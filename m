@@ -2,154 +2,129 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0588FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F16C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49912083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F064820854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OeWJRcUg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSrKUWwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388748AbfJNSQJ (ORCPT
+        id S2388760AbfJNSRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:16:09 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40445 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731955AbfJNSQJ (ORCPT
+        Mon, 14 Oct 2019 14:17:00 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42388 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731926AbfJNSRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:16:09 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so14534949oib.7
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 11:16:08 -0700 (PDT)
+        Mon, 14 Oct 2019 14:17:00 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so20770086wrw.9;
+        Mon, 14 Oct 2019 11:16:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MIBRcx0ifowvcR39u0o/yTqzRxoaaM/WNcTZ/tvS6ro=;
-        b=OeWJRcUgEFxmkHpbnahx0BDp6S/Ozy0Bl3rOrSHIseNZuZLmKTZEQBNd0C4sfgGnzi
-         t+w0+A7CFBRljCV40IDvG0WrnfNWMxa46gF7l6TDTUxKIXMEdaIjJYlnXNTSfJf7gQi7
-         iPpIy+HoaNN7lu7ME5QtEtS4EYWCPxlIwVK1KQJDQ4a4ILsMgCUUMwtUj0U1/8qkx6Pu
-         ePCKTenz99fyKckB6S736oaiKJ5l81f8n5VJReMhYfwQQJYn/9MVoIOpzbxUIdOHBfFc
-         m2/gS7idPQA6uGdH74+QYKnFYK4bJ7JxKEwdYkOjcLSnlitIlGJGO0uMtz/CoYYYXbhC
-         C6qw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1Iz1oz6GP5HGCChUa1AGUpZ/JU9QpdTHhqE0pdx1Qug=;
+        b=iSrKUWwaTP9uGmXMsO0BtAW8cJOduQ5JTliCmr6bkUSxDkRbcjjoNg2s8b2Mmi8CtE
+         WFn8uVIwhghntOhnc6CbbUilCpUnPSLx0vL7t+YzdYwSTTe7WVyn+NYJKP3Y69i3amxT
+         6w8n7KbghojZ4VouDbJnHGOjNdZGvP+GvrRGNQNWIpFmS2bHg/gRCNw1EkJceuJRN/GA
+         oIFq0wMxihYf2qus2L+q83XksWrBArXepLY0xhD30kbNxcKyYvdeNQ1CVGDYoSrfkpBc
+         coJPMOxQIQ05OsxU+4bkKvHM8TsxCz9rXFmhN8Hkbf9J4zdJFkNTOlccFzlVnGujVA/9
+         Bzdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MIBRcx0ifowvcR39u0o/yTqzRxoaaM/WNcTZ/tvS6ro=;
-        b=lZe68QdoVr765Ph5ntrGEbtlLsnJ07XsIVk28SXqlGgVngUIqMai68RqVeMciVw7Th
-         b84RDdSRM4E9d9IcHwCEUwcMM3XJpkQvH7IPl5Rh+QRG72EYS+FthyTkDxWPdAj7yG3l
-         n9cnwgxEkaFMBlt2rjvEeCkPDg+dwb8W4+6vW2cDoEmQh0YAztMxz9RDbARt03d3Y5lC
-         TT/gegVDZlz2oJqEpllZE8GsNDMG8r5L9OR5R9c/gjC+Ne7Owbp8jLeswQ+MnUPPRDL0
-         Hgdg6EVU0Z6nIGDtlIkG0v5wPwKPZmexql4lR7KvpMWFfweFgNBAx7jirMnfgYpvJcPe
-         pnUg==
-X-Gm-Message-State: APjAAAWJHaqX3Kww7FvIc7/nRJJa1UWamRWJFDpVJwxCoIL/1nCFjOZD
-        Y7+oASbo1CMHerSU89YJS7VcUdkkpGs6Kx1TFHXtvVuuI3U=
-X-Google-Smtp-Source: APXvYqzKxEz2BXIZJr/sLy+beuJcyD6wKA+TWsW55YiekuTAJeYe/skCAcGEK0KEpc5Ghf3kqL8lt3rB40/+shwwfp0=
-X-Received: by 2002:aca:4557:: with SMTP id s84mr25179212oia.101.1571076967291;
- Mon, 14 Oct 2019 11:16:07 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1Iz1oz6GP5HGCChUa1AGUpZ/JU9QpdTHhqE0pdx1Qug=;
+        b=QKiJjQZbSPmWxDSFBmWqlRdOjNvPFc1a3JCa4P+K+nLxihcFIbNtfSmi9I40ybpHg5
+         N/aGc1um+Pm8107Shzpal5lP0vCi9zO+W9SL0m90pkJng1rs2+shT16v4ZcXXDmNFRQ/
+         syYpVsVuYN9yeK8UoHKoyPCiEM206ztVFI7++7S2ifJmiY4GO+isuzKsTXVYIoDylLaO
+         p2UhJhDAZTxshif3Rx12IsWlSzPHAwr56vUr4vN8alDJShWUbzG3IE+6RGpX1Mxe3SB6
+         ayTg028AFyZb2E1d7wLlqTEf6vvIFDHNmI4vwosMQtzyUQFrXBjfVb3jW58OVyuoE7Hv
+         Pe1A==
+X-Gm-Message-State: APjAAAXD5R/uPlUbvpfvNBnlEVcnYqwJQ4pxkQa9v8nQ4G76Qjp16slo
+        U33E8uz6anRRLULWrz5hKx0=
+X-Google-Smtp-Source: APXvYqwzDmZVXGHklV4WahIEDJl6sJwwyx+JzyCH7C4cgz1/xOYpjceBxm0ni/Rv+Au96vTfE1+GDg==
+X-Received: by 2002:a5d:558b:: with SMTP id i11mr15233487wrv.166.1571077017345;
+        Mon, 14 Oct 2019 11:16:57 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f26:6400:ed5d:7e31:897c:be08? ([2003:ea:8f26:6400:ed5d:7e31:897c:be08])
+        by smtp.googlemail.com with ESMTPSA id o22sm45046855wra.96.2019.10.14.11.16.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 11:16:56 -0700 (PDT)
+Subject: Re: Module loading problem since 5.3
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <8132cf72-0ae1-48ae-51fb-1a01cf00c693@gmail.com>
+ <CAB=NE6XdVXMnq7pgmXxv4Qicu7=xrtQC-b2sXAfVxiAq68NMKg@mail.gmail.com>
+ <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
+ <20191014100143.GA6525@linux-8ccs>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <dbeb6e00-bc8f-e3ed-5a1c-57eace6dee17@gmail.com>
+Date:   Mon, 14 Oct 2019 20:16:48 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-2-dancol@google.com>
- <CAG48ez3yOPAC3mTJdQ5_8aARQPe+siid5jaa8U+aMtfj-bUJ2g@mail.gmail.com>
-In-Reply-To: <CAG48ez3yOPAC3mTJdQ5_8aARQPe+siid5jaa8U+aMtfj-bUJ2g@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Mon, 14 Oct 2019 11:15:30 -0700
-Message-ID: <CAKOZuet4VM-P_xm9R7cJO2_f60eUcqt5wHG8+khJedhctfEEhw@mail.gmail.com>
-Subject: Re: [PATCH 1/7] Add a new flags-accepting interface for anonymous inodes
-To:     Jann Horn <jannh@google.com>
-Cc:     Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191014100143.GA6525@linux-8ccs>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for taking a look
+On 14.10.2019 12:01, Jessica Yu wrote:
+> +++ Heiner Kallweit [11/10/19 21:26 +0200]:
+>> On 10.10.2019 19:15, Luis Chamberlain wrote:
+>>>
+>>>
+>>> On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+>>>
+>>>        MODULE_SOFTDEP("pre: realtek")
+>>>
+>>>     Are you aware of any current issues with module loading
+>>>     that could cause this problem?
+>>>
+>>>
+>>> Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+>>>
+>>> If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+>>>
+>>>   Luis
+>>>
+>> Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+>> https://lkml.org/lkml/2019/10/11/659
+> 
+> If you're running into depmod and module loading issues with kernels >=5.3-rc1,
+> it's likely due to the namespaces patchset and we're working on
+> getting all the kinks fixed. Could you please ask the bug reporter to
+> try the latest -rc kernel with these set of fixes applied on top?
+> 
+>   https://lore.kernel.org/linux-modules/20191010151443.7399-1-maennich@google.com/
+> 
+> They fix a known depmod issue caused by our __ksymtab naming scheme,
+> which is being reverted in favor of extracting the namespace from
+> __kstrtabns and __ksymtab_strings. These fixes will be in by -rc4.
+> 
+Thanks a lot, I'll check with the affected users.
+Maybe worth to be noted: I wasn't able to reproduce the module loading issue
+on my systems, one difference is that affected users have kmod utils
+version 25 and I have version 26. I asked them to upgrade to v26 and re-test,
+feedback is pending.
 
-On Mon, Oct 14, 2019 at 8:39 AM Jann Horn <jannh@google.com> wrote:
->
-> On Sat, Oct 12, 2019 at 9:16 PM Daniel Colascione <dancol@google.com> wrote:
-> > Add functions forwarding from the old names to the new ones so we
-> > don't need to change any callers.
->
-> This patch does more than the commit message says; it also refactors
-> the body of the function. (I would've moved that refactoring over into
-> patch 2, but I guess this works, too.)
->
-> [...]
-> > -struct file *anon_inode_getfile(const char *name,
-> > -                               const struct file_operations *fops,
-> > -                               void *priv, int flags)
-> > +struct file *anon_inode_getfile2(const char *name,
-> > +                                const struct file_operations *fops,
-> > +                                void *priv, int flags, int anon_inode_flags)
->
-> (AFAIK, normal kernel style is to slap a "__" prefix in front of the
-> function name instead of appending a digit, but I guess it doesn't
-> really matter.)
-
-I thought prefixing "_" was for signaling "this is an implementation
-detail and you probably don't want to call it unless you know what
-you're doing", not "here's a new version that does a new thing".
-
-> >  {
-> > +       struct inode *inode;
-> >         struct file *file;
-> >
-> > -       if (IS_ERR(anon_inode_inode))
-> > -               return ERR_PTR(-ENODEV);
-> > -
-> > -       if (fops->owner && !try_module_get(fops->owner))
-> > -               return ERR_PTR(-ENOENT);
-> > +       if (anon_inode_flags)
-> > +               return ERR_PTR(-EINVAL);
-> >
-> > +       inode = anon_inode_inode;
-> > +       if (IS_ERR(inode))
-> > +               return ERR_PTR(-ENODEV);
-> >         /*
-> > -        * We know the anon_inode inode count is always greater than zero,
-> > -        * so ihold() is safe.
-> > +        * We know the anon_inode inode count is always
-> > +        * greater than zero, so ihold() is safe.
-> >          */
->
-> This looks like maybe you started editing the comment, then un-did the
-> change, but left the modified line wrapping in your patch? Please
-> avoid that - code changes with no real reason make "git blame" output
-> more annoying and create trouble when porting patches between kernel
-> versions.
-
-I'll fix it.
-
->
-> [...]
-> >  EXPORT_SYMBOL_GPL(anon_inode_getfile);
-> > +EXPORT_SYMBOL_GPL(anon_inode_getfile2);
-> [...]
-> >  EXPORT_SYMBOL_GPL(anon_inode_getfd);
-> > +EXPORT_SYMBOL_GPL(anon_inode_getfd2);
->
-> Since anon_inode_getfd() is now a static inline function in
-> include/linux/anon_inodes.h, exporting it doesn't make sense anymore.
-> Same for anon_inode_getfile().
-
-I didn't want to break modules unnecessarily. Declaring the function
-inline and also exporting it gives us an efficiency win while avoiding
-an ABI break, right?
-
-> [...]
-> > +#define ANON_INODE_SECURE 1
->
-> That #define belongs in a later patch, right?
-
-Yep.
+> Thanks,
+> 
+> Jessica
+> 
+> 
+> .
+> 
+Heiner
