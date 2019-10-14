@@ -2,161 +2,444 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4D9C47404
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49097C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3AA207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BE7207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="W96FDWMm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JboMloqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbfJNHGf (ORCPT
+        id S1730230AbfJNHIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:06:35 -0400
-Received: from mail-eopbgr70125.outbound.protection.outlook.com ([40.107.7.125]:43588
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726500AbfJNHGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:06:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FIkqvLGIkd/t13VKCnDeOW5jn3Uh7OUpfcquss7CmEv8sMjUiUQPlr/zcX2fjLgRoPlsuKPPtjv/Yb1gPTttQE+ghcWZLkxHst5RUusGl0kqreCRy/H582LkSrCyU6TRfcWGieEgZsSWtcqw+RIMJ4tiUwjrlqn0C4FyOw9efuk6OSDyIA1x0+0im+eB04xxK+vJ1+ZqSHnB+VQFA5vinFGpscEeXSR2halvKwguisEfgGlFQ/DLLBMKiofsnmvGdZBwuanEsl9oGez+s+x8vQogWcUcnEcZPTakc2HTn9cttjZjiPYgmN31tAA59E5U8n4/J4Kfyqq/ykBD6RlIMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6VF1bQYAERY9fvsq9v1kGWMg3kC6mcZbbi65RUQFUwY=;
- b=Kr8byimu0HYjHqLqUqKhLmQjnpkf9aaKTx7LbUrqol4/yfzHYBMD4aDuXXUte48/6MgyEO427ls0RJ34CrybAFb8KnxIYD550g+vMTJN6NR6vRg9xdKzJIBPBZqAHiuoAGC4iJLS6veQtleVdJAN8lLyEATPinWaKGhIaDSnMdJxlEiVVTdexd4BHzU4op6y5kInTMTprc4Qw6RO1RoJf1LrsBoxrQYUWobQyZWvModrbvEjNohRfPWCEz3p5jw5bxJbwzw5+ksVtNY3KLFsiOnNQonWUXKcmkV1a21GvTs0svPzsfS4BGdU8O6h5DJSu9QB8usdGzEmv89kWOJ+pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6VF1bQYAERY9fvsq9v1kGWMg3kC6mcZbbi65RUQFUwY=;
- b=W96FDWMmFAJKE+EDD4ThKQWDJpWYPKoqlkq6QhsxQxnEZu5nxhpaLemsqYPPLbe/VaiVcPZy+Iq2PQeS4grCgnxLXAkQ3MMKFsEx16odtGSSaWEXOGVSKNqP6FUB36MwfYS+ZZLxmqLoO/YsR9ac25VRpD/r7C008vAE6FM9/Tw=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3321.eurprd02.prod.outlook.com (52.134.70.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Mon, 14 Oct 2019 07:06:26 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.021; Mon, 14 Oct 2019
- 07:06:26 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>, Rob Herring <robh@kernel.org>
-CC:     Leo Li <leoyang.li@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [EXT] Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional
- property i2c-mux-never-disable
-Thread-Topic: [EXT] Re: [v2,2/2] dt-bindings: i2c-mux-pca954x: Add optional
- property i2c-mux-never-disable
-Thread-Index: AQHVd0AksaVJuyFZf06jXLHgcXrzT6dVlliAgAP4BQCAAA+KgIAAL16A
-Date:   Mon, 14 Oct 2019 07:06:26 +0000
-Message-ID: <1f0c4d52-03d5-2947-f701-a0b5ab46c8e0@axentia.se>
-References: <20190930032503.44425-1-biwen.li@nxp.com>
- <20190930032503.44425-2-biwen.li@nxp.com> <20191011144445.GA2340@bogus>
- <DB7PR04MB44908DE0F57E985ED40C401A8F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <DB7PR04MB4490094F26EA412D4D9F5CF98F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB4490094F26EA412D4D9F5CF98F900@DB7PR04MB4490.eurprd04.prod.outlook.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR05CA0270.eurprd05.prod.outlook.com
- (2603:10a6:3:fc::22) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 87be8c44-25af-4fcd-dd95-08d75075073c
-x-ms-traffictypediagnostic: DB3PR0202MB3321:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB3PR0202MB332172E54716D63EC7291E31BC900@DB3PR0202MB3321.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(346002)(376002)(39830400003)(189003)(199004)(37524003)(8936002)(6306002)(2906002)(54906003)(76176011)(52116002)(6512007)(58126008)(81156014)(81166006)(71200400001)(71190400001)(110136005)(31696002)(99286004)(6436002)(229853002)(7736002)(8676002)(305945005)(6486002)(5660300002)(4326008)(316002)(14444005)(256004)(31686004)(508600001)(6246003)(66446008)(64756008)(66556008)(66946007)(66476007)(26005)(186003)(11346002)(446003)(476003)(2616005)(486006)(4001150100001)(6116002)(3846002)(966005)(36756003)(102836004)(14454004)(386003)(66066001)(53546011)(65806001)(86362001)(6506007)(65956001)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3321;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IJK7wTs42chxV1j+vHCxB0ow3277f69ujpCBAd422l8ixw5BZQz1dSKAJG08gCoCHUwYrn+GgHl9f1HqOnmaiF3Io70IXonKaY3TPBFZGwSTL4wu1iQF2kLE01yfVOzJur4RRxzArewyng7PZE9TC54gUlWQa/4Daa/aOusGeFm/PICDg+YHAflpNbsNx8czZUCRlumdLoLo7alWx66mvqZivFj30tBm2aMRKulkK4teCa387JLxE4UxkbxQd+XdgczZakW1oie7YzlL4Mm8Ay8X7fjbtQtUqnOxUnHSKjwuC5t6zLKbodOfHd4ao5GzqwONck6mTLK0maRWKg/ksgFiI8fXQE/gktQz391jgnoy/m3P680iWTrZwLNTBJZOqxb5aZjV0+yBr0kfqZFV5iiiaYsrDh2NpCgIaIzLcqIb/lQYnOE9jAwC9DgfT6heKlUh4QlulX1jnXEC3L4JQQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4074ED54FDB7FC42ADE235FE75FB49A8@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 14 Oct 2019 03:08:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30362 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730076AbfJNHIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 03:08:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571036887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xcDj/VFQ6KKNr9HZ7H5PSlKT512A8eXxxKSGyEaX09w=;
+        b=JboMloqvqPQteW7hiX40e4sKFpNeQZxFKBozOAoeW2tyjwRqsgGZxAIdO7Ccint+dWWR7S
+        tZN4JiUPGa+QX8XOE7b+D0JvEmWG1XUfNPJBVQiCsM4raiIRE9KjE2WPTWwfHr6dmPmzib
+        PPsUTHGl27XYiiIPqK0VE2Gf0SwFs64=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-QRKzzIZ4M8mAgx8iRBMjFA-1; Mon, 14 Oct 2019 03:08:03 -0400
+Received: by mail-qk1-f200.google.com with SMTP id x77so16117947qka.11
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:08:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xcDj/VFQ6KKNr9HZ7H5PSlKT512A8eXxxKSGyEaX09w=;
+        b=DEgFsqnboHTn4eS2uoJOq12OuE+pb327NRhmwYwGAYfEVCvvuRw4Em+V2IjcSUR9ry
+         2W1x4TRqsjBgy3M5ZwFC/IawvHgWmqgMvy+J5JVrVJDvzRBhSiAoeJBhCVYsJlsNeB8l
+         h1S2sEa/hgOSmY0E9zLsFAHgHSHw4H4v0tIL8NDRGF0IgiHnVyfg8kICu3nnlL2lsYL2
+         Is9fRRsu+A5lc681N+g8lA1YmBeK3ZOanSSIRMj/sdBvzfy+HsLF+WGSNr7SWsqPNT4s
+         BUrIMjOCdb2ReWQ/oOCny3k3AJchB15jX9+uysmpLI9gsmswR9Bp9YqnhbrLBp5WDNbJ
+         cNlQ==
+X-Gm-Message-State: APjAAAW3eNkx8LaRzyHehj4kiBKC4LRTu0nVNT+8nIR95bGA+y6Lp3j1
+        8lGjbIiMmTO5ACnaq9qfQWxbXvtDMisuU0E/KggYsvBnzgMSsNgEL5eDAXaryYPLtCx0KDHIfUm
+        hjj9X3KQDO8I4aWen3LjWcF2kJ6H47xz1FvdUFXLP
+X-Received: by 2002:a0c:8eca:: with SMTP id y10mr16311528qvb.138.1571036882965;
+        Mon, 14 Oct 2019 00:08:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzFGv+JqyNjog8PLDLVA5VjVphZUuovMFYVQIvEET4YHfeklDiPu3bN+Yq9uJSJ59ucHJyQGl2e9zhdn4TRs+k=
+X-Received: by 2002:a0c:8eca:: with SMTP id y10mr16311505qvb.138.1571036882508;
+ Mon, 14 Oct 2019 00:08:02 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87be8c44-25af-4fcd-dd95-08d75075073c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 07:06:26.1288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bim349/zSwdlKnqXlKvrq+JHKCm4m7l2twulRWhAfhqGux7t/0rs3jCN8RIVlw+/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3321
+References: <Mbf4goGxXZTfWwWtQQUke_rNf8kezpNOS9DVEVHf6RnnmjS1oRtMOJf4r14WfCC6GRYVs7gi0uZcIJ18Va2OJowzSbyMUGwLrl6I5fjW48o=@protonmail.com>
+ <201910140950.uA9aSUlt%lkp@intel.com> <TKRbvHYo9MdseQJhtKe0NPnI1BAPwcVBM_mJjDhYyPD46CuOy06PNzSQ6ifxPMMzKXTsRoD2aC_AaY5L9OAovXbof8ItLNZHcXULttZnps8=@protonmail.com>
+In-Reply-To: <TKRbvHYo9MdseQJhtKe0NPnI1BAPwcVBM_mJjDhYyPD46CuOy06PNzSQ6ifxPMMzKXTsRoD2aC_AaY5L9OAovXbof8ItLNZHcXULttZnps8=@protonmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 14 Oct 2019 09:07:50 +0200
+Message-ID: <CAO-hwJLea5rAZ20Mdn8tSD1a8FfbS9RDcu2nWwLgxTtxKKsWyg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] HID: logitech: Add MX Master over Bluetooth
+To:     Mazin Rezk <mnrzk@protonmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+X-MC-Unique: QRKzzIZ4M8mAgx8iRBMjFA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0xNCAwNjoxNiwgQml3ZW4gTGkgd3JvdGU6DQo+Pg0KPj4+DQo+Pj4gT24gTW9u
-LCBTZXAgMzAsIDIwMTkgYXQgMTE6MjU6MDNBTSArMDgwMCwgQml3ZW4gTGkgd3JvdGU6DQo+Pj4+
-IFRoZSBwYXRjaCBhZGRzIGFuIG9wdGlvbmFsIHByb3BlcnR5IGkyYy1tdXgtbmV2ZXItZGlzYWJs
-ZQ0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4N
-Cj4+Pj4gLS0tDQo+Pj4+IENoYW5nZSBpbiB2MjoNCj4+Pj4gICAgICAgLSB1cGRhdGUgZG9jdW1l
-bnRhdGlvbg0KPj4+Pg0KPj4+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ky
-Yy9pMmMtbXV4LXBjYTk1NHgudHh0IHwgMSArDQo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
-cnRpb24oKykNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdA0KPj4+PiBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLW11eC1wY2E5NTR4LnR4dA0KPj4+PiBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLW11eC1wY2E5NTR4LnR4dA0KPj4+PiBp
-bmRleCAzMGFjNmE2MGYwNDEuLjcxYjczZDBmZGI2MiAxMDA2NDQNCj4+Pj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtbXV4LXBjYTk1NHgudHh0DQo+Pj4+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLW11eC1wY2E5
-NTR4LnR4dA0KPj4+PiBAQCAtMzQsNiArMzQsNyBAQCBPcHRpb25hbCBQcm9wZXJ0aWVzOg0KPj4+
-PiAgICAgIC0gZmlyc3QgY2VsbCBpcyB0aGUgcGluIG51bWJlcg0KPj4+PiAgICAgIC0gc2Vjb25k
-IGNlbGwgaXMgdXNlZCB0byBzcGVjaWZ5IGZsYWdzLg0KPj4+PiAgICAgIFNlZSBhbHNvDQo+Pj4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9p
-bnRlcnJ1cHRzLnR4DQo+Pj4+IHQNCj4+Pj4gKyAgLSBpMmMtbXV4LW5ldmVyLWRpc2FibGU6IGFs
-d2F5cyBmb3JjZXMgbXV4IHRvIGJlIGVuYWJsZWQuDQo+Pj4NCj4+PiBFaXRoZXIgbmVlZHMgdG8g
-aGF2ZSBhIHZlbmRvciBwcmVmaXggb3IgYmUgZG9jdW1lbnRlZCBhcyBhIGNvbW1vbg0KPj4+IHBy
-b3BlcnR5Lg0KPiBJIGNob29zZSB0byBiZSBkb2N1bWVudGVkIGFzIGEgY29tbW9uIHByb3BlcnR5
-Lg0KDQpDYW4gd2UgcGxlYXNlIGp1c3QgZHJvcCB0aGUgbmV2ZXItZGlzYWJsZSBhcHByb2FjaCBh
-bmQgZm9jdXMgb24gaWRsZS1zdGF0ZQ0KaW5zdGVhZD8NCg0KPj4+DQo+Pj4gSUlSQywgd2UgYWxy
-ZWFkeSBoYXZlIGEgcHJvcGVydHkgZm9yIG11eCBkZWZhdWx0IHN0YXRlIHdoaWNoIHNlZW1zDQo+
-Pj4gbGlrZSB0aGF0IHdvdWxkIGNvdmVyIHRoaXMgdW5sZXNzIHlvdSBuZWVkIHRvIGxlYXZlIGl0
-IGluIGRpZmZlcmVudCBzdGF0ZXMuDQo+PiBPa2F5LCB5b3UgYXJlIHJpZ2h0LCB0aGFuayB5b3Ug
-c28gbXVjaC4gSSB3aWxsIHRyeSBpdCBpbiB2My4NCj4gRG8geW91IG1lYW4gdGhhdCB0aGUgcHJv
-cGVydHkgaXMgaTJjLW11eC1pZGxlLWRpc2Nvbm5lY3QgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2kyYy9pMmMtbXV4LXBjYTk1NHgudHh0Pw0KPiBJZiBzbywgdGhlIHByb3Bl
-cnR5IGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IGlzIG5vdCBnb29kIGZvciBtZS4NCj4gQmVjYXVz
-ZSBjb25kaXRpb24gb2YgdGhlIHByb3BlcnR5IGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0IGlzIGlu
-IGlkbGUgc3RhdGUoc29tZXRpbWVzKS4NCj4gQnV0IEkgbmVlZCBhbHdheXMgZW5hYmxlIGkyYyBt
-dWx0aXBsZXhlciBpbiB3aGF0ZXZlciBzdGF0ZShhbnl0aW1lKSwgc28gSSBhZGQgYSBjb21tb24g
-cHJvcGVydHkgaTJjLW11eC1uZXZlci1kaXNhYmxlLg0KDQpObywgSSBkbyBub3QgdGhpbmsgYW55
-IG5ldyBwcm9wZXJ0eSBpcyBuZWVkZWQuIEFGQUlDVCwgaWRsZS1zdGF0ZSBmaXRzDQpwZXJmZWN0
-bHksIGFuZCBJIHdpbGwgbm90IGNvbnNpZGVyIHRoaXMgaTJjLW11eC1uZXZlci1kaXNhYmxlDQph
-cHByb2FjaCB1bnRpbCBzb21lIGNvbXBlbGxpbmcgcmVhc29uIGlzIHByZXNlbnRlZCB3aHkgaWRs
-ZS1zdGF0ZQ0KaXMgbm90IGFwcHJvcHJpYXRlLiBZb3UgcHJvbWlzZWQgdG8gdGFrZSBhIHN0YWIg
-YXQgaXQsIGFuZCB1bnRpbA0KSSBoZWFyIGJhY2sgb24gdGhhdCwgdGhpcyBzZXJpZXMgaXMgb24g
-aG9sZC4gQXMgaW5kaWNhdGVkIGhlcmUgWzFdLg0KDQpZb3UgbmVlZCB0byBwYXRjaCB0aGUgZHJp
-dmVyIHRvIGxvb2sgYXQgdGhlIGlkbGUtc3RhdGUgcHJvcGVydHkNCmluc3RlYWQgb2YgaW52ZW50
-aW5nIGEgbmV3IChhbmQgbGVzcyBmbGV4aWJsZSkgcHJvcGVydHkuIElmIHlvdQ0KaW1wbGVtZW50
-IGlkbGUtc3RhdGUgZm9yIHRoaXMgZHJpdmVyIGFuZCBzZXQgdGhlIGlkbGUtc3RhdGUgdG8NCnNv
-bWUgY2hhbm5lbCBpbiB0aGUgZHRzLCB0aGUgbXV4IHdpbGwgbmV2ZXIgZGlzY29ubmVjdC4gUHJv
-YmxlbSBzb2x2ZWQuDQpQZXJoYXBzIG5vdCB5b3VyIGZpcnN0IHNvbHV0aW9uLCBidXQgaXQgZG9l
-cyBzb2x2ZSB5b3VyIHByb2JsZW0gYW5kDQptYXkgYWN0dWFsbHkgYmUgdXNlZnVsIGZvciBvdGhl
-ciBwdXJwb3NlcyB0aGFuIHlvdXIgYnJva2VuIGhhcmR3YXJlLg0KQW5kIGl0IGlzIGNvbnNpc3Rl
-bnQgYWNyb3NzIG90aGVyIGkyYy1tdXhlcy4gSSBzZWUgbm8gZG93bnNpZGUuDQoNCkNoZWVycywN
-ClBldGVyDQoNClsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzA3ZDg1NzQ4LTA3MjEt
-MzlkNC1kMmJlLTEzZWIxNmIwZjFkZUBheGVudGlhLnNlLw0K
+Hey,
+
+On Mon, Oct 14, 2019 at 6:35 AM Mazin Rezk <mnrzk@protonmail.com> wrote:
+>
+> On Sunday, October 13, 2019 9:28 PM, kbuild test robot <lkp@intel.com> wr=
+ote:
+>
+> > Hi Mazin,
+> >
+> > Thank you for the patch! Perhaps something to improve:
+> >
+> > [auto build test WARNING on linus/master]
+> > [cannot apply to v5.4-rc2 next-20191010]
+> > [if your patch is applied to the wrong git tree, please drop us a note =
+to help
+> > improve the system. BTW, we also suggest to use '--base' option to spec=
+ify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/3=
+7406982]
+> >
+> > url: https://github.com/0day-ci/linux/commits/Mazin-Rezk/HID-logitech-A=
+dd-MX-Master-over-Bluetooth/20191014-071534
+> > config: mips-allmodconfig (attached as .config)
+> > compiler: mips-linux-gcc (GCC) 7.4.0
+> > reproduce:
+> > wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make=
+.cross -O ~/bin/make.cross
+> > chmod +x ~/bin/make.cross
+> > # save the attached .config to linux build tree
+> > GCC_VERSION=3D7.4.0 make.cross ARCH=3Dmips
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot lkp@intel.com
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> > In file included from include/linux/ioport.h:15:0,
+> > from include/linux/device.h:15,
+> > from drivers/hid/hid-logitech-hidpp.c:13:
+> > drivers/hid/hid-logitech-hidpp.c: In function 'hidpp_send_rap_command_s=
+ync':
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
+ 'BIT'
+> >
+> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> >                                               ^~~
+> >
+> >
+> > > > drivers/hid/hid-logitech-hidpp.c:347:26: note: in expansion of macr=
+o 'HIDPP_QUIRK_MISSING_SHORT_REPORTS'
+> >
+> >      if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
+> >
+> >                              ^
+> >
+> >
+> > drivers/hid/hid-logitech-hidpp.c: In function 'hidpp_validate_device':
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
+ 'BIT'
+> >
+> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> >                                               ^~~
+> >
+> >
+> > drivers/hid/hid-logitech-hidpp.c:3496:22: note: in expansion of macro '=
+HIDPP_QUIRK_MISSING_SHORT_REPORTS'
+> > if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
+> >
+> >                          ^
+> >
+> >
+> > drivers/hid/hid-logitech-hidpp.c: At top level:
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
+ 'BIT'
+> >
+> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> >                                               ^~~
+> >
+> >
+> > drivers/hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'HI=
+DPP_QUIRK_MISSING_SHORT_REPORTS'
+> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
+S
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > > > drivers/hid/hid-logitech-hidpp.c:3794:5: note: in expansion of macr=
+o 'HIDPP_QUIRK_CLASS_BLUETOOTH_LE'
+> >
+> >         HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
+ 'BIT'
+> >
+> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> >                                               ^~~
+> >
+> >
+> > drivers/hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'HI=
+DPP_QUIRK_MISSING_SHORT_REPORTS'
+> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
+S
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/hid/hid-logitech-hidpp.c:3797:5: note: in expansion of macro 'H=
+IDPP_QUIRK_CLASS_BLUETOOTH_LE'
+> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > -----------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+-------
+> >
+> > In file included from include/linux/ioport.h:15:0,
+> > from include/linux/device.h:15,
+> > from drivers//hid/hid-logitech-hidpp.c:13:
+> > drivers//hid/hid-logitech-hidpp.c: In function 'hidpp_send_rap_command_=
+sync':
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
+IT'
+> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> > ^~~
+> > drivers//hid/hid-logitech-hidpp.c:347:26: note: in expansion of macro '=
+HIDPP_QUIRK_MISSING_SHORT_REPORTS'
+> > if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
+> >
+> >                              ^
+> >
+> >
+> > drivers//hid/hid-logitech-hidpp.c: In function 'hidpp_validate_device':
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
+IT'
+> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> > ^~~
+> > drivers//hid/hid-logitech-hidpp.c:3496:22: note: in expansion of macro =
+'HIDPP_QUIRK_MISSING_SHORT_REPORTS'
+> > if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
+> >
+> >                          ^
+> >
+> >
+> > drivers//hid/hid-logitech-hidpp.c: At top level:
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
+IT'
+> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> > ^~~
+> > drivers//hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'H=
+IDPP_QUIRK_MISSING_SHORT_REPORTS'
+> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
+S
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers//hid/hid-logitech-hidpp.c:3794:5: note: in expansion of macro '=
+HIDPP_QUIRK_CLASS_BLUETOOTH_LE'
+> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
+type [-Wshift-count-overflow]
+> >
+> >     #define BIT(nr)   (UL(1) << (nr))
+> >                              ^
+> >
+> >
+> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
+IT'
+> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> > ^~~
+> > drivers//hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'H=
+IDPP_QUIRK_MISSING_SHORT_REPORTS'
+> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
+S
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers//hid/hid-logitech-hidpp.c:3797:5: note: in expansion of macro '=
+HIDPP_QUIRK_CLASS_BLUETOOTH_LE'
+> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > vim +/BIT +74 drivers/hid/hid-logitech-hidpp.c
+> >
+> > 12
+> >
+> > > 13 #include <linux/device.h>
+> >
+> >     14        #include <linux/input.h>
+> >
+> >     15        #include <linux/usb.h>
+> >
+> >     16        #include <linux/hid.h>
+> >
+> >     17        #include <linux/module.h>
+> >
+> >     18        #include <linux/slab.h>
+> >
+> >     19        #include <linux/sched.h>
+> >
+> >     20        #include <linux/sched/clock.h>
+> >
+> >     21        #include <linux/kfifo.h>
+> >
+> >     22        #include <linux/input/mt.h>
+> >
+> >     23        #include <linux/workqueue.h>
+> >
+> >     24        #include <linux/atomic.h>
+> >
+> >     25        #include <linux/fixp-arith.h>
+> >
+> >     26        #include <asm/unaligned.h>
+> >
+> >     27        #include "usbhid/usbhid.h"
+> >     28        #include "hid-ids.h"
+> >     29
+> >     30        MODULE_LICENSE("GPL");
+> >     31        MODULE_AUTHOR("Benjamin Tissoires <benjamin.tissoires@gma=
+il.com>");
+> >
+> >     32        MODULE_AUTHOR("Nestor Lopez Casado <nlopezcasad@logitech.=
+com>");
+> >
+> >     33
+> >     34        static bool disable_raw_mode;
+> >     35        module_param(disable_raw_mode, bool, 0644);
+> >     36        MODULE_PARM_DESC(disable_raw_mode,
+> >     37                "Disable Raw mode reporting for touchpads and kee=
+p firmware gestures.");
+> >     38
+> >     39        static bool disable_tap_to_click;
+> >     40        module_param(disable_tap_to_click, bool, 0644);
+> >     41        MODULE_PARM_DESC(disable_tap_to_click,
+> >     42                "Disable Tap-To-Click mode reporting for touchpad=
+s (only on the K400 currently).");
+> >     43
+> >     44        #define REPORT_ID_HIDPP_SHORT                   0x10
+> >     45        #define REPORT_ID_HIDPP_LONG                    0x11
+> >     46        #define REPORT_ID_HIDPP_VERY_LONG               0x12
+> >     47
+> >     48        #define HIDPP_REPORT_SHORT_LENGTH               7
+> >     49        #define HIDPP_REPORT_LONG_LENGTH                20
+> >     50        #define HIDPP_REPORT_VERY_LONG_MAX_LENGTH       64
+> >     51
+> >     52        #define HIDPP_SUB_ID_CONSUMER_VENDOR_KEYS       0x03
+> >     53        #define HIDPP_SUB_ID_ROLLER                     0x05
+> >     54        #define HIDPP_SUB_ID_MOUSE_EXTRA_BTNS           0x06
+> >     55
+> >     56        #define HIDPP_QUIRK_CLASS_WTP                   BIT(0)
+> >     57        #define HIDPP_QUIRK_CLASS_M560                  BIT(1)
+> >     58        #define HIDPP_QUIRK_CLASS_K400                  BIT(2)
+> >     59        #define HIDPP_QUIRK_CLASS_G920                  BIT(3)
+> >     60        #define HIDPP_QUIRK_CLASS_K750                  BIT(4)
+> >     61
+> >     62        /* bits 2..20 are reserved for classes */
+> >     63        /* #define HIDPP_QUIRK_CONNECT_EVENTS           BIT(21) d=
+isabled */
+> >     64        #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS        BIT(22)
+> >     65        #define HIDPP_QUIRK_NO_HIDINPUT                 BIT(23)
+> >     66        #define HIDPP_QUIRK_FORCE_OUTPUT_REPORTS        BIT(24)
+> >     67        #define HIDPP_QUIRK_UNIFYING                    BIT(25)
+> >     68        #define HIDPP_QUIRK_HI_RES_SCROLL_1P0           BIT(26)
+> >     69        #define HIDPP_QUIRK_HI_RES_SCROLL_X2120         BIT(27)
+> >     70        #define HIDPP_QUIRK_HI_RES_SCROLL_X2121         BIT(28)
+> >     71        #define HIDPP_QUIRK_HIDPP_WHEELS                BIT(29)
+> >     72        #define HIDPP_QUIRK_HIDPP_EXTRA_MOUSE_BTNS      BIT(30)
+> >     73        #define HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS  BIT(31)
+> >
+> >
+> > > 74 #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
+> >
+> >     75
+> >
+> >
+> > --
+> >
+> > 0-DAY kernel test infrastructure Open Source Technology Center
+> > https://lists.01.org/pipermail/kbuild-all Intel Corporation
+>
+>
+> It seems that I overlooked that quirks is an unsigned long and is 32-bit
+> on some architectures. I feel like it's possible to change driver_data
+> and quirks to unsigned long long but it seems like such an unnecessarily
+> large change.
+
+Yep, which is why I told you to use 0x20 and 0x1f :)
+
+>
+> Since we've already reached the 32-bit limit for quirks, is it possible
+> that we could change how many bits are reserved for classes?
+
+yes, we can simply change the reserved range, this is just a comment after =
+all.
+
+>
+> Also, could bit 21 be reused for HIDPP_QUIRK_MISSING_SHORT_REPORTS?
+
+unfortunately no. This is theoretically kernel API, as you can have a
+script that binds a driver and sets a custom quirk for it (by writing
+to the sysfs new_id). So if one is marked as "reserved", resuing it
+might break someone's device though really unlikely.
+
+I'd rather shrink the number of classes than reusing one quirk already used=
+.
+
+Cheers,
+Benjamin
+
