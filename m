@@ -2,199 +2,120 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C0ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FDCECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358612064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BCE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571049115;
+	bh=4MzRh7R5PK6Za4Hhvz/6udvymFlQSmxe0JABtJIBSQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mAdngdiSxcSRWekF8yo8gBMIPdDrNiDJOuBir1MWLaZgrsYgPrT95jSLN8MlCFAvP
+	 Qn5rBVpmp6zYGrnHpfEC699/ewRO2LpMljkbUxbSCf/KeK8SYs9Oin5BdmvwwvOJpb
+	 xW3Ei+Xn3PHr//KqoKFuFDxctQBbj9Li2aH9YLgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbfJNK33 (ORCPT
+        id S1731440AbfJNKby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:29:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:39912 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731119AbfJNK32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:29:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDE68337;
-        Mon, 14 Oct 2019 03:29:27 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C3363F718;
-        Mon, 14 Oct 2019 03:29:25 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dma-mapping: Add dma_addr_is_phys_addr()
-To:     David Gibson <david@gibson.dropbear.id.au>,
-        Ram Pai <linuxram@us.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org,
-        benh@kernel.crashing.org, mpe@ellerman.id.au, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, aik@linux.ibm.com, paul.burton@mips.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com, hch@lst.de,
-        jasowang@redhat.com, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com
-References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
- <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
- <20191014045139.GN4080@umbus.fritz.box>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <37609731-5539-b906-aa94-2ef0242795ac@arm.com>
-Date:   Mon, 14 Oct 2019 11:29:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 14 Oct 2019 06:31:54 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42040 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731127AbfJNKby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:31:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so7821232pls.9;
+        Mon, 14 Oct 2019 03:31:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p52zOb8AkWjiHUW3lM+HOVr/SY7iwqKrbhUSsHYKydI=;
+        b=aKAN9G7S15wLAKjZdCk0TnvTdskk6ME9hd+nCHWwGBd2gO2ywsZkeW38VfYFGY3Yov
+         9ua1sLe+6BOwNwcYxN7INb16HuJ36whfxEHfaOsLZ+Nowk7uq9He+qFmoQS7sgLdRzto
+         N2z7/tEMzkUj9cgV0HWkxnAy/wqLQFt8yGQJVBfs+BdQplzsPhIMSfaPUJZ3DIP/bRN/
+         iqbFlyNLDA04wVUsWnxzXGyu29iIXr/cDYlc9KMQ2sEgw67LA1T7RXqNnSkb9dO0tdHI
+         8WgohWVdvJTZ4lt7Q/7qZcSbrMa01gf9yMPWQRfU76ROm+gGTcB0T68/9zR5PvG6FGv9
+         jKEQ==
+X-Gm-Message-State: APjAAAUMR4rOivVc2wsi92EyCczUg+Myau3aaYWebSpAG1UuLaMA5f/e
+        wss+12eMPKXWhFRaZZbjwDQ=
+X-Google-Smtp-Source: APXvYqwZaInwYLIRhKrxWj7gBZex+kOMBky3fc37KYVcVOUwoOaIUp8L1sRbMp8Fh1etp/Z1E5xNAA==
+X-Received: by 2002:a17:902:6b88:: with SMTP id p8mr27888381plk.251.1571049112966;
+        Mon, 14 Oct 2019 03:31:52 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c1sm27085900pfb.135.2019.10.14.03.31.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 03:31:51 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D2D324021A; Mon, 14 Oct 2019 10:31:50 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 10:31:50 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Message-ID: <20191014103150.GB16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191011141036.GK16384@42.do-not-panic.com>
+ <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
+ <20191011153823.GS16384@42.do-not-panic.com>
+ <20191011163819.GA1295750@kroah.com>
+ <20191014092216.GA16384@42.do-not-panic.com>
+ <20191014092929.GA3050866@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191014045139.GN4080@umbus.fritz.box>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014092929.GA3050866@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/10/2019 05:51, David Gibson wrote:
-> On Fri, Oct 11, 2019 at 06:25:18PM -0700, Ram Pai wrote:
->> From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->>
->> In order to safely use the DMA API, virtio needs to know whether DMA
->> addresses are in fact physical addresses and for that purpose,
->> dma_addr_is_phys_addr() is introduced.
->>
->> cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> cc: David Gibson <david@gibson.dropbear.id.au>
->> cc: Michael Ellerman <mpe@ellerman.id.au>
->> cc: Paul Mackerras <paulus@ozlabs.org>
->> cc: Michael Roth <mdroth@linux.vnet.ibm.com>
->> cc: Alexey Kardashevskiy <aik@linux.ibm.com>
->> cc: Paul Burton <paul.burton@mips.com>
->> cc: Robin Murphy <robin.murphy@arm.com>
->> cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> cc: Christoph Hellwig <hch@lst.de>
->> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
->> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+On Mon, Oct 14, 2019 at 11:29:29AM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Oct 14, 2019 at 09:22:16AM +0000, Luis Chamberlain wrote:
+> > On Fri, Oct 11, 2019 at 06:38:19PM +0200, Greg Kroah-Hartman wrote:
+> > > On Fri, Oct 11, 2019 at 03:38:23PM +0000, Luis Chamberlain wrote:
+> > > > On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On 10/11/19 4:10 PM, Luis Chamberlain wrote:
+> > > > > > Hey Hans, thanks for staying on top of this and follow up! For some
+> > > > > > reason the universe conspired against your first and last patch ([1/8],
+> > > > > > [8/8]), and I never got them. Could you bounce these or resend in case
+> > > > > > others confirm they also didn't get it?
+> > > > > 
+> > > > > I have received feedback from others on the first patch, so at least
+> > > > > that one has reached others. I've bounced patches 1 and 8 to you.
+> > > > 
+> > > > Thanks, can you also bounce the feedback received?
+> > > 
+> > > That is what lore.kernel.org is for...
+> > 
+> > If I have feedback on an email which I did not get I cannot easily reply to it.
 > 
-> The change itself looks ok, so
-> 
-> Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-> 
-> However, I would like to see the commit message (and maybe the inline
-> comments) expanded a bit on what the distinction here is about.  Some
-> of the text from the next patch would be suitable, about DMA addresses
-> usually being in a different address space but not in the case of
-> bounce buffering.
+> I meant, use lore.kernel.org to download the mbox of the thread and then
+> use your email client to respond to whatever you need there.  This all
+> is public, no need to ask anyone else to bounce emails to you.
 
-Right, this needs a much tighter definition. "DMA address happens to be 
-a valid physical address" is true of various IOMMU setups too, but I 
-can't believe it's meaningful in such cases.
+Last I looked it didn't allow you to downlaod an mbox of a thread...
+I'll take a look next time I miss a few emails.
 
-If what you actually want is "DMA is direct or SWIOTLB" - i.e. "DMA 
-address is physical address of DMA data (not necessarily the original 
-buffer)" - wouldn't dma_is_direct() suffice?
-
-Robin.
-
->> ---
->>   arch/powerpc/include/asm/dma-mapping.h | 21 +++++++++++++++++++++
->>   arch/powerpc/platforms/pseries/Kconfig |  1 +
->>   include/linux/dma-mapping.h            | 20 ++++++++++++++++++++
->>   kernel/dma/Kconfig                     |  3 +++
->>   4 files changed, 45 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/dma-mapping.h b/arch/powerpc/include/asm/dma-mapping.h
->> index 565d6f7..f92c0a4b 100644
->> --- a/arch/powerpc/include/asm/dma-mapping.h
->> +++ b/arch/powerpc/include/asm/dma-mapping.h
->> @@ -5,6 +5,8 @@
->>   #ifndef _ASM_DMA_MAPPING_H
->>   #define _ASM_DMA_MAPPING_H
->>   
->> +#include <asm/svm.h>
->> +
->>   static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
->>   {
->>   	/* We don't handle the NULL dev case for ISA for now. We could
->> @@ -15,4 +17,23 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
->>   	return NULL;
->>   }
->>   
->> +#ifdef CONFIG_ARCH_HAS_DMA_ADDR_IS_PHYS_ADDR
->> +/**
->> + * dma_addr_is_phys_addr - check whether a device DMA address is a physical
->> + *		address
->> + * @dev:	device to check
->> + *
->> + * Returns %true if any DMA address for this device happens to also be a valid
->> + * physical address (not necessarily of the same page).
->> + */
->> +static inline bool dma_addr_is_phys_addr(struct device *dev)
->> +{
->> +	/*
->> +	 * Secure guests always use the SWIOTLB, therefore DMA addresses are
->> +	 * actually the physical address of the bounce buffer.
->> +	 */
->> +	return is_secure_guest();
->> +}
->> +#endif
->> +
->>   #endif	/* _ASM_DMA_MAPPING_H */
->> diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
->> index 9e35cdd..0108150 100644
->> --- a/arch/powerpc/platforms/pseries/Kconfig
->> +++ b/arch/powerpc/platforms/pseries/Kconfig
->> @@ -152,6 +152,7 @@ config PPC_SVM
->>   	select SWIOTLB
->>   	select ARCH_HAS_MEM_ENCRYPT
->>   	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
->> +	select ARCH_HAS_DMA_ADDR_IS_PHYS_ADDR
->>   	help
->>   	 There are certain POWER platforms which support secure guests using
->>   	 the Protected Execution Facility, with the help of an Ultravisor
->> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
->> index f7d1eea..6df5664 100644
->> --- a/include/linux/dma-mapping.h
->> +++ b/include/linux/dma-mapping.h
->> @@ -693,6 +693,26 @@ static inline bool dma_addressing_limited(struct device *dev)
->>   			    dma_get_required_mask(dev);
->>   }
->>   
->> +#ifndef CONFIG_ARCH_HAS_DMA_ADDR_IS_PHYS_ADDR
->> +/**
->> + * dma_addr_is_phys_addr - check whether a device DMA address is a physical
->> + *		address
->> + * @dev:	device to check
->> + *
->> + * Returns %true if any DMA address for this device happens to also be a valid
->> + * physical address (not necessarily of the same page).
->> + */
->> +static inline bool dma_addr_is_phys_addr(struct device *dev)
->> +{
->> +	/*
->> +	 * Except in very specific setups, DMA addresses exist in a different
->> +	 * address space from CPU physical addresses and cannot be directly used
->> +	 * to reference system memory.
->> +	 */
->> +	return false;
->> +}
->> +#endif
->> +
->>   #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
->>   void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
->>   		const struct iommu_ops *iommu, bool coherent);
->> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
->> index 9decbba..6209b46 100644
->> --- a/kernel/dma/Kconfig
->> +++ b/kernel/dma/Kconfig
->> @@ -51,6 +51,9 @@ config ARCH_HAS_DMA_MMAP_PGPROT
->>   config ARCH_HAS_FORCE_DMA_UNENCRYPTED
->>   	bool
->>   
->> +config ARCH_HAS_DMA_ADDR_IS_PHYS_ADDR
->> +	bool
->> +
->>   config DMA_NONCOHERENT_CACHE_SYNC
->>   	bool
->>   
-> 
+  Luis
