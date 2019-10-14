@@ -2,167 +2,174 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EE4ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E8FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104502133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkE2NEEB"
+	by mail.kernel.org (Postfix) with ESMTP id 3F0242133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388048AbfJNQVd (ORCPT
+        id S2388066AbfJNQVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:21:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44531 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729889AbfJNQVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:21:32 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q15so8215039pll.11;
-        Mon, 14 Oct 2019 09:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XJ1DbTHwQkp6rz8764Ynj3HtGD3CNAlvqeCKZgSoVQ0=;
-        b=YkE2NEEBQSwXfOv2XRFZzx4Ygv0E1pGi5Y6ukpAcSKn+qrh0g4f2XtsI+WdBGG5JnL
-         gr9b72YQ9fTyqnPmL02ubAP8MG6rJxIddzgn9tuwa8ftCJfjqYyHqFa/ZsSBxv4UUmP4
-         p3IczoTvhsJIJulLzvUhvzchfD7krk4kcL1Q6AuMJSLsCQpN9cLC/F0z1ki47CGkSqGU
-         lFOwqdkq9QuPgAF6ouQpYKjeg43AEc80IuUraZ7HJZ00exki8/fVGfWs6gQUI9yKtO8C
-         Ziu5b0JDSkUxZHBfOmLcVHKjNI1+55Fpko3KO6QPLFOZIid/5qgj1UVe5pJtk67kBYIF
-         U+8Q==
+        Mon, 14 Oct 2019 12:21:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36442 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388054AbfJNQVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:21:35 -0400
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1805661D25
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 16:21:35 +0000 (UTC)
+Received: by mail-ed1-f70.google.com with SMTP id o92so10515798edb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:21:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XJ1DbTHwQkp6rz8764Ynj3HtGD3CNAlvqeCKZgSoVQ0=;
-        b=NfQ+xaIX4xyLq2/sS1zlGr7GnIJysdQHa/vopsBQG2sPsTYZeZrtniPsHPb/yINP0b
-         ne6SelIfDoZHtP1BNqbxipDuEEMzG3AiHFuvmBCqzJ+4ZIu9UNYNqDh/8+zGDhmXWG3G
-         L00wub1WnPFImRsSV9jW4+9q4uLrwZf8WaYF9PPRweP3D0vvce5Xg0xmJWybITGpedD2
-         ApzeHqAuQ/HuGj09NI9m8CCsBsM4Bj9VNTi/qywupcPVju8TUdsbANzryKkRjdYm9ekb
-         jQkxZfJqIXqdiB8hTBRVrfJwCLJY80ty4A85A/taUftDdRdK5NWnEsN75lzbJtu7jBez
-         QS8g==
-X-Gm-Message-State: APjAAAXKS5xqkV2ojM5Cardzj/qGIcHeg+vZ23vNIbOqBvFk0QXe2UE3
-        iCrPq4+KZBlqgYme9sHa6uE=
-X-Google-Smtp-Source: APXvYqyD30S+hd0zi0LGH5vSH5pXI4H6Jmrw2/vgufLPKDa5X6EfbljsT4vWOTPRqxzZ75NG5ocsbw==
-X-Received: by 2002:a17:902:7d92:: with SMTP id a18mr26228068plm.102.1571070091621;
-        Mon, 14 Oct 2019 09:21:31 -0700 (PDT)
-Received: from nishad ([2406:7400:54:c1b:38e9:5260:8522:a8f0])
-        by smtp.gmail.com with ESMTPSA id m19sm14877483pjl.28.2019.10.14.09.21.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 14 Oct 2019 09:21:31 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 21:51:20 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: dsa: sja1105: Use the correct style for SPDX License
- Identifier
-Message-ID: <20191014162116.GA5024@nishad>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jxJEiUicI74qFOY0JqtAedGKYBHKAdl/AbcmF2fazs4=;
+        b=tBux/4PxfTJi6kaez8Ug0aRed1pQFUbU0upxtBf4oOHRJS3weQ2l8rrDVEBWHPue7e
+         41kWdCh5JaepRHKxjhbTO23aal1LfJyiIfy2/lqWlYbGV7UYlQJM5OLl1btmIAEZSleC
+         pgG1urPXxzcGf7adauFsty0B3anekBiaZ8HCE/CdQ8XkMQ0V9Xvk70YsQ89QrVnlMuXS
+         TJKaFrwdYeS+m8dQYFgl9bLOENmA9Brubaq3s3mpDZHEfPfav6hq73d7eFDuBr5hFF81
+         t3U3I/MUg7J4CQ4aAOiclcUhMskDuKODmpFk840Y2k5AlIlgpe2c/zFVUwRu7tbldkgT
+         kwRA==
+X-Gm-Message-State: APjAAAVwG2r8di6GWqlURB7UQ7sH2Qv4Wr3sCG1jRPnhFG3tuowjXZXR
+        gOqWGnfpfTb7wfxFhN/9NBWNaeQ4rDygkYGvxQNwAo1b+1wGthaR5o3A5gvq52OkdGTMHDujC6Z
+        27p9q0ZmGdJlgbwKoWUJ4Z7Ui
+X-Received: by 2002:a50:9fcd:: with SMTP id c71mr28967496edf.139.1571070093513;
+        Mon, 14 Oct 2019 09:21:33 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyS0BF2XOi6OkeE1vgAAFwd+MqDj2BjN62Hn0mRr5YldhvLlYO8SB+mZW2bhY6FBZyMdUT7hQ==
+X-Received: by 2002:a50:9fcd:: with SMTP id c71mr28967464edf.139.1571070093258;
+        Mon, 14 Oct 2019 09:21:33 -0700 (PDT)
+Received: from localhost ([2a02:2450:102e:d85:877d:43b4:dd8f:144d])
+        by smtp.gmail.com with ESMTPSA id u11sm202672ejz.48.2019.10.14.09.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 09:21:32 -0700 (PDT)
+From:   Christian Kellner <ckellner@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Brauner <christian@brauner.io>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: [PATCH v4 1/2] pidfd: add NSpid entries to fdinfo
+Date:   Mon, 14 Oct 2019 18:20:32 +0200
+Message-Id: <20191014162034.2185-1-ckellner@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191011122323.7770-1-ckellner@redhat.com>
+References: <20191011122323.7770-1-ckellner@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header files related to Distributed Switch Architecture
-drivers for NXP SJA1105 series Ethernet switch support.
-It uses an expilict block comment for the SPDX License
-Identifier.
+From: Christian Kellner <christian@kellner.me>
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+Currently, the fdinfo file contains the Pid field which shows the
+pid a given pidfd refers to in the pid namespace of the procfs
+instance. If pid namespaces are configured, also show an NSpid field
+for easy retrieval of the pid in all descendant pid namespaces. If
+the pid namespace of the process is not a descendant of the pid
+namespace of the procfs instance 0 will be shown as its first NSpid
+entry and no other entries will be shown. Add a block comment to
+pidfd_show_fdinfo with a detailed explanation of Pid and NSpid fields.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Christian Kellner <christian@kellner.me>
 ---
-Changes in v2:
-  - Modify the commit message to reflect the changes done.
-  - Correct some indentation errors.
----
- drivers/net/dsa/sja1105/sja1105.h                | 4 ++--
- drivers/net/dsa/sja1105/sja1105_dynamic_config.h | 4 ++--
- drivers/net/dsa/sja1105/sja1105_ptp.h            | 4 ++--
- drivers/net/dsa/sja1105/sja1105_static_config.h  | 4 ++--
- drivers/net/dsa/sja1105/sja1105_tas.h            | 4 ++--
- 5 files changed, 10 insertions(+), 10 deletions(-)
+Changes in v4:
+- Reworked to properly handle the case where the pidfd is from a
+  different branch in the pid namespace hierarchy; also add block
+  comment with an in-depth explanation (Christian Brauner)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 8681ff9d1a76..b0dada13c377 100644
---- a/drivers/net/dsa/sja1105/sja1105.h
-+++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Copyright (c) 2018, Sensor-Technik Wiedemann GmbH
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018, Sensor-Technik Wiedemann GmbH
-  * Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
-  */
- #ifndef _SJA1105_H
-diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.h b/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
-index 740dadf43f01..1fc0d13dc623 100644
---- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
-+++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-  */
- #ifndef _SJA1105_DYNAMIC_CONFIG_H
- #define _SJA1105_DYNAMIC_CONFIG_H
-diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.h b/drivers/net/dsa/sja1105/sja1105_ptp.h
-index af456b0a4d27..394e12a6ad59 100644
---- a/drivers/net/dsa/sja1105/sja1105_ptp.h
-+++ b/drivers/net/dsa/sja1105/sja1105_ptp.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-  */
- #ifndef _SJA1105_PTP_H
- #define _SJA1105_PTP_H
-diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
-index 7f87022a2d61..f4a5c5c04311 100644
---- a/drivers/net/dsa/sja1105/sja1105_static_config.h
-+++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: BSD-3-Clause
-- * Copyright (c) 2016-2018, NXP Semiconductors
-+/* SPDX-License-Identifier: BSD-3-Clause */
-+/* Copyright (c) 2016-2018, NXP Semiconductors
-  * Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
-  */
- #ifndef _SJA1105_STATIC_CONFIG_H
-diff --git a/drivers/net/dsa/sja1105/sja1105_tas.h b/drivers/net/dsa/sja1105/sja1105_tas.h
-index 0b803c30e640..0aad212d88b2 100644
---- a/drivers/net/dsa/sja1105/sja1105_tas.h
-+++ b/drivers/net/dsa/sja1105/sja1105_tas.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-  */
- #ifndef _SJA1105_TAS_H
- #define _SJA1105_TAS_H
+ kernel/fork.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index bcdf53125210..782986962d47 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1695,12 +1695,63 @@ static int pidfd_release(struct inode *inode, struct file *file)
+ }
+ 
+ #ifdef CONFIG_PROC_FS
++/**
++ * pidfd_show_fdinfo - print information about a pidfd
++ * @m: proc fdinfo file
++ * @f: file referencing a pidfd
++ *
++ * Pid:
++ * This function will print the pid that a given pidfd refers to in the
++ * pid namespace of the procfs instance.
++ * If the pid namespace of the process is not a descendant of the pid
++ * namespace of the procfs instance 0 will be shown as its pid. This is
++ * similar to calling getppid() on a process whose parent is outside of
++ * its pid namespace.
++ *
++ * NSpid:
++ * If pid namespaces are supported then this function will also print
++ * the pid of a given pidfd refers to for all descendant pid namespaces
++ * starting from the current pid namespace of the instance, i.e. the
++ * Pid field and the first entry in the NSpid field will be identical.
++ * If the pid namespace of the process is not a descendant of the pid
++ * namespace of the procfs instance 0 will be shown as its first NSpid
++ * entry and no others will be shown.
++ * Note that this differs from the Pid and NSpid fields in
++ * /proc/<pid>/status where Pid and NSpid are always shown relative to
++ * the  pid namespace of the procfs instance. The difference becomes
++ * obvious when sending around a pidfd between pid namespaces from a
++ * different branch of the tree, i.e. where no ancestoral relation is
++ * present between the pid namespaces:
++ * - create two new pid namespaces ns1 and ns2 in the initial pid
++ *   namespace (also take care to create new mount namespaces in the
++ *   new pid namespace and mount procfs)
++ * - create a process with a pidfd in ns1
++ * - send pidfd from ns1 to ns2
++ * - read /proc/self/fdinfo/<pidfd> and observe that both Pid and NSpid
++ *   have exactly one entry, which is 0
++ */
+ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ {
+ 	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+ 	struct pid *pid = f->private_data;
++	pid_t nr = pid_nr_ns(pid, ns);
++
++	seq_put_decimal_ull(m, "Pid:\t", nr);
+ 
+-	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
++#ifdef CONFIG_PID_NS
++	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
++	if (nr) {
++		int i;
++
++		/* If nr is non-zero it means that 'pid' is valid and that
++		 * ns, i.e. the pid namespace associated with the procfs
++		 * instance, is in the pid namespace hierarchy of pid.
++		 * Start at one below the already printed level.
++		 */
++		for (i = ns->level + 1; i <= pid->level; i++)
++			seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
++	}
++#endif
+ 	seq_putc(m, '\n');
+ }
+ #endif
 -- 
-2.17.1
+2.21.0
 
