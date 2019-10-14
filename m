@@ -2,236 +2,113 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F37EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6C8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A5820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1360420873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhfeBhIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfJNKgk (ORCPT
+        id S1731535AbfJNKhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:36:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61401 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731249AbfJNKgj (ORCPT
+        Mon, 14 Oct 2019 06:37:00 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33822 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731457AbfJNKg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:36:39 -0400
-X-UUID: 1b6304880c8042f7a27372ca13839b5b-20191014
-X-UUID: 1b6304880c8042f7a27372ca13839b5b-20191014
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2088515174; Mon, 14 Oct 2019 18:36:35 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 14 Oct 2019 18:36:31 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 14 Oct 2019 18:36:31 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH 1/2] kasan: detect negative size in memory operation function
-Date:   Mon, 14 Oct 2019 18:36:32 +0800
-Message-ID: <20191014103632.17930-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 14 Oct 2019 06:36:59 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 3so24791177qta.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 03:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=26plC+LB/ET6lKUK8GUr/NZh4YTG4I5vCBM0xWKfjSY=;
+        b=vhfeBhIbqctA+sxvOa8rDMgMZA0l1qMP0sDE3KgO56Y6lc3OpphV7fkCxySXu6yuf0
+         zQI3csG/xFqaWpTB1334kqSZvke3KFNRZYH+iOzLeYF3LT0sw39+f3oVcoWI/Kv5yeV/
+         nNxqTAO+Kkfu0gzhK+V47J7dgvcAuP4c770wVb5w76FXzfs6pyIY8mljaRNp6JX/TsgU
+         uSpYNOzzWshBvP5PbZKMF4IAnIEEvTr8NIlBi/AY3fRAdB+qU1REmKvrl1AY0eM9iCWI
+         gm54+mmfq7mVRBq78QlBBUDV44/ghCCEpEvb32E2HuFldPnFvz+sBUrhiU9wVri71POt
+         YM6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=26plC+LB/ET6lKUK8GUr/NZh4YTG4I5vCBM0xWKfjSY=;
+        b=ic0/BmZXOyJkwprJYXhmtXHz3HN/kZIfqR3VG7RjLOJc2pI5lTIDXvdkJhVYgTakj2
+         nkl5bKUBNRkNFX0vJHCvUJIxROHxduEhwgjPQgA//qIz3l1S6OcKp+Z9+dAdY51m6II6
+         UXQ35guDCW+CLv9kDfCOrEQbxMK0FseZSx9ooQoklbDBOleXtqoXsuA9cXTAWxobdQBc
+         cC86P66/fp5fWP05iuY33z72UM82fphh0531N3pgyVPKMiVS6CONqrvLaJWysT8a5VbT
+         YEGevzpcCTS7Gp2+3zCsZGaaRaCgzF3n5UMUSuN0hd+ryCzrYOS31e5ddNIixJ8R0sCM
+         eUrw==
+X-Gm-Message-State: APjAAAX3tGIX83MD5eH+6nOj05E9/jvdViG/tv62poV5g3qifHBqIxNz
+        j88tmuSuWRBR8pw+4PdlfqtcBVj+Rctwm6bw6Lpkjw==
+X-Google-Smtp-Source: APXvYqwTjnC0ebjhJ3BkDHAXlucgRKIkCIRgkmsqM/V/dciQe1QoV4OVLkh9U5GxaZS3jwgbGp4caX/J7J0IoKwv77k=
+X-Received: by 2002:ac8:37e8:: with SMTP id e37mr30909144qtc.57.1571049418182;
+ Mon, 14 Oct 2019 03:36:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20191014103148.17816-1-walter-zh.wu@mediatek.com>
+In-Reply-To: <20191014103148.17816-1-walter-zh.wu@mediatek.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 14 Oct 2019 12:36:45 +0200
+Message-ID: <CACT4Y+aSybD6Z0YHuhbaTKK+fd4c3t4z8WneYdRRqA4N-G0fkA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] fix the missing underflow in memory operation function
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN missed detecting size is negative numbers in memset(), memcpy(),
-and memmove(), it will cause out-of-bounds bug, so needs to be detected
-by KASAN.
+On Mon, Oct 14, 2019 at 12:32 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>
+> The patchsets help to produce KASAN report when size is negative numbers
+> in memory operation function. It is helpful for programmer to solve the
+> undefined behavior issue. Patch 1 based on Dmitry's review and
+> suggestion, patch 2 is a test in order to verify the patch 1.
 
-If size is negative numbers, then it has three reasons to be
-defined as heap-out-of-bounds bug type.
-1) Casting negative numbers to size_t would indeed turn up as
-   a large size_t and its value will be larger than ULONG_MAX/2,
-   so that this can qualify as out-of-bounds.
-2) If KASAN has new bug type and user-space passes negative size,
-   then there are duplicate reports. So don't produce new bug type
-   in order to prevent duplicate reports by some systems (e.g. syzbot)
-   to report the same bug twice.
-3) When size is negative numbers, it may be passed from user-space.
-   So we always print heap-out-of-bounds in order to prevent that
-   kernel-space and user-space have the same bug but have duplicate
-   reports.
+Hi Walter,
 
-KASAN report:
+I only received this cover letter, but not the actual patches. I also
+don't see them in the group:
+https://groups.google.com/forum/#!forum/kasan-dev
+nor on internet. Have you mailed them? Where are they?
 
- BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
- Read of size 18446744073709551608 at addr ffffff8069660904 by task cat/72
-
- CPU: 2 PID: 72 Comm: cat Not tainted 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
- Hardware name: linux,dummy-virt (DT)
- Call trace:
-  dump_backtrace+0x0/0x288
-  show_stack+0x14/0x20
-  dump_stack+0x10c/0x164
-  print_address_description.isra.9+0x68/0x378
-  __kasan_report+0x164/0x1a0
-  kasan_report+0xc/0x18
-  check_memory_region+0x174/0x1d0
-  memmove+0x34/0x88
-  kmalloc_memmove_invalid_size+0x70/0xa0
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
-
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-Reported -by: Dmitry Vyukov <dvyukov@google.com>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
----
- mm/kasan/common.c         | 13 ++++++++-----
- mm/kasan/generic.c        |  5 +++++
- mm/kasan/generic_report.c | 18 ++++++++++++++++++
- mm/kasan/tags.c           |  5 +++++
- mm/kasan/tags_report.c    | 18 ++++++++++++++++++
- 5 files changed, 54 insertions(+), 5 deletions(-)
-
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6814d6d6a023..6ef0abd27f06 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
--	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memset(addr, c, len);
- }
-@@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
- #undef memmove
- void *memmove(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	!check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memmove(dest, src, len);
- }
-@@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t len)
- #undef memcpy
- void *memcpy(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	!check_memory_region((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memcpy(dest, src, len);
- }
-diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-index 616f9dd82d12..02148a317d27 100644
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	if (unlikely((void *)addr <
- 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
- 		kasan_report(addr, size, write, ret_ip);
-diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-index 36c645939bc9..52a92c7db697 100644
---- a/mm/kasan/generic_report.c
-+++ b/mm/kasan/generic_report.c
-@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- 	if (addr_has_shadow(info->access_addr))
- 		return get_shadow_bug_type(info);
- 	return get_wild_bug_type(info);
-diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-index 0e987c9ca052..b829535a3ad7 100644
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	tag = get_tag((const void *)addr);
- 
- 	/*
-diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-index 969ae08f59d7..f7ae474aef3a 100644
---- a/mm/kasan/tags_report.c
-+++ b/mm/kasan/tags_report.c
-@@ -36,6 +36,24 @@
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
- 	struct kasan_alloc_meta *alloc_meta;
- 	struct kmem_cache *cache;
--- 
-2.18.0
-
+> [1]https://bugzilla.kernel.org/show_bug.cgi?id=199341
+> [2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/
+>
+> Walter Wu (2):
+> kasan: detect negative size in memory operation function
+> kasan: add test for invalid size in memmove
+>
+> ---
+>  lib/test_kasan.c          | 18 ++++++++++++++++++
+>  mm/kasan/common.c         | 13 ++++++++-----
+>  mm/kasan/generic.c        |  5 +++++
+>  mm/kasan/generic_report.c | 18 ++++++++++++++++++
+>  mm/kasan/tags.c           |  5 +++++
+>  mm/kasan/tags_report.c    | 17 +++++++++++++++++
+>  6 files changed, 71 insertions(+), 5 deletions(-)
+>
+> --
+> 2.18.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191014103148.17816-1-walter-zh.wu%40mediatek.com.
