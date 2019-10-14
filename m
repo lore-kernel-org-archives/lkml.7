@@ -2,94 +2,101 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186DCC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BDAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E738921835
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:53:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="cRxAVTCL"
+	by mail.kernel.org (Postfix) with ESMTP id EE3EA217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbfJNOxm (ORCPT
+        id S1733023AbfJNOzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:53:42 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38648 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733085AbfJNOxl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:53:41 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j31so25809066qta.5
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PW4dLGOu0G6vmgzC0OiOGD0cErQ2nKSsOL/RWiAFO5U=;
-        b=cRxAVTCLGwQVzpxkkGI3xpEq9eB35FTosT9zUTaFO98lmY9LYe61TmdjvWvNyq1bF1
-         fU+caLmvr2eX60OFJmQQXudIZ/yvbE7rChdr2JJ4CJYl+H4Fx8SH+3ktrWQ0v+g8stPQ
-         t6VAd5zuydGWSKG+CaJ9HMtwNsDy74/VQqVtBcehCw3J3NFVldOR40wUsh3Sl0yx2rvB
-         Mdpk3RLXgsX7HaZSsRz9SdkvFEfPJMaYy6mFAtvQsppmX7yifZOszzgtwI+i1lR/pdbx
-         xrlXvqU5th1+RSDNsPdu836nIQDIpQepahEuXF/Jny8jEm4vBMNMurEZCQGvGrrlRzQM
-         WIXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PW4dLGOu0G6vmgzC0OiOGD0cErQ2nKSsOL/RWiAFO5U=;
-        b=iTZG5LuHMC8T9/VmwNV69+n0lwDENSnl9NG6vra2NO13y785DVk2UETMA5MEL1w6US
-         in9m7jPMxogjbwbRKb4f066y9dbx512rkuKexxUdGDMkXvD5rAEqZzO11ty4VmAf1gfD
-         l2QpYEPQq1jTLuvupHIqs9OqHV63nwzCRVS5oTbh4PrXZgUgb2pw8RSBohn45HwDR1aS
-         W6nplwwzV8Po53UjGcx4YTys+AGVTS4ruN/vSXRM6+gcmtOlFFmsjIH8WyYaqigufYvT
-         9xutTHbJ5KUPn0aVLQ0RSXH0gnLb5heu3RO/RD9Xv0u2aNnfKNfgdDC/YoKSLkE3TxZL
-         lcZA==
-X-Gm-Message-State: APjAAAUsfCmqGAI6/Ilp8smNN6SWtBv+dju0Om616GxcUdFI8oH7kN8L
-        5k8YI5vt4Aw6oC9NPVy4VBu3oHUg3Sc=
-X-Google-Smtp-Source: APXvYqyjHl+VvE+l5oagDo8fcPwf+f3sMtn5/JVWfT9V7LYxkEutHjZ5jV7ENvkRMxVpMDHTN/tlYQ==
-X-Received: by 2002:ac8:29c8:: with SMTP id 8mr31511933qtt.32.1571064821043;
-        Mon, 14 Oct 2019 07:53:41 -0700 (PDT)
-Received: from soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net ([40.117.208.181])
-        by smtp.gmail.com with ESMTPSA id h68sm7959128qkd.35.2019.10.14.07.53.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 07:53:40 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 14:53:38 +0000
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH] arm64: hibernate: check pgd table allocation
-Message-ID: <20191014145338.hc7dm6ypzvzrgxrw@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
-References: <20191014144824.159061-1-pasha.tatashin@soleen.com>
+        Mon, 14 Oct 2019 10:55:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36918 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731121AbfJNOzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 10:55:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8EE99BE43;
+        Mon, 14 Oct 2019 14:55:37 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 16:55:52 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 3/4] i2c: smbus: Add a way to instantiate SPD EEPROMs
+ automatically
+Message-ID: <20191014165552.1e8ddedc@endymion>
+In-Reply-To: <201910141823.bXxWHSkl%lkp@intel.com>
+References: <20191014113950.1f989ba6@endymion>
+        <201910141823.bXxWHSkl%lkp@intel.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014144824.159061-1-pasha.tatashin@soleen.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-14 10:48:24, Pavel Tatashin wrote:
-> There is a bug in create_safe_exec_page(), when page table is allocated
-> it is not checked that table is allocated successfully:
+On Mon, 14 Oct 2019 18:21:50 +0800, kbuild test robot wrote:
+> Hi Jean,
 > 
-> But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).  Check that
-> allocation was successful.
+> I love your patch! Perhaps something to improve:
 > 
-> Fixes: 82869ac57b5d ("arm64: kernel: Add support for hibernate/suspend-to-disk")
+> [auto build test WARNING on linus/master]
+> [cannot apply to v5.4-rc3 next-20191011]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> url:    https://github.com/0day-ci/linux/commits/Jean-Delvare/Instantiate-SPD-EEPROMs-at-boot-on-x86/20191014-174252
+> config: sparc64-allmodconfig (attached as .config)
+> compiler: sparc64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=sparc64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from drivers/i2c/i2c-core-base.c:24:0:
+>    include/linux/i2c-smbus.h: In function 'i2c_register_spd':
+> >> include/linux/i2c-smbus.h:52:9: warning: 'return' with a value, in function returning void  
+>      return 0;
+>             ^
+>    include/linux/i2c-smbus.h:50:13: note: declared here
+>     static void i2c_register_spd(struct i2c_adapter *adap)
+>                 ^~~~~~~~~~~~~~~~
+>    In file included from drivers/i2c/i2c-core-base.c:24:0:
+>    At top level:
+>    include/linux/i2c-smbus.h:50:13: warning: 'i2c_register_spd' defined but not used [-Wunused-function]
+> 
+> vim +/return +52 include/linux/i2c-smbus.h
+> 
+>     46	
+>     47	#if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
+>     48	void i2c_register_spd(struct i2c_adapter *adap);
+>     49	#else
+>     50	static void i2c_register_spd(struct i2c_adapter *adap)
+>     51	{
+>   > 52		return 0;  
+>     53	}
+>     54	#endif
+>     55	
 
-Forgot to include nit from James Morse: remove empty lines between tags.
-If required, I will send out an updated patch, otherwise it can be taken
-as is.
+Fixed, thanks Elliot.
 
-Thank you,
-Pasha
+-- 
+Jean Delvare
+SUSE L3 Support
