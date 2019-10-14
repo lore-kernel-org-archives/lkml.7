@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F8EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF0DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A6020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A753020873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbfJNSi7 (ORCPT
+        id S1732080AbfJNSjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:38:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40321 "EHLO
+        Mon, 14 Oct 2019 14:39:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40322 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731326AbfJNSi6 (ORCPT
+        with ESMTP id S1731370AbfJNSi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 14 Oct 2019 14:38:58 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iK5F5-0005ah-9b; Mon, 14 Oct 2019 20:38:51 +0200
+        id 1iK5F7-0005bM-Mt; Mon, 14 Oct 2019 20:38:53 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D9E1F1C0482;
-        Mon, 14 Oct 2019 20:38:47 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 18:38:47 -0000
-From:   "tip-bot2 for Zenghui Yu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 44F311C0489;
+        Mon, 14 Oct 2019 20:38:48 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 18:38:48 -0000
+From:   "tip-bot2 for Talel Shenhar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/gic-v3: Fix GIC_LINE_NR accessor
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+Subject: [tip: irq/urgent] irqchip/al-fic: Add support for irq retrigger
+Cc:     Talel Shenhar <talel@amazon.com>, Marc Zyngier <maz@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <1568789850-14080-1-git-send-email-yuzenghui@huawei.com>
-References: <1568789850-14080-1-git-send-email-yuzenghui@huawei.com>
+In-Reply-To: <1568018358-18985-1-git-send-email-talel@amazon.com>
+References: <1568018358-18985-1-git-send-email-talel@amazon.com>
 MIME-Version: 1.0
-Message-ID: <157107832781.12254.2548879177162595204.tip-bot2@tip-bot2>
+Message-ID: <157107832821.12254.3146433351737655073.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,39 +56,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     c107d613f9204ff9c7624c229938153d7492c56e
-Gitweb:        https://git.kernel.org/tip/c107d613f9204ff9c7624c229938153d7492c56e
-Author:        Zenghui Yu <yuzenghui@huawei.com>
-AuthorDate:    Wed, 18 Sep 2019 06:57:30 
+Commit-ID:     9c426b770bd088f18899f836093d810a83b59b98
+Gitweb:        https://git.kernel.org/tip/9c426b770bd088f18899f836093d810a83b59b98
+Author:        Talel Shenhar <talel@amazon.com>
+AuthorDate:    Mon, 09 Sep 2019 11:39:18 +03:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Wed, 18 Sep 2019 11:42:23 +01:00
+CommitterDate: Mon, 09 Sep 2019 18:11:47 +01:00
 
-irqchip/gic-v3: Fix GIC_LINE_NR accessor
+irqchip/al-fic: Add support for irq retrigger
 
-As per GIC spec, ITLinesNumber indicates the maximum SPI INTID that
-the GIC implementation supports. And the maximum SPI INTID an
-implementation might support is 1019 (field value 11111).
+Introduce interrupts retrigger support for Amazon's Annapurna Labs Fabric
+Interrupt Controller.
 
-max(GICD_TYPER_SPIS(...), 1020) is not what we actually want for
-GIC_LINE_NR. Fix it to min(GICD_TYPER_SPIS(...), 1020).
-
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Talel Shenhar <talel@amazon.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1568789850-14080-1-git-send-email-yuzenghui@huawei.com
+Link: https://lore.kernel.org/r/1568018358-18985-1-git-send-email-talel@amazon.com
 ---
- drivers/irqchip/irq-gic-v3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-al-fic.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 422664a..1edc993 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -59,7 +59,7 @@ static struct gic_chip_data gic_data __read_mostly;
- static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+diff --git a/drivers/irqchip/irq-al-fic.c b/drivers/irqchip/irq-al-fic.c
+index 1a57cee..0b0a737 100644
+--- a/drivers/irqchip/irq-al-fic.c
++++ b/drivers/irqchip/irq-al-fic.c
+@@ -15,6 +15,7 @@
  
- #define GIC_ID_NR	(1U << GICD_TYPER_ID_BITS(gic_data.rdists.gicd_typer))
--#define GIC_LINE_NR	max(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
-+#define GIC_LINE_NR	min(GICD_TYPER_SPIS(gic_data.rdists.gicd_typer), 1020U)
- #define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
+ /* FIC Registers */
+ #define AL_FIC_CAUSE		0x00
++#define AL_FIC_SET_CAUSE	0x08
+ #define AL_FIC_MASK		0x10
+ #define AL_FIC_CONTROL		0x28
  
- /*
+@@ -126,6 +127,16 @@ static void al_fic_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(irqchip, desc);
+ }
+ 
++static int al_fic_irq_retrigger(struct irq_data *data)
++{
++	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
++	struct al_fic *fic = gc->private;
++
++	writel_relaxed(BIT(data->hwirq), fic->base + AL_FIC_SET_CAUSE);
++
++	return 1;
++}
++
+ static int al_fic_register(struct device_node *node,
+ 			   struct al_fic *fic)
+ {
+@@ -159,6 +170,7 @@ static int al_fic_register(struct device_node *node,
+ 	gc->chip_types->chip.irq_unmask = irq_gc_mask_clr_bit;
+ 	gc->chip_types->chip.irq_ack = irq_gc_ack_clr_bit;
+ 	gc->chip_types->chip.irq_set_type = al_fic_irq_set_type;
++	gc->chip_types->chip.irq_retrigger = al_fic_irq_retrigger;
+ 	gc->chip_types->chip.flags = IRQCHIP_SKIP_SET_WAKE;
+ 	gc->private = fic;
+ 
