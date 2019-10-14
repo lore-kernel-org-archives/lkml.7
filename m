@@ -2,172 +2,85 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975CBC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E148AECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0981120650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:02:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="CrCPART2"
+	by mail.kernel.org (Postfix) with ESMTP id BAFC52083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571040145;
+	bh=gjZ84eYSKyLRBQDVS9KkAvi+i1YmiBvyGp7N1fgos5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Jkue9D+/2nZqS74yKDLi0/0dPyc37M9LA2+J7BN7H7CKysdBq54UvNJfgt6FnUmX
+	 Ijp+YhKhW61oNteDgUZjoSaGJtO9WqkyP08aOrlNKetY5sgoSclpQAj/KhHrpZNUva
+	 ZJ949PqMTrwo7iEoTREqrfVNiqCO1M3rNhxuX504=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfJNICD (ORCPT
+        id S1730142AbfJNICY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:02:03 -0400
-Received: from fd.dlink.ru ([178.170.168.18]:60580 "EHLO fd.dlink.ru"
+        Mon, 14 Oct 2019 04:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfJNICD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:02:03 -0400
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 3D6051B20A35; Mon, 14 Oct 2019 11:01:59 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 3D6051B20A35
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1571040119; bh=gdm2EEbYYtK0LBeSCJG8+CJkJpdqV/u9GSpbaHJHXVk=;
-        h=From:To:Cc:Subject:Date;
-        b=CrCPART2dsE7/fDiOhL8iGBGyfp1e8msUlVn45j7mWrcDNzdgVTSPlO25RKFpwdtB
-         YQ22QeZoaLctDSwmRJjdG1ng730uqlN9gseD3/9mysbHTt4ISUXAe/Cha+yDqYJYW7
-         CcMTdndFm60ZkVXL1RmCEPgprtc/UOTdcJK/Fc74=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 0A4B91B202B0;
-        Mon, 14 Oct 2019 11:01:52 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0A4B91B202B0
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 492221B217C5;
-        Mon, 14 Oct 2019 11:01:50 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.126])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 14 Oct 2019 11:01:50 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
-Date:   Mon, 14 Oct 2019 11:00:33 +0300
-Message-Id: <20191014080033.12407-1-alobakin@dlink.ru>
-X-Mailer: git-send-email 2.23.0
+        id S1729928AbfJNICY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:02:24 -0400
+Received: from localhost (unknown [122.167.124.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCB2E20650;
+        Mon, 14 Oct 2019 08:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571040143;
+        bh=gjZ84eYSKyLRBQDVS9KkAvi+i1YmiBvyGp7N1fgos5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KvNVoXYnE0Q/XbEnPebDW7zr35L3h2rMEjoshhFGj9G1vtitr68yRsxgzF774tF9v
+         gHgeSDlq6C6KyhQsnW5FfGO2DdV4mB7KouXRCTwqOOcHXypFbfInX0bYAf5/XhCw2x
+         QRKuqxaIJSz4+Zhoma8EH8FyaZ9z0wAbEWjERpzo=
+Date:   Mon, 14 Oct 2019 13:32:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "J.Lambrecht@TELEVIC.com" <J.Lambrecht@televic.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] dmaengine: imx-sdma: fix kernel hangs with SLUB slab
+ allocator
+Message-ID: <20191014080215.GL2654@vkoul-mobl>
+References: <1569347584-3478-1-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569347584-3478-1-git-send-email-yibin.gong@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
-skbs") made use of listified skb processing for the users of
-napi_gro_frags().
-The same technique can be used in a way more common napi_gro_receive()
-to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers
-including gro_cells and mac80211 users.
-This slightly changes the return value in cases where skb is being
-dropped by the core stack, but it seems to have no impact on related
-drivers' functionality.
-gro_normal_batch is left untouched as it's very individual for every
-single system configuration and might be tuned in manual order to
-achieve an optimal performance.
+On 24-09-19, 09:49, Robin Gong wrote:
+> Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+> (41) exceed the size of structure sdma_script_start_addrs(40),
+> thus cause memory corrupt such as slob block header so that kernel
+> trap into while() loop forever in slob_free(). Please refer to below
+> code piece in imx-sdma.c:
+> for (i = 0; i < sdma->script_number; i++)
+> 	if (addr_arr[i] > 0)
+> 		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
+> That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
+> support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+> (38->41 3 scripts added) not align with script number added in
+> sdma_script_start_addrs(2 scripts).
 
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Acked-by: Edward Cree <ecree@solarflare.com>
----
- net/core/dev.c | 49 +++++++++++++++++++++++++------------------------
- 1 file changed, 25 insertions(+), 24 deletions(-)
+Applied, thanks
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 8bc3dce71fc0..74f593986524 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -5884,6 +5884,26 @@ struct packet_offload *gro_find_complete_by_type(__be16 type)
- }
- EXPORT_SYMBOL(gro_find_complete_by_type);
- 
-+/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
-+static void gro_normal_list(struct napi_struct *napi)
-+{
-+	if (!napi->rx_count)
-+		return;
-+	netif_receive_skb_list_internal(&napi->rx_list);
-+	INIT_LIST_HEAD(&napi->rx_list);
-+	napi->rx_count = 0;
-+}
-+
-+/* Queue one GRO_NORMAL SKB up for list processing. If batch size exceeded,
-+ * pass the whole batch up to the stack.
-+ */
-+static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
-+{
-+	list_add_tail(&skb->list, &napi->rx_list);
-+	if (++napi->rx_count >= gro_normal_batch)
-+		gro_normal_list(napi);
-+}
-+
- static void napi_skb_free_stolen_head(struct sk_buff *skb)
- {
- 	skb_dst_drop(skb);
-@@ -5891,12 +5911,13 @@ static void napi_skb_free_stolen_head(struct sk_buff *skb)
- 	kmem_cache_free(skbuff_head_cache, skb);
- }
- 
--static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
-+static gro_result_t napi_skb_finish(struct napi_struct *napi,
-+				    struct sk_buff *skb,
-+				    gro_result_t ret)
- {
- 	switch (ret) {
- 	case GRO_NORMAL:
--		if (netif_receive_skb_internal(skb))
--			ret = GRO_DROP;
-+		gro_normal_one(napi, skb);
- 		break;
- 
- 	case GRO_DROP:
-@@ -5928,7 +5949,7 @@ gro_result_t napi_gro_receive(struct napi_struct *napi, struct sk_buff *skb)
- 
- 	skb_gro_reset_offset(skb);
- 
--	ret = napi_skb_finish(dev_gro_receive(napi, skb), skb);
-+	ret = napi_skb_finish(napi, skb, dev_gro_receive(napi, skb));
- 	trace_napi_gro_receive_exit(ret);
- 
- 	return ret;
-@@ -5974,26 +5995,6 @@ struct sk_buff *napi_get_frags(struct napi_struct *napi)
- }
- EXPORT_SYMBOL(napi_get_frags);
- 
--/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
--static void gro_normal_list(struct napi_struct *napi)
--{
--	if (!napi->rx_count)
--		return;
--	netif_receive_skb_list_internal(&napi->rx_list);
--	INIT_LIST_HEAD(&napi->rx_list);
--	napi->rx_count = 0;
--}
--
--/* Queue one GRO_NORMAL SKB up for list processing.  If batch size exceeded,
-- * pass the whole batch up to the stack.
-- */
--static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
--{
--	list_add_tail(&skb->list, &napi->rx_list);
--	if (++napi->rx_count >= gro_normal_batch)
--		gro_normal_list(napi);
--}
--
- static gro_result_t napi_frags_finish(struct napi_struct *napi,
- 				      struct sk_buff *skb,
- 				      gro_result_t ret)
 -- 
-2.23.0
-
+~Vinod
