@@ -2,97 +2,246 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32101ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97008C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C06C20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571044859;
-	bh=momcbrNXNi6e+3v35qZhKx3FkpySK3dGpNYseptPq10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ry5Gdrv/i9BcFlRWmStm8Qmtz2xbHzIoMviVduB0q9umEMlACxrVqwnI1ieOh4vJl
-	 JEPIFHwygkzmmQv06zKka+7dreyZezazK6Dqe7fLLnOs/wCF9SOKwb6GE5A1sBj4Yd
-	 h0sfSY77av0K/TyAaAwvwS8l0gMy+s5Jzcd2KU60=
+	by mail.kernel.org (Postfix) with ESMTP id 66E6620659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:22:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="B0IQWFkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbfJNJU5 (ORCPT
+        id S1730876AbfJNJWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:20:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45887 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730656AbfJNJU4 (ORCPT
+        Mon, 14 Oct 2019 05:22:20 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54698 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730656AbfJNJWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:20:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r1so8551413pgj.12;
-        Mon, 14 Oct 2019 02:20:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z80QF2P/utfSJTosq14dGOZH3U5rnspzRIHN6J5xfow=;
-        b=jorZTQXiOxg4InwNM34RTj+HGp8ns6ZEAQ8lIGJmTY1W7sK/dLdtN+/kHo9AWSzfxA
-         q6qkIqC2NaAszGLbX+Gas/r+otb34B3WbcYD8W2Z45EVlQNDcZn5p6RO/+HtoyR7rYnN
-         U9AEdq3o8YuHyEoaCXOF7HI8XgfgZdOdVOhSy6YCEykpxl8ayOWKflp61U+VdswHlTBc
-         TGg/3FVTotloiF4hPDyFakvWxmjU2+Nq93AAqN43l6xf6LeZlZdLWyy5mCmyKNcyvNqk
-         ww4VF5SOAjU89B0eOyG16Jn1A8QnIy/vkNAcNnj0U8ip6xZkKMPcWE9PnGP/6AzRCDr3
-         Roiw==
-X-Gm-Message-State: APjAAAUwCOybWzIXVT0IY7DHaZnmQgLbgXOlo1ix9ybwKH8+0XSRiRZk
-        iNLaP39/gvRnyF+YQwbmkWQ=
-X-Google-Smtp-Source: APXvYqzOPBH0WekcHZOXSoperMZAmy+14kCD91/1ZTagF7IA+gkuA3HNJe3CMO2I1E8cjDyeEkd/Uw==
-X-Received: by 2002:a17:90a:741:: with SMTP id s1mr35956209pje.113.1571044853994;
-        Mon, 14 Oct 2019 02:20:53 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y2sm19146917pfe.126.2019.10.14.02.20.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 02:20:52 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C92B94021A; Mon, 14 Oct 2019 09:20:51 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 09:20:51 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, keescook@chromium.org,
-        yzaikin@google.com, akpm@linux-foundation.org,
-        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
-        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
-        schowdary@nvidia.com, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com, changbin.du@intel.com,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 linux-kselftest-test 0/3] kunit: support building
- core/tests as modules
-Message-ID: <20191014092051.GZ16384@42.do-not-panic.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
+        Mon, 14 Oct 2019 05:22:19 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9E9AxtX005158;
+        Mon, 14 Oct 2019 11:22:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=+UdmFryc7CqLY9wR1in6JPCFjzpSqhmUkouJfW3L6Tc=;
+ b=B0IQWFkN09Qp9sLv2p8XbH4n/Z3MiF4vRyzUS1kjQaFoKyO5WhRB3hTs0hyG6ykISRF1
+ d28rasJuSu7mUC3pNU7NenEv3i+uFjUApdi0okgZuiuBLeCwSbgRxEJr+ogwevrXka0o
+ YAHcyzylkfp0f5Rt1oj/MwKmf0asJD46tkuvOQb9A9NEF6PxdDdbsdr+pgS+5b7d/2jb
+ xLcpLS3MV57MIwKu5K/kzufDTIoRh4crgq764XdSvJHgVgKL/pipMJr59dP+Rmf1OUzi
+ Tkj17XJBotfocHrM/2qOcn6aRX5tJktI4fJk4YK8mmK2vFGH18HcpwOa1DC4J5UsmjGy xA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vk5qj1ck1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Oct 2019 11:22:04 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3FCA9100034;
+        Mon, 14 Oct 2019 11:22:03 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 21C752B8C63;
+        Mon, 14 Oct 2019 11:22:03 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 14 Oct
+ 2019 11:22:03 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 14 Oct 2019 11:22:02
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3] dt-bindings: thermal: Convert stm32 thermal bindings to json-schema
+Date:   Mon, 14 Oct 2019 11:22:00 +0200
+Message-ID: <20191014092200.24179-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-14_06:2019-10-10,2019-10-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 03:55:43PM +0100, Alan Maguire wrote:
-> The current kunit execution model is to provide base kunit functionality
-> and tests built-in to the kernel.  The aim of this series is to allow
-> building kunit itself and tests as modules.  This in turn allows a
-> simple form of selective execution; load the module you wish to test.
-> In doing so, kunit itself (if also built as a module) will be loaded as
-> an implicit dependency.
-> 
-> Because this requires a core API modification - if a module delivers
-> multiple suites, they must be declared with the kunit_test_suites()
-> macro - we're proposing this patch as a candidate to be applied to the
-> test tree before too many kunit consumers appear.  We attempt to deal
-> with existing consumers in patch 1.
+Convert the STM32 thermal binding to DT schema format using json-schema
 
-This is neat and makes sense to me. However the ordering of the patches
-seems odd. If modules depend on kunit module, then shouldn't that go
-first? Ie, we want this to be bisectable in proper order.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in v3:
+- use (GPL-2.0-only OR BSD-2-Clause) license
+- fix indentation
+- add additionalProperties: false
+- add #thermal-sensor-cells property 
 
-  Luis
+ .../bindings/thermal/st,stm32-thermal.yaml         | 79 ++++++++++++++++++++++
+ .../devicetree/bindings/thermal/stm32-thermal.txt  | 61 -----------------
+ 2 files changed, 79 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/st,stm32-thermal.yaml
+ delete mode 100644 Documentation/devicetree/bindings/thermal/stm32-thermal.txt
+
+diff --git a/Documentation/devicetree/bindings/thermal/st,stm32-thermal.yaml b/Documentation/devicetree/bindings/thermal/st,stm32-thermal.yaml
+new file mode 100644
+index 000000000000..c0f59c56003d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/st,stm32-thermal.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/st,stm32-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 digital thermal sensor (DTS) binding
++
++maintainers:
++  - David Hernandez Sanchez <david.hernandezsanchez@st.com>
++
++properties:
++  compatible:
++    const: st,stm32-thermal
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pclk
++
++  "#thermal-sensor-cells":
++    const: 0
++
++required:
++  - "#thermal-sensor-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    dts: thermal@50028000 {
++        compatible = "st,stm32-thermal";
++        reg = <0x50028000 0x100>;
++        clocks = <&rcc TMPSENS>;
++        clock-names = "pclk";
++        #thermal-sensor-cells = <0>;
++        interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++    };
++
++    thermal-zones {
++        cpu_thermal: cpu-thermal {
++            polling-delay-passive = <0>;
++            polling-delay = <0>;
++
++            thermal-sensors = <&dts>;
++            trips {
++                cpu_alert1: cpu-alert1 {
++                    temperature = <85000>;
++                    hysteresis = <0>;
++                    type = "passive";
++                };
++
++                cpu_crit: cpu-crit {
++                    temperature = <120000>;
++                    hysteresis = <0>;
++                    type = "critical";
++                };
++            };
++
++            cooling-maps {
++            };
++        };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/thermal/stm32-thermal.txt b/Documentation/devicetree/bindings/thermal/stm32-thermal.txt
+deleted file mode 100644
+index 8c0d5a4d8031..000000000000
+--- a/Documentation/devicetree/bindings/thermal/stm32-thermal.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-Binding for Thermal Sensor for STMicroelectronics STM32 series of SoCs.
+-
+-On STM32 SoCs, the Digital Temperature Sensor (DTS) is in charge of managing an
+-analog block which delivers a frequency depending on the internal SoC's
+-temperature. By using a reference frequency, DTS is able to provide a sample
+-number which can be translated into a temperature by the user.
+-
+-DTS provides interrupt notification mechanism by threshold. This mechanism
+-offers two temperature trip points: passive and critical. The first is intended
+-for passive cooling notification while the second is used for over-temperature
+-reset.
+-
+-Required parameters:
+--------------------
+-
+-compatible: 	Should be "st,stm32-thermal"
+-reg: 		This should be the physical base address and length of the
+-		sensor's registers.
+-clocks: 	Phandle of the clock used by the thermal sensor.
+-		  See: Documentation/devicetree/bindings/clock/clock-bindings.txt
+-clock-names: 	Should be "pclk" for register access clock and reference clock.
+-		  See: Documentation/devicetree/bindings/resource-names.txt
+-#thermal-sensor-cells: Should be 0. See ./thermal.txt for a description.
+-interrupts:	Standard way to define interrupt number.
+-
+-Example:
+-
+-	thermal-zones {
+-		cpu_thermal: cpu-thermal {
+-			polling-delay-passive = <0>;
+-			polling-delay = <0>;
+-
+-			thermal-sensors = <&thermal>;
+-
+-			trips {
+-				cpu_alert1: cpu-alert1 {
+-					temperature = <85000>;
+-					hysteresis = <0>;
+-					type = "passive";
+-				};
+-
+-				cpu-crit: cpu-crit {
+-					temperature = <120000>;
+-					hysteresis = <0>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-			};
+-		};
+-	};
+-
+-	thermal: thermal@50028000 {
+-		compatible = "st,stm32-thermal";
+-		reg = <0x50028000 0x100>;
+-		clocks = <&rcc TMPSENS>;
+-		clock-names = "pclk";
+-		#thermal-sensor-cells = <0>;
+-		interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+-	};
+-- 
+2.15.0
+
