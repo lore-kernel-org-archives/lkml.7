@@ -2,251 +2,100 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57C0ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE1C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42F8222BD
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBD220650
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvlM80LD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388373AbfJNVVJ (ORCPT
+        id S1731054AbfJNVZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:21:09 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21857 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387506AbfJNVVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:21:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 14:21:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="185610161"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by orsmga007.jf.intel.com with ESMTP; 14 Oct 2019 14:21:03 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     tony.luck@intel.com, bp@alien8.de, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, bberg@redhat.com
-Cc:     x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        ckellner@redhat.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal throttle messages
-Date:   Mon, 14 Oct 2019 14:21:00 -0700
-Message-Id: <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+        Mon, 14 Oct 2019 17:25:38 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36404 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729930AbfJNVZi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:25:38 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so18041645ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 14:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wJ7ap/mJ4LnJlcvrkffAc0aZKRdl3/lTtd2w5VVgMTc=;
+        b=XvlM80LDSXmna1BJMSr5a/bmzis83k48RX5xlT4Z9K98g8V5GLTTt8PvAwFY5M687C
+         PLBSSyOO5XIVomNz6DBKoWIwuu4cbQ2Nnq0ApENs0GgqowU/HaeG33u+lJOl56QUkUWX
+         T8z4L6EcQT6iT+9nWO4ttuxmwCWZJioPwud8oVqdCrIaq4xHbrDmmtW3ceMiM0OKQ5c7
+         MnyIVoLoN/Dc8/SdqXiiuTAXx0AjFg3O7lT60uXtcnt1grLBjkn95fwsckLX27KEtyfo
+         9Bl1PkjY3WMRmrdu/bx2vA1Ix9fN955h0yXVUDq6tIv41l0/DY5c70ttDk03gvPkr4Qg
+         eBIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wJ7ap/mJ4LnJlcvrkffAc0aZKRdl3/lTtd2w5VVgMTc=;
+        b=LUOhFNtLX2h8EzBgHgIxwx4aMZ9BoauyIamd+rv5ybltIvgk0AdrVX67ky6cKYmBYP
+         TnIaDgxevz5t3Fe5CnnDCiJFpLOiR/Cc+/kmyhEDrWS5zbYOj+WOuilmKXwdG7VvQebK
+         Jtz0AQdWgVnsWafEHU6+U+B+m67zEKSZa4Q6r8atwNuANAi41fZEP/Apo7T0inMQaQwW
+         x3Phv8QEJBlp5LYl00x4tEOtOYaVtkzbLfv3BQGj4ggpjUZJFkUdIfpAdMk04AtiFXmo
+         nSKnKasfILarh2nvlVqHa2opDCwtNDvc3pmAP+eWaWEUKdGgaDX24tbVkCC5Nf5sZ3v6
+         vCHQ==
+X-Gm-Message-State: APjAAAVTf26fruyXltBb/xww7ch3KreM1MZftzywAMC5twNNToAnwnDJ
+        USf8IlxzhXy9qSX0KclpHh4=
+X-Google-Smtp-Source: APXvYqwrn/wHJNPs+Z3jEe7EFcLkK+LStFk07lBcqoiLWtIOcwAWjmYTRHgxAOvVccvdGxBdPJ9T7w==
+X-Received: by 2002:a2e:9b8a:: with SMTP id z10mr20223163lji.80.1571088336158;
+        Mon, 14 Oct 2019 14:25:36 -0700 (PDT)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id m15sm4429434ljh.50.2019.10.14.14.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 14:25:35 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     linux-xtensa@linux-xtensa.org, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH v3 0/3] xtensa: fix {get,put}_user() for 64bit values
+Date:   Mon, 14 Oct 2019 14:25:10 -0700
+Message-Id: <20191014212513.17661-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some modern systems have very tight thermal tolerances. Because of this
-they may cross thermal thresholds when running normal workloads (even
-during boot). The CPU hardware will react by limiting power/frequency
-and using duty cycles to bring the temperature back into normal range.
+Hello,
 
-Thus users may see a "critical" message about the "temperature above
-threshold" which is soon followed by "temperature/speed normal". These
-messages are rate limited, but still may repeat every few minutes.
+this series fixes return value, out-of-bound stack access and value
+truncation in xtensa implementation of {get,put}_user() for 64bit
+values. It also cleans up naming of assembly parameters in
+__{get,put}_user_asm and __check_align_{1,2,4}.
 
-The solution here is to set a timeout when the temperature first exceeds
-the threshold. If the CPU returns to normal before the timeout fires,
-we skip printing any messages. If we reach the timeout, then there may be
-a real thermal issue (e.g. inoperative or blocked fan) and we print the
-message (together with a count of how many thermal events have occurred).
-A rate control method is used to avoid printing repeatedly on these broken
-systems.
+Changes v2->v3:
+- fix assembly argument constraint for error code
+- rearrange result zero-initialization for error paths in __get_user_asm
 
-Some experimentation with fans enabled showed that temperature returned
-to normal on a laptop in ~4 seconds. With fans disabled it took over 10
-seconds. Default timeout is thus set to 8 seconds, but may be changed
-with kernel boot parameter: "x86_therm_warn_delay". This default interval
-is twice of typical sampling interval for cooling using running average
-power limit from user space thermal control softwares.
+Changes v1->v2:
+- initialize result when access_ok check fails in __get_user_check
+- initialize result in __get_user_asm for unaligned access
 
-In addition a new sysfs attribute is added to show what is the maximum
-amount of time in miili-seconds the system was in throttled state. This
-will allow to change x86_therm_warn_delay, if required.
+Al Viro (1):
+  xtensa: fix {get,put}_user() for 64bit values
 
-Suggested-by: Alan Cox <alan@linux.intel.com>
-Commit-comment-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- arch/x86/kernel/cpu/mce/therm_throt.c | 94 ++++++++++++++++++++++-----
- 1 file changed, 77 insertions(+), 17 deletions(-)
+Max Filippov (2):
+  xtensa: clean up assembly arguments in uaccess macros
+  xtensa: fix type conversion in __get_user_[no]check
 
-diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
-index 6e2becf547c5..b2e9d10bef44 100644
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -47,8 +47,13 @@ struct _thermal_state {
- 	bool			new_event;
- 	int			event;
- 	u64			next_check;
-+	u64			last_interrupt_time;
-+	struct timer_list	timer;
- 	unsigned long		count;
--	unsigned long		last_count;
-+	unsigned long		max_time_ms;
-+	int			rate_control_active;
-+	int			cpu;
-+	int			level;
- };
- 
- struct thermal_state {
-@@ -121,8 +126,15 @@ define_therm_throt_device_one_ro(package_throttle_count);
- define_therm_throt_device_show_func(package_power_limit, count);
- define_therm_throt_device_one_ro(package_power_limit_count);
- 
-+define_therm_throt_device_show_func(core_throttle, max_time_ms);
-+define_therm_throt_device_one_ro(core_throttle_max_time_ms);
-+
-+define_therm_throt_device_show_func(package_throttle, max_time_ms);
-+define_therm_throt_device_one_ro(package_throttle_max_time_ms);
-+
- static struct attribute *thermal_throttle_attrs[] = {
- 	&dev_attr_core_throttle_count.attr,
-+	&dev_attr_core_throttle_max_time_ms.attr,
- 	NULL
- };
- 
-@@ -135,6 +147,19 @@ static const struct attribute_group thermal_attr_group = {
- #define CORE_LEVEL	0
- #define PACKAGE_LEVEL	1
- 
-+#define THERM_THROT_WARN_INTERVAL_MS	8000
-+static unsigned int thermal_warn_interval = THERM_THROT_WARN_INTERVAL_MS;
-+
-+static void therm_throt_active_timer_fn(struct timer_list *t)
-+{
-+	struct _thermal_state *state = from_timer(state, t, timer);
-+
-+	pr_crit("CPU%d: %s temperature is above threshold, cpu clock is throttled from last %d milli seconds (total events = %lu)\n",
-+		state->cpu,
-+		state->level == CORE_LEVEL ? "Core" : "Package",
-+		thermal_warn_interval, state->count);
-+}
-+
- /***
-  * therm_throt_process - Process thermal throttling event from interrupt
-  * @curr: Whether the condition is current or not (boolean), since the
-@@ -174,31 +199,42 @@ static void therm_throt_process(bool new_event, int event, int level)
- 
- 	old_event = state->new_event;
- 	state->new_event = new_event;
-+	state->level = level;
- 
- 	if (new_event)
- 		state->count++;
- 
- 	if (time_before64(now, state->next_check) &&
--			state->count != state->last_count)
-+			  state->rate_control_active)
- 		return;
- 
-+	state->rate_control_active = 0;
-+
- 	state->next_check = now + CHECK_INTERVAL;
--	state->last_count = state->count;
- 
--	/* if we just entered the thermal event */
--	if (new_event) {
--		if (event == THERMAL_THROTTLING_EVENT)
--			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
--				this_cpu,
--				level == CORE_LEVEL ? "Core" : "Package",
--				state->count);
--		return;
--	}
--	if (old_event) {
--		if (event == THERMAL_THROTTLING_EVENT)
--			pr_info("CPU%d: %s temperature/speed normal\n", this_cpu,
--				level == CORE_LEVEL ? "Core" : "Package");
--		return;
-+	if (event == THERMAL_THROTTLING_EVENT) {
-+		if (new_event && !state->last_interrupt_time) {
-+			state->last_interrupt_time = now;
-+			if (!timer_pending(&state->timer))
-+				mod_timer(&state->timer,
-+					  (now + msecs_to_jiffies(thermal_warn_interval)));
-+		} else if (old_event && state->last_interrupt_time) {
-+			unsigned long throttle_time;
-+			int ret;
-+
-+			ret = del_timer(&state->timer);
-+			throttle_time = jiffies_delta_to_msecs(now - state->last_interrupt_time);
-+			if (!ret) {
-+				pr_crit("CPU%d: %s temperature/speed normal (total events = %lu, throttled time: %lu milli seconds)\n",
-+					state->cpu,
-+					state->level == CORE_LEVEL ? "Core" : "Package",
-+					state->count, throttle_time);
-+				state->rate_control_active = 1;
-+			}
-+			if (throttle_time > state->max_time_ms)
-+				state->max_time_ms = throttle_time;
-+			state->last_interrupt_time = 0;
-+		}
- 	}
- }
- 
-@@ -252,6 +288,9 @@ static int thermal_throttle_add_dev(struct device *dev, unsigned int cpu)
- 		err = sysfs_add_file_to_group(&dev->kobj,
- 					      &dev_attr_package_throttle_count.attr,
- 					      thermal_attr_group.name);
-+		err = sysfs_add_file_to_group(&dev->kobj,
-+					      &dev_attr_package_throttle_max_time_ms.attr,
-+					      thermal_attr_group.name);
- 		if (cpu_has(c, X86_FEATURE_PLN) && int_pln_enable)
- 			err = sysfs_add_file_to_group(&dev->kobj,
- 					&dev_attr_package_power_limit_count.attr,
-@@ -269,15 +308,28 @@ static void thermal_throttle_remove_dev(struct device *dev)
- /* Get notified when a cpu comes on/off. Be hotplug friendly. */
- static int thermal_throttle_online(unsigned int cpu)
- {
-+	struct thermal_state *state = &per_cpu(thermal_state, cpu);
- 	struct device *dev = get_cpu_device(cpu);
- 
-+	state->package_throttle.cpu = cpu;
-+	state->core_throttle.cpu = cpu;
-+
-+	timer_setup(&state->package_throttle.timer, therm_throt_active_timer_fn, 0);
-+	timer_setup(&state->core_throttle.timer, therm_throt_active_timer_fn, 0);
-+
- 	return thermal_throttle_add_dev(dev, cpu);
- }
- 
- static int thermal_throttle_offline(unsigned int cpu)
- {
-+	struct thermal_state *state = &per_cpu(thermal_state, cpu);
- 	struct device *dev = get_cpu_device(cpu);
- 
-+	del_timer(&state->package_throttle.timer);
-+	del_timer(&state->core_throttle.timer);
-+	state->package_throttle.last_interrupt_time = 0;
-+	state->core_throttle.last_interrupt_time = 0;
-+
- 	thermal_throttle_remove_dev(dev);
- 	return 0;
- }
-@@ -522,3 +574,11 @@ void intel_init_thermal(struct cpuinfo_x86 *c)
- 	/* enable thermal throttle processing */
- 	atomic_set(&therm_throt_en, 1);
- }
-+
-+static int __init therm_warn_delay(char *str)
-+{
-+	get_option(&str, &thermal_warn_interval);
-+
-+	return 0;
-+}
-+early_param("x86_therm_warn_delay", therm_warn_delay);
+ arch/xtensa/include/asm/uaccess.h | 94 +++++++++++++++++--------------
+ 1 file changed, 53 insertions(+), 41 deletions(-)
+
 -- 
-2.17.2
+2.20.1
 
