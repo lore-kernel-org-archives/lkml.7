@@ -2,220 +2,154 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC12FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA36C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A780320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47A021848
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XBpnqvo/"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="luLNBxuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbfJNPde (ORCPT
+        id S2387586AbfJNPeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:33:34 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40853 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbfJNPde (ORCPT
+        Mon, 14 Oct 2019 11:34:23 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37555 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730550AbfJNPeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:33:34 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v38so15192474edm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:33:32 -0700 (PDT)
+        Mon, 14 Oct 2019 11:34:23 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n17so6615371qtr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w9mlgI2kR839Z5/4gH9FpOIFXEfNmboTdDmci4yowm8=;
-        b=XBpnqvo/R+SLAG7D0cXXtujk7Wn+hKWHZlRrLXhUr7SQJ0NqAEJG4I4+VDKgVFKG4I
-         S9moF74zaFswuasxTslog93qudtZdAL6ALRRP80j125m0eqnUZygTij90BgJ/RfCxTFQ
-         /jTM/I23xTFE4LpqaEb5GAC+L34qdaXaluD0Y=
+        d=soleen.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zrqHEv4nHi+sN0Om5M3ZbJYqGC0cBLXNH2ku0StUbdE=;
+        b=luLNBxuQTNJa+fKdTc/2LXZcaKkugTUKNdfTIidC2O5vKzTr/x90eFbx7j/9tUpbHm
+         jliGJrGYg68iVwTVqc4XRBc22+JdQVpfqbmWvLAVUad1ne2cnPJlkzfjG/ycSU80xOUq
+         pUQpruHDx1+UdtqpduYLHbw1QsUIfipQnO7z8xcjjLGYjp2RGIlNueOFGdfyicHWo5Ko
+         AVP3v74tlOjWqstbVo7ntw6ElJT00qkeglTlvpHOmqdfVXoHE4e8mQNkg/zk02WgCNs3
+         zSf+y6enISByXcWfQg5KiBKxAuRKdp1Y0im5IDdmON0tQdZ/yxgB1w1v7UZmQr51iEZF
+         2IPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=w9mlgI2kR839Z5/4gH9FpOIFXEfNmboTdDmci4yowm8=;
-        b=iaHSqUB3cJXHuOCW4qRf2+iNfLSvrVf8NFmRv1Jxj/aH5vEG74V0CP89tsjT8UR8I8
-         jOnBHiqnVD6v3Hx9UvWj+OPlyfNEdxeFIZC0+K+4T0aOtw98O5Ma+vt1DK0vvaPg9JlT
-         NdrdXtxoFBOJrZJ6+qAhjeCxExb2RIyZV/dT/0Xda4uK7GFrUJ9avSq7oyIelBq45oYf
-         xN40eTQkbnbCvbFTqBabEXXnZGtXnv0SYtTh9Nj3++7Nil0iKt+MiqPov3wSbiHu1E+1
-         mDup9eJG2F2MGAmDEQr7MnhMcBCMeN42AEJnp6UcQgcM7FTEjbRHRAizXoMcKtBWGWpJ
-         23/A==
-X-Gm-Message-State: APjAAAX6lXiiZKwrOCG9nWmhg7HtozM/oVW5rpSUCuM8BrgRRWmrIfdR
-        B3BlroY3fv7ZcDU0z2WK44FM5w==
-X-Google-Smtp-Source: APXvYqzZcsbz6zCpy73n7rhQtamC1Ycdf9UyLjYi1OUVk/a9VHHjnxKszGDz64+a9FPgQ9SaIDgJIg==
-X-Received: by 2002:aa7:dd18:: with SMTP id i24mr29588611edv.239.1571067211516;
-        Mon, 14 Oct 2019 08:33:31 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id z20sm3235235edb.3.2019.10.14.08.33.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zrqHEv4nHi+sN0Om5M3ZbJYqGC0cBLXNH2ku0StUbdE=;
+        b=ZliOuZejuLKV/CW44g107fn55JM//pokcm86vQ8uPYZ6F858n1VJ4zgv/7LHjDZ4s9
+         t9YyoGAhRcRUEjPtNFPmnUZALsRZQ6IkfcBMAvp4n/Vw7narYIbmUTfEcJtoM2p6Czgj
+         xB4YbMwFoyofn4mrIrKpxYKbxktx3aC2rr/Xe3nCpHYZN+BWVF8FLvE8SRT+ImnTisxg
+         fvFTf2HrsgOF2ozGNTYeID4ItHM5K4RQZJ4TDs5BpcYpiPHqlIAkV5mTHNmVHBZGx92Q
+         1KV3+RZ2y8fJ4uqAJOnNBW7een0yBJApX/U1Pvik4ky+VUBPFjoBN23u2ZLc1s9ednUg
+         DQ4g==
+X-Gm-Message-State: APjAAAX3nhs2ynU52aSQbAYIu6c8KCB/jiSF8Lnc6Q6vDhZBGckERZVY
+        i5pwcDPXd9F+7DkNDdkfBiDjmA==
+X-Google-Smtp-Source: APXvYqxekmzdMSjMjhAgFiOQx3s7qswq/tSgxGyi405nt2WbrxhaGdHGN9wmG5n7i0A7SErwbAiGnA==
+X-Received: by 2002:ac8:2a66:: with SMTP id l35mr34457334qtl.340.1571067262099;
+        Mon, 14 Oct 2019 08:34:22 -0700 (PDT)
+Received: from soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net ([40.117.208.181])
+        by smtp.gmail.com with ESMTPSA id l15sm8985494qkj.16.2019.10.14.08.34.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 08:33:30 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 17:33:27 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>, nd <nd@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ben Davis <Ben.Davis@arm.com>
-Subject: Re: [PATCH v2 1/4] drm/komeda: Add a new helper
- drm_color_ctm_s31_32_to_qm_n()
-Message-ID: <20191014153327.GL11828@phenom.ffwll.local>
-Mail-Followup-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>, nd <nd@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ben Davis <Ben.Davis@arm.com>
-References: <20191011054240.17782-1-james.qian.wang@arm.com>
- <20191011054240.17782-2-james.qian.wang@arm.com>
- <20191014085605.GF11828@phenom.ffwll.local>
- <20191014095813.GA15227@jamwan02-TSP300>
+        Mon, 14 Oct 2019 08:34:21 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 15:34:19 +0000
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     James Morse <james.morse@arm.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
+        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com
+Subject: Re: [PATCH v6 08/17] arm64: hibernate: add trans_pgd public functions
+Message-ID: <20191014153419.galjhum7amnyuiml@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
+References: <20191004185234.31471-1-pasha.tatashin@soleen.com>
+ <20191004185234.31471-9-pasha.tatashin@soleen.com>
+ <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014095813.GA15227@jamwan02-TSP300>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2ea69969-154d-fa55-767d-43ea8971dd0e@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 09:58:20AM +0000, james qian wang (Arm Technology China) wrote:
-> On Mon, Oct 14, 2019 at 10:56:05AM +0200, Daniel Vetter wrote:
-> > On Fri, Oct 11, 2019 at 05:43:09AM +0000, james qian wang (Arm Technology China) wrote:
-> > > Add a new helper function drm_color_ctm_s31_32_to_qm_n() for driver to
-> > > convert S31.32 sign-magnitude to Qm.n 2's complement that supported by
-> > > hardware.
-> > >
-> > > Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_color_mgmt.c | 23 +++++++++++++++++++++++
-> > >  include/drm/drm_color_mgmt.h     |  2 ++
-> > >  2 files changed, 25 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_color_mgmt.c b/drivers/gpu/drm/drm_color_mgmt.c
-> > > index 4ce5c6d8de99..3d533d0b45af 100644
-> > > --- a/drivers/gpu/drm/drm_color_mgmt.c
-> > > +++ b/drivers/gpu/drm/drm_color_mgmt.c
-> > > @@ -132,6 +132,29 @@ uint32_t drm_color_lut_extract(uint32_t user_input, uint32_t bit_precision)
-> > >  }
-> > >  EXPORT_SYMBOL(drm_color_lut_extract);
-> > >
-> > > +/**
-> > > + * drm_color_ctm_s31_32_to_qm_n
-> > > + *
-> > > + * @user_input: input value
-> > > + * @m: number of integer bits
-> > > + * @n: number of fractinal bits
-> > > + *
-> > > + * Convert and clamp S31.32 sign-magnitude to Qm.n 2's complement.
-> >
-> > What's the Q meaning here? Also maybe specify that the higher bits above
-> > m+n are cleared to all 0 or all 1. Unit test would be lovely too. Anyway:
+> > +
+> > +	memcpy(page, src_start, length);
+> > +	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
+> > +
+> > +	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
+> > +	if (!trans_pgd)
+> > +		return -ENOMEM;
+> > +
+> > +	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
+> > +				PAGE_KERNEL_EXEC);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> >  	/*
+> >  	 * Load our new page tables. A strict BBM approach requires that we
+> >  	 * ensure that TLBs are free of any entries that may overlap with the
 > 
-> The Q used to represent signed two's complement.
+> (I suspect you are going to to duplicate this in the kexec code. Kexec has the same
+> pattern: instructions that have to be copied to do the relocation of the rest of memory)
 > 
-> For detail: https://en.wikipedia.org/wiki/Q_(number_format)
-> 
-> And it Q is 2's complement, so the value of higher bit equal to
-> sign-bit.
-> All 1 if it is negative
-> 0 if it is positive.
 
-Ah I didn't know about this notation, I think in other drm docs we just
-used m.n 2's complement to denote this layout. Up to you I think.
--Daniel
+Yes, the relocation function is also copied, but I do not see an easy
+way to unify this particular code with kexec. We can discuss in kexec
+part of this series what else can be unified with hibernate's code.
 
 > 
-> James
+> > @@ -462,6 +476,24 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
 > 
-> > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> >
-> > > + */
-> > > +uint64_t drm_color_ctm_s31_32_to_qm_n(uint64_t user_input,
-> > > +                                 uint32_t m, uint32_t n)
-> > > +{
-> > > +   u64 mag = (user_input & ~BIT_ULL(63)) >> (32 - n);
-> > > +   bool negative = !!(user_input & BIT_ULL(63));
-> > > +   s64 val;
-> > > +
-> > > +   /* the range of signed 2s complement is [-2^n+m, 2^n+m - 1] */
-> > > +   val = clamp_val(mag, 0, negative ? BIT(n + m) : BIT(n + m) - 1);
-> > > +
-> > > +   return negative ? 0ll - val : val;
-> > > +}
-> > > +EXPORT_SYMBOL(drm_color_ctm_s31_32_to_qm_n);
-> > > +
-> > >  /**
-> > >   * drm_crtc_enable_color_mgmt - enable color management properties
-> > >   * @crtc: DRM CRTC
-> > > diff --git a/include/drm/drm_color_mgmt.h b/include/drm/drm_color_mgmt.h
-> > > index d1c662d92ab7..60fea5501886 100644
-> > > --- a/include/drm/drm_color_mgmt.h
-> > > +++ b/include/drm/drm_color_mgmt.h
-> > > @@ -30,6 +30,8 @@ struct drm_crtc;
-> > >  struct drm_plane;
-> > >
-> > >  uint32_t drm_color_lut_extract(uint32_t user_input, uint32_t bit_precision);
-> > > +uint64_t drm_color_ctm_s31_32_to_qm_n(uint64_t user_input,
-> > > +                                 uint32_t m, uint32_t n);
-> > >
-> > >  void drm_crtc_enable_color_mgmt(struct drm_crtc *crtc,
-> > >                             uint degamma_lut_size,
-> > > --
-> > > 2.20.1
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > +int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
+> > +			  unsigned long end)
+> > +{
+> > +	int rc;
+> > +	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
+> > +
+> > +	if (!trans_pgd) {
+> > +		pr_err("Failed to allocate memory for temporary page tables.\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	rc = copy_page_tables(trans_pgd, start, end);
+> > +	if (!rc)
+> > +		*dst_pgdp = trans_pgd;
+> 
+> *dst_pgdp was already allocated in swsusp_arch_resume().
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Good catch, I forgot to remove allocation from swsusp_arch_resume().
+
+ 
+> > +
+> > +	return rc;
+> > +}
+> > +
+> >  /*
+> >   * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
+> >   *
+> > @@ -488,7 +520,7 @@ int swsusp_arch_resume(void)
+> >  		pr_err("Failed to allocate memory for temporary page tables.\n");
+> >  		return -ENOMEM;
+> >  	}
+> 
+> If the allocation moves into 'trans_pgd_create_copy()', please move the code just above
+> here (cut off by the diff) that allocates it in swsusp_arch_resume().
+> 
+> Its actually okay to leak memory like this, hibernate's allocator acts as a memory pool.
+> It either gets freed if we fail to resume, or vanishes when the resumed kernel takes over.
+
+I did.
+
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thank you,
+Pasha
