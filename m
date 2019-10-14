@@ -2,113 +2,104 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6C8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3605FECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1360420873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhfeBhIb"
+	by mail.kernel.org (Postfix) with ESMTP id 19B7020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731535AbfJNKhA (ORCPT
+        id S1731575AbfJNKhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:37:00 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33822 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731457AbfJNKg7 (ORCPT
+        Mon, 14 Oct 2019 06:37:02 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:24096 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731249AbfJNKhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:36:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 3so24791177qta.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 03:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=26plC+LB/ET6lKUK8GUr/NZh4YTG4I5vCBM0xWKfjSY=;
-        b=vhfeBhIbqctA+sxvOa8rDMgMZA0l1qMP0sDE3KgO56Y6lc3OpphV7fkCxySXu6yuf0
-         zQI3csG/xFqaWpTB1334kqSZvke3KFNRZYH+iOzLeYF3LT0sw39+f3oVcoWI/Kv5yeV/
-         nNxqTAO+Kkfu0gzhK+V47J7dgvcAuP4c770wVb5w76FXzfs6pyIY8mljaRNp6JX/TsgU
-         uSpYNOzzWshBvP5PbZKMF4IAnIEEvTr8NIlBi/AY3fRAdB+qU1REmKvrl1AY0eM9iCWI
-         gm54+mmfq7mVRBq78QlBBUDV44/ghCCEpEvb32E2HuFldPnFvz+sBUrhiU9wVri71POt
-         YM6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=26plC+LB/ET6lKUK8GUr/NZh4YTG4I5vCBM0xWKfjSY=;
-        b=ic0/BmZXOyJkwprJYXhmtXHz3HN/kZIfqR3VG7RjLOJc2pI5lTIDXvdkJhVYgTakj2
-         nkl5bKUBNRkNFX0vJHCvUJIxROHxduEhwgjPQgA//qIz3l1S6OcKp+Z9+dAdY51m6II6
-         UXQ35guDCW+CLv9kDfCOrEQbxMK0FseZSx9ooQoklbDBOleXtqoXsuA9cXTAWxobdQBc
-         cC86P66/fp5fWP05iuY33z72UM82fphh0531N3pgyVPKMiVS6CONqrvLaJWysT8a5VbT
-         YEGevzpcCTS7Gp2+3zCsZGaaRaCgzF3n5UMUSuN0hd+ryCzrYOS31e5ddNIixJ8R0sCM
-         eUrw==
-X-Gm-Message-State: APjAAAX3tGIX83MD5eH+6nOj05E9/jvdViG/tv62poV5g3qifHBqIxNz
-        j88tmuSuWRBR8pw+4PdlfqtcBVj+Rctwm6bw6Lpkjw==
-X-Google-Smtp-Source: APXvYqwTjnC0ebjhJ3BkDHAXlucgRKIkCIRgkmsqM/V/dciQe1QoV4OVLkh9U5GxaZS3jwgbGp4caX/J7J0IoKwv77k=
-X-Received: by 2002:ac8:37e8:: with SMTP id e37mr30909144qtc.57.1571049418182;
- Mon, 14 Oct 2019 03:36:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191014103148.17816-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20191014103148.17816-1-walter-zh.wu@mediatek.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 14 Oct 2019 12:36:45 +0200
-Message-ID: <CACT4Y+aSybD6Z0YHuhbaTKK+fd4c3t4z8WneYdRRqA4N-G0fkA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] fix the missing underflow in memory operation function
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mon, 14 Oct 2019 06:37:01 -0400
+X-UUID: 7dcb933b18764e979c3cfe88a285e36a-20191014
+X-UUID: 7dcb933b18764e979c3cfe88a285e36a-20191014
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 752259523; Mon, 14 Oct 2019 18:36:57 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 14 Oct 2019 18:36:52 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 14 Oct 2019 18:36:52 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH 2/2] kasan: add test for invalid size in memmove
+Date:   Mon, 14 Oct 2019 18:36:54 +0800
+Message-ID: <20191014103654.17982-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 0CF6CECFA4DBB0B2BBA0BF7B47F0B4713B9EC9875EB27669122A6B9E49B63E752000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:32 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> The patchsets help to produce KASAN report when size is negative numbers
-> in memory operation function. It is helpful for programmer to solve the
-> undefined behavior issue. Patch 1 based on Dmitry's review and
-> suggestion, patch 2 is a test in order to verify the patch 1.
+Test size is negative numbers in memmove in order to verify
+whether it correctly get KASAN report.
 
-Hi Walter,
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+---
+ lib/test_kasan.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-I only received this cover letter, but not the actual patches. I also
-don't see them in the group:
-https://groups.google.com/forum/#!forum/kasan-dev
-nor on internet. Have you mailed them? Where are they?
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index 49cc4d570a40..06942cf585cc 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -283,6 +283,23 @@ static noinline void __init kmalloc_oob_in_memset(void)
+ 	kfree(ptr);
+ }
+ 
++static noinline void __init kmalloc_memmove_invalid_size(void)
++{
++	char *ptr;
++	size_t size = 64;
++
++	pr_info("invalid size in memmove\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
++	}
++
++	memset((char *)ptr, 0, 64);
++	memmove((char *)ptr, (char *)ptr + 4, -2);
++	kfree(ptr);
++}
++
+ static noinline void __init kmalloc_uaf(void)
+ {
+ 	char *ptr;
+@@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
+ 	kmalloc_oob_memset_4();
+ 	kmalloc_oob_memset_8();
+ 	kmalloc_oob_memset_16();
++	kmalloc_memmove_invalid_size();
+ 	kmalloc_uaf();
+ 	kmalloc_uaf_memset();
+ 	kmalloc_uaf2();
+-- 
+2.18.0
 
-> [1]https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> [2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/
->
-> Walter Wu (2):
-> kasan: detect negative size in memory operation function
-> kasan: add test for invalid size in memmove
->
-> ---
->  lib/test_kasan.c          | 18 ++++++++++++++++++
->  mm/kasan/common.c         | 13 ++++++++-----
->  mm/kasan/generic.c        |  5 +++++
->  mm/kasan/generic_report.c | 18 ++++++++++++++++++
->  mm/kasan/tags.c           |  5 +++++
->  mm/kasan/tags_report.c    | 17 +++++++++++++++++
->  6 files changed, 71 insertions(+), 5 deletions(-)
->
-> --
-> 2.18.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191014103148.17816-1-walter-zh.wu%40mediatek.com.
