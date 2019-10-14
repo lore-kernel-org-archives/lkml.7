@@ -2,138 +2,86 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E7CECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C6BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A4A21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBAE21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388610AbfJNT3U (ORCPT
+        id S2388871AbfJNT3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 15:29:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19103 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbfJNT3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 15:29:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 12:29:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="198390316"
-Received: from kridax-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.7.178])
-  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 12:29:14 -0700
-Date:   Mon, 14 Oct 2019 22:29:13 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>
-Cc:     Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191014192913.GD15552@linux.intel.com>
-References: <1570128827.5046.19.camel@linux.ibm.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
- <20191014190033.GA15552@linux.intel.com>
+        Mon, 14 Oct 2019 15:29:54 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46625 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730405AbfJNT3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 15:29:54 -0400
+X-Originating-IP: 90.76.216.45
+Received: from windsurf.home (lfbn-1-2159-45.w90-76.abo.wanadoo.fr [90.76.216.45])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id CA804FF808;
+        Mon, 14 Oct 2019 19:29:39 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 21:29:38 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before
+ training link
+Message-ID: <20191014212938.14516102@windsurf.home>
+In-Reply-To: <20190522213351.21366-2-repk@triplefau.lt>
+References: <20190522213351.21366-2-repk@triplefau.lt>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4git47 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014190033.GA15552@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 10:00:33PM +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 09, 2019 at 12:11:06PM +0000, Safford, David (GE Global Research, US) wrote:
-> > 
-> > > From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Sent: Tuesday, October 8, 2019 7:54 PM
-> > > To: Ken Goldman <kgold@linux.ibm.com>
-> > > Cc: Safford, David (GE Global Research, US) <david.safford@ge.com>; Mimi
-> > > Zohar <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org;
-> > > stable@vger.kernel.org; open list:ASYMMETRIC KEYS
-> > > <keyrings@vger.kernel.org>; open list:CRYPTO API <linux-
-> > > crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> > > Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-> > > 
-> > > On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
-> > > > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
-> > > > > The TPM library specification states that the TPM must comply with
-> > > > > NIST
-> > > > > SP800-90 A.
-> > > > >
-> > > > > https://trustedcomputinggroup.org/membership/certification/tpm-certi
-> > > > > fied-products/
-> > > > >
-> > > > > shows that the TPMs get third party certification, Common Criteria EAL 4+.
-> > > > >
-> > > > > While it's theoretically possible that an attacker could compromise
-> > > > > both the TPM vendors and the evaluation agencies, we do have EAL 4+
-> > > > > assurance against both 1 and 2.
-> > > >
-> > > > Certifications do not equal to trust.
-> > > 
-> > > And for trusted keys the least trust solution is to do generation with the kernel
-> > > assets and sealing with TPM. With TEE the least trust solution is equivalent.
-> > > 
-> > > Are you proposing that the kernel random number generation should be
-> > > removed? That would be my conclusion of this discussion if I would agree any
-> > > of this (I don't).
-> > > 
-> > > /Jarkko
-> > 
-> > No one is suggesting that.
-> > 
-> > You are suggesting changing the documented behavior of trusted keys, and
-> > that would cause problems for some of our use cases. While certification
-> > may not in your mind be equal to trust, it is equal to compliance with 
-> > mandatory regulations.
-> > 
-> > Perhaps rather than arguing past each other, we should look into 
-> > providing users the ability to choose, as an argument to keyctl?
-> > 
-> > dave
-> 
-> I'm taking my words back in the regression part as regression would need
-> really a failing system. Definitely the fixes tag should be removed from
-> my patch.
-> 
-> What is anyway the role of the kernel rng? Why does it exist and when
-> exactly it should be used? This exactly where the whole review process
-> throughout the "chain of command" failed misserably with tpm_asym.c.
-> 
-> The commit message for tpm_asym.c does not document the design choice in
-> any possible way and still was merged to the mainline.
-> 
-> Before knowning the answer to the "existential" question we are
-> somewhat paralyzed on moving forward with trusted keys (e.g. paralyzed
-> to merge TEE backend).
-> 
-> Your proposal might make sense but I don't really want to say anything
-> since I'm completely cluesless of the role of the kernel rng. Looks like
-> everyone who participated to the review process of tpm_asym.c, is too.
+Hello Remi,
 
-As a ABI backwards compatibility workaround I'd agree most likely agree
-with you. As a guideline for new features there should be a framework on
-how to decide what to do.
+On Wed, 22 May 2019 23:33:50 +0200
+Remi Pommarel <repk@triplefau.lt> wrote:
 
-/Jarkko
+> When configuring pcie reset pin from gpio (e.g. initially set by
+> u-boot) to pcie function this pin goes low for a brief moment
+> asserting the PERST# signal. Thus connected device enters fundamental
+> reset process and link configuration can only begin after a minimal
+> 100ms delay (see [1]).
+> 
+> Because the pin configuration comes from the "default" pinctrl it is
+> implicitly configured before the probe callback is called:
+> 
+> driver_probe_device()
+>   really_probe()
+>     ...
+>     pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
+>                            function and PERST# is asserted */
+>     ...
+>     drv->probe()
+> 
+> [1] "PCI Express Base Specification", REV. 4.0
+>     PCI Express, February 19 2014, 6.6.1 Conventional Reset
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+
+It is always a bit annoying to add another 100ms in the boot path, but
+I don't see an easy alternative solution, so:
+
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
