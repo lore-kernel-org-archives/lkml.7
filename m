@@ -2,149 +2,132 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147D4ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46322ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E913C20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201C120854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4Sv0nu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732921AbfJNOok (ORCPT
+        id S1732972AbfJNOoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:44:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731121AbfJNOok (ORCPT
+        Mon, 14 Oct 2019 10:44:44 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54626 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731121AbfJNOon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:44:40 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9EEZUVm069450;
-        Mon, 14 Oct 2019 10:44:12 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vmt312n7s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Oct 2019 10:44:12 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9EEeLVF014283;
-        Mon, 14 Oct 2019 14:44:11 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04wdc.us.ibm.com with ESMTP id 2vk6f6u5jr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Oct 2019 14:44:11 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9EEiAHr28443060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 14:44:10 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B8496A057;
-        Mon, 14 Oct 2019 14:44:10 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59E7F6A054;
-        Mon, 14 Oct 2019 14:44:06 +0000 (GMT)
-Received: from [9.199.41.79] (unknown [9.199.41.79])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 14 Oct 2019 14:44:05 +0000 (GMT)
-Subject: Re: [PATCH 2/2] mm/gup: fix a misnamed "write" argument: should be
- "flags"
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        John Hubbard <jhubbard@nvidia.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>
-References: <20191013221155.382378-3-jhubbard@nvidia.com>
- <201910141316.DHpeevy3%lkp@intel.com>
- <d431c2cf-22bf-13be-05e5-c93512ac9ae5@nvidia.com>
- <20191014135234.7ak32pfir6du3xae@box>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <acc39afa-ae6f-0eb9-fa31-1b63f8f86b2e@linux.ibm.com>
-Date:   Mon, 14 Oct 2019 20:14:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 14 Oct 2019 10:44:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p7so17578225wmp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=lV9WUHRQYa+vcbnXaIrl9dHPzPBQxfzmjkh8HTlj1Bg=;
+        b=R4Sv0nu/0zTthcOB5gdAeVN4GjOy9iItL0K/CL5nKP+gYb8+0NlbvVtDbWrASvGTFg
+         Xq15G3Gif4VH+0edHvuVUs3yIveqxdNZS+8W6cN8Flbst2a09CdpfrX6aj/yKZ1HvxOG
+         cQU1WqMXDcgvms+37/3cqYRyAB5jN2IxSxkEyEBgja6lyNdKXHm0CEv1CMkA8A+C5OWg
+         43HJiqe22PxAK/W1GQfdSX6aDYU4+E4RJnH8Y8nwGD/OLM46seNi4tRfEWtaWljw1njn
+         v6hKrQOmlP1FYMfLEPltHPE+Lmo/zYA5/AtOZspeSJfUN9bqOQMmuTW+F49uO98xA3J+
+         dvjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lV9WUHRQYa+vcbnXaIrl9dHPzPBQxfzmjkh8HTlj1Bg=;
+        b=VlqP1eA6Y10vO+Fnu/1+6nuoDzoAvCHAdpwS8SdZf+dIiR4BI+OzCgzV4PjUylKsDz
+         RVwj+1Sv703O/EnVqssFY31OP5TQu+iZ9Oe44+wmXUnegd9vOsX5xQPqPmeDkHaQH6ma
+         TELHv0rvq2TF4GOKxfmVexwbh7hOsMOvYpHMvc+2pnD4aVoJk5gcFFNbvrmR/EHOYDom
+         1LKhRHsB2oidwd+HkG9JUl/7bCDYYrLzpMDEdPTHXrt9rc5gxJ8JNkgMEz+46Je+SgpJ
+         K322+b3hhx0xTptu2U4vPvwbelvTQ/AIZmADybpNIQCUTqH6tiWElhkMNxwJ7PyuMmLE
+         wWSg==
+X-Gm-Message-State: APjAAAUz6zAPoeR6CUE7nUah2MZ0l182h8hQkMeIfy0IPjgoPG79X8lH
+        OgWsw1MjU256knQ4mJvW/auoYg==
+X-Google-Smtp-Source: APXvYqzTSv6CMEyQM3i6C4SK/hTjeAMaTon8/RvoovUvDlefqH05gxDzk92qF3PTigpHHIEcQwWRyw==
+X-Received: by 2002:a05:600c:2481:: with SMTP id 1mr14687975wms.98.1571064280936;
+        Mon, 14 Oct 2019 07:44:40 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id z189sm33273049wmc.25.2019.10.14.07.44.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 07:44:40 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 15:44:40 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Module loading problem since 5.3
+Message-ID: <20191014144440.GG35313@google.com>
+References: <20191014085235.GW16384@42.do-not-panic.com>
 MIME-Version: 1.0
-In-Reply-To: <20191014135234.7ak32pfir6du3xae@box>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-14_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910140134
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191014085235.GW16384@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 7:22 PM, Kirill A. Shutemov wrote:
-> On Sun, Oct 13, 2019 at 11:43:10PM -0700, John Hubbard wrote:
->> On 10/13/19 11:12 PM, kbuild test robot wrote:
->>> Hi John,
->>>
->>> Thank you for the patch! Yet something to improve:
->>>
->>> [auto build test ERROR on linus/master]
->>> [cannot apply to v5.4-rc3 next-20191011]
->>> [if your patch is applied to the wrong git tree, please drop us a note to help
->>> improve the system. BTW, we also suggest to use '--base' option to specify the
->>> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->>>
->>> url:    https://github.com/0day-ci/linux/commits/John-Hubbard/gup-c-gup_benchmark-c-trivial-fixes-before-the-storm/20191014-114158
->>> config: powerpc-defconfig (attached as .config)
->>> compiler: powerpc64-linux-gcc (GCC) 7.4.0
->>> reproduce:
->>>           wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>           chmod +x ~/bin/make.cross
->>>           # save the attached .config to linux build tree
->>>           GCC_VERSION=7.4.0 make.cross ARCH=powerpc
->>>
->>> If you fix the issue, kindly add following tag
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>>      mm/gup.c: In function 'gup_hugepte':
->>>>> mm/gup.c:1990:33: error: 'write' undeclared (first use in this function); did you mean 'writeq'?
->>>        if (!pte_access_permitted(pte, write))
->>>                                       ^~~~~
->>>                                       writeq
->>>      mm/gup.c:1990:33: note: each undeclared identifier is reported only once for each function it appears in
->>>
->>
->> OK, so this shows that my cross-compiler test scripts are faulty lately,
->> sorry I missed this.
->>
->> But more importantly, the above missed case is an example of when "write" really
->> means "write", as opposed to meaning flags.
->>
->> Please put this patch on hold or drop it, until we hear from the authors as to how
->> they would like to resolve this. I suspect it will end up as something like:
->>
->> 	bool write = (flags & FOLL_WRITE);
->>
->> ...perhaps?
-> 
-> Just use
-> 
-> 	if (!pte_access_permitted(pte, flags & FOLL_WRITE))
-> 
-> as we have in gup_pte_range().
-> 
-> And add:
-> 
-> Fixes: cbd34da7dc9a ("mm: move the powerpc hugepd code to mm/gup.c")
-> 
+Hi Luis!
 
-b798bec4741bdd80224214fdd004c8e52698e42 isn't this the commit that need 
-to be mentioned in the Fixes: tag?
+On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
+>On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
+>> On 10.10.2019 19:15, Luis Chamberlain wrote:
+>> >
+>> >
+>> > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+>> >
+>> >        MODULE_SOFTDEP("pre: realtek")
+>> >
+>> >     Are you aware of any current issues with module loading
+>> >     that could cause this problem?
+>> >
+>> >
+>> > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+>> >
+>> > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+>> >
+>> >   Luis
+>>
+>> Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+>> https://lkml.org/lkml/2019/10/11/659
+>
+>Can you have your user with issues either revert 8651ec01daed or apply the fixes
+>mentioned by Matthias to see if that was the issue?
+>
+>Matthias what module did you run into which let you run into the issue
+>with depmod? I ask as I think it would be wise for us to add a test case
+>using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
+>regression you detected.
 
--aneesh
+The depmod warning can be reproduced when using a symbol that is built
+into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
+CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
+namespace USB_STORAGE and depmod stumbles upon this emitting the
+following warning (e.g. during make modules_install).
+
+  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
+
+As there is another (less intrusive) way of implementing the namespace
+feature, I posted a patch series [1] on last Thursday that should
+mitigate the issue as the ksymtab entries depmod eventually relies on
+are no longer carrying the namespace in their names.
+
+Cheers,
+Matthias
+
+[1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
+
+>
+>  Luis
