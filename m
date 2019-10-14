@@ -2,102 +2,203 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB94C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C78BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B2920854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A6420854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387493AbfJNP11 (ORCPT
+        id S2387513AbfJNP35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:27:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:46892 "EHLO foss.arm.com"
+        Mon, 14 Oct 2019 11:29:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39684 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732968AbfJNP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:27:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 236F728;
-        Mon, 14 Oct 2019 08:27:26 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 886913F68E;
-        Mon, 14 Oct 2019 08:27:24 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 16:27:17 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        glider@google.com, luto@kernel.org, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
-Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real
- shadow memory
-Message-ID: <20191014152717.GA20438@lakrids.cambridge.arm.com>
-References: <20191001065834.8880-1-dja@axtens.net>
- <20191001065834.8880-2-dja@axtens.net>
- <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
- <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
+        id S1729905AbfJNP34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:29:56 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 22CA9308FB9A;
+        Mon, 14 Oct 2019 15:29:56 +0000 (UTC)
+Received: from krava (unknown [10.40.205.218])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 39238196AE;
+        Mon, 14 Oct 2019 15:29:54 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 17:29:53 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] perf: add support for logging debug messages to
+ file
+Message-ID: <20191014152953.GD9700@krava>
+References: <20191008123554.6796-1-changbin.du@gmail.com>
+ <20191008123554.6796-3-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191008123554.6796-3-changbin.du@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 14 Oct 2019 15:29:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 12:57:44AM +1100, Daniel Axtens wrote:
-> Hi Andrey,
+On Tue, Oct 08, 2019 at 08:35:54PM +0800, Changbin Du wrote:
+> When in TUI mode, it is impossible to show all the debug messages to
+> console. This make it hard to debug perf issues using debug messages.
+> This patch adds support for logging debug messages to file to resolve
+> this problem.
 > 
+> The usage is:
+> perf -debug verbose=2,file=~/perf.log COMMAND
 > 
-> >> +	/*
-> >> +	 * Ensure poisoning is visible before the shadow is made visible
-> >> +	 * to other CPUs.
-> >> +	 */
-> >> +	smp_wmb();
-> >
-> > I'm not quite understand what this barrier do and why it needed.
-> > And if it's really needed there should be a pairing barrier
-> > on the other side which I don't see.
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > 
-> Mark might be better able to answer this, but my understanding is that
-> we want to make sure that we never have a situation where the writes are
-> reordered so that PTE is installed before all the poisioning is written
-> out. I think it follows the logic in __pte_alloc() in mm/memory.c:
+> --
+> v4: fix another segfault.
+> v3: fix a segfault issue.
+
+hi,
+no crash this time ;-) some questions below
+
+> ---
+>  tools/perf/Documentation/perf.txt | 15 ++++++-----
+>  tools/perf/util/debug.c           | 44 ++++++++++++++++++++++++++++---
+>  2 files changed, 49 insertions(+), 10 deletions(-)
 > 
-> 	/*
-> 	 * Ensure all pte setup (eg. pte page lock and page clearing) are
-> 	 * visible before the pte is made visible to other CPUs by being
-> 	 * put into page tables.
+> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+> index c05a94b2488e..a6b19661e5c3 100644
+> --- a/tools/perf/Documentation/perf.txt
+> +++ b/tools/perf/Documentation/perf.txt
+> @@ -16,14 +16,17 @@ OPTIONS
+>  	Setup debug variable (see list below) in value
+>  	range (0, 10). Use like:
+>  	  --debug verbose   # sets verbose = 1
+> -	  --debug verbose=2 # sets verbose = 2
+> +	  --debug verbose=2,file=~/perf.log
+> +	                    # sets verbose = 2 and save log to file
+>  
+>  	List of debug variables allowed to set:
+> -	  verbose=level		- general debug messages
+> -	  ordered-events=level	- ordered events object debug messages
+> -	  data-convert=level	- data convert command debug messages
+> -	  stderr		- write debug output (option -v) to stderr
+> -				  in browser mode
+> +	  verbose=level         - general debug messages
+> +	  ordered-events=level  - ordered events object debug messages
+> +	  data-convert=level    - data convert command debug messages
+> +	  stderr                - write debug output (option -v) to stderr
+> +	                          in browser mode
+> +	  file=path             - write debug output to log file (stderr and
+> +	                          file options are exclusive)
+>  
+>  --buildid-dir::
+>  	Setup buildid cache directory. It has higher priority than
+> diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+> index df82ad9cd16d..5cc2479d63ea 100644
+> --- a/tools/perf/util/debug.c
+> +++ b/tools/perf/util/debug.c
+> @@ -6,6 +6,7 @@
+>  #include <stdarg.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> +#include <errno.h>
+>  #include <sys/wait.h>
+>  #include <api/debug.h>
+>  #include <linux/kernel.h>
+> @@ -26,7 +27,7 @@
+>  int verbose;
+>  bool dump_trace = false, quiet = false;
+>  int debug_ordered_events;
+> -static bool redirect_to_stderr;
+> +static FILE *log_file;
+>  int debug_data_convert;
+>  
+>  int veprintf(int level, int var, const char *fmt, va_list args)
+> @@ -34,8 +35,10 @@ int veprintf(int level, int var, const char *fmt, va_list args)
+>  	int ret = 0;
+>  
+>  	if (var >= level) {
+> -		if (use_browser >= 1 && !redirect_to_stderr)
+> +		if (use_browser >= 1 && !log_file)
+>  			ui_helpline__vshow(fmt, args);
+> +		else if (log_file)
+> +			ret = vfprintf(log_file, fmt, args);
+>  		else
+>  			ret = vfprintf(stderr, fmt, args);
+>  	}
+> @@ -197,6 +200,24 @@ static int str2loglevel(const char *vstr)
+>  	return v;
+>  }
+>  
+> +static void flush_log(void)
+> +{
+> +	if (log_file)
+> +		fflush(log_file);
+> +}
+> +
+> +static void set_log_output(FILE *f)
+> +{
+> +	if (f == log_file)
+> +		return;
+> +
+> +	if (log_file && log_file != stderr)
+> +		fclose(log_file);
+> +
+> +	log_file = f;
+> +	atexit(flush_log);
+> +}
+> +
+>  int perf_debug_option(const char *str)
+>  {
+>  	char *sep, *vstr;
+> @@ -218,8 +239,23 @@ int perf_debug_option(const char *str)
+>  		else if (!strcmp(opt, "data-convert"))
+>  			debug_data_convert = str2loglevel(vstr);
+>  		else if (!strcmp(opt, "stderr"))
+> -			redirect_to_stderr = true;
 
-Yup. We need to ensure that if a thread sees a populated shadow PTE, the
-corresponding shadow memory has been zeroed. Thus, we need to ensure
-that the zeroing is observed by other CPUs before we update the PTE.
+do you ned to fflush stderr? I thought it's unbuffered
 
-We're relying on the absence of a TLB entry preventing another CPU from
-loading the corresponding shadow shadow memory until its PTE has been
-populated (after the zeroing is visible). Consequently there is no
-barrier on the other side, and just a control-dependency (which would be
-insufficient on its own).
+> -		else {
+> +			set_log_output(stderr);
+> +		else if (!strcmp(opt, "file")) {
+> +			FILE *f;
+> +
+> +			if (!vstr)
+> +				vstr = (char *)"perf.log";
 
-There is a potential problem here, as Will Deacon wrote up at:
+you did not mention in doc that perf.log is default
 
-  https://lore.kernel.org/linux-arm-kernel/20190827131818.14724-1-will@kernel.org/
+> +
+> +			f = fopen(vstr, "a");
+> +			if (!f) {
+> +				pr_err("Can not create log file: %s\n",
+> +				       strerror(errno));
+> +				free(dstr);
+> +				return -1;
+> +			}
+> +			fprintf(f, "\n===========perf log===========\n");
 
-... in the section starting:
+is this necessary?
 
-| *** Other architecture maintainers -- start here! ***
+jirka
 
-... whereby the CPU can spuriously fault on an access after observing a
-valid PTE.
-
-For arm64 we handle the spurious fault, and it looks like x86 would need
-something like its vmalloc_fault() applying to the shadow region to
-cater for this.
-
-Thanks,
-Mark.
+> +			set_log_output(f);
+> +		} else {
+>  			fprintf(stderr, "unkown debug option '%s'\n", opt);
+>  			free(dstr);
+>  			return -1;
+> -- 
+> 2.20.1
+> 
