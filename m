@@ -2,258 +2,120 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B55ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ABEECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4454F20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682D220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKE/qWvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbfJNKc6 (ORCPT
+        id S1731453AbfJNKf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:32:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51700 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731519AbfJNKc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:32:56 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1BCE92ADD03FD824A3F2;
-        Mon, 14 Oct 2019 18:32:52 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 18:32:43 +0800
-Date:   Mon, 14 Oct 2019 11:32:31 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-CC:     reg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, <grant.likely@arm.com>,
-        jean-philippe <jean-philippe@linaro.org>,
-        <ilias.apalodimas@linaro.org>, <francois.ozog@linaro.org>,
-        <kenneth-lee-2012@foxmail.com>, Wangzhou <wangzhou1@hisilicon.com>,
-        <linux-accelerators@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        "Zaibo Xu" <xuzaibo@huawei.com>
-Subject: Re: [PATCH v5 2/3] uacce: add uacce driver
-Message-ID: <20191014113231.00002967@huawei.com>
-In-Reply-To: <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
-References: <1571035735-31882-1-git-send-email-zhangfei.gao@linaro.org>
-        <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 14 Oct 2019 06:35:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44035 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731305AbfJNKf6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:35:58 -0400
+Received: by mail-pl1-f193.google.com with SMTP id q15so7823346pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 03:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RBxhSOhGoBq865LLyCQ9HRQenV+KPGNi6KV33B0fJwk=;
+        b=hKE/qWvVJ+nBCGXp08FZ1EhL0d/2DPj/AgqTRDupb+P51bWIiyZU/69pZfcptrERTc
+         vScq0gMH/PVrKAIJsdH9B69bFNH0j5EWNQk+hKVy3H6ipxIyv0yKReMhi8a2H/OJOX5D
+         cyHXukI+kjUhp0cAgZEnT39S06eg/3ZQS5WzNW+TNa6u3avSgTUUkbAl930dxBp4Bl0i
+         QKxaKJg4QKHqK4KsN2cmo1wXYDZT4uthupXa0werf9bJCleNMbKPQ+zlWGNUIEYghwxm
+         anxreqA+qVO5s7VXERhGj6XiFspq7IIso5zKAGb/9FrSacDrLjA6zr8lZUiC0b725X1Z
+         e0dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RBxhSOhGoBq865LLyCQ9HRQenV+KPGNi6KV33B0fJwk=;
+        b=eNFo/xdeO9v0iTotzaniHv0Ll9RsAXQ4uGtbdCDrwp2cFTQKypXpl0gsEjxfoSKjLZ
+         yqhny3r36f+YDB/9BjO1d5GG/FFItHVcu7dwooxYX2i/lCu1y9IsEpTvmKyESlwDteSx
+         nH4kGLqvRFUYJaKLtCDl+MSM4CeIWZJuZN39nnCBd3iAZjGg0LJV2HcgWifTdyHLJUXK
+         xQXj4fha+omd7Oo9ePTlCbSrjImSET90c8jlbgGqWxhcoCc30KN/RT9nA5XY0GwFxzhs
+         8cAxPl/uAUBtI14sfVrksPUDcsoemcdT7HEbsFdgc682PTqHElJN8xYnil9hhOphSMBr
+         Vfqw==
+X-Gm-Message-State: APjAAAXJ45DTTY0pYCB89YTaCos56xc5/dmlzNUyRmveaXCwUTqkMSPy
+        EaJUqDES2u+16NnvIQET23M=
+X-Google-Smtp-Source: APXvYqxwFQ5rWEaHyO1+CQZGJqSJ7RaE3hT+S5ikE/d9iGfP2L08synqCGkRUuyXAhI2gMzWb5KLKA==
+X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr29484930plp.221.1571049357916;
+        Mon, 14 Oct 2019 03:35:57 -0700 (PDT)
+Received: from localhost ([211.246.68.186])
+        by smtp.gmail.com with ESMTPSA id k95sm17287237pje.10.2019.10.14.03.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 03:35:57 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 19:33:41 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Vitaly Wool <vitalywool@gmail.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Theodore Ts'o <tytso@thunk.org>
+Subject: Re: [PATCH 0/3] Allow ZRAM to use any zpool-compatible backend
+Message-ID: <20191014103341.GA36860@jagdpanzerIV>
+References: <20191010230414.647c29f34665ca26103879c4@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010230414.647c29f34665ca26103879c4@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 14:48:54 +0800
-Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-
-> From: Kenneth Lee <liguozhu@hisilicon.com>
-> 
-> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
-> provide Shared Virtual Addressing (SVA) between accelerators and processes.
-> So accelerator can access any data structure of the main cpu.
-> This differs from the data sharing between cpu and io device, which share
-> data content rather than address.
-> Since unified address, hardware and user space of process can share the
-> same virtual address in the communication.
-> 
-> Uacce create a chrdev for every registration, the queue is allocated to
-> the process when the chrdev is opened. Then the process can access the
-> hardware resource by interact with the queue file. By mmap the queue
-> file space to user space, the process can directly put requests to the
-> hardware without syscall to the kernel space.
-> 
-> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
-> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-
 Hi,
 
-Some superficial comments from me.
+On (10/10/19 23:04), Vitaly Wool wrote:
+[..]
+> The coming patchset is a new take on the old issue: ZRAM can
+> currently be used only with zsmalloc even though this may not
+> be the optimal combination for some configurations. The previous
+> (unsuccessful) attempt dates back to 2015 [1] and is notable for
+> the heated discussions it has caused.
 
-Thanks,
+Oh, right, I do recall it.
 
-Jonathan
+> The patchset in [1] had basically the only goal of enabling
+> ZRAM/zbud combo which had a very narrow use case. Things have
+> changed substantially since then, and now, with z3fold used
+> widely as a zswap backend, I, as the z3fold maintainer, am
+> getting requests to re-interate on making it possible to use
+> ZRAM with any zpool-compatible backend, first of all z3fold.
 
+A quick question, what are the technical reasons to prefer
+allocator X over zsmalloc? Some data would help, I guess.
 
-...
+> The preliminary results for this work have been delivered at
+> Linux Plumbers this year [2]. The talk at LPC, though having
+> attracted limited interest, ended in a consensus to continue
+> the work and pursue the goal of decoupling ZRAM from zsmalloc.
 
-> +/*
-> + * While user space releases a queue, all the relatives on the queue
-> + * should be released immediately by this putting.
+[..]
 
-This one needs rewording but I'm not quite sure what
-relatives are in this case.
- 
-> + */
-> +static long uacce_put_queue(struct uacce_queue *q)
-> +{
-> +	struct uacce_device *uacce = q->uacce;
-> +
-> +	mutex_lock(&uacce_mutex);
-> +
-> +	if ((q->state == UACCE_Q_STARTED) && uacce->ops->stop_queue)
-> +		uacce->ops->stop_queue(q);
-> +
-> +	if ((q->state == UACCE_Q_INIT || q->state == UACCE_Q_STARTED) &&
-> +	     uacce->ops->put_queue)
-> +		uacce->ops->put_queue(q);
-> +
-> +	q->state = UACCE_Q_ZOMBIE;
-> +	mutex_unlock(&uacce_mutex);
-> +
-> +	return 0;
-> +}
-> +
-..
+> [1] https://lkml.org/lkml/2015/9/14/356
 
-> +
-> +static ssize_t qfrs_size_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct uacce_device *uacce = to_uacce_device(dev);
-> +	unsigned long size;
-> +	int i, ret;
-> +
-> +	for (i = 0, ret = 0; i < UACCE_QFRT_MAX; i++) {
-> +		size = uacce->qf_pg_size[i] << PAGE_SHIFT;
-> +		if (i == UACCE_QFRT_SS)
-> +			break;
-> +		ret += sprintf(buf + ret, "%lu\t", size);
-> +	}
-> +	ret += sprintf(buf + ret, "%lu\n", size);
-> +
-> +	return ret;
-> +}
+I need to re-read it, thanks for the link. IIRC, but maybe
+I'm wrong, one of the things Minchan was not happy with was
+increased maintenance cost. So, perhaps, this also should
+be discuss/addressed (and maybe even in the first place).
 
-This may break the sysfs rule of one thing per file.  If you have
-multiple regions, they should probably each have their own file
-to give their size.
-
-> +
-> +static DEVICE_ATTR_RO(id);
-> +static DEVICE_ATTR_RO(api);
-> +static DEVICE_ATTR_RO(numa_distance);
-> +static DEVICE_ATTR_RO(node_id);
-> +static DEVICE_ATTR_RO(flags);
-> +static DEVICE_ATTR_RO(available_instances);
-> +static DEVICE_ATTR_RO(algorithms);
-> +static DEVICE_ATTR_RO(qfrs_size);
-> +
-> +static struct attribute *uacce_dev_attrs[] = {
-> +	&dev_attr_id.attr,
-> +	&dev_attr_api.attr,
-> +	&dev_attr_node_id.attr,
-> +	&dev_attr_numa_distance.attr,
-> +	&dev_attr_flags.attr,
-> +	&dev_attr_available_instances.attr,
-> +	&dev_attr_algorithms.attr,
-> +	&dev_attr_qfrs_size.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(uacce_dev);
-> +
-...
-
-> +
-> +/**
-> + * uacce_unregister - unregisters a uacce
-> + * @uacce: the accelerator to unregister
-> + *
-> + * Unregister an accelerator that wat previously successully registered with
-
-wat -> was
-successully -> successfully
-
-
-> + * uacce_register().
-> + */
-> +void uacce_unregister(struct uacce_device *uacce)
-> +{
-> +	mutex_lock(&uacce_mutex);
-> +
-> +	if (uacce->flags & UACCE_DEV_SVA)
-> +		iommu_dev_disable_feature(uacce->pdev, IOMMU_DEV_FEAT_SVA);
-> +
-> +	uacce_unset_iommu_domain(uacce);
-> +	cdev_device_del(uacce->cdev, &uacce->dev);
-> +	idr_remove(&uacce_idr, uacce->dev_id);
-> +	put_device(&uacce->dev);
-> +
-> +	mutex_unlock(&uacce_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(uacce_unregister);
-> +
-...
-> diff --git a/include/linux/uacce.h b/include/linux/uacce.h
-> new file mode 100644
-> index 0000000..9137f3d
-> --- /dev/null
-> +++ b/include/linux/uacce.h
-> @@ -0,0 +1,167 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +#ifndef _LINUX_UACCE_H
-> +#define _LINUX_UACCE_H
-> +
-> +#include <linux/cdev.h>
-> +#include <uapi/misc/uacce/uacce.h>
-> +
-> +#define UACCE_NAME		"uacce"
-> +
-> +struct uacce_queue;
-> +struct uacce_device;
-> +
-> +/* uacce queue file flag, requires different operation */
-> +#define UACCE_QFRF_MAP		BIT(0)	/* map to current queue */
-> +#define UACCE_QFRF_MMAP		BIT(1)	/* map to user space */
-> +#define UACCE_QFRF_KMAP		BIT(2)	/* map to kernel space */
-> +#define UACCE_QFRF_DMA		BIT(3)	/* use dma api for the region */
-> +#define UACCE_QFRF_SELFMT	BIT(4)	/* self maintained qfr */
-> +
-
-...
-
-> +/**
-> + * struct uacce_queue
-> + * @uacce: pointer to uacce
-> + * @priv: private pointer
-> + * @wait: wait queue head
-> + * @pasid: pasid of the queue
-> + * @handle: iommu_sva handle return from iommu_sva_bind_device
-> + * @list: share list for qfr->qs
-> + * @mm: current->mm
-> + * @qfrs: pointer of qfr regions
-
-Missing state.  Make sure to run
-./scripts/kernel-doc FILENAME > /dev/null and
-fix any errors that show up.
-
-> + */
-> +struct uacce_queue {
-> +	struct uacce_device *uacce;
-> +	void *priv;
-> +	wait_queue_head_t wait;
-> +	int pasid;
-> +	struct iommu_sva *handle;
-> +	struct list_head list;
-> +	struct mm_struct *mm;
-> +	struct uacce_qfile_region *qfrs[UACCE_QFRT_MAX];
-> +	enum uacce_q_state state;
-> +};
-...
-
-Thanks,
-
-Jonathan
-
+	-ss
