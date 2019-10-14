@@ -2,326 +2,169 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5016C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D42C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A051A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF42207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j849QrP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbfJNKp6 (ORCPT
+        id S1731661AbfJNKqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:45:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34519 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731305AbfJNKp6 (ORCPT
+        Mon, 14 Oct 2019 06:46:40 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33807 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731441AbfJNKqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:45:58 -0400
-Received: from [212.86.36.32] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iJxrO-0002lB-PW; Mon, 14 Oct 2019 10:45:55 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, libc-alpha@sourceware.org
-Cc:     David Howells <dhowells@redhat.com>, Jann Horn <jannh@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-api@vger.kernel.org
-Subject: [PATCH v3 2/2] tests: test CLONE_CLEAR_SIGHAND
-Date:   Mon, 14 Oct 2019 12:45:38 +0200
-Message-Id: <20191014104538.3096-2-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191014104538.3096-1-christian.brauner@ubuntu.com>
-References: <20191014104538.3096-1-christian.brauner@ubuntu.com>
+        Mon, 14 Oct 2019 06:46:40 -0400
+Received: by mail-ed1-f65.google.com with SMTP id j8so2706869eds.1;
+        Mon, 14 Oct 2019 03:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SLSvROGsgOrUEvNT81BjHG6mslyR1XuSE3aUVvnJ/5Q=;
+        b=j849QrP2XfeeotlfzRkJWeOvRSueIN9CrbsKHiomuUpyreoDfReAZklyPkAPK1rZLV
+         W58mh9mu0aas/jIM8FgnALyPAGukYRgbMX3r+c8/jUk50QP0kmHsFCAOzkxOSkV0XkDs
+         1zBjCk1NUmtMS4olXHqUwm+odOYByEa+72HVtr21yPo1MVr8MTHXPBVOuTlF1RMRTIMa
+         Ti/ek/JKF3J/fYVc3lGWLGKJIZadG8uWflM7fQiquvD+XjC2ClEiHW3hhz8tqFjvkWIA
+         Id+dly3FnyybqdV1gjrPwsQlkkCsn6wtu3jMgv2G/7Xtbl9QQpgcB8XJdES/pSFoKzEo
+         pMOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SLSvROGsgOrUEvNT81BjHG6mslyR1XuSE3aUVvnJ/5Q=;
+        b=AM0mZxoWQywZ7WCwWJxVVb66FXYYmjlFwAVv0rpxosweMeFE3EVeJCEyOquDil2Gp+
+         zbq5QYZ/hsDHTIeTHzOgWI81QS00wIEoBA5hcj3lzkSUgOuwQRiu9fPgylFpkA/VHFOI
+         rP1EyMpDTwxrkz8RRsBH6EjMtm7zPu5Y6TKLDHhQyp2cK/RCZRKLf6e6yOmD7GaQSau6
+         RSnGHFNQKMDybLtEf0/6CJ6R71QFWPvAn3O6cdPbNC3AlwpLPNK5baUzeovLGwWCvdAK
+         XB429zxvv5V4HW82UhjpRcrSrjFj9uwXRkkxlf/lbPOBUEQRQ63Gj66nzvs/zmwMEw1F
+         MpUQ==
+X-Gm-Message-State: APjAAAVu8cBYU+xTtmHvL0N9fbyfYG0Rv+f3IZmxEnQwQgPQ1sf7VEdO
+        74FG8Pe2r4ZdT4pseaVYgm3+eeinDz6aC98SboQ=
+X-Google-Smtp-Source: APXvYqxiQSx8EAdJ5BZuRodetUcHE9C3Ym1rIP7KlT1XS6absJoC+IJ/Bb/9oya679tjoHehHULVk/uPNJBVQLmrzMY=
+X-Received: by 2002:a05:6402:149a:: with SMTP id e26mr27338068edv.123.1571049996979;
+ Mon, 14 Oct 2019 03:46:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191012123938.GA6865@nishad>
+In-Reply-To: <20191012123938.GA6865@nishad>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 14 Oct 2019 13:46:26 +0300
+Message-ID: <CA+h21hr=Wg7ydqcTLk85rrRGhx_LCxu2Ch3dWCt1-d1XtPaAcA@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: sja1105: Use the correct style for SPDX License Identifier
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test that CLONE_CLEAR_SIGHAND resets signal handlers to SIG_DFL for the
-child process and that CLONE_CLEAR_SIGHAND and CLONE_SIGHAND are
-mutually exclusive.
+Hi Nishad,
 
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: libc-alpha@sourceware.org
-Cc: linux-api@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v1 */
-Link: https://lore.kernel.org/r/20191010133518.5420-2-christian.brauner@ubuntu.com
+On Sat, 12 Oct 2019 at 15:39, Nishad Kamdar <nishadkamdar@gmail.com> wrote:
+>
+> This patch corrects the SPDX License Identifier style
+> in header files related to Distributed Switch Architecture
+> drivers for NXP SJA1105 series Ethernet switch support.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used)
+>
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> ---
 
-/* v2 */
-Link: https://lore.kernel.org/r/20191011102537.27502-2-christian.brauner@ubuntu.com
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - remove unused variable
-  - reuse variable in child process instead od declaring a new one
-  - move check for mutual exclusivity of CLONE_SIGHAND and
-    CLONE3_CLEAR_SIGHAND to top of test before setting up signal
-    handlers
-  - rename variables
+Your commit message has nothing to do with what you're fixing, but
+whatever. The SPDX identifiers _are_ using C-like comments.
 
-/* v3 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - s/CLONE3_CLEAR_SIGHAND/CLONE_CLEAR_SIGHAND/g
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/clone3/.gitignore     |   1 +
- tools/testing/selftests/clone3/Makefile       |   7 +
- .../selftests/clone3/clone3_clear_sighand.c   | 172 ++++++++++++++++++
- 5 files changed, 182 insertions(+)
- create mode 100644 tools/testing/selftests/clone3/.gitignore
- create mode 100644 tools/testing/selftests/clone3/Makefile
- create mode 100644 tools/testing/selftests/clone3/clone3_clear_sighand.c
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55199ef7fa74..582275d85607 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12828,6 +12828,7 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
- F:	samples/pidfd/
- F:	tools/testing/selftests/pidfd/
-+F:	tools/testing/selftests/clone3/
- K:	(?i)pidfd
- K:	(?i)clone3
- K:	\b(clone_args|kernel_clone_args)\b
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index c3feccb99ff5..6bf7aeb47650 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -4,6 +4,7 @@ TARGETS += bpf
- TARGETS += breakpoints
- TARGETS += capabilities
- TARGETS += cgroup
-+TARGETS += clone3
- TARGETS += cpufreq
- TARGETS += cpu-hotplug
- TARGETS += drivers/dma-buf
-diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/selftests/clone3/.gitignore
-new file mode 100644
-index 000000000000..6c9f98097774
---- /dev/null
-+++ b/tools/testing/selftests/clone3/.gitignore
-@@ -0,0 +1 @@
-+clone3_clear_sighand
-diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selftests/clone3/Makefile
-new file mode 100644
-index 000000000000..3ecd56ebc99d
---- /dev/null
-+++ b/tools/testing/selftests/clone3/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+CFLAGS += -g -I../../../../usr/include/
-+
-+TEST_GEN_PROGS := clone3_clear_sighand
-+
-+include ../lib.mk
-+
-diff --git a/tools/testing/selftests/clone3/clone3_clear_sighand.c b/tools/testing/selftests/clone3/clone3_clear_sighand.c
-new file mode 100644
-index 000000000000..0d957be1bdc5
---- /dev/null
-+++ b/tools/testing/selftests/clone3/clone3_clear_sighand.c
-@@ -0,0 +1,172 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <linux/sched.h>
-+#include <linux/types.h>
-+#include <sys/syscall.h>
-+#include <sys/wait.h>
-+
-+#include "../kselftest.h"
-+
-+#ifndef CLONE_CLEAR_SIGHAND
-+#define CLONE_CLEAR_SIGHAND 0x100000000ULL
-+#endif
-+
-+#ifndef __NR_clone3
-+#define __NR_clone3 -1
-+struct clone_args {
-+	__aligned_u64 flags;
-+	__aligned_u64 pidfd;
-+	__aligned_u64 child_tid;
-+	__aligned_u64 parent_tid;
-+	__aligned_u64 exit_signal;
-+	__aligned_u64 stack;
-+	__aligned_u64 stack_size;
-+	__aligned_u64 tls;
-+};
-+#endif
-+
-+static pid_t sys_clone3(struct clone_args *args, size_t size)
-+{
-+	return syscall(__NR_clone3, args, size);
-+}
-+
-+static void test_clone3_supported(void)
-+{
-+	pid_t pid;
-+	struct clone_args args = {};
-+
-+	if (__NR_clone3 < 0)
-+		ksft_exit_skip("clone3() syscall is not supported\n");
-+
-+	/* Set to something that will always cause EINVAL. */
-+	args.exit_signal = -1;
-+	pid = sys_clone3(&args, sizeof(args));
-+	if (!pid)
-+		exit(EXIT_SUCCESS);
-+
-+	if (pid > 0) {
-+		wait(NULL);
-+		ksft_exit_fail_msg(
-+			"Managed to create child process with invalid exit_signal\n");
-+	}
-+
-+	if (errno == ENOSYS)
-+		ksft_exit_skip("clone3() syscall is not supported\n");
-+
-+	ksft_print_msg("clone3() syscall supported\n");
-+}
-+
-+static void nop_handler(int signo)
-+{
-+}
-+
-+static int wait_for_pid(pid_t pid)
-+{
-+	int status, ret;
-+
-+again:
-+	ret = waitpid(pid, &status, 0);
-+	if (ret == -1) {
-+		if (errno == EINTR)
-+			goto again;
-+
-+		return -1;
-+	}
-+
-+	if (!WIFEXITED(status))
-+		return -1;
-+
-+	return WEXITSTATUS(status);
-+}
-+
-+static void test_clone3_clear_sighand(void)
-+{
-+	int ret;
-+	pid_t pid;
-+	struct clone_args args = {};
-+	struct sigaction act;
-+
-+	/*
-+	 * Check that CLONE_CLEAR_SIGHAND and CLONE_SIGHAND are mutually
-+	 * exclusive.
-+	 */
-+	args.flags |= CLONE_CLEAR_SIGHAND | CLONE_SIGHAND;
-+	args.exit_signal = SIGCHLD;
-+	pid = sys_clone3(&args, sizeof(args));
-+	if (pid > 0)
-+		ksft_exit_fail_msg(
-+			"clone3(CLONE_CLEAR_SIGHAND | CLONE_SIGHAND) succeeded\n");
-+
-+	act.sa_handler = nop_handler;
-+	ret = sigemptyset(&act.sa_mask);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s - sigemptyset() failed\n",
-+				   strerror(errno));
-+
-+	act.sa_flags = 0;
-+
-+	/* Register signal handler for SIGUSR1 */
-+	ret = sigaction(SIGUSR1, &act, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s - sigaction(SIGUSR1, &act, NULL) failed\n",
-+			strerror(errno));
-+
-+	/* Register signal handler for SIGUSR2 */
-+	ret = sigaction(SIGUSR2, &act, NULL);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s - sigaction(SIGUSR2, &act, NULL) failed\n",
-+			strerror(errno));
-+
-+	/* Check that CLONE_CLEAR_SIGHAND works. */
-+	args.flags = CLONE_CLEAR_SIGHAND;
-+	pid = sys_clone3(&args, sizeof(args));
-+	if (pid < 0)
-+		ksft_exit_fail_msg("%s - clone3(CLONE_CLEAR_SIGHAND) failed\n",
-+				   strerror(errno));
-+
-+	if (pid == 0) {
-+		ret = sigaction(SIGUSR1, NULL, &act);
-+		if (ret < 0)
-+			exit(EXIT_FAILURE);
-+
-+		if (act.sa_handler != SIG_DFL)
-+			exit(EXIT_FAILURE);
-+
-+		ret = sigaction(SIGUSR2, NULL, &act);
-+		if (ret < 0)
-+			exit(EXIT_FAILURE);
-+
-+		if (act.sa_handler != SIG_DFL)
-+			exit(EXIT_FAILURE);
-+
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	ret = wait_for_pid(pid);
-+	if (ret)
-+		ksft_exit_fail_msg(
-+			"Failed to clear signal handler for child process\n");
-+
-+	ksft_test_result_pass("Cleared signal handlers for child process\n");
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
-+	test_clone3_supported();
-+	test_clone3_clear_sighand();
-+
-+	return ksft_exit_pass();
-+}
--- 
-2.23.0
-
+>  drivers/net/dsa/sja1105/sja1105.h                | 4 ++--
+>  drivers/net/dsa/sja1105/sja1105_dynamic_config.h | 4 ++--
+>  drivers/net/dsa/sja1105/sja1105_ptp.h            | 4 ++--
+>  drivers/net/dsa/sja1105/sja1105_static_config.h  | 4 ++--
+>  drivers/net/dsa/sja1105/sja1105_tas.h            | 4 ++--
+>  5 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+> index 8681ff9d1a76..fb7a6fff643f 100644
+> --- a/drivers/net/dsa/sja1105/sja1105.h
+> +++ b/drivers/net/dsa/sja1105/sja1105.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - * Copyright (c) 2018, Sensor-Technik Wiedemann GmbH
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*  Copyright (c) 2018, Sensor-Technik Wiedemann GmbH
+>   * Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
+>   */
+>  #ifndef _SJA1105_H
+> diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.h b/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
+> index 740dadf43f01..4f64adb2d26a 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
+> +++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*  Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
+>   */
+>  #ifndef _SJA1105_DYNAMIC_CONFIG_H
+>  #define _SJA1105_DYNAMIC_CONFIG_H
+> diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.h b/drivers/net/dsa/sja1105/sja1105_ptp.h
+> index af456b0a4d27..c7e598fd1504 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_ptp.h
+> +++ b/drivers/net/dsa/sja1105/sja1105_ptp.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*  Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
+>   */
+>  #ifndef _SJA1105_PTP_H
+>  #define _SJA1105_PTP_H
+> diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
+> index 7f87022a2d61..ee66fae6128b 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_static_config.h
+> +++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: BSD-3-Clause
+> - * Copyright (c) 2016-2018, NXP Semiconductors
+> +/* SPDX-License-Identifier: BSD-3-Clause */
+> +/*  Copyright (c) 2016-2018, NXP Semiconductors
+>   * Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
+>   */
+>  #ifndef _SJA1105_STATIC_CONFIG_H
+> diff --git a/drivers/net/dsa/sja1105/sja1105_tas.h b/drivers/net/dsa/sja1105/sja1105_tas.h
+> index 0b803c30e640..c3ea7be52b9c 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_tas.h
+> +++ b/drivers/net/dsa/sja1105/sja1105_tas.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*  Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
+>   */
+>  #ifndef _SJA1105_TAS_H
+>  #define _SJA1105_TAS_H
+> --
+> 2.17.1
+>
