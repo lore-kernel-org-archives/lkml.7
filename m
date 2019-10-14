@@ -2,181 +2,134 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B5DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2238DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249C921882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QJgaaJ6a"
+	by mail.kernel.org (Postfix) with ESMTP id EC6A420854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571069558;
+	bh=6fgBtO62mZBLTVpjQ/XdUcdPxurG/FPvcAMlM0ciDns=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=yCUrWCZ49S69VJq7e4Va4oUCWSf/4edv7ALVohErqM0UygYMVB7xe+g0yoM2fO4ph
+	 zgcZMPnRHTs3cXZGC2RnsESrniMGqL5PKxAzvlX7NKDNVg4CGUknecrSnSOQrPwMA/
+	 UhmHzwDq6KFSG+vlRT2tsHuPvujQyUbKlxtAE9V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387952AbfJNQLm (ORCPT
+        id S2387971AbfJNQMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:11:42 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:23752 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731121AbfJNQLl (ORCPT
+        Mon, 14 Oct 2019 12:12:37 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54810 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732195AbfJNQMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:11:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571069496;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=6qSov3Hb5OrALou0VvA4Jh0umGO7LkXI7A0nsJccwFo=;
-        b=QJgaaJ6a1lghqyv2BL1MkEdiQonsdvaFry8yVxjKry2uDBVu1NOgY8XRXXmdYEkvlZ
-        CyjlVm4UV6tzJAxCQPJSUWEZLKz+vnmwV1OJtf4CbQa3aLQPZM0rkmCZyoMh9rom7EfO
-        TXF0qJ3akhYnLNUBsXXCyUGCNH+c0wbu171F8b/zzhR8JQ8lzQ6fVhIrbpHdbYdnY6T9
-        7r22FOm73h1sVbcpq9e6Ozr7ygkcPFiFddbplCINmpaqU4zkC8hfS3uow8M1SfgQLWH8
-        uk8jaUF5IyjBX6VnU473EJr5qdI7eiGcuA8PSX7jiNkdrg0SIMcWAEc6RBYFzZ7YMcJ1
-        bgDg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zpwDOpBCI="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.28.0 DYNA|AUTH)
-        with ESMTPSA id v00409v9EGBXKQi
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Mon, 14 Oct 2019 18:11:33 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] Lay common foundation to make PVR/SGX work without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <72851E17-9B56-4CA5-B164-667836A7C894@goldelico.com>
-Date:   Mon, 14 Oct 2019 18:11:33 +0200
-Cc:     Merlijn Wajer <merlijn@wizzup.org>, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        maemo-leste@lists.dyne.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@pyra-handheld.com, Robert Nelson <robertcnelson@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1A69DA38-DD6D-4C2B-9F42-D293796AC98A@goldelico.com>
-References: <20180108214032.GW3872@atomide.com> <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com> <20190213004143.GP5720@atomide.com> <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com> <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com> <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com> <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com> <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com> <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com> <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com> <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org> <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com> <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org> <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com> <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org> <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com> <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com> <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com> <ebb50954-b456-
-  4dab-0765-9dfa06c67075@wizzup.org> <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com> <72851E17-9B56-4CA5-B164-667836A7C894@goldelico.com>
-To:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
-X-Mailer: Apple Mail (2.3124)
+        Mon, 14 Oct 2019 12:12:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=2lucGtC5FgFnkQOwXgFW6LIHJ1tEIf7HqGz9IDto4us=; b=J7Fsb/Eu9Ao9
+        +0W6VbhNrfvcxYfqsERKsz/ohtt6gTdLZtA32MltYmlne6Yq3Psc/q+6XwhEPuEqkqIvaHqmfn6N8
+        vQO++KVVYsGl+FD1odllUQ/GS8rcvv0VOdz+BNQu6XcaLP7DucU+Il2V/lLqXs/MaTUsP8/x46zT6
+        skR3E=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iK2xK-0007yg-HJ; Mon, 14 Oct 2019 16:12:22 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id E13102741EF2; Mon, 14 Oct 2019 17:12:21 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Hulk Robot <hulkci@huawei.com>, jaska.uimonen@linux.intel.com,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        pierre-louis.bossart@linux.intel.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        tiwai@suse.com, yang.jie@linux.intel.com, yuehaibing@huawei.com,
+        yung-chuan.liao@linux.intel.com
+Subject: Applied "ASoC: SOF: Fix randbuild error" to the asoc tree
+In-Reply-To:  <20191014091308.23688-1-yuehaibing@huawei.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191014161221.E13102741EF2@ypsilon.sirena.org.uk>
+Date:   Mon, 14 Oct 2019 17:12:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
-> Am 12.10.2019 um 15:09 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi,
->=20
->> Am 05.10.2019 um 18:58 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> I have found the following description, followed all steps, and it =
-works:
->=20
-> http://blog.0xpebbles.org/PowerVR-SGX-on-the-beaglebone-black-in-2019
->=20
-> So with this, I have got a working user-space setup for BeagleBone and =
-some working
-> pvrsrvkm.ko module (kernel 4.4.155-ti-r155) for evaluation.
+   ASoC: SOF: Fix randbuild error
 
-> What I don't have yet is the full source code or build recipe for the =
-specific
-> 4.4.155-ti-r155 pvrsrvkm.ko from TI.
->=20
-> But even without having this yet, I can start experiments by replacing
-> kernel and pvrsrvkm.ko with mine. This should allow to gain new =
-insights.
+has been applied to the asoc tree at
 
-Good news:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-after making a Hybrid SD image of the setup described above and =
-replacing the
-4.4.155-ti-r155 kernel with its pvrsrvkm.ko by my own 5.4-rc2 kernel and =
-pvrsrvkm,
-I was able to start the pvrsrv uKernel. And run the gles1test1 on =
-beaglebone
-(without LCD but also without errors).
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-With this knowledge I could adapt my user-space. There are indeed =
-different
-non-free binaries for sgx530, sgx540, sgx544. And SGX needs enough =
-coherent memory.
-So I could make a completely self-built kernel and rootfs (using the git =
-clone from
-ti for the firmware + make install) run on BeagleBone.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Here is a quickly taken video:
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-https://youtu.be/jFCPR_EvtjY
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-With the same setup, I can now also load the kernel driver and run =
-pvrsrvctl on
-DM3730 without errors, but the gles1test1 reports some error and fails =
-to run.
-Maybe something in the video subsystem or memory mapping is still wrong.
+Thanks,
+Mark
 
-Unfortunately, the same setup does not run on omap5. It looks like there =
-are different
-releases for the non-free binaries and I have to pick the right one.
+From 9899a7a869935c4c93247b290ac7a70e0deab202 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Mon, 14 Oct 2019 17:13:08 +0800
+Subject: [PATCH] ASoC: SOF: Fix randbuild error
 
-On BBB the version I could make running is branch =
-ti-img-sgx/1.14.3699939_k4.4 from
-git://git.ti.com/graphics/omap5-sgx-ddk-um-linux.git. Target ti335x =
-works while
-target jacinto6evm fails for OMAP5. A diff on the binaries for e.g. =
-pvrsrvctl shows
-that they are different.
+When LEDS_TRIGGER_AUDIO is m and SND_SOC_SOF is y,
 
-If you want to repeat this setup and my instructions are too imprecise, =
-please
-ask.
+sound/soc/sof/control.o: In function `snd_sof_switch_put':
+control.c:(.text+0x587): undefined reference to `ledtrig_audio_set'
+control.c:(.text+0x593): undefined reference to `ledtrig_audio_set'
 
-So in summary this means:
-* the common foundation (clock, reset, power etc.) setup is working - =
-thanks to Tero, Tony and others
-* I have added device tree nodes for each SoC type to define sgx =
-registers, interrupts, compatible etc.
-* compiling SoC specific kernel module variants from single source tree =
-works
-* the work can already be demoed on BBB and OMAP5 Pyra (using different =
-user-space binaries)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191014091308.23688-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sof/control.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Basically I am now ready to post an RFC for the sgx child device nodes =
-together
-with a bindings document [1]. But I am not sure if I should better wait =
-until
-really all underlaying prm+rtsctl+syscon+idlest-polling patches by Tero =
-and Tony [2]
-have matured in linux-next and have arrived in v5.5-rc1. Would be short =
-before Xmas.
-
-Independent of low level patches, we all have to discuss how we want to =
-get the GPLed
-kernel driver [3] into mainline drivers/staging. This likely needs more =
-cleanup before
-it can be proposed.
-
-BR,
-Nikolaus
-
-[1]: =
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap=
--pvr-soc-glue-v5
-[2]: =
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap=
--sysc-prm-gfx
-[3]: =
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/late=
-st-pvr
+diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
+index 41551e8f6ac3..2c4abd406c4f 100644
+--- a/sound/soc/sof/control.c
++++ b/sound/soc/sof/control.c
+@@ -36,10 +36,12 @@ static void update_mute_led(struct snd_sof_control *scontrol,
+ 
+ 	scontrol->led_ctl.led_value = temp;
+ 
++#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+ 	if (!scontrol->led_ctl.direction)
+ 		ledtrig_audio_set(LED_AUDIO_MUTE, temp ? LED_OFF : LED_ON);
+ 	else
+ 		ledtrig_audio_set(LED_AUDIO_MICMUTE, temp ? LED_OFF : LED_ON);
++#endif
+ }
+ 
+ static inline u32 mixer_to_ipc(unsigned int value, u32 *volume_map, int size)
+-- 
+2.20.1
 
