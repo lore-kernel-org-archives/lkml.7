@@ -2,198 +2,165 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD55ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848532133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5269A2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="e19PdnTI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HKI8cWtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfJNN5u (ORCPT
+        id S1732391AbfJNN6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:57:50 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40788 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730477AbfJNN5u (ORCPT
+        Mon, 14 Oct 2019 09:58:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60080 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730477AbfJNN6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:57:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e13so1973108pga.7
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 06:57:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=w+qQ12zqF6/LBMHQ5Fp2IFcdj8n4Em4zE18BXC0o5qc=;
-        b=e19PdnTITiRHT8BkzMqzQslGAm0ePSp/Ygo3EPANA7IZYnPaqVYFwlLTDbRE6C315S
-         Fq2C21+LeOwUqC/5Q0/LhjsGkUjHkd4DrizycDmZ0CIZWjRjTpzT65GyR2KpdrUv/NzQ
-         ty+P8L2qB0/AsSbQ6iwuWlgckd43Y8kX2DTOQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=w+qQ12zqF6/LBMHQ5Fp2IFcdj8n4Em4zE18BXC0o5qc=;
-        b=tojO0MpQmrans5+dQ8hSg3a1c9c+Bmct+Gk/x93DC++2OcFoTWSXFDpvlt05uGNHBT
-         Jo6pvyYPC3oxDHF9GWNXIfDfeYo+SrCuwTNgiskBz1iAFAtZyoFybtf4Wtc3LZtmG3Xz
-         vCxjbzTWCXLNI0VmbcAs5Ng42vvCM9RMZNKoQMqsbIMi5ZNn+AU8m5R2tCSYgmib1nGZ
-         CG/vJa01xwyzFUIy1/FCCWHMDqeYSTElYsp7ldlFoBw6KAsA2ZEs5llObjaPPs1aC3/B
-         5RzYc0Uz3d6Mf6tt6ZKC+UaXiBDnnZfjF22GycZayIZOYG28j8ut8wya8nW6yoCq6dK1
-         ENpA==
-X-Gm-Message-State: APjAAAXgWIB5MsXeEvU4z1MftiW8p0uw0clxwZwURYkqLyY43Z2PuLJQ
-        UVoaVtzTHqFgTHx4IS/NJ2uhNQ==
-X-Google-Smtp-Source: APXvYqxv6ZzjyfwcTFL8mtTDtffryluSc6uc9hQ8Klc9iZGNvmBj4sktnP0dv9DvdOb4Ap0KWjNLDQ==
-X-Received: by 2002:a63:1d8:: with SMTP id 207mr17320083pgb.366.1571061468959;
-        Mon, 14 Oct 2019 06:57:48 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id z4sm15608752pjt.17.2019.10.14.06.57.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 06:57:48 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        glider@google.com, luto@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
-Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real shadow memory
-In-Reply-To: <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
-References: <20191001065834.8880-1-dja@axtens.net> <20191001065834.8880-2-dja@axtens.net> <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
-Date:   Tue, 15 Oct 2019 00:57:44 +1100
-Message-ID: <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
+        Mon, 14 Oct 2019 09:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kgs9bqvyVpw9soHAyFCmszbV5/zLcW17e2OOtQJqQmM=; b=HKI8cWtHi2xlWWe7fAXFD6PgA
+        it7YGMapylf8PQSv2dYPBczatiaiWqqimUwWlXuKaqxxLGS1DYd7ZryMM08Qg1DYSrspH8uFIIqCz
+        bpaieuWKuOSqdFFJ/NHVWlG5mnFesdN+in6LlNiFcQBtRoR7+ZJ1btIImW8p1xOSqtb+duv0K445h
+        ht7BZ3Nf6hN0Zvu6A65QoWeLJ64chu6SDJjnfE6ZPbHaBlTyP7mh4MVJMbTxAGyzFEOlTHVa7VY4E
+        6uVZR8ATVeV3uyMvJ1so34kdhmgi57F+fu3aXvspB1oM+RaR8Yaa4m8i33prmWK+57050oOgw7GD7
+        Bqgl7UD0g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iK0rq-0003L6-Or; Mon, 14 Oct 2019 13:58:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AACB6300F3F;
+        Mon, 14 Oct 2019 15:57:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B438B284DE584; Mon, 14 Oct 2019 15:58:32 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 15:58:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Manfred Spraul <manfred@colorfullife.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Waiman Long <longman@redhat.com>, 1vier1@web.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 3/6] ipc/mqueue.c: Update/document memory barriers
+Message-ID: <20191014135832.GO2359@hirez.programming.kicks-ass.net>
+References: <20191012054958.3624-1-manfred@colorfullife.com>
+ <20191012054958.3624-4-manfred@colorfullife.com>
+ <20191014125911.GF2328@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014125911.GF2328@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+On Mon, Oct 14, 2019 at 02:59:11PM +0200, Peter Zijlstra wrote:
+> On Sat, Oct 12, 2019 at 07:49:55AM +0200, Manfred Spraul wrote:
+> 
+> >  	for (;;) {
+> > +		/* memory barrier not required, we hold info->lock */
+> >  		__set_current_state(TASK_INTERRUPTIBLE);
+> >  
+> >  		spin_unlock(&info->lock);
+> >  		time = schedule_hrtimeout_range_clock(timeout, 0,
+> >  			HRTIMER_MODE_ABS, CLOCK_REALTIME);
+> >  
+> > +		if (READ_ONCE(ewp->state) == STATE_READY) {
+> > +			/*
+> > +			 * Pairs, together with READ_ONCE(), with
+> > +			 * the barrier in __pipelined_op().
+> > +			 */
+> > +			smp_acquire__after_ctrl_dep();
+> >  			retval = 0;
+> >  			goto out;
+> >  		}
+> >  		spin_lock(&info->lock);
+> > +
+> > +		/* we hold info->lock, so no memory barrier required */
+> > +		if (READ_ONCE(ewp->state) == STATE_READY) {
+> >  			retval = 0;
+> >  			goto out_unlock;
+> >  		}
+> > @@ -925,14 +933,12 @@ static inline void __pipelined_op(struct wake_q_head *wake_q,
+> >  	list_del(&this->list);
+> >  	wake_q_add(wake_q, this->task);
+> >  	/*
+> > +	 * The barrier is required to ensure that the refcount increase
+> > +	 * inside wake_q_add() is completed before the state is updated.
+> 
+> fails to explain *why* this is important.
+> 
+> > +	 *
+> > +	 * The barrier pairs with READ_ONCE()+smp_mb__after_ctrl_dep().
+> >  	 */
+> > +        smp_store_release(&this->state, STATE_READY);
+> 
+> You retained the whitespace damage.
+> 
+> And I'm terribly confused by this code, probably due to the lack of
+> 'why' as per the above. What is this trying to do?
+> 
+> Are we worried about something like:
+> 
+> 	A			B				C
+> 
+> 
+> 				wq_sleep()
+> 				  schedule_...();
+> 
+> 								/* spuriuos wakeup */
+> 								wake_up_process(B)
+> 
+> 	wake_q_add(A)
+> 	  if (cmpxchg()) // success
+> 
+> 	->state = STATE_READY (reordered)
+> 
+> 				  if (READ_ONCE() == STATE_READY)
+> 				    goto out;
+> 
+> 				exit();
+> 
+> 
+> 	    get_task_struct() // UaF
+> 
+> 
+> Can we put the exact and full race in the comment please?
+
+Like Davidlohr already suggested, elsewhere we write it like so:
 
 
->> +	/*
->> +	 * Ensure poisoning is visible before the shadow is made visible
->> +	 * to other CPUs.
->> +	 */
->> +	smp_wmb();
->
-> I'm not quite understand what this barrier do and why it needed.
-> And if it's really needed there should be a pairing barrier
-> on the other side which I don't see.
-
-Mark might be better able to answer this, but my understanding is that
-we want to make sure that we never have a situation where the writes are
-reordered so that PTE is installed before all the poisioning is written
-out. I think it follows the logic in __pte_alloc() in mm/memory.c:
-
-	/*
-	 * Ensure all pte setup (eg. pte page lock and page clearing) are
-	 * visible before the pte is made visible to other CPUs by being
-	 * put into page tables.
-	 *
-	 * The other side of the story is the pointer chasing in the page
-	 * table walking code (when walking the page table without locking;
-	 * ie. most of the time). Fortunately, these data accesses consist
-	 * of a chain of data-dependent loads, meaning most CPUs (alpha
-	 * being the notable exception) will already guarantee loads are
-	 * seen in-order. See the alpha page table accessors for the
-	 * smp_read_barrier_depends() barriers in page table walking code.
-	 */
-	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
-
-I can clarify the comment.
-
->> +
->> +	spin_lock(&init_mm.page_table_lock);
->> +	if (likely(pte_none(*ptep))) {
->> +		set_pte_at(&init_mm, addr, ptep, pte);
->> +		page = 0;
->> +	}
->> +	spin_unlock(&init_mm.page_table_lock);
->> +	if (page)
->> +		free_page(page);
->> +	return 0;
->> +}
->> +
->
->
-> ...
->
->> @@ -754,6 +769,8 @@ merge_or_add_vmap_area(struct vmap_area *va,
->>  	}
->>  
->>  insert:
->> +	kasan_release_vmalloc(orig_start, orig_end, va->va_start, va->va_end);
->> +
->>  	if (!merged) {
->>  		link_va(va, root, parent, link, head);
->>  		augment_tree_propagate_from(va);
->> @@ -2068,6 +2085,22 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
->>  
->>  	setup_vmalloc_vm(area, va, flags, caller);
->>  
->> +	/*
->> +	 * For KASAN, if we are in vmalloc space, we need to cover the shadow
->> +	 * area with real memory. If we come here through VM_ALLOC, this is
->> +	 * done by a higher level function that has access to the true size,
->> +	 * which might not be a full page.
->> +	 *
->> +	 * We assume module space comes via VM_ALLOC path.
->> +	 */
->> +	if (is_vmalloc_addr(area->addr) && !(area->flags & VM_ALLOC)) {
->> +		if (kasan_populate_vmalloc(area->size, area)) {
->> +			unmap_vmap_area(va);
->> +			kfree(area);
->> +			return NULL;
->> +		}
->> +	}
->> +
->>  	return area;
->>  }
->>  
->> @@ -2245,6 +2278,9 @@ static void __vunmap(const void *addr, int deallocate_pages)
->>  	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
->>  	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
->>  
->> +	if (area->flags & VM_KASAN)
->> +		kasan_poison_vmalloc(area->addr, area->size);
->> +
->>  	vm_remove_mappings(area, deallocate_pages);
->>  
->>  	if (deallocate_pages) {
->> @@ -2497,6 +2533,9 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
->>  	if (!addr)
->>  		return NULL;
->>  
->> +	if (kasan_populate_vmalloc(real_size, area))
->> +		return NULL;
->> +
->
-> KASAN itself uses __vmalloc_node_range() to allocate and map shadow in memory online callback.
-> So we should either skip non-vmalloc and non-module addresses here or teach kasan's memory online/offline
-> callbacks to not use __vmalloc_node_range() (do something similar to kasan_populate_vmalloc() perhaps?). 
-
-Ah, right you are. I haven't been testing that.
-
-I am a bit nervous about further restricting kasan_populate_vmalloc: I
-seem to remember having problems with code using the vmalloc family of
-functions to map memory that doesn't lie within vmalloc space but which
-still has instrumented accesses.
-
-On the other hand, I'm not keen on rewriting any of the memory
-on/offline code if I can avoid it!
-
-I'll have a look and get back you as soon as I can.
-
-Thanks for catching this.
-
-Kind regards,
-Daniel
-
->
-> -- 
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/352cb4fa-2e57-7e3b-23af-898e113bbe22%40virtuozzo.com.
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -930,15 +930,10 @@ static inline void __pipelined_op(struct
+ 				  struct mqueue_inode_info *info,
+ 				  struct ext_wait_queue *this)
+ {
++	get_task_struct(this->task);
+ 	list_del(&this->list);
+-	wake_q_add(wake_q, this->task);
+-	/*
+-	 * The barrier is required to ensure that the refcount increase
+-	 * inside wake_q_add() is completed before the state is updated.
+-	 *
+-	 * The barrier pairs with READ_ONCE()+smp_mb__after_ctrl_dep().
+-	 */
+-        smp_store_release(&this->state, STATE_READY);
++	smp_store_release(&this->state, STATE_READY);
++	wake_q_add_safe(wake_q, this->task);
+ }
+ 
+ /* pipelined_send() - send a message directly to the task waiting in
