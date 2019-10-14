@@ -2,144 +2,263 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198F7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20024C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3BE2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28CA207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A79ceiqR"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="Cd9Tp17/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbfJNMiz (ORCPT
+        id S1730894AbfJNMlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 08:38:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34339 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730800AbfJNMiz (ORCPT
+        Mon, 14 Oct 2019 08:41:00 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:54522 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730733AbfJNMlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:38:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j11so19572246wrp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 05:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=n+yPkcAtfV0uGXnqQ5l9CgswhmsyO7bUGevjjjP7SsU=;
-        b=A79ceiqRSzseaHRlZZLlXa96+PS5g04Icp7X8OBGCpMjSWZMKo6YOwikpLf6/jQBMq
-         fy340S/jR7Y1jWTQSQRys1d9vDsClxwWH30JJz5a9caRijoVmFpl1tPG3AosuzVtp7rP
-         fMzukJ6d4v08D6FyVMdnpj+QAw3XCZlpVVmVGKRK61gmLAKVd4ti+q8CWQQXv7obywCj
-         06lRcOwuzTFo8oItdzoN8RpKOz2b8YkAtKrGvYtuBvBpWJx0wBnQCms/+f11dE23FDii
-         VPYn6SrRQnKWrpVDmWTvuELG0ZI1jNBoKVhECHEeBhpUiP6PoKwYvoexLbVczKj1NYzt
-         92NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=n+yPkcAtfV0uGXnqQ5l9CgswhmsyO7bUGevjjjP7SsU=;
-        b=qB5xYnnav161G2PG+WSlXefbN8mV6PU9zsHkWZoT+ZD39xD3rNSBfx24KNnBlmzGlM
-         uU2cID+S8R0uxCfnTwfeonLZRh8ZVELGEoUUZnUu397BTS4+IpxPKn1OmjIcCgQqyvNN
-         a8pnB6X6i8U+5PgA1lNZmA8ti/hUA1ctIitfXQFeiSSUXqS8tRE0oFaEKviqwU1xJseJ
-         U9h9vN5DXhDnCF6Oj61v0asNufP/jN3MjPp+mf53D0RhO2JU64f/lMGPT808X4c5a1+0
-         jgX6k6lNWnW2yt/n3znJFbRo6OPQEoyFxGC1gtENFdjr/F0ppormjM+mqm2DFayJ7K9t
-         uLQQ==
-X-Gm-Message-State: APjAAAX0Q7m8aaPZdNEF5M3nXe33XdPgoOF3g+J/c06yn7USwR+Ch95+
-        dCY4FmLWCcp+3Hj78qPZJeUE8Q==
-X-Google-Smtp-Source: APXvYqwqbStCqYu3QLpfrXd2t39WhPUqXMhg7Pi5oJ3FT3qN/ojPYFC4TcXi10rFByzDts+Dg0rFdQ==
-X-Received: by 2002:adf:ff87:: with SMTP id j7mr25395021wrr.360.1571056732536;
-        Mon, 14 Oct 2019 05:38:52 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c17sm21653738wrc.60.2019.10.14.05.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 05:38:51 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 13:38:49 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmurphy@ti.com, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v5 3/3] leds: Add control of the voltage/current
- regulator to the LED core
-Message-ID: <20191014123849.fhvmqn7dyu6bminc@holly.lan>
-References: <20190923102059.17818-1-jjhiblot@ti.com>
- <20190923102059.17818-4-jjhiblot@ti.com>
- <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com>
- <20191013120937.GK5653@amd>
- <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
+        Mon, 14 Oct 2019 08:41:00 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id C0FD35C2968;
+        Mon, 14 Oct 2019 14:40:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1571056855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YrWET6MwKgu6ijCwF1dhxci/n4n0Vg1dUxqCWKvLfYI=;
+        b=Cd9Tp17/bN/gVz6dvVu67YBFVDnn7pdCVMWM9b9Nsd3CWRgrZjB4nKYjhCF5rsujmLA9b5
+        03ItSqHrudgjtO8J+OMeENMsYh/ubOHvYtZovvwmBzpRRy2tLpu3QC+KOXueJvk64QQfZq
+        M80bvjrKzHqCYNhbUajdL3zRtxiUhXg=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
-User-Agent: NeoMutt/20180716
+Date:   Mon, 14 Oct 2019 14:40:55 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 13/14] drm/mxsfb: Add support for horizontal stride
+In-Reply-To: <1567078215-31601-14-git-send-email-robert.chiras@nxp.com>
+References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
+ <1567078215-31601-14-git-send-email-robert.chiras@nxp.com>
+Message-ID: <3f346b1f809e77d343117dabc00c0402@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:49:07PM +0200, Jean-Jacques Hiblot wrote:
-> 
-> On 13/10/2019 14:09, Pavel Machek wrote:
-> > Hi!
-> > 
-> > > I must say I'm not a big fan of this change.
-> > > It adds a bunch of code to the LED core and gives small
-> > > functionality in a reward. It may also influence maximum
-> > > software blinking rate, so I'd rather avoid calling
-> > > regulator_enable/disable when timer trigger is set.
-> > > 
-> > > It will of course require more code.
-> > > 
-> > > Since AFAIR Pavel was original proponent of this change then
-> > > I'd like to see his opinion before we move on to discussing
-> > > possible improvements to this patch.
-> > Was I?
-> > 
-> > Okay, this series looks quite confusing to me. First, 1/3 looks
-> > "interesting" (would have to analyze it way more).
-> > 
-> > Second, 3/3... So we have a LED driver _and_ a regulator? So yes, the
-> > chip driving a LED is usually ... voltage/current regulator. What is
-> > second regulator doing there? Is that a common setup?
-> 
-> This is quite common with current-sink LED drivers.
-> 
-> The setup looks like this:
-> 
-> +-----------+
-> |           |
-> | Regulator |
-> |           +------------------------+
-> |           |                        |
-> +-----------+                      __|__
->                                    \   /
->          +---------------------+    \ / led
->          |                     |     V
->          |    Led Driver       |   --+--
->          |                     |     |
->          |                     |     |
->          |                +----------+
->          |              \      |
->          |               \     |
->          |                +    |
->          |                |    |
->          +---------------------+
->                           |
->                        +--+--+
->                        ///////
-> 
-> 
-> Only the regulator usually does not supply only one LED.
+Hi Robert,
 
-Given questions have been raised about the complexity of the change I
-wondered whether, for a system with this topology, the regulator
-could/should be enabled when the LED driver driver probes?
+Sorry it took me so long to have a closer look at this patchset.
+
+I will definitely merge part of it, but this particular patch actually
+breaks i.MX 7. I have vertical stripes on my display with this patch
+applied (using Weston with DRM backend). Not sure why this exactly
+happens, from what I understand this should only affect IP Version 4.
+
+Some notes below:
 
 
-Daniel.
+On 2019-08-29 13:30, Robert Chiras wrote:
+> Besides the eLCDIF block, there is another IP block, used in the past
+> for EPDC panels. Since the iMX.8mq doesn't have an EPDC connector, this
+> block is not documented, but we can use it to do additional operations
+> on the frame buffer.
+
+Hm, but this block is part of the ELCDIF block, in terms of clock, power
+domain etc?
+
+> In this case, we can use the pigeon registers from this IP block in
+> order to do horizontal crop on the frame buffer processed by the eLCDIF
+> block.
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Tested-by: Guido GÃ¼nther <agx@sigxcpu.org>
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 79 ++++++++++++++++++++++++++++++++++++--
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c  |  1 +
+>  drivers/gpu/drm/mxsfb/mxsfb_regs.h | 16 ++++++++
+>  3 files changed, 92 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index a12f53d..317575e 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -15,6 +15,7 @@
+>  
+>  #include <video/videomode.h>
+>  
+> +#include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_fb_cma_helper.h>
+> @@ -435,13 +436,66 @@ void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
+>  	clk_disable_unprepare(mxsfb->clk_axi);
+>  }
+>  
+> +void mxsfb_set_fb_hcrop(struct mxsfb_drm_private *mxsfb, u32 src_w, u32 fb_w)
+> +{
+> +	u32 mask_cnt, htotal, hcount;
+> +	u32 vdctrl2, vdctrl3, vdctrl4, transfer_count;
+> +	u32 pigeon_12_0, pigeon_12_1, pigeon_12_2;
+> +
+> +	if (src_w == fb_w) {
+> +		writel(0x0, mxsfb->base + HW_EPDC_PIGEON_12_0);
+> +		writel(0x0, mxsfb->base + HW_EPDC_PIGEON_12_1);
+> +
+> +		return;
+> +	}
+> +
+> +	transfer_count = readl(mxsfb->base + LCDC_V4_TRANSFER_COUNT);
+> +	hcount = TRANSFER_COUNT_GET_HCOUNT(transfer_count);
+> +
+> +	transfer_count &= ~TRANSFER_COUNT_SET_HCOUNT(0xffff);
+> +	transfer_count |= TRANSFER_COUNT_SET_HCOUNT(fb_w);
+> +	writel(transfer_count, mxsfb->base + LCDC_V4_TRANSFER_COUNT);
+> +
+> +	vdctrl2 = readl(mxsfb->base + LCDC_VDCTRL2);
+> +	htotal  = VDCTRL2_GET_HSYNC_PERIOD(vdctrl2);
+> +	htotal  += fb_w - hcount;
+> +	vdctrl2 &= ~VDCTRL2_SET_HSYNC_PERIOD(0x3ffff);
+> +	vdctrl2 |= VDCTRL2_SET_HSYNC_PERIOD(htotal);
+> +	writel(vdctrl2, mxsfb->base + LCDC_VDCTRL2);
+> +
+> +	vdctrl4 = readl(mxsfb->base + LCDC_VDCTRL4);
+> +	vdctrl4 &= ~SET_DOTCLK_H_VALID_DATA_CNT(0x3ffff);
+> +	vdctrl4 |= SET_DOTCLK_H_VALID_DATA_CNT(fb_w);
+> +	writel(vdctrl4, mxsfb->base + LCDC_VDCTRL4);
+> +
+> +	/* configure related pigeon registers */
+> +	vdctrl3  = readl(mxsfb->base + LCDC_VDCTRL3);
+> +	mask_cnt = GET_HOR_WAIT_CNT(vdctrl3) - 5;
+> +
+> +	pigeon_12_0 = PIGEON_12_0_SET_STATE_MASK(0x24)		|
+> +		      PIGEON_12_0_SET_MASK_CNT(mask_cnt)	|
+> +		      PIGEON_12_0_SET_MASK_CNT_SEL(0x6)		|
+> +		      PIGEON_12_0_POL_ACTIVE_LOW		|
+> +		      PIGEON_12_0_EN;
+> +	writel(pigeon_12_0, mxsfb->base + HW_EPDC_PIGEON_12_0);
+> +
+> +	pigeon_12_1 = PIGEON_12_1_SET_CLR_CNT(src_w) |
+> +		      PIGEON_12_1_SET_SET_CNT(0x0);
+> +	writel(pigeon_12_1, mxsfb->base + HW_EPDC_PIGEON_12_1);
+> +
+> +	pigeon_12_2 = 0x0;
+> +	writel(pigeon_12_2, mxsfb->base + HW_EPDC_PIGEON_12_2);
+> +}
+> +
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+>  			       struct drm_plane_state *state)
+>  {
+>  	struct drm_simple_display_pipe *pipe = &mxsfb->pipe;
+>  	struct drm_crtc *crtc = &pipe->crtc;
+> +	struct drm_plane_state *new_state = pipe->plane.state;
+> +	struct drm_framebuffer *fb = pipe->plane.state->fb;
+>  	struct drm_pending_vblank_event *event;
+> -	dma_addr_t paddr;
+> +	u32 fb_addr, src_off, src_w, stride, cpp = 0;
+
+dma_addr_t seems to be the better type here, why change?
+
+>  
+>  	spin_lock_irq(&crtc->dev->event_lock);
+>  	event = crtc->state->event;
+> @@ -456,10 +510,27 @@ void mxsfb_plane_atomic_update(struct
+> mxsfb_drm_private *mxsfb,
+>  	}
+>  	spin_unlock_irq(&crtc->dev->event_lock);
+>  
+> -	paddr = mxsfb_get_fb_paddr(mxsfb);
+> -	if (paddr) {
+> +	if (!fb)
+> +		return;
+> +
+> +	fb_addr = mxsfb_get_fb_paddr(mxsfb);
+> +	if (mxsfb->devdata->ipversion >= 4) {
+> +		cpp = fb->format->cpp[0];
+> +		src_off = (new_state->src_y >> 16) * fb->pitches[0] +
+> +			  (new_state->src_x >> 16) * cpp;
+> +		fb_addr += fb->offsets[0] + src_off;
+> +	}
+> +
+> +	if (fb_addr) {
+>  		clk_prepare_enable(mxsfb->clk_axi);
+> -		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
+> +		writel(fb_addr, mxsfb->base + mxsfb->devdata->next_buf);
+>  		clk_disable_unprepare(mxsfb->clk_axi);
+>  	}
+> +
+> +	if (mxsfb->devdata->ipversion >= 4 &&
+> +	    unlikely(drm_atomic_crtc_needs_modeset(new_state->crtc->state))) {
+> +		stride = DIV_ROUND_UP(fb->pitches[0], cpp);
+> +		src_w = new_state->src_w >> 16;
+> +		mxsfb_set_fb_hcrop(mxsfb, src_w, stride);
+> +	}
+>  }
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 888b520..06d3bf0 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -133,6 +133,7 @@ static int mxsfb_atomic_helper_check(struct drm_device *dev,
+>  		if (old_bpp != new_bpp)
+>  			new_state->mode_changed = true;
+>  	}
+> +
+
+Can you also drop this unrelated change?
+
+--
+Stefan
+
+>  	return ret;
+>  }
+>  
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> index 0f63ba1..df3279b 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> @@ -145,6 +145,22 @@
+>  #define DEBUG0_HSYNC			BIT(26)
+>  #define DEBUG0_VSYNC			BIT(25)
+>  
+> +/* pigeon registers for crop */
+> +#define HW_EPDC_PIGEON_12_0		0xb00
+> +#define HW_EPDC_PIGEON_12_1		0xb10
+> +#define HW_EPDC_PIGEON_12_2		0xb20
+> +
+> +#define PIGEON_12_0_SET_STATE_MASK(x)	REG_PUT((x), 31, 24)
+> +#define PIGEON_12_0_SET_MASK_CNT(x)	REG_PUT((x), 23, 12)
+> +#define PIGEON_12_0_SET_MASK_CNT_SEL(x)	REG_PUT((x), 11,  8)
+> +#define PIGEON_12_0_SET_OFFSET(x)	REG_PUT((x),  7,  4)
+> +#define PIGEON_12_0_SET_INC_SEL(x)	REG_PUT((x),  3,  2)
+> +#define PIGEON_12_0_POL_ACTIVE_LOW	BIT(1)
+> +#define PIGEON_12_0_EN			BIT(0)
+> +
+> +#define PIGEON_12_1_SET_CLR_CNT(x)	REG_PUT((x), 31, 16)
+> +#define PIGEON_12_1_SET_SET_CNT(x)	REG_PUT((x), 15,  0)
+> +
+>  #define MXSFB_MIN_XRES			120
+>  #define MXSFB_MIN_YRES			120
+>  #define MXSFB_MAX_XRES			0xffff
