@@ -2,78 +2,115 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97825C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969E4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FEED217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB37217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571070792;
+	bh=FcUTHcayL7M/TMVSM7QsI4LCJQgfA+E+GMaO89J0vJA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ip6e6JMon++d8rK7zta/lIPaD/7EaEx2V0ObotewFDsgcCjlJrbJUyGJ0DvMF5rCJ
+	 LiVdn2PHV7JHxbj8VVuIg8ZcGHswYb2kMyqkgZ5f4EUJ97+trtWPWDvE0gNRYHQoyI
+	 YZuCawNGbLDMDG+UJy3T9ruIWM4W5NWPN8L5FPVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfJNQc5 (ORCPT
+        id S2388116AbfJNQdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:32:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36487 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfJNQcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:32:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 09:32:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="198342481"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 09:32:51 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iK3H8-000Ebk-VG; Tue, 15 Oct 2019 00:32:50 +0800
-Date:   Tue, 15 Oct 2019 00:32:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     kbuild-all@lists.01.org, catalin.marinas@arm.com,
-        davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux@armlinux.org.uk, mark.rutland@arm.com, mripard@kernel.org,
-        robh+dt@kernel.org, wens@csie.org, will@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [RFC PATCH] crypto: sun8i_ce_pm_ops can be static
-Message-ID: <20191014163243.ijpkv4uyszse32lw@332d0cec05f4>
-References: <20191012184852.28329-3-clabbe.montjoie@gmail.com>
+        Mon, 14 Oct 2019 12:33:11 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37287 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfJNQdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:33:11 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u184so16453603qkd.4;
+        Mon, 14 Oct 2019 09:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4e/+dg0NVCCBrtHyCNhp9Ya4wF37EwRkEK+NeEl5+VU=;
+        b=A31njF9Kt8jL9DxYdqt+AFERZ4GXgyF70roSgACytG3oPAM4SAiEfGJA0thhHyQsRE
+         LDJwdWYGEuIpGGkNJedBJR9j2bImNS5IFxRfVCKSyf0ecjmUBeGfXkQhqHu0Q0/J9Z3S
+         6WvQvuglHPm37Ceukii41k6PvelrK0oe30D2phoqsH1fIzkYqooz65ZizMGS2Ae21r4u
+         NQwH94TUGi4i8G9syVddwuPF4XeoBEdQbqtIcjw26FBbZcP0aibSAUHvEZE7EsZQDlcN
+         rwgH1ijPQlLfswIvNQnaBq6wZuH+iOrUri5/E4uHH/RxDQQI8TCzgHFtRKVT9V2KgZL7
+         MY6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4e/+dg0NVCCBrtHyCNhp9Ya4wF37EwRkEK+NeEl5+VU=;
+        b=ZkbS568dRcdXYnh0M97wyMVgUFqEekU46ma0zvcwvIdfHOrYVIRGGBalrs5lLzY25o
+         Jav3zSNQqxcuB010qOt/D2de3ze7cEHEeWqPBab5yfV57DFwidSjSGvg4Gs12dtJV0FI
+         31JEdcbb30HGCvGyKbcEkswZc96byhSlsmuYIfZXX8T19Qk71vLZKWcl/MYQXr3Po3Ea
+         pJAiugIL/UPAgCzNXyLgBD2uszrQBSaVleBBEN17OI685omQP4NeLTpHq/OnSNP7eWNE
+         LCoTb6+oimCB0yXtoPR7+ZSWlRt9XWnxqmwF2rzqn3f6kzzVM7glMR9EdNGYmAI+uueT
+         SGoQ==
+X-Gm-Message-State: APjAAAWYpPBXVWivtuLm8iNO1rWer7dyVih3RddpS7271pt3lt9DWzi8
+        +Ilm2V+7LltSgX2PSeto5QY=
+X-Google-Smtp-Source: APXvYqz1ACcaWifQWUyV2g9FPNEuBZNZlzJ6t7epHU0KuMJ9cSqy7/zM89IFXIFaY8NMX42nGDVQtw==
+X-Received: by 2002:a37:484b:: with SMTP id v72mr31746062qka.206.1571070789784;
+        Mon, 14 Oct 2019 09:33:09 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:50c5])
+        by smtp.gmail.com with ESMTPSA id o124sm8220344qke.66.2019.10.14.09.33.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 09:33:09 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 09:33:07 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
+ operations
+Message-ID: <20191014163307.GG18794@devbig004.ftw2.facebook.com>
+References: <20191012010539.6131-1-cyphar@cyphar.com>
+ <20191014154136.GF18794@devbig004.ftw2.facebook.com>
+ <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191012184852.28329-3-clabbe.montjoie@gmail.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Aleksa.
 
-Fixes: f113059e7b4f ("crypto: Add Allwinner sun8i-ce Crypto Engine")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- sun8i-ce-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Oct 15, 2019 at 02:59:31AM +1100, Aleksa Sarai wrote:
+> On 2019-10-14, Tejun Heo <tj@kernel.org> wrote:
+> > On Sat, Oct 12, 2019 at 12:05:39PM +1100, Aleksa Sarai wrote:
+> > > Because pids->limit can be changed concurrently (but we don't want to
+> > > take a lock because it would be needlessly expensive), use the
+> > > appropriate memory barriers.
+> > 
+> > I can't quite tell what problem it's fixing.  Can you elaborate a
+> > scenario where the current code would break that your patch fixes?
+> 
+> As far as I can tell, not using *_ONCE() here means that if you had a
+> process changing pids->limit from A to B, a process might be able to
+> temporarily exceed pids->limit -- because pids->limit accesses are not
+> protected by mutexes and the C compiler can produce confusing
+> intermediate values for pids->limit[1].
+>
+> But this is more of a correctness fix than one fixing an actually
+> exploitable bug -- given the kernel memory model work, it seems like a
+> good idea to just use READ_ONCE() and WRITE_ONCE() for shared memory
+> access.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 77e9cb0cc6eea..a08f0e7a29752 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -412,7 +412,7 @@ static int sun8i_ce_pm_resume(struct device *dev)
- 	return err;
- }
- 
--const struct dev_pm_ops sun8i_ce_pm_ops = {
-+static const struct dev_pm_ops sun8i_ce_pm_ops = {
- 	SET_RUNTIME_PM_OPS(sun8i_ce_pm_suspend, sun8i_ce_pm_resume, NULL)
- };
- 
+READ/WRITE_ONCE provides protection against compiler generating
+multiple accesses for a single operation.  It won't prevent split
+writes / reads of 64bit variables on 32bit machines.  For that, you'd
+have to switch them to atomic64_t's.
+
+Thanks.
+
+-- 
+tejun
