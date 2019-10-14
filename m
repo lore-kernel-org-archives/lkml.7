@@ -2,72 +2,138 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC43ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D75EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE5220873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C82C20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:36:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="KZAvafxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbfJNSed (ORCPT
+        id S1730797AbfJNSgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:34:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40294 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729942AbfJNSec (ORCPT
+        Mon, 14 Oct 2019 14:36:15 -0400
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:44836 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfJNSgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:34:32 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iK5Ao-0005Xr-Rk; Mon, 14 Oct 2019 20:34:26 +0200
-Date:   Mon, 14 Oct 2019 20:34:15 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-cc:     "fweisbec@gmail.com" <fweisbec@gmail.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Mon, 14 Oct 2019 14:36:14 -0400
+Date:   Mon, 14 Oct 2019 18:36:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1571078171;
+        bh=c8f5ffkKV2bEwQy6LxxpHQK2PcptUqivs9BKAqP8sAU=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=KZAvafxn91fdrcFyvX8LGJoyBxWZVkxtIM5VVuIKhsVoXA3TmHl+hyBeutYGJMEgr
+         vBLcyK/5GBiXRSbjS0ZjVU9sNpvd7RagXwjlRKnji4IWfE2VYUNQi59pvqIvPFyKSj
+         xxjYi8GsER4//GkrwV00nQ5DtM/Ykhv/H2G7pjhc=
+To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH] tick: check if broadcast device could really be
- stopped
-In-Reply-To: <c3565734-05e3-0a9d-1101-92c4be476ae6@st.com>
-Message-ID: <alpine.DEB.2.21.1910142032590.1880@nanos.tec.linutronix.de>
-References: <20191009160246.17898-1-benjamin.gaignard@st.com> <alpine.DEB.2.21.1910141441350.2531@nanos.tec.linutronix.de> <a4b4b785-c471-a3c2-2c41-01bd9865e479@st.com> <alpine.DEB.2.21.1910141535500.2531@nanos.tec.linutronix.de> <16f7e8e9-eefe-5973-a08a-3e1823d20034@st.com>
- <alpine.DEB.2.21.1910141620100.2531@nanos.tec.linutronix.de> <c3565734-05e3-0a9d-1101-92c4be476ae6@st.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
+        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: [PATCH v6 1/2] HID: logitech: Add MX Master over Bluetooth
+Message-ID: <ggKipcQplIlTFmoP3hPnrQ-7_5-C0PKGd5feFymts3uenIBA8zOwz47YmKheD34H1rpkguDAGdx5YbS9UqpwfjT5Ir0Lji941liLVp--QtQ=@protonmail.com>
+Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019, Benjamin GAIGNARD wrote:
-> On 10/14/19 4:28 PM, Thomas Gleixner wrote:
-> > Unless you have a solution which works under all circumstances (and the
-> > current patch definitely does not) then you have to deal with the
-> > requirement of the broadcast timer (either physical or software based).
-> 
-> If I follow you I need, for my system, a software based broadcast timer 
-> (tick-broadcast-hrtimer ?).
+This patch adds support for the MX Master (b01e and b012) and also adds
+foundational code for other Bluetooth LE HID++ devices to be added.
 
-Yes, if you don't have a physical one.
- 
-> If that is correct I 'just' need to add a call to
-> tick_setup_hrtimer_broadcast() in arch/arm/kernel/time.c
+Some devices do not support short reports and thus have a quirk
+(HIDPP_QUIRK_MISSING_SHORT_REPORTS) that forces short reports to be sent as
+long reports. Since all Bluetooth LE HID++ devices seem to act this way,
+HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
 
-Correct.
+To allow for some space for future quirks, I changed the comment that
+defines the bits reserved for classes from 2...20 to 2..15.
 
-Thanks,
+Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+---
+ drivers/hid/hid-logitech-hidpp.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-	tglx
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hi=
+dpp.c
+index 0179f7ed77e5..997b1056850a 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -59,7 +59,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+ #define HIDPP_QUIRK_CLASS_G920=09=09=09BIT(3)
+ #define HIDPP_QUIRK_CLASS_K750=09=09=09BIT(4)
+
+-/* bits 2..20 are reserved for classes */
++/* bits 2..15 are reserved for classes */
++#define HIDPP_QUIRK_MISSING_SHORT_REPORTS=09BIT(20)
+ /* #define HIDPP_QUIRK_CONNECT_EVENTS=09=09BIT(21) disabled */
+ #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS=09BIT(22)
+ #define HIDPP_QUIRK_NO_HIDINPUT=09=09=09BIT(23)
+@@ -81,6 +82,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+ =09=09=09=09=09 HIDPP_QUIRK_HI_RES_SCROLL_X2120 | \
+ =09=09=09=09=09 HIDPP_QUIRK_HI_RES_SCROLL_X2121)
+
++#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE=09HIDPP_QUIRK_MISSING_SHORT_REPORTS
++
+ #define HIDPP_QUIRK_DELAYED_INIT=09=09HIDPP_QUIRK_NO_HIDINPUT
+
+ #define HIDPP_CAPABILITY_HIDPP10_BATTERY=09BIT(0)
+@@ -340,6 +343,12 @@ static int hidpp_send_rap_command_sync(struct hidpp_de=
+vice *hidpp_dev,
+ =09struct hidpp_report *message;
+ =09int ret, max_count;
+
++=09/* Force long reports on devices that do not support short reports */
++=09if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
++=09    report_id =3D=3D REPORT_ID_HIDPP_SHORT)
++=09=09report_id =3D REPORT_ID_HIDPP_LONG;
++
++
+ =09switch (report_id) {
+ =09case REPORT_ID_HIDPP_SHORT:
+ =09=09max_count =3D HIDPP_REPORT_SHORT_LENGTH - 4;
+@@ -3482,6 +3491,12 @@ static bool hidpp_validate_report(struct hid_device =
+*hdev, int id,
+
+ static bool hidpp_validate_device(struct hid_device *hdev)
+ {
++=09struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
++=09/* Skip the short report check if the device does not support it */
++=09if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
++=09=09return hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
++=09=09=09=09=09     HIDPP_REPORT_LONG_LENGTH, false);
++
+ =09return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
+ =09=09=09=09     HIDPP_REPORT_SHORT_LENGTH, false) &&
+ =09       hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+@@ -3773,6 +3788,13 @@ static const struct hid_device_id hidpp_devices[] =
+=3D {
+ =09{ /* MX5500 keyboard over Bluetooth */
+ =09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb30b),
+ =09  .driver_data =3D HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
++=09{ /* MX Master mouse over Bluetooth */
++=09  HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb012),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
++=09=09=09 HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
++=09{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_LOGITECH, 0xb01e),
++=09  .driver_data =3D HIDPP_QUIRK_HI_RES_SCROLL_X2121 |
++=09=09=09 HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
+ =09{}
+ };
+
+--
+2.23.0
+
