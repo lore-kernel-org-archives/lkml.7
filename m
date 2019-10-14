@@ -2,107 +2,93 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549CBECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FFAECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DB120673
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E45320673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571043160;
-	bh=vBPyUpzZ5gqo0M0pplRykhuKrTRr9hVofPkP6vqgI4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qagx48D/iWmanNnkYSfAZeq/DAEq6F6cPPFqorMhw3tMOngPkoqf7v7mPcTs0AKtC
-	 F9RtmaaW2BspvBZwxERfxq9jLouZT1YyAAWWr8Hjc5BuNlzaH5Aosdcv9JrrFtWx9b
-	 yUaWelOs+KJAqebsMCTHvywNjzZAOYqbU/Lxqg78=
+	s=default; t=1571043357;
+	bh=7SgIdN7SCY2lTkwz79mrxtgmgz6gh6kFf1YiSqY5mpE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i8RqUCh/pW325XpB3j68R0DdpgRd8fIVDu+gqUi40ilWTUVUrSi9/G+PRqsRRujQ4
+	 5KHZsYYUUvMLOzm5uM2APx1lU5sSSUqcwGFvzhaFRCaYjE7FsF+1KPtJbkwG+LsYlY
+	 kP4ph5wSmREmwVTiu5WHNz+jNqD6weYaza76MrNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfJNIwj (ORCPT
+        id S1730601AbfJNIz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:52:39 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:39984 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729928AbfJNIwi (ORCPT
+        Mon, 14 Oct 2019 04:55:56 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34130 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730354AbfJNIz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:52:38 -0400
-Received: by mail-pg1-f170.google.com with SMTP id e13so1494838pga.7;
-        Mon, 14 Oct 2019 01:52:38 -0700 (PDT)
+        Mon, 14 Oct 2019 04:55:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m19so13172482otp.1;
+        Mon, 14 Oct 2019 01:55:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LQjLxs+ChwVtzwmuuW/knNpY/RZXS8FrKGj5FuN7jvQ=;
-        b=f51tTPWe/gQpQC4M06glrU7S91Sgx+qYj3BUDMrQ+iENCwbLrsAutns5S4vdnrHFDO
-         BaPFNBkQdeohjqlTWGXnbzeiwvzFix++RWz6x1/WKlB2+8mDzucAXaQUTW1u4L36HUdW
-         JbgsthyI59pHu9eMB2tCw2xx8ggFxGzs6QgR7MMHQozO5L4t5yjXDXkgYlO3uS95RMP9
-         1zbWh/iO8/Gy4f4OohgHBAk/Tupyz2YxsKmnFgip35GMiT8p473c+aJ3BAmPRn8tJTSI
-         wWuqFmNf4ziIoYqaau5OBGw59Mq6yUE6vQwYxl2WkL/ZgpSmNYVMujcpnVk8lj1uyVCH
-         dTqg==
-X-Gm-Message-State: APjAAAXBc7+Ipq3xildBLAJCOZi54vhgHF7VcXxXLTKwNt/v4+LLX3ki
-        H5QlJ2PYVu/sZA1jPoIDqzg=
-X-Google-Smtp-Source: APXvYqwa12q0CPE+GNpbNjoSjz62Jb4XZaoMR0EnEbW6Gk820+iPtrynDZWJKS8Z4qZNmg5y5YkrCQ==
-X-Received: by 2002:a63:5c57:: with SMTP id n23mr9662639pgm.132.1571043157520;
-        Mon, 14 Oct 2019 01:52:37 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id x19sm20106793pgc.59.2019.10.14.01.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 01:52:36 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C032F4021A; Mon, 14 Oct 2019 08:52:35 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 08:52:35 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Matthias Maennich <maennich@google.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Module loading problem since 5.3
-Message-ID: <20191014085235.GW16384@42.do-not-panic.com>
-References: <8132cf72-0ae1-48ae-51fb-1a01cf00c693@gmail.com>
- <CAB=NE6XdVXMnq7pgmXxv4Qicu7=xrtQC-b2sXAfVxiAq68NMKg@mail.gmail.com>
- <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bbsWRrvQTJbuWyAg2ul9J/hFRTz5fzt/9tGYH0/lnMU=;
+        b=fs4wZGs4F3OXOQ1ecSCALKE8lO1fwYsaRnCPzCRa8KtOIzKesDJfaRFSnbTOWXh9Gm
+         hBcHkH063vbRBcxsMKxrVVxCViceRS39/f1wu6mGn11AjvnpwGyuK1u1iX5Dbs8BlLg4
+         e0mzlvUrdUcJQYszTXxkUMUTvNBml4s42uM6A5bygrT5Tlsd/0DBU1ZAutPAHZaXYzQk
+         IguyitAs0AdU6m4/fJXSjApC8COC7GYw0Z74lO1ag+gj68yLj0cdnxp1+njLlEvyr7Kd
+         OFDNxxTDlfs0LM3gX89l29D+tlTJjwKfwCvVQv6UfARdH57TtjMMyq/Ikk0JLNopadz+
+         Lh8g==
+X-Gm-Message-State: APjAAAX37dxJ0k+WqlZwHGGQ9+O2U78PNVrftV2vpQUsSAsIK/ROFviV
+        v7GE5A+wTVMCMBK6azZl5rep1yBfAh2v3GBANioAPQ==
+X-Google-Smtp-Source: APXvYqwSlvaE3YLgndSZ8qlhM/0cbXoelH23LKI6nbiD+tFcA3y3bXO9N4RW6ac2fPN++RtVr6j7ryhO/RbYeJlc0/A=
+X-Received: by 2002:a9d:459b:: with SMTP id x27mr22444160ote.167.1571043353566;
+ Mon, 14 Oct 2019 01:55:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <875eecfb-618a-4989-3b9f-f8272b8d3746@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191009130433.29134-1-sameo@linux.intel.com> <20191009130433.29134-2-sameo@linux.intel.com>
+ <CAJZ5v0ioC6XnC+sFpRJmm40T+YCnqoaHhJ+_Pmk7rvvC8UPT9w@mail.gmail.com> <20191011121447.GA4256@caravaggio>
+In-Reply-To: <20191011121447.GA4256@caravaggio>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 14 Oct 2019 10:55:41 +0200
+Message-ID: <CAJZ5v0gv_ycJc_XgxyA4LZS50xmh9PU_iLDRKyDL738C0Zaj_A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] acpi: Fail GED probe when not on hardware-reduced
+To:     Samuel Ortiz <sameo@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
-> On 10.10.2019 19:15, Luis Chamberlain wrote:
-> > 
-> > 
-> > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
-> > 
-> >        MODULE_SOFTDEP("pre: realtek")
-> > 
-> >     Are you aware of any current issues with module loading
-> >     that could cause this problem?
-> > 
-> > 
-> > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
-> > 
-> > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
-> > 
-> >   Luis
+On Fri, Oct 11, 2019 at 2:14 PM Samuel Ortiz <sameo@linux.intel.com> wrote:
 >
-> Maybe issue is related to a bug in introduction of symbol namespaces, see here:
-> https://lkml.org/lkml/2019/10/11/659
+> On Fri, Oct 11, 2019 at 12:38:49PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Oct 9, 2019 at 3:04 PM Samuel Ortiz <sameo@linux.intel.com> wrote:
+> > >
+> > > The Generic Event Device (GED) is a hardware-reduced platform device.
+> >
+> > No, it is not AFAICS.
+> It's a little confusing, I was not sure what's the common understanding
+> and tried to be safe by not having non HW-reduced machines getting a
+> new device that they've never seen so far.
 
-Can you have your user with issues either revert 8651ec01daed or apply the fixes
-mentioned by Matthias to see if that was the issue?
+I really don't expect firmware to expose GED for such machines (why
+would it?), but if it does so, then why not to handle it?
 
-Matthias what module did you run into which let you run into the issue
-with depmod? I ask as I think it would be wise for us to add a test case
-using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
-regression you detected.
+> > The spec doesn't say that GED cannot be used on platforms that aren't
+> > HW-reduced
+> I agree.
+>
+> >  and if evged.c is going to be built in unconditionally, the
+> > kernel will be able to handle GED regardless.
+> Ok, perfect then. Does that mean you're ok with the 2nd patch but are
+> going to drop this one?
 
-  Luis
+Sure, I will apply the second patch only.
+
+Thanks!
