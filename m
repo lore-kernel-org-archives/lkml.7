@@ -2,169 +2,117 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D42C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A7DECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF42207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:46:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j849QrP2"
+	by mail.kernel.org (Postfix) with ESMTP id B697320854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571050033;
+	bh=vpT/FdAQ44SBsZqxdUofQB31bkhK8wj8sizQkj6Rfqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LfNVamqtz/3ebgYM8sJ1BRxnqoM7JlJ9AOHvp1nAHrCHkXZ+NFu6X/898gafbLw9T
+	 V37Vx9OJS4VxcOMgc18a+gP/4X/9rt/8RAP3eG9JAGjJ9S26180uZEGhcNT0gpmw0c
+	 NR/6VeW62AJ+jvTc0vgR+04N0itYBfbw37K00GPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfJNKqk (ORCPT
+        id S1731677AbfJNKrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:46:40 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33807 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731441AbfJNKqk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:46:40 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j8so2706869eds.1;
-        Mon, 14 Oct 2019 03:46:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SLSvROGsgOrUEvNT81BjHG6mslyR1XuSE3aUVvnJ/5Q=;
-        b=j849QrP2XfeeotlfzRkJWeOvRSueIN9CrbsKHiomuUpyreoDfReAZklyPkAPK1rZLV
-         W58mh9mu0aas/jIM8FgnALyPAGukYRgbMX3r+c8/jUk50QP0kmHsFCAOzkxOSkV0XkDs
-         1zBjCk1NUmtMS4olXHqUwm+odOYByEa+72HVtr21yPo1MVr8MTHXPBVOuTlF1RMRTIMa
-         Ti/ek/JKF3J/fYVc3lGWLGKJIZadG8uWflM7fQiquvD+XjC2ClEiHW3hhz8tqFjvkWIA
-         Id+dly3FnyybqdV1gjrPwsQlkkCsn6wtu3jMgv2G/7Xtbl9QQpgcB8XJdES/pSFoKzEo
-         pMOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SLSvROGsgOrUEvNT81BjHG6mslyR1XuSE3aUVvnJ/5Q=;
-        b=AM0mZxoWQywZ7WCwWJxVVb66FXYYmjlFwAVv0rpxosweMeFE3EVeJCEyOquDil2Gp+
-         zbq5QYZ/hsDHTIeTHzOgWI81QS00wIEoBA5hcj3lzkSUgOuwQRiu9fPgylFpkA/VHFOI
-         rP1EyMpDTwxrkz8RRsBH6EjMtm7zPu5Y6TKLDHhQyp2cK/RCZRKLf6e6yOmD7GaQSau6
-         RSnGHFNQKMDybLtEf0/6CJ6R71QFWPvAn3O6cdPbNC3AlwpLPNK5baUzeovLGwWCvdAK
-         XB429zxvv5V4HW82UhjpRcrSrjFj9uwXRkkxlf/lbPOBUEQRQ63Gj66nzvs/zmwMEw1F
-         MpUQ==
-X-Gm-Message-State: APjAAAVu8cBYU+xTtmHvL0N9fbyfYG0Rv+f3IZmxEnQwQgPQ1sf7VEdO
-        74FG8Pe2r4ZdT4pseaVYgm3+eeinDz6aC98SboQ=
-X-Google-Smtp-Source: APXvYqxiQSx8EAdJ5BZuRodetUcHE9C3Ym1rIP7KlT1XS6absJoC+IJ/Bb/9oya679tjoHehHULVk/uPNJBVQLmrzMY=
-X-Received: by 2002:a05:6402:149a:: with SMTP id e26mr27338068edv.123.1571049996979;
- Mon, 14 Oct 2019 03:46:36 -0700 (PDT)
+        Mon, 14 Oct 2019 06:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731441AbfJNKrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:47:12 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B63207FF;
+        Mon, 14 Oct 2019 10:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571050031;
+        bh=vpT/FdAQ44SBsZqxdUofQB31bkhK8wj8sizQkj6Rfqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F0VN86+4Hapr2bz8SmKNW0OAHIY5s6XTT+UUe+ks4FaZJU8axqfv6lRn4n2yxnJjN
+         bQxyixquGe2nnkcmufn+A+wO7T++zcOQaj0v01N1kW1XAfCoNz/6RDCmT2E2wAY3yX
+         KAkSdaQeLsqLdUEQknpou+rGkikvp6Ew36LzuQHs=
+Date:   Mon, 14 Oct 2019 12:47:08 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        will@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 00/11] crypto: add sun8i-ce driver for Allwinner
+ crypto engine
+Message-ID: <20191014104708.cur6zbabmozhwu5o@gilmour>
+References: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-References: <20191012123938.GA6865@nishad>
-In-Reply-To: <20191012123938.GA6865@nishad>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 14 Oct 2019 13:46:26 +0300
-Message-ID: <CA+h21hr=Wg7ydqcTLk85rrRGhx_LCxu2Ch3dWCt1-d1XtPaAcA@mail.gmail.com>
-Subject: Re: [PATCH] net: dsa: sja1105: Use the correct style for SPDX License Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jcraal7cz45esj3i"
+Content-Disposition: inline
+In-Reply-To: <20191012184852.28329-1-clabbe.montjoie@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nishad,
 
-On Sat, 12 Oct 2019 at 15:39, Nishad Kamdar <nishadkamdar@gmail.com> wrote:
->
-> This patch corrects the SPDX License Identifier style
-> in header files related to Distributed Switch Architecture
-> drivers for NXP SJA1105 series Ethernet switch support.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
->
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
->
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> ---
+--jcraal7cz45esj3i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Your commit message has nothing to do with what you're fixing, but
-whatever. The SPDX identifiers _are_ using C-like comments.
+Hi,
 
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
+On Sat, Oct 12, 2019 at 08:48:41PM +0200, Corentin Labbe wrote:
+> Hello
+>
+> This patch serie adds support for the Allwinner crypto engine.
+> The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
+> The first generation is the Security System already handled by the
+> sun4i-ss driver.
+> The second is named also Security System and is present on A80 and A83T
+> SoCs, originaly this driver supported it also, but supporting both IP bringing
+> too much complexity and another driver (sun8i-ss) will came for it.
+>
+> For the moment, the driver support only DES3/AES in ECB/CBC mode.
+> Patchs for CTR/CTS/XTS, RSA and RNGs will came later.
+>
+> This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+> and tested on:
+> sun50i-a64-bananapi-m64
+> sun50i-a64-pine64-plus
+> sun50i-h5-libretech-all-h3-cc
+> sun50i-h6-pine-h64
+> sun8i-h2-plus-libretech-all-h3-cc
+> sun8i-h2-plus-orangepi-r1
+> sun8i-h2-plus-orangepi-zero
+> sun8i-h3-libretech-all-h3-cc
+> sun8i-h3-orangepi-pc
+> sun8i-r40-bananapi-m2-ultra
 
->  drivers/net/dsa/sja1105/sja1105.h                | 4 ++--
->  drivers/net/dsa/sja1105/sja1105_dynamic_config.h | 4 ++--
->  drivers/net/dsa/sja1105/sja1105_ptp.h            | 4 ++--
->  drivers/net/dsa/sja1105/sja1105_static_config.h  | 4 ++--
->  drivers/net/dsa/sja1105/sja1105_tas.h            | 4 ++--
->  5 files changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-> index 8681ff9d1a76..fb7a6fff643f 100644
-> --- a/drivers/net/dsa/sja1105/sja1105.h
-> +++ b/drivers/net/dsa/sja1105/sja1105.h
-> @@ -1,5 +1,5 @@
-> -/* SPDX-License-Identifier: GPL-2.0
-> - * Copyright (c) 2018, Sensor-Technik Wiedemann GmbH
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*  Copyright (c) 2018, Sensor-Technik Wiedemann GmbH
->   * Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
->   */
->  #ifndef _SJA1105_H
-> diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.h b/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
-> index 740dadf43f01..4f64adb2d26a 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
-> +++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.h
-> @@ -1,5 +1,5 @@
-> -/* SPDX-License-Identifier: GPL-2.0
-> - * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*  Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
->   */
->  #ifndef _SJA1105_DYNAMIC_CONFIG_H
->  #define _SJA1105_DYNAMIC_CONFIG_H
-> diff --git a/drivers/net/dsa/sja1105/sja1105_ptp.h b/drivers/net/dsa/sja1105/sja1105_ptp.h
-> index af456b0a4d27..c7e598fd1504 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_ptp.h
-> +++ b/drivers/net/dsa/sja1105/sja1105_ptp.h
-> @@ -1,5 +1,5 @@
-> -/* SPDX-License-Identifier: GPL-2.0
-> - * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*  Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
->   */
->  #ifndef _SJA1105_PTP_H
->  #define _SJA1105_PTP_H
-> diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
-> index 7f87022a2d61..ee66fae6128b 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_static_config.h
-> +++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
-> @@ -1,5 +1,5 @@
-> -/* SPDX-License-Identifier: BSD-3-Clause
-> - * Copyright (c) 2016-2018, NXP Semiconductors
-> +/* SPDX-License-Identifier: BSD-3-Clause */
-> +/*  Copyright (c) 2016-2018, NXP Semiconductors
->   * Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
->   */
->  #ifndef _SJA1105_STATIC_CONFIG_H
-> diff --git a/drivers/net/dsa/sja1105/sja1105_tas.h b/drivers/net/dsa/sja1105/sja1105_tas.h
-> index 0b803c30e640..c3ea7be52b9c 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_tas.h
-> +++ b/drivers/net/dsa/sja1105/sja1105_tas.h
-> @@ -1,5 +1,5 @@
-> -/* SPDX-License-Identifier: GPL-2.0
-> - * Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*  Copyright (c) 2019, Vladimir Oltean <olteanv@gmail.com>
->   */
->  #ifndef _SJA1105_TAS_H
->  #define _SJA1105_TAS_H
-> --
-> 2.17.1
->
+for the drivers/crypto part
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+I'll merge the dt and defconfig bits when Herbert will be ok with the
+changes.
+
+Maxime
+
+--jcraal7cz45esj3i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXaRSLAAKCRDj7w1vZxhR
+xbAiAQCXNw9TZ+NI9M/ffhLEMVuGBoKDSMxJpeuryNZeejUpbAEAotBuhlogZFYt
+6gcqR7k6JoRm4LKGytJt02QqNsKkQAI=
+=JdiC
+-----END PGP SIGNATURE-----
+
+--jcraal7cz45esj3i--
