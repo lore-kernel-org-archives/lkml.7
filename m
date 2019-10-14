@@ -3,277 +3,519 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732BFECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A2DECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4075B217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C42217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p76BhQLT"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="E3cxrZdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbfJNNBZ (ORCPT
+        id S1731873AbfJNNCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:01:25 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38155 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfJNNBY (ORCPT
+        Mon, 14 Oct 2019 09:02:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36681 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfJNNCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:01:24 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b20so16562646ljj.5;
-        Mon, 14 Oct 2019 06:01:22 -0700 (PDT)
+        Mon, 14 Oct 2019 09:02:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id m18so16686450wmc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 06:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QLWyLzhnVPrb1x7YKwNBPlM2SXgwhHVOnjlCQL1qRyg=;
-        b=p76BhQLTJ1F0aQ9rIs14XLwi+8O7Nhh67xw017YENAW/+GxZ4fECXokH0Y7x+LYtUU
-         xgjRcdr6wcPNWbLM0bKy07vebQ25PjdnXxahI1Om2etdD9jB28GaoB815gTp0tdqSHc7
-         ohIg59qi0BmTWNd+MRg00v9XAkCFmPkYRkhOfF7P5lLKCJTZvndzm9gCwZ9Yqpzqorc1
-         F/hJSn02eH2LkkTcToRg7Nin425hnLmb+4hCaFcIhCC57rcUZfn/LuCuXHRSrFOw4NNB
-         W8kLtcs6Oh4gkM4akmVp4CcaEDF9LO2BP6aUF7DjsHRqCogX9YJuMETsNEfNWAl8jk7N
-         XHhA==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/nFxm4Z4zbOqRhVwfCDlChNrbDNKiMWhquDss6zEqOw=;
+        b=E3cxrZddRUir6nAHTLAcJ1Czb68nRh/bL1wYEKOANgbFL30mHjCz6QiXkrsDefl5FR
+         1hxpaPhNBHlG5+bJsUj02vPGjOxDtEmPn3A9TpsczlOE5tkUi+uZk5/J1XzIeOV8cD89
+         d7HHVZG11CaoDJlNWvv13FVOOsKrvH1vV7FBYO7ynNzMd03caCR07LP0U+pBH/ddApKq
+         uZZR9NEW9uDK65zZpq2lu4GVC7w44hn2L1FkZO6fJb7/8KGmfBAC7eBzJdDSXRk4tu0O
+         jEJoFrIUmKqVLz7P6PzDdwzJ9V/snn2muYibxf0G11q5BWp4uoonfYxWFq8ZRZb0ddzc
+         Bh/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QLWyLzhnVPrb1x7YKwNBPlM2SXgwhHVOnjlCQL1qRyg=;
-        b=TXpGiW9c+j3sufv9hJ6/jh46u3UOloCBfv9t/EN/Um6McYkYR5ZEbO60aYmmxKAkbb
-         cIZEitDaLkzgn8vq3RpwH+Z9npX6P5Onk7fSbpiuPZ0/S/LPvIjGNxs5RJmtmGOY82rk
-         Vtg3FFvl2Z3XY8IsNOVfriVmdA8lE2X47xp6FVQKUM7NMcLVu5om+c+OCUXNIvHyr2iL
-         iPcG6lc5hx1H3zIkpfYUzEAghnLmepqfAVrwYfposu58N3oikZD5uZ1dVyzVo5WQ5aoR
-         Qy6RlA4M3s3S14aycrc1RsbMK+tHbz3CWipOfTpOgc+bg8T8gt0crlzgmqi4lOcuZWVz
-         n3Dg==
-X-Gm-Message-State: APjAAAUPwEEVIudRRX0xnbgFu4Gz0JdanjF1mw241nCOof+WMz0HraVl
-        duTcry8Pb1QTJX96mbgjyWdS13yS
-X-Google-Smtp-Source: APXvYqzPIxmhOAnWeITeISqaEvu5pccliF3amD+PDseFz9ZhuXzB2dVKNdtiPxp4dc9SiFBYRmm1pA==
-X-Received: by 2002:a2e:501c:: with SMTP id e28mr18763949ljb.204.1571058080896;
-        Mon, 14 Oct 2019 06:01:20 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id t3sm4385942lfd.92.2019.10.14.06.01.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2019 06:01:20 -0700 (PDT)
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
- framework
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
-        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
- <20191014094215.kb6q32chgb5sd2nb@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ff60c519-a177-a17e-352c-718028689fab@gmail.com>
-Date:   Mon, 14 Oct 2019 16:01:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/nFxm4Z4zbOqRhVwfCDlChNrbDNKiMWhquDss6zEqOw=;
+        b=jcSd49/rc2aUZefQ5Ft779NiyDDorQe2wlbivjwuhXbRv4yrGoVt/neggaUsMoK/U0
+         mlqWiP5BjdRbrrUVeEgEuozdPMXAd27UZsHn+kNPypbPThMy6ahB68njiR8JZKc386lR
+         BpO4jwX8sjyiKv7Rkcy/UJFwdfHrVPPGiygHxsW/SubY03kKwOiwR9PrhrhuigO1E8aU
+         Rvh8lnExyCqc1ARXtBenUcreaqqQg/2P3FFobKDJhFlhWQ99mHDckv+e9QmZxn7JY/f4
+         MmQas5IV/KQHvUpCY3zfCOdY8+Clovk+iv2s/69YYchOw5kFonBySDNMJbcWM2a6XhGE
+         4jKg==
+X-Gm-Message-State: APjAAAWDHfZF0E3fNZz9Yz3ls2kfB+4AJQnYH2dCP8hwYkp2tOjcoA/N
+        Rq81GWl6HHcFf1ejtGoCwaozNg==
+X-Google-Smtp-Source: APXvYqzWxduvN5MalN1A4MGURPO2inFehBWQ5C7Jv9jPUxpNA5W/yKDACfllnuIFkF8p7H4/Y5LM0w==
+X-Received: by 2002:a1c:7313:: with SMTP id d19mr15338531wmb.16.1571058127081;
+        Mon, 14 Oct 2019 06:02:07 -0700 (PDT)
+Received: from localhost (ip-89-177-225-135.net.upcbroadband.cz. [89.177.225.135])
+        by smtp.gmail.com with ESMTPSA id a9sm27574015wmf.14.2019.10.14.06.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 06:02:06 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 15:02:05 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 06/17] ethtool: netlink bitset handling
+Message-ID: <20191014130205.GA2314@nanopsycho>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <af208e79258e7e3c3af3860e6a8908a50dec095f.1570654310.git.mkubecek@suse.cz>
+ <20191011133429.GA3056@nanopsycho>
+ <20191014111847.GB8493@unicorn.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20191014094215.kb6q32chgb5sd2nb@vireshk-i7>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014111847.GB8493@unicorn.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.10.2019 12:42, Viresh Kumar пишет:
-> On 22-09-19, 23:12, Dmitry Osipenko wrote:
->> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
->>
->>
->> [   87.952369] ==================================================================
->> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
->> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
-> 
-> Hi Dmitry,
-> 
-> I tried to reproduce it on my ubuntu on ARM64 setup and I couldn't hit
-> these issues on v5.4-rc1 with Kasan built in.
-> 
-> I then enabled Kasan (tried both inline and outline instrumentation)
-> but I couldn't get past the issues with module insertion. It fails
-> like this for me:
-> 
-> root@linaro-developer:~/work# insmod cpufreq-dt.ko 
-> [   72.985974] cpufreq_dt: Unknown symbol __asan_report_load1_noabort (err -2)
-> [   72.993164] cpufreq_dt: Unknown symbol __asan_report_load4_noabort (err -2)
-> [   73.000307] cpufreq_dt: Unknown symbol __asan_report_load8_noabort (err -2)
-> [   73.007451] cpufreq_dt: Unknown symbol __asan_report_store1_noabort (err -2)
-> [   73.014643] cpufreq_dt: Unknown symbol __asan_register_globals (err -2)
-> [   73.021409] cpufreq_dt: Unknown symbol __asan_unregister_globals (err -2)
-> [   73.028349] cpufreq_dt: Unknown symbol __asan_report_store8_noabort (err -2)
-> [   73.035543] cpufreq_dt: Unknown symbol __asan_report_store4_noabort (err -2)
-> insmod: ERROR: could not insert module cpufreq-dt.ko: Unknown symbol in module
-> 
-> I tried to search for these errors but couldn't find why I am getting
-> these and why the symbols are missing here. Can you suggest something
-> here ?
-> 
+Mon, Oct 14, 2019 at 01:18:47PM CEST, mkubecek@suse.cz wrote:
+>On Fri, Oct 11, 2019 at 03:34:29PM +0200, Jiri Pirko wrote:
+>> Wed, Oct 09, 2019 at 10:59:18PM CEST, mkubecek@suse.cz wrote:
+>> >+Bit sets
+>> >+========
+>> >+
+>> >+For short bitmaps of (reasonably) fixed length, standard ``NLA_BITFIELD32``
+>> >+type is used. For arbitrary length bitmaps, ethtool netlink uses a nested
+>> >+attribute with contents of one of two forms: compact (two binary bitmaps
+>> >+representing bit values and mask of affected bits) and bit-by-bit (list of
+>> >+bits identified by either index or name).
+>> >+
+>> >+Compact form: nested (bitset) atrribute contents:
+>> >+
+>> >+  ============================  ======  ============================
+>> >+  ``ETHTOOL_A_BITSET_LIST``     flag    no mask, only a list
+>> 
+>> I find "list" a bit confusing name of a flag. Perhaps better to stick
+>> with the "compact" terminology and make this "ETHTOOL_A_BITSET_COMPACT"?
+>> Then in the code you can have var "is_compact", which makes the code a
+>> bit easier to read I believe.
+>
+>This is not the same as "compact", "list" flag means that the bit set
+>does not represent a value/mask pair but only a single bitmap (which can
+>be understood as a list or subset of possible values).
 
-Sorry, I don't know what's wrong with ARM64. There is no KASAN on ARM32 in upstream yet, I'm using
-the WIP patches [1].
+Okay, this is confusing. So you say that the "LIST" may be on and
+ETHTOOL_A_BITSET_VALUE present, but ETHTOOL_A_BITSET_MASK not?
+I thought that whtn "LIST" is on, no "VALUE" nor "MASK" should be here.
 
-[1] https://lkml.org/lkml/2019/6/17/1562
 
-BTW, I moved tegra20-cpufreq to use cpufreq-dt recently and the problem presents with the cpufreq-dt:
+>
+>This saves some space in kernel replies where there is no natural mask
+>so that we would have to invent one (usually all possible bits) but it
 
-# rmmod cpufreq_dt
-# modprobe cpufreq_dt
+Do you have an example?
 
-[   31.259483] ==================================================================
-[   31.260321] BUG: KASAN: use-after-free in notifier_chain_register+0x2b/0x7c
-[   31.261026] Read of size 4 at addr cc30250c by task modprobe/218
 
-[   31.262067] CPU: 1 PID: 218 Comm: modprobe Tainted: G        W
-5.4.0-rc2-next-20191011-00194-g02f44e30b215-dirty #2645
-[   31.263347] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-[   31.264154] [<c011116d>] (unwind_backtrace) from [<c010bb05>] (show_stack+0x11/0x14)
-[   31.264960] [<c010bb05>] (show_stack) from [<c0d749ad>] (dump_stack+0x89/0x98)
-[   31.265804] [<c0d749ad>] (dump_stack) from [<c02c72dd>]
-(print_address_description.constprop.0+0x3d/0x340)
-[   31.266830] [<c02c72dd>] (print_address_description.constprop.0) from [<c02c7767>]
-(__kasan_report+0xe3/0x12c)
-[   31.267865] [<c02c7767>] (__kasan_report) from [<c014eabb>] (notifier_chain_register+0x2b/0x7c)
-[   31.268755] [<c014eabb>] (notifier_chain_register) from [<c014eb89>]
-(blocking_notifier_chain_register+0x29/0x3c)
-[   31.269842] [<c014eb89>] (blocking_notifier_chain_register) from [<c072cc11>]
-(dev_pm_qos_add_notifier+0x79/0xf8)
-[   31.270948] [<c072cc11>] (dev_pm_qos_add_notifier) from [<c095ec71>] (cpufreq_online+0x5e1/0x8a4)
-[   31.271922] [<c095ec71>] (cpufreq_online) from [<c095efbd>] (cpufreq_add_dev+0x79/0x80)
-[   31.272889] [<c095efbd>] (cpufreq_add_dev) from [<c0720213>] (subsys_interface_register+0xc3/0x100)
-[   31.273894] [<c0720213>] (subsys_interface_register) from [<c095d83f>]
-(cpufreq_register_driver+0x13b/0x1ec)
-[   31.274912] [<c095d83f>] (cpufreq_register_driver) from [<bf800475>] (dt_cpufreq_probe+0x89/0xe0
-[cpufreq_dt])
-[   31.275924] [<bf800475>] (dt_cpufreq_probe [cpufreq_dt]) from [<c0723e31>]
-(platform_drv_probe+0x49/0x88)
-[   31.276889] [<c0723e31>] (platform_drv_probe) from [<c0721ad9>] (really_probe+0x109/0x378)
-[   31.277715] [<c0721ad9>] (really_probe) from [<c0721e93>] (driver_probe_device+0x57/0x15c)
-[   31.278537] [<c0721e93>] (driver_probe_device) from [<c0722145>] (device_driver_attach+0x61/0x64)
-[   31.279425] [<c0722145>] (device_driver_attach) from [<c0722191>] (__driver_attach+0x49/0xa0)
-[   31.280273] [<c0722191>] (__driver_attach) from [<c071fe6d>] (bus_for_each_dev+0x69/0x94)
-[   31.281087] [<c071fe6d>] (bus_for_each_dev) from [<c0720f71>] (bus_add_driver+0x179/0x1e8)
-[   31.281909] [<c0720f71>] (bus_add_driver) from [<c0722cf7>] (driver_register+0x8f/0x130)
-[   31.282734] [<c0722cf7>] (driver_register) from [<bf805017>] (dt_cpufreq_platdrv_init+0x17/0x1000
-[cpufreq_dt])
-[   31.283761] [<bf805017>] (dt_cpufreq_platdrv_init [cpufreq_dt]) from [<c0102f69>]
-(do_one_initcall+0x4d/0x280)
-[   31.284759] [<c0102f69>] (do_one_initcall) from [<c01c70a9>] (do_init_module+0xb9/0x28c)
-[   31.285561] [<c01c70a9>] (do_init_module) from [<c01c9ba9>] (load_module+0x2895/0x2c04)
-[   31.286347] [<c01c9ba9>] (load_module) from [<c01ca0d7>] (sys_finit_module+0x7b/0x8c)
-[   31.287117] [<c01ca0d7>] (sys_finit_module) from [<c0101001>] (ret_fast_syscall+0x1/0x26)
-[   31.287901] Exception stack(0xcabb3fa8 to 0xcabb3ff0)
-[   31.288406] 3fa0:                   0003f348 00000001 00000003 0002b744 00000000 b6b31e74
-[   31.289200] 3fc0: 0003f348 00000001 94ccfd00 0000017b 0003f3f0 00000000 0003f348 00040010
-[   31.290029] 3fe0: b6b31df8 b6b31de8 00022534 aec752f0
+>is more important in request where some request want to modify a subset
+>of bits (set some, unset some) while some requests pass a list of bits
+>to be set after the operation (i.e. "I want exactly these to be
+>enabled").
 
-[   31.290698] Allocated by task 181:
-[   31.291065]  __kasan_kmalloc.constprop.0+0x7b/0x84
-[   31.291565]  cpufreq_online+0x55f/0x8a4
-[   31.291959]  cpufreq_add_dev+0x79/0x80
-[   31.292351]  subsys_interface_register+0xc3/0x100
-[   31.292830]  cpufreq_register_driver+0x13b/0x1ec
-[   31.293335]  dt_cpufreq_probe+0x89/0xe0 [cpufreq_dt]
-[   31.293832]  platform_drv_probe+0x49/0x88
-[   31.294245]  really_probe+0x109/0x378
-[   31.294623]  driver_probe_device+0x57/0x15c
-[   31.295048]  device_driver_attach+0x61/0x64
-[   31.295472]  __driver_attach+0x49/0xa0
-[   31.295854]  bus_for_each_dev+0x69/0x94
-[   31.296244]  bus_add_driver+0x179/0x1e8
-[   31.296636]  driver_register+0x8f/0x130
-[   31.297047]  dt_cpufreq_platdrv_init+0x17/0x1000 [cpufreq_dt]
-[   31.297616]  do_one_initcall+0x4d/0x280
-[   31.298013]  do_init_module+0xb9/0x28c
-[   31.298397]  load_module+0x2895/0x2c04
-[   31.298780]  sys_finit_module+0x7b/0x8c
-[   31.299167]  ret_fast_syscall+0x1/0x26
-[   31.299548]  0xb6c2ac60
+Hmm, it's a different type of bitset then. Wouldn't it be better to have
+ETHTOOL_A_BITSET_TYPE
+and enum:
+ETHTOOL_A_BITSET_TYPE_LIST
+ETHTOOL_A_BITSET_TYPE_MASKED
+or something like that?
+Or maybe just NLA_FLAG called "MASKED". I don't know, "list" has a
+specific meaning and this isn't that...
 
-[   31.299967] Freed by task 214:
-[   31.300288]  __kasan_slab_free+0xb7/0xe0
-[   31.300686]  kfree+0x71/0x1f4
-[   31.301001]  subsys_interface_unregister+0xad/0xf0
-[   31.338959]  cpufreq_unregister_driver+0x2f/0x7c
-[   31.377102]  dt_cpufreq_remove+0x15/0x18 [cpufreq_dt]
-[   31.414885]  platform_drv_remove+0x27/0x34
-[   31.452644]  device_release_driver_internal+0xdf/0x1a8
-[   31.490404]  driver_detach+0x85/0xf8
-[   31.527682]  bus_remove_driver+0x53/0xb0
-[   31.564827]  dt_cpufreq_platdrv_exit+0x9/0xb28 [cpufreq_dt]
-[   31.601736]  sys_delete_module+0x117/0x1a4
-[   31.638575]  ret_fast_syscall+0x1/0x26
-[   31.675041]  0xb6cafff4
 
-[   31.746517] The buggy address belongs to the object at cc302400
-                which belongs to the cache kmalloc-512 of size 512
-[   31.817855] The buggy address is located 268 bytes inside of
-                512-byte region [cc302400, cc302600)
-[   31.888496] The buggy address belongs to the page:
-[   31.923247] page:d291a000 refcount:1 mapcount:0 mapping:ce001a00 index:0x0 compound_mapcount: 0
-[   31.958247] flags: 0x10200(slab|head)
-[   31.992944] raw: 00010200 00000100 00000122 ce001a00 00000000 00100010 ffffffff 00000001
-[   32.027763] page dumped because: kasan: bad access detected
+>
+>The flag could be omitted for compact form where we could simply say
+>that if there is no mask, it's a list, but we need it for verbose form.
+>
+>> >+  ``ETHTOOL_A_BITSET_SIZE``     u32     number of significant bits
+>> >+  ``ETHTOOL_A_BITSET_VALUE``    binary  bitmap of bit values
+>> >+  ``ETHTOOL_A_BITSET_MASK``     binary  bitmap of valid bits
+>> 
+>> Couple of times the NLA_BITFIELD32 limitation was discussed, so isn't
+>> this the time to introduce generic NLA_BITFIELD with variable len and
+>> use it here? This is exactly job for it. As this is UAPI, I believe it
+>> should be done now cause later won't work.
+>
+>As discussed before, we would lose the option to omit mask when it's not
+>needed.
 
-[   32.095965] Memory state around the buggy address:
-[   32.129904]  cc302400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   32.163593]  cc302480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   32.196538] >cc302500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   32.229052]               ^
-[   32.260939]  cc302580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   32.292881]  cc302600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[   32.324296] ==================================================================
-[   32.355594] Disabling lock debugging due to kernel taint
-[   32.462151] ------------[ cut here ]------------
-[   32.492881] WARNING: CPU: 1 PID: 218 at lib/refcount.c:156 dev_pm_opp_of_add_table+0x59/0x128
-[   32.523741] refcount_t: increment on 0; use-after-free.
-[   32.554329] Modules linked in: cpufreq_dt(+) tegra30_devfreq [last unloaded: cpufreq_dt]
-[   32.585233] CPU: 1 PID: 218 Comm: modprobe Tainted: G    B   W
-5.4.0-rc2-next-20191011-00194-g02f44e30b215-dirty #2645
-[   32.646692] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-[   32.677493] [<c011116d>] (unwind_backtrace) from [<c010bb05>] (show_stack+0x11/0x14)
-[   32.708460] [<c010bb05>] (show_stack) from [<c0d749ad>] (dump_stack+0x89/0x98)
-[   32.739392] [<c0d749ad>] (dump_stack) from [<c0127713>] (__warn+0x10f/0x110)
-[   32.770049] [<c0127713>] (__warn) from [<c0127a09>] (warn_slowpath_fmt+0x61/0x78)
-[   32.800656] [<c0127a09>] (warn_slowpath_fmt) from [<c095afc5>] (dev_pm_opp_of_add_table+0x59/0x128)
-[   32.860732] [<c095afc5>] (dev_pm_opp_of_add_table) from [<c095b0c5>]
-(dev_pm_opp_of_cpumask_add_table+0x31/0x88)
-[   32.921247] [<c095b0c5>] (dev_pm_opp_of_cpumask_add_table) from [<bf800245>]
-(cpufreq_init+0xd9/0x280 [cpufreq_dt])
-[   32.982732] [<bf800245>] (cpufreq_init [cpufreq_dt]) from [<c095ea0f>] (cpufreq_online+0x37f/0x8a4)
-[   33.045107] [<c095ea0f>] (cpufreq_online) from [<c095efbd>] (cpufreq_add_dev+0x79/0x80)
-[   33.077037] [<c095efbd>] (cpufreq_add_dev) from [<c0720213>] (subsys_interface_register+0xc3/0x100)
-[   33.140128] [<c0720213>] (subsys_interface_register) from [<c095d83f>]
-(cpufreq_register_driver+0x13b/0x1ec)
-[   33.204911] [<c095d83f>] (cpufreq_register_driver) from [<bf800475>] (dt_cpufreq_probe+0x89/0xe0
-[cpufreq_dt])
-[   33.271766] [<bf800475>] (dt_cpufreq_probe [cpufreq_dt]) from [<c0723e31>]
-(platform_drv_probe+0x49/0x88)
-[   33.340156] [<c0723e31>] (platform_drv_probe) from [<c0721ad9>] (really_probe+0x109/0x378)
-[   33.375275] [<c0721ad9>] (really_probe) from [<c0721e93>] (driver_probe_device+0x57/0x15c)
-[   33.410559] [<c0721e93>] (driver_probe_device) from [<c0722145>] (device_driver_attach+0x61/0x64)
-[   33.446244] [<c0722145>] (device_driver_attach) from [<c0722191>] (__driver_attach+0x49/0xa0)
-[   33.482238] [<c0722191>] (__driver_attach) from [<c071fe6d>] (bus_for_each_dev+0x69/0x94)
-[   33.518513] [<c071fe6d>] (bus_for_each_dev) from [<c0720f71>] (bus_add_driver+0x179/0x1e8)
-[   33.555099] [<c0720f71>] (bus_add_driver) from [<c0722cf7>] (driver_register+0x8f/0x130)
-[   33.592015] [<c0722cf7>] (driver_register) from [<bf805017>] (dt_cpufreq_platdrv_init+0x17/0x1000
-[cpufreq_dt])
-[   33.666547] [<bf805017>] (dt_cpufreq_platdrv_init [cpufreq_dt]) from [<c0102f69>]
-(do_one_initcall+0x4d/0x280)
-[   33.742553] [<c0102f69>] (do_one_initcall) from [<c01c70a9>] (do_init_module+0xb9/0x28c)
-[   33.781507] [<c01c70a9>] (do_init_module) from [<c01c9ba9>] (load_module+0x2895/0x2c04)
-[   33.820735] [<c01c9ba9>] (load_module) from [<c01ca0d7>] (sys_finit_module+0x7b/0x8c)
-[   33.860308] [<c01ca0d7>] (sys_finit_module) from [<c0101001>] (ret_fast_syscall+0x1/0x26)
-[   33.900121] Exception stack(0xcabb3fa8 to 0xcabb3ff0)
-[   33.940062] 3fa0:                   0003f348 00000001 00000003 0002b744 00000000 b6b31e74
-[   33.980876] 3fc0: 0003f348 00000001 94ccfd00 0000017b 0003f3f0 00000000 0003f348 00040010
-[   34.021838] 3fe0: b6b31df8 b6b31de8 00022534 aec752f0
-[   34.062931] ---[ end trace f68728a0d3053b54 ]---
+Sorry, it's been couple of months already :/
+
+
+>
+>> >+Bit-by-bit form: nested (bitset) attribute contents:
+>> >+
+>> >+ +---------------------------------+--------+-----------------------------+
+>> >+ | ``ETHTOOL_A_BITSET_LIST``       | flag   | no mask, only a list        |
+>> >+ +---------------------------------+--------+-----------------------------+
+>> >+ | ``ETHTOOL_A_BITSET_SIZE``       | u32    | number of significant bits  |
+>> >+ +---------------------------------+--------+-----------------------------+
+>> >+ | ``ETHTOOL_A_BITSET_BIT``        | nested | array of bits               |
+>> 
+>> "ETHTOOL_A_BITSET_BIT" does not exist in the code. I believe you ment
+>> "ETHTOOL_A_BITSET_BITS"
+>> 
+>> 
+>> >+ +-+-------------------------------+--------+-----------------------------+
+>> >+ |   ``ETHTOOL_A_BITSET_BIT+``     | nested | one bit                     |
+>> 
+>> You seem to be missing "|" here.
+>> Also "ETHTOOL_A_BITSET_BIT" does not exist. I believe you ment
+>> "ETHTOOL_A_BITS_BIT"
+>
+>Yes on both, thanks.
+>
+>> >+/* bit sets */
+>> >+
+>> >+enum {
+>> >+	ETHTOOL_A_BIT_UNSPEC,
+>> >+	ETHTOOL_A_BIT_INDEX,			/* u32 */
+>> >+	ETHTOOL_A_BIT_NAME,			/* string */
+>> >+	ETHTOOL_A_BIT_VALUE,			/* flag */
+>> >+
+>> >+	/* add new constants above here */
+>> >+	__ETHTOOL_A_BIT_CNT,
+>> >+	ETHTOOL_A_BIT_MAX = __ETHTOOL_A_BIT_CNT - 1
+>> >+};
+>> >+
+>> >+enum {
+>> >+	ETHTOOL_A_BITS_UNSPEC,
+>> >+	ETHTOOL_A_BITS_BIT,
+>> >+
+>> >+	/* add new constants above here */
+>> >+	__ETHTOOL_A_BITS_CNT,
+>> >+	ETHTOOL_A_BITS_MAX = __ETHTOOL_A_BITS_CNT - 1
+>> >+};
+>> 
+>> I think it would be good to have this named with "_BITSET_" in it so it
+>> is crystal clear this is part of the bitset UAPI.
+>
+>I guess we can add "_BITSET" (e.g. ETHTOOL_A_BITSET_BIT_VALUE). These
+>constants shouldn't be used outside bitset.c (and some isolated part of
+>the userspace code) so the length is not so much of an issue.
+
+Great.
+
+
+>
+>> >+/**
+>> >+ * ethnl_put_bitset32() - Put a bitset nest into a message
+>> >+ * @skb:      skb with the message
+>> >+ * @attrtype: attribute type for the bitset nest
+>> >+ * @val:      value bitmap (u32 based)
+>> >+ * @mask:     mask bitmap (u32 based, optional)
+>> >+ * @nbits:    bit length of the bitset
+>> >+ * @names:    array of bit names (optional)
+>> >+ * @compact:  use compact format for the output
+>> >+ *
+>> >+ * Compose a nested attribute representing a bitset. If @mask is null, simple
+>> >+ * bitmap (bit list) is created, if @mask is provided, represent a value/mask
+>> >+ * pair. Bit names are only used in verbose mode and when provided by calller.
+>> >+ *
+>> >+ * Return:    0 on success, negative error value on error
+>> 
+>> Remove the spaces.
+>
+>OK
+>
+>> >+ */
+>> >+int ethnl_put_bitset32(struct sk_buff *skb, int attrtype, const u32 *val,
+>> >+		       const u32 *mask, unsigned int nbits,
+>> >+		       ethnl_string_array_t names, bool compact)
+>> >+{
+>> >+	struct nlattr *nest;
+>> >+	struct nlattr *attr;
+>> >+
+>> >+	nest = nla_nest_start(skb, attrtype);
+>> >+	if (!nest)
+>> >+		return -EMSGSIZE;
+>> >+
+>> >+	if (!mask && nla_put_flag(skb, ETHTOOL_A_BITSET_LIST))
+>> 
+>> Wait, shouldn't you rather check "!compact" ?
+>> 
+>> and WARN_ON in case compact == true && mask == NULL?
+>
+>The "compact" and "list" flags are orthogonal. In this function, caller
+>passes null @mask if it wants to generated a list (as documented in the
+>function description above). In some older version I had "bool is_list"
+>which was set to "!mask" but I felt it didn't really make the code any
+>simpler; I can return to that if you think it will make the code easier
+>to read.
+>
+>> 
+>> 
+>> >+		goto nla_put_failure;
+>> >+	if (nla_put_u32(skb, ETHTOOL_A_BITSET_SIZE, nbits))
+>> >+		goto nla_put_failure;
+>> >+	if (compact) {
+>> >+		unsigned int nwords = DIV_ROUND_UP(nbits, 32);
+>> >+		unsigned int nbytes = nwords * sizeof(u32);
+>> >+		u32 *dst;
+>> >+
+>> >+		attr = nla_reserve(skb, ETHTOOL_A_BITSET_VALUE, nbytes);
+>> >+		if (!attr)
+>> >+			goto nla_put_failure;
+>> >+		dst = nla_data(attr);
+>> >+		memcpy(dst, val, nbytes);
+>> >+		if (nbits % 32)
+>> >+			dst[nwords - 1] &= __lower_bits(nbits);
+>> >+
+>> >+		if (mask) {
+>> >+			attr = nla_reserve(skb, ETHTOOL_A_BITSET_MASK, nbytes);
+>> >+			if (!attr)
+>> >+				goto nla_put_failure;
+>> >+			dst = nla_data(attr);
+>> >+			memcpy(dst, mask, nbytes);
+>> >+			if (nbits % 32)
+>> >+				dst[nwords - 1] &= __lower_bits(nbits);
+>> >+		}
+>> >+	} else {
+>> >+		struct nlattr *bits;
+>> >+		unsigned int i;
+>> >+
+>> >+		bits = nla_nest_start(skb, ETHTOOL_A_BITSET_BITS);
+>> >+		if (!bits)
+>> >+			goto nla_put_failure;
+>> >+		for (i = 0; i < nbits; i++) {
+>> >+			const char *name = names ? names[i] : NULL;
+>> >+
+>> >+			if (!__bitmap32_test_bit(mask ?: val, i))
+>> 
+>> A) this __bitmap32_test_bit() looks like something generic, yet it is
+>>    not. Perhaps you would want to add this helper to
+>>    include/linux/bitmap.h?
+>
+>I'm not sure it would be appreciated there as the whole header file is
+>for functions handling unsigned long based bitmaps. I'll rename it to
+>make it obvious it's a local helper.
+>
+>> B) Why don't you do bitmap_to_arr32 conversion in this function just
+>>    before val/mask put. Then you can use normal test_bit() here.
+>
+>This relates to the question (below) why we need two versions of the
+>functions, one for unsigned long based bitmaps, one for u32 based ones.
+>The reason is that both are used internally by existing code. So if we
+>had only one set of bitset functions, callers using the other format
+>would have to do the wrapping themselves.
+>
+>There are two reasons why u32 versions are implemented directly and
+>usingned long ones as wrappers. First, u32 based bitmaps are more
+>frequent in existing code. Second, when we can get away with a cast
+>(i.e. anywhere exect 64-bit big endian), unsigned long based bitmap can
+>be always interpreted as u32 based bitmap but if we tried it the other
+>way, we would need a special handling of the last word when the number
+>of 32-bit words is odd.
+
+Okay. Perhaps you can add it as a comment so it is clear what is going
+on?
+
+
+>
+>> >+				continue;
+>> >+			attr = nla_nest_start(skb, ETHTOOL_A_BITS_BIT);
+>> >+			if (!attr ||
+>> >+			    nla_put_u32(skb, ETHTOOL_A_BIT_INDEX, i))
+>> 
+>> You mix these 2 in 1 if which are not related. Better keep them separate
+>> in two ifs.
+>> Or you can put the rest of the puts in the same if too.
+>
+>OK
+>
+>> >+				goto nla_put_failure;
+>> >+			if (name &&
+>> >+			    ethnl_put_strz(skb, ETHTOOL_A_BIT_NAME, name))
+>> >+				goto nla_put_failure;
+>> >+			if (mask && __bitmap32_test_bit(val, i) &&
+>> >+			    nla_put_flag(skb, ETHTOOL_A_BIT_VALUE))
+>> >+				goto nla_put_failure;
+>> >+			nla_nest_end(skb, attr);
+>> >+		}
+>> >+		nla_nest_end(skb, bits);
+>> >+	}
+>> >+
+>> >+	nla_nest_end(skb, nest);
+>> >+	return 0;
+>> >+
+>> >+nla_put_failure:
+>> >+	nla_nest_cancel(skb, nest);
+>> >+	return -EMSGSIZE;
+>> >+}
+>> >+
+>> >+static const struct nla_policy bitset_policy[ETHTOOL_A_BITSET_MAX + 1] = {
+>> >+	[ETHTOOL_A_BITSET_UNSPEC]	= { .type = NLA_REJECT },
+>> >+	[ETHTOOL_A_BITSET_LIST]		= { .type = NLA_FLAG },
+>> >+	[ETHTOOL_A_BITSET_SIZE]		= { .type = NLA_U32 },
+>> >+	[ETHTOOL_A_BITSET_BITS]		= { .type = NLA_NESTED },
+>> >+	[ETHTOOL_A_BITSET_VALUE]	= { .type = NLA_BINARY },
+>> >+	[ETHTOOL_A_BITSET_MASK]		= { .type = NLA_BINARY },
+>> >+};
+>> >+
+>> >+static const struct nla_policy bit_policy[ETHTOOL_A_BIT_MAX + 1] = {
+>> >+	[ETHTOOL_A_BIT_UNSPEC]		= { .type = NLA_REJECT },
+>> >+	[ETHTOOL_A_BIT_INDEX]		= { .type = NLA_U32 },
+>> >+	[ETHTOOL_A_BIT_NAME]		= { .type = NLA_NUL_STRING },
+>> >+	[ETHTOOL_A_BIT_VALUE]		= { .type = NLA_FLAG },
+>> >+};
+>> >+
+>> >+/**
+>> >+ * ethnl_bitset_is_compact() - check if bitset attribute represents a compact
+>> >+ *			       bitset
+>> >+ * @bitset  - nested attribute representing a bitset
+>> >+ * @compact - pointer for return value
+>> 
+>> In the rest of the code, you use
+>> @name: description
+>
+>Right, I'll fix this.
+>
+>> >+ *
+>> >+ * Return: 0 on success, negative error code on failure
+>> >+ */
+>> >+int ethnl_bitset_is_compact(const struct nlattr *bitset, bool *compact)
+>> >+{
+>> >+	struct nlattr *tb[ETHTOOL_A_BITSET_MAX + 1];
+>> >+	int ret;
+>> >+
+>> >+	ret = nla_parse_nested(tb, ETHTOOL_A_BITSET_MAX, bitset,
+>> >+			       bitset_policy, NULL);
+>> >+	if (ret < 0)
+>> >+		return ret;
+>> >+
+>> >+	if (tb[ETHTOOL_A_BITSET_BITS]) {
+>> >+		if (tb[ETHTOOL_A_BITSET_VALUE] || tb[ETHTOOL_A_BITSET_MASK])
+>> >+			return -EINVAL;
+>> >+		*compact = false;
+>> >+		return 0;
+>> >+	}
+>> >+	if (!tb[ETHTOOL_A_BITSET_SIZE] || !tb[ETHTOOL_A_BITSET_VALUE])
+>> >+		return -EINVAL;
+>> >+
+>> >+	*compact = true;
+>> >+	return 0;
+>> >+}
+>> >+
+>> >+static int ethnl_name_to_idx(ethnl_string_array_t names, unsigned int n_names,
+>> >+			     const char *name, unsigned int name_len)
+>> >+{
+>> >+	unsigned int i;
+>> >+
+>> >+	if (!names)
+>> >+		return n_names;
+>> >+
+>> >+	for (i = 0; i < n_names; i++) {
+>> >+		const char *bname = names[i];
+>> >+
+>> >+		if (!strncmp(bname, name, name_len) &&
+>> >+		    strlen(bname) <= name_len)
+>> >+			return i;
+>> >+	}
+>> >+
+>> >+	return n_names;
+>> 
+>> Maybe bettet to stick with -ERRNO?
+>
+>OK
+>
+>> >+}
+>> >+
+>> >+static int ethnl_parse_bit(unsigned int *index, bool *val, unsigned int nbits,
+>> >+			   const struct nlattr *bit_attr, bool is_list,
+>> >+			   ethnl_string_array_t names,
+>> >+			   struct netlink_ext_ack *extack)
+>> >+{
+>> >+	struct nlattr *tb[ETHTOOL_A_BIT_MAX + 1];
+>> >+	int ret, idx;
+>> >+
+>> >+	if (nla_type(bit_attr) != ETHTOOL_A_BITS_BIT) {
+>> >+		NL_SET_ERR_MSG_ATTR(extack, bit_attr,
+>> >+				    "only ETHTOOL_A_BITS_BIT allowed in ETHTOOL_A_BITSET_BITS");
+>> >+		return -EINVAL;
+>> >+	}
+>> 
+>> Probably it makes sense the caller does this check. Later on, if there
+>> is another possible value, the check would have to go there anyway.
+>
+>OK
+>
+>> >+	ret = nla_parse_nested(tb, ETHTOOL_A_BIT_MAX, bit_attr, bit_policy,
+>> >+			       extack);
+>> >+	if (ret < 0)
+>> >+		return ret;
+>> >+
+>> >+	if (tb[ETHTOOL_A_BIT_INDEX]) {
+>> >+		const char *name;
+>> >+
+>> >+		idx = nla_get_u32(tb[ETHTOOL_A_BIT_INDEX]);
+>> >+		if (idx >= nbits) {
+>> >+			NL_SET_ERR_MSG_ATTR(extack,
+>> >+					    tb[ETHTOOL_A_BIT_INDEX],
+>> >+					    "bit index too high");
+>> >+			return -EOPNOTSUPP;
+>> >+		}
+>> >+		name = names ? names[idx] : NULL;
+>> >+		if (tb[ETHTOOL_A_BIT_NAME] && name &&
+>> >+		    strncmp(nla_data(tb[ETHTOOL_A_BIT_NAME]), name,
+>> >+			    nla_len(tb[ETHTOOL_A_BIT_NAME]))) {
+>> >+			NL_SET_ERR_MSG_ATTR(extack, bit_attr,
+>> >+					    "bit index and name mismatch");
+>> >+			return -EINVAL;
+>> >+		}
+>> >+	} else if (tb[ETHTOOL_A_BIT_NAME]) {
+>> >+		idx = ethnl_name_to_idx(names, nbits,
+>> >+					nla_data(tb[ETHTOOL_A_BIT_NAME]),
+>> >+					nla_len(tb[ETHTOOL_A_BIT_NAME]));
+>> 
+>> It's a string? Policy validation should take care if it is correctly
+>> terminated by '\0'. Then you don't need to pass len down. Anyone who is
+>> interested in length can use strlen().
+>
+>OK
+>
+>> >+	is_list = (tb[ETHTOOL_A_BITSET_LIST] != NULL);
+>> 
+>> just:
+>> 	is_list = tb[ETHTOOL_A_BITSET_LIST]
+>> is enough.
+>
+>Assignment from pointer to a bool felt a bit weird but if you find it
+>acceptable, I have no problem with it.
+>
+>> >+int ethnl_bitset_is_compact(const struct nlattr *bitset, bool *compact);
+>> >+int ethnl_bitset_size(const unsigned long *val, const unsigned long *mask,
+>> >+		      unsigned int nbits, ethnl_string_array_t names,
+>> >+		      bool compact);
+>> >+int ethnl_bitset32_size(const u32 *val, const u32 *mask, unsigned int nbits,
+>> >+			ethnl_string_array_t names, bool compact);
+>> >+int ethnl_put_bitset(struct sk_buff *skb, int attrtype,
+>> >+		     const unsigned long *val, const unsigned long *mask,
+>> >+		     unsigned int nbits, ethnl_string_array_t names,
+>> >+		     bool compact);
+>> >+int ethnl_put_bitset32(struct sk_buff *skb, int attrtype, const u32 *val,
+>> >+		       const u32 *mask, unsigned int nbits,
+>> >+		       ethnl_string_array_t names, bool compact);
+>> >+int ethnl_update_bitset(unsigned long *bitmap, unsigned int nbits,
+>> >+			const struct nlattr *attr, ethnl_string_array_t names,
+>> >+			struct netlink_ext_ack *extack, bool *mod);
+>> >+int ethnl_update_bitset32(u32 *bitmap, unsigned int nbits,
+>> >+			  const struct nlattr *attr, ethnl_string_array_t names,
+>> >+			  struct netlink_ext_ack *extack, bool *mod);
+>> 
+>> Hmm, I wonder why user needs to work with the 32 variants..
+>
+>See above.
+>
+>Michal
