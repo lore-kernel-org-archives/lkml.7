@@ -3,154 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAE1ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9957ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3311620854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA1820854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbfJNKvf (ORCPT
+        id S1731682AbfJNKy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:51:35 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48649 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731449AbfJNKve (ORCPT
+        Mon, 14 Oct 2019 06:54:59 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:58199 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731010AbfJNKy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:51:34 -0400
-Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 9c378dd1878789af; Mon, 14 Oct 2019 12:51:32 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: PM: Consolidate runtime resume and system resume paths
-Date:   Mon, 14 Oct 2019 12:51:31 +0200
-Message-ID: <3118349.722IRLjr4b@kreacher>
-In-Reply-To: <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
-References: <20190927090202.1468-1-drake@endlessm.com> <4883845.KNzyzeMIEj@kreacher> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
+        Mon, 14 Oct 2019 06:54:58 -0400
+Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 14 Oct 2019
+ 18:55:04 +0800
+From:   Qianggui Song <qianggui.song@amlogic.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Qianggui Song <qianggui.song@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v3 0/4] pinctrl: meson-a1: add pinctrl driver
+Date:   Mon, 14 Oct 2019 18:54:48 +0800
+Message-ID: <1571050492-6598-1-git-send-email-qianggui.song@amlogic.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Originating-IP: [10.28.8.19]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This patchset adds Pin controller driver support for Meson-A1 Soc
+which shares the same register layout of pinmux with previous
+Meson-G12A, however there is difference for gpio and pin config
+registers in A1.
 
-There is an arbitrary difference between the system resume and
-runtime resume code paths for PCI devices regarding the delay to
-apply when switching the devices from D3cold to D0.
+Changes since v2 at [1]:
+ - make dt parser callback as a separate patch
 
-Namely, pci_restore_standard_config() used in the runtime resume
-code path calls pci_set_power_state() which in turn invokes
-__pci_start_power_transition() to power up the device through the
-platform firmware and that function applies the transition delay
-(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-However, pci_pm_default_resume_early() used in the system resume
-code path calls pci_power_up() which doesn't apply the delay at
-all and that causes issues to occur during resume from
-suspend-to-idle on some systems where the delay is required.
+Changes since v1 at [0]:
+ - collect Reviewed-by
+ - modify commit log
+ - add an extra dt parser function for a1
 
-Since there is no reason for that difference to exist, modify
-pci_pm_default_resume_early() to invoke pci_restore_standard_config()
-instead of pci_power_up() and drop the latter, but in order to
-prevent the ACPI power state values (cached by the ACPI layer) from
-becoming stale in some cases during resume from suspend-to-RAM
-(ACPI S3), as per commit cc2893b6af52 ("PCI: Ensure we re-enable
-devices on resume"), refresh the ACPI power state information in
-pci_pm_default_resume_early() in that case.
+[0] https://lore.kernel.org/linux-amlogic/1568700442-18540-1-git-send-email-qianggui.song@amlogic.com/
+[1] https://lore.kernel.org/linux-amlogic/1570532999-23302-1-git-send-email-qianggui.song@amlogic.com/
 
-[Note that while this change should take the issue originally
- addressed by commit cc2893b6af52 ("PCI: Ensure we re-enable devices
- on resume") into account in a generally safer way, an alternative
- would be to make pci_power_up() use __pci_start_power_transition()
- instead of calling platform_pci_set_power_state() directly.]
+Qianggui Song (4):
+  pinctrl: add compatible for Amlogic Meson A1 pin controller
+  pinctrl: meson: add a new dt parse callback for Meson-A series SoCs
+  pinctrl: meson: add pinctrl driver support for Meson-A1 Soc
+  arm64: dts: meson: a1: add pinctrl controller support
 
-Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-Reported-by: Daniel Drake <drake@endlessm.com> 
-Tested-by: Daniel Drake <drake@endlessm.com> 
-Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/pci/pci-driver.c |    8 +++++---
- drivers/pci/pci.c        |   15 ---------------
- drivers/pci/pci.h        |    1 -
- 3 files changed, 5 insertions(+), 19 deletions(-)
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  18 +
+ drivers/pinctrl/meson/Kconfig                      |   6 +
+ drivers/pinctrl/meson/Makefile                     |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-a1.c           | 942 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |  16 +-
+ drivers/pinctrl/meson/pinctrl-meson.h              |   7 +
+ include/dt-bindings/gpio/meson-a1-gpio.h           |  73 ++
+ 8 files changed, 1063 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
+ create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
 
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -523,9 +523,10 @@ static int pci_restore_standard_config(s
- 
- static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
- {
--	pci_power_up(pci_dev);
--	pci_restore_state(pci_dev);
--	pci_pme_restore(pci_dev);
-+	if (pm_resume_via_firmware())
-+		pci_refresh_power_state(pci_dev);
-+
-+	pci_restore_standard_config(pci_dev);
- }
- 
- /*
-@@ -713,6 +714,7 @@ static void pci_pm_complete(struct devic
- 		pci_power_t pre_sleep_state = pci_dev->current_state;
- 
- 		pci_refresh_power_state(pci_dev);
-+		pci_update_current_state(pci_dev, pci_dev->current_state);
- 		/*
- 		 * On platforms with ACPI this check may also trigger for
- 		 * devices sharing power resources if one of those power
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -954,21 +954,6 @@ void pci_refresh_power_state(struct pci_
- {
- 	if (platform_pci_power_manageable(dev))
- 		platform_pci_refresh_power_state(dev);
--
--	pci_update_current_state(dev, dev->current_state);
--}
--
--/**
-- * pci_power_up - Put the given device into D0 forcibly
-- * @dev: PCI device to power up
-- */
--void pci_power_up(struct pci_dev *dev)
--{
--	if (platform_pci_power_manageable(dev))
--		platform_pci_set_power_state(dev, PCI_D0);
--
--	pci_raw_set_power_state(dev, PCI_D0);
--	pci_update_current_state(dev, PCI_D0);
- }
- 
- /**
-Index: linux-pm/drivers/pci/pci.h
-===================================================================
---- linux-pm.orig/drivers/pci/pci.h
-+++ linux-pm/drivers/pci/pci.h
-@@ -85,7 +85,6 @@ struct pci_platform_pm_ops {
- int pci_set_platform_pm(const struct pci_platform_pm_ops *ops);
- void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
- void pci_refresh_power_state(struct pci_dev *dev);
--void pci_power_up(struct pci_dev *dev);
- void pci_disable_enabled_device(struct pci_dev *dev);
- int pci_finish_runtime_suspend(struct pci_dev *dev);
- void pcie_clear_root_pme_status(struct pci_dev *dev);
-
-
+-- 
+1.9.1
 
