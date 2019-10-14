@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
 	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4842ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EE920650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE062067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UE3cFj1e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4x27pY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbfJNVZn (ORCPT
+        id S1732261AbfJNVZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:25:43 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33592 "EHLO
+        Mon, 14 Oct 2019 17:25:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42486 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729708AbfJNVZm (ORCPT
+        with ESMTP id S1731950AbfJNVZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:25:42 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so18064349ljd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 14:25:39 -0700 (PDT)
+        Mon, 14 Oct 2019 17:25:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y23so18000365lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 14:25:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KOU51IFsj1iWUWTwrZgYX0bBua/cZqGBz0E2pjuMMik=;
-        b=UE3cFj1eeaEg+c6oSlBkkGkBUi7iBIX1FCElgCSWH3V3Q5VLWYARw4curmMKBKFQVJ
-         LogzpmkVabWdQEig0e9+eynXQymGCkTRKi6xqzw4GbRDvggJEN/hLzYYWcu7HvaJXf0j
-         0rJFr2M8O2PGWZSoazQq5daJlnIWfpV/3jVQv4iyuq3JqVvMlZEuJkKTZz5T3TU24b9n
-         afqhUArYr7MCj7LLWUFkmKR8CTaKeepZ7shKb8Z71rvG3Dob7vAXoKeUYGu414thkb9f
-         SDYxDjrTLJPu8xEHmQ5glwBsME9AFWHckLxSKL4OuBztN5ePy0V99evU7HoSbnJ5a3TV
-         az7g==
+        bh=DEgyVkL1sRyTaJ07rFVWXkm6zQa7bcNVlWuViQ4TgNU=;
+        b=p4x27pY5o1BRq8AMo8WFS8GZ6D0eaSL/VI0BXPX27bftuxZPW7jpu1H7GGEAc2szhU
+         7BgOUad4M9W1l5TXn2ONUnxEiiH3nZKhpj5pE/nzgH0smDp9+db17IF1N226dphGLmzp
+         fpgny4cDX38i3hGPi2IDnZy6lAky4o6W1uccekOtQlP0mzgVFeIyd7TWpgHkeA5OuIzT
+         TR8UdBQ70X/oLmA6ibzzjLIPhXYiysKXaDrXjKityi4Iohj/2KOk2cckpalix+QLP/Xw
+         k3j+fU9Qkw93fX31y0k5+hYfUO2xjzMwc+aS1Z8rF/EBmjHSsIPOokVdVnrTd1GOtWkr
+         GGFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KOU51IFsj1iWUWTwrZgYX0bBua/cZqGBz0E2pjuMMik=;
-        b=sINjfbVGfQqOS5PBQfhGBSJhbTiK1SrRFufwxlV3eW2GoE+pXD5ilaUhFothBJp/AI
-         O6ZyV98F8n3VE2LFGdU/LrQou9G0dbw+ypHSq8tDCVT+PXZjmt0wwYANNiH8g2tw2LwX
-         unszsVcV1ez5SWrI/sDywZdFw/C2CTu22soQcuF3y1uc6GKuLB+f9Wc+oFZakNhdj3vV
-         TxFKHSyVv3ltjQKbyP7cAIhhaiuYF+V0Iw5XMYTMaAuvAf3daAJ26OslddIaYLTp8Ew1
-         az7+VzXMthTJTKRfm6oItSUfBMZTTLsCB+5UqrDUz5SmphwvOxUxBh/OXIFn10Q8Qc+J
-         LXzw==
-X-Gm-Message-State: APjAAAW45kZz4JIRIa7b5qxhKwUSa6nsCqj1+/JulRQticz6KGjgEQut
-        bIi7lSMhnepQvGpdCtXu1hY=
-X-Google-Smtp-Source: APXvYqwb/FwNAARo6WlmergKMs6EALRCoKHxGf0b0I+UrDEz02wKF9Rcd90SPMhv9xw5zLIwDXmyZw==
-X-Received: by 2002:a2e:9205:: with SMTP id k5mr13217193ljg.202.1571088339195;
-        Mon, 14 Oct 2019 14:25:39 -0700 (PDT)
+        bh=DEgyVkL1sRyTaJ07rFVWXkm6zQa7bcNVlWuViQ4TgNU=;
+        b=l9Jr2+h1fuRNQAxEt1fsijo8uN5qFzMTd5+M3H/GusDGtfmYidWd+rkFanUpDEHNlX
+         6rnvIw14WLxEL8TKPaPDPdHTqUb1pQUVVrlYrjbnMe/yzmKmKsRiKq37zgNomCOXoo6K
+         V56k99qgvzuG83rXzFut/DzY/2fvLMIn73KHiE/urDDDxJs9fmdKoMZkX/EhK7A+qvD0
+         03kk/PlTUZzfIRC9xAf420xYltvghH2MtkoSsXkc+Ti1KiK+B5SOTBvLtU8vug58dyV7
+         vEjDZGDIDwHrrhXOdaAKGY/pf57TeUz3wkyuM4x0euLZngtlbF+T3/cdynMj86xSRiid
+         fDVg==
+X-Gm-Message-State: APjAAAVP1XLFPEtGX7D+1WbucFGpWzWuvebxOhrsjTj0ny7BbJTaoIt2
+        Ic2hKXd4qP5xBHpBokE3h2g=
+X-Google-Smtp-Source: APXvYqyY3tP9am2tq4FKuD+kPXcviflzydBEde4bb/OQl6d8Be+IeuS0n04q8xmHWm/uccdoWT3nVg==
+X-Received: by 2002:a2e:9151:: with SMTP id q17mr7797001ljg.115.1571088341828;
+        Mon, 14 Oct 2019 14:25:41 -0700 (PDT)
 Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id m15sm4429434ljh.50.2019.10.14.14.25.36
+        by smtp.gmail.com with ESMTPSA id m15sm4429434ljh.50.2019.10.14.14.25.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 14:25:38 -0700 (PDT)
+        Mon, 14 Oct 2019 14:25:41 -0700 (PDT)
 From:   Max Filippov <jcmvbkbc@gmail.com>
 To:     linux-xtensa@linux-xtensa.org, Al Viro <viro@zeniv.linux.org.uk>
 Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
         Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v3 1/3] xtensa: fix {get,put}_user() for 64bit values
-Date:   Mon, 14 Oct 2019 14:25:11 -0700
-Message-Id: <20191014212513.17661-2-jcmvbkbc@gmail.com>
+Subject: [PATCH v3 2/3] xtensa: clean up assembly arguments in uaccess macros
+Date:   Mon, 14 Oct 2019 14:25:12 -0700
+Message-Id: <20191014212513.17661-3-jcmvbkbc@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191014212513.17661-1-jcmvbkbc@gmail.com>
 References: <20191014212513.17661-1-jcmvbkbc@gmail.com>
@@ -74,54 +74,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Numeric assembly arguments are hard to understand and assembly code that
+uses them is hard to modify. Use named arguments in __check_align_*,
+__get_user_asm and __put_user_asm. Modify macro parameter names so that
+they don't affect argument names. Use '+' constraint for the [err]
+argument instead of having it as both input and output.
 
-First of all, on short copies __copy_{to,from}_user() return the amount
-of bytes left uncopied, *not* -EFAULT.  get_user() and put_user() are
-expected to return -EFAULT on failure.
-
-Another problem is get_user(v32, (__u64 __user *)p); that should
-fetch 64bit value and the assign it to v32, truncating it in process.
-Current code, OTOH, reads 8 bytes of data and stores them at the
-address of v32, stomping on the 4 bytes that follow v32 itself.
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 ---
- arch/xtensa/include/asm/uaccess.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Changes v2->v3:
+- fix assembly argument constraint for error code
+
+ arch/xtensa/include/asm/uaccess.h | 42 +++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
 diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index 6792928ba84a..f568c00392ec 100644
+index f568c00392ec..da4d35445063 100644
 --- a/arch/xtensa/include/asm/uaccess.h
 +++ b/arch/xtensa/include/asm/uaccess.h
-@@ -100,7 +100,7 @@ do {									\
- 	case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break;	\
- 	case 8: {							\
- 		     __typeof__(*ptr) __v64 = x;			\
--		     retval = __copy_to_user(ptr, &__v64, 8);		\
-+		     retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;	\
- 		     break;						\
- 	        }							\
- 	default: __put_user_bad();					\
-@@ -198,7 +198,16 @@ do {									\
- 	case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
- 	case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
- 	case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
--	case 8: retval = __copy_from_user(&x, ptr, 8);    break;	\
-+	case 8: {							\
-+		u64 __x;						\
-+		if (unlikely(__copy_from_user(&__x, ptr, 8))) {		\
-+			retval = -EFAULT;				\
-+			(x) = 0;					\
-+		} else {						\
-+			(x) = *(__force __typeof__((ptr)))&__x;		\
-+		}							\
-+		break;							\
-+	}								\
- 	default: (x) = __get_user_bad();				\
- 	}								\
- } while (0)
+@@ -132,14 +132,14 @@ do {									\
+ #define __check_align_1  ""
+ 
+ #define __check_align_2				\
+-	"   _bbci.l %3,  0, 1f		\n"	\
+-	"   movi    %0, %4		\n"	\
++	"   _bbci.l %[addr], 0, 1f	\n"	\
++	"   movi    %[err], %[efault]	\n"	\
+ 	"   _j      2f			\n"
+ 
+ #define __check_align_4				\
+-	"   _bbsi.l %3,  0, 0f		\n"	\
+-	"   _bbci.l %3,  1, 1f		\n"	\
+-	"0: movi    %0, %4		\n"	\
++	"   _bbsi.l %[addr], 0, 0f	\n"	\
++	"   _bbci.l %[addr], 1, 1f	\n"	\
++	"0: movi    %[err], %[efault]	\n"	\
+ 	"   _j      2f			\n"
+ 
+ 
+@@ -151,24 +151,24 @@ do {									\
+  * WARNING: If you modify this macro at all, verify that the
+  * __check_align_* macros still work.
+  */
+-#define __put_user_asm(x, addr, err, align, insn, cb)	\
++#define __put_user_asm(x_, addr_, err_, align, insn, cb)\
+ __asm__ __volatile__(					\
+ 	__check_align_##align				\
+-	"1: "insn"  %2, %3, 0		\n"		\
++	"1: "insn"  %[x], %[addr], 0	\n"		\
+ 	"2:				\n"		\
+ 	"   .section  .fixup,\"ax\"	\n"		\
+ 	"   .align 4			\n"		\
+ 	"   .literal_position		\n"		\
+ 	"5:				\n"		\
+-	"   movi   %1, 2b		\n"		\
+-	"   movi   %0, %4		\n"		\
+-	"   jx     %1			\n"		\
++	"   movi   %[tmp], 2b		\n"		\
++	"   movi   %[err], %[efault]	\n"		\
++	"   jx     %[tmp]		\n"		\
+ 	"   .previous			\n"		\
+ 	"   .section  __ex_table,\"a\"	\n"		\
+ 	"   .long	1b, 5b		\n"		\
+ 	"   .previous"					\
+-	:"=r" (err), "=r" (cb)				\
+-	:"r" ((int)(x)), "r" (addr), "i" (-EFAULT), "0" (err))
++	:[err] "+r"(err_), [tmp] "=r"(cb)		\
++	:[x] "r"(x_), [addr] "r"(addr_), [efault] "i"(-EFAULT))
+ 
+ #define __get_user_nocheck(x, ptr, size)			\
+ ({								\
+@@ -217,25 +217,25 @@ do {									\
+  * WARNING: If you modify this macro at all, verify that the
+  * __check_align_* macros still work.
+  */
+-#define __get_user_asm(x, addr, err, align, insn, cb) \
+-__asm__ __volatile__(			\
++#define __get_user_asm(x_, addr_, err_, align, insn, cb) \
++__asm__ __volatile__(				\
+ 	__check_align_##align			\
+-	"1: "insn"  %2, %3, 0		\n"	\
++	"1: "insn"  %[x], %[addr], 0	\n"	\
+ 	"2:				\n"	\
+ 	"   .section  .fixup,\"ax\"	\n"	\
+ 	"   .align 4			\n"	\
+ 	"   .literal_position		\n"	\
+ 	"5:				\n"	\
+-	"   movi   %1, 2b		\n"	\
+-	"   movi   %2, 0		\n"	\
+-	"   movi   %0, %4		\n"	\
+-	"   jx     %1			\n"	\
++	"   movi   %[tmp], 2b		\n"	\
++	"   movi   %[x], 0		\n"	\
++	"   movi   %[err], %[efault]	\n"	\
++	"   jx     %[tmp]		\n"	\
+ 	"   .previous			\n"	\
+ 	"   .section  __ex_table,\"a\"	\n"	\
+ 	"   .long	1b, 5b		\n"	\
+ 	"   .previous"				\
+-	:"=r" (err), "=r" (cb), "=r" (x)	\
+-	:"r" (addr), "i" (-EFAULT), "0" (err))
++	:[err] "+r"(err_), [tmp] "=r"(cb), [x] "=r"(x_)\
++	:[addr] "r"(addr_), [efault] "i"(-EFAULT))
+ 
+ 
+ /*
 -- 
 2.20.1
 
