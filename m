@@ -2,86 +2,144 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2893C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198F7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCD72089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3BE2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 12:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mIza66vK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A79ceiqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbfJNMhk (ORCPT
+        id S1730840AbfJNMiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 08:37:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56580 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730719AbfJNMhk (ORCPT
+        Mon, 14 Oct 2019 08:38:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34339 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730800AbfJNMiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 08:37:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yYAldVN1JRszGUxBq9RZEjwXEyMvOHbWiO36ki8rfvE=; b=mIza66vKvzZBQf7NH/6oCRM8R
-        1bHTY3YpWccy8oU6bSFQmji9JLg/BG+qFWRJAcZdr8WG9C+8IvvypPzr+r/0tlNo3xPjVXvVlRJrA
-        FXaNmhpDkho8mLdgdHer2ZIMKYLDXfYnwGVc3XBNgeLOZn4d+xpc755YahnbuZSt/BuRkEjpfe7Yr
-        EMECvRbqRZ5AdnyiGpAFExoSdUAfhF28Q+6Nfp3JuaAXXMpmfXCk+PVNKkyHGsmFZd1b1SRBc0YaY
-        PwVDZXdzfWpF+yYiX1+LCGbqZYBaqGjViul3tkaS4o9OQGGH+f9MCiY9Inha/tHR9OnktDz0lPAmh
-        UeaSG/i2g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iJzbO-00007u-S9; Mon, 14 Oct 2019 12:37:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E152C300F3F;
-        Mon, 14 Oct 2019 14:36:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E6E1E2829A4D1; Mon, 14 Oct 2019 14:37:28 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 14:37:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 2/6] ipc/mqueue.c: Remove duplicated code
-Message-ID: <20191014123728.GE2328@hirez.programming.kicks-ass.net>
-References: <20191012054958.3624-1-manfred@colorfullife.com>
- <20191012054958.3624-3-manfred@colorfullife.com>
+        Mon, 14 Oct 2019 08:38:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j11so19572246wrp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 05:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=n+yPkcAtfV0uGXnqQ5l9CgswhmsyO7bUGevjjjP7SsU=;
+        b=A79ceiqRSzseaHRlZZLlXa96+PS5g04Icp7X8OBGCpMjSWZMKo6YOwikpLf6/jQBMq
+         fy340S/jR7Y1jWTQSQRys1d9vDsClxwWH30JJz5a9caRijoVmFpl1tPG3AosuzVtp7rP
+         fMzukJ6d4v08D6FyVMdnpj+QAw3XCZlpVVmVGKRK61gmLAKVd4ti+q8CWQQXv7obywCj
+         06lRcOwuzTFo8oItdzoN8RpKOz2b8YkAtKrGvYtuBvBpWJx0wBnQCms/+f11dE23FDii
+         VPYn6SrRQnKWrpVDmWTvuELG0ZI1jNBoKVhECHEeBhpUiP6PoKwYvoexLbVczKj1NYzt
+         92NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=n+yPkcAtfV0uGXnqQ5l9CgswhmsyO7bUGevjjjP7SsU=;
+        b=qB5xYnnav161G2PG+WSlXefbN8mV6PU9zsHkWZoT+ZD39xD3rNSBfx24KNnBlmzGlM
+         uU2cID+S8R0uxCfnTwfeonLZRh8ZVELGEoUUZnUu397BTS4+IpxPKn1OmjIcCgQqyvNN
+         a8pnB6X6i8U+5PgA1lNZmA8ti/hUA1ctIitfXQFeiSSUXqS8tRE0oFaEKviqwU1xJseJ
+         U9h9vN5DXhDnCF6Oj61v0asNufP/jN3MjPp+mf53D0RhO2JU64f/lMGPT808X4c5a1+0
+         jgX6k6lNWnW2yt/n3znJFbRo6OPQEoyFxGC1gtENFdjr/F0ppormjM+mqm2DFayJ7K9t
+         uLQQ==
+X-Gm-Message-State: APjAAAX0Q7m8aaPZdNEF5M3nXe33XdPgoOF3g+J/c06yn7USwR+Ch95+
+        dCY4FmLWCcp+3Hj78qPZJeUE8Q==
+X-Google-Smtp-Source: APXvYqwqbStCqYu3QLpfrXd2t39WhPUqXMhg7Pi5oJ3FT3qN/ojPYFC4TcXi10rFByzDts+Dg0rFdQ==
+X-Received: by 2002:adf:ff87:: with SMTP id j7mr25395021wrr.360.1571056732536;
+        Mon, 14 Oct 2019 05:38:52 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id c17sm21653738wrc.60.2019.10.14.05.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 05:38:51 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 13:38:49 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmurphy@ti.com, tomi.valkeinen@ti.com
+Subject: Re: [PATCH v5 3/3] leds: Add control of the voltage/current
+ regulator to the LED core
+Message-ID: <20191014123849.fhvmqn7dyu6bminc@holly.lan>
+References: <20190923102059.17818-1-jjhiblot@ti.com>
+ <20190923102059.17818-4-jjhiblot@ti.com>
+ <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com>
+ <20191013120937.GK5653@amd>
+ <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191012054958.3624-3-manfred@colorfullife.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 07:49:54AM +0200, Manfred Spraul wrote:
-> +static inline void __pipelined_op(struct wake_q_head *wake_q,
->  				  struct mqueue_inode_info *info,
-> +				  struct ext_wait_queue *this)
->  {
-> +	list_del(&this->list);
-> +	wake_q_add(wake_q, this->task);
->  	/*
->  	 * Rely on the implicit cmpxchg barrier from wake_q_add such
->  	 * that we can ensure that updating receiver->state is the last
-> @@ -937,7 +932,19 @@ static inline void pipelined_send(struct wake_q_head *wake_q,
->  	 * yet, at that point we can later have a use-after-free
->  	 * condition and bogus wakeup.
->  	 */
-> +        this->state = STATE_READY;
+On Mon, Oct 14, 2019 at 12:49:07PM +0200, Jean-Jacques Hiblot wrote:
+> 
+> On 13/10/2019 14:09, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > I must say I'm not a big fan of this change.
+> > > It adds a bunch of code to the LED core and gives small
+> > > functionality in a reward. It may also influence maximum
+> > > software blinking rate, so I'd rather avoid calling
+> > > regulator_enable/disable when timer trigger is set.
+> > > 
+> > > It will of course require more code.
+> > > 
+> > > Since AFAIR Pavel was original proponent of this change then
+> > > I'd like to see his opinion before we move on to discussing
+> > > possible improvements to this patch.
+> > Was I?
+> > 
+> > Okay, this series looks quite confusing to me. First, 1/3 looks
+> > "interesting" (would have to analyze it way more).
+> > 
+> > Second, 3/3... So we have a LED driver _and_ a regulator? So yes, the
+> > chip driving a LED is usually ... voltage/current regulator. What is
+> > second regulator doing there? Is that a common setup?
+> 
+> This is quite common with current-sink LED drivers.
+> 
+> The setup looks like this:
+> 
+> +-----------+
+> |           |
+> | Regulator |
+> |           +------------------------+
+> |           |                        |
+> +-----------+                      __|__
+>                                    \   /
+>          +---------------------+    \ / led
+>          |                     |     V
+>          |    Led Driver       |   --+--
+>          |                     |     |
+>          |                     |     |
+>          |                +----------+
+>          |              \      |
+>          |               \     |
+>          |                +    |
+>          |                |    |
+>          +---------------------+
+>                           |
+>                        +--+--+
+>                        ///////
+> 
+> 
+> Only the regulator usually does not supply only one LED.
 
-  ^^^^^^^^^^ whitespace damage
+Given questions have been raised about the complexity of the change I
+wondered whether, for a system with this topology, the regulator
+could/should be enabled when the LED driver driver probes?
 
-> +}
+
+Daniel.
