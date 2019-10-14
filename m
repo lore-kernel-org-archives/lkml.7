@@ -2,126 +2,124 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D80DECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7594C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C7320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B192620854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="ZdR7ZoWp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DhDyMkuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388520AbfJNRYx (ORCPT
+        id S2388534AbfJNRdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:24:53 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:36438 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387724AbfJNRYx (ORCPT
+        Mon, 14 Oct 2019 13:33:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60128 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730307AbfJNRdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:24:53 -0400
-Received: by mail-yb1-f194.google.com with SMTP id t4so2992696ybk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9bItvDSfbUsGhJswtzc99Hv7SGEwqL2WVtPMge+nuj8=;
-        b=ZdR7ZoWpTjUK/j/uIvcYxf8AsCcxUN5J75ACgNQc+j+DUc6RjjZSMYsGtv9DWU1tu+
-         lMQ9QGm9fH8BnO1gvS5egsNQgkrYm16hoNSRbAxYmrK/k6aCUYBw0msI/NEVNAUQhI51
-         nBsK7ZayQ4iZgYNy9foFBnwqOVPfMhAoKPnLGmSCz7qNtQLojlfZ8rNA3eXiE56WahVE
-         qf+vNcHJ5BiiytaxK+cwUrdRvsbLr0zRQOWVEFpA0E9GEn6UxrMipdUfHzzfQYmKwF2U
-         FmstD00eybdMC+4+nSNwloJ8OlNmWtonMauOhCToYkn2Ogct4DHlwPTCjpFHE676KaF8
-         jgGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9bItvDSfbUsGhJswtzc99Hv7SGEwqL2WVtPMge+nuj8=;
-        b=PhBY6eV84YWuP1pXsepdxqzgSDIHs2r1fFRKFrMmLyYBs4Hjr9RogpZJ31cLku1i8V
-         iptdAgitxiEwo+IaM9CRv3KwfF6y+t2KNGd53hmej1GvxGHTnSX52ALrD7M6NgPEEzEo
-         fnbyR3rBp7FlG8kAoBOovdhvcH06evwnMyUOSEvdIewdxIyqTzIdcicPn6vcax+3SbLz
-         fDbwbqoswddoLusABXFcbTm9GbN4Npo1J9VXWNMylsUqX+0QMLLIWdLEMNKMOM9CM6o2
-         A6kP5Vf+jQgGhomo79hLj0pFb/Ft6aZkAFK3BzmEmlsRruYmsj116cC7ctN1wSkKlIIr
-         +iiA==
-X-Gm-Message-State: APjAAAW9Y717yHHJHYAqcQhvu2DwjTJBzGKOUu/mdVwBoDt4ymEACVPM
-        SUZFS2dLkPpwc63yrDX//pBhUOJuDEZcJOdR2FKJQA==
-X-Google-Smtp-Source: APXvYqzB4zzkOE4i6QIC5XrmCSDNAgopQj1flwi6e5XwJDEcgzOgZP4uJU4RwXKlJHcUAR/TstlAmokX+NlbIZ6pO9k=
-X-Received: by 2002:a25:d610:: with SMTP id n16mr20533403ybg.486.1571073891004;
- Mon, 14 Oct 2019 10:24:51 -0700 (PDT)
+        Mon, 14 Oct 2019 13:33:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EHTRm2055532;
+        Mon, 14 Oct 2019 17:33:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=SgoPaXtNxXkqZxvIC3mKHam0uE1SQovKYmuch0B2NlQ=;
+ b=DhDyMkuZYE70IGS8w2tWI14yqTSd4ojJOq8VBEmTIOAJckSPdzfnWPzc4flTyhibnsbF
+ Rjov5ug2GK6wQbwJRzkbk96SrugA2pLFHHgikNI74GFogfeUGnRoJsjr2OpsfiL39PTs
+ YHE5N/R+9T8QXIHDz6J6mzga6yKxYFW/Wj5AoSZB8hb8NYNJ+cZ6soIWfsQeZHGBxYWe
+ +rQ10X6ZL0Xl4Hzg76Zr3JVwnU6U8fkj5UxdGTLf6dlw9y0Edj+NJLvngXroOE0viV/m
+ 6zS26bvgQFnbAvQ7YTkS8KBV+0hH2FhbtJKKxlSTSfzwqZ+WSSSXkTJoRxpMk2Z8fGER qA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vk7fr2as5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 17:33:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EHRtTl009294;
+        Mon, 14 Oct 2019 17:33:11 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vkry6shsb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 17:33:11 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9EHX9WA026469;
+        Mon, 14 Oct 2019 17:33:09 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 14 Oct 2019 17:33:09 +0000
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ limits
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com>
+ <CAHS8izN1Q7XH84Srem_McB+Jz67-fu6KPCMQjzbnPDTPzgwC2A@mail.gmail.com>
+ <CAHS8izNhZc8zsdf=eXU5L_ouKwk9s00S-Q21P=QA+vAF3BsXcg@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <f042aba0-7e0f-80c5-1285-6b6fd2b3cbac@oracle.com>
+Date:   Mon, 14 Oct 2019 10:33:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191014125302.21479-1-anders.roxell@linaro.org>
-In-Reply-To: <20191014125302.21479-1-anders.roxell@linaro.org>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 14 Oct 2019 13:24:14 -0400
-Message-ID: <CAMavQKKYzj_jbP2UTMe1O6K5GYxxM1buB=iWC8vFZU5e0vTGGA@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp-mst: remove unused variable
-To:     Anders Roxell <anders.roxell@linaro.org>,
-        Manasi Navare <manasi.d.navare@intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHS8izNhZc8zsdf=eXU5L_ouKwk9s00S-Q21P=QA+vAF3BsXcg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910140146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910140146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 8:53 AM Anders Roxell <anders.roxell@linaro.org> wr=
-ote:
->
-> The variable 'dev' is no longer used and the compiler rightly complains
-> that it should be removed.
->
-> ../drivers/gpu/drm/drm_dp_mst_topology.c: In function =E2=80=98drm_atomic=
-_get_mst_topology_state=E2=80=99:
-> ../drivers/gpu/drm/drm_dp_mst_topology.c:4187:21: warning: unused variabl=
-e =E2=80=98dev=E2=80=99 [-Wunused-variable]
->   struct drm_device *dev =3D mgr->dev;
->                      ^~~
->
-> Rework to remove the unused variable.
->
-> Fixes: 83fa9842afe7 ("drm/dp-mst: Drop connection_mutex check")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+On 10/11/19 1:41 PM, Mina Almasry wrote:
+> On Fri, Oct 11, 2019 at 12:10 PM Mina Almasry <almasrymina@google.com> wrote:
+>>
+>> On Mon, Sep 23, 2019 at 10:47 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>>
+>>> On 9/19/19 3:24 PM, Mina Almasry wrote:
+>>
+>> Mike, note your suggestion above to check if the page hugetlb_cgroup
+>> is null doesn't work if we want to keep the current counter working
+>> the same: the page will always have a hugetlb_cgroup that points that
+>> contains the old counter. Any ideas how to apply this new counter
+>> behavior to a private NORESERVE mappings? Is there maybe a flag I can
+>> set on the pages at allocation time that I can read on free time to
+>> know whether to uncharge the hugetlb_cgroup or not?
+> 
+> Reading the code and asking around a bit, it seems the pointer to the
+> hugetlb_cgroup is in page[2].private. Is it reasonable to use
+> page[3].private to store the hugetlb_cgroup to uncharge for the new
+> counter and increment HUGETLB_CGROUP_MIN_ORDER to 3? I think that
+> would solve my problem. When allocating a private NORESERVE page, set
+> page[3].private to the hugetlb_cgroup to uncharge, then on
+> free_huge_page, check page[3].private, if it is non-NULL, uncharge the
+> new counter on it.
 
-Hi Anders,
-Thank you for your patch! Manasi has already posted a patch for this:
-https://patchwork.freedesktop.org/patch/335358/
+Sorry for not responding sooner.  This approach should work, and it looks like
+you have a v6 of the series.  I'll take a look.
 
-It's reviewed, so we're just waiting for it to land.
-
-Sean
-
-
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
-dp_mst_topology.c
-> index 9364e4f42975..9cccc5e63309 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -4184,8 +4184,6 @@ EXPORT_SYMBOL(drm_dp_mst_topology_state_funcs);
->  struct drm_dp_mst_topology_state *drm_atomic_get_mst_topology_state(stru=
-ct drm_atomic_state *state,
->                                                                     struc=
-t drm_dp_mst_topology_mgr *mgr)
->  {
-> -       struct drm_device *dev =3D mgr->dev;
-> -
->         return to_dp_mst_topology_state(drm_atomic_get_private_obj_state(=
-state, &mgr->base));
->  }
->  EXPORT_SYMBOL(drm_atomic_get_mst_topology_state);
-> --
-> 2.20.1
->
+-- 
+Mike Kravetz
