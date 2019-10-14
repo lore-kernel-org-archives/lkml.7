@@ -2,149 +2,144 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C75CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B10DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA382133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D077D206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:12:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itzJC3de"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388187AbfJNRJv (ORCPT
+        id S2388350AbfJNRMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:09:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62831 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbfJNRJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:09:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 10:09:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="189079736"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 14 Oct 2019 10:09:49 -0700
-Date:   Mon, 14 Oct 2019 10:14:05 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-Cc:     "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 0/4] User API for nested shared virtual address (SVA)
-Message-ID: <20191014101405.5429571b@jacob-builder>
-In-Reply-To: <20191007123912.60c19a79@jacob-builder>
-References: <1570045363-24856-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20191007123912.60c19a79@jacob-builder>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 14 Oct 2019 13:12:14 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53273 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbfJNRMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 13:12:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i16so18059206wmd.3;
+        Mon, 14 Oct 2019 10:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wjPpfe0lrndXWhOCFmYf2W6HrSQtzboPEPFW1b5LREg=;
+        b=itzJC3de2En2EeFufvj1TyZAJ8eyvesQUNiibWxyqksGkDYnHFj//i/YwNblwNwAJ6
+         y/h3t2nBbPAUgdVHAj+hK3uCzfOD3Vfk88xdXJZ/+Qedzyvg6lF9etmocR8W142Jpyu6
+         dvmVouc9v2RnQH+pJm0pTbk9CBOAlbtUf6jKLqHsTRQowFAqQiUUCOM0qA8mRq5pjajs
+         PGOfDl0RQPI2C4cMOenaNOaQ7GoNKzYdlpAXm53ayu9CAdvtS5pGQd/KtbYxi3m32LbC
+         2aGP/BzUjquBeLDL6a2TLEuqN7trsl162O6svYdbXrOXiGvrz4ztpHEiEN8gortGUVr1
+         7H2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wjPpfe0lrndXWhOCFmYf2W6HrSQtzboPEPFW1b5LREg=;
+        b=JI4P7I1ioPQA8Pi9a7pOKwM7khR2PYv5WFFtKwIYlddYSpIl/x/ZjDng4cNReupak3
+         eZVW9L3jKbr4tb0FvTeV67igZmRXKaxKwAX/Z000X9wAMjG+27EuSjWohbKP+ae4RdiQ
+         XbupdGxestDGicnzdaZ1ATN2qs8VKI7QN8ITbvO91tNlDX1eXt/njM38tbHzBkijCJGY
+         U9kFTc3Rtw5OdTNPA/ut9E0SAe4DTdBvUHqJT8G/Pl5iLTGXiaRp3IRIOYU2qGjqkA+k
+         aRN9HLiiy8OxVcgmvRi+z1fNkukNwxTH7FXMaaq4OWGnPWslDJ8/Qy9znuAkOxqwOGmt
+         Sm2g==
+X-Gm-Message-State: APjAAAW92IOuzWifoD2VJj2mGdf/wvzNKVnRWZ79X/jNWFEYvg+c6O8z
+        +WYR6oc417ZGmCPx6aBazBRD/BXtdFH8OHEc/3HOu4mu
+X-Google-Smtp-Source: APXvYqyduxFHsTBernmb65Sr66YPGB4gh2Rp8a0B4JBEKA3l2KJIIAU8kUsWIW/+shuLsX4Pto7pYpGvwC0TfyQ0HT0=
+X-Received: by 2002:a1c:8157:: with SMTP id c84mr15477556wmd.56.1571073131661;
+ Mon, 14 Oct 2019 10:12:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <0000000000007193390594d5e959@google.com>
+In-Reply-To: <0000000000007193390594d5e959@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Tue, 15 Oct 2019 01:12:19 +0800
+Message-ID: <CADvbK_e5yjk3LBGUdYw9L-5zOibDZJtHJKOSkw8ConqZGgv6CQ@mail.gmail.com>
+Subject: Re: memory leak in sctp_get_port_local (3)
+To:     syzbot <syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+On Mon, Oct 14, 2019 at 10:50 AM syzbot
+<syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    da940012 Merge tag 'char-misc-5.4-rc3' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11c87fc7600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e76c708f07645488
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d44f7bbebdea49dbc84a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128d3f8b600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ead04b600000
+We probably need to add ".no_autobind = true" in sctp_prot to prevent
+sendmsg() from going the path: inet_sendmsg()->inet_send_prepare()->
+inet_autobind(), and leave sctp_sendmsg() to handle sctp_autobind().
 
-Just another gentle reminder. I think we have reached consensus in this
-common code. Jean and Eric can confirm.
+will have a try tomorrow.
 
-Thanks,
-
-Jacob
-
-On Mon, 7 Oct 2019 12:39:12 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-
-> Hi Joerg and all,
-> 
-> Just wondering if you have more comments on this series.
-> 
-> Thanks,
-> 
-> Jacob
-> 
-> On Wed,  2 Oct 2019 12:42:39 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> 
-> > This set consists of IOMMU APIs to support SVA in the guest, a.k.a
-> > nested SVA. As the complete SVA support is complex, we break down
-> > the enabling effort into three stages:
-> > 1. PCI device direct assignment
-> > 2. Fault handling, especially page request service support
-> > 3. Mediated device assignment
-> > 
-> > Each stage includes common API and vendor specific IOMMU driver
-> > changes. This series is the common uAPI for stage #1. It is intended
-> > to build consensus on the interface which all vendors reply on.
-> > 
-> > This series is extracted from the complete stage1 set which includes
-> > VT-d code. https://lkml.org/lkml/2019/8/15/951
-> > 
-> > Changes:
-> >  - Use spinlock instead of mutex to protect ioasid custom
-> > allocators. This is to support callers in atomic context
-> >  - Added more padding to guest PASID bind data for future
-> > extensions, suggested by Joerg.
-> > After much thinking, I did not do name change from PASID to IOASID
-> > in the uAPI, considering we have been using PASID in the rest of
-> > uAPIs. IOASID will remain used within the kernel.
-> > 
-> > For more discussions lead to this series, checkout LPC 2019
-> > VFIO/IOMMU/PCI microconference materials.
-> > https://linuxplumbersconf.org/event/4/sessions/66/#20190909
-> > 
-> > 
-> > Change log:
-> > v4:    - minor patch regroup and fixes based on review from Jean
-> > v3:    - include errno.h in ioasid.h to fix compile error
-> >        - rebased to v5.4-rc1, no change
-> >  
-> > v2:
-> > 	- Addressed review comments by Jean on IOASID custom
-> > allocators, locking fix, misc control flow fix.
-> > 	- Fixed a compile error with missing header errno.h
-> > 	- Updated Jean-Philiippe's new email and updateded
-> > reviewed-by tag
-> > 
-> > Jacob Pan (2):
-> >   iommu/ioasid: Add custom allocators
-> >   iommu: Introduce guest PASID bind function
-> > 
-> > Jean-Philippe Brucker (1):
-> >   iommu: Add I/O ASID allocator
-> > 
-> > Yi L Liu (1):
-> >   iommu: Introduce cache_invalidate API
-> > 
-> >  drivers/iommu/Kconfig      |   4 +
-> >  drivers/iommu/Makefile     |   1 +
-> >  drivers/iommu/ioasid.c     | 422
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > drivers/iommu/iommu.c      |  30 ++++ include/linux/ioasid.h     |
-> > 76 ++++++++ include/linux/iommu.h      |  36 ++++
-> >  include/uapi/linux/iommu.h | 169 ++++++++++++++++++
-> >  7 files changed, 738 insertions(+)
-> >  create mode 100644 drivers/iommu/ioasid.c
-> >  create mode 100644 include/linux/ioasid.h
-> >   
-> 
-> [Jacob Pan]
-
-[Jacob Pan]
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com
+>
+> executing program
+> executing program
+> BUG: memory leak
+> unreferenced object 0xffff888120b3d380 (size 64):
+>    comm "syz-executor517", pid 6949, jiffies 4294941316 (age 13.400s)
+>    hex dump (first 32 bytes):
+>      23 4e 00 00 00 00 00 00 00 00 00 00 00 00 00 00  #N..............
+>      88 16 ef 24 81 88 ff ff 00 00 00 00 00 00 00 00  ...$............
+>    backtrace:
+>      [<000000006e6207b2>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:43 [inline]
+>      [<000000006e6207b2>] slab_post_alloc_hook mm/slab.h:586 [inline]
+>      [<000000006e6207b2>] slab_alloc mm/slab.c:3319 [inline]
+>      [<000000006e6207b2>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+>      [<00000000d0d058e2>] sctp_bucket_create net/sctp/socket.c:8523 [inline]
+>      [<00000000d0d058e2>] sctp_get_port_local+0x189/0x5a0
+> net/sctp/socket.c:8270
+>      [<0000000082735c7f>] sctp_do_bind+0xcc/0x200 net/sctp/socket.c:402
+>      [<0000000080c8d55e>] sctp_bindx_add+0x4b/0xd0 net/sctp/socket.c:497
+>      [<00000000eb10f474>] sctp_setsockopt_bindx+0x156/0x1b0
+> net/sctp/socket.c:1022
+>      [<000000004e959dd5>] sctp_setsockopt net/sctp/socket.c:4641 [inline]
+>      [<000000004e959dd5>] sctp_setsockopt+0xaea/0x2dc0 net/sctp/socket.c:4611
+>      [<000000000e9e767a>] sock_common_setsockopt+0x38/0x50
+> net/core/sock.c:3147
+>      [<00000000a549638a>] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
+>      [<000000003c15b96c>] __do_sys_setsockopt net/socket.c:2100 [inline]
+>      [<000000003c15b96c>] __se_sys_setsockopt net/socket.c:2097 [inline]
+>      [<000000003c15b96c>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2097
+>      [<00000000ee3ea8a3>] do_syscall_64+0x73/0x1f0
+> arch/x86/entry/common.c:290
+>      [<000000006bf005e9>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
