@@ -2,103 +2,186 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF75ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD34DECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238A020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEC62133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+OAQ9IK"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FyIKuo/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733113AbfJNO6H (ORCPT
+        id S1733150AbfJNPBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:58:07 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41625 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732606AbfJNO6H (ORCPT
+        Mon, 14 Oct 2019 11:01:52 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33430 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732518AbfJNPBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:58:07 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r2so12019672lfn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:58:05 -0700 (PDT)
+        Mon, 14 Oct 2019 11:01:51 -0400
+Received: by mail-io1-f67.google.com with SMTP id z19so38680262ior.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tkMPQ0LrWyijz11NY5m0dmZYPiuXzrUEUbYC0qMqHT0=;
-        b=C+OAQ9IKKfx8e2rgas2AZ/0OGtlN4cljS5G/pxMlqfJVHoV9hGaOFEZXBC6WZgyz5g
-         6bQfXmBG1AwfT8bPzH56YybQxmcQ/ojzp4XFbBO2fgPtl2211m1hUna+mID/Ts6vRoNV
-         fP5dmjjtLtkd/JWDSlrMUZM0Gb2CExkVb8loj4Uoej2q98lBhBLnsG0Sgeg2xRyUD5JI
-         CZxxPfWamLz/Jp3UwnStL0Na13rkuarQ2VlpFIHgP7zCvejyFaymFXbasLe54gwTOjl0
-         UFheRmi8QXQ4TIodN4AkDokdrprbIfbZPgj84p8Ao0G8PONXh5YoGl5LUuJg6T8dFJnm
-         6Fhw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=RBbFQbsMRuGkFH9TOgKa/APZMAZbJ864y+kjiYJrE1U=;
+        b=FyIKuo/nViMZB3JBD0ppimRpUjkKGlCbCtnS3RaKr5QF54lzSukRxZ1ViCzdNwtCPT
+         2XxJTF5X6x9JolYpyauRll0g5Kuypy6sRNnEMCapkXc8XmB81MTO8pdaBDRHCNwCsdEm
+         v9O93eD8EZKlKhsrZ3ZYmEtX09LJcrASkZk107sM964Zcbz5GSFb/l3lOwfaY/3wlHQE
+         31ZCtZwN1LUpafKO3dOxLel4a2JzWevqqU7+eWynbaO0AtlNZXzqxxGGI9nDkHEvL+0U
+         KS1bA1abFAjaDmrH7F/WCJhhIxc0vYtJsqOh/Jk+eTx7nl93YGQxA8Nly7kOvBynfEmr
+         5p4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tkMPQ0LrWyijz11NY5m0dmZYPiuXzrUEUbYC0qMqHT0=;
-        b=M445rda1cpw1OzO+BnpcZk1EAgqoPo52Zl744vAE46m/9uyz1f3SnZu3HCOncAxZL0
-         cCaSjQmpR004wOYkQPsRiq8urAfENrzXdZ0s6B8TXb8hAmpvdeQm6MBXI1G8taCG6SNP
-         WVXfFUZ+4e4LHRsEGT7PHW4IeikwCotniO8ENdWlpA86TlwbfHa4FWUIW2Mb1FF60jvi
-         66d+TYJo/z6OItwzCJg2uGFO3wfuUtbepyEuQLBEI63RsJeU1DS1KOSfV2ca/Ur+nf96
-         MwvvHLjaeOFx5L8oL6pv2NcvXVxa4E5t2stJMLq/BQjU+wAtRIIvzZH6/mFB+Z1qr2L4
-         FhMA==
-X-Gm-Message-State: APjAAAWOnMW1TScwVBggvqpDQqDLY11USdqobdvQNbFs4WNDRN39WFzp
-        cxjjWOJkvkDitheqI3VCUkYZb4LM8ig64CGCpmORCA==
-X-Google-Smtp-Source: APXvYqyver79gBl47T+XusZQVNebkHis2dYvxUgZLilvocoQWhgpFd2wvwu3K2QPqmBF3HGmydaXZADiOqjHGU+7srw=
-X-Received: by 2002:a19:7409:: with SMTP id v9mr16419666lfe.125.1571065084369;
- Mon, 14 Oct 2019 07:58:04 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RBbFQbsMRuGkFH9TOgKa/APZMAZbJ864y+kjiYJrE1U=;
+        b=MOY6SGoc9S4e+w3BDJAPHE1hnZmnkZbRbWdFPybtXtiibZj4zplFmnOvQRMR9/9krZ
+         PzmhAGIygTEgCrCTJKwO4hQmk1ufnsL+jJVe/lUu3ARirH+qlunLdIhqLpoBFdS5IYTY
+         T8VV04Hjuyiz9ImSchleNpFTBphIsAc0vjLxifHBJubtV6EXI99LM+kZCXTxsSbWg1xQ
+         o6o/v9HdkfxBIuSzSf0pGyqtryN1uS80fn+HJQa/QdWjtfU3ppTgXCa120GBJRm+EyPh
+         57EisooZ5l+GXdMriAVFqoLiMsKF+NpxNYE1uiMhnZH2AHLkmaY+g73H/w3IVaAcDGLH
+         y+CQ==
+X-Gm-Message-State: APjAAAUU/l+22jFOL+Fc2LNKjULK1/8VY9BVbCYlFAbRUVYLWT725h08
+        rgygYyzbIhKiSgKhVOirTYWLlA==
+X-Google-Smtp-Source: APXvYqy7R2KYT8rrTdebUklRG5eUH535i1PHVhhWSlMcKP9wtSFI8a0ITsiyPE+xbjE+BpkN1mKp8Q==
+X-Received: by 2002:a05:6602:2581:: with SMTP id p1mr17932218ioo.32.1571065310732;
+        Mon, 14 Oct 2019 08:01:50 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id v19sm12201951iol.24.2019.10.14.08.01.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 08:01:49 -0700 (PDT)
+Subject: Re: WARNING: refcount bug in sock_wfree (2)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     syzbot <syzbot+c0ba5b9e742f049a2edf@syzkaller.appspotmail.com>,
+        davem@davemloft.net, hare@suse.com, jmoyer@redhat.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <0000000000006819150594d5e956@google.com>
+ <0ba7cb74-507e-7fb5-6147-1d5fee34155f@kernel.dk>
+Message-ID: <511c839b-f261-8538-17e7-89bffc82e63a@kernel.dk>
+Date:   Mon, 14 Oct 2019 09:01:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190620150555.15717-1-patrick.bellasi@arm.com>
- <CAKfTPtDTfyBvfwE6_gtjxJoPNS6YGQ7rrLcjg_M-jr=YSc+FNA@mail.gmail.com>
- <20190628100751.lpcwsouacsi2swkm@e110439-lin> <20190628123800.GS3419@hirez.programming.kicks-ass.net>
- <20190628140057.7aujh2wsk7wtqib3@e110439-lin> <20190802094725.ploqfarz7fj7vrtp@e110439-lin>
- <20191014145218.GI2328@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191014145218.GI2328@hirez.programming.kicks-ass.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 14 Oct 2019 16:57:52 +0200
-Message-ID: <CAKfTPtDK-KSVz6HSr185yEj2TzZrNRx5FG_pUpp0-rxHWsXurQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: util_est: fast ramp-up EWMA on utilization increases
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Douglas Raillard <douglas.raillard@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0ba7cb74-507e-7fb5-6147-1d5fee34155f@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 at 16:52, Peter Zijlstra <peterz@infradead.org> wrote:
->
->
-> The energy aware schedutil patches remimded me this was still pending.
->
-> On Fri, Aug 02, 2019 at 10:47:25AM +0100, Patrick Bellasi wrote:
-> > Hi Peter, Vincent,
-> > is there anything different I can do on this?
->
-> I think both Vincent and me are basically fine with the patch, it was
-> the Changelog/explanation for it that sat uneasy.
+On 10/13/19 9:25 PM, Jens Axboe wrote:
+> On 10/13/19 8:49 PM, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    442630f6 Add linux-next specific files for 20191008
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=158fa6bf600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=af1bfeef713eefdd
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=c0ba5b9e742f049a2edf
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a861b3600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1769f48b600000
+>>
+>> The bug was bisected to:
+>>
+>> commit 6c080ff07363389cb4092193eb333639f0392b8c
+>> Author: Jens Axboe <axboe@kernel.dk>
+>> Date:   Thu Oct 3 14:11:03 2019 +0000
+>>
+>>        io_uring: allow sparse fixed file sets
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1344b993600000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10c4b993600000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=1744b993600000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+c0ba5b9e742f049a2edf@syzkaller.appspotmail.com
+>> Fixes: 6c080ff07363 ("io_uring: allow sparse fixed file sets")
+>>
+>> ------------[ cut here ]------------
+>> refcount_t: underflow; use-after-free.
+>> WARNING: CPU: 0 PID: 8691 at lib/refcount.c:190
+>> refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+>> WARNING: CPU: 0 PID: 8691 at lib/refcount.c:190
+>> refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 0 PID: 8691 Comm: syz-executor322 Not tainted 5.4.0-rc2-next-20191008
+>> #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> Call Trace:
+>>     __dump_stack lib/dump_stack.c:77 [inline]
+>>     dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>>     panic+0x2e3/0x75c kernel/panic.c:221
+>>     __warn.cold+0x2f/0x35 kernel/panic.c:582
+>>     report_bug+0x289/0x300 lib/bug.c:195
+>>     fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>>     fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>>     do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+>>     do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>>     invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+>> RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+>> RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+>> Code: 1d b0 f0 7f 06 31 ff 89 de e8 6c d7 30 fe 84 db 75 94 e8 23 d6 30 fe
+>> 48 c7 c7 20 81 e6 87 c6 05 90 f0 7f 06 01 e8 e8 15 02 fe <0f> 0b e9 75 ff
+>> ff ff e8 04 d6 30 fe e9 6e ff ff ff 48 89 df e8 e7
+>> RSP: 0018:ffff8880a8267a28 EFLAGS: 00010282
+>> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+>> RDX: 0000000000000000 RSI: ffffffff815cb676 RDI: ffffed101504cf37
+>> RBP: ffff8880a8267ac0 R08: ffff888090e363c0 R09: fffffbfff14eeb42
+>> R10: fffffbfff14eeb41 R11: ffffffff8a775a0f R12: 00000000fffffd02
+>> R13: 0000000000000001 R14: ffff8880a8267a98 R15: 0000000000000001
+>>     sock_wfree+0x10c/0x190 net/core/sock.c:1958
+>>     unix_destruct_scm+0x115/0x170 net/unix/scm.c:149
+>>     io_destruct_skb+0x62/0x80 fs/io_uring.c:2995
+>>     skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
+>>     skb_release_all+0x16/0x60 net/core/skbuff.c:663
+>>     __kfree_skb net/core/skbuff.c:679 [inline]
+>>     kfree_skb net/core/skbuff.c:697 [inline]
+>>     kfree_skb+0x101/0x3c0 net/core/skbuff.c:691
+>>     __io_sqe_files_scm+0x429/0x640 fs/io_uring.c:3049
+>>     io_sqe_files_scm fs/io_uring.c:3071 [inline]
+>>     io_sqe_files_register fs/io_uring.c:3154 [inline]
+>>     __io_uring_register+0x1f69/0x2d70 fs/io_uring.c:4152
+>>     __do_sys_io_uring_register fs/io_uring.c:4204 [inline]
+>>     __se_sys_io_uring_register fs/io_uring.c:4186 [inline]
+>>     __x64_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:4186
+>>     do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>>     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> RIP: 0033:0x440279
+>> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+>> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+>> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+>> RSP: 002b:00007ffeeedc31e8 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
+>> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440279
+>> RDX: 0000000020000280 RSI: 0000000000000002 RDI: 0000000000000003
+>> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+>> R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000401b00
+>> R13: 0000000000401b90 R14: 0000000000000000 R15: 0000000000000000
+>> Kernel Offset: disabled
+>> Rebooting in 86400 seconds..
+> 
+> I think this will do it, but that's just from looking at the code,
+> haven't tried to reproduce anything yet.
+> 
+> I'll take a closer look tomorrow and verify.
 
-I agree
+Took a closer look, and verified that this is indeed the issue, and that
+the patch does fix it. I'm going to apply this to my for-5.5/io_uring
+branch, which is where the offending commit it queued up.
 
->
-> Specifically I think the 'confusion' around the PELT invariance stuff
-> doesn't help.
->
-> I think that if you present it simply as making util_est directly follow
-> upward motion and only decay on downward -- and the rationale for it --
-> then it should be fine.
->
->
+-- 
+Jens Axboe
+
