@@ -2,118 +2,222 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D03EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B0EECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB36920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:43:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkNSjhP0"
+	by mail.kernel.org (Postfix) with ESMTP id E165D2089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbfJNVnZ (ORCPT
+        id S1730568AbfJNVqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:43:25 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32897 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbfJNVnY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:43:24 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so18098432ljd.0;
-        Mon, 14 Oct 2019 14:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3qwTHsJQXtLByGWGmkMogTYtmXYBCZ8p7g4dCDAH2Hc=;
-        b=GkNSjhP0eZ80orHn4cAARxiyTXcvb5pPD7FRVCWSFff5/lJaJh7m0Eym/uVAhlJAK3
-         aOHaHKdueqDalt+cb9568WOvHFiduwq/KtHwrU6C7RUEO0UvH+kOatOoFvjlusem7ElO
-         4+eiy/B13KWx8QhR4CT9z8n/JZzaCtNEUWW8qB6UdWJqss3SHN/4IMdo8S2dyTVnsMqF
-         xwGi1bJhpw2ugWX5wToPEFZTe3kTp9fijpoJ039D1UCsXOR83LYsj6ftvPMB3vEpo9oE
-         MAuZ+SddrdhSAp9zO46QStgTyDk2WaXu4jbmygCQohW7F1sk3FGynVd9IdaF/UXvAQ+l
-         qplQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3qwTHsJQXtLByGWGmkMogTYtmXYBCZ8p7g4dCDAH2Hc=;
-        b=p/qd/PizWgxx65FLuAeC6FIELa6ulIclu/RTDT+OlvGQ76yq4D+AZ1lsMHjrrmt7U5
-         HZrdBN7XJ6PaYXvfxm1ujgZuFQSCXIyWVDOlsFCQ+KsxApYP/kbIKn6aXwHnSnnV9UK6
-         j6jk+l7+GN+S30k7mNQMWrfq0A5agqTl1ZTnCqrqI21S05w81dlbGmET2p+f9kRQBmLZ
-         VdgNj3YOJMGQmYjP3PpWeNVHkhZqWdJvEm+KMFvmXTGOM6F9gu0+kNn/gCJGe/NJ0hx5
-         RRsVWI6RE1upv4TAspSI9n1zq885YV+s2gnJmA93oCkFhrrOzfFmWMpI6z/DQS08nFRo
-         FhEg==
-X-Gm-Message-State: APjAAAVmJ0t+nqCjmqHqsL4bBQH4fGIM3g6IhoThYqsN9nq0SPeQkDC9
-        8jiLLrjbHA2Am7fG6qx5IaWqBwlA9Q9sCYCyZc320hA=
-X-Google-Smtp-Source: APXvYqz3z9deyqj84FSXsg+/2ryg7LbrmoOETqAHbU2dkepNZeuB6r+Ff9HGPQY2TdsoLFO2AyX5r0FI0UrTiwWGhNM=
-X-Received: by 2002:a2e:5354:: with SMTP id t20mr20223113ljd.227.1571089402725;
- Mon, 14 Oct 2019 14:43:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191014071531.12790-1-hslester96@gmail.com>
-In-Reply-To: <20191014071531.12790-1-hslester96@gmail.com>
-From:   Pavel Shilovsky <piastryyy@gmail.com>
-Date:   Mon, 14 Oct 2019 14:43:11 -0700
-Message-ID: <CAKywueQY-J3g0RBF4=opP8SbhpWh-BHoHWzNEeTruxmfacnhGw@mail.gmail.com>
-Subject: Re: [PATCH] cifs: Fix missed free operations
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 17:46:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53098 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729054AbfJNVqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:46:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 27535B2D8;
+        Mon, 14 Oct 2019 21:46:36 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Joshua Kinard <kumba@gentoo.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v2] rtc: ds1685: add indirect access method and remove plat_read/plat_write
+Date:   Mon, 14 Oct 2019 23:46:21 +0200
+Message-Id: <20191014214621.25257-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=BF=D0=BD, 14 =D0=BE=D0=BA=D1=82. 2019 =D0=B3. =D0=B2 00:18, Chuhong Yua=
-n <hslester96@gmail.com>:
->
-> cifs_setattr_nounix has two paths which miss free operations
-> for xid and fullpath.
-> Use goto cifs_setattr_exit like other paths to fix them.
->
-> Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable ha=
-ndles")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  fs/cifs/inode.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-> index 5dcc95b38310..df9377828e2f 100644
-> --- a/fs/cifs/inode.c
-> +++ b/fs/cifs/inode.c
-> @@ -2475,9 +2475,9 @@ cifs_setattr_nounix(struct dentry *direntry, struct=
- iattr *attrs)
->                         rc =3D tcon->ses->server->ops->flush(xid, tcon, &=
-wfile->fid);
->                         cifsFileInfo_put(wfile);
->                         if (rc)
-> -                               return rc;
-> +                               goto cifs_setattr_exit;
->                 } else if (rc !=3D -EBADF)
-> -                       return rc;
-> +                       goto cifs_setattr_exit;
->                 else
->                         rc =3D 0;
->         }
-> --
-> 2.20.1
->
+SGI Octane (IP30) doesn't have RTC register directly mapped into CPU
+address space, but accesses RTC registers with an address and data
+register.  This is now supported by additional access functions, which
+are selected by a new field in platform data. Removed plat_read/plat_write
+since there is no user and their usage could introduce lifetime issue,
+when functions are placed in different modules.
 
-Looks good, thanks.
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+Changes in v2:
 
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+- check if rtc->read and rtc->write are setup
+- spell out indirect in function names and explain difference
+  between standard and indirect functions
 
-The original patch was tagged for stable, so, it seems that this one
-should be tagged too.
+ arch/mips/sgi-ip32/ip32-platform.c |  2 +-
+ drivers/rtc/rtc-ds1685.c           | 78 +++++++++++++++++++++++++-------------
+ include/linux/rtc/ds1685.h         |  8 ++--
+ 3 files changed, 58 insertions(+), 30 deletions(-)
 
---
-Best regards,
-Pavel Shilovsky
+diff --git a/arch/mips/sgi-ip32/ip32-platform.c b/arch/mips/sgi-ip32/ip32-platform.c
+index 5a2a82148d8d..c3909bd8dd1a 100644
+--- a/arch/mips/sgi-ip32/ip32-platform.c
++++ b/arch/mips/sgi-ip32/ip32-platform.c
+@@ -115,7 +115,7 @@ ip32_rtc_platform_data[] = {
+ 		.bcd_mode = true,
+ 		.no_irq = false,
+ 		.uie_unsupported = false,
+-		.alloc_io_resources = true,
++		.access_type = ds1685_reg_direct,
+ 		.plat_prepare_poweroff = ip32_prepare_poweroff,
+ 	},
+ };
+diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
+index 349a8d1caca1..98d06b3ee913 100644
+--- a/drivers/rtc/rtc-ds1685.c
++++ b/drivers/rtc/rtc-ds1685.c
+@@ -31,7 +31,10 @@
+ 
+ 
+ /* ----------------------------------------------------------------------- */
+-/* Standard read/write functions if platform does not provide overrides */
++/*
++ *  Standard read/write
++ *  all registers are mapped in CPU address space
++ */
+ 
+ /**
+  * ds1685_read - read a value from an rtc register.
+@@ -59,6 +62,35 @@ ds1685_write(struct ds1685_priv *rtc, int reg, u8 value)
+ }
+ /* ----------------------------------------------------------------------- */
+ 
++/*
++ * Indirect read/write functions
++ * access happens via address and data register mapped in CPU address space
++ */
++
++/**
++ * ds1685_indirect_read - read a value from an rtc register.
++ * @rtc: pointer to the ds1685 rtc structure.
++ * @reg: the register address to read.
++ */
++static u8
++ds1685_indirect_read(struct ds1685_priv *rtc, int reg)
++{
++	writeb(reg, rtc->regs);
++	return readb(rtc->data);
++}
++
++/**
++ * ds1685_indirect_write - write a value to an rtc register.
++ * @rtc: pointer to the ds1685 rtc structure.
++ * @reg: the register address to write.
++ * @value: value to write to the register.
++ */
++static void
++ds1685_indirect_write(struct ds1685_priv *rtc, int reg, u8 value)
++{
++	writeb(reg, rtc->regs);
++	writeb(value, rtc->data);
++}
+ 
+ /* ----------------------------------------------------------------------- */
+ /* Inlined functions */
+@@ -1062,42 +1094,36 @@ ds1685_rtc_probe(struct platform_device *pdev)
+ 	if (!rtc)
+ 		return -ENOMEM;
+ 
+-	/*
+-	 * Allocate/setup any IORESOURCE_MEM resources, if required.  Not all
+-	 * platforms put the RTC in an easy-access place.  Like the SGI Octane,
+-	 * which attaches the RTC to a "ByteBus", hooked to a SuperIO chip
+-	 * that sits behind the IOC3 PCI metadevice.
+-	 */
+-	if (pdata->alloc_io_resources) {
++	/* Setup resources and access functions */
++	switch (pdata->access_type) {
++	case ds1685_reg_direct:
++		rtc->regs = devm_platform_ioremap_resource(pdev, 0);
++		if (IS_ERR(rtc->regs))
++			return PTR_ERR(rtc->regs);
++		rtc->read = ds1685_read;
++		rtc->write = ds1685_write;
++		break;
++	case ds1685_reg_indirect:
+ 		rtc->regs = devm_platform_ioremap_resource(pdev, 0);
+ 		if (IS_ERR(rtc->regs))
+ 			return PTR_ERR(rtc->regs);
++		rtc->data = devm_platform_ioremap_resource(pdev, 1);
++		if (IS_ERR(rtc->data))
++			return PTR_ERR(rtc->data);
++		rtc->read = ds1685_indirect_read;
++		rtc->write = ds1685_indirect_write;
++		break;
+ 	}
+ 
++	if (!rtc->read || !rtc->write)
++		return -ENXIO;
++
+ 	/* Get the register step size. */
+ 	if (pdata->regstep > 0)
+ 		rtc->regstep = pdata->regstep;
+ 	else
+ 		rtc->regstep = 1;
+ 
+-	/* Platform read function, else default if mmio setup */
+-	if (pdata->plat_read)
+-		rtc->read = pdata->plat_read;
+-	else
+-		if (pdata->alloc_io_resources)
+-			rtc->read = ds1685_read;
+-		else
+-			return -ENXIO;
+-
+-	/* Platform write function, else default if mmio setup */
+-	if (pdata->plat_write)
+-		rtc->write = pdata->plat_write;
+-	else
+-		if (pdata->alloc_io_resources)
+-			rtc->write = ds1685_write;
+-		else
+-			return -ENXIO;
+-
+ 	/* Platform pre-shutdown function, if defined. */
+ 	if (pdata->plat_prepare_poweroff)
+ 		rtc->prepare_poweroff = pdata->plat_prepare_poweroff;
+diff --git a/include/linux/rtc/ds1685.h b/include/linux/rtc/ds1685.h
+index 101c7adc05a2..67ee9d20cc5a 100644
+--- a/include/linux/rtc/ds1685.h
++++ b/include/linux/rtc/ds1685.h
+@@ -42,6 +42,7 @@
+ struct ds1685_priv {
+ 	struct rtc_device *dev;
+ 	void __iomem *regs;
++	void __iomem *data;
+ 	u32 regstep;
+ 	int irq_num;
+ 	bool bcd_mode;
+@@ -70,12 +71,13 @@ struct ds1685_rtc_platform_data {
+ 	const bool bcd_mode;
+ 	const bool no_irq;
+ 	const bool uie_unsupported;
+-	const bool alloc_io_resources;
+-	u8 (*plat_read)(struct ds1685_priv *, int);
+-	void (*plat_write)(struct ds1685_priv *, int, u8);
+ 	void (*plat_prepare_poweroff)(void);
+ 	void (*plat_wake_alarm)(void);
+ 	void (*plat_post_ram_clear)(void);
++	enum {
++		ds1685_reg_direct,
++		ds1685_reg_indirect
++	} access_type;
+ };
+ 
+ 
+-- 
+2.16.4
+
