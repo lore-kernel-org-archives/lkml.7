@@ -2,124 +2,185 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA782ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DA5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B745F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C9620673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:25:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a13vBRzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbfJNLZD (ORCPT
+        id S1730255AbfJNLZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:25:03 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54842 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfJNLZD (ORCPT
+        Mon, 14 Oct 2019 07:25:39 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:23749 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729363AbfJNLZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:25:03 -0400
-Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 4617d267eb5b2597; Mon, 14 Oct 2019 13:25:01 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: PM: Fix pci_power_up()
-Date:   Mon, 14 Oct 2019 13:25:00 +0200
-Message-ID: <5720276.eiOaOx1Qyb@kreacher>
-In-Reply-To: <3118349.722IRLjr4b@kreacher>
-References: <20190927090202.1468-1-drake@endlessm.com> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com> <3118349.722IRLjr4b@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Mon, 14 Oct 2019 07:25:38 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191014112534epoutp036543efab734bd34249a3752799378093~Nf8ZUZG651872118721epoutp03c
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 11:25:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191014112534epoutp036543efab734bd34249a3752799378093~Nf8ZUZG651872118721epoutp03c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571052334;
+        bh=hTQaHSOqj4sU/pT0l/ISHmiDV0BTtmWO7XPAAgh3lbs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=a13vBRzpfY2U59nAja5PoV2tfW7S+NT4OgVYbU6epEHqa5zK7n0z+bPK5+FoaAjYa
+         kaetwPPgGPobcCGlSX07ZAmm+NnWc8RaIy0J0IgMXzLoo65fM/YpfIncLPsUr78PHB
+         AwPrxQfIx/WRFo3gVOVb+2ycbd1i04iX3vEEG0LA=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20191014112534epcas5p2876869cfd34c41d5445c9f94c5845e5b~Nf8YoAhW80758507585epcas5p2A;
+        Mon, 14 Oct 2019 11:25:34 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CB.F5.04480.D2B54AD5; Mon, 14 Oct 2019 20:25:34 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191014112533epcas5p1c18bb35f34950256b625e467924b2acd~Nf8YJihFn2990029900epcas5p10;
+        Mon, 14 Oct 2019 11:25:33 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191014112533epsmtrp2334246f8d030707ba7616a333064e926~Nf8YIjuX43164431644epsmtrp2d;
+        Mon, 14 Oct 2019 11:25:33 +0000 (GMT)
+X-AuditID: b6c32a4b-cbbff70000001180-63-5da45b2dcdf9
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D0.C1.04081.D2B54AD5; Mon, 14 Oct 2019 20:25:33 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191014112531epsmtip23d1a77b4d5d0c40bbaba04801a1da67a~Nf8WHwat02272122721epsmtip2H;
+        Mon, 14 Oct 2019 11:25:31 +0000 (GMT)
+From:   Pankaj Sharma <pankj.sharma@samsung.com>
+To:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        eugen.hristev@microchip.com, ludovic.desroches@microchip.com,
+        pankaj.dubey@samsung.com, rcsekar@samsung.com,
+        Pankaj Sharma <pankj.sharma@samsung.com>,
+        Sriram Dash <sriram.dash@samsung.com>
+Subject: [PATCH v2] can: m_can: add support for one shot mode
+Date:   Mon, 14 Oct 2019 16:54:48 +0530
+Message-Id: <1571052288-22554-1-git-send-email-pankj.sharma@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsWy7bCmhq5e9JJYg7udjBZzzrewWBz4cZzF
+        YtX3qcwWl3fNYbN4sfY6q8X6RVNYLI4tELNYtPULu8XyrvvMFrMu7GC1uLGe3WLpvZ2sDjwe
+        W1beZPL4eOk2o8edH0sZPfr/Gnj0bVnF6PF5k1wAWxSXTUpqTmZZapG+XQJXxrbDl5gK2kQr
+        7t14xdzAOFmwi5GTQ0LARGLbuhb2LkYuDiGB3YwSv1bfhnI+MUr8X/6KEcL5xijR9KGXFaal
+        o3M3mC0ksJdRYukKP4iiFiaJRXeOgiXYBPQkLr2fzAZiiwiESizrncAKUsQs0MQk0bW5lxkk
+        ISxgK/F/dgsTiM0ioCpxYtVedhCbV8BDYtGHLhaIbXISN891MoM0SwhsYJP4P+clVMJFYsb8
+        DewQtrDEq+NboGwpic/v9rJB2NkSC3f3A9VzANkVEm0zhCHC9hIHrswBCzMLaEqs36UPEmYW
+        4JPo/f2ECaKaV6KjTQiiWk1i6tN3jBC2jMSdR5uhhntI7PyyghESDrES0+ftYZnAKDMLYegC
+        RsZVjJKpBcW56anFpgXGeanlesWJucWleel6yfm5mxjBSUHLewfjpnM+hxgFOBiVeHgV0hbH
+        CrEmlhVX5h5ilOBgVhLhZZiwIFaINyWxsiq1KD++qDQntfgQozQHi5I47yTWqzFCAumJJanZ
+        qakFqUUwWSYOTqkGxriy/T+aJCsSZz0JtrYqMzq3u8CJZ8c/Nlm3b5HnHm9KUCjpO7J+0o3W
+        96bBm1ZUfbed9+VfZqrvvbnJfboquwpF5p8Kv6yz9cjTM+Uicbr326TXZU4M+i59fYLXLE7e
+        6Tnml1LWsT3eddNo8wVpaZ6IG5NvzrDbnJ7rN2357vN8srqX395j9FViKc5INNRiLipOBAD5
+        LeB8BgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKLMWRmVeSWpSXmKPExsWy7bCSvK5u9JJYg/c/pCzmnG9hsTjw4ziL
+        xarvU5ktLu+aw2bxYu11Vov1i6awWBxbIGaxaOsXdovlXfeZLWZd2MFqcWM9u8XSeztZHXg8
+        tqy8yeTx8dJtRo87P5YyevT/NfDo27KK0ePzJrkAtigum5TUnMyy1CJ9uwSujG2HLzEVtIlW
+        3LvxirmBcbJgFyMnh4SAiURH527WLkYuDiGB3YwSW282M3YxcgAlZCQWf66GqBGWWPnvOTuI
+        LSTQxCSx6ZQeiM0moCdx6f1kNhBbRCBcYueELiYQm1mgh0mi9W4CiC0sYCvxf3YLWJxFQFXi
+        xKq9YHN4BTwkFn3oYoGYLydx81wn8wRGngWMDKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz0vWS
+        83M3MYIDT0tzB+PlJfGHGAU4GJV4eE8kL44VYk0sK67MPcQowcGsJMLLMGFBrBBvSmJlVWpR
+        fnxRaU5q8SFGaQ4WJXHep3nHIoUE0hNLUrNTUwtSi2CyTBycUg2MrFWKUVvfzb9Vf/zKSy+l
+        rIVzjBapKwk23QrNX8DzZcr0D6+K3CQWTFOP7j+XwC+eYCqiybDqWbP6TP2Cnv+TV6VIL+5q
+        +lj9/+PNSpX0P0syluVcNrH+W8C0bfOOoCU/Zz2J1Nqan3DA0ne/wPI76dc2r/tbr3RhmWT+
+        0r/zJiyYvuf67qhMFSWW4oxEQy3mouJEAGBJnEA4AgAA
+X-CMS-MailID: 20191014112533epcas5p1c18bb35f34950256b625e467924b2acd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191014112533epcas5p1c18bb35f34950256b625e467924b2acd
+References: <CGME20191014112533epcas5p1c18bb35f34950256b625e467924b2acd@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+According to the CAN Specification (see ISO 11898-1:2015, 8.3.4
+Recovery Management), the M_CAN provides means for automatic
+retransmission of frames that have lost arbitration or that
+have been disturbed by errors during transmission. By default
+automatic retransmission is enabled.
 
-There is an arbitrary difference between the system resume and
-runtime resume code paths for PCI devices regarding the delay to
-apply when switching the devices from D3cold to D0.
+The Bosch MCAN controller has support for disabling automatic
+retransmission.
 
-Namely, pci_restore_standard_config() used in the runtime resume
-code path calls pci_set_power_state() which in turn invokes
-__pci_start_power_transition() to power up the device through the
-platform firmware and that function applies the transition delay
-(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-However, pci_pm_default_resume_early() used in the system resume
-code path calls pci_power_up() which doesn't apply the delay at
-all and that causes issues to occur during resume from
-suspend-to-idle on some systems where the delay is required.
+To support time-triggered communication as described in ISO
+11898-1:2015, chapter 9.2, the automatic retransmission may be
+disabled via CCCR.DAR.
 
-Since there is no reason for that difference to exist, modify
-pci_power_up() to follow pci_set_power_state() more closely and
-invoke __pci_start_power_transition() from there to call the
-platform firmware to power up the device (in case that's necessary).
+CAN_CTRLMODE_ONE_SHOT is used for disabling automatic retransmission.
 
-Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-Reported-by: Daniel Drake <drake@endlessm.com> 
-Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
+Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
 ---
 
-Daniel, please test this one.
+changes in v2:
+ - rebase to net-next
 
----
- drivers/pci/pci.c |   24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/net/can/m_can/m_can.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -959,19 +959,6 @@ void pci_refresh_power_state(struct pci_
- }
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 386e7eb..7efafee 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -123,6 +123,7 @@ enum m_can_reg {
+ #define CCCR_CME_CANFD_BRS	0x2
+ #define CCCR_TXP		BIT(14)
+ #define CCCR_TEST		BIT(7)
++#define CCCR_DAR		BIT(6)
+ #define CCCR_MON		BIT(5)
+ #define CCCR_CSR		BIT(4)
+ #define CCCR_CSA		BIT(3)
+@@ -1173,7 +1174,7 @@ static void m_can_chip_config(struct net_device *dev)
+ 	if (cdev->version == 30) {
+ 	/* Version 3.0.x */
  
- /**
-- * pci_power_up - Put the given device into D0 forcibly
-- * @dev: PCI device to power up
-- */
--void pci_power_up(struct pci_dev *dev)
--{
--	if (platform_pci_power_manageable(dev))
--		platform_pci_set_power_state(dev, PCI_D0);
--
--	pci_raw_set_power_state(dev, PCI_D0);
--	pci_update_current_state(dev, PCI_D0);
--}
--
--/**
-  * pci_platform_power_transition - Use platform to change device power state
-  * @dev: PCI device to handle.
-  * @state: State to put the device into.
-@@ -1154,6 +1141,17 @@ int pci_set_power_state(struct pci_dev *
- EXPORT_SYMBOL(pci_set_power_state);
+-		cccr &= ~(CCCR_TEST | CCCR_MON |
++		cccr &= ~(CCCR_TEST | CCCR_MON | CCCR_DAR |
+ 			(CCCR_CMR_MASK << CCCR_CMR_SHIFT) |
+ 			(CCCR_CME_MASK << CCCR_CME_SHIFT));
  
- /**
-+ * pci_power_up - Put the given device into D0 forcibly
-+ * @dev: PCI device to power up
-+ */
-+void pci_power_up(struct pci_dev *dev)
-+{
-+	__pci_start_power_transition(dev, PCI_D0);
-+	pci_raw_set_power_state(dev, PCI_D0);
-+	pci_update_current_state(dev, PCI_D0);
-+}
+@@ -1183,7 +1184,7 @@ static void m_can_chip_config(struct net_device *dev)
+ 	} else {
+ 	/* Version 3.1.x or 3.2.x */
+ 		cccr &= ~(CCCR_TEST | CCCR_MON | CCCR_BRSE | CCCR_FDOE |
+-			  CCCR_NISO);
++			  CCCR_NISO | CCCR_DAR);
+ 
+ 		/* Only 3.2.x has NISO Bit implemented */
+ 		if (cdev->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
+@@ -1203,6 +1204,10 @@ static void m_can_chip_config(struct net_device *dev)
+ 	if (cdev->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
+ 		cccr |= CCCR_MON;
+ 
++	/* Disable Auto Retransmission (all versions) */
++	if (priv->can.ctrlmode & CAN_CTRLMODE_ONE_SHOT)
++		cccr |= CCCR_DAR;
 +
-+/**
-  * pci_choose_state - Choose the power state of a PCI device
-  * @dev: PCI device to be suspended
-  * @state: target sleep state for the whole system. This is the value
-
-
+ 	/* Write config */
+ 	m_can_write(cdev, M_CAN_CCCR, cccr);
+ 	m_can_write(cdev, M_CAN_TEST, test);
+@@ -1348,7 +1353,8 @@ static int m_can_dev_setup(struct m_can_classdev *m_can_dev)
+ 	m_can_dev->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
+ 					CAN_CTRLMODE_LISTENONLY |
+ 					CAN_CTRLMODE_BERR_REPORTING |
+-					CAN_CTRLMODE_FD;
++					CAN_CTRLMODE_FD |
++					CAN_CTRLMODE_ONE_SHOT;
+ 
+ 	/* Set properties depending on M_CAN version */
+ 	switch (m_can_dev->version) {
+-- 
+2.7.4
 
