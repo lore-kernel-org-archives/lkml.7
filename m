@@ -2,187 +2,147 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2DDC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4382ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EEB2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:54:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yHO5dTtA"
+	by mail.kernel.org (Postfix) with ESMTP id 871AF217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388257AbfJNQyl (ORCPT
+        id S2388263AbfJNQ4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:54:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35948 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfJNQyl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:54:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id j11so8264222plk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LYebUPfyNzPvvFP6j5p7uvU8uZK4poYJs3oTBiRKm0g=;
-        b=yHO5dTtAuvHOPwCvhm/oWcoY2hcMLNAkmng6d4K3ooyyc8zFnTpjyWc9bK7HKdw1eF
-         uhd/5dQxKHkqFVLlVXpfn4EdvctySb+we4N53Caoh1g2VXNi0pMG0qKb3Z8UqTC95VEv
-         mxyZBN43b74Lp/RypZ2DXb9hata5FSUyE2Yxg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LYebUPfyNzPvvFP6j5p7uvU8uZK4poYJs3oTBiRKm0g=;
-        b=Ep+CpQeF0lc74flGNAQ1K94uemP8cAz4dJWXWtafHGCcnszEd6htbL/kjLZOlppRkm
-         nRdFfvGSddasWZhXXlcNLhWu9tB9706IWZGHqM34aDfvcIctDw2JA1VzBL42ZGMLeeV4
-         ET2KZ/84Rs/1C1iHHyVOORJTA3t1R1NSCP/fPB3hPUuN/1ZQ48VBEsAFLIp9ERFxMQoF
-         ugdKSXlAyrL3c4B7MBf3NMHq34vdZ0EG//mIMtpu5nkldFnlySRNoOFnidNiOC3RFkJu
-         8FHeU2YGlwTUQWXLF9AkGI/hRcI4/mqHyarX1SSY7KIYUDC6LaVzmC5CvypI5My3HUrO
-         NF4w==
-X-Gm-Message-State: APjAAAXYZXEF8ebK5gws2yLdKPefe9EPCz8ZUBeb3G3cL+CUvrIqd6Jf
-        i1UgQ5gCt0v2TwdL3Tp79iBsgw==
-X-Google-Smtp-Source: APXvYqyKVWUXBeWglNde3TqlO343XuFeYMHzVKt0SNBc79A0whQtME9EbjWCNDqvZmCRkvRhU7Yjbw==
-X-Received: by 2002:a17:902:a712:: with SMTP id w18mr31527230plq.304.1571072080087;
-        Mon, 14 Oct 2019 09:54:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id i7sm14063475pjs.1.2019.10.14.09.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 09:54:39 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 12:54:38 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191014165438.GB105106@google.com>
-References: <20191011160330.199604-1-joel@joelfernandes.org>
- <20191014093544.GB2328@hirez.programming.kicks-ass.net>
+        Mon, 14 Oct 2019 12:56:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33738 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbfJNQ4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:56:14 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4872ABD9755E61BFA34D;
+        Tue, 15 Oct 2019 00:56:12 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 00:56:07 +0800
+Subject: Re: edac KASAN warning in experimental arm64 allmodconfig boot
+To:     James Morse <james.morse@arm.com>
+References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+ <dc974549-6ea4-899d-7f3a-b2fcfafe1528@arm.com>
+CC:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <tony.luck@intel.com>, Robert Richter <rrichter@marvell.com>,
+        <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <a5e3c4eb-57ed-d4bc-a771-47472c5fb088@huawei.com>
+Date:   Mon, 14 Oct 2019 17:56:02 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014093544.GB2328@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <dc974549-6ea4-899d-7f3a-b2fcfafe1528@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 11:35:44AM +0200, Peter Zijlstra wrote:
-> On Fri, Oct 11, 2019 at 12:03:30PM -0400, Joel Fernandes (Google) wrote:
-> 
-> > @@ -4761,6 +4762,7 @@ int perf_event_release_kernel(struct perf_event *event)
-> >  	}
-> >  
-> >  no_ctx:
-> > +	security_perf_event_free(event);
-> >  	put_event(event); /* Must be the 'last' reference */
-> >  	return 0;
-> >  }
-> 
-> > @@ -10553,11 +10568,16 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
-> >  		}
-> >  	}
-> >  
-> > +	err = security_perf_event_alloc(event);
-> > +	if (err)
-> > +		goto err_security;
-> > +
-> >  	/* symmetric to unaccount_event() in _free_event() */
-> >  	account_event(event);
-> >  
-> >  	return event;
-> >  
-> > +err_security:
-> >  err_addr_filters:
-> >  	kfree(event->addr_filter_ranges);
-> >  
-> 
-> There's a bunch of problems here I think:
-> 
->  - err_security is named wrong; the naming scheme is to name the label
->    after the last thing that succeeded / first thing that needs to be
->    undone.
-> 
->  - per that, you're forgetting to undo 'get_callchain_buffers()'
+On 14/10/2019 17:15, James Morse wrote:
+> Hi John,
+>
 
-Yes, you're right. Tested your fix below. Sorry to miss this.
+Hi James,
 
->  - perf_event_release_kernel() is not a full match to
->    perf_event_alloc(), inherited events get created by
->    perf_event_alloc() but never pass through
->    perf_event_release_kernel().
+> On 14/10/2019 16:18, John Garry wrote:
+>> I'm experimenting by trying to boot an allmodconfig arm64 kernel, as mentioned here:
+>
+> Crumbs!
+>
+>
+>> One thing that I noticed - it's hard to miss actually - is the amount of complaining from
+>> KASAN about the EDAC/ghes code. Maybe this is something I should not care about/red
+>> herring, or maybe something genuine. Let me know what you think.
+>
+> Hmmm, I thought I tested this recently...
+>
+>> Log snippet (I cut off after the first KASAN warning):
+>>
+>> [   70.471011][    T1] random: get_random_u32 called from new_slab+0x360/0x698 with
+>> crng_init=0
+>
+>> [   70.478671][    T1] [Firmware Bug]: APEI: Invalid bit width + offset in GAR
+>> [0x94110034/64/0/3/0]
+>
+> (this one's for you right?)
 
-Oh, through inherit_event(). Thanks for pointing this semantic out, did not
-know that.
+Yeah, I'll report it. It might be already fixed.
 
-> I'm thinking the below patch on top should ammend these issues; please
-> verify.
+>
+>> [   70.700412][    T1] ------------[ cut here ]------------
+>
+>> [   70.802080][    T1] Call trace:
+>> [   70.802093][    T1]  debug_print_object+0xec/0x130
+>> [   70.802106][    T1]  __debug_check_no_obj_freed+0x114/0x290
+>> [   70.802119][    T1]  debug_check_no_obj_freed+0x18/0x28
+>> [   70.802130][    T1]  slab_free_freelist_hook+0x18c/0x228
+>> [   70.802140][    T1]  kfree+0x264/0x420
+>> [   70.802157][    T1]  _edac_mc_free+0x6c/0x210
+>> [   70.814163][    T1]  edac_mc_free+0x68/0x88
+>> [   70.814177][    T1]  ghes_edac_unregister+0x44/0x70
+>> [   70.814193][    T1]  ghes_remove+0x274/0x2a0
+>
+> Ugh. This must be the test driver remove thing.
 
-Yes, applied your diff below and verified that the events are getting freed
-as they were in my initial set of tests. The diff also looks good to me.
+Yeah, the probe, remove, probe again flow from 
+CONFIG_DEBUG_TEST_DRIVER_REMOVE.
 
-I squashed your diff below and will resend as v3. Since you modified this
-patch a lot, I will add your Co-developed-by tag as well.
+>
+> I've reproduced this, but had to remove the parent GHES twice. It looks like it tries to
+> use the first ghes_edac global variables when freeing the second. ghes_init prevents it
+> from re-allocating over the top.
+>
+> The below diff fixes it for me.
 
-thanks, Peter!
+And for me by the looks of it. That's with CONFIG_DEBUG_KOBJECT_RELEASE 
+now unset, but I expect the same with it set.
 
- - Joel
-
-
-> ---
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4540,6 +4540,8 @@ static void _free_event(struct perf_even
->  
->  	unaccount_event(event);
->  
-> +	security_perf_event_free(event);
-> +
->  	if (event->rb) {
->  		/*
->  		 * Can happen when we close an event with re-directed output.
-> @@ -4774,7 +4776,6 @@ int perf_event_release_kernel(struct per
->  	}
->  
->  no_ctx:
-> -	security_perf_event_free(event);
->  	put_event(event); /* Must be the 'last' reference */
->  	return 0;
+(I'll post it as a proper patch once I've done the
+> archaeology)
+>
+> -----------%<-----------
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index d413a0bdc9ad..955b59b6aade 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -554,6 +554,7 @@ void ghes_edac_unregister(struct ghes *ghes)
+>                 return;
+>
+>         mci = ghes_pvt->mci;
+> +       ghes_pvt = NULL;
+>         edac_mc_del_mc(mci->pdev);
+>         edac_mc_free(mci);
 >  }
-> @@ -10595,14 +10596,18 @@ perf_event_alloc(struct perf_event_attr
->  
->  	err = security_perf_event_alloc(event);
->  	if (err)
-> -		goto err_security;
-> +		goto err_callchain_buffer;
->  
->  	/* symmetric to unaccount_event() in _free_event() */
->  	account_event(event);
->  
->  	return event;
->  
-> -err_security:
-> +err_callchain_buffer:
-> +	if (!event->parent) {
-> +		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
-> +			put_callchain_buffers();
-> +	}
->  err_addr_filters:
->  	kfree(event->addr_filter_ranges);
->  
+>
+> -----------%<-----------
+>
+
+Thanks,
+John
+
+BTW, I am not sure if my response to Boris was rejected due to 
+attachments, as but it is here:
+
+https://lore.kernel.org/linux-edac/dc974549-6ea4-899d-7f3a-b2fcfafe1528@arm.com/T/#ma0e122ca0eda9d80e869af179352f75037146d3c
+
+>
+> Thanks!
+>
+> James
+>
+> .
+>
+
+
