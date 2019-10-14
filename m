@@ -4,102 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C01C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4935EECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6601620854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAB520854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJRy+r/z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BTLGihW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387896AbfJNQDm (ORCPT
+        id S2387900AbfJNQEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:03:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45805 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731121AbfJNQDl (ORCPT
+        Mon, 14 Oct 2019 12:04:51 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34956 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732906AbfJNQEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:03:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so9175709pgj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:03:41 -0700 (PDT)
+        Mon, 14 Oct 2019 12:04:51 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x3so14198389oig.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:04:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PrIaBUAl4Zs70Rvgh9Rg9A2Po5PtzGSRs+KQTItvpaE=;
-        b=FJRy+r/zmSx0gTnh8nKk1MPaEhd9110EYn+G/+d4CpMIFscpk01MlyLHoHm5nqZ8ue
-         CuEul5WqlGE6j/Va+TR2Yui1YW7GVr2UUJY+9m2nC1JwH5BH8lcHf9U9XardiDiGlOoi
-         LaSSoXJLXvlrU+VQVXnO4lV/hae2O2+UoHmjSciqevrjzzXyJTp2d2+Y56+KcxRdCA6F
-         7jmUcI5EAM3RTKj4p1Vaa6PDjBLCH1AKMAuK0N4y1tOSRYdnDC35vB3Mw9OlU6bctebd
-         2KNziMABLbLEYIGJg85nQqt/hgKI9d4QgqspA9b11El3xetBfiuEmVrbjpRyRnhgYpcf
-         TsJg==
+        bh=1/oA4GHUe8fryr8ogyJYGS6yhaGsA/XmoYYSjCn5tG8=;
+        b=BTLGihW/wv2eV8aWLaXAVOYXato+DzxslEWCR5heglTYrXl+jI4hPaIoSH3kOBgJmA
+         x8Pb0mSiFMK6BK/4u7lkzo63BHz4/wCrWJbqaxFaCIwHJnx/wUEwiSjI8TeYQXX8Rikq
+         2nudpNpEZyLND2Iil3SoZtJqHd0tcSPoS3AL7KVyUl830l7RaWy/YfZDlPSxoztcwSo/
+         47jRyNacS9iNk9zSxk1nef8kjTs12q1rGV2++B624mMUtpT3B/xyUyB2xZ74KB1JniQ0
+         MQo3UcmfRiAoIpkqML8//EDr3SaPPuu4JSwn2AJOM13TmQ0KUqPOwmNW5W77upXOY5X3
+         FZxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PrIaBUAl4Zs70Rvgh9Rg9A2Po5PtzGSRs+KQTItvpaE=;
-        b=rSGPp79YRycIr7t6SL6roTOLUXgzk1M0akmm+PZ2Qn9G7fzQ6d26NbGaDqH4e0rlgF
-         eMZZgcIx+l64P3imE2X47RQK8rt2+8a2fwVVKle5TFpStAaaNyJDTaMsuB9eQpOuKZ2+
-         UeYXb/Jl0uQATlWxHzsljsZ5XaOGKj/3lEWk+oL3ikiWdZ8RDuO9bDHiB5D4u2Ja10vA
-         jz0tckXMePhxwXQ7kbDGbgxUnl+7kpCQTwBZQBNCF2cjiyOIT2MsajUyKJAu9oU1kxRS
-         DAuq0DwzzWnq+wsACYlNqV/1EtWVbnDyt6F+IlQ+p7og2OKtEPOi+73/PuNYZQ1REJLy
-         hGmg==
-X-Gm-Message-State: APjAAAUpcSC/JDR4didHE8G9tQzBPn4Bo4Mg3igXUmufL0+ptCPHAAuW
-        9rgCRPM5on0hgnAPbwc2c044Q99NBvMJ8r3k3qApUOMY
-X-Google-Smtp-Source: APXvYqzU0iN+S7UXYs1uP8WMChehRjsMrIbH3W7hJo7ZotpsfsIfMcdj3QGiw3CN0MtVD1Q6FSaHcabb11NtrnpteRQ=
-X-Received: by 2002:a65:464b:: with SMTP id k11mr15727142pgr.263.1571069020713;
- Mon, 14 Oct 2019 09:03:40 -0700 (PDT)
+        bh=1/oA4GHUe8fryr8ogyJYGS6yhaGsA/XmoYYSjCn5tG8=;
+        b=ZCE8lMUNYvkJgqwtDs0mxnsIhYsE14q/8n+Cu9psv84NuZay7huG8Wa4cilZmQb+SJ
+         oan5CUghdEqSEXlgiBHTS1jZLgprDyfxLz/xjk61RC+OMkMWDQy9mkKNFUosN8mL6G+/
+         2tXmKnw1ZsXpHtQwlK5zn6WFRnLGhMHslA21ySsqf5846pI3xDy5qgiBjx0JJHLDBSkb
+         zxbc+QBLusAmpindPExwsuGF3UlTQ3YxqJQ+p59mAaJPheugrqF/2QeH9BaFzL3ewW7u
+         zSNK5qwdvMIe9wFLlEo4y91T4vN1r0DjLenQVDkqA5G2jAug5aLBqGW6A+BxBZD/A1iY
+         oV/g==
+X-Gm-Message-State: APjAAAW0nVWGUCDYfTckMd5aaLWdAsWWIKxJFeZVXfoYRhLbVCZGLwyN
+        FbzFpBwjwgRNvSfKN6eHoXfz0umFhufQ1zLO7+Ajpg==
+X-Google-Smtp-Source: APXvYqxXR3roLEhM1Q1pM7JBpKepo96dBtV/cwrCg3P9n58AzmtIzESZTptd3g+9Psex6LMGksnCpsKWDzYzpyzvh7s=
+X-Received: by 2002:a05:6808:95:: with SMTP id s21mr25291295oic.68.1571069089126;
+ Mon, 14 Oct 2019 09:04:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911182049.77853-1-natechancellor@gmail.com> <20191014025101.18567-1-natechancellor@gmail.com>
-In-Reply-To: <20191014025101.18567-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 14 Oct 2019 09:03:29 -0700
-Message-ID: <CAKwvOdm+xxo=Qm7N8CznSExFNL=GxoJ0Da4Td2D0zUYH4mOLvg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] LLVM/Clang fixes for pseries_defconfig
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
+ <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
+ <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com> <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+In-Reply-To: <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 14 Oct 2019 18:04:22 +0200
+Message-ID: <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
+Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Pavel Emelyanov <xemul@parallels.com>,
+        Linux API <linux-api@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 7:51 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Sun, Oct 13, 2019 at 3:14 AM Andy Lutomirski <luto@kernel.org> wrote:
+> [adding more people because this is going to be an ABI break, sigh]
+> On Sat, Oct 12, 2019 at 5:52 PM Daniel Colascione <dancol@google.com> wrote:
+> > On Sat, Oct 12, 2019 at 4:10 PM Andy Lutomirski <luto@kernel.org> wrote:
+> > > On Sat, Oct 12, 2019 at 12:16 PM Daniel Colascione <dancol@google.com> wrote:
+> > > > The new secure flag makes userfaultfd use a new "secure" anonymous
+> > > > file object instead of the default one, letting security modules
+> > > > supervise userfaultfd use.
+> > > >
+> > > > Requiring that users pass a new flag lets us avoid changing the
+> > > > semantics for existing callers.
+> > >
+> > > Is there any good reason not to make this be the default?
+> > >
+> > >
+> > > The only downside I can see is that it would increase the memory usage
+> > > of userfaultfd(), but that doesn't seem like such a big deal.  A
+> > > lighter-weight alternative would be to have a single inode shared by
+> > > all userfaultfd instances, which would require a somewhat different
+> > > internal anon_inode API.
+> >
+> > I'd also prefer to just make SELinux use mandatory, but there's a
+> > nasty interaction with UFFD_EVENT_FORK. Adding a new UFFD_SECURE mode
+> > which blocks UFFD_EVENT_FORK sidesteps this problem. Maybe you know a
+> > better way to deal with it.
+[...]
+> Now that you've pointed this mechanism out, it is utterly and
+> completely broken and should be removed from the kernel outright or at
+> least severely restricted.  A .read implementation MUST NOT ACT ON THE
+> CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
+> as stdin to a setuid program.
 >
-> Hi all,
->
-> This series includes a set of fixes for LLVM/Clang when building
-> pseries_defconfig. These have been floating around as standalone
-> patches so I decided to gather them up as a series so it was easier
-> to review/apply them.
->
-> This has been broken for a bit now, it would be nice to get these
-> reviewed and applied. Please let me know if I need to do anything
-> to move these along.
+> So I think the right solution might be to attempt to *remove*
+> UFFD_EVENT_FORK.  Maybe the solution is to say that, unless the
+> creator of a userfaultfd() has global CAP_SYS_ADMIN, then it cannot
+> use UFFD_FEATURE_EVENT_FORK) and print a warning (once) when
+> UFFD_FEATURE_EVENT_FORK is allowed.  And, after some suitable
+> deprecation period, just remove it.  If it's genuinely useful, it
+> needs an entirely new API based on ioctl() or a syscall.  Or even
+> recvmsg() :)
 
-+1, we've been carrying these out of tree for some time now, with this
-series merged, we can get back to 0 out of tree patches.
-
->
-> Previous versions:
->
-> https://lore.kernel.org/lkml/20190911182049.77853-1-natechancellor@gmail.com/
->
-> Cheers,
-> Nathan
->
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+FWIW, <https://codesearch.debian.net/search?q=UFFD_FEATURE_EVENT_FORK&literal=1>
+just shows the kernel, kernel selftests, and strace code for decoding
+syscall arguments. CRIU uses it though (probably for postcopy live
+migration / lazy migration?), I guess that code isn't in debian for
+some reason.
