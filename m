@@ -2,98 +2,150 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D526BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1A9ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD63220854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12C320873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/j8jtNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbfJNRmE (ORCPT
+        id S1731171AbfJNRtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:42:04 -0400
-Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17433 "EHLO
-        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731171AbfJNRmE (ORCPT
+        Mon, 14 Oct 2019 13:49:53 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41115 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729776AbfJNRtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:42:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571074914; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=UoaKiyg+jQdvyC/HhihkyXN4vATpVe1FzZda6S9x50vCOlNQChj6l5iHpkER9D0llDqinnyxy87QDh7AsSbYI1R6tUS+Yc9N7XUd++mhMtwEWC+9LCdXQcb9LeLrP0ZdX4fxoCd47YXj6CNUBOKbiY5hUS2bVtB9waqVcpz06YA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1571074914; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=sz/CQBl0duYZalGaCIYiBg7xruUCOAaCokFPhXphtJM=; 
-        b=MIsc+Kk2VqXzXnM1/cUjHBsaqsKYgb2HxWrSK+t+42eapnh/VsbfRGsIXElno0vaxJa1iowXYn4GToHUFGt38z6/otN6+GyHtkfx6HBY0NnXaSehiir4wtcEnVozzp+HZhYuTXTAL9zh1KqHpQPbRvGTTnuK/VaYCyvTnxwobak=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
-        with SMTPS id 1571074913103134.03014784679272; Mon, 14 Oct 2019 10:41:53 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 17:27:31 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: accel: bma400: add bindings
-Message-ID: <20191014172731.GA30646@nessie>
-References: <20191012192525.21040-1-dan@dlrobertson.com>
- <20191012192525.21040-2-dan@dlrobertson.com>
- <20191014171521.GA29335@bogus>
+        Mon, 14 Oct 2019 13:49:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p4so4849866wrm.8;
+        Mon, 14 Oct 2019 10:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XXUMrGZIb6oF2ZXlkY6NvVGKtm0a8dgxsmrS0PyzrVM=;
+        b=I/j8jtNurZb03wO5OtpFMwdIEKSI/vQc1BpvLpGl7ryBO321tGoGGD/dOPskkClYgw
+         od4t5zjq2+ndwxdNXh+zb0qgGfEDiYNC8CJI5nF9z0sOJtW/AfXcRs9u9iWNzfztTASm
+         zRmpLe4p98ADBn7rdM7pjSDzk7VKVIejQmclv2xjvGruv1pY+/Z3iKi3Ri2jzo/vZXKZ
+         U1CtlK0iIYAuWGsQk/PJUF6nLEzNapqKj/Nhjmq1INYWCFMOd1+W22by2mHCL9aIRP7o
+         dRogtOEYzA8TV/asYmxRHwEpPsFleBrtG5/5o48RbATHAQ6SxNYlqC7Ip8//tVEgp69R
+         zJfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XXUMrGZIb6oF2ZXlkY6NvVGKtm0a8dgxsmrS0PyzrVM=;
+        b=iDRSjREZaDKP5Nl1ZIDtb+r//1i4tkubJ4zWmetRoiPdlb8lgy2+BIK5rPvHL6sZtp
+         ImF4NY/a/hyHRrQCeexUiB2lTsvFxRMfaRwgwKofZvmYepbRMEwrFZPjqUdiZLJKF+YL
+         ouA58MaQRhrUpY9YS5DOXKjTDQFuO52TGDk35JYJhpuE2IUum3VjzM4XvTn5CgDGqpeQ
+         0HDMou1ApeI0JN3tPHNTzRGmFbBhmyHLnw/ENj/A1/qXaH66CgG/KgWtly5PdsUFwo7t
+         3acTWr4gUUf3fcgcRz3NMKWwNj7dySP19sfPBzperEXZJYgDNSLStL072CSAwlKhSqZk
+         1iOA==
+X-Gm-Message-State: APjAAAXuo8DuEGJjVZXJtylxFGpO5+TpNp9+f95232UhWL7TqAUawFyo
+        vnceqEb2zSAIh/SV3lWC9MM=
+X-Google-Smtp-Source: APXvYqy78vv8xomOjJzk/rQmkBz13qhvU+ercRByH/EBEIZm2MrjAU0AN+KF4wDSX2QXx60c7i4efw==
+X-Received: by 2002:adf:fa92:: with SMTP id h18mr26866005wrr.220.1571075388812;
+        Mon, 14 Oct 2019 10:49:48 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id o70sm26093856wme.29.2019.10.14.10.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 10:49:48 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 18:49:46 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
+Message-ID: <20191014174946.GC5359@stefanha-x1.localdomain>
+References: <20191011081557.28302-1-jasowang@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
 Content-Disposition: inline
-In-Reply-To: <20191014171521.GA29335@bogus>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Zoho-Virus-Status: 1
-X-ZohoMailClient: External
+In-Reply-To: <20191011081557.28302-1-jasowang@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---cNdxnHkX5QqsyA0e
+--XMCwj5IQnwKtuyBG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Fails 'make dt_binding_check':
+On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
+> There are hardware that can do virtio datapath offloading while having
+> its own control path. This path tries to implement a mdev based
+> unified API to support using kernel virtio driver to drive those
+> devices. This is done by introducing a new mdev transport for virtio
+> (virtio_mdev) and register itself as a new kind of mdev driver. Then
+> it provides a unified way for kernel virtio driver to talk with mdev
+> device implementation.
+>=20
+> Though the series only contains kernel driver support, the goal is to
+> make the transport generic enough to support userspace drivers. This
+> means vhost-mdev[1] could be built on top as well by resuing the
+> transport.
+>=20
+> A sample driver is also implemented which simulate a virito-net
+> loopback ethernet device on top of vringh + workqueue. This could be
+> used as a reference implementation for real hardware driver.
+>=20
+> Consider mdev framework only support VFIO device and driver right now,
+> this series also extend it to support other types. This is done
+> through introducing class id to the device and pairing it with
+> id_talbe claimed by the driver. On top, this seris also decouple
+> device specific parents ops out of the common ones.
 
-Thanks for the note. Should running `make dt_binding_check` be added to
-`Documentation/devicetree/bindings/submitting-patches.rst`?
+I was curious so I took a quick look and posted comments.
 
-Cheers,
+I guess this driver runs inside the guest since it registers virtio
+devices?
 
- - Dan
+If this is used with physical PCI devices that support datapath
+offloading then how are physical devices presented to the guest without
+SR-IOV?
 
---cNdxnHkX5QqsyA0e
+Stefan
+
+--XMCwj5IQnwKtuyBG
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEF5dO2RaKc5C+SCJ9RcSmUsR+QqUFAl2kr/cACgkQRcSmUsR+
-QqWFXg/9FsPJaiW55rPeVJ+BAFKW2BQd/QKN+TynZB/aEydTO/ohevd2G/u2C2Ak
-4z1zFgAqBumsGcEeoy7P1PpIaqLiJ1WBOr4H87bGGIRvjHvyTVStldh6hIQ/k7PI
-WbK9+no+FJ/Wwjgdcyty1Ni6lp8shMtJexTynIeymvYPKnC9LvdUp5buGe7FylRS
-F69iFget4xN9QciFFr27mq0wx+RtSOM5L42stvTjz8SBj/TMTUt9ROuwgr3TlPUN
-lUJT+nOQAhZZPT4vXsAgte5D2Fl+KmOi459cmqoshotihZnmZRmWYgLHpKFM4dju
-AEl4acLIMopFdBM9jFBJCLBb/lQbIlX3mf4E6rR2bBGt49Vc3x/yGKgddj9s+wyp
-8Xq5rlAplIZf+enrooHLxAXeUM2I1IizdZooGFY00zAXo7ZxpwNcyvL2g4iC/ezY
-wuNjaKuboGWCLbnKYi5CJrTSTUSt8pqVH+KFm58W5gPQrW2ZwFilDZYs1ZqM2inM
-/hhGAgBHP0U7p7cQZr4jr+qp6Idinns3RQCsYcZv1iRre4MSnmx3B5i7iOjjzlcn
-HCofz25ssaz6fDOA1bRhl6bhPhlXeQ5JGc+q1ELIp4Bawoc/05LtAPznIOlBEEqj
-UMO5CAycCKUG5FdtrTLXOYaHOsYHM9biuBKIuXd/ZxipDQ/VSQA=
-=36QZ
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2ktToACgkQnKSrs4Gr
+c8jgRgf/WWO5uJxyZLwosUbr+PGHcqci4COe1VGy3Aveab34yl0NQekiPT6CEG5k
+PLqiRN9UlPXnMq5H6tsIptfG1mBTxJpF0H7FVRGvwKnV+NizCllURp1Eb1y6ucTd
+j3Rg8JZAwDCdJsZ8d2o4JXQKv9CIavomjp0ZQNIdRiKJ8gOueiWydBgCOSO/l0dh
+t/YI7ENprVpSg56pZba9Y3eueA6Gt4oSfHZbgtQWXBueHkyN90em9JoDAktAOu1m
+PZAQykFnCUGV7RwfK2jUW+WIgh8mSrhu36zoyl9OAASnmHeiMBCTqpvHTKzRH180
+fEnf2WwIaOxFvEnbfxu/3ljKyhjEaA==
+=X6sM
 -----END PGP SIGNATURE-----
 
---cNdxnHkX5QqsyA0e--
-
+--XMCwj5IQnwKtuyBG--
