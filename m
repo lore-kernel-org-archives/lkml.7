@@ -2,192 +2,172 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25D7ECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975CBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9BE2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0981120650
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="CrCPART2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbfJNIAx (ORCPT
+        id S1730073AbfJNICD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:00:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726637AbfJNIAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:00:53 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 043818491006F9A592D1;
-        Mon, 14 Oct 2019 16:00:49 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 16:00:46 +0800
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
-        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
-        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
-        <rafael@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>
-References: <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
- <20191010073212.GB18412@dhcp22.suse.cz>
- <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
- <20191011111539.GX2311@hirez.programming.kicks-ass.net>
- <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
- <20191012074014.GA2037204@kroah.com>
- <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
- <20191012104001.GA2052933@kroah.com> <20191012104742.GA2053473@kroah.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <82000bc8-6912-205b-0251-25b9cc430973@huawei.com>
-Date:   Mon, 14 Oct 2019 16:00:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Mon, 14 Oct 2019 04:02:03 -0400
+Received: from fd.dlink.ru ([178.170.168.18]:60580 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726637AbfJNICD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:02:03 -0400
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 3D6051B20A35; Mon, 14 Oct 2019 11:01:59 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 3D6051B20A35
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1571040119; bh=gdm2EEbYYtK0LBeSCJG8+CJkJpdqV/u9GSpbaHJHXVk=;
+        h=From:To:Cc:Subject:Date;
+        b=CrCPART2dsE7/fDiOhL8iGBGyfp1e8msUlVn45j7mWrcDNzdgVTSPlO25RKFpwdtB
+         YQ22QeZoaLctDSwmRJjdG1ng730uqlN9gseD3/9mysbHTt4ISUXAe/Cha+yDqYJYW7
+         CcMTdndFm60ZkVXL1RmCEPgprtc/UOTdcJK/Fc74=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id 0A4B91B202B0;
+        Mon, 14 Oct 2019 11:01:52 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0A4B91B202B0
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 492221B217C5;
+        Mon, 14 Oct 2019 11:01:50 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Mon, 14 Oct 2019 11:01:50 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Edward Cree <ecree@solarflare.com>, Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Alexander Lobakin <alobakin@dlink.ru>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
+Date:   Mon, 14 Oct 2019 11:00:33 +0300
+Message-Id: <20191014080033.12407-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191012104742.GA2053473@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/12 18:47, Greg KH wrote:
-> On Sat, Oct 12, 2019 at 12:40:01PM +0200, Greg KH wrote:
->> On Sat, Oct 12, 2019 at 05:47:56PM +0800, Yunsheng Lin wrote:
->>> On 2019/10/12 15:40, Greg KH wrote:
->>>> On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
->>>>> add pci and acpi maintainer
->>>>> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
->>>>>
->>>>> On 2019/10/11 19:15, Peter Zijlstra wrote:
->>>>>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
->>>>>>> But I failed to see why the above is related to making node_to_cpumask_map()
->>>>>>> NUMA_NO_NODE aware?
->>>>>>
->>>>>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
->>>>>> have a node assigned.
->>>>>>
->>>>>> It not having one, is a straight up bug. We must not silently accept
->>>>>> NO_NODE there, ever.
->>>>>>
->>>>>
->>>>> I suppose you mean reporting a lack of affinity when the node of a pcie
->>>>> device is not set by "not silently accept NO_NODE".
->>>>
->>>> If the firmware of a pci device does not provide the node information,
->>>> then yes, warn about that.
->>>>
->>>>> As Greg has asked about in [1]:
->>>>> what is a user to do when the user sees the kernel reporting that?
->>>>>
->>>>> We may tell user to contact their vendor for info or updates about
->>>>> that when they do not know about their system well enough, but their
->>>>> vendor may get away with this by quoting ACPI spec as the spec
->>>>> considering this optional. Should the user believe this is indeed a
->>>>> fw bug or a misreport from the kernel?
->>>>
->>>> Say it is a firmware bug, if it is a firmware bug, that's simple.
->>>>
->>>>> If this kind of reporting is common pratice and will not cause any
->>>>> misunderstanding, then maybe we can report that.
->>>>
->>>> Yes, please do so, that's the only way those boxes are ever going to get
->>>> fixed.  And go add the test to the "firmware testing" tool that is based
->>>> on Linux that Intel has somewhere, to give vendors a chance to fix this
->>>> before they ship hardware.
->>>>
->>>> This shouldn't be a big deal, we warn of other hardware bugs all the
->>>> time.
->>>
->>> Ok, thanks for clarifying.
->>>
->>> Will send a patch to catch the case when a pcie device without numa node
->>> being set and warn about it.
->>>
->>> Maybe use dev->bus to verify if it is a pci device?
->>
->> No, do that in the pci bus core code itself, when creating the devices
->> as that is when you know, or do not know, the numa node, right?
->>
->> This can't be in the driver core only, as each bus type will have a
->> different way of determining what the node the device is on.  For some
->> reason, I thought the PCI core code already does this, right?
-> 
-> Yes, pci_irq_get_node(), which NO ONE CALLS!  I should go delete that
-> thing...
-> 
-> Anyway, it looks like the pci core code does call set_dev_node() based
-> on the PCI bridge, so if that is set up properly, all should be fine.
-> 
-> If not, well, you have buggy firmware and you need to warn about that at
-> the time you are creating the bridge.  Look at the call to
-> pcibus_to_node() in pci_register_host_bridge().
+Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
+skbs") made use of listified skb processing for the users of
+napi_gro_frags().
+The same technique can be used in a way more common napi_gro_receive()
+to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers
+including gro_cells and mac80211 users.
+This slightly changes the return value in cases where skb is being
+dropped by the core stack, but it seems to have no impact on related
+drivers' functionality.
+gro_normal_batch is left untouched as it's very individual for every
+single system configuration and might be tuned in manual order to
+achieve an optimal performance.
 
-Thanks for pointing out the specific function.
-Maybe we do not need to warn about the case when the device has a parent,
-because we must have warned about the parent if the device has a parent
-and the parent also has a node of NO_NODE, so do not need to warn the child
-device anymore? like blew:
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Acked-by: Edward Cree <ecree@solarflare.com>
+---
+ net/core/dev.c | 49 +++++++++++++++++++++++++------------------------
+ 1 file changed, 25 insertions(+), 24 deletions(-)
 
-@@ -932,6 +932,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
-        list_add_tail(&bus->node, &pci_root_buses);
-        up_write(&pci_bus_sem);
-
-+       if (nr_node_ids > 1 && !parent &&
-+           dev_to_node(bus->bridge) == NUMA_NO_NODE)
-+               dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 8bc3dce71fc0..74f593986524 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5884,6 +5884,26 @@ struct packet_offload *gro_find_complete_by_type(__be16 type)
+ }
+ EXPORT_SYMBOL(gro_find_complete_by_type);
+ 
++/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
++static void gro_normal_list(struct napi_struct *napi)
++{
++	if (!napi->rx_count)
++		return;
++	netif_receive_skb_list_internal(&napi->rx_list);
++	INIT_LIST_HEAD(&napi->rx_list);
++	napi->rx_count = 0;
++}
 +
-        return 0;
-
-
-Also, we do not need to warn about that in pci_device_add(), Right?
-Because we must have warned about the pci host bridge of the pci device.
-
-I may be wrong about above because I am not so familiar with the pci.
-
-> 
-> And yes, you need to do this all on a per-bus-type basis, as has been
-> pointed out.  It's up to the bus to create the device and set this up
-> properly.
-
-Thanks.
-Will do that on per-bus-type basis.
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
++/* Queue one GRO_NORMAL SKB up for list processing. If batch size exceeded,
++ * pass the whole batch up to the stack.
++ */
++static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
++{
++	list_add_tail(&skb->list, &napi->rx_list);
++	if (++napi->rx_count >= gro_normal_batch)
++		gro_normal_list(napi);
++}
++
+ static void napi_skb_free_stolen_head(struct sk_buff *skb)
+ {
+ 	skb_dst_drop(skb);
+@@ -5891,12 +5911,13 @@ static void napi_skb_free_stolen_head(struct sk_buff *skb)
+ 	kmem_cache_free(skbuff_head_cache, skb);
+ }
+ 
+-static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
++static gro_result_t napi_skb_finish(struct napi_struct *napi,
++				    struct sk_buff *skb,
++				    gro_result_t ret)
+ {
+ 	switch (ret) {
+ 	case GRO_NORMAL:
+-		if (netif_receive_skb_internal(skb))
+-			ret = GRO_DROP;
++		gro_normal_one(napi, skb);
+ 		break;
+ 
+ 	case GRO_DROP:
+@@ -5928,7 +5949,7 @@ gro_result_t napi_gro_receive(struct napi_struct *napi, struct sk_buff *skb)
+ 
+ 	skb_gro_reset_offset(skb);
+ 
+-	ret = napi_skb_finish(dev_gro_receive(napi, skb), skb);
++	ret = napi_skb_finish(napi, skb, dev_gro_receive(napi, skb));
+ 	trace_napi_gro_receive_exit(ret);
+ 
+ 	return ret;
+@@ -5974,26 +5995,6 @@ struct sk_buff *napi_get_frags(struct napi_struct *napi)
+ }
+ EXPORT_SYMBOL(napi_get_frags);
+ 
+-/* Pass the currently batched GRO_NORMAL SKBs up to the stack. */
+-static void gro_normal_list(struct napi_struct *napi)
+-{
+-	if (!napi->rx_count)
+-		return;
+-	netif_receive_skb_list_internal(&napi->rx_list);
+-	INIT_LIST_HEAD(&napi->rx_list);
+-	napi->rx_count = 0;
+-}
+-
+-/* Queue one GRO_NORMAL SKB up for list processing.  If batch size exceeded,
+- * pass the whole batch up to the stack.
+- */
+-static void gro_normal_one(struct napi_struct *napi, struct sk_buff *skb)
+-{
+-	list_add_tail(&skb->list, &napi->rx_list);
+-	if (++napi->rx_count >= gro_normal_batch)
+-		gro_normal_list(napi);
+-}
+-
+ static gro_result_t napi_frags_finish(struct napi_struct *napi,
+ 				      struct sk_buff *skb,
+ 				      gro_result_t ret)
+-- 
+2.23.0
 
