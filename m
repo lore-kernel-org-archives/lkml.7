@@ -4,345 +4,256 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ECAECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B55ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A624120854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4454F20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfJNKc7 (ORCPT
+        id S1731554AbfJNKc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:32:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41695 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731127AbfJNKc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:32:57 -0400
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1iJxen-0001vG-H5; Mon, 14 Oct 2019 12:32:53 +0200
-Subject: Re: [RESEND v2] i2c: imx: support slave mode for imx I2C driver
-To:     Biwen Li <biwen.li@nxp.com>, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, wsa@the-dreams.de, leoyang.li@nxp.com,
-        aisheng.dong@nxp.com, xiaoning.wang@nxp.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com,
-        jiafei.pan@nxp.com, xiaobo.xie@nxp.com
-References: <20191009101802.19309-1-biwen.li@nxp.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <113865e9-e846-1079-6f58-7fddb245398c@pengutronix.de>
-Date:   Mon, 14 Oct 2019 12:32:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 14 Oct 2019 06:32:58 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51700 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731519AbfJNKc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:32:56 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1BCE92ADD03FD824A3F2;
+        Mon, 14 Oct 2019 18:32:52 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
+ 18:32:43 +0800
+Date:   Mon, 14 Oct 2019 11:32:31 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+CC:     reg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, <grant.likely@arm.com>,
+        jean-philippe <jean-philippe@linaro.org>,
+        <ilias.apalodimas@linaro.org>, <francois.ozog@linaro.org>,
+        <kenneth-lee-2012@foxmail.com>, Wangzhou <wangzhou1@hisilicon.com>,
+        <linux-accelerators@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        "Zaibo Xu" <xuzaibo@huawei.com>
+Subject: Re: [PATCH v5 2/3] uacce: add uacce driver
+Message-ID: <20191014113231.00002967@huawei.com>
+In-Reply-To: <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
+References: <1571035735-31882-1-git-send-email-zhangfei.gao@linaro.org>
+        <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20191009101802.19309-1-biwen.li@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 14 Oct 2019 14:48:54 +0800
+Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+
+> From: Kenneth Lee <liguozhu@hisilicon.com>
+> 
+> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+> provide Shared Virtual Addressing (SVA) between accelerators and processes.
+> So accelerator can access any data structure of the main cpu.
+> This differs from the data sharing between cpu and io device, which share
+> data content rather than address.
+> Since unified address, hardware and user space of process can share the
+> same virtual address in the communication.
+> 
+> Uacce create a chrdev for every registration, the queue is allocated to
+> the process when the chrdev is opened. Then the process can access the
+> hardware resource by interact with the queue file. By mmap the queue
+> file space to user space, the process can directly put requests to the
+> hardware without syscall to the kernel space.
+> 
+> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+
 Hi,
 
-I'm trying to test you patch on i.MX6S RIoTBoard. So far I fail to get it working with 
-following setup:
-1. register i2c-gpio
-2. connect i2c-gpio SCL to i2c-imx SCL pin and i2c-gpio SDA to i2c-imx SDA pin
-3. run this command to register i2c slave eeprom on i2c-imx:
-echo slave-24c02 0x1064 > /sys/bus/i2c/devices/i2c-3/new_device
-4. run "i2cdetect 4" on i2c-gpio to detect eeprom on i2c-imx slave.
+Some superficial comments from me.
 
-So far, nothing was detected and even irq counter of i2c-imx didn't increased.
+Thanks,
 
-Do I'm missing some thing? Please, help me to test you patch.
-
-And, please, do not forget to include me in the next patch round, if you wont to get your 
-patches mainline.
-
-This devicetree i used for testing:
-#include "imx6dl-riotboard.dts"
-
-/ {
-         i2c_gpio: i2c-gpio {
-                 compatible = "i2c-gpio";
-                 #address-cells = <1>;
-                 #size-cells = <0>;
-                 pinctrl-names = "default";
-                 pinctrl-0 = <&pinctrl_i2c_gpio>;
-                 gpios = <
-                         &gpio4 27 GPIO_ACTIVE_HIGH /* SDA */
-                         &gpio4 26 GPIO_ACTIVE_HIGH /* SCL */
-                 >;
-                 clock-frequency = <10000>;
-                 status = "okay";
-         };
-};
-
-&iomuxc {
-         pinctrl-names = "default";
-
-         imx6-riotboard {
-                 pinctrl_i2c_gpio: i2c-gpiogrp {
-                         fsl,pins = <
-                                 MX6QDL_PAD_DISP0_DAT6__GPIO4_IO27 0x4001b8b1
-                                 MX6QDL_PAD_DISP0_DAT5__GPIO4_IO26 0x4001b8b1
-                         >;
-                 };
-         };
-};
-
-&i2c4 {
-                 clock-frequency = <10000>;
-
-};
+Jonathan
 
 
-Regards,
-Oleksij
+...
 
-On 09.10.19 12:18, Biwen Li wrote:
-> The patch supports slave mode for imx I2C driver
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v2:
-> 	- remove MACRO CONFIG_I2C_SLAVE
-> 
->   drivers/i2c/busses/i2c-imx.c | 180 ++++++++++++++++++++++++++++++++---
->   1 file changed, 166 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-> index a3b61336fe55..d9858bc63656 100644
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -203,6 +203,7 @@ struct imx_i2c_struct {
->   	struct pinctrl_state *pinctrl_pins_gpio;
->   
->   	struct imx_i2c_dma	*dma;
-> +	struct i2c_client	*slave;
->   };
->   
->   static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
-> @@ -588,23 +589,38 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
->   	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
->   }
->   
-> -static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-> +/* Clear interrupt flag bit */
-> +static void i2c_imx_clr_if_bit(struct imx_i2c_struct *i2c_imx)
->   {
-> -	struct imx_i2c_struct *i2c_imx = dev_id;
-> -	unsigned int temp;
-> +	unsigned int status;
->   
-> -	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-> -	if (temp & I2SR_IIF) {
-> -		/* save status register */
-> -		i2c_imx->i2csr = temp;
-> -		temp &= ~I2SR_IIF;
-> -		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
-> -		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
-> -		wake_up(&i2c_imx->queue);
-> -		return IRQ_HANDLED;
-> -	}
-> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-> +	status &= ~I2SR_IIF;
-> +	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
-> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
-> +}
->   
-> -	return IRQ_NONE;
-> +/* Clear arbitration lost bit */
-> +static void i2c_imx_clr_al_bit(struct imx_i2c_struct *i2c_imx)
+> +/*
+> + * While user space releases a queue, all the relatives on the queue
+> + * should be released immediately by this putting.
+
+This one needs rewording but I'm not quite sure what
+relatives are in this case.
+ 
+> + */
+> +static long uacce_put_queue(struct uacce_queue *q)
 > +{
-> +	unsigned int status;
+> +	struct uacce_device *uacce = q->uacce;
 > +
-> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-> +	status &= ~I2SR_IAL;
-> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
-> +}
+> +	mutex_lock(&uacce_mutex);
 > +
-> +static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
-> +{
-> +	unsigned int status;
+> +	if ((q->state == UACCE_Q_STARTED) && uacce->ops->stop_queue)
+> +		uacce->ops->stop_queue(q);
 > +
-> +	/* Save status register */
-> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-> +	i2c_imx->i2csr = status | I2SR_IIF;
+> +	if ((q->state == UACCE_Q_INIT || q->state == UACCE_Q_STARTED) &&
+> +	     uacce->ops->put_queue)
+> +		uacce->ops->put_queue(q);
 > +
-> +	wake_up(&i2c_imx->queue);
-> +
-> +	return IRQ_HANDLED;
->   }
->   
->   static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
-> @@ -1048,11 +1064,147 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
->   		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
->   }
->   
-> +static void i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
-> +{
-> +	unsigned int temp;
-> +
-> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
-> +
-> +	/* Set slave addr. */
-> +	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
-> +
-> +	/* Disable i2c module */
-> +	temp = i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN;
-> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-> +
-> +	/* Reset status register */
-> +	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx,
-> +			  IMX_I2C_I2SR);
-> +
-> +	/* Enable module and enable interrupt from i2c module */
-> +	temp = i2c_imx->hwdata->i2cr_ien_opcode | I2CR_IIEN;
-> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-> +
-> +	/* Wait controller to be stable */
-> +	usleep_range(50, 150);
-> +}
-> +
-> +static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
-> +{
-> +	unsigned int status, ctl;
-> +	u8 value;
-> +
-> +	if (!i2c_imx->slave) {
-> +		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->slave is null");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-> +	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
-> +	if (status & I2SR_IAL) { /* Arbitration lost */
-> +		i2c_imx_clr_al_bit(i2c_imx);
-> +	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
-> +		if (status & I2SR_SRW) { /* Master wants to read from us*/
-> +			dev_dbg(&i2c_imx->adapter.dev, "read requested");
-> +			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
-> +
-> +			/* Slave transmit */
-> +			ctl |= I2CR_MTX;
-> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-> +
-> +			/* Send data */
-> +			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
-> +		} else { /* Master wants to write to us */
-> +			dev_dbg(&i2c_imx->adapter.dev, "write requested");
-> +			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
-> +
-> +			/* Slave receive */
-> +			ctl &= ~I2CR_MTX;
-> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-> +			/* Dummy read */
-> +			imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-> +		}
-> +	} else if (!(ctl & I2CR_MTX)) { /* Receive mode */
-> +			if (status & I2SR_IBB) { /* No STOP signal detected */
-> +				ctl &= ~I2CR_MTX;
-> +				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-> +
-> +				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-> +				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
-> +			} else { /* STOP signal is detected */
-> +				dev_dbg(&i2c_imx->adapter.dev,
-> +					"STOP signal detected");
-> +				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
-> +			}
-> +	} else if (!(status & I2SR_RXAK)) {	/* Transmit mode received ACK */
-> +		ctl |= I2CR_MTX;
-> +		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-> +
-> +		i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
-> +
-> +		imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
-> +	} else { /* Transmit mode received NAK */
-> +		ctl &= ~I2CR_MTX;
-> +		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-> +		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int i2c_imx_reg_slave(struct i2c_client *client)
-> +{
-> +	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
-> +
-> +	if (i2c_imx->slave)
-> +		return -EBUSY;
-> +
-> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
-> +	i2c_imx->slave = client;
-> +
-> +	i2c_imx_slave_init(i2c_imx);
+> +	q->state = UACCE_Q_ZOMBIE;
+> +	mutex_unlock(&uacce_mutex);
 > +
 > +	return 0;
 > +}
 > +
-> +static int i2c_imx_unreg_slave(struct i2c_client *client)
+..
+
+> +
+> +static ssize_t qfrs_size_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
 > +{
-> +	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
+> +	struct uacce_device *uacce = to_uacce_device(dev);
+> +	unsigned long size;
+> +	int i, ret;
 > +
-> +	if (!i2c_imx->slave)
-> +		return -EINVAL;
-> +
-> +	i2c_imx->slave = NULL;
-> +
-> +	return 0;
-> +}
-> +
->   static const struct i2c_algorithm i2c_imx_algo = {
->   	.master_xfer	= i2c_imx_xfer,
->   	.functionality	= i2c_imx_func,
-> +	.reg_slave	= i2c_imx_reg_slave,
-> +	.unreg_slave	= i2c_imx_unreg_slave,
->   };
->   
-> +static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-> +{
-> +	struct imx_i2c_struct *i2c_imx = dev_id;
-> +	unsigned int status, ctl;
-> +	irqreturn_t irq_status = IRQ_NONE;
-> +
-> +	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-> +	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
-> +
-> +	if (status & I2SR_IIF) {
-> +		i2c_imx_clr_if_bit(i2c_imx);
-> +		if (ctl & I2CR_MSTA)
-> +			irq_status = i2c_imx_master_isr(i2c_imx);
-> +		else
-> +			irq_status = i2c_imx_slave_isr(i2c_imx);
+> +	for (i = 0, ret = 0; i < UACCE_QFRT_MAX; i++) {
+> +		size = uacce->qf_pg_size[i] << PAGE_SHIFT;
+> +		if (i == UACCE_QFRT_SS)
+> +			break;
+> +		ret += sprintf(buf + ret, "%lu\t", size);
 > +	}
+> +	ret += sprintf(buf + ret, "%lu\n", size);
 > +
-> +	return irq_status;
+> +	return ret;
 > +}
+
+This may break the sysfs rule of one thing per file.  If you have
+multiple regions, they should probably each have their own file
+to give their size.
+
 > +
->   static int i2c_imx_probe(struct platform_device *pdev)
->   {
->   	struct imx_i2c_struct *i2c_imx;
-> 
+> +static DEVICE_ATTR_RO(id);
+> +static DEVICE_ATTR_RO(api);
+> +static DEVICE_ATTR_RO(numa_distance);
+> +static DEVICE_ATTR_RO(node_id);
+> +static DEVICE_ATTR_RO(flags);
+> +static DEVICE_ATTR_RO(available_instances);
+> +static DEVICE_ATTR_RO(algorithms);
+> +static DEVICE_ATTR_RO(qfrs_size);
+> +
+> +static struct attribute *uacce_dev_attrs[] = {
+> +	&dev_attr_id.attr,
+> +	&dev_attr_api.attr,
+> +	&dev_attr_node_id.attr,
+> +	&dev_attr_numa_distance.attr,
+> +	&dev_attr_flags.attr,
+> +	&dev_attr_available_instances.attr,
+> +	&dev_attr_algorithms.attr,
+> +	&dev_attr_qfrs_size.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(uacce_dev);
+> +
+...
 
-Kind regards,
-Oleksij Rempel
+> +
+> +/**
+> + * uacce_unregister - unregisters a uacce
+> + * @uacce: the accelerator to unregister
+> + *
+> + * Unregister an accelerator that wat previously successully registered with
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+wat -> was
+successully -> successfully
+
+
+> + * uacce_register().
+> + */
+> +void uacce_unregister(struct uacce_device *uacce)
+> +{
+> +	mutex_lock(&uacce_mutex);
+> +
+> +	if (uacce->flags & UACCE_DEV_SVA)
+> +		iommu_dev_disable_feature(uacce->pdev, IOMMU_DEV_FEAT_SVA);
+> +
+> +	uacce_unset_iommu_domain(uacce);
+> +	cdev_device_del(uacce->cdev, &uacce->dev);
+> +	idr_remove(&uacce_idr, uacce->dev_id);
+> +	put_device(&uacce->dev);
+> +
+> +	mutex_unlock(&uacce_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(uacce_unregister);
+> +
+...
+> diff --git a/include/linux/uacce.h b/include/linux/uacce.h
+> new file mode 100644
+> index 0000000..9137f3d
+> --- /dev/null
+> +++ b/include/linux/uacce.h
+> @@ -0,0 +1,167 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _LINUX_UACCE_H
+> +#define _LINUX_UACCE_H
+> +
+> +#include <linux/cdev.h>
+> +#include <uapi/misc/uacce/uacce.h>
+> +
+> +#define UACCE_NAME		"uacce"
+> +
+> +struct uacce_queue;
+> +struct uacce_device;
+> +
+> +/* uacce queue file flag, requires different operation */
+> +#define UACCE_QFRF_MAP		BIT(0)	/* map to current queue */
+> +#define UACCE_QFRF_MMAP		BIT(1)	/* map to user space */
+> +#define UACCE_QFRF_KMAP		BIT(2)	/* map to kernel space */
+> +#define UACCE_QFRF_DMA		BIT(3)	/* use dma api for the region */
+> +#define UACCE_QFRF_SELFMT	BIT(4)	/* self maintained qfr */
+> +
+
+...
+
+> +/**
+> + * struct uacce_queue
+> + * @uacce: pointer to uacce
+> + * @priv: private pointer
+> + * @wait: wait queue head
+> + * @pasid: pasid of the queue
+> + * @handle: iommu_sva handle return from iommu_sva_bind_device
+> + * @list: share list for qfr->qs
+> + * @mm: current->mm
+> + * @qfrs: pointer of qfr regions
+
+Missing state.  Make sure to run
+./scripts/kernel-doc FILENAME > /dev/null and
+fix any errors that show up.
+
+> + */
+> +struct uacce_queue {
+> +	struct uacce_device *uacce;
+> +	void *priv;
+> +	wait_queue_head_t wait;
+> +	int pasid;
+> +	struct iommu_sva *handle;
+> +	struct list_head list;
+> +	struct mm_struct *mm;
+> +	struct uacce_qfile_region *qfrs[UACCE_QFRT_MAX];
+> +	enum uacce_q_state state;
+> +};
+...
+
+Thanks,
+
+Jonathan
+
