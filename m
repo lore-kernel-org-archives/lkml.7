@@ -2,157 +2,150 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23788ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5881C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF362089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8896220659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:36:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8OgWxl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfJNJfu (ORCPT
+        id S1730990AbfJNJgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:35:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54044 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730889AbfJNJfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:35:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 58CECBCF9;
-        Mon, 14 Oct 2019 09:35:47 +0000 (UTC)
-Subject: Re: [PATCH] mm: mempolicy: fix the absence of the last bit of
- nodemask
-To:     Michal Hocko <mhocko@kernel.org>, Pan Zhang <zhangpan26@huawei.com>
-Cc:     akpm@linux-foundation.org, rientjes@google.com, jgg@ziepe.ca,
-        aarcange@redhat.com, yang.shi@linux.alibaba.com,
-        zhongjiang@huawei.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Cristopher Lameter <cl@linux.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <1570882789-20579-1-git-send-email-zhangpan26@huawei.com>
- <20191014091243.GD317@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e91614fa-4fc4-5e66-e8a9-3eede916e71f@suse.cz>
-Date:   Mon, 14 Oct 2019 11:35:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 14 Oct 2019 05:36:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43145 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730667AbfJNJgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:36:05 -0400
+Received: by mail-io1-f66.google.com with SMTP id v2so36475853iob.10;
+        Mon, 14 Oct 2019 02:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s9AqOQmZzl9ck63tcXDk11yCxjKOidou9bwFz65u/jY=;
+        b=a8OgWxl4ipJM47v4BTC5OYcqLvNxhJEQ1+VoNrsGVzDbrnnA7xxCAirf2517sNSbM5
+         jjYg7s2NajIZg8w0UN5hhO8g6vcOGR4yOl1gdsVlsM9vFiYAWbIwJQCkOj+JImfiVh5n
+         wm/apkKezw78dEhqLQr/5WAGOpk9uLtJtaBiEGouVym7vd0Bvlne4Qhumvo+ouISpmpf
+         WBh++iAkyZS0QYoC9Q50igOcefydGfp5X6d+yq9oHVEOBwZ4ss7OaXSsF1L9sPoouf0N
+         BQ0B76O/5eMGES3LjUnDr6nBVl+9sIwq3zZFaP48aFb7omfFVt1YhhFhDKDEY4iFlzAv
+         Ti+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s9AqOQmZzl9ck63tcXDk11yCxjKOidou9bwFz65u/jY=;
+        b=Hy4IkO+0tuxITSFO/kKuXIq7SEpZqOcu8lLnqwHlUSDTJsO1jUgqW1uDlLH+m8fUyZ
+         QuO4Gh7cN6S01MsEUpY9B/qohQ5v813s1U7dQ//GBPhvA8xXWM1L89RTNOSeNcIOfhIE
+         6DIkCSM2uB4oh9lDNa4REUDpmreJGkuZl6Ja5EGwI/CxyccpLgMuVq6TMbZ7D1hbPBX6
+         WXx/gjc8uP4Evn8hleQyF2ZA76Bd+YjDcGRcl/DjON+iLgdKDs3WVRzfuUyyirenXcos
+         Ndlr+pruhyQf+tpnEYRDgHq7x+QTx4qiyrj0K0+hj5ofD01xSWWxiOc2Sg7ljqYQfEi3
+         PhQA==
+X-Gm-Message-State: APjAAAXD7Z2DXa2oLxIf9A+ATIgCWhEguIvZeNLDkUc/LSOsJWw/Ax7u
+        MAAUT6MNbIFY3inroZlQslBkFZCBqD9+DK+0aqI=
+X-Google-Smtp-Source: APXvYqyt51wuPmTidlghhiH+FcOVbHb2tpKLjvK3ekBqksHUkhbxWfwTO53T0r8tu4bySR9NF8asNHSg4uK9rU461Og=
+X-Received: by 2002:a02:a619:: with SMTP id c25mr36046904jam.144.1571045762783;
+ Mon, 14 Oct 2019 02:36:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191014091243.GD317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191014090059.21871-1-gmayyyha@gmail.com>
+In-Reply-To: <20191014090059.21871-1-gmayyyha@gmail.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 14 Oct 2019 11:36:09 +0200
+Message-ID: <CAOi1vP-tvu-p4J+OJKcu209zn_pNFr_=sYhZ5=1ChgejQzHJpg@mail.gmail.com>
+Subject: Re: [PATCH] function dispatch should return if mds session does not exist
+To:     Yanhu Cao <gmayyyha@gmail.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 11:12 AM, Michal Hocko wrote:
->> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->> index 4ae967b..a23509f 100644
->> --- a/mm/mempolicy.c
->> +++ b/mm/mempolicy.c
->> @@ -1328,9 +1328,11 @@ static int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
->>  	unsigned long nlongs;
->>  	unsigned long endmask;
->>  
->> -	--maxnode;
->>  	nodes_clear(*nodes);
->> -	if (maxnode == 0 || !nmask)
->> +	/*
->> +	 * If the user specified only one node, no need to set nodemask
->> +	 */
->> +	if (maxnode - 1 == 0 || !nmask)
->>  		return 0;
->>  	if (maxnode > PAGE_SIZE*BITS_PER_BYTE)
->>  		return -EINVAL;
-> 
-> I am afraid this is a wrong fix. It is really hard to grasp the code but my
-> understanding is that the caller is supposed to provide maxnode larger
-> than than the nodemask. So if you want 2 nodes then maxnode should be 3.
-> Have a look at the libnuma (which is a reference implementation)
-> 
-> static void setpol(int policy, struct bitmask *bmp)
-> {
-> 	if (set_mempolicy(policy, bmp->maskp, bmp->size + 1) < 0)
-> 		numa_error("set_mempolicy");
-> }
-> 
-> The semantic is quite awkward but it is that way for years.
+On Mon, Oct 14, 2019 at 11:01 AM Yanhu Cao <gmayyyha@gmail.com> wrote:
+>
+> we shouldn't call ceph_msg_put, otherwise libceph will pass
+> invalid pointer to mm.
+>
+> kernel panic - not syncing: fatal exception
+>     [5452201.213885] ------------[ cut here ]------------
+>     [5452201.213889] kernel BUG at mm/slub.c:3901!
+>     [5452201.213938] invalid opcode: 0000 [#1] SMP PTI
+>     [5452201.213971] CPU: 35 PID: 3037447 Comm: kworker/35:1 Kdump: loaded Not tainted 4.19.15 #1
+>     [5452201.214020] Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 01/22/2018
+>     [5452201.214088] Workqueue: ceph-msgr ceph_con_workfn [libceph]
+>     [5452201.214129] RIP: 0010:kfree+0x15b/0x170
+>     [5452201.214156] Code: 8b 02 f6 c4 80 75 08 49 8b 42 08 a8 01 74 1b 49 8b 02 31 f6 f6 c4 80 74 05 41 0f b6 72 51 5b 5d 41 5c 4c 89 d7 e9 95 03 f9 ff <0f> 0b 48 83 e8 01 e9 01 ff ff ff 49 83 ea 01 e9 e9 fe ff ff 90 0f
+>     [5452201.214262] RSP: 0018:ffffb8c3a0607cb0 EFLAGS: 00010246
+>     [5452201.214296] RAX: ffffeee840000008 RBX: ffff9130c0000000 RCX: 0000000080200016
+>     [5452201.214339] RDX: 00006f0ec0000000 RSI: 0000000000000000 RDI: ffff9130c0000000
+>     [5452201.214383] RBP: ffff91107f823970 R08: 0000000000000001 R09: 0000000000000000
+>     [5452201.214426] R10: ffffeee840000000 R11: 0000000000000001 R12: ffffffffc076c45d
+>     [5452201.214469] R13: ffff91107f823970 R14: ffff91107f8239e0 R15: ffff91107f823900
+>     [5452201.214513] FS:  0000000000000000(0000) GS:ffff9110bfbc0000(0000) knlGS:0000000000000000
+>     [5452201.214562] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>     [5452201.214598] CR2: 000055993ab29620 CR3: 0000003a1e00a003 CR4: 00000000003606e0
+>     [5452201.214641] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>     [5452201.214685] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>     [5452201.214728] Call Trace:
+>     [5452201.214759]  ceph_msg_release+0x15d/0x190 [libceph]
+>     [5452201.214811]  dispatch+0x66/0xa50 [ceph]
+>     [5452201.214846]  try_read+0x7f3/0x11d0 [libceph]
+>     [5452201.214878]  ? dequeue_entity+0x37e/0x7e0
+>     [5452201.214907]  ? pick_next_task_fair+0x291/0x610
+>     [5452201.214937]  ? dequeue_task_fair+0x5d/0x700
+>     [5452201.214966]  ? __switch_to+0x8c/0x470
+>     [5452201.214999]  ceph_con_workfn+0xa2/0x5b0 [libceph]
+>     [5452201.215033]  process_one_work+0x16b/0x370
+>     [5452201.215062]  worker_thread+0x49/0x3f0
+>     [5452201.215089]  kthread+0xf5/0x130
+>     [5452201.215112]  ? max_active_store+0x80/0x80
+>     [5452201.215139]  ? kthread_bind+0x10/0x10
+>     [5452201.215167]  ret_from_fork+0x1f/0x30
+>
+> Link: https://tracker.ceph.com/issues/42288
+>
+> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> ---
+>  fs/ceph/mds_client.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+> index a8a8f84f3bbf..066358fea347 100644
+> --- a/fs/ceph/mds_client.c
+> +++ b/fs/ceph/mds_client.c
+> @@ -4635,7 +4635,7 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
+>         mutex_lock(&mdsc->mutex);
+>         if (__verify_registered_session(mdsc, s) < 0) {
+>                 mutex_unlock(&mdsc->mutex);
+> -               goto out;
+> +               return;
+>         }
+>         mutex_unlock(&mdsc->mutex);
+>
+> @@ -4672,7 +4672,6 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
+>                 pr_err("received unknown message type %d %s\n", type,
+>                        ceph_msg_type_name(type));
+>         }
+> -out:
+>         ceph_msg_put(msg);
+>  }
+>
 
-Yes, unfortunately. Too late to change. We could just update the
-manpages at this point.
+Hi Yanhu,
 
-get_mempolicy(2) says:
- maxnode specifies the number of node IDs that can be stored into
-nodemask—that is, the maximum node ID plus one.
+This doesn't look right to me.  The messenger hands its reference to
+the dispatch function, the dispatch function is responsible for putting
+it.  Even if the session isn't registered, the message should still be
+valid and should still be freed.  The bug is somewhere else...
 
-- Since node ID starts with 0, it should be actually "plus two".
+Thanks,
 
-set_mempolicy(2) says:
- nodemask  points to a bit mask of node IDs that contains up to maxnode
-bits.
-
-- should be also clarified.
+                Ilya
