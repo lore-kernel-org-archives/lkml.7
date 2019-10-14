@@ -2,114 +2,336 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB5AECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463D2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121D42133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F71121925
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GHUdQAsL"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="L/NbAB3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbfJNVCD (ORCPT
+        id S1732277AbfJNVGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:02:03 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:4098 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfJNVCD (ORCPT
+        Mon, 14 Oct 2019 17:06:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40522 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfJNVGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:02:03 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da4e2550001>; Mon, 14 Oct 2019 14:02:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 14 Oct 2019 14:02:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 14 Oct 2019 14:02:02 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 14 Oct
- 2019 21:02:02 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 14 Oct
- 2019 21:02:01 +0000
-Subject: Re: Documentation/, SPDX tags, and checkpatch.pl
-To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>
-References: <124ecffe-25a0-ace6-f106-d9d173c17035@nvidia.com>
- <f7ebadf988edddd423187c3a09fcc35bf69b25f6.camel@perches.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <403794f4-fc55-0591-d613-5c3d440abdbe@nvidia.com>
-Date:   Mon, 14 Oct 2019 14:02:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 14 Oct 2019 17:06:12 -0400
+Received: by mail-io1-f67.google.com with SMTP id h144so40954320iof.7
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 14:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=5Fh50IqKsV9DI7qDXmQliZcABf63QxMooRZ2h3IAY6k=;
+        b=L/NbAB3JijK/RLJKceyrd9ouCTGu3WZr5yW68DkgdWytjUkVAO/3sNPIYF8veG+u8w
+         RklFrlQSfLp5ajhmL2DgLsiy7G0EmzepJKzRQ37+lB+QaOCcVAbmMckJTaoiQlSIfCCs
+         YB1QfIDm2ojYiL9wU2SsTYh4ht18EcoYX2Jmz7zakOe/fG1f4Ud88uuoxdenY/6qaKHi
+         7M94x7DwQWlH2oSz0WrMWuC3E18uCAQaeav9dEH5Wfbq1wBrllIEKfO2vUXLlrEXETtr
+         8psL+0JVlFfSjWy9FpcNmG4ErywWFRYy4oq0zWYZsYdj4lbdVjf1egjRNCxv3uvxcr8/
+         x7Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=5Fh50IqKsV9DI7qDXmQliZcABf63QxMooRZ2h3IAY6k=;
+        b=P5LY7XhFbsWWZhBvN00/QB5qF0VV2P+Ddjc9ZC9avhVTUok/ZegbWCq//PYn29efJB
+         TcHvXU9K9dIMWEulntFW+5/FHo8Cz980c4DvffaI4ZZK5ccIR12wTjQhILO1oezlzBF7
+         ayvBaj3/siKKZxcOMc93LESR6zRwbdKXYV9/KO3c5vfwrLTObZ4S9WXlPr8PgXHlRKK/
+         Adl4W0i0u6oZ0R5QUdoyl4IsBWWReOu3k9sZzGMsuu/dZsEOC2FRR57sRF5Cs+yoKGRm
+         wy7XTDdZU/odK+9pGDNx/Ao1kbb2uPDGLrlTdr0hiCvSJJWFLkAhHnTnUr9LdwXkW/q0
+         BebQ==
+X-Gm-Message-State: APjAAAV+NfkO3iti81NjFEJKICxrlCAd5ny4weSb+/1BTUnYWlJXf3ct
+        IepBF8oLnzzAMZx8EWxks7LzvQ==
+X-Google-Smtp-Source: APXvYqwnLoB+44Z3avtM3EZMI2/MnjmtUkhVWHppjSvExVu8UtTha0EHFRTkuSMXssxHrjmHv5AbGg==
+X-Received: by 2002:a92:7702:: with SMTP id s2mr2557103ilc.248.1571087169985;
+        Mon, 14 Oct 2019 14:06:09 -0700 (PDT)
+Received: from localhost (67-0-10-3.albq.qwest.net. [67.0.10.3])
+        by smtp.gmail.com with ESMTPSA id m15sm1695738ilg.49.2019.10.14.14.06.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 14:06:08 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 14:06:07 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Shuah Khan <shuah@kernel.org>
+cc:     Palmer Dabbelt <palmer@sifive.com>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Alan Kao <alankao@andestech.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, me@carlosedp.com
+Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
+In-Reply-To: <alpine.DEB.2.21.9999.1910041819230.15827@viisi.sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1910141405220.12988@viisi.sifive.com>
+References: <20190822205533.4877-1-david.abdurachmanov@sifive.com> <alpine.DEB.2.21.9999.1910041819230.15827@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <f7ebadf988edddd423187c3a09fcc35bf69b25f6.camel@perches.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571086933; bh=WhdlqgGD4WNpAO9N83U+RIExqRfkcKvyt18GI27NTV8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GHUdQAsLNy7m1gWqU+ZGUWPxpt4A2DkPxZNB2PKHXy8vOz/HIsKUTJ3ZQKFXhzPMR
-         jJq3zGuSsjUIN7jF9Gcp7N/2s7EV1JfxrmuTsSFqVzF7FAGZ7yxPBMpiZUxJ75+N4U
-         k0U0JB0p9QXnfkrcwkuA/N6jHf8tEQcHRdzgcmna70qvZDO/4/yy7xchyGazKyxKen
-         b6h2nRveGsmyxGNZOVY6zbWs9IA+fwmD3RQLumJO+CFs/dqAorHQus7LzjSUkiYXqj
-         VQ25GI8/ygXyMzOfvliTe8qWffStykfuh7lAPz2R6Drvz0jA65rVUorhxRjarOLWJJ
-         46BD3tleOODpQ==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 1:55 PM, Joe Perches wrote:
-> On Mon, 2019-10-14 at 13:47 -0700, John Hubbard wrote:
->> Hi,
->>
->> When adding a new Documentation/ file, checkpatch.pl is warning me
->> that the SPDX tag is missing. Should checkpatch.pl skip those kinds
->> of warnings, seeing as how we probably don't intend on putting the
->> SPDX tags at the top of the Documentation/*.rst files?
->>
->> Or are we, after all? I'm just looking to get to a warnings-free situation 
->> here, one way or the other. :)
->>
->> The exact warning I'm seeing is:
->>
->> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
->> #25: FILE: Documentation/vm/get_user_pages.rst:1:
->> +.. _get_user_pages:
->>
+Shuah,
+
+Could you please take a quick look at this and ack it if you're OK with 
+the tools/testing change?  We'd like to get this merged soon.
+
+- Paul
+
+
+On Fri, 4 Oct 2019, Paul Walmsley wrote:
+
+> Hello Shuah,
 > 
-> Looks like ~18% of the .rst files already have SPDX markers
+> On Thu, 22 Aug 2019, David Abdurachmanov wrote:
 > 
-> $ git ls-files -- '*.rst' | wc -l
-> 2125
+> > This patch was extensively tested on Fedora/RISCV (applied by default on
+> > top of 5.2-rc7 kernel for <2 months). The patch was also tested with 5.3-rc
+> > on QEMU and SiFive Unleashed board.
+> > 
+> > libseccomp (userspace) was rebased:
+> > https://github.com/seccomp/libseccomp/pull/134
+> > 
+> > Fully passes libseccomp regression testing (simulation and live).
+> > 
+> > There is one failing kernel selftest: global.user_notification_signal
+> > 
+> > v1 -> v2:
+> >   - return immediatly if secure_computing(NULL) returns -1
+> >   - fixed whitespace issues
+> >   - add missing seccomp.h
+> >   - remove patch #2 (solved now)
+> >   - add riscv to seccomp kernel selftest
+> > 
+> > Cc: keescook@chromium.org
+> > Cc: me@carlosedp.com
+> > 
+> > Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
 > 
-> $ git grep -n "SPDX-License-Identifier:" -- '*.rst'| grep ':1:' | wc -l
-> 378
+> We'd like to merge this patch through the RISC-V tree.
+> Care to ack the change to tools/testing/selftests/seccomp/seccomp_bpf.c ?  
 > 
-> Likely all .rst files will have these markers eventually.
+> Kees has already reviewed it:
+> 
+> https://lore.kernel.org/linux-riscv/CAJr-aD=UnCN9E_mdVJ2H5nt=6juRSWikZnA5HxDLQxXLbsRz-w@mail.gmail.com/
+> 
+> 
+> - Paul
+> 
+> 
+> > ---
+> >  arch/riscv/Kconfig                            | 14 ++++++++++
+> >  arch/riscv/include/asm/seccomp.h              | 10 +++++++
+> >  arch/riscv/include/asm/thread_info.h          |  5 +++-
+> >  arch/riscv/kernel/entry.S                     | 27 +++++++++++++++++--
+> >  arch/riscv/kernel/ptrace.c                    | 10 +++++++
+> >  tools/testing/selftests/seccomp/seccomp_bpf.c |  8 +++++-
+> >  6 files changed, 70 insertions(+), 4 deletions(-)
+> >  create mode 100644 arch/riscv/include/asm/seccomp.h
+> > 
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index 59a4727ecd6c..441e63ff5adc 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -31,6 +31,7 @@ config RISCV
+> >  	select GENERIC_SMP_IDLE_THREAD
+> >  	select GENERIC_ATOMIC64 if !64BIT
+> >  	select HAVE_ARCH_AUDITSYSCALL
+> > +	select HAVE_ARCH_SECCOMP_FILTER
+> >  	select HAVE_MEMBLOCK_NODE_MAP
+> >  	select HAVE_DMA_CONTIGUOUS
+> >  	select HAVE_FUTEX_CMPXCHG if FUTEX
+> > @@ -235,6 +236,19 @@ menu "Kernel features"
+> >  
+> >  source "kernel/Kconfig.hz"
+> >  
+> > +config SECCOMP
+> > +	bool "Enable seccomp to safely compute untrusted bytecode"
+> > +	help
+> > +	  This kernel feature is useful for number crunching applications
+> > +	  that may need to compute untrusted bytecode during their
+> > +	  execution. By using pipes or other transports made available to
+> > +	  the process as file descriptors supporting the read/write
+> > +	  syscalls, it's possible to isolate those applications in
+> > +	  their own address space using seccomp. Once seccomp is
+> > +	  enabled via prctl(PR_SET_SECCOMP), it cannot be disabled
+> > +	  and the task is only allowed to execute a few safe syscalls
+> > +	  defined by each seccomp mode.
+> > +
+> >  endmenu
+> >  
+> >  menu "Boot options"
+> > diff --git a/arch/riscv/include/asm/seccomp.h b/arch/riscv/include/asm/seccomp.h
+> > new file mode 100644
+> > index 000000000000..bf7744ee3b3d
+> > --- /dev/null
+> > +++ b/arch/riscv/include/asm/seccomp.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +#ifndef _ASM_SECCOMP_H
+> > +#define _ASM_SECCOMP_H
+> > +
+> > +#include <asm/unistd.h>
+> > +
+> > +#include <asm-generic/seccomp.h>
+> > +
+> > +#endif /* _ASM_SECCOMP_H */
+> > diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+> > index 905372d7eeb8..a0b2a29a0da1 100644
+> > --- a/arch/riscv/include/asm/thread_info.h
+> > +++ b/arch/riscv/include/asm/thread_info.h
+> > @@ -75,6 +75,7 @@ struct thread_info {
+> >  #define TIF_MEMDIE		5	/* is terminating due to OOM killer */
+> >  #define TIF_SYSCALL_TRACEPOINT  6       /* syscall tracepoint instrumentation */
+> >  #define TIF_SYSCALL_AUDIT	7	/* syscall auditing */
+> > +#define TIF_SECCOMP		8	/* syscall secure computing */
+> >  
+> >  #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
+> >  #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
+> > @@ -82,11 +83,13 @@ struct thread_info {
+> >  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+> >  #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
+> >  #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
+> > +#define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+> >  
+> >  #define _TIF_WORK_MASK \
+> >  	(_TIF_NOTIFY_RESUME | _TIF_SIGPENDING | _TIF_NEED_RESCHED)
+> >  
+> >  #define _TIF_SYSCALL_WORK \
+> > -	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
+> > +	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT | \
+> > +	 _TIF_SECCOMP )
+> >  
+> >  #endif /* _ASM_RISCV_THREAD_INFO_H */
+> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> > index bc7a56e1ca6f..0bbedfa3e47d 100644
+> > --- a/arch/riscv/kernel/entry.S
+> > +++ b/arch/riscv/kernel/entry.S
+> > @@ -203,8 +203,25 @@ check_syscall_nr:
+> >  	/* Check to make sure we don't jump to a bogus syscall number. */
+> >  	li t0, __NR_syscalls
+> >  	la s0, sys_ni_syscall
+> > -	/* Syscall number held in a7 */
+> > -	bgeu a7, t0, 1f
+> > +	/*
+> > +	 * The tracer can change syscall number to valid/invalid value.
+> > +	 * We use syscall_set_nr helper in syscall_trace_enter thus we
+> > +	 * cannot trust the current value in a7 and have to reload from
+> > +	 * the current task pt_regs.
+> > +	 */
+> > +	REG_L a7, PT_A7(sp)
+> > +	/*
+> > +	 * Syscall number held in a7.
+> > +	 * If syscall number is above allowed value, redirect to ni_syscall.
+> > +	 */
+> > +	bge a7, t0, 1f
+> > +	/*
+> > +	 * Check if syscall is rejected by tracer or seccomp, i.e., a7 == -1.
+> > +	 * If yes, we pretend it was executed.
+> > +	 */
+> > +	li t1, -1
+> > +	beq a7, t1, ret_from_syscall_rejected
+> > +	/* Call syscall */
+> >  	la s0, sys_call_table
+> >  	slli t0, a7, RISCV_LGPTR
+> >  	add s0, s0, t0
+> > @@ -215,6 +232,12 @@ check_syscall_nr:
+> >  ret_from_syscall:
+> >  	/* Set user a0 to kernel a0 */
+> >  	REG_S a0, PT_A0(sp)
+> > +	/*
+> > +	 * We didn't execute the actual syscall.
+> > +	 * Seccomp already set return value for the current task pt_regs.
+> > +	 * (If it was configured with SECCOMP_RET_ERRNO/TRACE)
+> > +	 */
+> > +ret_from_syscall_rejected:
+> >  	/* Trace syscalls, but only if requested by the user. */
+> >  	REG_L t0, TASK_TI_FLAGS(tp)
+> >  	andi t0, t0, _TIF_SYSCALL_WORK
+> > diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
+> > index 368751438366..63e47c9f85f0 100644
+> > --- a/arch/riscv/kernel/ptrace.c
+> > +++ b/arch/riscv/kernel/ptrace.c
+> > @@ -154,6 +154,16 @@ void do_syscall_trace_enter(struct pt_regs *regs)
+> >  		if (tracehook_report_syscall_entry(regs))
+> >  			syscall_set_nr(current, regs, -1);
+> >  
+> > +	/*
+> > +	 * Do the secure computing after ptrace; failures should be fast.
+> > +	 * If this fails we might have return value in a0 from seccomp
+> > +	 * (via SECCOMP_RET_ERRNO/TRACE).
+> > +	 */
+> > +	if (secure_computing(NULL) == -1) {
+> > +		syscall_set_nr(current, regs, -1);
+> > +		return;
+> > +	}
+> > +
+> >  #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+> >  	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+> >  		trace_sys_enter(regs, syscall_get_nr(current, regs));
+> > diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> > index 6ef7f16c4cf5..492e0adad9d3 100644
+> > --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> > +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> > @@ -112,6 +112,8 @@ struct seccomp_data {
+> >  #  define __NR_seccomp 383
+> >  # elif defined(__aarch64__)
+> >  #  define __NR_seccomp 277
+> > +# elif defined(__riscv)
+> > +#  define __NR_seccomp 277
+> >  # elif defined(__hppa__)
+> >  #  define __NR_seccomp 338
+> >  # elif defined(__powerpc__)
+> > @@ -1582,6 +1584,10 @@ TEST_F(TRACE_poke, getpid_runs_normally)
+> >  # define ARCH_REGS	struct user_pt_regs
+> >  # define SYSCALL_NUM	regs[8]
+> >  # define SYSCALL_RET	regs[0]
+> > +#elif defined(__riscv) && __riscv_xlen == 64
+> > +# define ARCH_REGS	struct user_regs_struct
+> > +# define SYSCALL_NUM	a7
+> > +# define SYSCALL_RET	a0
+> >  #elif defined(__hppa__)
+> >  # define ARCH_REGS	struct user_regs_struct
+> >  # define SYSCALL_NUM	gr[20]
+> > @@ -1671,7 +1677,7 @@ void change_syscall(struct __test_metadata *_metadata,
+> >  	EXPECT_EQ(0, ret) {}
+> >  
+> >  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
+> > -    defined(__s390__) || defined(__hppa__)
+> > +    defined(__s390__) || defined(__hppa__) || defined(__riscv)
+> >  	{
+> >  		regs.SYSCALL_NUM = syscall;
+> >  	}
+> > -- 
+> > 2.21.0
+> > 
+> > 
+> 
+> 
+> - Paul
 > 
 
-hah, I had tunnel vision: none of the Documentation/vm/*.rst files that I 
-was looking at as examples had the tags.
 
-I'll add the tag, sorry about the confusion and thanks for the quick 
-response!
-
-thanks,
-
-John Hubbard
-NVIDIA
