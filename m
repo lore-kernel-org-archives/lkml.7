@@ -2,88 +2,154 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF67BECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0588FC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D93B2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571076957;
-	bh=Prey82v4ad7BLPsnx89oB+1hUhy0tx74+0odftiQKbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h2f2ZHbns0n9OOt318UCEnlBWnOVN7GpDsr+7lKt9QaekX4ToRxhUm//Optw6me6A
-	 tiJC5G6ehjURTw5wMIvwmPsZ3wwLSmJ5tAM9Y/icAePWotDeelO55QgYJwi6fVGPmA
-	 QBYXEngkn5Z8pBoE7gRCa89eMPB8M2JXYMELcriI=
+	by mail.kernel.org (Postfix) with ESMTP id D49912083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:16:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OeWJRcUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388737AbfJNSP4 (ORCPT
+        id S2388748AbfJNSQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:15:56 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38077 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731955AbfJNSPz (ORCPT
+        Mon, 14 Oct 2019 14:16:09 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40445 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731955AbfJNSQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:15:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e11so14592191otl.5;
-        Mon, 14 Oct 2019 11:15:53 -0700 (PDT)
+        Mon, 14 Oct 2019 14:16:09 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so14534949oib.7
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 11:16:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MIBRcx0ifowvcR39u0o/yTqzRxoaaM/WNcTZ/tvS6ro=;
+        b=OeWJRcUgEFxmkHpbnahx0BDp6S/Ozy0Bl3rOrSHIseNZuZLmKTZEQBNd0C4sfgGnzi
+         t+w0+A7CFBRljCV40IDvG0WrnfNWMxa46gF7l6TDTUxKIXMEdaIjJYlnXNTSfJf7gQi7
+         iPpIy+HoaNN7lu7ME5QtEtS4EYWCPxlIwVK1KQJDQ4a4ILsMgCUUMwtUj0U1/8qkx6Pu
+         ePCKTenz99fyKckB6S736oaiKJ5l81f8n5VJReMhYfwQQJYn/9MVoIOpzbxUIdOHBfFc
+         m2/gS7idPQA6uGdH74+QYKnFYK4bJ7JxKEwdYkOjcLSnlitIlGJGO0uMtz/CoYYYXbhC
+         C6qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TiZbwsrM4/f/r5LoaJ2jEpnL+9g4W53LGZPuPtXJ5LM=;
-        b=Qb6WWSFS5xiw72NuHODsUzYvIlK6C3S0EHPdYaZZ4YzeziQOETw74vmIjKKj8XKhYN
-         fpTZ3/RzVjHxyZGX/3skROiP7fTheLVNhegS29mdJzX0zC4UtXgWrzP74oGKq1sYdHcT
-         xXTdWnojcSkTcEtiHwMAxlf+q9ILEXkk353h2veqYrtYDGZCEcle3PRb8Am962FolkfM
-         MxZUCrErm+z4Ga9CzJBjchTKZWGwokLfHuibSyWyvZmQvfosPZ22nKAV2rvIqYSLTo1j
-         g6edHEP9HTPI74iIkOE13DybYJpZffIxzlpTmvQ95diC7mwNgFTB0o8LvLsYRSyU2InK
-         JojQ==
-X-Gm-Message-State: APjAAAUpr0NxIGOosoGnJkobYwniB66OBBz1iWHsjyFo19Wf5F1ldie/
-        7mIQYGqGWZUizN1NuHAxnQ==
-X-Google-Smtp-Source: APXvYqwwLBpes6pzkDEJ5uGNYvvOO1uZW4E2cZtm+9i7VdKdIHpEhdpbx+gD453w2aQEhuO6bNHFQw==
-X-Received: by 2002:a9d:5f0f:: with SMTP id f15mr23799786oti.251.1571076953138;
-        Mon, 14 Oct 2019 11:15:53 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d95sm6216527otb.25.2019.10.14.11.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 11:15:52 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 13:15:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: rockchip: add rk3308 SoC
- support
-Message-ID: <20191014181552.GA12199@bogus>
-References: <20191012061528.27821-1-jay.xu@rock-chips.com>
- <20191014030348.18860-1-jay.xu@rock-chips.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MIBRcx0ifowvcR39u0o/yTqzRxoaaM/WNcTZ/tvS6ro=;
+        b=lZe68QdoVr765Ph5ntrGEbtlLsnJ07XsIVk28SXqlGgVngUIqMai68RqVeMciVw7Th
+         b84RDdSRM4E9d9IcHwCEUwcMM3XJpkQvH7IPl5Rh+QRG72EYS+FthyTkDxWPdAj7yG3l
+         n9cnwgxEkaFMBlt2rjvEeCkPDg+dwb8W4+6vW2cDoEmQh0YAztMxz9RDbARt03d3Y5lC
+         TT/gegVDZlz2oJqEpllZE8GsNDMG8r5L9OR5R9c/gjC+Ne7Owbp8jLeswQ+MnUPPRDL0
+         Hgdg6EVU0Z6nIGDtlIkG0v5wPwKPZmexql4lR7KvpMWFfweFgNBAx7jirMnfgYpvJcPe
+         pnUg==
+X-Gm-Message-State: APjAAAWJHaqX3Kww7FvIc7/nRJJa1UWamRWJFDpVJwxCoIL/1nCFjOZD
+        Y7+oASbo1CMHerSU89YJS7VcUdkkpGs6Kx1TFHXtvVuuI3U=
+X-Google-Smtp-Source: APXvYqzKxEz2BXIZJr/sLy+beuJcyD6wKA+TWsW55YiekuTAJeYe/skCAcGEK0KEpc5Ghf3kqL8lt3rB40/+shwwfp0=
+X-Received: by 2002:aca:4557:: with SMTP id s84mr25179212oia.101.1571076967291;
+ Mon, 14 Oct 2019 11:16:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014030348.18860-1-jay.xu@rock-chips.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-2-dancol@google.com>
+ <CAG48ez3yOPAC3mTJdQ5_8aARQPe+siid5jaa8U+aMtfj-bUJ2g@mail.gmail.com>
+In-Reply-To: <CAG48ez3yOPAC3mTJdQ5_8aARQPe+siid5jaa8U+aMtfj-bUJ2g@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Mon, 14 Oct 2019 11:15:30 -0700
+Message-ID: <CAKOZuet4VM-P_xm9R7cJO2_f60eUcqt5wHG8+khJedhctfEEhw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] Add a new flags-accepting interface for anonymous inodes
+To:     Jann Horn <jannh@google.com>
+Cc:     Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 11:03:48 +0800, Jianqun Xu wrote:
-> Add rk3308 SoC support to rockchip pinctrl.
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes since v1:
-> - Add Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> 
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Thanks for taking a look
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Oct 14, 2019 at 8:39 AM Jann Horn <jannh@google.com> wrote:
+>
+> On Sat, Oct 12, 2019 at 9:16 PM Daniel Colascione <dancol@google.com> wrote:
+> > Add functions forwarding from the old names to the new ones so we
+> > don't need to change any callers.
+>
+> This patch does more than the commit message says; it also refactors
+> the body of the function. (I would've moved that refactoring over into
+> patch 2, but I guess this works, too.)
+>
+> [...]
+> > -struct file *anon_inode_getfile(const char *name,
+> > -                               const struct file_operations *fops,
+> > -                               void *priv, int flags)
+> > +struct file *anon_inode_getfile2(const char *name,
+> > +                                const struct file_operations *fops,
+> > +                                void *priv, int flags, int anon_inode_flags)
+>
+> (AFAIK, normal kernel style is to slap a "__" prefix in front of the
+> function name instead of appending a digit, but I guess it doesn't
+> really matter.)
+
+I thought prefixing "_" was for signaling "this is an implementation
+detail and you probably don't want to call it unless you know what
+you're doing", not "here's a new version that does a new thing".
+
+> >  {
+> > +       struct inode *inode;
+> >         struct file *file;
+> >
+> > -       if (IS_ERR(anon_inode_inode))
+> > -               return ERR_PTR(-ENODEV);
+> > -
+> > -       if (fops->owner && !try_module_get(fops->owner))
+> > -               return ERR_PTR(-ENOENT);
+> > +       if (anon_inode_flags)
+> > +               return ERR_PTR(-EINVAL);
+> >
+> > +       inode = anon_inode_inode;
+> > +       if (IS_ERR(inode))
+> > +               return ERR_PTR(-ENODEV);
+> >         /*
+> > -        * We know the anon_inode inode count is always greater than zero,
+> > -        * so ihold() is safe.
+> > +        * We know the anon_inode inode count is always
+> > +        * greater than zero, so ihold() is safe.
+> >          */
+>
+> This looks like maybe you started editing the comment, then un-did the
+> change, but left the modified line wrapping in your patch? Please
+> avoid that - code changes with no real reason make "git blame" output
+> more annoying and create trouble when porting patches between kernel
+> versions.
+
+I'll fix it.
+
+>
+> [...]
+> >  EXPORT_SYMBOL_GPL(anon_inode_getfile);
+> > +EXPORT_SYMBOL_GPL(anon_inode_getfile2);
+> [...]
+> >  EXPORT_SYMBOL_GPL(anon_inode_getfd);
+> > +EXPORT_SYMBOL_GPL(anon_inode_getfd2);
+>
+> Since anon_inode_getfd() is now a static inline function in
+> include/linux/anon_inodes.h, exporting it doesn't make sense anymore.
+> Same for anon_inode_getfile().
+
+I didn't want to break modules unnecessarily. Declaring the function
+inline and also exporting it gives us an efficiency win while avoiding
+an ABI break, right?
+
+> [...]
+> > +#define ANON_INODE_SECURE 1
+>
+> That #define belongs in a later patch, right?
+
+Yep.
