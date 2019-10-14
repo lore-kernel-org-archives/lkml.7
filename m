@@ -2,177 +2,165 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0958DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D20ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2A02089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1872133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUOZyqvx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P3sNmpyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfJNOaL (ORCPT
+        id S1732707AbfJNOcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:30:11 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39907 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731121AbfJNOaL (ORCPT
+        Mon, 14 Oct 2019 10:32:47 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38294 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731121AbfJNOcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:30:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y3so16867590ljj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:30:07 -0700 (PDT)
+        Mon, 14 Oct 2019 10:32:46 -0400
+Received: by mail-qt1-f195.google.com with SMTP id j31so25712488qta.5
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4KnYoOPPFHv3dN60JOLlRL3+ZtlpFRy9C6DeF61vf5c=;
-        b=OUOZyqvx29wH7rc3CvwAuaIZ+GQ5KtGKHC0FM4FK3djf6hvWrK015gRit7CP83xlYW
-         PgsYPJjieD53vd1HTelsUN1NVCHikg2pCv0EUbmhuNqceogGNPCkp+VWVw9yL8E8aHee
-         fSm25qBu/KNV8xLQh17zvJ1HwykkS/SqGylohlpxqHOtAAKTMqmwCe/6x+thl45pyPwh
-         RRqB7WqoT1bDxdQG4REZJA8R6d3J5X+l0n/RMZPbi3IlC+jveOSx3d5b8yxZrhcolGhl
-         elHE7DeDFv0rJNdYqYav3e+K9Rt166V10VmXpuJ9a6n/7hBnvM5q7GM2ts2FvqwZalVd
-         OAoQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jh1Xv42HTTtwmxhqCtdsejKM5Dntl522tkuHl33kJk4=;
+        b=P3sNmpyIcNeZD8fTLdWrBX33rU5etmRObYsN7svAbj/KLbvBzmApjwe6VGVsBMYkrc
+         MSZSn2Xa52REQ+SucE4Qjb8+3zVJ+6UXGOhtbBgSzrTrn0dT60miOIrGkxtwDdy8o22Y
+         j0LLclmpkGiH4Y6AQPrBIONh3tvZOZdxXpZygb5HvpxN8O/Ud4IYcq5dT28vs/vxaFvc
+         iIDv29xAYBdGNemMkERNjs0KNPKweyp7uw2nLPTqW4nalduFQQ5vKO1be46GRSukIhzp
+         TnipCB10FhP1HcjZr5B1YmKFkn+0oIDWk0OQpTP1clVP77fd4SnA4f38CIq8eBGiQ+qO
+         nQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4KnYoOPPFHv3dN60JOLlRL3+ZtlpFRy9C6DeF61vf5c=;
-        b=JVZKjTUviCdjZhgv1xTD6LsRsZpC3hGPh6dtkA82VD1fBkhmzxpI4TzTU5cHlzAFnr
-         fbfgEM5dzr45EqdGjt2jldXYyLmgXSMA2aJRYkYGHebsNdDvcLwgI5CX77gIOuVAYdzv
-         qZu7msaV6PmKW5XXr/yrAZsf3SpCoODLbDN/zD3hlJT9evOTuSad44VlNoQahTRetwaa
-         JwSp+Fxc+8WagqRmGlhcZq3a/7vKDmlYUt1OCUEqxBRSHJo4jxn8adj7wbIS0kIY/BVq
-         XBNi/vRU4Rq+dEFSwKT46rK3QRUc7vmPLA7J5eHLTki8lnXZSyY38ZTL+5GW0RI/I8JF
-         WJuw==
-X-Gm-Message-State: APjAAAWyx1sBQ8cBatNcoKbWzJxJhlL50GjLED0S/Jtxpfu7tjuz2fmd
-        Pjfs7LvR7GDBURjOdDLfstE=
-X-Google-Smtp-Source: APXvYqy3orK/l+Ogj4KsrJzIOsl0EmsAJXTu6NSe1IuG36oa+BnGsDcPb7RoF3bstoEHQhUJMstC3g==
-X-Received: by 2002:a2e:8e87:: with SMTP id z7mr16735369ljk.207.1571063406842;
-        Mon, 14 Oct 2019 07:30:06 -0700 (PDT)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id t25sm4231134ljj.93.2019.10.14.07.30.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 07:30:06 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 14 Oct 2019 16:30:03 +0200
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 1/1] mm/vmalloc: remove preempt_disable/enable when do
- preloading
-Message-ID: <20191014143003.GB17874@pc636>
-References: <20191010223318.28115-1-urezki@gmail.com>
- <20191014131308.GG317@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jh1Xv42HTTtwmxhqCtdsejKM5Dntl522tkuHl33kJk4=;
+        b=nK5yDkU8tcZmkF4uf9bv+gaDL5pBxD67CJF3+J2X3trbBs0TI+NZ3YMqaGxk70Bcmu
+         U3jWG9r4L6+CZ1I5kX01g58LtjxOe/WsLE0TcYfM+X/OG9V/5SyzwIoMieh3CAN78kJ4
+         egcFoK2appg74mk+4ZsuJLWuKEFc5X1T5T0d/WqlJDZ46r1UuQp0MKFySRWc5aEanZwS
+         UCf4NPLOQHcyuQm7K/oSw0vlRmuV1SYgKOw1tXS6GJ9iUOK3NE6kW6BOJH9x553rVxpO
+         ABZfTpSwbStbM9AWAb9SuXvuJszTYJmXjtOvHaOAi5w0IqdIQOY4aJaaz3uW0XSdyz1p
+         kfGw==
+X-Gm-Message-State: APjAAAXfusOd8HVUoZa0wb2O/U4zl8UEIaL3GI3AVMbLnNzR1+fG3H0W
+        so+m2xhLLss/XlAr5t/tZwJGmPe1VUBNA92LmBR2lQ==
+X-Google-Smtp-Source: APXvYqzsoWPEP43Z3L5Dz9F518H/l7kj+qgoYmNx43PzKG2znUoHJURuJXgYUPmIPO7QICQ5OslDnJsAKHNNAKXjEkE=
+X-Received: by 2002:aed:2a3b:: with SMTP id c56mr34156048qtd.343.1571063565275;
+ Mon, 14 Oct 2019 07:32:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014131308.GG317@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191012065255.23249-1-daniel.lezcano@linaro.org> <20191012065255.23249-11-daniel.lezcano@linaro.org>
+In-Reply-To: <20191012065255.23249-11-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 14 Oct 2019 20:02:34 +0530
+Message-ID: <CAP245DVpV3-qkawjAyHYk5Ke9W_uoFy3FEHMM5z3036WD2dh6w@mail.gmail.com>
+Subject: Re: [PATCH 11/11] thermal: Move thermal governor structure to
+ internal header
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 03:13:08PM +0200, Michal Hocko wrote:
-> On Fri 11-10-19 00:33:18, Uladzislau Rezki (Sony) wrote:
-> > Get rid of preempt_disable() and preempt_enable() when the
-> > preload is done for splitting purpose. The reason is that
-> > calling spin_lock() with disabled preemtion is forbidden in
-> > CONFIG_PREEMPT_RT kernel.
-> 
-> I think it would be really helpful to describe why the preemption was
-> disabled in that path. Some of that is explained in the comment but the
-> changelog should mention that explicitly.
->  
-Will do that, makes sense.
+On Sat, Oct 12, 2019 at 12:23 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> The thermal governor structure is a big structure where no
+> user should change value inside except via helper functions.
+>
+> Move the structure to the internal header thus preventing external
+> code to be tempted by hacking the structure's variables.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  drivers/thermal/thermal_core.h | 20 ++++++++++++++++++++
+>  include/linux/thermal.h        | 21 +--------------------
+>  2 files changed, 21 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+> index c75309d858ce..e54150fa4c5b 100644
+> --- a/drivers/thermal/thermal_core.h
+> +++ b/drivers/thermal/thermal_core.h
+> @@ -46,6 +46,26 @@ struct thermal_attr {
+>         char name[THERMAL_NAME_LENGTH];
+>  };
+>
+> +/**
+> + * struct thermal_governor - structure that holds thermal governor information
+> + * @name:      name of the governor
+> + * @bind_to_tz: callback called when binding to a thermal zone.  If it
+> + *             returns 0, the governor is bound to the thermal zone,
+> + *             otherwise it fails.
+> + * @unbind_from_tz:    callback called when a governor is unbound from a
+> + *                     thermal zone.
+> + * @throttle:  callback called for every trip point even if temperature is
+> + *             below the trip point temperature
+> + * @governor_list:     node in thermal_governor_list (in thermal_core.c)
+> + */
+> +struct thermal_governor {
+> +       char name[THERMAL_NAME_LENGTH];
+> +       int (*bind_to_tz)(struct thermal_zone_device *tz);
+> +       void (*unbind_from_tz)(struct thermal_zone_device *tz);
+> +       int (*throttle)(struct thermal_zone_device *tz, int trip);
+> +       struct list_head        governor_list;
+> +};
+> +
+>  static inline bool cdev_is_power_actor(struct thermal_cooling_device *cdev)
+>  {
+>         return cdev->ops->get_requested_power && cdev->ops->state2power &&
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index 8daa179918a1..04264e8a2bce 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -45,6 +45,7 @@
+>
+>  struct thermal_zone_device;
+>  struct thermal_cooling_device;
+> +struct thermal_governor;
+>  struct thermal_instance;
+>  struct thermal_attr;
+>
+> @@ -206,26 +207,6 @@ struct thermal_zone_device {
+>         enum thermal_notify_event notify_event;
+>  };
+>
+> -/**
+> - * struct thermal_governor - structure that holds thermal governor information
+> - * @name:      name of the governor
 
-> > Therefore, we do not guarantee that a CPU is preloaded, instead
-> > we minimize the case when it is not with this change.
-> > 
-> > For example i run the special test case that follows the preload
-> > pattern and path. 20 "unbind" threads run it and each does
-> > 1000000 allocations. Only 3.5 times among 1000000 a CPU was
-> > not preloaded. So it can happen but the number is negligible.
-> > 
-> > V1 -> V2:
-> >   - move __this_cpu_cmpxchg check when spin_lock is taken,
-> >     as proposed by Andrew Morton
-> >   - add more explanation in regard of preloading
-> >   - adjust and move some comments
-> > 
-> > Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
-> > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > ---
-> >  mm/vmalloc.c | 50 +++++++++++++++++++++++++++++++++-----------------
-> >  1 file changed, 33 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index e92ff5f7dd8b..f48cd0711478 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -969,6 +969,19 @@ adjust_va_to_fit_type(struct vmap_area *va,
-> >  			 * There are a few exceptions though, as an example it is
-> >  			 * a first allocation (early boot up) when we have "one"
-> >  			 * big free space that has to be split.
-> > +			 *
-> > +			 * Also we can hit this path in case of regular "vmap"
-> > +			 * allocations, if "this" current CPU was not preloaded.
-> > +			 * See the comment in alloc_vmap_area() why. If so, then
-> > +			 * GFP_NOWAIT is used instead to get an extra object for
-> > +			 * split purpose. That is rare and most time does not
-> > +			 * occur.
-> > +			 *
-> > +			 * What happens if an allocation gets failed. Basically,
-> > +			 * an "overflow" path is triggered to purge lazily freed
-> > +			 * areas to free some memory, then, the "retry" path is
-> > +			 * triggered to repeat one more time. See more details
-> > +			 * in alloc_vmap_area() function.
-> >  			 */
-> >  			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
-> 
-> This doesn't seem to have anything to do with the patch. Have you
-> considered to make it a patch on its own? Btw. I find this comment very
-> useful!
-> 
-Makes sense, will make it as separate patch.
+AFAICT, some drivers actually like to specify what governor to use
+when calling thermal_zone_device_register(), by passing the
+thermal_zone_params parameter. You will probably need to provide for
+helper functions to return the value of governor name, I think.
 
-> >  			if (!lva)
-> > @@ -1078,31 +1091,34 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
-> >  
-> >  retry:
-> >  	/*
-> > -	 * Preload this CPU with one extra vmap_area object to ensure
-> > -	 * that we have it available when fit type of free area is
-> > -	 * NE_FIT_TYPE.
-> > +	 * Preload this CPU with one extra vmap_area object. It is used
-> > +	 * when fit type of free area is NE_FIT_TYPE. Please note, it
-> > +	 * does not guarantee that an allocation occurs on a CPU that
-> > +	 * is preloaded, instead we minimize the case when it is not.
-> > +	 * It can happen because of migration, because there is a race
-> > +	 * until the below spinlock is taken.
-> 
-> s@migration@cpu migration@ because migration without on its own is quite
-> ambiguous, especially in the MM code where it usually refers to memory.
-> 
-Thanks, will update it.
-
-
-Thank you for the comments!
-
---
-Vlad Rezki
+> - * @bind_to_tz: callback called when binding to a thermal zone.  If it
+> - *             returns 0, the governor is bound to the thermal zone,
+> - *             otherwise it fails.
+> - * @unbind_from_tz:    callback called when a governor is unbound from a
+> - *                     thermal zone.
+> - * @throttle:  callback called for every trip point even if temperature is
+> - *             below the trip point temperature
+> - * @governor_list:     node in thermal_governor_list (in thermal_core.c)
+> - */
+> -struct thermal_governor {
+> -       char name[THERMAL_NAME_LENGTH];
+> -       int (*bind_to_tz)(struct thermal_zone_device *tz);
+> -       void (*unbind_from_tz)(struct thermal_zone_device *tz);
+> -       int (*throttle)(struct thermal_zone_device *tz, int trip);
+> -       struct list_head        governor_list;
+> -};
+> -
+>  /* Structure that holds binding parameters for a zone */
+>  struct thermal_bind_params {
+>         struct thermal_cooling_device *cdev;
+> --
+> 2.17.1
+>
