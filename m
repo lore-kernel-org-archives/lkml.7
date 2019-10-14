@@ -4,97 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5910ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB23EECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C7721882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D59A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571073508;
-	bh=2FZxD16cupzZtxUXKTn425B051OEnRW6JxJgO7vB/Lc=;
+	s=default; t=1571073544;
+	bh=05QNorFiSLj7Gs+qU/VdPacB2xikZ7m17zM3mX64TsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MEiPdktckyPP18XOUXJbja6cikyhR5m0DJ2mH835JRRfVd9jGrFshrqrhxjkus2BH
-	 U2tQS8jV/5YjG476M92Y/O8bfsh25YNmHtaiB5Uj3exrJABSxkCnjCvrJsA8aDRuB4
-	 LZiKMgrD8E1Cj9AIN4XukM81pdo6nhyKC9NM9XHw=
+	b=kMmVYwSH7emPq2T8XrQ+nuQBe5U6k5OSHtqyuFOft/qZEAqw3qI6FjUDEDGI6hXOV
+	 KNeCBEaT7qR9SW/qIopbD9NPDxqULkeSB7/IeUJmMTAtbZscimb3VQWvOJWLAZmcRg
+	 o8FnGUpRpERM/H9Xz4qHxLnnUnqBjdP1bH0XjQtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388434AbfJNRS1 (ORCPT
+        id S2388446AbfJNRTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:18:27 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42686 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbfJNRS1 (ORCPT
+        Mon, 14 Oct 2019 13:19:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40867 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729997AbfJNRTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:18:27 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i185so14346424oif.9;
-        Mon, 14 Oct 2019 10:18:25 -0700 (PDT)
+        Mon, 14 Oct 2019 13:19:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id y39so14446447ota.7;
+        Mon, 14 Oct 2019 10:19:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=woBF22Zo3gSgEXnFBjrpZBAJnkenQ3ulqN1pWDAJfBI=;
-        b=iIaJnSY5r6Ahxx8YoZjrnS4jLJmWxbdiN93xBV+bw4yS1Poo3t+GPpFmRCZwtvtMSr
-         MB02bQhArwCrXHzOlHK7msZlH+HGM3CXzv9gNxRhn5gHI1Oxeac5y+q1KbOi/clRC5+d
-         QKSfJw4nLvapU4GrZHY5I6o6DY82B0j61ArVo4HFNvI/tBzBY7OyJxR344reZk17Iw4K
-         KPOTPDV9fKizD2cOI2HRtQR27y7p8oJlM5m1icDC9SzHEJT6xfJp/2SqV6mQ4PPDlxhK
-         GW17Nqq4OXFuKCDQo1e9y0HbLr/UBBlEx3p7EbEIuQ8dW/kAbo+ZsMUrEmMqnb11Iv2u
-         RaKg==
-X-Gm-Message-State: APjAAAV03sYNDmX0I5SmnavEiK6BieYt+Lkd8fASLgOCzd3V+MGjUfON
-        0+QhO1RBLq1cl85SDawbDA==
-X-Google-Smtp-Source: APXvYqyr/1vK3/H8M3hQGrLJtcS3+95Pa3jcICVvxpRAUDlmEdNi7d5eXvtMuY3v1sivDQUgc/Dw4w==
-X-Received: by 2002:aca:4994:: with SMTP id w142mr25900821oia.88.1571073505046;
-        Mon, 14 Oct 2019 10:18:25 -0700 (PDT)
+        bh=Oawtn+ZtULQjiLVim+vckZa5eaPMWsScI+Ob1030FAs=;
+        b=lPbImLFcLWmJa7pEc6i+5n62mB+Ph+vqCpAL2oHYX6RgvTIOAsRi0QUVsfhDYdc8+L
+         6VYI4vWJsqTUXw00lamV4DfIzHNuYqAYg6KRiqAn8MORFiGmj5WETFLgrdENFTDKhTUl
+         RkGCZHuJYLlBw0/XdrEhFu4Cuv5GCPULV2I9YPZxggODsaDHABsyLcSy0pgvcW8ZU28a
+         hiccvEzpN9HCdKNXsneSS3i2GLPQW8L2WVZCdLMUFAs+/MMx0Z+/f3jZCmcIYOm8oUgg
+         WknN6Pgs2xvcVCZgfNdZSfYjx7J8iecwwmWlFtnPewM5ivTWjrO5KFux24y06cbrItRn
+         5moA==
+X-Gm-Message-State: APjAAAVTk7rjllK2lGLztOU1/2hOX3kOr+j/I3Ym3hLRUwAzmXi8mD6x
+        GcM4eqN4ExT24jsJLKDdTN7We7M=
+X-Google-Smtp-Source: APXvYqyPtnEO4APY3yw1HpmCGICMIlAbQFIjbEAo3JeIS6WLqjZNALfT21r09YAL7iS9fjzlr9BLKQ==
+X-Received: by 2002:a9d:7993:: with SMTP id h19mr4679414otm.226.1571073542158;
+        Mon, 14 Oct 2019 10:19:02 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v6sm5638740oie.4.2019.10.14.10.18.23
+        by smtp.gmail.com with ESMTPSA id c19sm5576940oib.21.2019.10.14.10.19.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 10:18:24 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 12:18:22 -0500
+        Mon, 14 Oct 2019 10:19:01 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 12:19:00 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        alexandre.torgue@st.com, yannick.fertre@st.com,
-        philippe.cornu@st.com, hugues.fruchet@st.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v3] dt-bindings: media: Convert stm32 dcmi bindings to
- json-schema
-Message-ID: <20191014171822.GA7421@bogus>
-References: <20191014092021.24020-1-benjamin.gaignard@st.com>
- <20191014092021.24020-2-benjamin.gaignard@st.com>
+Subject: Re: [PATCH v3] dt-bindings: thermal: Convert stm32 thermal bindings
+ to json-schema
+Message-ID: <20191014171900.GA8680@bogus>
+References: <20191014092200.24179-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014092021.24020-2-benjamin.gaignard@st.com>
+In-Reply-To: <20191014092200.24179-1-benjamin.gaignard@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 11:20:21 +0200, Benjamin Gaignard wrote:
-> Convert the STM32 dcmi binding to DT schema format using json-schema
+On Mon, 14 Oct 2019 11:22:00 +0200, Benjamin Gaignard wrote:
+> Convert the STM32 thermal binding to DT schema format using json-schema
 > 
 > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
 > changes in v3:
-> -use (GPL-2.0-only OR BSD-2-Clause) license
-> 
-> changes in v2:
-> - use BSD-2-Clause license
-> - remove useless dma descriptions
-> - fix clock property
+> - use (GPL-2.0-only OR BSD-2-Clause) license
+> - fix indentation
 > - add additionalProperties: false
-> - fix reset indentation
+> - add #thermal-sensor-cells property 
 > 
->  .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 -----------
->  .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 86 ++++++++++++++++++++++
->  2 files changed, 86 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
->  create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+>  .../bindings/thermal/st,stm32-thermal.yaml         | 79 ++++++++++++++++++++++
+>  .../devicetree/bindings/thermal/stm32-thermal.txt  | 61 -----------------
+>  2 files changed, 79 insertions(+), 61 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/st,stm32-thermal.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/stm32-thermal.txt
 > 
 
 Applied, thanks.
