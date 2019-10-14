@@ -2,116 +2,90 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C221C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263C3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F56521882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F120821848
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfJNPoG (ORCPT
+        id S2387682AbfJNPot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:44:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:47290 "EHLO foss.arm.com"
+        Mon, 14 Oct 2019 11:44:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63197 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbfJNPoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:44:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60DE228;
-        Mon, 14 Oct 2019 08:44:03 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9CCC3F718;
-        Mon, 14 Oct 2019 08:44:01 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 16:43:59 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, dvyukov@google.com,
-        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
-        gor@linux.ibm.com
-Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real
- shadow memory
-Message-ID: <20191014154359.GC20438@lakrids.cambridge.arm.com>
-References: <20191001065834.8880-1-dja@axtens.net>
- <20191001065834.8880-2-dja@axtens.net>
+        id S1731441AbfJNPos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:44:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 08:44:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="225112710"
+Received: from rtnitta-mobl1.amr.corp.intel.com (HELO [10.251.134.135]) ([10.251.134.135])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Oct 2019 08:44:47 -0700
+Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: Fix randbuild error
+To:     YueHaibing <yuehaibing@huawei.com>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        jaska.uimonen@linux.intel.com, yang.jie@linux.intel.com,
+        yung-chuan.liao@linux.intel.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20191014091308.23688-1-yuehaibing@huawei.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <3222f3a0-f3cf-b1b9-df23-ec392f7dae4f@linux.intel.com>
+Date:   Mon, 14 Oct 2019 10:36:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001065834.8880-2-dja@axtens.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191014091308.23688-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 04:58:30PM +1000, Daniel Axtens wrote:
-> Hook into vmalloc and vmap, and dynamically allocate real shadow
-> memory to back the mappings.
+
+
+On 10/14/19 4:13 AM, YueHaibing wrote:
+> When LEDS_TRIGGER_AUDIO is m and SND_SOC_SOF is y,
 > 
-> Most mappings in vmalloc space are small, requiring less than a full
-> page of shadow space. Allocating a full shadow page per mapping would
-> therefore be wasteful. Furthermore, to ensure that different mappings
-> use different shadow pages, mappings would have to be aligned to
-> KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+> sound/soc/sof/control.o: In function `snd_sof_switch_put':
+> control.c:(.text+0x587): undefined reference to `ledtrig_audio_set'
+> control.c:(.text+0x593): undefined reference to `ledtrig_audio_set'
 > 
-> Instead, share backing space across multiple mappings. Allocate a
-> backing page when a mapping in vmalloc space uses a particular page of
-> the shadow region. This page can be shared by other vmalloc mappings
-> later on.
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Thanks for the fix.
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+> ---
+>   sound/soc/sof/control.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> We hook in to the vmap infrastructure to lazily clean up unused shadow
-> memory.
+> diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
+> index 41551e8..2c4abd4 100644
+> --- a/sound/soc/sof/control.c
+> +++ b/sound/soc/sof/control.c
+> @@ -36,10 +36,12 @@ static void update_mute_led(struct snd_sof_control *scontrol,
+>   
+>   	scontrol->led_ctl.led_value = temp;
+>   
+> +#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+>   	if (!scontrol->led_ctl.direction)
+>   		ledtrig_audio_set(LED_AUDIO_MUTE, temp ? LED_OFF : LED_ON);
+>   	else
+>   		ledtrig_audio_set(LED_AUDIO_MICMUTE, temp ? LED_OFF : LED_ON);
+> +#endif
+>   }
+>   
+>   static inline u32 mixer_to_ipc(unsigned int value, u32 *volume_map, int size)
 > 
-> To avoid the difficulties around swapping mappings around, this code
-> expects that the part of the shadow region that covers the vmalloc
-> space will not be covered by the early shadow page, but will be left
-> unmapped. This will require changes in arch-specific code.
-> 
-> This allows KASAN with VMAP_STACK, and may be helpful for architectures
-> that do not have a separate module space (e.g. powerpc64, which I am
-> currently working on). It also allows relaxing the module alignment
-> back to PAGE_SIZE.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=202009
-> Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-> [Mark: rework shadow allocation]
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-
-Sorry to point this out so late, but your S-o-B should come last in the
-chain per Documentation/process/submitting-patches.rst. Judging by the
-rest of that, I think you want something like:
-
-Co-developed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com> [shadow rework]
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-
-... leaving yourself as the Author in the headers.
-
-Sorry to have made that more complicated!
-
-[...]
-
-> +static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
-> +					void *unused)
-> +{
-> +	unsigned long page;
-> +
-> +	page = (unsigned long)__va(pte_pfn(*ptep) << PAGE_SHIFT);
-> +
-> +	spin_lock(&init_mm.page_table_lock);
-> +
-> +	if (likely(!pte_none(*ptep))) {
-> +		pte_clear(&init_mm, addr, ptep);
-> +		free_page(page);
-> +	}
-
-There should be TLB maintenance between clearing the PTE and freeing the
-page here.
-
-Thanks,
-Mark.
