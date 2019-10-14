@@ -2,117 +2,113 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3167DECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE0ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0991C20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB5320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ncAdm5p6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L7h8UGPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbfJNKhv (ORCPT
+        id S1731592AbfJNKiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:37:51 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41466 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731249AbfJNKhv (ORCPT
+        Mon, 14 Oct 2019 06:38:05 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32924 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731249AbfJNKiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:37:51 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p10so15408527qkg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 03:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xb4r1wuhDtOoPbUBnl8EutTh4mh6Tp7aWVqMVQujZhw=;
-        b=ncAdm5p62dlyPVnbhlG8Ia8TOY8Bj9kzLoEPG8kBn98/b8IfkhIVulK5Sep05pIK1O
-         a8o0B3t0aBxh0xAqIOcEfeSXp13CEtfHNcab6d7/193DUVfmkz6KLTW7BNnGSznYniOC
-         OrQZYXwNQfNq6OFKV5BbBiaTmdDdA/KzwRrZQgY2d88OFjuIVU2/uImhKHWnlurIyJTf
-         NP0R4emwQfuBb5AFCb0fsCrPv+n4gOBYVydhYj5Mse1CI1LeqzszvjYKB1kegwn/09dD
-         ncJyFdOgxfUX5QfpE14HpJht0iIDCoje7GqrMD9p9QhnHQ3UxkeRvYSV9f1KCk9Dy3Wa
-         IlLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xb4r1wuhDtOoPbUBnl8EutTh4mh6Tp7aWVqMVQujZhw=;
-        b=Y4Akt1YZhJx5zbXx1Ti9vMsfptidDa0cvcSCx2tozBQi+3fySBGU3bjJw7w7utLQVP
-         k6mXlOmwwV2TrWIvnzJihSdK2lJWapd6m50BgGqilG5t3RXs5FL4MYAmOaY+SwVvfjkX
-         FNV8SZlfFB0g5xf4ZBR19Xn1JS4fjqCu2tbPcoyaWtMzpKp9bOZGxDtqmnFL6B4LIJDq
-         /56RlFI0N2G92JVMbdtcv0oRBKmbc3zJA0XUmd3f2kp0M0WeM/W5ZmILOlF7/tU44B0B
-         uAsRX8Q+S1sWzb8Q1PKk47IDAMSD9kivcapOrXaLRy3rVvp3OEtLJy8G2p+nie9VYhQG
-         DkNw==
-X-Gm-Message-State: APjAAAXXiiOlVOj61Msx3zGkUM/ZzSuPl6vLLQlqLcq5xoDf6wyQKqon
-        JLIbtlKT+1EXc1emtzvOm7vgTD9Xjd8H7ITz5fwXbw==
-X-Google-Smtp-Source: APXvYqxYd8Es1sxTY+VJ2ATWYdlj9YU4K41B4R2sul1P3y5YoKeVysrLikKwT7pXtYzOTHQ/ki/Sr8bYKKH4sdYYyHs=
-X-Received: by 2002:a05:620a:2158:: with SMTP id m24mr29448433qkm.250.1571049468723;
- Mon, 14 Oct 2019 03:37:48 -0700 (PDT)
+        Mon, 14 Oct 2019 06:38:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9EAbtDU005926;
+        Mon, 14 Oct 2019 05:37:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571049475;
+        bh=2TKdF4XZsAi3cmbNxmwvJlAMNLqUp9nQSOsq0fzDzFU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=L7h8UGPzbB7kzMy5Je17fC1cYeqUlfyihdetkST2Pl71DRU8dqIEE0R7z8zlRT6qU
+         lDQ3zaKO9dxLPgUZVpJkTf6YaVZFB1RLrAFrfSNqYKxk2XewFZnIYpjmQFKt2AnILG
+         H7uFcryA8ovkvXu1mg1YX38DZDFj/AS1CIh8gTbA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9EAbtkl007537
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 14 Oct 2019 05:37:55 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 14
+ Oct 2019 05:37:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 14 Oct 2019 05:37:49 -0500
+Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9EAbrc5100478;
+        Mon, 14 Oct 2019 05:37:53 -0500
+Subject: Re: [PATCH] leds: tlc591xx: update the maximum brightness
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
+References: <20190923100250.22326-1-jjhiblot@ti.com>
+ <91864098-a6e8-e275-4b07-e4bb15469f78@gmail.com> <20191013114508.GI5653@amd>
+ <844845d6-01fe-50c4-94cd-e19ce8a5d060@gmail.com>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <e551e3ea-5b75-9b6e-d898-b4516a090c54@ti.com>
+Date:   Mon, 14 Oct 2019 12:37:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191014103148.17816-1-walter-zh.wu@mediatek.com> <CACT4Y+aSybD6Z0YHuhbaTKK+fd4c3t4z8WneYdRRqA4N-G0fkA@mail.gmail.com>
-In-Reply-To: <CACT4Y+aSybD6Z0YHuhbaTKK+fd4c3t4z8WneYdRRqA4N-G0fkA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 14 Oct 2019 12:37:37 +0200
-Message-ID: <CACT4Y+aj20xfJ4nSR1piWcZTmANJ-kS8+ZcBfz6jG4ZTjR51yw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] fix the missing underflow in memory operation function
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <844845d6-01fe-50c4-94cd-e19ce8a5d060@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:36 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Oct 14, 2019 at 12:32 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > The patchsets help to produce KASAN report when size is negative numbers
-> > in memory operation function. It is helpful for programmer to solve the
-> > undefined behavior issue. Patch 1 based on Dmitry's review and
-> > suggestion, patch 2 is a test in order to verify the patch 1.
->
-> Hi Walter,
->
-> I only received this cover letter, but not the actual patches. I also
-> don't see them in the group:
-> https://groups.google.com/forum/#!forum/kasan-dev
-> nor on internet. Have you mailed them? Where are they?
 
-OK, received them just now.
+On 13/10/2019 18:36, Jacek Anaszewski wrote:
+> On 10/13/19 1:45 PM, Pavel Machek wrote:
+>> Hi!
+>>
+>>>> @@ -112,11 +113,11 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
+>>>>   	struct tlc591xx_priv *priv = led->priv;
+>>>>   	int err;
+>>>>   
+>>>> -	switch (brightness) {
+>>>> +	switch ((int)brightness) {
+>>>>   	case 0:
+>> Can we get a rid of the cast here? Do we need to move away from the
+>> enum for the brightness?
+> I at first also wanted to ask for dropping the cast but first tried
+> to do it myself. Then I found out compiler (or sparse, I don't recall
+> exactly) complains about TLC591XX_MAX_BRIGHTNESS not being a value of
+> enum led_brighteess type. That's the reason for the cast Jean added,
+> I presume.
 
-> > [1]https://bugzilla.kernel.org/show_bug.cgi?id=199341
-> > [2]https://lore.kernel.org/linux-arm-kernel/20190927034338.15813-1-walter-zh.wu@mediatek.com/
-> >
-> > Walter Wu (2):
-> > kasan: detect negative size in memory operation function
-> > kasan: add test for invalid size in memmove
-> >
-> > ---
-> >  lib/test_kasan.c          | 18 ++++++++++++++++++
-> >  mm/kasan/common.c         | 13 ++++++++-----
-> >  mm/kasan/generic.c        |  5 +++++
-> >  mm/kasan/generic_report.c | 18 ++++++++++++++++++
-> >  mm/kasan/tags.c           |  5 +++++
-> >  mm/kasan/tags_report.c    | 17 +++++++++++++++++
-> >  6 files changed, 71 insertions(+), 5 deletions(-)
-> >
-> > --
-> > 2.18.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191014103148.17816-1-walter-zh.wu%40mediatek.com.
+Indeed that cast is to fix the warning.
+
+JJ
+
+>>> Added tag:
+>>>
+>>> Fixes: e370d010a5fe ("leds: tlc591xx: Driver for the TI 8/16 Channel i2c
+>>> LED driver")
+>>>
+>>> and applied to the for-5.5 branch.
+>> Actually, careful with the Fixes tag. -stable people will want to
+>> apply it, and it may not be a good idea in this case. Maximum
+>> brightness of 256 is pretty unusual, so I'd call this "a bit risky".
+> I entirely disagree. Not seeing anything risky in that since
+> max_brightness is also initialized to this value. If userspace properly
+> uses the ABI, then it will be safe.
+>
+>> Best regards,
+>> 									Pavel
+>>
