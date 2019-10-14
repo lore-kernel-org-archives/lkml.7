@@ -2,77 +2,105 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C01C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D567BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79D7207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACD5207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBY+KsDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbfJNKJv (ORCPT
+        id S1731328AbfJNKLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:09:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:39488 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731235AbfJNKJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:09:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D22B3337;
-        Mon, 14 Oct 2019 03:09:50 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CDAD3F718;
-        Mon, 14 Oct 2019 03:09:50 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 11:09:45 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Marco Elver <elver@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] stop_machine: avoid potential race behaviour
-Message-ID: <20191014100943.GA41626@lakrids.cambridge.arm.com>
-References: <20191007104536.27276-1-mark.rutland@arm.com>
- <20191008083637.GI2294@hirez.programming.kicks-ass.net>
+        Mon, 14 Oct 2019 06:11:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33781 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730860AbfJNKLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:11:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i76so9840550pgc.0;
+        Mon, 14 Oct 2019 03:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u6WI0gDjbvLg3JzSkl1yVQQFCwF5JM/S0gxkF6bM6fg=;
+        b=lBY+KsDoJUg2hKJs7lp8p8z4x5tDAIj44Rj+aOGnsc7Inftl94nbqA0J0mKXUfDTYT
+         QeRQihPX6F3qwA0JnLbUVxFOYnix5KjZebKetNhRYXQUuSbNc9oH58UrD5vRXY5ckaze
+         Bfj3ploISAFEcjrqZuu/ms2lVfnWBhQLnitoRsqsDE/bqp3+nSuYpLdkkWiU6tXjxsiq
+         B9jYhvh42Vy5qQg1ZlpbFsI/zPK1qfuvEy8mRTVUROOTZzIGss8e1qGfv6QsNX6DP8ov
+         clD+1K+1Lj0yn0HyUbUfbyrab+M0EYUMY/Rh9ao7p213ftX+UygJAaKK1ziLIWpq9VJL
+         ZoUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u6WI0gDjbvLg3JzSkl1yVQQFCwF5JM/S0gxkF6bM6fg=;
+        b=c0Khj+exKbCl7MV3A3LZ2pGX1L1l0tjMpSEO/jDkG0AcXqGqahHB5az/vAXm0CPw8b
+         FwGAr0QI5cIObWwEEPk5kECXYQw+EJSPqr/3rhkg3FX8e+xKpmimT2lNzn53QVpRCG5G
+         3wYwV/LMvfmsqSaqY7EBkB2jNfgjebyzNSvV7OVln+IY37PfNrZSgthRDdDhvuxvhZ83
+         VAm8lpMr1pq9Dl/yS1kS9iGDva+iG0nOeaMorfwmNEoG2GHGfpMnKEIpJTObxsZvtvGr
+         HaqFXbowlO2k3faH4Omhsxb0EyuahxDGLLR8eI+Tc5DAGI9XaQus3V4d21z0hPKbCVol
+         RIIA==
+X-Gm-Message-State: APjAAAVXHOLS65x699Al3yNdd2XZ5qdmy7+lmcxHnMjQhTgWfDwypd2k
+        iRKI4Y3ieOm3I7quOR47DeiMAFs7w4FKt1Dx8QU=
+X-Google-Smtp-Source: APXvYqwwxxKi/wqKL8hzQH0JWvzTmEg06U0A67Gdgik5ysLzrtrS1capqHHl51ggKu1gORfFTWboMHEJXTZ5IVFyuCs=
+X-Received: by 2002:a17:90a:c684:: with SMTP id n4mr35304592pjt.33.1571047881584;
+ Mon, 14 Oct 2019 03:11:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008083637.GI2294@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20191014090910.9701-1-jgross@suse.com> <20191014090910.9701-2-jgross@suse.com>
+In-Reply-To: <20191014090910.9701-2-jgross@suse.com>
+From:   Paul Durrant <pdurrant@gmail.com>
+Date:   Mon, 14 Oct 2019 11:11:10 +0100
+Message-ID: <CACCGGhDz6nAqoKUaZ+Ud7O7Srm1ygt=6UgSrydajizJfWZsRPQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] xen/netback: fix error path of xenvif_connect_data()
+To:     Juergen Gross <jgross@suse.com>
+Cc:     xen-devel <xen-devel@lists.xenproject.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        Paul Durrant <paul@xen.org>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 10:36:37AM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 07, 2019 at 11:45:36AM +0100, Mark Rutland wrote:
-> > Both multi_cpu_stop() and set_state() access multi_stop_data::state
-> > racily using plain accesses. These are subject to compiler
-> > transformations which could break the intended behaviour of the code,
-> > and this situation is detected by KCSAN on both arm64 and x86 (splats
-> > below).
-> 
-> I really don't think there is anything the compiler can do wrong here.
-> 
-> That is, I'm thinking I'd like to get this called out as a false-positive.
+On Mon, 14 Oct 2019 at 10:09, Juergen Gross <jgross@suse.com> wrote:
+>
+> xenvif_connect_data() calls module_put() in case of error. This is
+> wrong as there is no related module_get().
+>
+> Remove the superfluous module_put().
+>
+> Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
+> Cc: <stable@vger.kernel.org> # 3.12
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-I agree that in practice, it's very unlikely this would go wrong.
+Yes, looks like this should have been cleaned up a long time ago.
 
-There are some things the compiler could do, e.g. with re-ordering of
-volatile and plain reads of the same variable:
+Reviewed-by: Paul Durrant <paul@xen.org>
 
-  https://lore.kernel.org/lkml/20191003161233.GB38140@lakrids.cambridge.arm.com/
-
-... and while I agree that's vanishingly unlikely to happen here, I
-couldn't say how to rule that out without ruling out cases that would
-actually blow up in practice.
-
-> That said, the patch looks obviously fine and will help with the
-> validation effort so no real objection there.
-
-Great! Can I take that as an Acked-by?
-
-I assume this should go via the tip tree.
-
-Thanks,
-Mark.
+> ---
+>  drivers/net/xen-netback/interface.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
+> index 240f762b3749..103ed00775eb 100644
+> --- a/drivers/net/xen-netback/interface.c
+> +++ b/drivers/net/xen-netback/interface.c
+> @@ -719,7 +719,6 @@ int xenvif_connect_data(struct xenvif_queue *queue,
+>         xenvif_unmap_frontend_data_rings(queue);
+>         netif_napi_del(&queue->napi);
+>  err:
+> -       module_put(THIS_MODULE);
+>         return err;
+>  }
+>
+> --
+> 2.16.4
+>
