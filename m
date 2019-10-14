@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C348EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 05:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AA5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 05:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D81B20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 05:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE13D21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 05:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FQ5ORjgo"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dZWm0bOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfJNFcI (ORCPT
+        id S1729837AbfJNFcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 01:32:08 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33864 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfJNFcH (ORCPT
+        Mon, 14 Oct 2019 01:32:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42333 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfJNFcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 01:32:07 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j11so18056813wrp.1
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 22:32:05 -0700 (PDT)
+        Mon, 14 Oct 2019 01:32:08 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so17998289wrw.9
+        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 22:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8ehlRfTi/fq+Oy1TzUxlpwPnlRkkcugNpCvrZknIDGg=;
-        b=FQ5ORjgovekCk7XGqhyn+ke278DVw0wPlJaaxeMo1a5O4thnBrnZ0ux4qmb22O+ztr
-         LI3Q5AyYGkd/u/6Fs5rfH7EUzCJeINMQpQ/2bREwujfr+jeoJMoo9uOLUytI3y0ox+Cw
-         uvTm2edHXCe+7eBdbWbBS324u0Vad8Fqlmuv80+RA+Gw2Kgn3TYKPaEhy9KjpqZL6MM/
-         0CYCelN+RFX8cJDSgVFnauAIpGNzozZ2XUgCFlOKxD2VYWBA6Z8O8XA+QL6Vyv4WEIbS
-         O1ixREOhLQqgVB4B91diAct1NeWoynDToZTqm7ZeDbNIhfsS7wiUbfslNWZ6EOiJ5iBI
-         H/tg==
+        bh=aiibnLb4ztqM4McCZf8ivuH47sJDCIoIvUY8u0wjWw8=;
+        b=dZWm0bODxvVtd4jc+Sv3HEOR144u2b+ytObS+iiHa0aWE+7M86xnmZ1BQr3dL+y/R5
+         I3dg+hkyPrT1CpIWzSYqJpSd2Nma1oDXyroJNgsTMmgMCkg0RNvghA5OatcRKRamhlAR
+         ouV7VuiYPwRstXsmzg6/QPxOItKOWp87NucpAz6f83jY+B6Y1eUKdhamcDg77ueQ493/
+         0KDj2K41P8eP9KCnV1adMmDtKATMNOaeUgxsv9Jn3QVk63xzvDSADv9g8ZCV1v04pB2p
+         XPD1uo4Vb30Uss7PrWno0cArt2kbvguVeN+qqYP/D068ydIxqj7ohAYke5/KQ/WZpbQP
+         DImg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=8ehlRfTi/fq+Oy1TzUxlpwPnlRkkcugNpCvrZknIDGg=;
-        b=nJbn1NKHWDUjLUFrjIxsd+TlHVt/j3jfrq+pNNBMdDMBsIP7gFdVAcHOX33MBlFE+W
-         wgsRbG8pYPXabPTNF624S1r9xkcSh4DKh/JYn4dvmmY5eAq46gmZufrOchLHNcHq6yYa
-         rP+U79z6s8/FBALzLGDKimKNflqPu1hWFfuxfenecq4kNxqxTfhQhYAtaYWwUgUTwT5u
-         dzj9Zkv75LTua81/cl0YmmIHbyfMxwNPAv5E1gzOBy2AfnjXb2HEqFEKTp5B/JbOFyot
-         Hl8E6k8P0a6KFBd21PgwdLhIye+7oH7pZqXj5n8+ucXD5Sh6GDs3iRAk0c4vd7NtF8MX
-         IPXQ==
-X-Gm-Message-State: APjAAAX48iKtmAZrZXA8hi1KrjB84v+8Pu3kir4KI6ohBGkx2iUVo2s5
-        FswYkn3A75bxaulKDOE0/GxHWA==
-X-Google-Smtp-Source: APXvYqzASzbmQ23svVZMfVmaqECJFtThTvyq6i0XHeqaL0MjTozTSVrjTQXBUc9//FwizHoJb6IEdw==
-X-Received: by 2002:a5d:6581:: with SMTP id q1mr23513906wru.393.1571031124896;
-        Sun, 13 Oct 2019 22:32:04 -0700 (PDT)
+        bh=aiibnLb4ztqM4McCZf8ivuH47sJDCIoIvUY8u0wjWw8=;
+        b=EuvmDdB0QMrzC1uDaajseR5XzK/tKcCYIOB962D7UI2fUm1ogMchHW7AKmWGvp3JXD
+         xwh1F+wmHGaVetZYEe4wqX1fLXxaB8HVivEvqkhHbyPP8kQQjeYPcSj6WpYzBWpwSfeC
+         47rc/McUwguroptbMfSjhIQy0NIK/hizIdi/qfqrjr5FDV7errhXIvRHPIBk3abhvtN4
+         D9S+ocJUEsZPNxFZzd91fmLvEc+JdxRUhwD+l6LHaASg2TXOxl/P7BUx62CVRNfYzZqE
+         Y4Cda4Ws/ZEouPHIhxYT7xbQ0bxsTEloeIFH2/Enc1hnOYCQ9Q7wH+ivHhlh1nMnF8/2
+         vOZg==
+X-Gm-Message-State: APjAAAWMIboL94KFfjEweetWfLcVSk3nnhv8uu9KQMI/4QVPLVBvJXU9
+        tGbCG8jBambQQPXX3gfNz+l3aA==
+X-Google-Smtp-Source: APXvYqzwgYyla5i+WdGDH9uV7L7OrlHDKcef3vSlLkS/1w30Ak08EC3dys/X03T3BQUy1jWogl3vYA==
+X-Received: by 2002:a5d:6984:: with SMTP id g4mr9280068wru.43.1571031125748;
+        Sun, 13 Oct 2019 22:32:05 -0700 (PDT)
 Received: from localhost.localdomain ([51.15.160.169])
         by smtp.googlemail.com with ESMTPSA id o18sm44238772wrw.90.2019.10.13.22.32.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 13 Oct 2019 22:32:04 -0700 (PDT)
+        Sun, 13 Oct 2019 22:32:05 -0700 (PDT)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     davem@davemloft.net, herbert@gondor.apana.org.au,
         khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
@@ -62,9 +62,9 @@ To:     davem@davemloft.net, herbert@gondor.apana.org.au,
 Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v2 1/4] dt-bindings: crypto: Add DT bindings documentation for amlogic-crypto
-Date:   Mon, 14 Oct 2019 05:31:41 +0000
-Message-Id: <1571031104-6880-2-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v2 2/4] MAINTAINERS: Add myself as maintainer of amlogic crypto
+Date:   Mon, 14 Oct 2019 05:31:42 +0000
+Message-Id: <1571031104-6880-3-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571031104-6880-1-git-send-email-clabbe@baylibre.com>
 References: <1571031104-6880-1-git-send-email-clabbe@baylibre.com>
@@ -73,73 +73,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the
-Amlogic GXL cryptographic offloader driver.
+I will maintain the amlogic crypto driver.
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- .../bindings/crypto/amlogic,gxl-crypto.yaml   | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-new file mode 100644
-index 000000000000..5becc60a0e28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/amlogic,gxl-crypto.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 36c5d6ee01f9..a8487a0999ce 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1477,6 +1477,13 @@ F:	drivers/soc/amlogic/
+ F:	drivers/rtc/rtc-meson*
+ N:	meson
+ 
++ARM/Amlogic Meson SoC Crypto Drivers
++M:	Corentin Labbe <clabbe@baylibre.com>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/amlogic/
++F:	Documentation/devicetree/bindings/crypto/amlogic*
 +
-+title: Amlogic GXL Cryptographic Offloader
-+
-+maintainers:
-+  - Corentin Labbe <clabbe@baylibre.com>
-+
-+properties:
-+  compatible:
-+    items:
-+    - const: amlogic,gxl-crypto
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: "Interrupt for flow 0"
-+      - description: "Interrupt for flow 1"
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: blkmv
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/gxbb-clkc.h>
-+
-+    crypto: crypto@c883e000 {
-+        compatible = "amlogic,gxl-crypto";
-+        reg = <0x0 0xc883e000 0x0 0x36>;
-+        interrupts = <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>, <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&clkc CLKID_BLKMV>;
-+        clock-names = "blkmv";
-+    };
+ ARM/Amlogic Meson SoC Sound Drivers
+ M:	Jerome Brunet <jbrunet@baylibre.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
 -- 
 2.21.0
 
