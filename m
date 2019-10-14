@@ -2,98 +2,250 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D72FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A80C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2D020650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XUUeeIZr";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CjTLFxp2"
+	by mail.kernel.org (Postfix) with ESMTP id 6A19B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbfJNIcf (ORCPT
+        id S1730507AbfJNIcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 14 Oct 2019 04:32:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33186 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfJNIce (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mga12.intel.com ([192.55.52.136]:34525 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730233AbfJNIce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 14 Oct 2019 04:32:34 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 20B03606CF; Mon, 14 Oct 2019 08:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571041954;
-        bh=mqqICtAwQO6IrAaUIxFT7Uu3ziQTlKCLs+IOJ1bdsVE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=XUUeeIZrI8TbhyfqZoP6OuDHJq13fKXFppsRTkNoM/uBjHEjc4Ov+tIAm21sNsxDg
-         jXO/+c6lz8ULlJJ9/MLP91eJx7PwU2m63i8qduzGzF+VGjeFeoaT3BXZglKN83eS7F
-         gptdYVI6qaLxMxc9nJtBbTpb20w39GPoACNz9lSo=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2650360256;
-        Mon, 14 Oct 2019 08:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571041953;
-        bh=mqqICtAwQO6IrAaUIxFT7Uu3ziQTlKCLs+IOJ1bdsVE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=CjTLFxp2I4Aq0r4fNj7qxXzPLOND7hKWl/kODSbPW7F6SkZC3gvr+NRkQMAL57ifH
-         DQliA/kyrk+g6J3Dtgj7A4nABSPkdNfjtmeEYO4+iWFXB9dxB3H8ZFJzjxQ2hPR4k2
-         /sFz3BcTnfgIJYdQ5coy+pWyYIxHHlruAFf+fb2E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2650360256
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        ath10k@lists.infradead.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] ath10k: Correct error check of dma_map_single()
-References: <20191010162653.141303-1-bjorn.andersson@linaro.org>
-        <20191011115732.044BF60BE8@smtp.codeaurora.org>
-        <20191011171652.GF571@minitux>
-Date:   Mon, 14 Oct 2019 11:32:28 +0300
-In-Reply-To: <20191011171652.GF571@minitux> (Bjorn Andersson's message of
-        "Fri, 11 Oct 2019 10:16:52 -0700")
-Message-ID: <87a7a3zq03.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 01:32:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
+   d="scan'208";a="225012217"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Oct 2019 01:32:31 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iJvmJ-0000Jr-Dk; Mon, 14 Oct 2019 16:32:31 +0800
+Date:   Mon, 14 Oct 2019 16:32:20 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     ivan.lazeev@gmail.com
+Cc:     kbuild-all@lists.01.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vanya Lazeev <ivan.lazeev@gmail.com>
+Subject: Re: [PATCH v6] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Message-ID: <201910141623.SRwaPnfk%lkp@intel.com>
+References: <20191002201212.32395-1-ivan.lazeev@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191002201212.32395-1-ivan.lazeev@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn Andersson <bjorn.andersson@linaro.org> writes:
+Hi,
 
-> On Fri 11 Oct 04:57 PDT 2019, Kalle Valo wrote:
->
->> Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
->> 
->> > The return value of dma_map_single() should be checked for errors using
->> > dma_mapping_error(), rather than testing for NULL. Correct this.
->> > 
->> > Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference
->> > support over wmi")
->> > Cc: stable@vger.kernel.org
->> > Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
->> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> 
->> Did this fix any real bug? Or is this just something found during code review?
->> 
->
-> CONFIG_DMA_API_DEBUG screamed at us for calling dma_unmap_single()
-> without ever having called dma_mapping_error() on the return value.
+Thank you for the patch! Perhaps something to improve:
 
-Ok, I'll add something about to the commit log in v2 so that the
-background is also documented.
+[auto build test WARNING on jss-tpmdd/next]
+[cannot apply to v5.4-rc3 next-20191011]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+url:    https://github.com/0day-ci/linux/commits/ivan-lazeev-gmail-com/tpm_crb-fix-fTPM-on-AMD-Zen-CPUs/20191003-054300
+base:   git://git.infradead.org/users/jjs/linux-tpmdd next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-43-g0ccb3b4-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/char/tpm/tpm_crb.c:507:62: sparse: sparse: Using plain integer as NULL pointer
+
+vim +507 drivers/char/tpm/tpm_crb.c
+
+   501	
+   502	static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+   503			      struct acpi_table_tpm2 *buf)
+   504	{
+   505		struct list_head acpi_resource_list;
+   506		struct resource iores_array[TPM_CRB_MAX_RESOURCES];
+ > 507		void __iomem *iobase_array[TPM_CRB_MAX_RESOURCES] = {0};
+   508		struct resource *iores_range[] = {
+   509			iores_array,
+   510			iores_array + TPM_CRB_MAX_RESOURCES
+   511		};
+   512		struct device *dev = &device->dev;
+   513		struct resource *iores;
+   514		void __iomem **iobase_ptr;
+   515		int num_resources, i;
+   516		u32 pa_high, pa_low;
+   517		u64 cmd_pa;
+   518		u32 cmd_size;
+   519		__le64 __rsp_pa;
+   520		u64 rsp_pa;
+   521		u32 rsp_size;
+   522		int ret;
+   523	
+   524		INIT_LIST_HEAD(&acpi_resource_list);
+   525		ret = acpi_dev_get_resources(device, &acpi_resource_list,
+   526					     crb_check_resource, iores_range);
+   527		if (ret < 0)
+   528			return ret;
+   529		acpi_dev_free_resource_list(&acpi_resource_list);
+   530	
+   531		if (iores_range[0] == iores_array) {
+   532			dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+   533			return -EINVAL;
+   534		} else if (!iores_range[0]) {
+   535			dev_warn(dev, "TPM2 ACPI table defines too many memory resources\n");
+   536			iores_range[0] = iores_range[1];
+   537		}
+   538	
+   539		num_resources = iores_range[0] - iores_array;
+   540	
+   541		iores = NULL;
+   542		iobase_ptr = NULL;
+   543		for (i = 0; i < num_resources; ++i) {
+   544			if (buf->control_address >= iores_array[i].start &&
+   545			    buf->control_address + sizeof(struct crb_regs_tail) - 1 <=
+   546			    iores_array[i].end) {
+   547				iores = iores_array + i;
+   548				iobase_ptr = iobase_array + i;
+   549				break;
+   550			}
+   551		}
+   552	
+   553		priv->regs_t = crb_map_res(dev, iores, iobase_ptr, buf->control_address,
+   554					   sizeof(struct crb_regs_tail));
+   555	
+   556		if (IS_ERR(priv->regs_t))
+   557			return PTR_ERR(priv->regs_t);
+   558	
+   559		/* The ACPI IO region starts at the head area and continues to include
+   560		 * the control area, as one nice sane region except for some older
+   561		 * stuff that puts the control area outside the ACPI IO region.
+   562		 */
+   563		if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
+   564		    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
+   565			if (iores &&
+   566			    buf->control_address == iores->start +
+   567			    sizeof(*priv->regs_h))
+   568				priv->regs_h = *iobase_ptr;
+   569			else
+   570				dev_warn(dev, FW_BUG "Bad ACPI memory layout");
+   571		}
+   572	
+   573		ret = __crb_request_locality(dev, priv, 0);
+   574		if (ret)
+   575			return ret;
+   576	
+   577		/*
+   578		 * PTT HW bug w/a: wake up the device to access
+   579		 * possibly not retained registers.
+   580		 */
+   581		ret = __crb_cmd_ready(dev, priv);
+   582		if (ret)
+   583			goto out_relinquish_locality;
+   584	
+   585		pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+   586		pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+   587		cmd_pa = ((u64)pa_high << 32) | pa_low;
+   588		cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
+   589	
+   590		iores = NULL;
+   591		iobase_ptr = NULL;
+   592		for (i = 0; i < num_resources; ++i) {
+   593			if (cmd_pa >= iores_array[i].start &&
+   594			    cmd_pa <= iores_array[i].end) {
+   595				iores = iores_array + i;
+   596				iobase_ptr = iobase_array + i;
+   597				break;
+   598			}
+   599		}
+   600	
+   601		if (iores)
+   602			cmd_size = crb_fixup_cmd_size(dev, iores, cmd_pa, cmd_size);
+   603	
+   604		dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+   605			pa_high, pa_low, cmd_size);
+   606	
+   607		priv->cmd = crb_map_res(dev, iores, iobase_ptr,	cmd_pa, cmd_size);
+   608		if (IS_ERR(priv->cmd)) {
+   609			ret = PTR_ERR(priv->cmd);
+   610			goto out;
+   611		}
+   612	
+   613		memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+   614		rsp_pa = le64_to_cpu(__rsp_pa);
+   615		rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
+   616	
+   617		iores = NULL;
+   618		iobase_ptr = NULL;
+   619		for (i = 0; i < num_resources; ++i) {
+   620			if (rsp_pa >= iores_array[i].start &&
+   621			    rsp_pa <= iores_array[i].end) {
+   622				iores = iores_array + i;
+   623				iobase_ptr = iobase_array + i;
+   624				break;
+   625			}
+   626		}
+   627	
+   628		if (iores)
+   629			rsp_size = crb_fixup_cmd_size(dev, iores, rsp_pa, rsp_size);
+   630	
+   631		if (cmd_pa != rsp_pa) {
+   632			priv->rsp = crb_map_res(dev, iores, iobase_ptr,
+   633						rsp_pa, rsp_size);
+   634			ret = PTR_ERR_OR_ZERO(priv->rsp);
+   635			goto out;
+   636		}
+   637	
+   638		/* According to the PTP specification, overlapping command and response
+   639		 * buffer sizes must be identical.
+   640		 */
+   641		if (cmd_size != rsp_size) {
+   642			dev_err(dev, FW_BUG "overlapping command and response buffer sizes are not identical");
+   643			ret = -EINVAL;
+   644			goto out;
+   645		}
+   646	
+   647		priv->rsp = priv->cmd;
+   648	
+   649	out:
+   650		if (!ret)
+   651			priv->cmd_size = cmd_size;
+   652	
+   653		__crb_go_idle(dev, priv);
+   654	
+   655	out_relinquish_locality:
+   656	
+   657		__crb_relinquish_locality(dev, priv, 0);
+   658	
+   659		return ret;
+   660	}
+   661	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
