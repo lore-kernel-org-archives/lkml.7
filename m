@@ -2,184 +2,521 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A0DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7136AECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501E72133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234C421835
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IB2aUdkb"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="glcounY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfJNXvi (ORCPT
+        id S1726773AbfJNXyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 19:51:38 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44586 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfJNXvi (ORCPT
+        Mon, 14 Oct 2019 19:54:23 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49414 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfJNXyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 19:51:38 -0400
-Received: by mail-io1-f68.google.com with SMTP id w12so41693940iol.11
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 16:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k4LG9A60e0AWB6+HxDiNUTXT9+nVfxCFWPyoyVSEVA0=;
-        b=IB2aUdkbO4uaayL9lm/pGvtaPMct+pJEOEo+QZUCZ2M5Ui9SlTD0C+j3+Zmd6dHTN4
-         qgVmLoHycRpD0utCSuz/9a3EpAUk6f+3ot7NYRegMNOA6YcNltTEJh/Mc0RacU4MOobj
-         OtKE1oH/ITR4/GVnSEpkxGKLK0JFYaNpdbAHc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k4LG9A60e0AWB6+HxDiNUTXT9+nVfxCFWPyoyVSEVA0=;
-        b=P+VGiiskH+S51yegbK3sVecHEF51Wr00V5l0BxGdi8bDXvh7dw8xpHa+omGQpTxB1P
-         DS5q1nlVxbP+Sjd9ctCX0mGLQEWK4r0mq+QgdCbUt0WuCz1Yw2yM4UiPwxerVmby65na
-         JtGCqQNFMNDoUicnR8fobEi2tntpVRS3kCj/7Q5uXJHaEniiLN8qgNwUwtfX/EVkuUhG
-         NWct1xlgh0BxXaz07Ph2xLTw88J1Ct5pCH8YJvy7GCvfqMTf/rRXLaxqtYxlqmi1wNFt
-         WdYnc26qnl7tugVcwt0T9BMz2sK01h4m0tF6/E660GMczqN08HM7uyy7MlOcMEAl+8Er
-         S3sw==
-X-Gm-Message-State: APjAAAUyb9CpoAlNvAvI2XKKzDtjva4Ps/FrNgYJ2nfMnG3Vzy2UsbaF
-        g20T0MsWU7vh4cWbAHlHyENgKhL9uy0=
-X-Google-Smtp-Source: APXvYqzCj7iX5FatI6iAuFbHZ7g3MfGJGfydgLtMnDZKzw/zHrCFWYtOK0aDp4qpaNr7EUq4SUJauw==
-X-Received: by 2002:a92:1011:: with SMTP id y17mr3229081ill.234.1571097097017;
-        Mon, 14 Oct 2019 16:51:37 -0700 (PDT)
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
-        by smtp.gmail.com with ESMTPSA id h4sm13812471iom.17.2019.10.14.16.51.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2019 16:51:36 -0700 (PDT)
-Received: by mail-io1-f50.google.com with SMTP id v2so41742419iob.10
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 16:51:36 -0700 (PDT)
-X-Received: by 2002:a92:819c:: with SMTP id q28mr3325441ilk.269.1571097095829;
- Mon, 14 Oct 2019 16:51:35 -0700 (PDT)
+        Mon, 14 Oct 2019 19:54:23 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DE8CD2DB;
+        Tue, 15 Oct 2019 01:54:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571097258;
+        bh=hfpslVW26r3Ogt5SQMeyWDGwSwprOPxuec8jVPFZfUo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=glcounY74wfjjB5G8ku+IBMumtAabZ8EiO08q9I+P0wZwmFmikqV8CANyWckFWRdw
+         N4Nw3bMD00orMm7jX+COYHn92HbtQGCAoMcx+Qkt7ZvozjsT+cje8N41p46DyOCXbp
+         BjZgNAo/OqSx94lTGSfRJU9yhF6jzNSwuOuFlJfA=
+Date:   Tue, 15 Oct 2019 02:54:14 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, ezequiel@collabora.com,
+        seanpaul@chromium.org
+Subject: Re: [PATCH v4 3/9] drm: rcar-du: Add support for CMM
+Message-ID: <20191014235414.GC11248@pendragon.ideasonboard.com>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-4-jacopo+renesas@jmondi.org>
+ <20190918225534.GA11474@pendragon.ideasonboard.com>
+ <20191010174628.ta7qp75quo65jjdc@uno.localdomain>
 MIME-Version: 1.0
-References: <201910110030.gUpQOCmR%lkp@intel.com> <20191014162847.kshvdwcahyjbtweo@holly.lan>
-In-Reply-To: <20191014162847.kshvdwcahyjbtweo@holly.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 14 Oct 2019 16:51:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WL_2zDoqdB96NK5tLwmqsL4Zt+wUbhKrGq7dz+sUAdYw@mail.gmail.com>
-Message-ID: <CAD=FV=WL_2zDoqdB96NK5tLwmqsL4Zt+wUbhKrGq7dz+sUAdYw@mail.gmail.com>
-Subject: Re: [danielt-linux:kgdb/for-next 4/4] kernel/debug/debug_core.c:452:17:
- warning: array subscript is outside array bounds
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191010174628.ta7qp75quo65jjdc@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Jacopo,
 
-On Mon, Oct 14, 2019 at 9:28 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> Hi Doug
->
-> On Fri, Oct 11, 2019 at 12:41:31AM +0800, kbuild test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git kgdb/for-next
-> > head:   2277b492582d5525244519f60da6f9daea5ef41a
-> > commit: 2277b492582d5525244519f60da6f9daea5ef41a [4/4] kdb: Fix stack crawling on 'running' CPUs that aren't the master
-> > config: sh-allyesconfig (attached as .config)
-> > compiler: sh4-linux-gcc (GCC) 7.4.0
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout 2277b492582d5525244519f60da6f9daea5ef41a
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=7.4.0 make.cross ARCH=sh
+On Thu, Oct 10, 2019 at 07:46:28PM +0200, Jacopo Mondi wrote:
+> On Thu, Sep 19, 2019 at 01:55:35AM +0300, Laurent Pinchart wrote:
+> > On Fri, Sep 06, 2019 at 03:54:30PM +0200, Jacopo Mondi wrote:
+> >> Add a driver for the R-Car Display Unit Color Correction Module.
+> >>
+> >> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> >> to perform image enhancement and color correction.
+> >>
+> >> Add support for CMM through a driver that supports configuration of
+> >> the 1-dimensional LUT table. More advanced CMM feature will be
+> >> implemented on top of this basic one.
+> >>
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> ---
+> >>  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
+> >>  drivers/gpu/drm/rcar-du/Makefile   |   1 +
+> >>  drivers/gpu/drm/rcar-du/rcar_cmm.c | 251 +++++++++++++++++++++++++++++
+> >>  drivers/gpu/drm/rcar-du/rcar_cmm.h |  61 +++++++
+> >>  4 files changed, 320 insertions(+)
+> >>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
+> >>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+> >>
+> >> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> >> index 1529849e217e..539d232790d1 100644
+> >> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> >> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> >> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
+> >>  	  Choose this option if you have an R-Car chipset.
+> >>  	  If M is selected the module will be called rcar-du-drm.
+> >>
+> >> +config DRM_RCAR_CMM
+> >> +	bool "R-Car DU Color Management Module (CMM) Support"
+> >> +	depends on DRM && OF
+> >> +	depends on DRM_RCAR_DU
+> >> +	help
+> >> +	  Enable support for R-Car Color Management Module (CMM).
+> >> +
+> >>  config DRM_RCAR_DW_HDMI
+> >>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+> >>  	depends on DRM && OF
+> >> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
+> >> index 6c2ed9c46467..4d1187ccc3e5 100644
+> >> --- a/drivers/gpu/drm/rcar-du/Makefile
+> >> +++ b/drivers/gpu/drm/rcar-du/Makefile
+> >> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
+> >>  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
+> >>  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
+> >>
+> >> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
+> >>  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
+> >>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
+> >>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
+> >> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> >> new file mode 100644
+> >> index 000000000000..3cacdc4474c7
+> >> --- /dev/null
+> >> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> >> @@ -0,0 +1,251 @@
+> >> +// SPDX-License-Identifier: GPL-2.0+
+> >> +/*
+> >> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
+> >> + *
+> >> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> + */
+> >> +
+> >> +#include <linux/io.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/pm_runtime.h>
+> >> +
+> >> +#include <drm/drm_color_mgmt.h>
+> >> +
+> >> +#include "rcar_cmm.h"
+> >> +
+> >> +#define CM2_LUT_CTRL		0x0000
+> >> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
+> >> +#define CM2_LUT_TBL_BASE	0x0600
+> >> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
+> >> +
+> >> +struct rcar_cmm {
+> >> +	void __iomem *base;
+> >> +	bool enabled;
+> >> +
+> >> +	/*
+> >> +	 * @lut:		1D-LUT status
+> >> +	 * @lut.enabled:	1D-LUT enabled flag
+> >> +	 * @lut.table:		Table of 1D-LUT entries scaled to hardware
+> >> +	 *			precision (8-bits per color component)
+> >> +	 */
+> >> +	struct {
+> >> +		bool enabled;
+> >> +		u32 table[CM2_LUT_SIZE];
+> >> +	} lut;
+> >> +};
+> >> +
+> >> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
+> >> +{
+> >> +	return ioread32(rcmm->base + reg);
+> >> +}
+> >> +
+> >> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
+> >> +{
+> >> +	iowrite32(data, rcmm->base + reg);
+> >> +}
+> >> +
+> >> +/*
+> >> + * rcar_cmm_lut_extract() - Scale down to hardware precision the DRM LUT table
+> >> + *			    entries and store them.
 > >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
+> > "Scale the DRM LUT table entries to hardware precision and store them."
 > >
-> > Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
+> >> + * @rcmm: Pointer to the CMM device
+> >> + * @drm_lut: Pointer to the DRM LUT table
+> >> + */
+> >> +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm,
+> >> +				 const struct drm_color_lut *drm_lut)
+> >> +{
+> >> +	unsigned int i;
+> >> +
+> >> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
+> >> +		const struct drm_color_lut *lut = &drm_lut[i];
+> >> +
+> >> +		rcmm->lut.table[i] = drm_color_lut_extract(lut->red, 8) << 16
+> >> +				   | drm_color_lut_extract(lut->green, 8) << 8
+> >> +				   | drm_color_lut_extract(lut->blue, 8);
+> >> +	}
+> >> +}
+> >> +
+> >> +/*
+> >> + * rcar_cmm_lut_write() - Write to hardware the LUT table entries from the
+> >> + *			  local table.
 > >
-> > All warnings (new ones prefixed by >>):
+> > "Write the LUT table entries from the local table to the hardware."
 > >
-> >    kernel/debug/debug_core.c: In function 'kdb_dump_stack_on_cpu':
-> > >> kernel/debug/debug_core.c:452:17: warning: array subscript is outside array bounds [-Warray-bounds]
-> >      if (!(kgdb_info[cpu].exception_state & DCPU_IS_SLAVE)) {
-> >            ~~~~~~~~~^~~~~
-> >    kernel/debug/debug_core.c:469:33: warning: array subscript is outside array bounds [-Warray-bounds]
-> >      kgdb_info[cpu].exception_state |= DCPU_WANT_BT;
-> >    kernel/debug/debug_core.c:470:18: warning: array subscript is outside array bounds [-Warray-bounds]
-> >      while (kgdb_info[cpu].exception_state & DCPU_WANT_BT)
-> >             ~~~~~~~~~^~~~~
->
-> Thoughts on the following?
->
-> From 9e0114bc9ae504c3a7e837c977d64f84b2010d8e Mon Sep 17 00:00:00 2001
-> From: Daniel Thompson <daniel.thompson@linaro.org>
-> Date: Fri, 11 Oct 2019 08:49:29 +0100
-> Subject: [PATCH] kdb: Avoid array subscript warnings on non-SMP builds
->
-> Recent versions of gcc (reported on gcc-7.4) issue array subscript
-> warnings for builds where SMP is not enabled.
->
-> There is no bug here but there is scope to improve the code
-> generation for non-SMP systems (whilst also silencing the warning).
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 2277b492582d ("kdb: Fix stack crawling on 'running' CPUs that aren't the master")
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  kernel/debug/debug_core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 70e86b4b4932..eccb7298a0b5 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -449,7 +449,8 @@ void kdb_dump_stack_on_cpu(int cpu)
->                 return;
->         }
->
-> -       if (!(kgdb_info[cpu].exception_state & DCPU_IS_SLAVE)) {
-> +       if (!IS_ENABLED(CONFIG_SMP) ||
-> +           !(kgdb_info[cpu].exception_state & DCPU_IS_SLAVE)) {
+> >> + * @rcmm: Pointer to the CMM device
+> >> + */
+> >> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm)
+> >> +{
+> >> +	unsigned int i;
+> >> +
+> >> +	for (i = 0; i < CM2_LUT_SIZE; ++i)
+> >> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), rcmm->lut.table[i]);
+> >> +}
+> >> +
+> >> +/*
+> >> + * rcar_cmm_setup() - Configure the CMM unit.
+> >> + * @pdev: The platform device associated with the CMM instance
+> >> + * @config: The CRTC-provided configuration.
+> >> + *
+> >> + * Configure the CMM unit with the CRTC-provided configuration.
+> >> + * Currently enabling, disabling and programming of the 1-D LUT unit is
+> >> + * supported.
+> >> + */
+> >> +int rcar_cmm_setup(struct platform_device *pdev,
+> >> +		   const struct rcar_cmm_config *config)
+> >> +{
+> >> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> >> +
+> >> +	/*
+> >> +	 * As rcar_cmm_setup() is called by atomic commit tail helper, it might
+> >> +	 * be called when the CMM is disabled. As we can't program the hardware
+> >> +	 * in that case, store the configuration internally and apply it when
+> >> +	 * the CMM will be enabled by the CRTC through rcar_cmm_enable().
+> >> +	 */
+> >> +	if (!rcmm->enabled) {
+> >> +		if (!config->lut.enable)
+> >> +			return 0;
+> >> +
+> >> +		rcar_cmm_lut_extract(rcmm, config->lut.table);
+> >> +		rcmm->lut.enabled = true;
+> >> +
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	/* Stop LUT operations if requested. */
+> >> +	if (!config->lut.enable) {
+> >> +		if (rcmm->lut.enabled) {
+> >> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> >> +			rcmm->lut.enabled = false;
+> >> +		}
+> >> +
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * Enable LUT and program the new gamma table values.
+> >> +	 *
+> >> +	 * FIXME: In order to have stable operations it is required to first
+> >> +	 * enable the 1D-LUT and then program its table entries. This seems to
+> >> +	 * contradict what the chip manual reports, and will have to be
+> >> +	 * reconsidered when implementing support for double buffering.
+> >> +	 */
+> >> +	if (!rcmm->lut.enabled) {
+> >> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+> >> +		rcmm->lut.enabled = true;
+> >> +	}
+> >> +
+> >> +	rcar_cmm_lut_extract(rcmm, config->lut.table);
+> >> +	rcar_cmm_lut_write(rcmm);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
+> >> +
+> >> +/*
+> >> + * rcar_cmm_enable() - Enable the CMM unit.
+> >> + * @pdev: The platform device associated with the CMM instance
+> >> + *
+> >> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
+> >> + * components, such as 1-D LUT, if requested.
+> >> + */
+> >> +int rcar_cmm_enable(struct platform_device *pdev)
+> >> +{
+> >> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> >> +	int ret;
+> >> +
+> >> +	ret = pm_runtime_get_sync(&pdev->dev);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	/* Apply the LUT table values saved at rcar_cmm_setup() time. */
+> >> +	if (rcmm->lut.enabled) {
+> >> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+> >> +		rcar_cmm_lut_write(rcmm);
+> >> +	}
+> >> +
+> >> +	rcmm->enabled = true;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
+> >> +
+> >> +/*
+> >> + * rcar_cmm_disable() - Disable the CMM unit.
+> >> + * @pdev: The platform device associated with the CMM instance
+> >> + *
+> >> + * Disable the CMM unit by stopping the parent clock.
+> >> + */
+> >> +void rcar_cmm_disable(struct platform_device *pdev)
+> >> +{
+> >> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> >> +
+> >> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> >> +
+> >> +	pm_runtime_put(&pdev->dev);
+> >> +
+> >> +	rcmm->lut.enabled = false;
+> >> +	rcmm->enabled = false;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
+> >> +
+> >> +/*
+> >> + * rcar_cmm_init() - Make sure the CMM has probed.
+> >
+> > I would document this as "Intialize the CMM" to match the function name.
+> > We may add more initialization in the future.
+> >
+> >> + * @pdev: The platform device associated with the CMM instance
+> >> + *
+> >> + * Return: 0 if the CMM has probed, -EPROBE_DEFER otherwise
+> >
+> > 0 on success, -EPROBE_DEFER is the CMM isn't availablet yet
+> >
+> 
+> Just to note I've take Kieran's suggestion in to return -ENODEV when
+> the CMM config option is not set.
+> 
+> >> + */
+> >> +int rcar_cmm_init(struct platform_device *pdev)
+> >> +{
+> >> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> >> +
+> >> +	if (!rcmm)
+> >> +		return -EPROBE_DEFER;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
+> >> +
+> >> +static int rcar_cmm_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct rcar_cmm *rcmm;
+> >> +
+> >> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
+> >> +	if (!rcmm)
+> >> +		return -ENOMEM;
+> >> +	platform_set_drvdata(pdev, rcmm);
+> >> +
+> >> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
+> >> +	if (IS_ERR(rcmm->base))
+> >> +		return PTR_ERR(rcmm->base);
+> >> +
+> >> +	pm_runtime_enable(&pdev->dev);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rcar_cmm_remove(struct platform_device *pdev)
+> >> +{
+> >> +	pm_runtime_disable(&pdev->dev);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static const struct of_device_id rcar_cmm_of_table[] = {
+> >> +	{ .compatible = "renesas,rcar-gen3-cmm", },
+> >> +	{ .compatible = "renesas,rcar-gen2-cmm", },
+> >> +	{ },
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
+> >> +
+> >> +static struct platform_driver rcar_cmm_platform_driver = {
+> >> +	.probe		= rcar_cmm_probe,
+> >> +	.remove		= rcar_cmm_remove,
+> >> +	.driver		= {
+> >> +		.name	= "rcar-cmm",
+> >> +		.of_match_table = rcar_cmm_of_table,
+> >> +	},
+> >> +};
+> >> +
+> >> +module_platform_driver(rcar_cmm_platform_driver);
+> >> +
+> >> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+> >> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
+> >> +MODULE_LICENSE("GPL v2");
+> >> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> >> new file mode 100644
+> >> index 000000000000..15a2c874b6a6
+> >> --- /dev/null
+> >> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> >> @@ -0,0 +1,61 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0+ */
+> >> +/*
+> >> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
+> >> + *
+> >> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> + */
+> >> +
+> >> +#ifndef __RCAR_CMM_H__
+> >> +#define __RCAR_CMM_H__
+> >> +
+> >> +#define CM2_LUT_SIZE		256
+> >> +
+> >> +struct drm_color_lut;
+> >> +struct platform_device;
+> >> +
+> >> +/**
+> >> + * struct rcar_cmm_config - CMM configuration
+> >> + *
+> >> + * @lut:	1D-LUT configuration
+> >> + * @lut.enable:	1D-LUT enable flag
+> >> + * @lut.table:	1D-LUT table entries. Might be set to NULL when the CMM has to
+> >> + *		be re-enabled but not re=programmed.
+> >
+> > s/re=programmed/re-programmed/
+> >
+> > As discussed offline this can't really happen as far as I can tell.
+> > However, it will still be useful when we'll add CLU support, as then a
+> > CLU reprogramming without a LUT reprogramming could happen.
+> 
+> How are we going to program CLU ? Using which DRM property ?
+> I had a look at 'ctm', but it does not seems to apply, as it only
+> provides 9 64bits entries (why 9??)
+> https://elixir.bootlin.com/linux/latest/source/include/uapi/drm/drm_mode.h#L623
+> 
+> The CLU is programmed with pairs of 32bits entries, assembled using
+> 8 bit data/addresses for each color components. Considering the LUT
+> entries have 16 bits per color components, we could re-use those, but
+> seems a bit of an abuse to me. Is there somethig more trivial I am
+> missing ?
 
-Thanks for sending this!  I saw the alert but I was on vacation last
-Friday and today has been a trainwreck.
+You're not missing anything, we'll have to create a new property for
+this. The CLU is a 17x17x17 matrix of 32-bit values, that's what we'll
+have to pass.
 
-I guess my first thought is that this fix is slightly confusing to
-read.  Reading it makes you think that if we don't have SMP that we'll
-print:
+> Anyway, for now I think you are right, and if the 'crtc->state->gamma_lut'
+> field is set, then the table (provided it's of the right size) cannot be
+> NULL.
+> 
+> Disabling the CMM with:
+> 			req.add(crtc, {
+> 					{ "GAMMA_LUT", 0 },
+> 			});
+> 
+> results in 'crtc->state->gamma_lut' being not set, and this is already
+> handled by setting to false the rcar_cmm_config.lut.enable flag in
+> rcar_du_atomic_commit_update_cmm() so I would rather drop the table ==
+> NULL case from documentation and re-think about it once we handle CLU.
+> 
+> > I think we should make the documentation a bit clearer:
+> >
+> > "1D-LUT table entries. Only valid when lut.enable is true, shall be NULL
+> > otherwise. When non-NULL, the LUT table will be programmed with the new
+> > values. Otherwise the LUT table will retain its previously programmed
+> > values."
+> >
+> > This being said, the code in rcar_cmm_setup() will crash if table is
+> > NULL. I would either drop the option of table being NULL (and thus
+> > update the documentation here) if you don't need this yet in the DU
+> > driver, or fix rcar_cmm_setup(). You've posted enough versions of this
+> > series in my opinion, so please pick the easiest option, and we'll
+> > rework the code when adding CLU support anyway.
+> 
+> Unfortunately I would love to take your tag in and being done with
+> this, but considering Sean's advices on Ezequiel's series, I think
+> I'll now need to move CMM handling to crtc's begin/enable as well, so
+> another review round will likely be required.
+> 
+> > With those small issues fixes,
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> >> + */
+> >> +struct rcar_cmm_config {
+> >> +	struct {
+> >> +		bool enable;
+> >> +		struct drm_color_lut *table;
+> >> +	} lut;
+> >> +};
+> >> +
+> >> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
+> >> +int rcar_cmm_init(struct platform_device *pdev);
+> >> +
+> >> +int rcar_cmm_enable(struct platform_device *pdev);
+> >> +void rcar_cmm_disable(struct platform_device *pdev);
+> >> +
+> >> +int rcar_cmm_setup(struct platform_device *pdev,
+> >> +		   const struct rcar_cmm_config *config);
+> >> +#else
+> >> +static inline int rcar_cmm_init(struct platform_device *pdev)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline int rcar_cmm_enable(struct platform_device *pdev)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline void rcar_cmm_disable(struct platform_device *pdev)
+> >> +{
+> >> +}
+> >> +
+> >> +static int rcar_cmm_setup(struct platform_device *pdev,
+> >> +			  const struct rcar_cmm_config *config)
+> >> +{
+> >> +	return 0;
+> >> +}
+> >> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
+> >> +
+> >> +#endif /* __RCAR_CMM_H__ */
 
-  ERROR: Task on cpu %d didn't stop in the debugger
+-- 
+Regards,
 
-It took me a second to realize that of course this would never print
-because if we're ot on SMP then the first "if" test would trip and
-we'd return.  Which makes me wonder why we couldn't instead change
-that "if" test to:
-
- if (!IS_ENABLED(CONFIG_SMP) || cpu == raw_smp_processor_id()) {
-
-...and be done with it.
-
----
-
-As far as the "there is no bug here", I actually wonder.  We are
-always called with a cpu that we got from "kdb_process_cpu(p)", right?
- That function sets cpu to 0 if "cpu > num_possible_cpus()".  ...but
-shouldn't it be >=?  I guess task_cpu() probably returned something
-sane anyway...
-
-I also find it a little odd that kdb_process_cpu() returns a signed
-int even though task_cpu() returns an unsigned one, but I guess we
-don't need to worry about the case where the number of CPUs can't fit
-into a signed int?
-
----
-
-Hopefully that's all correct.  I'm just about outta time and I wanted
-to send something off.  If something looks wrong it probably is...
-
--Doug
+Laurent Pinchart
