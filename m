@@ -2,178 +2,73 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50D7ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA3DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CE620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="oMUdeIsA"
+	by mail.kernel.org (Postfix) with ESMTP id BA32D20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfJNSg1 (ORCPT
+        id S1731903AbfJNShY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:36:27 -0400
-Received: from mail-40130.protonmail.ch ([185.70.40.130]:34515 "EHLO
-        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730717AbfJNSg1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:36:27 -0400
-Date:   Mon, 14 Oct 2019 18:36:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1571078184;
-        bh=HlmGu1q+Sq6eE8y8EwjOQgPvCZXyiZ/Ph43h6boW/JM=;
-        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=oMUdeIsAbHtWC1ET7YqCx0SXUA6gq46ZEc+O+9NzI0GW5qdtixs7GEgrjiPkRtXLu
-         ql89U4XZQ8Pa+ce6jph7E05LgIx8o13M36J5JmEICFPcztcSs0ORTHLG6CNMCwJZ6L
-         ZDle2DdzfxhmoFLzAsiSUNPBkzI9ialeSagI7YIM=
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        "mnrzk@protonmail.com" <mnrzk@protonmail.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: [PATCH v6 2/2] HID: logitech: Support WirelessDeviceStatus connect events
-Message-ID: <_1Ewv9AvBhbWTNcFOkmvCyjVph73eQIz23Plyv5ffgaWWHnmPBTbSIJhs47AnYatJsmDWu4JlMjcsKE8Cf31lvmwQipYEu47YglNfroyJtM=@protonmail.com>
-Feedback-ID: 18B_FC5q-t32TXzMsVp9BgkgrdNH3iwklfW8WOrHrcxZA0WRj7JodCh5VXKxs6A3OaiHK0QNd8wi3SImKex8yQ==:Ext:ProtonMail
+        Mon, 14 Oct 2019 14:37:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:35204 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728392AbfJNShY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 14:37:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 11:37:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="201538235"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Oct 2019 11:37:23 -0700
+Date:   Mon, 14 Oct 2019 11:37:23 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
+Message-ID: <20191014183723.GE22962@linux.intel.com>
+References: <20191014162247.61461-1-xiaoyao.li@intel.com>
+ <87y2xn462e.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2xn462e.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows WirelessDeviceStatus (0x1d4b) events to be detected as
-connection events in the hid-logitech-hidpp module.
+On Mon, Oct 14, 2019 at 06:58:49PM +0200, Vitaly Kuznetsov wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> 
+> > They are duplicated codes to create vcpu.arch.{user,guest}_fpu in VMX
+> > and SVM. Make them common functions.
+> >
+> > No functional change intended.
+> 
+> Would it rather make sense to move this code to
+> kvm_arch_vcpu_create()/kvm_arch_vcpu_destroy() instead?
 
-Devices with HIDPP_QUIRK_WIRELESS_DEVICE_STATUS use WirelessDeviceStatus
-instead of traditional connect events. Since all Bluetooth LE devices seem
-to act this way, HIDPP_QUIRK_CLASS_BLUETOOTH_LE aliases this quirk.
+Does it make sense?  Yes.  Would it actually work?  No.  Well, not without
+other shenanigans.
 
-Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
----
- drivers/hid/hid-logitech-hidpp.c | 42 ++++++++++++++++++++++++++++----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+FPU allocation can't be placed after the call to .create_vcpu() becuase
+it's consumed in kvm_arch_vcpu_init().   FPU allocation can't come before
+.create_vcpu() because the vCPU struct itself hasn't been allocated.  The
+latter could be solved by passed the FPU pointer into .create_vcpu(), but
+that's a bit ugly and is not a precedent we want to set.
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hi=
-dpp.c
-index 997b1056850a..9b3df57ca857 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -60,6 +60,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
- #define HIDPP_QUIRK_CLASS_K750=09=09=09BIT(4)
-
- /* bits 2..15 are reserved for classes */
-+#define HIDPP_QUIRK_WIRELESS_DEVICE_STATUS=09BIT(19)
- #define HIDPP_QUIRK_MISSING_SHORT_REPORTS=09BIT(20)
- /* #define HIDPP_QUIRK_CONNECT_EVENTS=09=09BIT(21) disabled */
- #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS=09BIT(22)
-@@ -82,7 +83,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
- =09=09=09=09=09 HIDPP_QUIRK_HI_RES_SCROLL_X2120 | \
- =09=09=09=09=09 HIDPP_QUIRK_HI_RES_SCROLL_X2121)
-
--#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE=09HIDPP_QUIRK_MISSING_SHORT_REPORTS
-+#define HIDPP_QUIRK_CLASS_BLUETOOTH_LE=09(HIDPP_QUIRK_MISSING_SHORT_REPORT=
-S | \
-+=09=09=09=09=09 HIDPP_QUIRK_WIRELESS_DEVICE_STATUS)
-
- #define HIDPP_QUIRK_DELAYED_INIT=09=09HIDPP_QUIRK_NO_HIDINPUT
-
-@@ -189,6 +191,8 @@ struct hidpp_device {
-
- =09struct hidpp_battery battery;
- =09struct hidpp_scroll_counter vertical_wheel_counter;
-+
-+=09u8 wireless_feature_index;
- };
-
- /* HID++ 1.0 error codes */
-@@ -402,10 +406,14 @@ static inline bool hidpp_match_error(struct hidpp_rep=
-ort *question,
- =09    (answer->fap.params[0] =3D=3D question->fap.funcindex_clientid);
- }
-
--static inline bool hidpp_report_is_connect_event(struct hidpp_report *repo=
-rt)
-+static inline bool hidpp_report_is_connect_event(struct hidpp_device *hidp=
-p,
-+=09=09=09=09=09=09 struct hidpp_report *report)
- {
--=09return (report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) &&
--=09=09(report->rap.sub_id =3D=3D 0x41);
-+=09return ((hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS) &&
-+=09=09(report->fap.feature_index =3D=3D hidpp->wireless_feature_index)) ||
-+=09      (((report->report_id =3D=3D REPORT_ID_HIDPP_SHORT) ||
-+=09=09(hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)) &&
-+=09=09(report->rap.sub_id =3D=3D 0x41));
- }
-
- /**
-@@ -1282,6 +1290,24 @@ static int hidpp_battery_get_property(struct power_s=
-upply *psy,
- =09return ret;
- }
-
-+/* -----------------------------------------------------------------------=
---- */
-+/* 0x1d4b: Wireless device status                                         =
-    */
-+/* -----------------------------------------------------------------------=
---- */
-+#define HIDPP_PAGE_WIRELESS_DEVICE_STATUS=09=09=090x1d4b
-+
-+static int hidpp_set_wireless_feature_index(struct hidpp_device *hidpp)
-+{
-+=09u8 feature_type;
-+=09int ret;
-+
-+=09ret =3D hidpp_root_get_feature(hidpp,
-+=09=09=09=09     HIDPP_PAGE_WIRELESS_DEVICE_STATUS,
-+=09=09=09=09     &hidpp->wireless_feature_index,
-+=09=09=09=09     &feature_type);
-+
-+=09return ret;
-+}
-+
- /* -----------------------------------------------------------------------=
---- */
- /* 0x2120: Hi-resolution scrolling                                        =
-    */
- /* -----------------------------------------------------------------------=
---- */
-@@ -3077,7 +3103,7 @@ static int hidpp_raw_hidpp_event(struct hidpp_device =
-*hidpp, u8 *data,
- =09=09}
- =09}
-
--=09if (unlikely(hidpp_report_is_connect_event(report))) {
-+=09if (unlikely(hidpp_report_is_connect_event(hidpp, report))) {
- =09=09atomic_set(&hidpp->connected,
- =09=09=09=09!(report->rap.params[0] & (1 << 6)));
- =09=09if (schedule_work(&hidpp->work) =3D=3D 0)
-@@ -3624,6 +3650,12 @@ static int hidpp_probe(struct hid_device *hdev, cons=
-t struct hid_device_id *id)
- =09=09hidpp_overwrite_name(hdev);
- =09}
-
-+=09if (connected && (hidpp->quirks & HIDPP_QUIRK_WIRELESS_DEVICE_STATUS)) =
-{
-+=09=09ret =3D hidpp_set_wireless_feature_index(hidpp);
-+=09=09if (ret)
-+=09=09=09goto hid_hw_init_fail;
-+=09}
-+
- =09if (connected && (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP)) {
- =09=09ret =3D wtp_get_config(hidpp);
- =09=09if (ret)
---
-2.23.0
-
+At a glance, FPU allocation can be moved to kvm_arch_vcpu_init(), maybe
+right before the call to fx_init().
