@@ -2,140 +2,115 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C92ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675E5ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12B220854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571069600;
-	bh=zjFem5lp4+gnrWzIM2ZkN1H8IvqsRovrVaTH0wBvSw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zoaO+JFSf7Fyz7A8+iXCY2/g55VJAyFQWmq+6s1xlzyVzI9NcGeEj7YODW9qyQmuU
-	 dA2ZJyLBdHVIRvHGHZSXRLopI5PhGq2WncOP667q6zTkaWU20zkm6gsU6k1KUc0GrH
-	 E9+hD78vQl5UD+zQ5WiPKSb+GVwA++IzVE6Rw8gg=
+	by mail.kernel.org (Postfix) with ESMTP id 49CED20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387989AbfJNQNT (ORCPT
+        id S2387999AbfJNQPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:13:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34974 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730030AbfJNQNT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:13:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w6so12224397lfl.2;
-        Mon, 14 Oct 2019 09:13:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YHnMAZs14fJi1NNz2NtD+GzNSsWEq3noMLIQejJbPKU=;
-        b=toH9VV3wIiWhb/2qHvQHVe+jWgxZmwSsmZS57GensCyN++iU9E+LykRN0Ln+cTA3KY
-         dwzm5i6h6jXjiL6dp2lKbQtTVPEBGYvaqWG+zX3yKSTluqFm3BrklQT2G+q1b2iXIO7I
-         p9l312WUWBvjU9wLMG9MLJtlNJXqxKKiECobN92aIMmY5yoPduxzxXHgNpUGwDvKEpRu
-         VWq4U5dEOzbevlOoYQgfTJkAkeAJ2kKO8+U4Jy01yz9cmKjtVjYZ4BXLoHyx6GUzUs7n
-         DQy/qbWucgwNONBbD10gdcSN1fKeUvtgNZtv4JOEhDHWCDRMamEjq8OKl/dfc6Kmu5xl
-         qDBw==
-X-Gm-Message-State: APjAAAUSPIzgN3OCpX5H+rlkAte+JKd7NKhZnU1b0TxXrLgxBPtVne/y
-        G39hULvg8/BJZXR8PyCNvdw=
-X-Google-Smtp-Source: APXvYqwDP0lRYsp3cJGX83F+AoNpiKoRwb/MliBNk6cC6YR1rKI1uNyUAt7eBJo+pCIcoF5AbQU7Mg==
-X-Received: by 2002:ac2:5a06:: with SMTP id q6mr16772533lfn.59.1571069596454;
-        Mon, 14 Oct 2019 09:13:16 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id 126sm5526559lfh.45.2019.10.14.09.13.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 09:13:14 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iK2yM-00051m-6W; Mon, 14 Oct 2019 18:13:26 +0200
-Date:   Mon, 14 Oct 2019 18:13:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mon, 14 Oct 2019 12:15:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:48080 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730028AbfJNQPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:15:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DE8528;
+        Mon, 14 Oct 2019 09:15:10 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 32DAA3F718;
+        Mon, 14 Oct 2019 09:15:09 -0700 (PDT)
+Subject: Re: edac KASAN warning in experimental arm64 allmodconfig boot
+To:     John Garry <john.garry@huawei.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191014161326.GO13531@localhost>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
- <20191011093633.GD27819@localhost>
- <20191014084847.GD11828@phenom.ffwll.local>
+        tony.luck@intel.com, Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <dc974549-6ea4-899d-7f3a-b2fcfafe1528@arm.com>
+Date:   Mon, 14 Oct 2019 17:15:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014084847.GD11828@phenom.ffwll.local>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
-> On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
-> > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > > > Two old USB drivers had a bug in them which could lead to memory leaks
-> > > > if an interrupted process raced with a disconnect event.
-> > > > 
-> > > > Turns out we had a few more driver in other subsystems with the same
-> > > > kind of bug in them.
-> > 
-> > > Random funny idea: Could we do some debug annotations (akin to
-> > > might_sleep) that splats when you might_sleep_interruptible somewhere
-> > > where interruptible sleeps are generally a bad idea? Like in
-> > > fops->release?
-> > 
-> > There's nothing wrong with interruptible sleep in fops->release per se,
-> > it's just that drivers cannot return -ERESTARTSYS and friends and expect
-> > to be called again later.
+Hi John,
+
+On 14/10/2019 16:18, John Garry wrote:
+> I'm experimenting by trying to boot an allmodconfig arm64 kernel, as mentioned here:
+
+Crumbs!
+
+
+> One thing that I noticed - it's hard to miss actually - is the amount of complaining from
+> KASAN about the EDAC/ghes code. Maybe this is something I should not care about/red
+> herring, or maybe something genuine. Let me know what you think.
+
+Hmmm, I thought I tested this recently...
+
+> Log snippet (I cut off after the first KASAN warning):
 > 
-> Do you have a legit usecase for interruptible sleeps in fops->release?
+> [   70.471011][    T1] random: get_random_u32 called from new_slab+0x360/0x698 with
+> crng_init=0
 
-The tty layer depends on this for example when waiting for buffered
-writes to complete (something which may never happen when using flow
-control).
+> [   70.478671][    T1] [Firmware Bug]: APEI: Invalid bit width + offset in GAR
+> [0x94110034/64/0/3/0]
 
-> I'm not even sure killable is legit in there, since it's an fd, not a
-> process context ...
+(this one's for you right?)
 
-It will be run in process context in many cases, and for ttys we're good
-AFAICT.
+> [   70.700412][    T1] ------------[ cut here ]------------
 
-> > The return value from release() is ignored by vfs, and adding a splat in
-> > __fput() to catch these buggy drivers might be overkill.
-> 
-> Ime once you have a handful of instances of a broken pattern, creating a
-> check for it (under a debug option only ofc) is very much justified.
-> Otherwise they just come back to life like the undead, all the time. And
-> there's a _lot_ of fops->release callbacks in the kernel.
+> [   70.802080][    T1] Call trace:
+> [   70.802093][    T1]  debug_print_object+0xec/0x130
+> [   70.802106][    T1]  __debug_check_no_obj_freed+0x114/0x290
+> [   70.802119][    T1]  debug_check_no_obj_freed+0x18/0x28
+> [   70.802130][    T1]  slab_free_freelist_hook+0x18c/0x228
+> [   70.802140][    T1]  kfree+0x264/0x420
+> [   70.802157][    T1]  _edac_mc_free+0x6c/0x210
+> [   70.814163][    T1]  edac_mc_free+0x68/0x88
+> [   70.814177][    T1]  ghes_edac_unregister+0x44/0x70
+> [   70.814193][    T1]  ghes_remove+0x274/0x2a0
 
-Yeah, you have a point.
+Ugh. This must be the test driver remove thing.
 
-But take tty again as an example, the close tty operation called from
-release() is declared void so there's no propagated return value for vfs
-to check.
+I've reproduced this, but had to remove the parent GHES twice. It looks like it tries to
+use the first ghes_edac global variables when freeing the second. ghes_init prevents it
+from re-allocating over the top.
 
-It may even be better to fix up the 100 or so callbacks potentially
-returning non-zero and make fops->release void so that the compiler
-would help us catch any future bugs and also serve as a hint for
-developers that returning errnos from fops->release is probably not
-what you want to do.
+The below diff fixes it for me. (I'll post it as a proper patch once I've done the
+archaeology)
 
-But that's a lot of churn of course.
+-----------%<-----------
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index d413a0bdc9ad..955b59b6aade 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -554,6 +554,7 @@ void ghes_edac_unregister(struct ghes *ghes)
+                return;
 
-Johan
+        mci = ghes_pvt->mci;
++       ghes_pvt = NULL;
+        edac_mc_del_mc(mci->pdev);
+        edac_mc_free(mci);
+ }
+
+-----------%<-----------
+
+
+Thanks!
+
+James
