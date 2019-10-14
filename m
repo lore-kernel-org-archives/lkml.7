@@ -2,90 +2,164 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2254C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAF6C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809002067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B432067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZkcShoru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfJNAIi (ORCPT
+        id S1729607AbfJNAMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 20:08:38 -0400
-Received: from 13.mo5.mail-out.ovh.net ([87.98.182.191]:59480 "EHLO
-        13.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbfJNAIi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 20:08:38 -0400
-X-Greylist: delayed 8400 seconds by postgrey-1.27 at vger.kernel.org; Sun, 13 Oct 2019 20:08:37 EDT
-Received: from player793.ha.ovh.net (unknown [10.109.143.145])
-        by mo5.mail-out.ovh.net (Postfix) with ESMTP id 348FC251C5A
-        for <linux-kernel@vger.kernel.org>; Sun, 13 Oct 2019 23:40:02 +0200 (CEST)
-Received: from etezian.org (81-175-223-118.bb.dnainternet.fi [81.175.223.118])
-        (Authenticated sender: andi@etezian.org)
-        by player793.ha.ovh.net (Postfix) with ESMTPSA id E1807AE3A080;
-        Sun, 13 Oct 2019 21:39:51 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 00:39:50 +0300
-From:   Andi Shyti <andi@etezian.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andi Shyti <andi@etezian.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Simon Shields <simon@lineageos.org>,
-        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] Input: mms114 - add support for mms345l
-Message-ID: <20191013213950.GB16344@jack.zhora.eu>
-References: <20191007203343.101466-1-stephan@gerhold.net>
- <20191007205021.104402-1-stephan@gerhold.net>
- <20191008220014.GI22365@dtor-ws>
- <20191009072612.GA2814@jack.zhora.eu>
- <20191009204017.GK22365@dtor-ws>
+        Sun, 13 Oct 2019 20:12:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:48711 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729450AbfJNAMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 13 Oct 2019 20:12:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46rzXB4bDMz9sP3;
+        Mon, 14 Oct 2019 11:12:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571011950;
+        bh=q74D+MFjNqBIEAS6oZBzpX6cMPiumc8l4RSDT5m31N0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZkcShoruEFGdM6CwcgDnElvAM3CMDxfWmCsDBXDEXZLZhZQ0ixH9F/Td2N29XIrmT
+         GtVmcIY9yx+AETDfZdX7DG/6D+XkF/rZPe7COcNYZqFwhT2fbKHAEUmzJ4ua3RRpRc
+         vQIGk2rgX82sS4lt+y4nc3sPO6Hrn+EggjmKS57zF4NwXiQBxg7r27u33vCCl33lBZ
+         HQh7Ss0ImFRODPeGHM6ih4GECjmdfxSIDD9zAS+YJ0boencdiBMsxJVeogTNIz1w9L
+         QlFaCg2uIlzVkMM7HtVZJf/gqM7p7mx9eiYqymxyy2b2JFEmb0RCG29j6csphBVZ1N
+         +NEB+UxVeLp7A==
+Date:   Mon, 14 Oct 2019 11:12:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     DRI <dri-devel@lists.freedesktop.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dave Airlie <airlied@linux.ie>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20191014111225.66b36035@canb.auug.org.au>
+In-Reply-To: <20191008103045.2d4711e2@canb.auug.org.au>
+References: <20191008103045.2d4711e2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009204017.GK22365@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Ovh-Tracer-Id: 11074914435028337306
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrjedtgddtudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Type: multipart/signed; boundary="Sig_/IynAOh40NwOY6_v=aXfuQML";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+--Sig_/IynAOh40NwOY6_v=aXfuQML
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > > > There was a related patch [2] that removes I2C_M_NOSTART for all models,
-> > > > but it seems abandoned and I do not have any other model for testing.
-> > > > Therefore, this patch implements the least instrusive solution
-> > > > and only removes I2C_M_NOSTART for MMS345L.
-> > > 
-> > > Hmm,  at this point I am inclined to pick up Andi's patch since it seems
-> > > to work for you and him and it looks like Android drivers are not using
-> > > I2C_M_NOSTART. I wonder if this was some quirk/big on the platform where
-> > > it was originally developed.
-> > 
-> > I completely forgot about that patch :)
-> > 
-> > I should refresh some old work on that device which was left
-> > undone.
-> > 
-> > > Any objections?
-> > 
-> > It's OK for me. If you can just update my e-mail, please, when
-> > applying the patch to "andi@etezian.org". Thanks!
-> 
-> Andi, any chance you could resend it with the new email? One thing that
-> I try to avoid modifying whenever I can is S-O-B strings...
+Hi all,
 
-sure, I will resend the patches, but it might take some time (a
-few days I hope) because I don't have the devices with me right
-now for testing (and I added some small fixes, as well)
+This is now a semantic conflict between the drm and v4l-dvb trees.
 
-Thanks,
-Andi
+On Tue, 8 Oct 2019 10:30:45 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the drm-misc tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+
+drivers/media/platform/cec-gpio/cec-gpio.c: In function 'cec_gpio_probe':
+drivers/media/platform/cec-gpio/cec-gpio.c:262:2: error: too few arguments =
+to function 'cec_notifier_cec_adap_unregister'
+  262 |  cec_notifier_cec_adap_unregister(cec->notifier);
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/media/platform/cec-gpio/cec-gpio.c:11:
+include/media/cec-notifier.h:98:6: note: declared here
+   98 | void cec_notifier_cec_adap_unregister(struct cec_notifier *n,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/platform/cec-gpio/cec-gpio.c: In function 'cec_gpio_remove':
+drivers/media/platform/cec-gpio/cec-gpio.c:272:2: error: too few arguments =
+to function 'cec_notifier_cec_adap_unregister'
+  272 |  cec_notifier_cec_adap_unregister(cec->notifier);
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/media/platform/cec-gpio/cec-gpio.c:11:
+include/media/cec-notifier.h:98:6: note: declared here
+   98 | void cec_notifier_cec_adap_unregister(struct cec_notifier *n,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> Caused by commit
+>=20
+>   10d8f308ba3e ("cec: add cec_adapter to cec_notifier_cec_adap_unregister=
+()")
+>=20
+> interacting with commit
+>=20
+>   7e86efa2ff03 ("media: cec-gpio: add notifier support")
+>=20
+> form the v4l-dvb tree.
+>=20
+> I have applied the following merge fix patch.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 8 Oct 2019 10:26:05 +1100
+> Subject: [PATCH] cec: fix up for "cec: add cec_adapter to
+>  cec_notifier_cec_adap_unregister()"
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/media/platform/cec-gpio/cec-gpio.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/cec-gpio/cec-gpio.c b/drivers/media/p=
+latform/cec-gpio/cec-gpio.c
+> index 7be91e712c4a..42d2c2cd9a78 100644
+> --- a/drivers/media/platform/cec-gpio/cec-gpio.c
+> +++ b/drivers/media/platform/cec-gpio/cec-gpio.c
+> @@ -259,7 +259,7 @@ static int cec_gpio_probe(struct platform_device *pde=
+v)
+>  	return 0;
+> =20
+>  unreg_notifier:
+> -	cec_notifier_cec_adap_unregister(cec->notifier);
+> +	cec_notifier_cec_adap_unregister(cec->notifier, cec->adap);
+>  del_adap:
+>  	cec_delete_adapter(cec->adap);
+>  	return ret;
+> @@ -269,7 +269,7 @@ static int cec_gpio_remove(struct platform_device *pd=
+ev)
+>  {
+>  	struct cec_gpio *cec =3D platform_get_drvdata(pdev);
+> =20
+> -	cec_notifier_cec_adap_unregister(cec->notifier);
+> +	cec_notifier_cec_adap_unregister(cec->notifier, cec->adap);
+>  	cec_unregister_adapter(cec->adap);
+>  	return 0;
+>  }
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IynAOh40NwOY6_v=aXfuQML
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2jvWkACgkQAVBC80lX
+0GxhMQf+IOH2N5GUA3sEEihwFNdRMxh4bjsFiylBGrj+lpSR809XXKFgcKWndm4W
+X8skcXPQJ9jcK+C7JOFRaKyvtqgCASaDdx0vHjT7LzpoHXxyRcaeUoDiXFFkpQN3
+YiVPQphuHTqdCKcqGv5WEXM673PL/WzW1LmVWpMrHDdOkOiC2R2s0PUwmJ/p28CC
+gSqZeEKU4Iyzdb+kPwrLetiwElqEEuXCGCAdXyDNnVU4pi7k6QMGzgN3dHsmE7Ip
+lgFBBDdE4uKXloOGo56jTmChRqLeK9bc+T6JlnL0ygQyQkxZsLTXwHaEaGWXoyxB
+iPjzVKtce5H34SnRjJhjSHqVH4P/1w==
+=NVb/
+-----END PGP SIGNATURE-----
+
+--Sig_/IynAOh40NwOY6_v=aXfuQML--
