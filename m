@@ -2,103 +2,143 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE05C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC1FC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F736207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CA12067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 00:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D25DMKKk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XE1UTlaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbfJNAnr (ORCPT
+        id S1729654AbfJNAt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 20:43:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43834 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729180AbfJNAnq (ORCPT
+        Sun, 13 Oct 2019 20:49:56 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43880 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729454AbfJNAt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 20:43:46 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9E0f906136448;
-        Mon, 14 Oct 2019 00:43:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=77664crqggBs6vqUBErJUe+tfNhGlZupqkwqa4ZPD94=;
- b=D25DMKKkY6e9st02pwZm5u2GptW5e3vzLJDJuZuQEEkcoX6pJKoHJzFfGafZZyb3cFLS
- YTcoNlit9wgUdb0eH4nhDRxQroACznJkNaVr0OPwj2AxPqPtAhYI8HpFGlWQpYPLW6E7
- mZ+n8tM/OPvmdLSUfpeg2yRMED7kYB9hwOW6sodcItkWg6CEynb0n1OpJ8b5tonG7Fg+
- hb72pv0gFCBuIpIhhAcm7z3+nG94FGKPIQBKw+j3yo7yWScCzEixYRN5gDionbrtY1G9
- E9ccD3evlZatnMlSGClwirBSUaLi/zJB1HJC9971A4BFso3LfVdbuKeLikJZwgzwfE6D zg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2vk7fqw6us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 00:43:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9E0djRW124185;
-        Mon, 14 Oct 2019 00:41:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vkrbhr5cu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 00:41:36 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9E0fYrd030219;
-        Mon, 14 Oct 2019 00:41:34 GMT
-Received: from z2.cn.oracle.com (/10.182.71.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 14 Oct 2019 00:41:34 +0000
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org,
-        linux-pm@vger.kernel.org, mtosatti@redhat.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH] cpuidle: not unset the driver if it already exist
-Date:   Sun, 13 Oct 2019 08:46:26 +0800
-Message-Id: <1570927586-12023-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=799
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910140003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9409 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=885 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910140003
+        Sun, 13 Oct 2019 20:49:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t84so12414132oih.10;
+        Sun, 13 Oct 2019 17:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dm90rt3X4Dj0eZ5nqIXjNthLIZg5on7T0CNMl+bnamI=;
+        b=XE1UTlaI0ZlC+hBkpc7OA5fWSkOET5PEeVgIug60HyB8Ljy84wZqVh/RMQrjINYbty
+         NdTqnyJSMZX1AFMLi4orjiH0xoP2Vigz663/RR5zx7mGQVm1R7qGnELhRrvGvRw09AwB
+         U6tT8Es08EKQ3vSOaNMXymM4T/n5uC0fnkD48oCPd8EDWrncVEFg/sAA5tcLlJsG31H4
+         Dh32BfSvfJpudqCpStZVVEkCGMNotSF1PS81/u0A5BiVBUpke8qMgtYZy+7E0aPk38jA
+         T3w4LD0S4LoMdsQ8NjZxxxmeoGCt1kM2h2lkaHeYRGIcCpfRlwE8LBKkZslNQfyld7gO
+         LM7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dm90rt3X4Dj0eZ5nqIXjNthLIZg5on7T0CNMl+bnamI=;
+        b=uhjTXTzTIaRYXfZ/PS/KgFTH/kXSAqAvTaz/fwqcQRc3cHkm+u+tzVJZdm4+pGJPjm
+         MtrSdRY2q4v0LWMnyK9g8TovvSHK5I12TIahKl5HPOS3D0GYhAH3SlWF4/XWbdlTtu4d
+         e7IhLTysuMO8bJw5cHpsOk10uslNby/I2eVLn0pd5nJQbwTBlc+4cbSZF2UIjvzk0qRS
+         RpNl+MS2nse1361lqxI9cLflvT7Or5ZFmYCwla8No+4gXPGStIZRWevbx2pscv5HSCAv
+         odTWApaUrVrfk+Lup2wgMyOVPli+0UlrsGioc9sI3Fvb8N11ysw+NFH73wUY9zH3M6Zp
+         yBbw==
+X-Gm-Message-State: APjAAAXUF+EaWV/qQLWPKDku5WXEODo3yojg6W7FtQmjPehWfI1a1jR3
+        aHxY8GFW2ruU51a5szWo+6MB6zCiynPeBinqdOXhag==
+X-Google-Smtp-Source: APXvYqxHyULL/aZ+orTB4oPYdU/SUdg/07ZS2C52JueTMCjbvM79SmxwlCVeROmuMrojVdXYg3qOO5lAxDrvtJtHKSw=
+X-Received: by 2002:aca:da41:: with SMTP id r62mr21466808oig.47.1571014193872;
+ Sun, 13 Oct 2019 17:49:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <1568974038-13750-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1568974038-13750-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 14 Oct 2019 08:49:42 +0800
+Message-ID: <CANRm+Cy_eQ=m=bDfyw2yrAmDjJuc=f+siSQTrPpjCpBbYbfPeA@mail.gmail.com>
+Subject: Re: [PATCH] KVM: LAPIC: micro-optimize fixed mode ipi delivery
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__cpuidle_set_driver() check if there is an already exist driver and
-unset it before return with -EBUSY. The next call will succeed as it's
-just unset. This is strange as we should either keep old driver and
-return -EBUSY or unset and set new driver and return 0.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
----
- drivers/cpuidle/driver.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
-index 80c1a83..a200304 100644
---- a/drivers/cpuidle/driver.c
-+++ b/drivers/cpuidle/driver.c
-@@ -74,7 +74,6 @@ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
- 	for_each_cpu(cpu, drv->cpumask) {
- 
- 		if (__cpuidle_get_cpu_driver(cpu)) {
--			__cpuidle_unset_driver(drv);
- 			return -EBUSY;
- 		}
- 
--- 
-1.8.3.1
-
+ping,
+On Fri, 20 Sep 2019 at 18:07, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> After disabling mwait/halt/pause vmexits, RESCHEDULE_VECTOR and
+> CALL_FUNCTION_SINGLE_VECTOR etc IPI is one of the main remaining
+> cause of vmexits observed in product environment which can't be
+> optimized by PV IPIs. This patch is the follow-up on commit
+> 0e6d242eccdb (KVM: LAPIC: Micro optimize IPI latency), to optimize
+> redundancy logic before fixed mode ipi is delivered in the fast
+> path.
+>
+> - broadcast handling needs to go slow path, so the delivery mode repair
+>   can be delayed to before slow path.
+> - self-IPI will not be intervened by hypervisor any more after APICv is
+>   introduced and the boxes support APICv are popular now. In addition,
+>   kvm_apic_map_get_dest_lapic() can handle the self-IPI, so there is no
+>   need a shortcut for the non-APICv case.
+>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/irq_comm.c | 6 +++---
+>  arch/x86/kvm/lapic.c    | 5 -----
+>  2 files changed, 3 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index 8ecd48d..aa88156 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -52,15 +52,15 @@ int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
+>         unsigned long dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
+>         unsigned int dest_vcpus = 0;
+>
+> +       if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
+> +               return r;
+> +
+>         if (irq->dest_mode == 0 && irq->dest_id == 0xff &&
+>                         kvm_lowest_prio_delivery(irq)) {
+>                 printk(KERN_INFO "kvm: apic: phys broadcast and lowest prio\n");
+>                 irq->delivery_mode = APIC_DM_FIXED;
+>         }
+>
+> -       if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
+> -               return r;
+> -
+>         memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
+>
+>         kvm_for_each_vcpu(i, vcpu, kvm) {
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 323bdca..d77fe29 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -955,11 +955,6 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+>
+>         *r = -1;
+>
+> -       if (irq->shorthand == APIC_DEST_SELF) {
+> -               *r = kvm_apic_set_irq(src->vcpu, irq, dest_map);
+> -               return true;
+> -       }
+> -
+>         rcu_read_lock();
+>         map = rcu_dereference(kvm->arch.apic_map);
+>
+> --
+> 2.7.4
+>
