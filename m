@@ -2,132 +2,160 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46322ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDD5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201C120854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A28520854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4Sv0nu/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EwxHdjjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732972AbfJNOoo (ORCPT
+        id S1732951AbfJNOon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:44:44 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54626 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731121AbfJNOon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 14 Oct 2019 10:44:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p7so17578225wmp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:44:41 -0700 (PDT)
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37766 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732926AbfJNOom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 10:44:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y5so10543828pfo.4
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lV9WUHRQYa+vcbnXaIrl9dHPzPBQxfzmjkh8HTlj1Bg=;
-        b=R4Sv0nu/0zTthcOB5gdAeVN4GjOy9iItL0K/CL5nKP+gYb8+0NlbvVtDbWrASvGTFg
-         Xq15G3Gif4VH+0edHvuVUs3yIveqxdNZS+8W6cN8Flbst2a09CdpfrX6aj/yKZ1HvxOG
-         cQU1WqMXDcgvms+37/3cqYRyAB5jN2IxSxkEyEBgja6lyNdKXHm0CEv1CMkA8A+C5OWg
-         43HJiqe22PxAK/W1GQfdSX6aDYU4+E4RJnH8Y8nwGD/OLM46seNi4tRfEWtaWljw1njn
-         v6hKrQOmlP1FYMfLEPltHPE+Lmo/zYA5/AtOZspeSJfUN9bqOQMmuTW+F49uO98xA3J+
-         dvjg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=bNRsloUe1+m4c9HwAHy8LRzIsaF4TY0K3ozGxhA8oJE=;
+        b=EwxHdjjNsqta9UkaQIFxIfnG0B6BAXf96vujfejhhkvHxVRBeQJgGrK9iYGgytgIEp
+         9jm7sveUEd3k0Of2wyL6yDBybU1TWyg5lKWEjTIIelCia+RL1q6CrR0ZTmYBbAFRr46R
+         82EZYjy6E2P2VFQAk+sZ0NkdG4Bmy1z3VzmSgaBqAhbMIPSgFUXiwirEu2ePF5hq8scJ
+         bR47FX/znhoRxEHlW6LjlbtkjQD/8jKZwFjqomoa+4FY973w7sHWCxRFpMhxD67LbH9U
+         0dZibsYhA/CwgcIkSqFv/IQIkeFjp6PDfUZcseqBC+qIr+hmerTNNTaFbRj27GitbON7
+         0DUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lV9WUHRQYa+vcbnXaIrl9dHPzPBQxfzmjkh8HTlj1Bg=;
-        b=VlqP1eA6Y10vO+Fnu/1+6nuoDzoAvCHAdpwS8SdZf+dIiR4BI+OzCgzV4PjUylKsDz
-         RVwj+1Sv703O/EnVqssFY31OP5TQu+iZ9Oe44+wmXUnegd9vOsX5xQPqPmeDkHaQH6ma
-         TELHv0rvq2TF4GOKxfmVexwbh7hOsMOvYpHMvc+2pnD4aVoJk5gcFFNbvrmR/EHOYDom
-         1LKhRHsB2oidwd+HkG9JUl/7bCDYYrLzpMDEdPTHXrt9rc5gxJ8JNkgMEz+46Je+SgpJ
-         K322+b3hhx0xTptu2U4vPvwbelvTQ/AIZmADybpNIQCUTqH6tiWElhkMNxwJ7PyuMmLE
-         wWSg==
-X-Gm-Message-State: APjAAAUz6zAPoeR6CUE7nUah2MZ0l182h8hQkMeIfy0IPjgoPG79X8lH
-        OgWsw1MjU256knQ4mJvW/auoYg==
-X-Google-Smtp-Source: APXvYqzTSv6CMEyQM3i6C4SK/hTjeAMaTon8/RvoovUvDlefqH05gxDzk92qF3PTigpHHIEcQwWRyw==
-X-Received: by 2002:a05:600c:2481:: with SMTP id 1mr14687975wms.98.1571064280936;
-        Mon, 14 Oct 2019 07:44:40 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id z189sm33273049wmc.25.2019.10.14.07.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 07:44:40 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 15:44:40 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Module loading problem since 5.3
-Message-ID: <20191014144440.GG35313@google.com>
-References: <20191014085235.GW16384@42.do-not-panic.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bNRsloUe1+m4c9HwAHy8LRzIsaF4TY0K3ozGxhA8oJE=;
+        b=jrMcmQC+xEwKbxxz6fgGLiA0ePQGamFJQ2uHvZH94nm93Clcb/Z93qjGCtbiZEmzM1
+         041kOPRPRvaCOfBAH3OfmvnXNnYzWvXeMYMwfidO9sVncN38yAOyJBEC5NWq4Rm/ZJJe
+         bB4DvzY7E+3HrkyVcROgOvfPNeZQ7C+4I1v7uyRIRWl3JwWqxFFjxCmNtqVDogvMYjyJ
+         nmp8E7i3I4vYCFes0O8Kx/MfEaG08zyWmNBra0wG980pWugEYVhq1svyiRpz62WrSMyt
+         I+3FwHu/LjQmofMxEe26DGgNU+urQe+3ipYJb21FJ/IyXBGMtzSak5RV0YapyaEXSDQq
+         TtGA==
+X-Gm-Message-State: APjAAAWktFBzsVXPESm9P3AoZfrbFTZ395VdqSlVdCXr+Noi8S2MqhcN
+        2yIRl5JG4oNEDExf82Vg/nPZ
+X-Google-Smtp-Source: APXvYqyaDf+8FJSPKt0DRGHMoHpd4vlbdM2vJwLkBbOx/vnNENq1hbKjckJw85Fgl07ugMHoEKf38Q==
+X-Received: by 2002:a63:5423:: with SMTP id i35mr34670105pgb.128.1571064281958;
+        Mon, 14 Oct 2019 07:44:41 -0700 (PDT)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id y8sm14852113pgs.34.2019.10.14.07.44.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 14 Oct 2019 07:44:41 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 20:14:32 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     ulf.hansson@linaro.org, afaerber@suse.de, robh+dt@kernel.org,
+        sboyd@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        thomas.liau@actions-semi.com, linux-actions@lists.infradead.org,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v4 3/7] arm64: dts: actions: Add MMC controller support
+ for S900
+Message-ID: <20191014144432.GA8583@mani>
+References: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org>
+ <20190916154546.24982-4-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191014085235.GW16384@42.do-not-panic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190916154546.24982-4-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis!
+On Mon, Sep 16, 2019 at 09:15:42PM +0530, Manivannan Sadhasivam wrote:
+> Add MMC controller support for Actions Semi S900 SoC. There are 4 MMC
+> controllers in this SoC which can be used for accessing SD/MMC/SDIO cards.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
->On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
->> On 10.10.2019 19:15, Luis Chamberlain wrote:
->> >
->> >
->> > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
->> >
->> >        MODULE_SOFTDEP("pre: realtek")
->> >
->> >     Are you aware of any current issues with module loading
->> >     that could cause this problem?
->> >
->> >
->> > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
->> >
->> > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
->> >
->> >   Luis
->>
->> Maybe issue is related to a bug in introduction of symbol namespaces, see here:
->> https://lkml.org/lkml/2019/10/11/659
->
->Can you have your user with issues either revert 8651ec01daed or apply the fixes
->mentioned by Matthias to see if that was the issue?
->
->Matthias what module did you run into which let you run into the issue
->with depmod? I ask as I think it would be wise for us to add a test case
->using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
->regression you detected.
+Applied for v5.5.
 
-The depmod warning can be reproduced when using a symbol that is built
-into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
-CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
-namespace USB_STORAGE and depmod stumbles upon this emitting the
-following warning (e.g. during make modules_install).
+Thanks,
+Mani
 
-  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
-
-As there is another (less intrusive) way of implementing the namespace
-feature, I posted a patch series [1] on last Thursday that should
-mitigate the issue as the ksymtab entries depmod eventually relies on
-are no longer carrying the namespace in their names.
-
-Cheers,
-Matthias
-
-[1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
-
->
->  Luis
+> ---
+>  arch/arm64/boot/dts/actions/s900.dtsi | 45 +++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
+> index df3a68a3ac97..eb35cf78ab73 100644
+> --- a/arch/arm64/boot/dts/actions/s900.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s900.dtsi
+> @@ -4,6 +4,7 @@
+>   */
+>  
+>  #include <dt-bindings/clock/actions,s900-cmu.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/actions,s900-reset.h>
+>  
+> @@ -284,5 +285,49 @@
+>  			dma-requests = <46>;
+>  			clocks = <&cmu CLK_DMAC>;
+>  		};
+> +
+> +		mmc0: mmc@e0330000 {
+> +			compatible = "actions,owl-mmc";
+> +			reg = <0x0 0xe0330000 0x0 0x4000>;
+> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cmu CLK_SD0>;
+> +			resets = <&cmu RESET_SD0>;
+> +			dmas = <&dma 2>;
+> +			dma-names = "mmc";
+> +			status = "disabled";
+> +		};
+> +
+> +		mmc1: mmc@e0334000 {
+> +			compatible = "actions,owl-mmc";
+> +			reg = <0x0 0xe0334000 0x0 0x4000>;
+> +			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cmu CLK_SD1>;
+> +			resets = <&cmu RESET_SD1>;
+> +			dmas = <&dma 3>;
+> +			dma-names = "mmc";
+> +			status = "disabled";
+> +		};
+> +
+> +		mmc2: mmc@e0338000 {
+> +			compatible = "actions,owl-mmc";
+> +			reg = <0x0 0xe0338000 0x0 0x4000>;
+> +			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cmu CLK_SD2>;
+> +			resets = <&cmu RESET_SD2>;
+> +			dmas = <&dma 4>;
+> +			dma-names = "mmc";
+> +			status = "disabled";
+> +		};
+> +
+> +		mmc3: mmc@e033c000 {
+> +			compatible = "actions,owl-mmc";
+> +			reg = <0x0 0xe033c000 0x0 0x4000>;
+> +			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cmu CLK_SD3>;
+> +			resets = <&cmu RESET_SD3>;
+> +			dmas = <&dma 46>;
+> +			dma-names = "mmc";
+> +			status = "disabled";
+> +		};
+>  	};
+>  };
+> -- 
+> 2.17.1
+> 
