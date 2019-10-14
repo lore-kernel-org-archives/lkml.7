@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_12_24,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A1EECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B6CECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B6B21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED8B21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571088414;
-	bh=+KgQJOXU7urgB72CYh2W8EVuBlhYXZcyO6nz2vNzloQ=;
+	s=default; t=1571088415;
+	bh=Rz8xhmL935mXLtSudYn8Yr1PvTUCjNWwAoCjj8yI2QU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2K40Oe1n9Aso2eMFon9drl00ByUFqrwZQihQM1yu+4rnIf0yk9hPVFaAf1eCQqey9
-	 u0B2sX6+kMItLgWYXNGWQI6rxWFQtEK7XER3mkSkHL/99/Fdm3biSW0DrwEVRjCwlb
-	 fXClpzuvugiENUn6TzKkhxxKHW1wZNVX16nKGGLg=
+	b=dO0F/w77SM/7tQ1xB7zB1IhA/cv47gueN/LJjGed8vB0LSqgW7gmc2OSqMwvhBrhC
+	 o/5buUFFZbsxOJu7IqNQ9JP8DW0t4qFUEiQxI2s+TyqV6527dulXtiRUN02PTCU0aQ
+	 ae6qaJ1YDf8aePrMWxG2U1+cVTImdW4GXpScGQXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfJNV0w (ORCPT
+        id S2388961AbfJNV0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33658 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 17:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730823AbfJNV0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:26:48 -0400
+        id S2387750AbfJNV0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:26:49 -0400
 Received: from earth.universe (eth-west-pareq2-46-193-2-41.wb.wifirst.net [46.193.2.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B40312067B;
-        Mon, 14 Oct 2019 21:26:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC19121721;
+        Mon, 14 Oct 2019 21:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571088406;
-        bh=+KgQJOXU7urgB72CYh2W8EVuBlhYXZcyO6nz2vNzloQ=;
+        s=default; t=1571088408;
+        bh=Rz8xhmL935mXLtSudYn8Yr1PvTUCjNWwAoCjj8yI2QU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zFyNm3I/Crp/zzW6NZoOZVILPbYpW29GiOPdC9tSS5lRFEJyYQROLLOVShsCul5pt
-         wknAjJI8ZXVuvjI7DhWc72ZyCf2WwOAwQgfyIepqs6iDbJrfO1G9daRQRdYsWoFkMf
-         k903R6AbCcCEPNrn5z/Ah8hVYnWNJK6TQaPM9OvQ=
+        b=RtIJQllrBy84L7sEf7yZJPleBJieDdrmJp+JZFafMLwgj1hir8qaGHMg7mLI57x7b
+         feOHpfR8QSh2iK5kyt430OLvgPI9KQNfF+dBkXYBfQaenzFnRWbda/23AWQXGn2Uyw
+         xmB8qrjCC2yS7grSoCGzYdRaD4lOSwxi5njohQ0U=
 Received: by earth.universe (Postfix, from userid 1000)
-        id 9791C3C0CA7; Mon, 14 Oct 2019 07:46:35 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 07:46:35 +0200
+        id 1147F3C0CAA; Mon, 14 Oct 2019 08:59:13 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 08:59:13 +0200
 From:   Sebastian Reichel <sre@kernel.org>
-To:     lecopzer@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yj.chiang@mediatek.com, lecopzer.chen@mediatek.com
-Subject: Re: [PATCH v2 2/2] test_power: Add CURRENT properties
-Message-ID: <20191014054635.a5h5jyuefxqpderp@earth.universe>
-References: <20190912182600.24211-1-lecopzer.chen@mediatek.com>
- <20190912182600.24211-3-lecopzer.chen@mediatek.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: reset: at91-poweroff: lookup for proper PMC DT
+ node
+Message-ID: <20191014065913.k244l6gdgfiu4jsk@earth.universe>
+References: <1569493537-7612-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tsj4wc5oafdhapfr"
+        protocol="application/pgp-signature"; boundary="d46ovw6gybmflark"
 Content-Disposition: inline
-In-Reply-To: <20190912182600.24211-3-lecopzer.chen@mediatek.com>
+In-Reply-To: <1569493537-7612-1-git-send-email-claudiu.beznea@microchip.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,148 +63,82 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---tsj4wc5oafdhapfr
+--d46ovw6gybmflark
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Sep 13, 2019 at 02:26:00AM +0800, lecopzer@gmail.com wrote:
-> CURRENT is really general in other battery drivers,
-> Android also has an interface to monitor CURRENT, so let's
-> add it into test framework.
+On Thu, Sep 26, 2019 at 01:25:37PM +0300, Claudiu Beznea wrote:
+> Driver has been enabled also for SAM9X60. At the moment the patch which d=
+id
+> this has been sent to mainline the PMC for SAM9X60 wasn't integrated.
+> SAM9X60 has a new PMC compatible (see commit 01e2113de9a5
+> ("clk: at91: add sam9x60 pmc driver")). Do to this we have to
+> look for proper PMC compatible here, in SHDWC driver.
 >=20
-> The default value (1.6A) is just a random but reasonable value.
->=20
-> Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
 
 Thanks, queued.
 
 -- Sebastian
 
->  drivers/power/supply/test_power.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
+>  drivers/power/reset/at91-sama5d2_shdwc.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/tes=
-t_power.c
-> index 70db8d20e138..65c23ef6408d 100644
-> --- a/drivers/power/supply/test_power.c
-> +++ b/drivers/power/supply/test_power.c
-> @@ -34,6 +34,7 @@ static int battery_technology		=3D POWER_SUPPLY_TECHNOL=
-OGY_LION;
->  static int battery_capacity		=3D 50;
->  static int battery_voltage		=3D 3300;
->  static int battery_charge_counter	=3D -1000;
-> +static int battery_current		=3D 1600;
-> =20
->  static bool module_initialized;
-> =20
-> @@ -118,6 +119,10 @@ static int test_power_get_battery_property(struct po=
-wer_supply *psy,
->  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->  		val->intval =3D battery_voltage;
->  		break;
-> +	case POWER_SUPPLY_PROP_CURRENT_AVG:
-> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
-> +		val->intval =3D battery_current;
-> +		break;
->  	default:
->  		pr_info("%s: some properties deliberately report errors.\n",
->  			__func__);
-> @@ -149,6 +154,8 @@ static enum power_supply_property test_power_battery_=
-props[] =3D {
->  	POWER_SUPPLY_PROP_SERIAL_NUMBER,
->  	POWER_SUPPLY_PROP_TEMP,
->  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_CURRENT_AVG,
-> +	POWER_SUPPLY_PROP_CURRENT_NOW,
+> diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/res=
+et/at91-sama5d2_shdwc.c
+> index e341cc5c0ea6..1c18f465a245 100644
+> --- a/drivers/power/reset/at91-sama5d2_shdwc.c
+> +++ b/drivers/power/reset/at91-sama5d2_shdwc.c
+> @@ -269,6 +269,12 @@ static const struct of_device_id at91_shdwc_of_match=
+[] =3D {
 >  };
+>  MODULE_DEVICE_TABLE(of, at91_shdwc_of_match);
 > =20
->  static char *test_power_ac_supplied_to[] =3D {
-> @@ -467,6 +474,21 @@ static int param_set_battery_charge_counter(const ch=
-ar *key,
-> =20
->  #define param_get_battery_charge_counter param_get_int
-> =20
-> +static int param_set_battery_current(const char *key,
-> +					const struct kernel_param *kp)
-> +{
-> +	int tmp;
-> +
-> +	if (1 !=3D sscanf(key, "%d", &tmp))
-> +		return -EINVAL;
-> +
-> +	battery_current =3D tmp;
-> +	signal_power_supply_changed(test_power_supplies[TEST_BATTERY]);
-> +	return 0;
-> +}
-> +
-> +#define param_get_battery_current param_get_int
-> +
->  static const struct kernel_param_ops param_ops_ac_online =3D {
->  	.set =3D param_set_ac_online,
->  	.get =3D param_get_ac_online,
-> @@ -512,6 +534,11 @@ static const struct kernel_param_ops param_ops_batte=
-ry_charge_counter =3D {
->  	.get =3D param_get_battery_charge_counter,
->  };
-> =20
-> +static const struct kernel_param_ops param_ops_battery_current =3D {
-> +	.set =3D param_set_battery_current,
-> +	.get =3D param_get_battery_current,
+> +static const struct of_device_id at91_pmc_ids[] =3D {
+> +	{ .compatible =3D "atmel,sama5d2-pmc" },
+> +	{ .compatible =3D "microchip,sam9x60-pmc" },
+> +	{ /* Sentinel. */ }
 > +};
 > +
->  #define param_check_ac_online(name, p) __param_check(name, p, void);
->  #define param_check_usb_online(name, p) __param_check(name, p, void);
->  #define param_check_battery_status(name, p) __param_check(name, p, void);
-> @@ -521,6 +548,7 @@ static const struct kernel_param_ops param_ops_batter=
-y_charge_counter =3D {
->  #define param_check_battery_capacity(name, p) __param_check(name, p, voi=
-d);
->  #define param_check_battery_voltage(name, p) __param_check(name, p, void=
-);
->  #define param_check_battery_charge_counter(name, p) __param_check(name, =
-p, void);
-> +#define param_check_battery_current(name, p) __param_check(name, p, void=
-);
+>  static int __init at91_shdwc_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *res;
+> @@ -313,7 +319,7 @@ static int __init at91_shdwc_probe(struct platform_de=
+vice *pdev)
 > =20
+>  	at91_shdwc_dt_configure(pdev);
 > =20
->  module_param(ac_online, ac_online, 0644);
-> @@ -555,6 +583,9 @@ module_param(battery_charge_counter, battery_charge_c=
-ounter, 0644);
->  MODULE_PARM_DESC(battery_charge_counter,
->  	"battery charge counter (microampere-hours)");
-> =20
-> +module_param(battery_current, battery_current, 0644);
-> +MODULE_PARM_DESC(battery_current, "battery current (milliampere)");
-> +
->  MODULE_DESCRIPTION("Power supply driver for testing");
->  MODULE_AUTHOR("Anton Vorontsov <cbouatmailru@gmail.com>");
->  MODULE_LICENSE("GPL");
+> -	np =3D of_find_compatible_node(NULL, NULL, "atmel,sama5d2-pmc");
+> +	np =3D of_find_matching_node(NULL, at91_pmc_ids);
+>  	if (!np) {
+>  		ret =3D -ENODEV;
+>  		goto clk_disable;
 > --=20
-> 2.17.1
+> 2.7.4
 >=20
 
---tsj4wc5oafdhapfr
+--d46ovw6gybmflark
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2kC7sACgkQ2O7X88g7
-+poarA//S/InhPqISwJjDMvHrhrHAKC8/GjEzggsBixhDbnnj7SKrkmJJ15908TZ
-gFhMTzplv0eiJu4BBFexS2ogAxBQ+O5b5672Jw0nXwv+vJU/l2NasVIHE5b5wl0l
-+bboYa4gcrEAVVweKv5fbUz7vRhqQB6U6xmUkkFWaXYNAm5lNUt/m6aCYlVhM8a9
-k2kD/j+WWVlXzi8rf8GFbDyTgMH/+FBI+77sPQgc2sBiSF0KVWz8i1U5SW0RHYlN
-eOzKX6BsX/B9uqMILPWOX2IhPVFvoiImFgS2JeZzGxotHdG7fYoJwQ77g2M8KvJV
-8IieFzt8otiYEFVzAMrKmxXN8DizalrQ0wzb5G0jkKyaTwIUEaOxugtXQYToI5Ol
-XHLWXPOaUUN47VAZRmvB+Zsl2LP4LKVSrFVFNsEQbHhnyr3wzsA38CCFc8jKRQa1
-4AmZBQBeCD0RBDpgVabeh70pcZ9fn44sDkIuxdxs6euSmcjyspT16MbTbScLCe/R
-ftoPKnIvXpQw+eHPctDDDTvH4bhZ7qpoZLEWfpSM8am0F87zCtllxdZP0EyUJGAr
-xJ+ir9I2kK8W6kc3nkdiZWdzSr/s09sUeDZUbhLPIiHyJ+zYQJHuPe60/KbaeCbl
-GXAR3GyJsmaHaB74Ulj5VssiFolcKfnkm+rjdx99cjFwBE2RPfw=
-=yx3M
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2kHMAACgkQ2O7X88g7
++pq7ohAAmySmtlvTEoMtu+Eg6ZkyLhWE91QzJjC093TI4eHPf9Qq1kRKpJvzf7w4
+ft7/1dtdHaMh3WZ7QnzcqTRvYWuHqjWQn3vF/gNuuXkCbo0LBUI+zuJozc6+83Xp
+XMRehD0muqSMEEPaceJAXw1uUiTn2oygLr5mDYBZpZtShk5qF5aNBRWccf8V1Npj
+ZeZOj/whAqHAR5ixz3XaKOYuC9w5LWn63IrmTCtbWeJkuR3pfcjSJJkOH9MH3TYR
+TipTLYjdsMGfrT6YWAFH/ay5dKKUALWYnyxkAwyis/BZuaxtUuJwLuEpXAd2WO6Q
+qBrAI3XMeWvf2csWXiJ/o6Dp1TnPWh4bNwaBM3McBNbgWdPNpfYZxH1db/GpXbds
+ipP/ntBN/DKtQ07VfK/2JziQ3D+bR7fi5aTueLo+5+WtzlV/poBLooTWVMRWfRQn
+ljaAUWw4EkIy2W97u1/u4ZRQHbNw8FUT2zn/zlOaDDA+HGMYU0etfb7aaY45QCUe
+nzQaC+QkMvKLFJe+LYnkN7ZP+Aj28pP+A4Bejc14qN4p7PHwqPWHTHF7v/SfKS5T
+xXc5lezAd+uBvTZkUpXEFBw/lW3RJFgF4HbiOaU6soNYW6IhXOgKrn57GYPuOuZE
+XYk2VReN/wl+jhjh96z3rM51pdkSJT9eOOxNhOQTs3diaOvsPBY=
+=lBa6
 -----END PGP SIGNATURE-----
 
---tsj4wc5oafdhapfr--
+--d46ovw6gybmflark--
