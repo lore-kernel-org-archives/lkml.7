@@ -2,113 +2,98 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D806ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D526BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A10920854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571074905;
-	bh=YYSRFuWjjjO9Dv0wsRR/bvBjolbFH4cIWD41bw1dJHk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Dy4OAZcTxbEEcoGNXJ5XtKQXPsRBjyprZRkjzCznaLpvr6NN+1QZ8JHp20FrlQBX1
-	 ma/ASQlllw31GBgBN0fSEeFJWvLc4brwAqhP1nPsWvCpXxf8ZMC14dHdFjJyq6vhd4
-	 GEJKGF56s7hWO12k0JhfroJoqCmB3UH/sXf0JYN4=
+	by mail.kernel.org (Postfix) with ESMTP id BD63220854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbfJNRlo (ORCPT
+        id S1731572AbfJNRmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:41:44 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46908 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731171AbfJNRln (ORCPT
+        Mon, 14 Oct 2019 13:42:04 -0400
+Received: from sender4-op-o14.zoho.com ([136.143.188.14]:17433 "EHLO
+        sender4-op-o14.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731171AbfJNRmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:41:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t8so12356617lfc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P799DeurAv7knAP/9jFPDE4m8m+46TvvpHN93XfkDjE=;
-        b=HWWymbYdZnWtJmHwFOmPF1ZzJDaTOeayFZ5PwgDvPf6UmwnVngK8F0WL6ftDpUBt65
-         6CA7fbK/RfBrDC+lGkPSzKjf3Py8iCvGuqPRh2kQkkDM55QsR1au+xiI2Z52IW4rOkCn
-         s1q1W19Sc+umQVIDvAwB4blHAjaZuSeemBQjM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P799DeurAv7knAP/9jFPDE4m8m+46TvvpHN93XfkDjE=;
-        b=Su7v4yc7CHe6HCWzpLTwmRTR9GVdxMv72VGrWZXPaw2+7X/HIVMdBnjPn4F2SJ51Y1
-         APuWqMzTcCmcMS9vYBlcPRokQM/dED7mxL3rDg+XOXiwrBmfZRpEqnu13PHfHJ72AVCn
-         zcS0/+AB6KpGcxZTQ+gMtXR05OJQbx+0iJBX2xuLmDPQ4MAo3VQ0H2Ytm/fe8+wDRNuV
-         j7eTtlqaxSOUhDGy/+WAUSnaCExI8UiKJNSqsvfYx48gbHLGnnxgYiQpiMByN/DenIjn
-         uIgoReMd3xCgf/7twFueBA5FBkneUngOqM6iouys+CWW/Ufj2zMbltMKSB0SicycviFO
-         jNGw==
-X-Gm-Message-State: APjAAAXHSWRUbK/6p35vaSIBSHZ6FggVw47pVyzngzj73bSXyds7miDa
-        UEfW6K4yM+8+A7FZLAkwUYNeRnuRvnM=
-X-Google-Smtp-Source: APXvYqx/sJHftL73nww4DAGr2NubKEPgazEl6bzRBdv7auQfdgJqAthBGcYdSACuHtbcJOoiwubMuA==
-X-Received: by 2002:ac2:5a5a:: with SMTP id r26mr10309532lfn.70.1571074901311;
-        Mon, 14 Oct 2019 10:41:41 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id t22sm4377264lfg.91.2019.10.14.10.41.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2019 10:41:36 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id l21so17497218lje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:41:35 -0700 (PDT)
-X-Received: by 2002:a2e:6a04:: with SMTP id f4mr19334971ljc.97.1571074895188;
- Mon, 14 Oct 2019 10:41:35 -0700 (PDT)
+        Mon, 14 Oct 2019 13:42:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571074914; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=UoaKiyg+jQdvyC/HhihkyXN4vATpVe1FzZda6S9x50vCOlNQChj6l5iHpkER9D0llDqinnyxy87QDh7AsSbYI1R6tUS+Yc9N7XUd++mhMtwEWC+9LCdXQcb9LeLrP0ZdX4fxoCd47YXj6CNUBOKbiY5hUS2bVtB9waqVcpz06YA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1571074914; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=sz/CQBl0duYZalGaCIYiBg7xruUCOAaCokFPhXphtJM=; 
+        b=MIsc+Kk2VqXzXnM1/cUjHBsaqsKYgb2HxWrSK+t+42eapnh/VsbfRGsIXElno0vaxJa1iowXYn4GToHUFGt38z6/otN6+GyHtkfx6HBY0NnXaSehiir4wtcEnVozzp+HZhYuTXTAL9zh1KqHpQPbRvGTTnuK/VaYCyvTnxwobak=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-100-15-144-194.washdc.fios.verizon.net [100.15.144.194]) by mx.zohomail.com
+        with SMTPS id 1571074913103134.03014784679272; Mon, 14 Oct 2019 10:41:53 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 17:27:31 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: accel: bma400: add bindings
+Message-ID: <20191014172731.GA30646@nessie>
+References: <20191012192525.21040-1-dan@dlrobertson.com>
+ <20191012192525.21040-2-dan@dlrobertson.com>
+ <20191014171521.GA29335@bogus>
 MIME-Version: 1.0
-References: <20191011121951.nxna6hruuskvdxod@box> <20191011223818.7238-1-vgupta@synopsys.com>
-In-Reply-To: <20191011223818.7238-1-vgupta@synopsys.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 14 Oct 2019 10:41:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whLs=TrRzmB9KRLxcPERq0QXPUUkbD8vzKzaDszBcUspg@mail.gmail.com>
-Message-ID: <CAHk-=whLs=TrRzmB9KRLxcPERq0QXPUUkbD8vzKzaDszBcUspg@mail.gmail.com>
-Subject: Re: [RFC] asm-generic/tlb: stub out pmd_free_tlb() if __PAGETABLE_PMD_FOLDED
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Linux-MM <linux-mm@kvack.org>, linux-snps-arc@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Content-Disposition: inline
+In-Reply-To: <20191014171521.GA29335@bogus>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Zoho-Virus-Status: 1
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 3:38 PM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
->
-> This is inine with similar patches for nopud [1] and nop4d [2] cases.
 
-I don't think your patch is wrong, but wouldn't it be easier and
-cleaner to just do this instead
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-    --- a/include/asm-generic/pgtable-nopmd.h
-    +++ b/include/asm-generic/pgtable-nopmd.h
-    @@ -60,7 +60,7 @@ static inline pmd_t * pmd_offset(pud_t * pud,
-unsigned long address)
-     static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
-     {
-     }
-    -#define __pmd_free_tlb(tlb, x, a)          do { } while (0)
-    +#define pmd_free_tlb(tlb, x, a)            do { } while (0)
+> Fails 'make dt_binding_check':
 
-     #undef  pmd_addr_end
-     #define pmd_addr_end(addr, end)                    (end)
+Thanks for the note. Should running `make dt_binding_check` be added to
+`Documentation/devicetree/bindings/submitting-patches.rst`?
 
-and just rely on the regular "#ifndef pmd_free_tlb" in
-include/asm-generic/tlb.h?
+Cheers,
 
-Completely untested.
+ - Dan
 
-              Linus
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEF5dO2RaKc5C+SCJ9RcSmUsR+QqUFAl2kr/cACgkQRcSmUsR+
+QqWFXg/9FsPJaiW55rPeVJ+BAFKW2BQd/QKN+TynZB/aEydTO/ohevd2G/u2C2Ak
+4z1zFgAqBumsGcEeoy7P1PpIaqLiJ1WBOr4H87bGGIRvjHvyTVStldh6hIQ/k7PI
+WbK9+no+FJ/Wwjgdcyty1Ni6lp8shMtJexTynIeymvYPKnC9LvdUp5buGe7FylRS
+F69iFget4xN9QciFFr27mq0wx+RtSOM5L42stvTjz8SBj/TMTUt9ROuwgr3TlPUN
+lUJT+nOQAhZZPT4vXsAgte5D2Fl+KmOi459cmqoshotihZnmZRmWYgLHpKFM4dju
+AEl4acLIMopFdBM9jFBJCLBb/lQbIlX3mf4E6rR2bBGt49Vc3x/yGKgddj9s+wyp
+8Xq5rlAplIZf+enrooHLxAXeUM2I1IizdZooGFY00zAXo7ZxpwNcyvL2g4iC/ezY
+wuNjaKuboGWCLbnKYi5CJrTSTUSt8pqVH+KFm58W5gPQrW2ZwFilDZYs1ZqM2inM
+/hhGAgBHP0U7p7cQZr4jr+qp6Idinns3RQCsYcZv1iRre4MSnmx3B5i7iOjjzlcn
+HCofz25ssaz6fDOA1bRhl6bhPhlXeQ5JGc+q1ELIp4Bawoc/05LtAPznIOlBEEqj
+UMO5CAycCKUG5FdtrTLXOYaHOsYHM9biuBKIuXd/ZxipDQ/VSQA=
+=36QZ
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
+
