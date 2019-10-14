@@ -6,132 +6,64 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8170FECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1C4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B07207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41582084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfJNKIg (ORCPT
+        id S1731362AbfJNKIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:08:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33409 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730880AbfJNKIf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:08:35 -0400
-Received: from [212.86.36.32] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iJxH8-000093-VJ; Mon, 14 Oct 2019 10:08:27 +0000
-Date:   Mon, 14 Oct 2019 12:08:26 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] clone3: add CLONE3_CLEAR_SIGHAND
-Message-ID: <20191014100824.sc4aqfktbn6go736@wittgenstein>
-References: <20191010133518.5420-1-christian.brauner@ubuntu.com>
- <CAHO5Pa3V7fDb_+U-v+LB+TeAU0vfJyUMs9mD4ZqUtbLpZcD4nA@mail.gmail.com>
- <20191011221208.5eglbazksfigliob@yavin.dot.cyphar.com>
- <CAKgNAkhgGhGi-hMJt3UxYYDuyOZLx7c-eucpD5V7js+hsyv2CQ@mail.gmail.com>
- <20191012074840.4to7lh4zbt4wup74@wittgenstein>
- <b3fce4a4-10a8-befe-a438-f16dfa0cdb6b@gmail.com>
+        Mon, 14 Oct 2019 06:08:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:39444 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730880AbfJNKIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:08:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4AF3337;
+        Mon, 14 Oct 2019 03:08:38 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDAAC3F718;
+        Mon, 14 Oct 2019 03:08:37 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:07:56 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] drivers: firmware: psci: use kernel restart handler
+ functionality
+Message-ID: <20191014100756.GA4028@bogus>
+References: <20191012214735.1127009-1-stefan@agner.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3fce4a4-10a8-befe-a438-f16dfa0cdb6b@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191012214735.1127009-1-stefan@agner.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 01:46:54PM +0200, Michael Kerrisk (man-pages) wrote:
-> On 10/12/19 9:48 AM, Christian Brauner wrote:
-> > On Sat, Oct 12, 2019 at 08:53:34AM +0200, Michael Kerrisk (man-pages) wrote:
-> >> Hello Aleksa,
-> >>
-> >> On Sat, 12 Oct 2019 at 00:12, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >>>
-> >>> On 2019-10-11, Michael Kerrisk <mtk.manpages@gmail.com> wrote:
-> >>>> Why CLONE3_CLEAR_SIGHAND rather than just CLONE_CLEAR_SIGHAND?
-> > 
-> > I don't care much how we name this apart from the "_CLEAR_SIGHAND"
-> > suffix. But see for a little rationale below.
-> > 
-> >>>
-> >>> There are no more flag bits left for the classic clone()/clone2() (the
-> >>> last one was used up by CLONE_PIDFD) -- thus this flag is clone3()-only.
-> >>
-> >> Yes, I understand that. But, I'm not sure that the "3" in the prefix
-> >> is necessary. "CLONE_" still seems better to me.
-> >>
-> >> Consider this: sometime in the near future we will probably have time
-> >> namespaces. The new flag for those namespaces will only be usable with
-> >> clone3(). It should NOT be called CLONE3_NEWTIME, but rather
-> >> CLONE_NEWTIME (or similar), because that same flag will presumably
-> >> also be used in other APIs such as unshare() and setns(). (Hmm -- I
-> > 
-> > There are some noteable differences though. CLONE_NEWTIME takes the
-> > CSIGNAL bit which is in the range of a 32bit integer and thus useable by
-> > unshare() too. The same does not hold for CLONE{3}_CLEAR_SIGHAND. You
-> > can't pass it to unshare(). unshare() also just deals with
-> > namespace-relevant stuff so CLONE{3}_CLEAR_SIGHAND doesn't make much
-> > sense there.
+On Sat, Oct 12, 2019 at 11:47:35PM +0200, Stefan Agner wrote:
+> From: Stefan Agner <stefan.agner@toradex.com>
 > 
-> Sure, but going forward there's very likely to be more CLONE flags
-> for whatever reason, and some will be usable just in clone3()
-> while others will be more widely used (in other APIs such as
-> unshare() and setns()). Using two different prefixes for these
-> flags (CLONE_/CLONE3_) would be just confusing. AFAICS, the CLONE3_
-
-I do agree with that part. And as I said in my previous mail, I don't
-care about the prefix.
-
-> prefix really provides no advantage, but does have the potential to
-> cause confusion down the track for the aforementioned reasons.
-> (Furthermore... Shudder! What if there's a clone4() one day. I
-> know you might say: "won't happen, we got things right this time",
-> but API history suggests that "right" now not infrequently becomes
-> "oops" later.) I do recommend CLONE_ for all the flags...
-
-I do love your trust in our ability to design syscalls (//Cc Aleksa ;)). :)
-
+> Use the kernels restart handler to register the PSCI system reset
+> capability. The restart handler use notifier chains along with
+> priorities. This allows to use restart handlers with higher priority
+> (in case available) while still supporting PSCI.
 > 
-> >> wonder if we are going to need a new unshare2() or some such...)
-> > 
-> > We still have one 32bit bit left (CLONE_DETACHED) which we can't reuse
-> > with clone()/clone2() but we can reuse with clone3(). We can simply
-> > earmark it for namespace-related stuff and thus still have one bit left
-> > for unshare() before we have to go for unshare2() (If we have to go
-> > there at all since I'm not sure how much more namespaces we can come up
-> > with.).
+> Since the ARM handler had priority over the kernels restart handler
+> before this patch, use a slightly elevated priority of 160 to make
+> sure PSCI is used before most of the other handlers are called.
 > 
-> I'm sure there'll be more namespaces...
 
-Let's hope not. :) Anyway, no real reason to do unshare2() any time
-soon. :)
+There's an attempt(rather pull request[1]) to consolidate these into new
+system power/restart handler.
 
-Christian
+--
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/linux-arm-kernel/20191002131228.4085560-1-thierry.reding@gmail.com
