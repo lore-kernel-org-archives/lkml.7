@@ -2,198 +2,180 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD32ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3AFECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690A920659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DBE20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fD2zTYgY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DFNYV5Mt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfJNJRn (ORCPT
+        id S1730808AbfJNJSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:17:43 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34447 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730438AbfJNJRm (ORCPT
+        Mon, 14 Oct 2019 05:18:12 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22188 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730713AbfJNJSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:17:42 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j8so2487152eds.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:17:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EZfxpi3wJn7CHGgZY3AghGLO9PJ6e7d/ikmLyqekpVw=;
-        b=fD2zTYgYVzAXQ+/DZ0dHRSWa22Fs6U2WuKPrE9lnr1Mk0qMMREr0mE55PH+8n/D1r3
-         ptC/MJadGP8PGQxBrDvp+jy/W7PxPeheACL2WtmUHp69JoLeFh+ja5VxQGaqy3cE+JAV
-         vk3agDfU+kbSAhygn11SNSGw7xnghqjA55hmg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=EZfxpi3wJn7CHGgZY3AghGLO9PJ6e7d/ikmLyqekpVw=;
-        b=RE8HSCh1GGTGyuGeEVSLRylOltZYCaqlOhZ55MDbMBm0uhYUbhjMyB38BKJjvWs+zt
-         jl7y82GtnQ08UtCQ+yIXnF9M4GwNemj4oKPreWy/z3Q4U0Al55FfXr1dbzFVPDEle7Pr
-         H3OdsoYrcfwwQIfpX4plrMbH7JuJoK1TDGwxJ1XToK6aznRFVEq6q/G8pxSQeRj5yMWN
-         QzKyubHP1mWzfLAEUPhvF4fJS7fRHV3ZzS17RX5GFwCMBHXuV4B+fZDNGZCa9R07+DlT
-         8m3dahEkJyhstlmgo4bP1bDXjareCygdskZSaj1Dcc64Nleoc40JNykOwEl9MZeim8XT
-         +DBg==
-X-Gm-Message-State: APjAAAX6CBrKQw7B4Hb7o3sFN+gAW4Jml1u9Zlj+hgz55ml5+blym4LC
-        kNHR8gAJsvVFni9w6BQRH+jyrA==
-X-Google-Smtp-Source: APXvYqyNl3B+iSLwfjR/ZObVZjTTlEO2IcVtqxZVqxSYiuhvAE8KY3zmOXkE7StB46x3ntGe0CFM1Q==
-X-Received: by 2002:a50:fa8e:: with SMTP id w14mr27409748edr.285.1571044659368;
-        Mon, 14 Oct 2019 02:17:39 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id l7sm3060647edv.84.2019.10.14.02.17.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 02:17:38 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 11:17:36 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     syzbot <syzbot+e7ad70d406e74d8fc9d0@syzkaller.appspotmail.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org,
-        oleg.vasilev@intel.com, omrigann@gmail.com,
-        rodrigosiqueiramelo@gmail.com, simon.ser@intel.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in vkms_gem_free_object
-Message-ID: <20191014091736.GJ11828@phenom.ffwll.local>
-Mail-Followup-To: syzbot <syzbot+e7ad70d406e74d8fc9d0@syzkaller.appspotmail.com>,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org,
-        oleg.vasilev@intel.com, omrigann@gmail.com,
-        rodrigosiqueiramelo@gmail.com, simon.ser@intel.com,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000006bed900594d5e99a@google.com>
+        Mon, 14 Oct 2019 05:18:11 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9E9BgUs022240;
+        Mon, 14 Oct 2019 11:18:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=rppez0TLqKr7YkVENE3vEAgH7KKEnoklKwSXeMW5hE0=;
+ b=DFNYV5MtpvRsSZAzHlfLc3B0+XEKkNJ683+vDjSCDB5bEq+3raU1dQD28YpkeH4ae1Vu
+ E9y1Vv1nFom+CJ94Q/9ckj1kLS/8VGN6add2+FpjlZC1ttG5d+dikLUUGwHs/Q/qt2xX
+ NYaD3gXOi6/cmY81B4prQAOdj0YcdineO3Vm5db+xLkJwhSdRzK3e5c7Hm4EPvOxOv/i
+ p8WeC0vK06qr3x3+OqmirefnVyH9sNgGputS8z54QDak5w97yY8DZoQiVCWQ3BOMM5+j
+ oAg9akOy1ld+TuEomQAq8TCCN3owcghIIi5+1sbpWCDb2gq9x3n4pE2Tp15agQXNCzxi jQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vk3y9hrrm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Oct 2019 11:18:01 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F40A10003A;
+        Mon, 14 Oct 2019 11:17:59 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0D3A42B8C52;
+        Mon, 14 Oct 2019 11:17:59 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 14 Oct
+ 2019 11:17:59 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 14 Oct 2019 11:17:58
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <ohad@wizery.com>, <bjorn.andersson@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3] dt-bindings: hwlock: Convert stm32 hwspinlock bindings to json-schema
+Date:   Mon, 14 Oct 2019 11:17:56 +0200
+Message-ID: <20191014091756.23763-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000006bed900594d5e99a@google.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-14_06:2019-10-10,2019-10-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 07:49:08PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    8ada228a Add linux-next specific files for 20191011
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14c30b1b600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7cf4eed5fe42c31a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e7ad70d406e74d8fc9d0
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1087d31b600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e27c53600000
-> 
-> The bug was bisected to:
-> 
-> commit 94e2ec3f7fef86506293a448273b2b4ee21e6195
-> Author: Oleg Vasilev <omrigann@gmail.com>
-> Date:   Mon Sep 30 15:59:24 2019 +0000
-> 
->     drm/vkms: prime import support
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ef2d57600000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17ef2d57600000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13ef2d57600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e7ad70d406e74d8fc9d0@syzkaller.appspotmail.com
-> Fixes: 94e2ec3f7fef ("drm/vkms: prime import support")
+Convert the STM32 hwspinlock binding to DT schema format using json-schema
 
-Oleg, will you be looking at this? With the reproducer and full drm
-debugging enabled it shouldn't be too hard to figure out what's going on
-heere ...
--Daniel
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+change in v3:
+- use (GPL-2.0-only OR BSD-2-Clause)
 
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 9040 at drivers/gpu/drm/vkms/vkms_gem.c:37
-> vkms_gem_free_object+0x92/0xb0 drivers/gpu/drm/vkms/vkms_gem.c:37
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 9040 Comm: syz-executor028 Not tainted 5.4.0-rc2-next-20191011
-> #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2e3/0x75c kernel/panic.c:221
->  __warn.cold+0x2f/0x35 kernel/panic.c:582
->  report_bug+0x289/0x300 lib/bug.c:195
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  fixup_bug arch/x86/kernel/traps.c:169 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
->  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> RIP: 0010:vkms_gem_free_object+0x92/0xb0 drivers/gpu/drm/vkms/vkms_gem.c:37
-> Code: 44 68 7f fd 49 8d bc 24 f8 01 00 00 e8 c7 8d 64 fd 4c 89 e7 e8 3f 39
-> ae ff 4c 89 e7 e8 f7 9a ba fd 41 5c 5d c3 e8 1e 68 7f fd <0f> 0b eb a2 e8 15
-> 68 7f fd 0f 0b eb c8 e8 2c e7 ba fd eb b6 e8 25
-> RSP: 0018:ffff8880971df9e8 EFLAGS: 00010293
-> RAX: ffff8880989c2200 RBX: ffffffff894e5000 RCX: ffffffff83a1eda6
-> RDX: 0000000000000000 RSI: ffffffff83f3ab02 RDI: ffff8880a8c4fa78
-> RBP: ffff8880971df9f0 R08: ffff8880989c2200 R09: ffffed1012e3bf36
-> R10: ffffed1012e3bf35 R11: 0000000000000003 R12: ffff8880a8c4f800
-> R13: ffff8880a3ab8000 R14: ffffffff83f3aa70 R15: ffff8880a3ab8020
->  drm_gem_object_free+0x100/0x220 drivers/gpu/drm/drm_gem.c:983
->  kref_put include/linux/kref.h:65 [inline]
->  drm_gem_object_put_unlocked drivers/gpu/drm/drm_gem.c:1017 [inline]
->  drm_gem_object_put_unlocked+0x127/0x170 drivers/gpu/drm/drm_gem.c:1002
->  drm_gem_object_handle_put_unlocked+0x1ad/0x2d0
-> drivers/gpu/drm/drm_gem.c:239
->  drm_gem_object_release_handle+0x102/0x1c0 drivers/gpu/drm/drm_gem.c:261
->  idr_for_each+0x138/0x250 lib/idr.c:208
->  drm_gem_release+0x27/0x40 drivers/gpu/drm/drm_gem.c:939
->  drm_file_free.part.0+0x7f4/0xc00 drivers/gpu/drm/drm_file.c:244
->  drm_file_free drivers/gpu/drm/drm_file.c:213 [inline]
->  drm_close_helper drivers/gpu/drm/drm_file.c:271 [inline]
->  drm_release+0x286/0x3f0 drivers/gpu/drm/drm_file.c:443
->  __fput+0x2ff/0x890 fs/file_table.c:280
->  ____fput+0x16/0x20 fs/file_table.c:313
->  task_work_run+0x145/0x1c0 kernel/task_work.c:113
->  exit_task_work include/linux/task_work.h:22 [inline]
->  do_exit+0x904/0x2e60 kernel/exit.c:817
->  do_group_exit+0x135/0x360 kernel/exit.c:921
->  __do_sys_exit_group kernel/exit.c:932 [inline]
->  __se_sys_exit_group kernel/exit.c:930 [inline]
->  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
->  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x442bb8
-> Code: Bad RIP value.
-> RSP: 002b:00007ffd8fdc0b98 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000442bb8
-> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-> RBP: 00000000004c24c8 R08: 00000000000000e7 R09: ffffffffffffffd0
-> R10: 00000000004002e0 R11: 0000000000000246 R12: 0000000000000001
-> R13: 00000000006d41a0 R14: 0000000000000000 R15: 0000000000000000
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+change in v2:
+- use BSD-2-Clause license
+- use const for #hwlock-cells
+- add additionalProperties: false
 
+ .../bindings/hwlock/st,stm32-hwspinlock.txt        | 23 ----------
+ .../bindings/hwlock/st,stm32-hwspinlock.yaml       | 50 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
+ create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
+
+diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
+deleted file mode 100644
+index adf4f000ea3d..000000000000
+--- a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-STM32 Hardware Spinlock Device Binding
+--------------------------------------
+-
+-Required properties :
+-- compatible : should be "st,stm32-hwspinlock".
+-- reg : the register address of hwspinlock.
+-- #hwlock-cells : hwlock users only use the hwlock id to represent a specific
+-	hwlock, so the number of cells should be <1> here.
+-- clock-names : Must contain "hsem".
+-- clocks : Must contain a phandle entry for the clock in clock-names, see the
+-	common clock bindings.
+-
+-Please look at the generic hwlock binding for usage information for consumers,
+-"Documentation/devicetree/bindings/hwlock/hwlock.txt"
+-
+-Example of hwlock provider:
+-	hwspinlock@4c000000 {
+-		compatible = "st,stm32-hwspinlock";
+-		#hwlock-cells = <1>;
+-		reg = <0x4c000000 0x400>;
+-		clocks = <&rcc HSEM>;
+-		clock-names = "hsem";
+-	};
+diff --git a/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
+new file mode 100644
+index 000000000000..47cf9c8d97e9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwlock/st,stm32-hwspinlock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Hardware Spinlock bindings
++
++maintainers:
++  - Benjamin Gaignard <benjamin.gaignard@st.com>
++  - Fabien Dessenne <fabien.dessenne@st.com>
++
++properties:
++  "#hwlock-cells":
++    const: 1
++
++  compatible:
++    const: st,stm32-hwspinlock
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: hsem
++
++required:
++  - "#hwlock-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    hwspinlock@4c000000 {
++        compatible = "st,stm32-hwspinlock";
++        #hwlock-cells = <1>;
++        reg = <0x4c000000 0x400>;
++        clocks = <&rcc HSEM>;
++        clock-names = "hsem";
++    };
++
++...
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.15.0
+
