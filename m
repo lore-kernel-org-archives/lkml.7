@@ -2,70 +2,102 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C212ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CE2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FF82089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:27:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KSqc/zaD"
+	by mail.kernel.org (Postfix) with ESMTP id B7F152133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732793AbfJNO1v (ORCPT
+        id S1732825AbfJNO2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:27:51 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55168 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732589AbfJNO1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:27:51 -0400
-Received: from zn.tnic (p200300EC2F065800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5800:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DC5C21EC06FB;
-        Mon, 14 Oct 2019 16:27:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571063270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=xnAbQTxxzd5rIOcOu5tUVs/ScOLib3p+kaJk8MwESRY=;
-        b=KSqc/zaDPn6v9D5UIZq9wrxPldVUwvdMSEseyWU7S5Wq/+7aEXMA7XiWEAm3lz9KWt35s7
-        TCA02Fe5YQlnylwhNI0ui27bYkekf7quKcxw2ZwFDr4y0ZfIvvkSwdMtoDbXG0IIAskTJb
-        SB+xxSNls49Nxb1eG9A3O9cgVQ24noY=
-Date:   Mon, 14 Oct 2019 16:27:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 07/28] x86/boot: Annotate local functions
-Message-ID: <20191014142742.GD4715@zn.tnic>
-References: <20191011115108.12392-1-jslaby@suse.cz>
- <20191011115108.12392-8-jslaby@suse.cz>
+        Mon, 14 Oct 2019 10:28:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38857 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731121AbfJNO2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 10:28:40 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iK1Kr-0001WJ-Uc; Mon, 14 Oct 2019 16:28:34 +0200
+Date:   Mon, 14 Oct 2019 16:28:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+cc:     "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH] tick: check if broadcast device could really be
+ stopped
+In-Reply-To: <16f7e8e9-eefe-5973-a08a-3e1823d20034@st.com>
+Message-ID: <alpine.DEB.2.21.1910141620100.2531@nanos.tec.linutronix.de>
+References: <20191009160246.17898-1-benjamin.gaignard@st.com> <alpine.DEB.2.21.1910141441350.2531@nanos.tec.linutronix.de> <a4b4b785-c471-a3c2-2c41-01bd9865e479@st.com> <alpine.DEB.2.21.1910141535500.2531@nanos.tec.linutronix.de>
+ <16f7e8e9-eefe-5973-a08a-3e1823d20034@st.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191011115108.12392-8-jslaby@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 01:50:47PM +0200, Jiri Slaby wrote:
-> .Lrelocated, .Lpaging_enabled, .Lno_longmode, and .Lin_pm32 are
-> self-standing local functions, annotate them as such and preserve "no
-> alignment".
+On Mon, 14 Oct 2019, Benjamin GAIGNARD wrote:
+> On 10/14/19 3:40 PM, Thomas Gleixner wrote:
+> > I don't understand what you are trying to achieve here. If the tick device,
+> > i.e. the comparator stops working in deep idle states, then the device has
+> > rightfully the CLOCK_EVT_FEAT_C3STOP (mis)feature set. Which means that the
+> > system needs a fallback device for the deep idle case. If there is no
+> > physical fallback device then you should enable the hrtimer based broadcast
+> > pseudo tick device.
+> >
+> > If the CPUs never go deep idle because there is no idle driver loaded or
+> > the deep power state in which the comparator stops working is never
+> > reached, then the broadcast hrtimer will never be used. It just eats a bit
+> > of memory and a few extra instructions.
 > 
-> The annotations do not generate anything yet.
+> Since CPUs won't go in deep idle I don't want to get a broadcast timer
+> but only an hrtimer to get accure latencies for the scheduler.
 
-So the annotation is only documentational, right?
+What's wrong with the broadcast timer if it is never utilized? It's there,
+needs a few bytes of memory and that's it.
 
--- 
-Regards/Gruss,
-    Boris.
+> When arch arm timer doesn't set CLOCK_EVT_FEAT_C3STOP flag, my system got
+> a hrtimer and everything goes well.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Sure, but that's applicable to your particular system only and not a
+generic solution. Neither your DT hack, nor the other one you posted.
+
+> If arch arm timer set CLOCK_EVT_FEAT_C3STOP hrtimer disappear (except if
+> I add an additional broadcast timer).
+
+Right.
+
+> What is the link between tick broadcast timer and hrtimer ? Does arch 
+> arm timer could only implement them at the same time ?
+
+If the clock event device is affected by deep power states, then the core
+requires a fallback device, aka. broadcast timer, which makes sure that no
+event is lost in case that the CPU goes into a deep power state. If no CPU
+ever goes deep, the broadcast timer is there and unused.
+
+Obviously the system cannot enable high resolution timers if the clock
+event device is affected by power states.
+
+Unless you have a solution which works under all circumstances (and the
+current patch definitely does not) then you have to deal with the
+requirement of the broadcast timer (either physical or software based).
+
+"I don't want a broadcast timer falls" into the "I want a pony" realm.
+
+Thanks,
+
+	tglx
+
