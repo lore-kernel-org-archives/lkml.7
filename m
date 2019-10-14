@@ -2,144 +2,116 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F7FECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5FBECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71DA217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D5B2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnB1O5Qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387720AbfJNPpn (ORCPT
+        id S2387726AbfJNPqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:45:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:47346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729997AbfJNPpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:45:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C8B328;
-        Mon, 14 Oct 2019 08:45:42 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F6F13F718;
-        Mon, 14 Oct 2019 08:45:41 -0700 (PDT)
-Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
- capability
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
- <20191010171517.28782-2-suzuki.poulose@arm.com>
- <20191011113620.GG27757@arm.com>
- <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
- <20191011142137.GH27757@arm.com>
- <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
- <20191014145204.GS27757@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <12e002e7-42e8-c205-e42c-3348359d2f98@arm.com>
-Date:   Mon, 14 Oct 2019 16:45:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 14 Oct 2019 11:46:32 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37992 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729930AbfJNPqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:46:32 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 3so17256754wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gqnH5u+Rmz2NG69129OK2vF9yH2mCkTespyQ46VZaP8=;
+        b=JnB1O5QmG2avz0u1r/tYNyNtqVV3ZL9hHVUvFV60SIzhrPzy9leC5ZvDm19z/f4bcO
+         0gRaKyu4pgOPEzDnNkaJL6I/DjcFznx8QzRIGuWuWYTY6H5XWW6Quh7P5DtfDTmACNVs
+         +0MKKHGZlzVbW4Tsdmzk1TAK/wWE9YRc/JElqor1Q62XSKgfOphUyhi0KdpoPx8ExNvF
+         /E+RrbHctSrcNpffZ9br7HF4gDXO+Ey38oQjG3Lv2bzfEQhKyNlOFb1522zQt4FLRiIr
+         slZAZdK0wW9bxM8C7TQYVJ9TFwqG1uoMCYYkbsmbZ3pOjwuLxBe1wtaCE00K3rLOOwbA
+         MsYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gqnH5u+Rmz2NG69129OK2vF9yH2mCkTespyQ46VZaP8=;
+        b=Bb0hX7i+R3QAjz/AIvx9vUoTPaa8mVYUOZCisxyI9UB/QOEPU/ZUhe+rkAzqShzd3p
+         fNowxmZ/FJqu/hq/+aQ5QRVUN8/q88sb2Bp1aC1qbkuLe6rJUGF1dxe4L2zibsmlDjU0
+         FNuW3lSHVcY0DDpiaKmSpa+rb7UvM+OsJxP/NtdZbWuar1Dv+JMDdUAn7UQsC5dJmkIW
+         MIw8FkPpfDjZ6drh3RMH+66aAnReIXi+OkZzfcgpp9ChIiN/bz49tR4qxw6jLwClLOhK
+         wDoZLPU/TaBfNnjEk+yCfhTAnhoeYnnbduRhxZJBS6HXgbiirlFIcQt0rfpBT3U5Tz7d
+         bJpQ==
+X-Gm-Message-State: APjAAAV8oHBhpaXS4ef4fJLq+DsSku/Tov6pd3iSUi/lZTPWNhD+b6wz
+        YFsj2+hGr76T3hS+VSR+bpFFuw==
+X-Google-Smtp-Source: APXvYqwGT4KOZXWes00rIf6fjnXihAP+4JZg25EojQh4Euuu0pxswSBdYFr1OfRcypxedl5j8+hG4w==
+X-Received: by 2002:a7b:c7d3:: with SMTP id z19mr12069411wmk.83.1571067990478;
+        Mon, 14 Oct 2019 08:46:30 -0700 (PDT)
+Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id q22sm16539738wmj.5.2019.10.14.08.46.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 08:46:29 -0700 (PDT)
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        patches@linaro.org
+Subject: [PATCH v3 0/5] kdb: Cleanup code to read user input and handle escape sequences
+Date:   Mon, 14 Oct 2019 16:46:21 +0100
+Message-Id: <20191014154626.351-1-daniel.thompson@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191014145204.GS27757@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I've been meaning to repost this for some time, and inspired by
+having someone keen to review it, I dug it out again!
 
+I split this as carefully as I could into small pieces but the original
+code was complex so even in small bits it doesn't make for light
+reading.  Things do make more sense once you realize/remember that
+escape_delay is a count down timer that expires the escape sequences!
 
-On 14/10/2019 15:52, Dave Martin wrote:
-> On Fri, Oct 11, 2019 at 06:28:43PM +0100, Suzuki K Poulose wrote:
->>
->>
->> On 11/10/2019 15:21, Dave Martin wrote:
->>> On Fri, Oct 11, 2019 at 01:13:18PM +0100, Suzuki K Poulose wrote: > Hi Dave
->>>>
->>>> On 11/10/2019 12:36, Dave Martin wrote:
->>>>> On Thu, Oct 10, 2019 at 06:15:15PM +0100, Suzuki K Poulose wrote:
->>>>>> The NO_FPSIMD capability is defined with scope SYSTEM, which implies
->>>>>> that the "absence" of FP/SIMD on at least one CPU is detected only
->>>>>> after all the SMP CPUs are brought up. However, we use the status
->>>>>> of this capability for every context switch. So, let us change
->>>>>> the scop to LOCAL_CPU to allow the detection of this capability
->>>>>> as and when the first CPU without FP is brought up.
->>>>>>
->>>>>> Also, the current type allows hotplugged CPU to be brought up without
->>>>>> FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
->>>>>> up. Fix both of these issues by changing the capability to
->>>>>> BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
->>>>>>
->>>>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
->>>>>> Cc: Will Deacon <will@kernel.org>
->>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>>>> ---
->>>>>>   arch/arm64/kernel/cpufeature.c | 2 +-
->>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->>>>>> index 9323bcc40a58..0f9eace6c64b 100644
->>>>>> --- a/arch/arm64/kernel/cpufeature.c
->>>>>> +++ b/arch/arm64/kernel/cpufeature.c
->>>>>> @@ -1361,7 +1361,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->>>>>>   	{
->>>>>>   		/* FP/SIMD is not implemented */
->>>>>>   		.capability = ARM64_HAS_NO_FPSIMD,
->>>>>> -		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
->>>>>> +		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
->>>>>
->>>>> ARM64_HAS_NO_FPSIMD is really a disability, not a capability.
->>>>>
->>>>> Although we have other things that smell like this (CPU errata for
->>>>> example), I wonder whether inverting the meaning in the case would
->>>>> make the situation easier to understand.
->>>>
->>>> Yes, it is indeed a disability, more on that below.
->>>>
->>>>>
->>>>> So, we'd have ARM64_HAS_FPSIMD, with a minimum (signed) feature field
->>>>> value of 0.  Then this just looks like an ARM64_CPUCAP_SYSTEM_FEATURE
->>>>> IIUC.  We'd just need to invert the sense of the check in
->>>>> system_supports_fpsimd().
->>>>
->>>> This is particularly something we want to avoid with this patch. We want
->>>> to make sure that we have the up-to-date status of the disability right
->>>> when it happens. i.e, a CPU without FP/SIMD is brought up. With SYSTEM_FEATURE
->>>> you have to wait until we bring all the CPUs up. Also, for HAS_FPSIMD,
->>>> you must wait until all the CPUs are up, unlike the negated capability.
->>>
->>> I don't see why waiting for the random defective early CPU to come up is
->>> better than waiting for all the early CPUs to come up and then deciding.
->>>
->>> Kernel-mode NEON aside, the status of this cap should not matter until
->>> we enter userspace for the first time.
->>>
->>> The only issue is if e.g., crypto drivers that can use kernel-mode NEON
->>> probe for it before all early CPUs are up, and so cache the wrong
->>> decision.  The current approach doesn't cope with that anyway AFAICT.
->>
->> This approach does in fact. With LOCAL_CPU scope, the moment a defective
->> CPU turns up, we mark the "capability" and thus the kernel cannot use
->> the neon then onwards, unlike the existing case where we have time till
->> we boot all the CPUs (even when the boot CPU may be defective).
-> 
-> I guess that makes sense.
-> 
-> I'm now wondering what happens if anything tries to use kernel-mode NEON
-> before SVE is initialised -- which doesn't happen until cpufeatures
-> configures the system features.
-> 
-> I don't think your proposed change makes anything worse here, but it may
-> need looking into.
+Most of the patches are simple tidy ups although patches 4 and 5
+introduce new behaviours. Patch 4 shouldn't be controversial but
+perhaps patch 5 is (although hopefully not ;-) ).
 
-We could throw in a WARN_ON() in kernel_neon() to make sure that the SVE
-is initialised ?
+Mostly this is auto tested, see here:
+https://github.com/daniel-thompson/kgdbtest/commit/c65e28d99357c2df6dac2cebe195574e634d04dc
 
-Suzuki
+Changes in v3:
+
+ - Accepted all review comments from Doug (except the return type
+   of kdb_getchar() as discussed in the mail threads). In particular
+   this fixes a bug in the handling of the btaprompt.
+ - Added Doug's reviewed-by to patches 1 and 2.
+
+Changes in v2:
+
+ - Improve comment in patch 4 to better describe what is happening
+ - Rebase on v5.4-rc2
+
+Daniel Thompson (5):
+  kdb: Tidy up code to handle escape sequences
+  kdb: Simplify code to fetch characters from console
+  kdb: Remove special case logic from kdb_read()
+  kdb: Improve handling of characters from different input sources
+  kdb: Tweak escape handling for vi users
+
+ kernel/debug/kdb/kdb_bt.c      |  22 ++--
+ kernel/debug/kdb/kdb_io.c      | 229 ++++++++++++++++-----------------
+ kernel/debug/kdb/kdb_private.h |   1 +
+ 3 files changed, 123 insertions(+), 129 deletions(-)
+
+--
+2.21.0
+
