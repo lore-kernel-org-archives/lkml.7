@@ -2,185 +2,454 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64439C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E701ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C26920854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="NLZ1Cpsj";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="D6X2k2k5"
+	by mail.kernel.org (Postfix) with ESMTP id 1AD5C20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfJNLMt (ORCPT
+        id S1730013AbfJNLSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:12:49 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:61708 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731767AbfJNLMt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:12:49 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9EBAAe3014674;
-        Mon, 14 Oct 2019 04:12:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=FjJFi/lV4hcCh/WkDmsRb/8C20q1g6PN9wZmshHmPCY=;
- b=NLZ1CpsjWbYY9pZaAMRSnPfNWjoOgITRt/65RR58IINOFz5Fa9ETvuBS7FVNQzVo5RF3
- RJf3IQPejdNmkXpCiG6JTIU2K7anTBAv+YD/DMJPQpSF6gAdsr6b+Yd2wxGyKOlS3LEj
- gKtjY9pP+HOF6vBhZcsSpacRBgnymos4EEuuaAOVe604BegeAJxtHecK0f32C+d7qxz6
- prHC1CW8ebvyCljBDUfjMqieC4Y7+SeUwGmBg8zahh7YgMySxkjtgLCayl6Gwwn3NTEu
- wMIUu8O9+1NWCT+M6gJcSUO+s4hevWBeS8c9hr15Rby6vNRnUQ4m9tWXfMRc11xmQVZx 9Q== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2vkebnwg53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 14 Oct 2019 04:12:26 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 14 Oct
- 2019 04:12:24 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.55) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 14 Oct 2019 04:12:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GYtUAwbsYwHMMkPm2yB5PvCufeU7Yt2CB5NHViiNNEMsKtutnt3zzrERfi3ut2jIQYff9TSa4261voSmwypJHEaDplsmqFDWJiSxa2eEiZpyjmBrlO6eLTdSEbBaigT8LXVyOC7EDRGdIDFBJ0U2MAV4+Lm377PgEWC1+r5e1XEk0k1TbVdVpb77hRiQ83clYyCo6OGjKlkn8pa/QF77M9Kxpe95rD+smsjwq3ZXE/FkM3CVQ0DUTgITm8eErm7G7PQxXsjAkfCHNEikYmobHYhHSX7uVHcYE7o0PoXBohnIBikNdA0dsEBxalnz/Ny9PeHt1l1bRnWpzuBUmwaAEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FjJFi/lV4hcCh/WkDmsRb/8C20q1g6PN9wZmshHmPCY=;
- b=QVBG98EnPo/TN3o8S0VXpjalsQzpWHcbJ2wYEby9kzDA1J0/rGNiIiSd5EDLCTJw7qGYm9nqJNwIv/hk8vlLIkMyzd4KFNxbOO7xNaxRE9/fipMGL2KXM6U4cEk/55X1QQn6Ifdvnvw52Bmx8H5OHYWB+KHyEyTXCVgmLiJZVMj0NGu3GpNcUdXcLQlxejXWj2a0fGuz5YH+iVuHE+YSdnUi0aUfYmBJb70lQgKqEFDwkZQkHwjfCo12/Jjl7qZKZfzy90teJ/VJjgHGrs/vgx59IYTZw6DvvB+TvbJ8oAcdj0BDO7b4w3llDCRIsMDCTm0VHGujV8en6g+sqQDD2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FjJFi/lV4hcCh/WkDmsRb/8C20q1g6PN9wZmshHmPCY=;
- b=D6X2k2k5Ierowwv3ceyATpuz0t5vbkuWUkjLg8jtKOa+dCaqF0UI552NvT0oI2FpyeZiAzjmDEE26q2tSje7FWRCAi/bgWqdW8vLRLDyC+t3xKQgOK39nDz+RTk7lCj1ED59dBcN8ho5fs2642oJA3J5PMDVL1NubyCxBySnB3E=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2399.namprd18.prod.outlook.com (20.179.82.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Mon, 14 Oct 2019 11:12:23 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d16d:8855:c030:2763%3]) with mapi id 15.20.2347.023; Mon, 14 Oct 2019
- 11:12:23 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        "James Morse" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/19] EDAC, mc: Remove per layer counters
-Thread-Topic: [PATCH 06/19] EDAC, mc: Remove per layer counters
-Thread-Index: AQHVf6jU3Hq1HIO940WaZOfHTRxydKdVQUmAgAS/3YA=
-Date:   Mon, 14 Oct 2019 11:12:23 +0000
-Message-ID: <20191014111215.f5wyed33ilppfopg@rric.localdomain>
-References: <20191010202418.25098-1-rrichter@marvell.com>
- <20191010202418.25098-7-rrichter@marvell.com>
- <20191011074031.699396df@coco.lan>
-In-Reply-To: <20191011074031.699396df@coco.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR07CA0012.eurprd07.prod.outlook.com
- (2603:10a6:7:67::22) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 613c4445-5726-4e54-1dd3-08d750976328
-x-ms-traffictypediagnostic: MN2PR18MB2399:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <MN2PR18MB2399851D8ED78929D6817C5BD9900@MN2PR18MB2399.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(4326008)(305945005)(7736002)(6436002)(446003)(6246003)(2906002)(966005)(229853002)(478600001)(3846002)(6512007)(9686003)(6116002)(6306002)(8936002)(86362001)(486006)(81156014)(8676002)(81166006)(11346002)(71190400001)(71200400001)(256004)(476003)(1076003)(66476007)(66556008)(64756008)(66446008)(52116002)(102836004)(99286004)(5660300002)(54906003)(66946007)(316002)(25786009)(66066001)(14454004)(76176011)(6916009)(186003)(386003)(26005)(6506007)(53546011)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2399;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cRyHqW+wF/ksVaaFgYw1UKtlNYZDRpJFBG/oIwqjJ6NMphjEM93oOMIhc+4QD1DdapwKhz7V2j4Mq7o4iELi7Faifj2XOYp9AlhXo0boW+JqaOEAGoezdkvhzxO66KUcdoDPRXrug2B4YcjCQ2wtwvx1qOnmJEXoL3ph49kvtmtjm3pC4pCt0pUKvIbbzC2FP0FO6Qh/KcpJ3fHh4TWM4YTyCQrNVFDamURmUaWDOAtC2G32ekhL5ZD6YeXjC/WNRWc6Vghy/ICxzBQZSxZVZ92eKvAgK3S/0SeL0PwC4ksknuW5VHlWJ5xuORmtj5smoD7EUcCMF0gOBy84F8ZoA8AsdSY9uZYj/nTeGQImPdxHgkEymwCp/GA8Sw7KwXCOjYyBp0WGHz0KLNmdWudRce1MJhtvxDH2X8LOmVlY1mVQCrqQFTbfLqsbgBqVhey1XHg7OWcl4+svdNjEnWwD8A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <264E08D05C6B3E47972EEB2C28D8F64E@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 07:18:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33532 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726351AbfJNLSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 07:18:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C230BAF62;
+        Mon, 14 Oct 2019 11:18:49 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id D8CF2E3935; Mon, 14 Oct 2019 13:18:47 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 13:18:47 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 06/17] ethtool: netlink bitset handling
+Message-ID: <20191014111847.GB8493@unicorn.suse.cz>
+References: <cover.1570654310.git.mkubecek@suse.cz>
+ <af208e79258e7e3c3af3860e6a8908a50dec095f.1570654310.git.mkubecek@suse.cz>
+ <20191011133429.GA3056@nanopsycho>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 613c4445-5726-4e54-1dd3-08d750976328
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 11:12:23.1760
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OvvTQ64qc+izlGOsf4srgY9VqltlFdKkLeSGm4gwdKYEHHGqOigU18lukB9uzDC0g5Ny7GlQz1Szq0u7KGonmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2399
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-14_07:2019-10-11,2019-10-14 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011133429.GA3056@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.10.19 07:40:31, Mauro Carvalho Chehab wrote:
-> Em Thu, 10 Oct 2019 20:25:16 +0000
-> Robert Richter <rrichter@marvell.com> escreveu:
->=20
-> > Looking at how mci->{ue,ce}_per_layer[EDAC_MAX_LAYERS] is used, it
-> > turns out that only the leaves in the memory hierarchy are consumed
-> > (in sysfs), but not the intermediate layers, e.g.:
-> >=20
-> >  count =3D dimm->mci->ce_per_layer[dimm->mci->n_layers-1][dimm->idx];
-> >=20
-> > These unused counters only add complexity, remove them. The error
-> > counter values are directly stored in struct dimm_info now.
->=20
-> Hmm... not sure if this patch is correct. I remember that there are some
-> border cases on some drivers (maybe the 3-layer drivers used together
-> with RDIMM memory controllers?) where some errors are not associated
-> to an specific dimm, but, instead, are related to a problem at the memory
-> bus.
->=20
-> Also, depending on how the memory controllers are organized[1], the ECC
-> logic groups memory on DIMM pairs. So, when an error occur, it may be
-> either at DIMM1 or DIMM2.
->=20
-> [1] On Intel, this happens with pre-Nehalem memory controllers.
->=20
-> Due to that, storing errors at the dimm struct sounds wrong, as the
-> error may affect multiple DIMMs or even the entire layer.
+On Fri, Oct 11, 2019 at 03:34:29PM +0200, Jiri Pirko wrote:
+> Wed, Oct 09, 2019 at 10:59:18PM CEST, mkubecek@suse.cz wrote:
+> >+Bit sets
+> >+========
+> >+
+> >+For short bitmaps of (reasonably) fixed length, standard ``NLA_BITFIELD32``
+> >+type is used. For arbitrary length bitmaps, ethtool netlink uses a nested
+> >+attribute with contents of one of two forms: compact (two binary bitmaps
+> >+representing bit values and mask of affected bits) and bit-by-bit (list of
+> >+bits identified by either index or name).
+> >+
+> >+Compact form: nested (bitset) atrribute contents:
+> >+
+> >+  ============================  ======  ============================
+> >+  ``ETHTOOL_A_BITSET_LIST``     flag    no mask, only a list
+> 
+> I find "list" a bit confusing name of a flag. Perhaps better to stick
+> with the "compact" terminology and make this "ETHTOOL_A_BITSET_COMPACT"?
+> Then in the code you can have var "is_compact", which makes the code a
+> bit easier to read I believe.
 
-That was my first thought too, but the counter values are not used at
-all. The only exception is to provide *per-dimm* counters here:
+This is not the same as "compact", "list" flag means that the bit set
+does not represent a value/mask pair but only a single bitmap (which can
+be understood as a list or subset of possible values).
 
- {ce,ue}_per_layer[n_layers-1][dimm->idx].=20
+This saves some space in kernel replies where there is no natural mask
+so that we would have to invent one (usually all possible bits) but it
+is more important in request where some request want to modify a subset
+of bits (set some, unset some) while some requests pass a list of bits
+to be set after the operation (i.e. "I want exactly these to be
+enabled").
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/edac/edac_mc_sysfs.c?id=3D4f5cafb5cb8471e54afdc9054d973535614f7675#n5=
-67
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/edac/edac_mc_sysfs.c?id=3D4f5cafb5cb8471e54afdc9054d973535614f7675#n5=
-84
+The flag could be omitted for compact form where we could simply say
+that if there is no mask, it's a list, but we need it for verbose form.
 
-The case you mentioned above is if the mc only sends parts of the
-error location (with a top, mid or low layer missing). The dimm cannot
-be identified then. In this case edac_mc_handle_error() tries to find
-a unique row (+ channel infomation if available and lists all possible
-dimm labels in e->label. See:
+> >+  ``ETHTOOL_A_BITSET_SIZE``     u32     number of significant bits
+> >+  ``ETHTOOL_A_BITSET_VALUE``    binary  bitmap of bit values
+> >+  ``ETHTOOL_A_BITSET_MASK``     binary  bitmap of valid bits
+> 
+> Couple of times the NLA_BITFIELD32 limitation was discussed, so isn't
+> this the time to introduce generic NLA_BITFIELD with variable len and
+> use it here? This is exactly job for it. As this is UAPI, I believe it
+> should be done now cause later won't work.
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/edac/edac_mc.c?id=3D4f5cafb5cb8471e54afdc9054d973535614f7675#n1153
+As discussed before, we would lose the option to omit mask when it's not
+needed.
 
-Thus, we see a counter increment for row (and also channel if it can
-be identified), but this is counted in mci->csrows array only that is
-not removed by this patch.
+> >+Bit-by-bit form: nested (bitset) attribute contents:
+> >+
+> >+ +---------------------------------+--------+-----------------------------+
+> >+ | ``ETHTOOL_A_BITSET_LIST``       | flag   | no mask, only a list        |
+> >+ +---------------------------------+--------+-----------------------------+
+> >+ | ``ETHTOOL_A_BITSET_SIZE``       | u32    | number of significant bits  |
+> >+ +---------------------------------+--------+-----------------------------+
+> >+ | ``ETHTOOL_A_BITSET_BIT``        | nested | array of bits               |
+> 
+> "ETHTOOL_A_BITSET_BIT" does not exist in the code. I believe you ment
+> "ETHTOOL_A_BITSET_BITS"
+> 
+> 
+> >+ +-+-------------------------------+--------+-----------------------------+
+> >+ |   ``ETHTOOL_A_BITSET_BIT+``     | nested | one bit                     |
+> 
+> You seem to be missing "|" here.
+> Also "ETHTOOL_A_BITSET_BIT" does not exist. I believe you ment
+> "ETHTOOL_A_BITS_BIT"
 
-That said, the {ue,ce}_per_layer[] arrays can be removed by keeping
-the same driver functionality, esp. the case you mentioned above.
+Yes on both, thanks.
 
--Robert
+> >+/* bit sets */
+> >+
+> >+enum {
+> >+	ETHTOOL_A_BIT_UNSPEC,
+> >+	ETHTOOL_A_BIT_INDEX,			/* u32 */
+> >+	ETHTOOL_A_BIT_NAME,			/* string */
+> >+	ETHTOOL_A_BIT_VALUE,			/* flag */
+> >+
+> >+	/* add new constants above here */
+> >+	__ETHTOOL_A_BIT_CNT,
+> >+	ETHTOOL_A_BIT_MAX = __ETHTOOL_A_BIT_CNT - 1
+> >+};
+> >+
+> >+enum {
+> >+	ETHTOOL_A_BITS_UNSPEC,
+> >+	ETHTOOL_A_BITS_BIT,
+> >+
+> >+	/* add new constants above here */
+> >+	__ETHTOOL_A_BITS_CNT,
+> >+	ETHTOOL_A_BITS_MAX = __ETHTOOL_A_BITS_CNT - 1
+> >+};
+> 
+> I think it would be good to have this named with "_BITSET_" in it so it
+> is crystal clear this is part of the bitset UAPI.
+
+I guess we can add "_BITSET" (e.g. ETHTOOL_A_BITSET_BIT_VALUE). These
+constants shouldn't be used outside bitset.c (and some isolated part of
+the userspace code) so the length is not so much of an issue.
+
+> >+/**
+> >+ * ethnl_put_bitset32() - Put a bitset nest into a message
+> >+ * @skb:      skb with the message
+> >+ * @attrtype: attribute type for the bitset nest
+> >+ * @val:      value bitmap (u32 based)
+> >+ * @mask:     mask bitmap (u32 based, optional)
+> >+ * @nbits:    bit length of the bitset
+> >+ * @names:    array of bit names (optional)
+> >+ * @compact:  use compact format for the output
+> >+ *
+> >+ * Compose a nested attribute representing a bitset. If @mask is null, simple
+> >+ * bitmap (bit list) is created, if @mask is provided, represent a value/mask
+> >+ * pair. Bit names are only used in verbose mode and when provided by calller.
+> >+ *
+> >+ * Return:    0 on success, negative error value on error
+> 
+> Remove the spaces.
+
+OK
+
+> >+ */
+> >+int ethnl_put_bitset32(struct sk_buff *skb, int attrtype, const u32 *val,
+> >+		       const u32 *mask, unsigned int nbits,
+> >+		       ethnl_string_array_t names, bool compact)
+> >+{
+> >+	struct nlattr *nest;
+> >+	struct nlattr *attr;
+> >+
+> >+	nest = nla_nest_start(skb, attrtype);
+> >+	if (!nest)
+> >+		return -EMSGSIZE;
+> >+
+> >+	if (!mask && nla_put_flag(skb, ETHTOOL_A_BITSET_LIST))
+> 
+> Wait, shouldn't you rather check "!compact" ?
+> 
+> and WARN_ON in case compact == true && mask == NULL?
+
+The "compact" and "list" flags are orthogonal. In this function, caller
+passes null @mask if it wants to generated a list (as documented in the
+function description above). In some older version I had "bool is_list"
+which was set to "!mask" but I felt it didn't really make the code any
+simpler; I can return to that if you think it will make the code easier
+to read.
+
+> 
+> 
+> >+		goto nla_put_failure;
+> >+	if (nla_put_u32(skb, ETHTOOL_A_BITSET_SIZE, nbits))
+> >+		goto nla_put_failure;
+> >+	if (compact) {
+> >+		unsigned int nwords = DIV_ROUND_UP(nbits, 32);
+> >+		unsigned int nbytes = nwords * sizeof(u32);
+> >+		u32 *dst;
+> >+
+> >+		attr = nla_reserve(skb, ETHTOOL_A_BITSET_VALUE, nbytes);
+> >+		if (!attr)
+> >+			goto nla_put_failure;
+> >+		dst = nla_data(attr);
+> >+		memcpy(dst, val, nbytes);
+> >+		if (nbits % 32)
+> >+			dst[nwords - 1] &= __lower_bits(nbits);
+> >+
+> >+		if (mask) {
+> >+			attr = nla_reserve(skb, ETHTOOL_A_BITSET_MASK, nbytes);
+> >+			if (!attr)
+> >+				goto nla_put_failure;
+> >+			dst = nla_data(attr);
+> >+			memcpy(dst, mask, nbytes);
+> >+			if (nbits % 32)
+> >+				dst[nwords - 1] &= __lower_bits(nbits);
+> >+		}
+> >+	} else {
+> >+		struct nlattr *bits;
+> >+		unsigned int i;
+> >+
+> >+		bits = nla_nest_start(skb, ETHTOOL_A_BITSET_BITS);
+> >+		if (!bits)
+> >+			goto nla_put_failure;
+> >+		for (i = 0; i < nbits; i++) {
+> >+			const char *name = names ? names[i] : NULL;
+> >+
+> >+			if (!__bitmap32_test_bit(mask ?: val, i))
+> 
+> A) this __bitmap32_test_bit() looks like something generic, yet it is
+>    not. Perhaps you would want to add this helper to
+>    include/linux/bitmap.h?
+
+I'm not sure it would be appreciated there as the whole header file is
+for functions handling unsigned long based bitmaps. I'll rename it to
+make it obvious it's a local helper.
+
+> B) Why don't you do bitmap_to_arr32 conversion in this function just
+>    before val/mask put. Then you can use normal test_bit() here.
+
+This relates to the question (below) why we need two versions of the
+functions, one for unsigned long based bitmaps, one for u32 based ones.
+The reason is that both are used internally by existing code. So if we
+had only one set of bitset functions, callers using the other format
+would have to do the wrapping themselves.
+
+There are two reasons why u32 versions are implemented directly and
+usingned long ones as wrappers. First, u32 based bitmaps are more
+frequent in existing code. Second, when we can get away with a cast
+(i.e. anywhere exect 64-bit big endian), unsigned long based bitmap can
+be always interpreted as u32 based bitmap but if we tried it the other
+way, we would need a special handling of the last word when the number
+of 32-bit words is odd.
+
+> >+				continue;
+> >+			attr = nla_nest_start(skb, ETHTOOL_A_BITS_BIT);
+> >+			if (!attr ||
+> >+			    nla_put_u32(skb, ETHTOOL_A_BIT_INDEX, i))
+> 
+> You mix these 2 in 1 if which are not related. Better keep them separate
+> in two ifs.
+> Or you can put the rest of the puts in the same if too.
+
+OK
+
+> >+				goto nla_put_failure;
+> >+			if (name &&
+> >+			    ethnl_put_strz(skb, ETHTOOL_A_BIT_NAME, name))
+> >+				goto nla_put_failure;
+> >+			if (mask && __bitmap32_test_bit(val, i) &&
+> >+			    nla_put_flag(skb, ETHTOOL_A_BIT_VALUE))
+> >+				goto nla_put_failure;
+> >+			nla_nest_end(skb, attr);
+> >+		}
+> >+		nla_nest_end(skb, bits);
+> >+	}
+> >+
+> >+	nla_nest_end(skb, nest);
+> >+	return 0;
+> >+
+> >+nla_put_failure:
+> >+	nla_nest_cancel(skb, nest);
+> >+	return -EMSGSIZE;
+> >+}
+> >+
+> >+static const struct nla_policy bitset_policy[ETHTOOL_A_BITSET_MAX + 1] = {
+> >+	[ETHTOOL_A_BITSET_UNSPEC]	= { .type = NLA_REJECT },
+> >+	[ETHTOOL_A_BITSET_LIST]		= { .type = NLA_FLAG },
+> >+	[ETHTOOL_A_BITSET_SIZE]		= { .type = NLA_U32 },
+> >+	[ETHTOOL_A_BITSET_BITS]		= { .type = NLA_NESTED },
+> >+	[ETHTOOL_A_BITSET_VALUE]	= { .type = NLA_BINARY },
+> >+	[ETHTOOL_A_BITSET_MASK]		= { .type = NLA_BINARY },
+> >+};
+> >+
+> >+static const struct nla_policy bit_policy[ETHTOOL_A_BIT_MAX + 1] = {
+> >+	[ETHTOOL_A_BIT_UNSPEC]		= { .type = NLA_REJECT },
+> >+	[ETHTOOL_A_BIT_INDEX]		= { .type = NLA_U32 },
+> >+	[ETHTOOL_A_BIT_NAME]		= { .type = NLA_NUL_STRING },
+> >+	[ETHTOOL_A_BIT_VALUE]		= { .type = NLA_FLAG },
+> >+};
+> >+
+> >+/**
+> >+ * ethnl_bitset_is_compact() - check if bitset attribute represents a compact
+> >+ *			       bitset
+> >+ * @bitset  - nested attribute representing a bitset
+> >+ * @compact - pointer for return value
+> 
+> In the rest of the code, you use
+> @name: description
+
+Right, I'll fix this.
+
+> >+ *
+> >+ * Return: 0 on success, negative error code on failure
+> >+ */
+> >+int ethnl_bitset_is_compact(const struct nlattr *bitset, bool *compact)
+> >+{
+> >+	struct nlattr *tb[ETHTOOL_A_BITSET_MAX + 1];
+> >+	int ret;
+> >+
+> >+	ret = nla_parse_nested(tb, ETHTOOL_A_BITSET_MAX, bitset,
+> >+			       bitset_policy, NULL);
+> >+	if (ret < 0)
+> >+		return ret;
+> >+
+> >+	if (tb[ETHTOOL_A_BITSET_BITS]) {
+> >+		if (tb[ETHTOOL_A_BITSET_VALUE] || tb[ETHTOOL_A_BITSET_MASK])
+> >+			return -EINVAL;
+> >+		*compact = false;
+> >+		return 0;
+> >+	}
+> >+	if (!tb[ETHTOOL_A_BITSET_SIZE] || !tb[ETHTOOL_A_BITSET_VALUE])
+> >+		return -EINVAL;
+> >+
+> >+	*compact = true;
+> >+	return 0;
+> >+}
+> >+
+> >+static int ethnl_name_to_idx(ethnl_string_array_t names, unsigned int n_names,
+> >+			     const char *name, unsigned int name_len)
+> >+{
+> >+	unsigned int i;
+> >+
+> >+	if (!names)
+> >+		return n_names;
+> >+
+> >+	for (i = 0; i < n_names; i++) {
+> >+		const char *bname = names[i];
+> >+
+> >+		if (!strncmp(bname, name, name_len) &&
+> >+		    strlen(bname) <= name_len)
+> >+			return i;
+> >+	}
+> >+
+> >+	return n_names;
+> 
+> Maybe bettet to stick with -ERRNO?
+
+OK
+
+> >+}
+> >+
+> >+static int ethnl_parse_bit(unsigned int *index, bool *val, unsigned int nbits,
+> >+			   const struct nlattr *bit_attr, bool is_list,
+> >+			   ethnl_string_array_t names,
+> >+			   struct netlink_ext_ack *extack)
+> >+{
+> >+	struct nlattr *tb[ETHTOOL_A_BIT_MAX + 1];
+> >+	int ret, idx;
+> >+
+> >+	if (nla_type(bit_attr) != ETHTOOL_A_BITS_BIT) {
+> >+		NL_SET_ERR_MSG_ATTR(extack, bit_attr,
+> >+				    "only ETHTOOL_A_BITS_BIT allowed in ETHTOOL_A_BITSET_BITS");
+> >+		return -EINVAL;
+> >+	}
+> 
+> Probably it makes sense the caller does this check. Later on, if there
+> is another possible value, the check would have to go there anyway.
+
+OK
+
+> >+	ret = nla_parse_nested(tb, ETHTOOL_A_BIT_MAX, bit_attr, bit_policy,
+> >+			       extack);
+> >+	if (ret < 0)
+> >+		return ret;
+> >+
+> >+	if (tb[ETHTOOL_A_BIT_INDEX]) {
+> >+		const char *name;
+> >+
+> >+		idx = nla_get_u32(tb[ETHTOOL_A_BIT_INDEX]);
+> >+		if (idx >= nbits) {
+> >+			NL_SET_ERR_MSG_ATTR(extack,
+> >+					    tb[ETHTOOL_A_BIT_INDEX],
+> >+					    "bit index too high");
+> >+			return -EOPNOTSUPP;
+> >+		}
+> >+		name = names ? names[idx] : NULL;
+> >+		if (tb[ETHTOOL_A_BIT_NAME] && name &&
+> >+		    strncmp(nla_data(tb[ETHTOOL_A_BIT_NAME]), name,
+> >+			    nla_len(tb[ETHTOOL_A_BIT_NAME]))) {
+> >+			NL_SET_ERR_MSG_ATTR(extack, bit_attr,
+> >+					    "bit index and name mismatch");
+> >+			return -EINVAL;
+> >+		}
+> >+	} else if (tb[ETHTOOL_A_BIT_NAME]) {
+> >+		idx = ethnl_name_to_idx(names, nbits,
+> >+					nla_data(tb[ETHTOOL_A_BIT_NAME]),
+> >+					nla_len(tb[ETHTOOL_A_BIT_NAME]));
+> 
+> It's a string? Policy validation should take care if it is correctly
+> terminated by '\0'. Then you don't need to pass len down. Anyone who is
+> interested in length can use strlen().
+
+OK
+
+> >+	is_list = (tb[ETHTOOL_A_BITSET_LIST] != NULL);
+> 
+> just:
+> 	is_list = tb[ETHTOOL_A_BITSET_LIST]
+> is enough.
+
+Assignment from pointer to a bool felt a bit weird but if you find it
+acceptable, I have no problem with it.
+
+> >+int ethnl_bitset_is_compact(const struct nlattr *bitset, bool *compact);
+> >+int ethnl_bitset_size(const unsigned long *val, const unsigned long *mask,
+> >+		      unsigned int nbits, ethnl_string_array_t names,
+> >+		      bool compact);
+> >+int ethnl_bitset32_size(const u32 *val, const u32 *mask, unsigned int nbits,
+> >+			ethnl_string_array_t names, bool compact);
+> >+int ethnl_put_bitset(struct sk_buff *skb, int attrtype,
+> >+		     const unsigned long *val, const unsigned long *mask,
+> >+		     unsigned int nbits, ethnl_string_array_t names,
+> >+		     bool compact);
+> >+int ethnl_put_bitset32(struct sk_buff *skb, int attrtype, const u32 *val,
+> >+		       const u32 *mask, unsigned int nbits,
+> >+		       ethnl_string_array_t names, bool compact);
+> >+int ethnl_update_bitset(unsigned long *bitmap, unsigned int nbits,
+> >+			const struct nlattr *attr, ethnl_string_array_t names,
+> >+			struct netlink_ext_ack *extack, bool *mod);
+> >+int ethnl_update_bitset32(u32 *bitmap, unsigned int nbits,
+> >+			  const struct nlattr *attr, ethnl_string_array_t names,
+> >+			  struct netlink_ext_ack *extack, bool *mod);
+> 
+> Hmm, I wonder why user needs to work with the 32 variants..
+
+See above.
+
+Michal
