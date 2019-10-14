@@ -2,135 +2,103 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46370C47404
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012D9ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE142083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC50720854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRzdaIn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbfJNHPa (ORCPT
+        id S1730364AbfJNHP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:15:30 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:61513 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730265AbfJNHP3 (ORCPT
+        Mon, 14 Oct 2019 03:15:59 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33281 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730109AbfJNHP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:15:29 -0400
-X-UUID: a34fba46a10641c8b6329ad044c76f52-20191014
-X-UUID: a34fba46a10641c8b6329ad044c76f52-20191014
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <mark-mc.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1988080015; Mon, 14 Oct 2019 15:15:20 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 14 Oct 2019 15:15:17 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 14 Oct 2019 15:15:18 +0800
-From:   MarkLee <Mark-MC.Lee@mediatek.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Sean Wang <sean.wang@mediatek.com>,
-        John Crispin <john@phrozen.org>,
-        Nelson Chang <nelson.chang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rene van Dorst <opensource@vdorst.com>,
-        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        MarkLee <Mark-MC.Lee@mediatek.com>
-Subject: [PATCH net,v3 2/2] arm: dts: mediatek: Update mt7629 dts to reflect the latest dt-binding
-Date:   Mon, 14 Oct 2019 15:15:18 +0800
-Message-ID: <20191014071518.11923-3-Mark-MC.Lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191014071518.11923-1-Mark-MC.Lee@mediatek.com>
-References: <20191014071518.11923-1-Mark-MC.Lee@mediatek.com>
+        Mon, 14 Oct 2019 03:15:59 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d22so7623842pls.0;
+        Mon, 14 Oct 2019 00:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EcHPy7pjRRYKhGqR1ifh85tAKii20mZHUVwEAWWq4vA=;
+        b=DRzdaIn0lZu/lCPx8qOsHxv2FJ25hNx8czlGr6HpoGiM7THWTHGbh7eyXp8vnBrVJ3
+         NyoZL/MfiHqr+EZHKDMFdwIS+XHXZGKEnj/z8aZjSrghZuzBE892zmGPjshGRwIbu8qM
+         nc6rZB9RC+jcm6nAc3P2b7mee/bwX/THceu9SEHWUTGtwqGRsC9sdktMIRK2oyWapAyC
+         8zqkdyfB6pjTkmTdGPqXZ9L9QajddMUn9RdnHFlizPpbxuqS26FdgmmsYhHVvK28Vqd7
+         IPGiuwmWRg0PvFksgLR+OttjXm/JRAvCXRWz2hRPgvYSf9c7Fcj3SHgt7HbtaKOZ8kOM
+         R/Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EcHPy7pjRRYKhGqR1ifh85tAKii20mZHUVwEAWWq4vA=;
+        b=W+oeVdwDCpqJfCHwR9Ukr5jQAHcyTRSPM0cEbuqhcREiEAgByjGPo7r+vqI2BtgELf
+         GRYRdVU7yQw52vUP71sqfg5XFuNaxL3UJ7tqa1VxrtZIWmVnOdQSxU3qAA3OfGzqnImW
+         l/HcNhMIzOPrDy6FGOQ969YW/xiFEqf0nqzVMA14aJicX23TxBZlqVwR7yE+LBDRld+5
+         Tl0b7PhuS9iwnS7R4XTJaQxueKuNQ0FneBE3btSNHJ36axj9mSwZDZFGvWy6P3W82e/i
+         rbhm8Oc2EZyLq+KCyf/m/Wp/FT+/z9JgSa1JcUV2S61oQ9ic0voJLd/7zzqDkV9aWjQJ
+         mzvw==
+X-Gm-Message-State: APjAAAU7JMo3E8RSawZ7L84dIvptfDZPcruMXf5vaX7sPtNpNaacturo
+        182k+UCjvHCdnHt9NGz6RTI=
+X-Google-Smtp-Source: APXvYqxZDui+wwiRJFEgneVvFNMTtPtqLfAE14NpycsMUGeDjokpW4ERCFlIctwnl1RdNiCL8daVgQ==
+X-Received: by 2002:a17:902:d90e:: with SMTP id c14mr28542085plz.91.1571037358463;
+        Mon, 14 Oct 2019 00:15:58 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id p88sm14971345pjp.22.2019.10.14.00.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 00:15:57 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] cifs: Fix missed free operations
+Date:   Mon, 14 Oct 2019 15:15:31 +0800
+Message-Id: <20191014071531.12790-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
-* Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
-* Set gmac1 to gmii mode that connect to a internal gphy
+cifs_setattr_nounix has two paths which miss free operations
+for xid and fullpath.
+Use goto cifs_setattr_exit like other paths to fix them.
 
-Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
---
-v2->v3:
-* no change
-v1->v2:
-* SGMII port only support BASE-X at 2.5Gbit.
+Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable handles")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
- arch/arm/boot/dts/mt7629.dtsi    |  2 --
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ fs/cifs/inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
-index 3621b7d2b22a..9980c10c6e29 100644
---- a/arch/arm/boot/dts/mt7629-rfb.dts
-+++ b/arch/arm/boot/dts/mt7629-rfb.dts
-@@ -66,9 +66,21 @@
- 	pinctrl-1 = <&ephy_leds_pins>;
- 	status = "okay";
- 
-+	gmac0: mac@0 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <0>;
-+		phy-mode = "2500base-x";
-+		fixed-link {
-+			speed = <2500>;
-+			full-duplex;
-+			pause;
-+		};
-+	};
-+
- 	gmac1: mac@1 {
- 		compatible = "mediatek,eth-mac";
- 		reg = <1>;
-+		phy-mode = "gmii";
- 		phy-handle = <&phy0>;
- 	};
- 
-@@ -78,7 +90,6 @@
- 
- 		phy0: ethernet-phy@0 {
- 			reg = <0>;
--			phy-mode = "gmii";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..867b88103b9d 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -468,14 +468,12 @@
- 			compatible = "mediatek,mt7629-sgmiisys", "syscon";
- 			reg = <0x1b128000 0x3000>;
- 			#clock-cells = <1>;
--			mediatek,physpeed = "2500";
- 		};
- 
- 		sgmiisys1: syscon@1b130000 {
- 			compatible = "mediatek,mt7629-sgmiisys", "syscon";
- 			reg = <0x1b130000 0x3000>;
- 			#clock-cells = <1>;
--			mediatek,physpeed = "2500";
- 		};
- 	};
- };
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 5dcc95b38310..df9377828e2f 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2475,9 +2475,9 @@ cifs_setattr_nounix(struct dentry *direntry, struct iattr *attrs)
+ 			rc = tcon->ses->server->ops->flush(xid, tcon, &wfile->fid);
+ 			cifsFileInfo_put(wfile);
+ 			if (rc)
+-				return rc;
++				goto cifs_setattr_exit;
+ 		} else if (rc != -EBADF)
+-			return rc;
++			goto cifs_setattr_exit;
+ 		else
+ 			rc = 0;
+ 	}
 -- 
-2.17.1
+2.20.1
 
