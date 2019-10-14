@@ -2,136 +2,95 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F20ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894E8ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49FB2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F35C2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XOJDbg6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733065AbfJNOwI (ORCPT
+        id S1733078AbfJNOwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:52:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:46180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732457AbfJNOwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:52:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D970E337;
-        Mon, 14 Oct 2019 07:52:07 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F16313F68E;
-        Mon, 14 Oct 2019 07:52:06 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 15:52:04 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
- capability
-Message-ID: <20191014145204.GS27757@arm.com>
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
- <20191010171517.28782-2-suzuki.poulose@arm.com>
- <20191011113620.GG27757@arm.com>
- <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
- <20191011142137.GH27757@arm.com>
- <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
+        Mon, 14 Oct 2019 10:52:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45174 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731121AbfJNOwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 10:52:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MkoYcTXKhce4x1iFMop5m8fG1D+SqlCqItdS8ky9PfU=; b=XOJDbg6ABJJK8Rso4KprxAQ62
+        ZXt2l38/lFEEGW1rNFPUtiWKlZAEu8gaEgmDl2pvdb6zmxq16Qv3Heaqtxx4Ekfcs8eHdm6HVP149
+        B2GMIjA0S5AZIzAUXd6mNsyaY2VUp1sxl1470Gdn5OfN0hcm1viqMr9npxFis9lT5V2igaOjjx/jC
+        +eZGI3EkoKwFt4Gk5t9ovq396v07nnMEQCbM8RLp/JcCLZwvTpQN+C1D5GZMHboBQlaUCSKlFhmo0
+        vuKcmQOJudZ3he8R7/dkLmYss0NNBc2OpMbXHeqVCauqBafM/wBGfptkl4By4koT48hwZM2TgK2jq
+        ww6N6Zj0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iK1hs-00023C-9J; Mon, 14 Oct 2019 14:52:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44222305FCE;
+        Mon, 14 Oct 2019 16:51:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5454D2023039A; Mon, 14 Oct 2019 16:52:18 +0200 (CEST)
+Date:   Mon, 14 Oct 2019 16:52:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Douglas Raillard <douglas.raillard@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH] sched/fair: util_est: fast ramp-up EWMA on utilization
+ increases
+Message-ID: <20191014145218.GI2328@hirez.programming.kicks-ass.net>
+References: <20190620150555.15717-1-patrick.bellasi@arm.com>
+ <CAKfTPtDTfyBvfwE6_gtjxJoPNS6YGQ7rrLcjg_M-jr=YSc+FNA@mail.gmail.com>
+ <20190628100751.lpcwsouacsi2swkm@e110439-lin>
+ <20190628123800.GS3419@hirez.programming.kicks-ass.net>
+ <20190628140057.7aujh2wsk7wtqib3@e110439-lin>
+ <20190802094725.ploqfarz7fj7vrtp@e110439-lin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190802094725.ploqfarz7fj7vrtp@e110439-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 06:28:43PM +0100, Suzuki K Poulose wrote:
-> 
-> 
-> On 11/10/2019 15:21, Dave Martin wrote:
-> >On Fri, Oct 11, 2019 at 01:13:18PM +0100, Suzuki K Poulose wrote: > Hi Dave
-> >>
-> >>On 11/10/2019 12:36, Dave Martin wrote:
-> >>>On Thu, Oct 10, 2019 at 06:15:15PM +0100, Suzuki K Poulose wrote:
-> >>>>The NO_FPSIMD capability is defined with scope SYSTEM, which implies
-> >>>>that the "absence" of FP/SIMD on at least one CPU is detected only
-> >>>>after all the SMP CPUs are brought up. However, we use the status
-> >>>>of this capability for every context switch. So, let us change
-> >>>>the scop to LOCAL_CPU to allow the detection of this capability
-> >>>>as and when the first CPU without FP is brought up.
-> >>>>
-> >>>>Also, the current type allows hotplugged CPU to be brought up without
-> >>>>FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
-> >>>>up. Fix both of these issues by changing the capability to
-> >>>>BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
-> >>>>
-> >>>>Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-> >>>>Cc: Will Deacon <will@kernel.org>
-> >>>>Cc: Mark Rutland <mark.rutland@arm.com>
-> >>>>Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >>>>Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >>>>---
-> >>>>  arch/arm64/kernel/cpufeature.c | 2 +-
-> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>
-> >>>>diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> >>>>index 9323bcc40a58..0f9eace6c64b 100644
-> >>>>--- a/arch/arm64/kernel/cpufeature.c
-> >>>>+++ b/arch/arm64/kernel/cpufeature.c
-> >>>>@@ -1361,7 +1361,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
-> >>>>  	{
-> >>>>  		/* FP/SIMD is not implemented */
-> >>>>  		.capability = ARM64_HAS_NO_FPSIMD,
-> >>>>-		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-> >>>>+		.type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
-> >>>
-> >>>ARM64_HAS_NO_FPSIMD is really a disability, not a capability.
-> >>>
-> >>>Although we have other things that smell like this (CPU errata for
-> >>>example), I wonder whether inverting the meaning in the case would
-> >>>make the situation easier to understand.
-> >>
-> >>Yes, it is indeed a disability, more on that below.
-> >>
-> >>>
-> >>>So, we'd have ARM64_HAS_FPSIMD, with a minimum (signed) feature field
-> >>>value of 0.  Then this just looks like an ARM64_CPUCAP_SYSTEM_FEATURE
-> >>>IIUC.  We'd just need to invert the sense of the check in
-> >>>system_supports_fpsimd().
-> >>
-> >>This is particularly something we want to avoid with this patch. We want
-> >>to make sure that we have the up-to-date status of the disability right
-> >>when it happens. i.e, a CPU without FP/SIMD is brought up. With SYSTEM_FEATURE
-> >>you have to wait until we bring all the CPUs up. Also, for HAS_FPSIMD,
-> >>you must wait until all the CPUs are up, unlike the negated capability.
-> >
-> >I don't see why waiting for the random defective early CPU to come up is
-> >better than waiting for all the early CPUs to come up and then deciding.
-> >
-> >Kernel-mode NEON aside, the status of this cap should not matter until
-> >we enter userspace for the first time.
-> >
-> >The only issue is if e.g., crypto drivers that can use kernel-mode NEON
-> >probe for it before all early CPUs are up, and so cache the wrong
-> >decision.  The current approach doesn't cope with that anyway AFAICT.
-> 
-> This approach does in fact. With LOCAL_CPU scope, the moment a defective
-> CPU turns up, we mark the "capability" and thus the kernel cannot use
-> the neon then onwards, unlike the existing case where we have time till
-> we boot all the CPUs (even when the boot CPU may be defective).
 
-I guess that makes sense.
+The energy aware schedutil patches remimded me this was still pending.
 
-I'm now wondering what happens if anything tries to use kernel-mode NEON
-before SVE is initialised -- which doesn't happen until cpufeatures
-configures the system features.
+On Fri, Aug 02, 2019 at 10:47:25AM +0100, Patrick Bellasi wrote:
+> Hi Peter, Vincent,
+> is there anything different I can do on this?
 
-I don't think your proposed change makes anything worse here, but it may
-need looking into.
+I think both Vincent and me are basically fine with the patch, it was
+the Changelog/explanation for it that sat uneasy.
 
-Cheers
----Dave
+Specifically I think the 'confusion' around the PELT invariance stuff
+doesn't help.
+
+I think that if you present it simply as making util_est directly follow
+upward motion and only decay on downward -- and the rationale for it --
+then it should be fine.
+
+
