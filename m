@@ -2,219 +2,134 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9BBECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE01C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD5C21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="eIkhtqDo";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="IZkwDcK6"
+	by mail.kernel.org (Postfix) with ESMTP id 489A62089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfJNUNx (ORCPT
+        id S1732370AbfJNUQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 16:13:53 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:59954 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729864AbfJNUNw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 16:13:52 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9EKDVv3021040;
-        Mon, 14 Oct 2019 13:13:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=hZdq5eXuDhJgtf/T42jGdzL3qpr6IJg6qMUrkQyFckE=;
- b=eIkhtqDoY27wveVSXaJnuDkRZG7hoZ2GU+REEOZyLDvQRIDOefL8ewyz6JOcNjoc4Owu
- RnCx4ZuAMJer4el+L/24bjpIeaJnQ1jjE6BcRzpn48XZL7txyJ8OfMYh5KkZMKKNC5YJ
- RPGFZRV2duunAuQhd5RCEPnY6OUqETw68FE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vky52e6ew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 14 Oct 2019 13:13:32 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 14 Oct 2019 13:13:00 -0700
-Received: from ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 14 Oct 2019 13:13:00 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 14 Oct 2019 13:13:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Das7vj7goEseKEI9HW9F3Ip4V8iHgXrMS6pMHr5ZGYaOznHmgi4BPbkb7TURe3ujpgqROuzLD9uArkeWCPD5+pWeoAZzs4LVFj3G9F19VDD3hQtadRPgSlYb9y/lNOALg/6l1KxLsLX3z29YmdnHvdLLRJ/SrSS19VkdxcBgtk7RYM27HHJOuqH6KjLKvCW5bIF5KXX7tm1N5SPLrq5EDnX1xrs89xzwRa3aEqWf7HZ0niUlhFQqdLEYcatbHv1HVTHj/kvOY8zPr7C4ckzORvqIdAwf8565kMsw+f+R6cesIbGhHA5fJs62QIAOvIv7ouTXUhtIhnRk5uqJWEQfxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hZdq5eXuDhJgtf/T42jGdzL3qpr6IJg6qMUrkQyFckE=;
- b=bId9zDYibXOUhui4lgODtFRphFPjWA9rnlEmbkl+rwUcjGNEND3zL8BMJZRr7Of7P94Jwk5aIindgd4ROpRNkW6BWrx8GKB2bP+hEGi5EtLAdZl3oF3aRIo0zHZVz9UtJB3Ml4uXf1jJKdxFxOaXqDLZ3sA54Bcbwba1ewv0UsPVcn/HryNgMrYOtRFbu04M6Z+rsZKzhnQAhT3AFUXobB5SBy0mgv9mzfJWvXq69ZhXHzatlA9xCuJc/svwVPQP2qkTiNhwgKxgJe9Rr/bxVNxW70fGL1/o5DxpzqcYgMPxGomLOGa1hCo601uoybqZaVXMjv9/kXD8EZoq8W8F4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hZdq5eXuDhJgtf/T42jGdzL3qpr6IJg6qMUrkQyFckE=;
- b=IZkwDcK6xU9MhFINO2NImA2A44ZzH7yTEGAdEf9A4PUVLaaHQhYy7fvx2unfbfOnjxDIKl2u6K24IVzQgTAAgN4YLN73nqFnh3fBXUDIFgGMDSBhvhgFZ4pgewnCUCtfqdeL7OvrjYT4Ampy8xTLQx2OLFBj9t+qblIP4GzuWcU=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1182.namprd15.prod.outlook.com (10.175.3.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Mon, 14 Oct 2019 20:12:59 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2347.023; Mon, 14 Oct 2019
- 20:12:59 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Alexei Starovoitov <ast@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
- bpf_get_stack()
-Thread-Topic: [PATCH bpf-next 2/2] bpf/stackmap: fix A-A deadlock in
- bpf_get_stack()
-Thread-Index: AQHVfzKraNK9YMcIS0WwHSwrlFbkdqdTfF0AgACi24CAAAefAIAABZIAgAWzPYCAALmAgA==
-Date:   Mon, 14 Oct 2019 20:12:59 +0000
-Message-ID: <048ED376-246D-4895-B5DA-FB3158C99122@fb.com>
-References: <20191010061916.198761-1-songliubraving@fb.com>
- <20191010061916.198761-3-songliubraving@fb.com>
- <20191010073608.GO2311@hirez.programming.kicks-ass.net>
- <a1d30b11-2759-0293-5612-48150db92775@fb.com>
- <20191010174618.GT2328@hirez.programming.kicks-ass.net>
- <4865df4d-7d13-0655-f3b4-5d025aaa1edb@fb.com>
- <20191014090903.GA2328@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191014090903.GA2328@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3594.4.19)
-x-originating-ip: [2620:10d:c090:200::2:249a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4624f09-0376-481e-58a8-08d750e2e8d9
-x-ms-traffictypediagnostic: MWHPR15MB1182:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB118262A24774DEB3F147D62EB3900@MWHPR15MB1182.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(366004)(376002)(396003)(39860400002)(199004)(189003)(52314003)(6436002)(50226002)(8936002)(36756003)(6486002)(4326008)(46003)(6116002)(2906002)(33656002)(11346002)(446003)(86362001)(14444005)(7736002)(229853002)(256004)(305945005)(71190400001)(71200400001)(66446008)(6512007)(102836004)(6506007)(66476007)(53546011)(66556008)(186003)(478600001)(6916009)(2616005)(316002)(5660300002)(476003)(81166006)(81156014)(8676002)(99286004)(66946007)(6246003)(486006)(76116006)(54906003)(25786009)(14454004)(76176011)(64756008)(98474003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1182;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qQUJ7c5bG3SqcTPQTqS1jJ4ZezvGHUapx9WsL8Rasv1GK0EvlGnAR2sIr8j97M0Tj5LSmAGWMjl3fNdNv/peHjO1EpEw3Y/q29Co+WrrFjgsOSFyg/eRbMNMa4g4DhJwg5KJZ8lvMEaV53+xif5Qf7/DYHqaj8IWOqA8ZBTx4T266mz+Ja1QYGted/Sz4yK+b25HIFQMMtkteKvQiE3rgGewN84Oc6xqVP/MaX/+Afu2sZD4TRh117jf16oy6vnikZwWHu9SZbcp2Ge6rTIBmnq1IZhE339wNN2E4kpWnUE/HboQPgRb8SrhexWtbMfPl6nO4O0mmZOjewhooFl7Iklw5brYzCYHXSa6Xq9V24jaHGw3UxxOpDx3GF7DAG0ykKaGJeg0+973bHlNAAqsfY7oX1i+pgoqC5zxx8iXah8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E1B63940F9EEE443B9F123C048498F46@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 16:16:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:22903 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729864AbfJNUQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 16:16:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 13:16:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="396582525"
+Received: from kridax-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.7.178])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Oct 2019 13:16:05 -0700
+Date:   Mon, 14 Oct 2019 23:16:04 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>, dhowells@redhat.com,
+        peterhuewe@gmx.de, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, daniel.thompson@linaro.org
+Subject: Re: [Patch v7 0/4] Create and consolidate trusted keys subsystem
+Message-ID: <20191014201604.GN15552@linux.intel.com>
+References: <1570425935-7435-1-git-send-email-sumit.garg@linaro.org>
+ <20191011123757.GD3129@linux.intel.com>
+ <20191011210517.qxjemugqczsvscu6@cantor>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4624f09-0376-481e-58a8-08d750e2e8d9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 20:12:59.4064
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 02p02APrS160hJ9JCgo3Z/m4bBwxRYZrA8ZtXuRuUnqHN1B43OqzexHNzDWPeWrAGJ3w5Iw6bB2B8zDdPm6Geg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1182
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-14_10:2019-10-11,2019-10-14 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999 spamscore=0
- mlxscore=0 suspectscore=0 clxscore=1015 phishscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910140168
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011210517.qxjemugqczsvscu6@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Peter!
+On Fri, Oct 11, 2019 at 02:05:17PM -0700, Jerry Snitselaar wrote:
+> On Fri Oct 11 19, Jarkko Sakkinen wrote:
+> > On Mon, Oct 07, 2019 at 10:55:31AM +0530, Sumit Garg wrote:
+> > > This patch-set does restructuring of trusted keys code to create and
+> > > consolidate trusted keys subsystem.
+> > > 
+> > > Also, patch #2 replaces tpm1_buf code used in security/keys/trusted.c and
+> > > crypto/asymmertic_keys/asym_tpm.c files to use the common tpm_buf code.
+> > > 
+> > > Changes in v7:
+> > > 1. Rebased to top of tpmdd/master
+> > > 2. Patch #4: update tpm2 trusted keys code to use tpm_send() instead of
+> > >    tpm_transmit_cmd() which is an internal function.
+> > > 
+> > > Changes in v6:
+> > > 1. Switch TPM asymmetric code also to use common tpm_buf code. These
+> > >    changes required patches #1 and #2 update, so I have dropped review
+> > >    tags from those patches.
+> > > 2. Incorporated miscellaneous comments from Jarkko.
+> > > 
+> > > Changes in v5:
+> > > 1. Drop 5/5 patch as its more relavant along with TEE patch-set.
+> > > 2. Add Reviewed-by tag for patch #2.
+> > > 3. Fix build failure when "CONFIG_HEADER_TEST" and
+> > >    "CONFIG_KERNEL_HEADER_TEST" config options are enabled.
+> > > 4. Misc changes to rename files.
+> > > 
+> > > Changes in v4:
+> > > 1. Separate patch for export of tpm_buf code to include/linux/tpm.h
+> > > 2. Change TPM1.x trusted keys code to use common tpm_buf
+> > > 3. Keep module name as trusted.ko only
+> > > 
+> > > Changes in v3:
+> > > 
+> > > Move TPM2 trusted keys code to trusted keys subsystem.
+> > > 
+> > > Changes in v2:
+> > > 
+> > > Split trusted keys abstraction patch for ease of review.
+> > > 
+> > > Sumit Garg (4):
+> > >   tpm: Move tpm_buf code to include/linux/
+> > >   KEYS: Use common tpm_buf for trusted and asymmetric keys
+> > >   KEYS: trusted: Create trusted keys subsystem
+> > >   KEYS: trusted: Move TPM2 trusted keys code
+> > > 
+> > >  crypto/asymmetric_keys/asym_tpm.c                  | 101 +++----
+> > >  drivers/char/tpm/tpm-interface.c                   |  56 ----
+> > >  drivers/char/tpm/tpm.h                             | 226 ---------------
+> > >  drivers/char/tpm/tpm2-cmd.c                        | 307 --------------------
+> > >  include/Kbuild                                     |   1 -
+> > >  include/keys/{trusted.h => trusted_tpm.h}          |  49 +---
+> > >  include/linux/tpm.h                                | 251 ++++++++++++++--
+> > >  security/keys/Makefile                             |   2 +-
+> > >  security/keys/trusted-keys/Makefile                |   8 +
+> > >  .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  96 +++----
+> > >  security/keys/trusted-keys/trusted_tpm2.c          | 314 +++++++++++++++++++++
+> > >  11 files changed, 652 insertions(+), 759 deletions(-)
+> > >  rename include/keys/{trusted.h => trusted_tpm.h} (77%)
+> > >  create mode 100644 security/keys/trusted-keys/Makefile
+> > >  rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
+> > >  create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
+> > > 
+> > > --
+> > > 2.7.4
+> > > 
+> > 
+> > I fixed a merge conflict caused by James' commit. Already pushed.
+> > Compiling test kernel ATM i.e. tested-by's will follow later.
+> > 
+> > /Jarkko
+> 
+> Are you missing patch 4 on master?
 
-> On Oct 14, 2019, at 2:09 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Thu, Oct 10, 2019 at 06:06:14PM +0000, Alexei Starovoitov wrote:
->> On 10/10/19 10:46 AM, Peter Zijlstra wrote:
->=20
->>> All of stack_map_get_build_id_offset() is just disguisting games; I did
->>> tell you guys how to do lockless vma lookups a few years ago -- and yes=
-,
->>> that is invasive core mm surgery. But this is just disguisting hacks fo=
-r
->>> not wanting to do it right.
->>=20
->> you mean speculative page fault stuff?
->> That was my hope as well and I offered Laurent all the help to land it.
->> Yet after a year since we've talked the patches are not any closer
->> to landing.
->> Any other 'invasive mm surgery' you have in mind?
->=20
-> Indeed that series. It had RCU managed VMAs and lockless VMA lookups,
-> which is exactly what you need here.
+Already removed the patch set given the sparse issues. Read this email
+after doing that. Thanks anyway for pointing that out.
 
-Lockless VMA lookups will be really useful. It would resolve all the=20
-pains we are having here.=20
-
-I remember Google folks also mentioned in LPC that they would like=20
-better mechanism to confirm build-id in perf.=20
-
->=20
->>> Basically the only semi-sane thing to do with that trainwreck is
->>> s/in_nmi()/true/ and pray.
->>>=20
->>> On top of that I just hate buildids in general.
->>=20
->> Emotions aside... build_id is useful and used in production.
->> It's used widely because it solves real problems.
->=20
-> AFAIU it solves the problem of you not knowing what version of the
-> binary runs where; which I was hoping your cloud infrastructure thing
-> would actually know already.
->=20
-> Anyway, I know what it does, I just don't nessecarily agree it is the
-> right way around that particular problem (also, the way I'm personally
-> affected is that perf-record is dead slow by default due to built-id
-> post processing).
->=20
-> And it obviously leads to horrible hacks like the code currently under
-> discussion :/
->=20
->> This dead lock is from real servers and not from some sanitizer wannabe.
->=20
-> If you enable CFS bandwidth control and run this function on the
-> trace_hrtimer_start() tracepoint, you should be able to trigger a real
-> AB-BA lockup.
->=20
->> Hence we need to fix it as cleanly as possible and quickly.
->> s/in_nmi/true/ is certainly an option.
->=20
-> That is the best option; because tracepoints / perf-overflow handlers
-> really should not be taking any locks.
->=20
->> I'm worried about overhead of doing irq_work_queue() all the time.
->> But I'm not familiar with mechanism enough to justify the concerns.
->> Would it make sense to do s/in_nmi/irgs_disabled/ instead?
->=20
-> irqs_disabled() should work in this particular case because rq->lock
-> (and therefore all it's nested locks) are IRQ-safe.
-
-We worry about the overhead of irq_work for every single stackmap=20
-lookup. So we would like to go with the irqs_disabled() check. I just=20
-sent v2 of the patch.=20
-
-Thanks again,
-Song
-
+/Jarkko
