@@ -6,138 +6,104 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9A4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28546ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762FC207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05FC20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571044298;
-	bh=8tI0g8zsw0fgwE0YUxt+xgXYluVqnNPk8e67hI5uqDs=;
+	s=default; t=1571044368;
+	bh=Lk/P8XMouIXUljGjzkFNXunhbSH4Zc3ZxMvXEYiBSs8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2WeqK5F+/SWwAOrU72ebJxAiZBt4OzeWUwuFitf84EaPuvnK7OSQUPBw874PbqMhA
-	 nnfd+k5t+gROBhdbj/h7bFKVU/zAW5uqtTztYEUV5969JZoMEzNaGmgMiI/1VwDRKA
-	 R2uaC2P1BXOSZKQv6XPMuUpEGFcDXenze5Xdf2Co=
+	b=nIxfQbEhZ/f78ETPMCcDm5RoN2Llaon/OF85Zrq5lIT2mMnbm6/Ee22kLASRpA6Rx
+	 QPSKeVRYO+Df9VXHV82GKtgXWvhYKmvhufPqGw34h1rZH+Vw4/7VCisIy/r7b7o02m
+	 CVqGEG41JlyCYbr6Bx51EYWp/NNf+pW4mfx+FLQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbfJNJLh (ORCPT
+        id S1730720AbfJNJMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:11:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39843 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730438AbfJNJLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:11:37 -0400
-Received: by mail-pl1-f196.google.com with SMTP id s17so7734879plp.6;
-        Mon, 14 Oct 2019 02:11:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+IFRxy6xr/cn5i5eJ5LyoCFcrnq8otJ7MI3Vnt7AQmQ=;
-        b=U826a941vtbfZP0+j8BWQZoMRB+iHWVT8hr9rJiFYjQnuJktsDEGBeYNQsnSgXxtfG
-         T/UsJswL1tAo17YDzOX2nVbdvuQpMomIO/TpVsS3WJESRehEkXCfX+oADAJ1DNaX2/4v
-         hhJToE9Sa41G7QWuwjE5pnQW0CEOkUhKU9/VilOYdDcErh6LvA0XesmQrtubXFrc6IUQ
-         oqL1y5WgErKBFrUbif9ysuXANdQb6idsl/3jXMJHbh0t6C5dQzU9OZACeSVwh5xjxd+B
-         yNhmLqyJHTYGUQNFHa+J03ZvPzE1mcnREdOvibece0xM24telG5kjQiEbaG+H3Nc18Ya
-         CRAg==
-X-Gm-Message-State: APjAAAUEg7Jk/UKtfHtv8w8MZYXg4x0hJXagP8QPo/e7YaohxiiVMo7z
-        b7RPpWvbPxuD+Boa1e+r8cQ=
-X-Google-Smtp-Source: APXvYqzqz+mYzu6Rr6fKvuJ7evMkxLlZvgFgPvKfodKwNGTJg2ZtQUysAWGF3WWCCK+xvwrnrs5+ZA==
-X-Received: by 2002:a17:902:a717:: with SMTP id w23mr28734080plq.177.1571044296067;
-        Mon, 14 Oct 2019 02:11:36 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id s1sm16973494pjs.31.2019.10.14.02.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 02:11:34 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0A8564021A; Mon, 14 Oct 2019 09:11:33 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 09:11:33 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 1/8] efi: Export boot-services code and data as
- debugfs-blobs
-Message-ID: <20191014091133.GY16384@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191004145056.43267-2-hdegoede@redhat.com>
+        Mon, 14 Oct 2019 05:12:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38106 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730656AbfJNJMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:12:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 716A7B8EF;
+        Mon, 14 Oct 2019 09:12:44 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 11:12:43 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pan Zhang <zhangpan26@huawei.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
+        jgg@ziepe.ca, aarcange@redhat.com, yang.shi@linux.alibaba.com,
+        zhongjiang@huawei.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Cristopher Lameter <cl@linux.com>
+Subject: Re: [PATCH] mm: mempolicy: fix the absence of the last bit of
+ nodemask
+Message-ID: <20191014091243.GD317@dhcp22.suse.cz>
+References: <1570882789-20579-1-git-send-email-zhangpan26@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004145056.43267-2-hdegoede@redhat.com>
+In-Reply-To: <1570882789-20579-1-git-send-email-zhangpan26@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:50:49PM +0200, Hans de Goede wrote:
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 8d3e778e988b..abba49c4c46d 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -314,6 +315,55 @@ static __init int efivar_ssdt_load(void)
->  static inline int efivar_ssdt_load(void) { return 0; }
->  #endif
+[Cc Christopher - th initial emails is http://lkml.kernel.org/r/1570882789-20579-1-git-send-email-zhangpan26@huawei.com]
+
+On Sat 12-10-19 20:19:48, Pan Zhang wrote:
+>     When I want to use set_mempolicy to get the memory from each node on the numa machine,
+>     and the MPOL_INTERLEAVE flag seems to achieve this goal.
+>     However, during the test, it was found that the use result of node was unbalanced.
+>     The memory was allocated evenly from the nodes except the last node,
+>     which obviously did not match the expectations.
+> 
+>     You can test as follows:
+> 1.  Create a file that needs to be mmap ped:
+>     dd if=/dev/zero of=./test count=1024 bs=1M
+
+This will already poppulate the page cache and if it fits into memory
+(which seems to be the case in your example output) then your mmap later
+will not allocate any new memory.
+
+I suspect that using numactl --interleave 0,1 dd if=/dev/zero of=./test count=1024 bs=1M
+
+will produce an output much closer to your expectation. Right?
+
+[...]
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 4ae967b..a23509f 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -1328,9 +1328,11 @@ static int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
+>  	unsigned long nlongs;
+>  	unsigned long endmask;
 >  
-> +#ifdef CONFIG_DEBUG_FS
-> +
-> +#define EFI_DEBUGFS_MAX_BLOBS 32
-> +
-> +static struct debugfs_blob_wrapper debugfs_blob[EFI_DEBUGFS_MAX_BLOBS];
-> +
-> +static void __init efi_debugfs_init(void)
-> +{
-> +	struct dentry *efi_debugfs;
-> +	efi_memory_desc_t *md;
-> +	char name[32];
-> +	int type_count[EFI_BOOT_SERVICES_DATA + 1] = {};
-> +	int i = 0;
-> +
-> +	efi_debugfs = debugfs_create_dir("efi", NULL);
-> +	if (IS_ERR_OR_NULL(efi_debugfs))
-> +		return;
-> +
-> +	for_each_efi_memory_desc(md) {
-> +		switch (md->type) {
-> +		case EFI_BOOT_SERVICES_CODE:
-> +			snprintf(name, sizeof(name), "boot_services_code%d",
-> +				 type_count[md->type]++);
-> +			break;
-> +		case EFI_BOOT_SERVICES_DATA:
-> +			snprintf(name, sizeof(name), "boot_services_data%d",
-> +				 type_count[md->type]++);
-> +			break;
-> +		default:
-> +			continue;
-> +		}
-> +
-> +		debugfs_blob[i].size = md->num_pages << EFI_PAGE_SHIFT;
-> +		debugfs_blob[i].data = memremap(md->phys_addr,
-> +						debugfs_blob[i].size,
-> +						MEMREMAP_WB);
-> +		if (!debugfs_blob[i].data)
-> +			continue;
-> +
-> +		debugfs_create_blob(name, 0400, efi_debugfs, &debugfs_blob[i]);
-> +		i++;
-> +		if (i == EFI_DEBUGFS_MAX_BLOBS)
-> +			break;
+> -	--maxnode;
+>  	nodes_clear(*nodes);
+> -	if (maxnode == 0 || !nmask)
+> +	/*
+> +	 * If the user specified only one node, no need to set nodemask
+> +	 */
+> +	if (maxnode - 1 == 0 || !nmask)
+>  		return 0;
+>  	if (maxnode > PAGE_SIZE*BITS_PER_BYTE)
+>  		return -EINVAL;
 
-Why do we silently ignore more entries ? And could documentation be
-added for ways in which this could be used in practice?
+I am afraid this is a wrong fix. It is really hard to grasp the code but my
+understanding is that the caller is supposed to provide maxnode larger
+than than the nodemask. So if you want 2 nodes then maxnode should be 3.
+Have a look at the libnuma (which is a reference implementation)
 
-  Luis
+static void setpol(int policy, struct bitmask *bmp)
+{
+	if (set_mempolicy(policy, bmp->maskp, bmp->size + 1) < 0)
+		numa_error("set_mempolicy");
+}
+
+The semantic is quite awkward but it is that way for years.
+-- 
+Michal Hocko
+SUSE Labs
