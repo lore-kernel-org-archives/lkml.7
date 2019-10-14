@@ -2,117 +2,61 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E21ECE596
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4430C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE57207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C94207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731830AbfJNL7S (ORCPT
+        id S1731855AbfJNL7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:59:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3709 "EHLO huawei.com"
+        Mon, 14 Oct 2019 07:59:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49580 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730314AbfJNL7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:59:14 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7505F171767C03AD8FE1;
-        Mon, 14 Oct 2019 19:59:10 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 14 Oct 2019 19:59:00 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <stable@vger.kernel.org>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>, <sudeep.holla@arm.com>, <rrichter@marvell.com>,
-        <jeremy.linton@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
-        <guohanjun@huawei.com>, <wanghuiqiang@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH for-stable-5.3 2/2] arm64: topology: Use PPTT to determine if PE is a thread
-Date:   Mon, 14 Oct 2019 19:56:02 +0800
-Message-ID: <1571054162-71090-3-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1571054162-71090-1-git-send-email-john.garry@huawei.com>
-References: <1571054162-71090-1-git-send-email-john.garry@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+        id S1731446AbfJNL7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 07:59:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E050B98A;
+        Mon, 14 Oct 2019 11:59:53 +0000 (UTC)
+Message-ID: <1571054381.19529.16.camel@suse.com>
+Subject: Re: Lockup on USB and block devices
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org
+Date:   Mon, 14 Oct 2019 13:59:41 +0200
+In-Reply-To: <Pine.LNX.4.44L0.1910011427110.1991-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1910011427110.1991-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+Am Dienstag, den 01.10.2019, 14:31 -0400 schrieb Alan Stern:
+> It looks like a problem with your xHCI USB host controller.  Normally a
+> usb-storage transfer would be aborted after 90 seconds.  But if the
+> host controller (or its driver) isn't working right, and the abort
+> never completes, you end up with a situation like this -- usb-storage
+> and the higher SCSI and block layers waiting indefinitely for an event
+> that won't occur.
 
-Commit 98dc19902a0b2e5348e43d6a2c39a0a7d0fc639e upstream.
+Hi,
 
-ACPI 6.3 adds a thread flag to represent if a CPU/PE is
-actually a thread. Given that the MPIDR_MT bit may not
-represent this information consistently on homogeneous machines
-we should prefer the PPTT flag if its available.
+that would imply that usb_unlink_urb() is malfunctioning
+without taking down the whole bus. Is that likely?
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Robert Richter <rrichter@marvell.com>
-[will: made acpi_cpu_is_threaded() return 'bool']
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- arch/arm64/kernel/topology.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 0825c4a856e3..6106c49f84bc 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -340,17 +340,28 @@ void remove_cpu_topology(unsigned int cpu)
- }
- 
- #ifdef CONFIG_ACPI
-+static bool __init acpi_cpu_is_threaded(int cpu)
-+{
-+	int is_threaded = acpi_pptt_cpu_is_thread(cpu);
-+
-+	/*
-+	 * if the PPTT doesn't have thread information, assume a homogeneous
-+	 * machine and return the current CPU's thread state.
-+	 */
-+	if (is_threaded < 0)
-+		is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
-+
-+	return !!is_threaded;
-+}
-+
- /*
-  * Propagate the topology information of the processor_topology_node tree to the
-  * cpu_topology array.
-  */
- static int __init parse_acpi_topology(void)
- {
--	bool is_threaded;
- 	int cpu, topology_id;
- 
--	is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
--
- 	for_each_possible_cpu(cpu) {
- 		int i, cache_id;
- 
-@@ -358,7 +369,7 @@ static int __init parse_acpi_topology(void)
- 		if (topology_id < 0)
- 			return topology_id;
- 
--		if (is_threaded) {
-+		if (acpi_cpu_is_threaded(cpu)) {
- 			cpu_topology[cpu].thread_id = topology_id;
- 			topology_id = find_acpi_cpu_topology(cpu, 1);
- 			cpu_topology[cpu].core_id   = topology_id;
--- 
-2.17.1
+	Regards
+		Oliver
 
