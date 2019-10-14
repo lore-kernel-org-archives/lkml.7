@@ -2,137 +2,211 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BE1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E230C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1272054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571047262;
-	bh=8hv8kOwTn5l1HMAW6XIWlV7FwUBsOLdkJOgm2pAl2aI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=NWR6D1fWSBcPprx6UfXxpFc6M0S292O2apGpRArmxkLJRqzZIyaZqR7ykZ4X6o8JD
-	 hG5iW7jPTetzcqn7Sly1Rjn+O7H2FUHEr3Kve2VEunu/Tpz6Uwz3vXa0bOU4QHIP9O
-	 +6hJsUkoAJf13p+Ascr7Xy17KK9qpvewGbEtvroI=
+	by mail.kernel.org (Postfix) with ESMTP id DDC392089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731325AbfJNKBB (ORCPT
+        id S1731330AbfJNKBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48040 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 06:01:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:39288 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731119AbfJNKBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:01:00 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA5D2054F;
-        Mon, 14 Oct 2019 10:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571047260;
-        bh=8hv8kOwTn5l1HMAW6XIWlV7FwUBsOLdkJOgm2pAl2aI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g7gI7ebKZCUYTZattLt0HE3lw3Nsq6q00J7tMhyyt9zDE8dEXgfC3XH8klLi+lsOp
-         6yGF/Za110rw9sekhZIdCmSEXI3nbPJ7CdbBd9QEclVQKQbkhCGs/FECyI+eERPhJX
-         sWISdHTROwOTQZ1ZSSRXTdDiihJAg6mphwKG5X3w=
-Message-ID: <6157a498a381e63bbf19094b5d59137f62be7c7f.camel@kernel.org>
-Subject: Re: [PATCH] function dispatch should return if mds session does not
- exist
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 14 Oct 2019 06:00:58 -0400
-In-Reply-To: <20191014090059.21871-1-gmayyyha@gmail.com>
-References: <20191014090059.21871-1-gmayyyha@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S1731119AbfJNKBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:01:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BEB8337;
+        Mon, 14 Oct 2019 03:01:35 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 526CB3F718;
+        Mon, 14 Oct 2019 03:01:34 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:01:29 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
+References: <20190522213351.21366-3-repk@triplefau.lt>
+ <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+ <20190930165230.GA12568@voidbox>
+ <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
+ <20191013113415.3c653526@why>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191013113415.3c653526@why>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-14 at 17:00 +0800, Yanhu Cao wrote:
-> we shouldn't call ceph_msg_put, otherwise libceph will pass
-> invalid pointer to mm.
+On Sun, Oct 13, 2019 at 11:34:15AM +0100, Marc Zyngier wrote:
+> On Tue, 1 Oct 2019 09:05:46 +0100
+> Andrew Murray <andrew.murray@arm.com> wrote:
 > 
-> kernel panic - not syncing: fatal exception
->     [5452201.213885] ------------[ cut here ]------------
->     [5452201.213889] kernel BUG at mm/slub.c:3901!
->     [5452201.213938] invalid opcode: 0000 [#1] SMP PTI
->     [5452201.213971] CPU: 35 PID: 3037447 Comm: kworker/35:1 Kdump: loaded Not tainted 4.19.15 #1
->     [5452201.214020] Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 01/22/2018
->     [5452201.214088] Workqueue: ceph-msgr ceph_con_workfn [libceph]
->     [5452201.214129] RIP: 0010:kfree+0x15b/0x170
->     [5452201.214156] Code: 8b 02 f6 c4 80 75 08 49 8b 42 08 a8 01 74 1b 49 8b 02 31 f6 f6 c4 80 74 05 41 0f b6 72 51 5b 5d 41 5c 4c 89 d7 e9 95 03 f9 ff <0f> 0b 48 83 e8 01 e9 01 ff ff ff 49 83 ea 01 e9 e9 fe ff ff 90 0f
->     [5452201.214262] RSP: 0018:ffffb8c3a0607cb0 EFLAGS: 00010246
->     [5452201.214296] RAX: ffffeee840000008 RBX: ffff9130c0000000 RCX: 0000000080200016
->     [5452201.214339] RDX: 00006f0ec0000000 RSI: 0000000000000000 RDI: ffff9130c0000000
->     [5452201.214383] RBP: ffff91107f823970 R08: 0000000000000001 R09: 0000000000000000
->     [5452201.214426] R10: ffffeee840000000 R11: 0000000000000001 R12: ffffffffc076c45d
->     [5452201.214469] R13: ffff91107f823970 R14: ffff91107f8239e0 R15: ffff91107f823900
->     [5452201.214513] FS:  0000000000000000(0000) GS:ffff9110bfbc0000(0000) knlGS:0000000000000000
->     [5452201.214562] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->     [5452201.214598] CR2: 000055993ab29620 CR3: 0000003a1e00a003 CR4: 00000000003606e0
->     [5452201.214641] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->     [5452201.214685] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->     [5452201.214728] Call Trace:
->     [5452201.214759]  ceph_msg_release+0x15d/0x190 [libceph]
->     [5452201.214811]  dispatch+0x66/0xa50 [ceph]
->     [5452201.214846]  try_read+0x7f3/0x11d0 [libceph]
->     [5452201.214878]  ? dequeue_entity+0x37e/0x7e0
->     [5452201.214907]  ? pick_next_task_fair+0x291/0x610
->     [5452201.214937]  ? dequeue_task_fair+0x5d/0x700
->     [5452201.214966]  ? __switch_to+0x8c/0x470
->     [5452201.214999]  ceph_con_workfn+0xa2/0x5b0 [libceph]
->     [5452201.215033]  process_one_work+0x16b/0x370
->     [5452201.215062]  worker_thread+0x49/0x3f0
->     [5452201.215089]  kthread+0xf5/0x130
->     [5452201.215112]  ? max_active_store+0x80/0x80
->     [5452201.215139]  ? kthread_bind+0x10/0x10
->     [5452201.215167]  ret_from_fork+0x1f/0x30
+> Hi Lorenzo,
 > 
-> Link: https://tracker.ceph.com/issues/42288
+> > On Mon, Sep 30, 2019 at 06:52:30PM +0200, Remi Pommarel wrote:
+> > > On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:  
+> > > > On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:  
+> > > > > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+> > > > > implemented and does not reflect the actual link training state (the
+> > > > > flag is always set to 0). In order to support link re-training feature
+> > > > > this flag has to be emulated. The Link Training and Status State
+> > > > > Machine (LTSSM) flag in Aardvark LMI config register could be used as
+> > > > > a link training indicator. Indeed if the LTSSM is in L0 or upper state
+> > > > > then link training has completed (see [1]).
+> > > > > 
+> > > > > Unfortunately because after asking a link retraining it takes a while
+> > > > > for the LTSSM state to become less than 0x10 (due to L0s to recovery
+> > > > > state transition delays), LTSSM can still be in L0 while link training
+> > > > > has not finished yet. So this waits for link to be in recovery or lesser
+> > > > > state before returning after asking for a link retrain.
+> > > > > 
+> > > > > [1] "PCI Express Base Specification", REV. 4.0
+> > > > >     PCI Express, February 19 2014, Table 4-14
+> > > > > 
+> > > > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > > > > ---
+> > > > > Changes since v1:
+> > > > >   - Rename retraining flag field
+> > > > >   - Fix DEVCTL register writing
+> > > > > 
+> > > > > Changes since v2:
+> > > > >   - Rewrite patch logic so it is more legible
+> > > > > 
+> > > > > Please note that I will unlikely be able to answer any comments from May
+> > > > > 24th to June 10th.
+> > > > > ---
+> > > > >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
+> > > > >  1 file changed, 28 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > > > index 134e0306ff00..8803083b2174 100644
+> > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > @@ -180,6 +180,8 @@
+> > > > >  #define LINK_WAIT_MAX_RETRIES		10
+> > > > >  #define LINK_WAIT_USLEEP_MIN		90000
+> > > > >  #define LINK_WAIT_USLEEP_MAX		100000
+> > > > > +#define RETRAIN_WAIT_MAX_RETRIES	10
+> > > > > +#define RETRAIN_WAIT_USLEEP_US		2000
+> > > > >  
+> > > > >  #define MSI_IRQ_NUM			32
+> > > > >  
+> > > > > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+> > > > >  	return -ETIMEDOUT;
+> > > > >  }
+> > > > >  
+> > > > > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+> > > > > +{
+> > > > > +	size_t retries;
+> > > > > +
+> > > > > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> > > > > +		if (!advk_pcie_link_up(pcie))
+> > > > > +			break;
+> > > > > +		udelay(RETRAIN_WAIT_USLEEP_US);
+> > > > > +	}
+> > > > > +}
+> > > > > +
+> > > > >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > > > >  {
+> > > > >  	u32 reg;
+> > > > > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
+> > > > >  	}
+> > > > >  
+> > > > > +	case PCI_EXP_LNKCTL: {
+> > > > > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
+> > > > > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> > > > > +			~(PCI_EXP_LNKSTA_LT << 16);  
+> > > > 
+> > > > The commit message says "the flag is always set to 0" - therefore I guess
+> > > > you don't *need* to mask out the LT bit here? I assume this is just
+> > > > belt-and-braces but thought I'd check incase I've misunderstood or if your
+> > > > commit message is inaccurate.
+> > > > 
+> > > > In any case masking out the bit (or adding a comment) makes this code more
+> > > > readable as the reader doesn't need to know what the hardware does with this
+> > > > bit.  
+> > > 
+> > > Actually vendor eventually responded that the bit was reserved, but
+> > > during my tests it remains to 0.
+> > > 
+> > > So yes I am masking this out mainly for belt-and-braces and legibility.  
+> > 
+> > Thanks for the clarification.
+> > 
+> > >   
+> > > > > +		if (!advk_pcie_link_up(pcie))
+> > > > > +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> > > > > +		*value = val;
+> > > > > +		return PCI_BRIDGE_EMUL_HANDLED;
+> > > > > +	}
+> > > > > +
+> > > > >  	case PCI_CAP_LIST_ID:
+> > > > >  	case PCI_EXP_DEVCAP:
+> > > > >  	case PCI_EXP_DEVCTL:
+> > > > >  	case PCI_EXP_LNKCAP:
+> > > > > -	case PCI_EXP_LNKCTL:
+> > > > >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+> > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
+> > > > >  	default:
+> > > > > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+> > > > >  
+> > > > >  	switch (reg) {
+> > > > >  	case PCI_EXP_DEVCTL:
+> > > > > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> > > > > +		break;  
+> > > > 
+> > > > Why is this here?
+> > > >   
+> > > 
+> > > Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
+> > > as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
+> > > successfully retrain), they do have different behaviours.
+> > > 
+> > > So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
+> > > wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
+> > > set.  
+> > 
+> > Oh yes, of course!
+> > 
+> > Thanks and:
+> > 
+> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 > 
-> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> ---
->  fs/ceph/mds_client.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Is there any hope for this workaround to make it into 5.4?
 > 
-> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> index a8a8f84f3bbf..066358fea347 100644
-> --- a/fs/ceph/mds_client.c
-> +++ b/fs/ceph/mds_client.c
-> @@ -4635,7 +4635,7 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
->  	mutex_lock(&mdsc->mutex);
->  	if (__verify_registered_session(mdsc, s) < 0) {
->  		mutex_unlock(&mdsc->mutex);
-> -		goto out;
-> +		return;
->  	}
->  	mutex_unlock(&mdsc->mutex);
->  
-> @@ -4672,7 +4672,6 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
->  		pr_err("received unknown message type %d %s\n", type,
->  		       ceph_msg_type_name(type));
->  	}
-> -out:
->  	ceph_msg_put(msg);
->  }
->  
+> My EspressoBin (which is blessed with this joke of a PCIe controller)
+> is pretty much a doorstop without it and dies with a SError early at
+> boot.
+> 
+> FWIW:
+> 
+> Tested-by: Marc Zyngier <maz@kernel.org>
 
-This doesn't look quite right. We hold a msg reference here. If we don't
-call ceph_msg_put on it then that reference will leak.
+Hi Marc,
 
-Do you know which pointer it was trying to kfree at the time of the
-crash? What's your rationale for thinking that this is the problem?
+First thing I will have to mark it as a Fixes: (if Remi can provide
+me with a tag that'd be great), usually we send fixes at -rc* for
+patches that fix code that went in the current (eg 5.4) material,
+I will ask Bjorn to see if we can send this in one of the upcoming
+-rc* even if it fixes older code.
 
 Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Lorenzo
