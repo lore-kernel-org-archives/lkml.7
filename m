@@ -2,415 +2,280 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339FBECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EADECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B5620659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+pFCIbj"
+	by mail.kernel.org (Postfix) with ESMTP id B138E207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 13:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbfJNNtv (ORCPT
+        id S1732267AbfJNNv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 09:49:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35636 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730459AbfJNNtv (ORCPT
+        Mon, 14 Oct 2019 09:51:29 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34401 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730418AbfJNNv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 09:49:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 205so10468778pfw.2;
-        Mon, 14 Oct 2019 06:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K1QhziSJF1dgiTXw/w57+vAnrOQ8wok0jxLAMqNu/b8=;
-        b=n+pFCIbjCAw2UDbY9RNemWBhev+x36UGP/NAbzg3oitQrLwKNPa2+Vhq6Y1H3yKAK5
-         dr6binvZyhyoJ6GgnANXMNk06A5dR8R4UKJzMmHFLIr/SES2RNzoT/I2DDe4qprQaoCd
-         4iDMXTc5ScSsB7/DTp6LpqHPoeQwg9+NBlvbes5kyaMn8X/Mk4+WrboXIoHznIAo5HfU
-         qTPQrfm/Lrigt+3cAR5P9wMXce31MxEPJAK0MaN5cGhMA8RevKMNifVxdeu6B/G+l6mf
-         DQcNs58/MZRDojI5pn/t4WiyBq9VZoHdsSbO4RhghylAPSmfDlp2hjpKr7LLji9Gpxd+
-         w9ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K1QhziSJF1dgiTXw/w57+vAnrOQ8wok0jxLAMqNu/b8=;
-        b=uM+eFhXGBdWmrDvDSMemydYipFDvpXPrDmU2zmXAy7j2teqnJ0POAHqDS71CC4cQjj
-         8GSzBP79TOPFKas/6sh4S0hHCCPmrr6Sigxmdugx2z6246OQ7Htq1AGZ5kH6SW/8rmLH
-         sbcZC5CRMhvvBHltYesiL574ym4sQNl08FetmSsaKKR2BJ6soZb7oS4rAvzcNLQWFjSS
-         HI798pjv657JxwL+yPnU1WpsJ26fL3BBt/lLqARpt1NVq31LhjLYjRdjQFP5PsVv/7p5
-         nOlbQioz7VjT5RqptF9dm6eF23rbXFS3u3UYnC7WgYNoOMXxaPvo7cMJ10zOPkyi7ryQ
-         E5mg==
-X-Gm-Message-State: APjAAAUXWSUw+ENSCAgOwbfoegLwcNUfQKUHpaU/3VWHyGniimoUTQtS
-        cbmTpQ1bR6NRNT7mpoxUnsTNLFun
-X-Google-Smtp-Source: APXvYqyq29zjfx554BXuqDBUyhrf4Qz04hWVCHjnPP4AYz+g0vgLi1v9p4/LmmiPhX3EZssqG979qQ==
-X-Received: by 2002:a17:90a:c405:: with SMTP id i5mr37917328pjt.9.1571060989875;
-        Mon, 14 Oct 2019 06:49:49 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r19sm16929096pgj.43.2019.10.14.06.49.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 06:49:48 -0700 (PDT)
-Subject: Re: [PATCH 3/4] watchdog: add meson secure watchdog driver
-To:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>, linux-watchdog@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com>
- <1570874721-36077-4-git-send-email-xingyu.chen@amlogic.com>
- <07e8aef0-c991-f212-d500-c5ce77b3dea3@roeck-us.net>
- <51912003-658e-d290-d4db-130808caf6cd@amlogic.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1c2ac5b1-4ba4-b4e9-8775-b1597d9aae99@roeck-us.net>
-Date:   Mon, 14 Oct 2019 06:49:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 14 Oct 2019 09:51:29 -0400
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 70DC2FF820;
+        Mon, 14 Oct 2019 13:51:23 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 16:00:26 +0200
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20191014140026.GB1426@voidbox>
+References: <20190522213351.21366-3-repk@triplefau.lt>
+ <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+ <20190930165230.GA12568@voidbox>
+ <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
+ <20191013113415.3c653526@why>
+ <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
+ <20191014130627.GA1426@voidbox>
+ <eda65141ee1006fe3a93a9989867dc31@www.loen.fr>
 MIME-Version: 1.0
-In-Reply-To: <51912003-658e-d290-d4db-130808caf6cd@amlogic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eda65141ee1006fe3a93a9989867dc31@www.loen.fr>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 4:42 AM, Xingyu Chen wrote:
-> Hi, Guenter
-> Thanks for your review.
+On Mon, Oct 14, 2019 at 02:45:34PM +0100, Marc Zyngier wrote:
+> Hi Remi,
 > 
-> On 2019/10/12 22:29, Guenter Roeck wrote:
->> On 10/12/19 3:05 AM, Xingyu Chen wrote:
->>> The watchdog controller on the Meson-A/C series SoCs is moved to secure
->>> world, watchdog operation needs to be done in secure EL3 mode via ATF,
->>> Non-secure world can call SMC instruction to trap to AFT for watchdog
->>> operation.
->>>
->>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->>> ---
->>>   drivers/watchdog/Kconfig         |  16 +++
->>>   drivers/watchdog/Makefile        |   1 +
->>>   drivers/watchdog/meson_sec_wdt.c | 205 +++++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 222 insertions(+)
->>>   create mode 100644 drivers/watchdog/meson_sec_wdt.c
->>>
->>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>> index 58e7c10..e6b0707 100644
->>> --- a/drivers/watchdog/Kconfig
->>> +++ b/drivers/watchdog/Kconfig
->>> @@ -826,6 +826,22 @@ config MESON_GXBB_WATCHDOG
->>>         To compile this driver as a module, choose M here: the
->>>         module will be called meson_gxbb_wdt.
->>> +config MESON_SEC_WATCHDOG
->>> +    tristate "Amlogic Meson Secure watchdog support"
->>> +    depends on ARCH_MESON || COMPILE_TEST
->>
->> Did you try COMPILE_TEST (eg allmodconfig) on, say x86_64 ?
->> AFAICS the meson sm calls are only available if MESON_SM is
->> enabled, and that depends on both ARCH_MESON and ARM64_4K_PAGES.
->> This dependency is not expressed here, and neither is enabled
->> with COMPILE_TEST.Sorry, I have't done this kind of test before for this patchset. There
-> is a kernel build error which related to the current driver when i try to use allmodconfig with x86. I will fix it by adding "depends on MESON_SM" in next version.
->>
->>> +    select WATCHDOG_CORE
->>> +    help
->>> +      The watchdog controller on the Meson-A/C series SoCs is moved to
->>> +      secure world, watchdog operation needs to be done in secure EL3
->>> +      mode via ATF, non-secure world can call SMC instruction to trap
->>> +      to ATF for the watchdog operation.
->>> +
->>> +      Say Y here if watchdog controller on Meson SoCs is located in
->>> +      secure world.
->>> +
->>> +      To compile this driver as a module, choose M here: the
->>> +      module will be called meson_sec_wdt.
->>> +
->>>   config MESON_WATCHDOG
->>>       tristate "Amlogic Meson SoCs watchdog support"
->>>       depends on ARCH_MESON || COMPILE_TEST
->>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->>> index 2ee352b..5e6b73d 100644
->>> --- a/drivers/watchdog/Makefile
->>> +++ b/drivers/watchdog/Makefile
->>> @@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
->>>   obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
->>>   obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
->>>   obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
->>> +obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
->>>   obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
->>>   obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
->>>   obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
->>> diff --git a/drivers/watchdog/meson_sec_wdt.c b/drivers/watchdog/meson_sec_wdt.c
->>> new file mode 100644
->>> index 00000000..2b5357c
->>> --- /dev/null
->>> +++ b/drivers/watchdog/meson_sec_wdt.c
->>> @@ -0,0 +1,205 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>> +/*
->>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->>> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
->>> + *
->>> + */
->>> +#include <linux/err.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/types.h>
->>> +#include <linux/watchdog.h>
->>> +#include <linux/firmware/meson/meson_sm.h>
->>> +
->>> +#define MESON_SIP_WDT_DISABLE        0x1
->>> +#define MESON_SIP_WDT_ENABLE        0x2
->>> +#define MESON_SIP_WDT_PING        0x3
->>> +#define MESON_SIP_WDT_INIT        0x4
->>> +#define MESON_SIP_WDT_RESETNOW        0x5
->>> +#define MESON_SIP_WDT_SETTIMEOUT    0x6
->>> +#define MESON_SIP_WDT_GETTIMELEFT    0x7
->>> +
->>> +#define DEFAULT_TIMEOUT            30 /* seconds */
->>> +
->>> +/*
->>> + * Watchdog timer tick is set to 1ms in secfw side, and tick count is
->>> + * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
->>> + * timeout value is 0xffff ms.
->>> + */
->>> +#define MAX_TIMEOUT_MS            0xFFFF
->>> +
->>> +struct meson_sec_wdt {
->>> +    struct watchdog_device wdt_dev;
->>> +    struct meson_sm_firmware *fw;
->>> +};
->>> +
->>> +static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
->>> +{
->>> +    int ret;
->>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>> +
->>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>> +                MESON_SIP_WDT_ENABLE, 0, 0, 0, 0); > +    if (ret)
->>> +        return ret;
->>> +
->>> +    return 0;
->>
->> This is equivalent to
->>      return ret;
->> or even
->>      return meson_sm_call(...);
->> I will fix it in next version.
->>> +}
->>> +
->>> +static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
->>> +{
->>> +    int ret;
->>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>> +
->>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>> +                MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    return 0;
->>
->> Same as above.
-> I will fix it in next version.
->>
->>> +}
->>> +
->>> +static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
->>> +{
->>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>> +
->>> +    meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>> +              MESON_SIP_WDT_PING, 0, 0, 0, 0);
->>> +
->>> +    return 0;
->>
->> Why ignore errors ?
-> I will fix it as above.
->>
->>> +}
->>> +
->>> +static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
->>> +                     unsigned int timeout)
->>> +{
->>> +    int ret;
->>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>> +
->>> +    wdt_dev->timeout = timeout;
->>> +    meson_sec_wdt_ping(wdt_dev);
->>> +
->>
->> Unconditionally ? Also, the core does that after setting the timeoutIt is used to avoid watchdog timer expire once the timeout is updated, 
-> and that the watchdog_ping from core not been invoked. If it is considered useless, i will remove it.
+> On 2019-10-14 14:06, Remi Pommarel wrote:
+> > Hi Lorenzo, Marc,
+> > 
+> > On Mon, Oct 14, 2019 at 11:01:29AM +0100, Lorenzo Pieralisi wrote:
+> > > On Sun, Oct 13, 2019 at 11:34:15AM +0100, Marc Zyngier wrote:
+> > > > On Tue, 1 Oct 2019 09:05:46 +0100
+> > > > Andrew Murray <andrew.murray@arm.com> wrote:
+> > > >
+> > > > Hi Lorenzo,
+> > > >
+> > > > > On Mon, Sep 30, 2019 at 06:52:30PM +0200, Remi Pommarel wrote:
+> > > > > > On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:
+> > > > > > > On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel
+> > > wrote:
+> > > > > > > > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status
+> > > register is not
+> > > > > > > > implemented and does not reflect the actual link training
+> > > state (the
+> > > > > > > > flag is always set to 0). In order to support link
+> > > re-training feature
+> > > > > > > > this flag has to be emulated. The Link Training and Status
+> > > State
+> > > > > > > > Machine (LTSSM) flag in Aardvark LMI config register could
+> > > be used as
+> > > > > > > > a link training indicator. Indeed if the LTSSM is in L0 or
+> > > upper state
+> > > > > > > > then link training has completed (see [1]).
+> > > > > > > >
+> > > > > > > > Unfortunately because after asking a link retraining it
+> > > takes a while
+> > > > > > > > for the LTSSM state to become less than 0x10 (due to L0s
+> > > to recovery
+> > > > > > > > state transition delays), LTSSM can still be in L0 while
+> > > link training
+> > > > > > > > has not finished yet. So this waits for link to be in
+> > > recovery or lesser
+> > > > > > > > state before returning after asking for a link retrain.
+> > > > > > > >
+> > > > > > > > [1] "PCI Express Base Specification", REV. 4.0
+> > > > > > > >     PCI Express, February 19 2014, Table 4-14
+> > > > > > > >
+> > > > > > > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > > > > > > > ---
+> > > > > > > > Changes since v1:
+> > > > > > > >   - Rename retraining flag field
+> > > > > > > >   - Fix DEVCTL register writing
+> > > > > > > >
+> > > > > > > > Changes since v2:
+> > > > > > > >   - Rewrite patch logic so it is more legible
+> > > > > > > >
+> > > > > > > > Please note that I will unlikely be able to answer any
+> > > comments from May
+> > > > > > > > 24th to June 10th.
+> > > > > > > > ---
+> > > > > > > >  drivers/pci/controller/pci-aardvark.c | 29
+> > > ++++++++++++++++++++++++++-
+> > > > > > > >  1 file changed, 28 insertions(+), 1 deletion(-)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c
+> > > b/drivers/pci/controller/pci-aardvark.c
+> > > > > > > > index 134e0306ff00..8803083b2174 100644
+> > > > > > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > > > > > @@ -180,6 +180,8 @@
+> > > > > > > >  #define LINK_WAIT_MAX_RETRIES		10
+> > > > > > > >  #define LINK_WAIT_USLEEP_MIN		90000
+> > > > > > > >  #define LINK_WAIT_USLEEP_MAX		100000
+> > > > > > > > +#define RETRAIN_WAIT_MAX_RETRIES	10
+> > > > > > > > +#define RETRAIN_WAIT_USLEEP_US		2000
+> > > > > > > >
+> > > > > > > >  #define MSI_IRQ_NUM			32
+> > > > > > > >
+> > > > > > > > @@ -239,6 +241,17 @@ static int
+> > > advk_pcie_wait_for_link(struct advk_pcie *pcie)
+> > > > > > > >  	return -ETIMEDOUT;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > +static void advk_pcie_wait_for_retrain(struct advk_pcie
+> > > *pcie)
+> > > > > > > > +{
+> > > > > > > > +	size_t retries;
+> > > > > > > > +
+> > > > > > > > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES;
+> > > ++retries) {
+> > > > > > > > +		if (!advk_pcie_link_up(pcie))
+> > > > > > > > +			break;
+> > > > > > > > +		udelay(RETRAIN_WAIT_USLEEP_US);
+> > > > > > > > +	}
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > > > > > > >  {
+> > > > > > > >  	u32 reg;
+> > > > > > > > @@ -426,11 +439,20 @@
+> > > advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> > > > > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
+> > > > > > > >  	}
+> > > > > > > >
+> > > > > > > > +	case PCI_EXP_LNKCTL: {
+> > > > > > > > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA
+> > > */
+> > > > > > > > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg)
+> > > &
+> > > > > > > > +			~(PCI_EXP_LNKSTA_LT << 16);
+> > > > > > >
+> > > > > > > The commit message says "the flag is always set to 0" -
+> > > therefore I guess
+> > > > > > > you don't *need* to mask out the LT bit here? I assume this
+> > > is just
+> > > > > > > belt-and-braces but thought I'd check incase I've
+> > > misunderstood or if your
+> > > > > > > commit message is inaccurate.
+> > > > > > >
+> > > > > > > In any case masking out the bit (or adding a comment) makes
+> > > this code more
+> > > > > > > readable as the reader doesn't need to know what the
+> > > hardware does with this
+> > > > > > > bit.
+> > > > > >
+> > > > > > Actually vendor eventually responded that the bit was
+> > > reserved, but
+> > > > > > during my tests it remains to 0.
+> > > > > >
+> > > > > > So yes I am masking this out mainly for belt-and-braces and
+> > > legibility.
+> > > > >
+> > > > > Thanks for the clarification.
+> > > > >
+> > > > > >
+> > > > > > > > +		if (!advk_pcie_link_up(pcie))
+> > > > > > > > +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> > > > > > > > +		*value = val;
+> > > > > > > > +		return PCI_BRIDGE_EMUL_HANDLED;
+> > > > > > > > +	}
+> > > > > > > > +
+> > > > > > > >  	case PCI_CAP_LIST_ID:
+> > > > > > > >  	case PCI_EXP_DEVCAP:
+> > > > > > > >  	case PCI_EXP_DEVCTL:
+> > > > > > > >  	case PCI_EXP_LNKCAP:
+> > > > > > > > -	case PCI_EXP_LNKCTL:
+> > > > > > > >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+> > > > > > > >  		return PCI_BRIDGE_EMUL_HANDLED;
+> > > > > > > >  	default:
+> > > > > > > > @@ -447,8 +469,13 @@
+> > > advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+> > > > > > > >
+> > > > > > > >  	switch (reg) {
+> > > > > > > >  	case PCI_EXP_DEVCTL:
+> > > > > > > > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> > > > > > > > +		break;
+> > > > > > >
+> > > > > > > Why is this here?
+> > > > > > >
+> > > > > >
+> > > > > > Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same
+> > > thing, but
+> > > > > > as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
+> > > > > > successfully retrain), they do have different behaviours.
+> > > > > >
+> > > > > > So this is here so PCI_EXP_DEVCTL keeps its old behaviour and
+> > > do not
+> > > > > > wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL)
+> > > bit is
+> > > > > > set.
+> > > > >
+> > > > > Oh yes, of course!
+> > > > >
+> > > > > Thanks and:
+> > > > >
+> > > > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > > >
+> > > > Is there any hope for this workaround to make it into 5.4?
+> > > >
+> > > > My EspressoBin (which is blessed with this joke of a PCIe
+> > > controller)
+> > > > is pretty much a doorstop without it and dies with a SError early
+> > > at
+> > > > boot.
+> > > >
+> > > > FWIW:
+> > > >
+> > > > Tested-by: Marc Zyngier <maz@kernel.org>
+> > > 
+> > > Hi Marc,
+> > > 
+> > > First thing I will have to mark it as a Fixes: (if Remi can provide
+> > > me with a tag that'd be great), usually we send fixes at -rc* for
+> > > patches that fix code that went in the current (eg 5.4) material,
+> > > I will ask Bjorn to see if we can send this in one of the upcoming
+> > > -rc* even if it fixes older code.
+> > 
+> > Sure, I think this could be considered a fix for the following commit :
+> > Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI
+> > bridge config space")
+> > 
+> > Moreover, Marc, I am also a bit supprised that you did not have to use
+> > [1] to even be able to boot.
 > 
-
-As mentioned, the core sends a ping immediately after the update.
-
->>
->>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>> +                MESON_SIP_WDT_SETTIMEOUT,
->>> +                wdt_dev->timeout, 0, 0, 0);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    return 0;
->>
->> same as above.
-> I will fix it in next version.
->>
->>> +}
->>> +
->>> +static unsigned int meson_sec_wdt_get_timeleft(struct watchdog_device *wdt_dev)
->>> +{
->>> +    int ret;
->>> +    int timeleft;
->>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>> +
->>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, &timeleft,
->>> +                MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
->>> +
->>> +    if (ret)
->>> +        return 0;
->>
->> Really ? Why ? 0 is most definitely incorrect here.
-> I just want to return a invalid value after I failed to get valid timeleft. Could you tell me what is corrent value ?
-
-Why not return the error ?
-
->>
->>> +
->>> +    return timeleft;
->>> +}
->>> +
->>> +static const struct watchdog_ops meson_sec_wdt_ops = {
->>> +    .start = meson_sec_wdt_start,
->>> +    .stop = meson_sec_wdt_stop,
->>> +    .ping = meson_sec_wdt_ping,
->>> +    .set_timeout = meson_sec_wdt_set_timeout,
->>> +    .get_timeleft = meson_sec_wdt_get_timeleft,
->>> +};
->>> +
->>> +static const struct watchdog_info meson_sec_wdt_info = {
->>> +    .identity = "Meson Secure Watchdog Timer",
->>> +    .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
->>> +};
->>> +
->>> +static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
->>> +{
->>> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
->>> +
->>> +    if (watchdog_active(&data->wdt_dev))
->>> +        meson_sec_wdt_start(&data->wdt_dev);
->>
->> No error return ?
-> I will fix it in next version
->>
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
->>> +{
->>> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
->>> +
->>> +    if (watchdog_active(&data->wdt_dev))
->>> +        meson_sec_wdt_stop(&data->wdt_dev);
->>
->> No error return ?
-> same as above
->>
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
->>> +    SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, meson_sec_wdt_resume)
->>> +};
->>> +
->>> +static const struct of_device_id meson_sec_wdt_dt_ids[] = {
->>> +     { .compatible = "amlogic,meson-sec-wdt", },
->>> +     { /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, meson_sec_wdt_dt_ids);
->>> +
->>> +static int meson_sec_wdt_probe(struct platform_device *pdev)
->>> +{
->>> +    struct device *dev = &pdev->dev;
->>> +    struct meson_sec_wdt *data;
->>> +    struct device_node *sm_np;
->>> +    int ret;
->>> +
->>> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->>> +    if (!data)
->>> +        return -ENOMEM;
->>> +
->>> +    sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
->>> +    if (!sm_np) {
->>> +        dev_err(&pdev->dev, "no secure-monitor node\n");
->>> +        return -ENODEV;
->>
->> ENODEV is wrong here.
-> I found some drivers use the ENODEV in this case, Eg:
-> - ./watchdog/ts4800_wdt.c -122
-> - ./nvmem/meson-efuse.c   -55
-> ...
+> No, I don't have that one, and yet the system boots fine (although PCI
+> doesn't get much use on this box). I guess I'm lucky...
 > 
-> Could you tell me which error code is more suitable in this case ?
+> > Also if you want to be completely immune to this kind of SError (that
+> > could theoretically happen if the link goes down for other reasons than
+> > being retrained) you would have to use mainline ATF along with [2]. But
+> > the chances to hit that are low (could only happen in case of link
+> > errors).
+> 
+> Now you've got me worried. Can you point me to that ATF patch? I'm quite
+> curious as to how you recover from an SError on a v8.0 CPU given that it
+> has no syndrome information and may as well signal "CPU on fire!"...
 > 
 
-Yes, I understand, with Millions of LOC to choose from, you will
-find examples for everything somewhere in the Linux kernel.
-That doesn't mean it is a good idea.
+The patch is at [1]. Please note that this is done quite similarly for
+rcar.
 
-The property is listed as mandatory, so EINVAL would probably be
-most appropriate, unless DT handling proposes a different error code
-in such situations.
+[1] https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/1541
 
->>
->>> +    }
->>> +
->>> +    data->fw = meson_sm_get(sm_np);
->>> +    of_node_put(sm_np);
->>> +    if (!data->fw)
->>> +        return -EPROBE_DEFER;
->>
->> How do you know ?
-> The fw pointer is static variable which is initialized to NULL. if it is equal to NULL, and indicate the meson_sm driver is not registered, then wdt driver use EPROBE_DEFER to defer probe.
->>
->>> +
->>> +    platform_set_drvdata(pdev, data);
->>> +
->>> +    data->wdt_dev.parent = dev;
->>> +    data->wdt_dev.info = &meson_sec_wdt_info;
->>> +    data->wdt_dev.ops = &meson_sec_wdt_ops;
->>> +    data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
->>> +    data->wdt_dev.min_timeout = 1;
->>> +    data->wdt_dev.timeout = DEFAULT_TIMEOUT;
->>> +    watchdog_set_drvdata(&data->wdt_dev, data);
->>> +
->> No watchdog_init_timeout() ? Any special reason for not supporting
->> to set the timeout with a devicetree property ?
-> I want to keep consistency with previous meson watchdog driver.
-> as follows:
-> - meson_gxbb_wdt.c
-> - meson_wdt.c
-> 
-
-Yes, again, it is possible to find examples for pretty much everything
-in the linux kernel. But, sure, as you wish.
-
-Guenter
+-- 
+Remi
