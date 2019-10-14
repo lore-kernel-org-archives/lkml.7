@@ -2,143 +2,182 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705BFECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3124FECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40716207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1676207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZDLfHIR"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MRcwLPOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfJNJBL (ORCPT
+        id S1730640AbfJNJCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:01:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38481 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730544AbfJNJBK (ORCPT
+        Mon, 14 Oct 2019 05:02:13 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:39483 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730432AbfJNJCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:01:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h195so10020148pfe.5;
-        Mon, 14 Oct 2019 02:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PbTD0I60GSh6vo2clQRoXHKv0wnjYHftDLcQtXDhKQ8=;
-        b=HZDLfHIR7a7a6S4ceGXMBLioZ5g2C8evGK0qdnQjAMcoYOMFP87sBeU2tOM+gFn1SN
-         nk0e+7ngdgZ22Sut5YK3yzDuuit1cxpUgetxk7rjIlZtwByVE55z8ZgXkh+sLgxUSahc
-         MyoUK/ecqm17Ak2Pqt5Pt64joHOTVwwlljuB9fsu5GeROcqqcn3jWDUFCM+wT5vnj90x
-         qqQAgzkNTQ3tdlruc49hEmYbfD9PZScqnXwj00sujNKkYW3FKm+3Gt2WnX3uyadXCU9U
-         PE3HR61AxoQgkoFuLshnn1oR0AmZsCcHQrEEmzlkZvL7CsDV16qFDqu2NsRbkvIwBlEJ
-         dASw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PbTD0I60GSh6vo2clQRoXHKv0wnjYHftDLcQtXDhKQ8=;
-        b=VVYM7qlWloUHfW6wIcxteyresHEIMvg6GOgYuaB1FIiOz1KAqbfIWENTXMfTaZtxo8
-         qCEIhhR/7E77P7jievJwyhbc5J/wLpazQ1b+dhMqPwCTBtDI8jFf/kK1vdbFNGHAlaXQ
-         +ownZ1Vzu3qjc/v2HJpLHiPMTjBolWG/DKBLUAPcEi0ERj94oj28sx6CWVjZ843OU4Te
-         4As1C+wqsbE196NRdehRzGpMqj7WMOuEA0Z05A7acpaahYj1XacRS5JnP7zCCtsIWpf/
-         OzmE0auE4FFIg1AuoFbrxqXal13efKAFMZQqRN0pA+USh8cxkc3XoVLaLHGZTusVuU0A
-         MY7g==
-X-Gm-Message-State: APjAAAWFPb8bX/TY23BnYgHwqPcZUMumHRvdrW20hjt4KAq3FMogvN2S
-        UKw65LC6TKQjgMd8Ih3yQ4Ppz+R6JYc=
-X-Google-Smtp-Source: APXvYqw5glUkNF3sk3ZQxU4/KsL6ZW4MrUvH7bkze8fN1Ogp/oNGHPdRApsmzVY3LFDrrizDgPa8dw==
-X-Received: by 2002:aa7:96ba:: with SMTP id g26mr32035784pfk.132.1571043669838;
-        Mon, 14 Oct 2019 02:01:09 -0700 (PDT)
-Received: from MacBook-Pro.jd.com ([111.200.23.6])
-        by smtp.googlemail.com with ESMTPSA id e192sm22063103pfh.83.2019.10.14.02.01.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 02:01:09 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [PATCH] function dispatch should return if mds session does not exist
-Date:   Mon, 14 Oct 2019 17:00:59 +0800
-Message-Id: <20191014090059.21871-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Mon, 14 Oct 2019 05:02:13 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191014090211euoutp020aa3e0d59fa40f9029a8d8b9f4f00aaa~Nd-NB_7TZ1063410634euoutp02p
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:02:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191014090211euoutp020aa3e0d59fa40f9029a8d8b9f4f00aaa~Nd-NB_7TZ1063410634euoutp02p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1571043731;
+        bh=cO+wLtuW1/Yo97buZEw+qgmmgFL/YbKANib/7pQpOmk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=MRcwLPOZ4CwbsFJY2pkiZbJJTNB/Bsv35makNpKxSS38wLVmQ3/x3EGwZ6i7hJquE
+         X2eKDeQFzKAni4+jeHe8SNt4dVQ4BIKzFd0Zv+OWVfOdcHCq5ToH91HTx4F+UtOjNJ
+         vm2M+oBS/qvvPQ9/rSHNV2DDG+PoheJc+aSqqr5g=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191014090211eucas1p166d9145f016049559c4df5671968af66~Nd-M1JP0M3102231022eucas1p1v;
+        Mon, 14 Oct 2019 09:02:11 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 96.DF.04374.39934AD5; Mon, 14
+        Oct 2019 10:02:11 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191014090211eucas1p23a0c6b43599efdeea47d13be210b5260~Nd-MiuFha1565215652eucas1p2D;
+        Mon, 14 Oct 2019 09:02:11 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191014090211eusmtrp11ab717af595719f005ad7f60d49aee58~Nd-MiFovP1207812078eusmtrp1d;
+        Mon, 14 Oct 2019 09:02:11 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-f1-5da439933587
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 23.8B.04117.39934AD5; Mon, 14
+        Oct 2019 10:02:11 +0100 (BST)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191014090210eusmtip2699cbc2afc4ae9976adb5f73eeca5d5c~Nd-MIj21U2719827198eusmtip2i;
+        Mon, 14 Oct 2019 09:02:10 +0000 (GMT)
+Subject: Re: ARM Juno r1 + CONFIG_PROVE_LOCKING=y => boot failure
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <7ef07169-4335-0a73-8bce-229433ef96f5@samsung.com>
+Date:   Mon, 14 Oct 2019 11:02:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191011144233.GA2438@bogus>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJKsWRmVeSWpSXmKPExsWy7djP87qTLZfEGtw8KW3xflkPo8X9fcuZ
+        LDY9vsZqcXnXHDaLA0vbWSze/H7BbrH81A4Wi5Y7pg4cHmvmrWH02LSqk81j85J6j8+b5AJY
+        orhsUlJzMstSi/TtErgy1h67wVwwT6RizsHNzA2MJwW6GDk5JARMJDYc/sDSxcjFISSwglHi
+        0umJrBDOF0aJ18feMkM4nxkl7t7tZodpufb1GhOILSSwnFGi4V0oRNFbRombdyESwgKOEg3T
+        bzGD2CIC6hJLzm5hBLGZBSYxSUz+JAZiswkYSnS97WIDsXkF7CQevGgAW8AioCrxduJxMFtU
+        IFbi3o/jzBA1ghInZz5hAbE5BbQk/m89BTVTXmL72znMELa4xK0n85lADpIQ2MQuse0mRJGE
+        gIvEu8+HWCFsYYlXx7dAfSMjcXpyDwtEQzOjxMNza9khnB5GictNM6C6rSUOH78I1M0BtEJT
+        Yv0ufYiwo8TcgyeYQMISAnwSN94KQhzBJzFp23RmiDCvREebEES1msSs4+vg1h68cIl5AqPS
+        LCSvzULyziwk78xC2LuAkWUVo3hqaXFuemqxcV5quV5xYm5xaV66XnJ+7iZGYAI6/e/41x2M
+        +/4kHWIU4GBU4uE9kbw4Vog1say4MvcQowQHs5IIL8OEBbFCvCmJlVWpRfnxRaU5qcWHGKU5
+        WJTEeasZHkQLCaQnlqRmp6YWpBbBZJk4OKUaGA8vvLGczfxnuNxGTv7eayU72V96sa60d330
+        XWn5jaCNR3T2bL5kdr6NL2bZenadr0pfZ4S0aOQ8TbPtVQw7XvWCa4LYU2abnXXvcq1bJ5dv
+        rbzIPU9bZFIFg4m85UfDa7Y9kwNvfzH7YZqd8jeQ7d/k+bcm/eiPe33JqC7CmztVm1t3zryZ
+        R5VYijMSDbWYi4oTAT5Akq88AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xe7qTLZfEGhw8xWHxflkPo8X9fcuZ
+        LDY9vsZqcXnXHDaLA0vbWSze/H7BbrH81A4Wi5Y7pg4cHmvmrWH02LSqk81j85J6j8+b5AJY
+        ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQy1h67
+        wVwwT6RizsHNzA2MJwW6GDk5JARMJK59vcYEYgsJLGWU2NSdARGXkTg5rYEVwhaW+HOti62L
+        kQuo5jWjxIfOb2wgCWEBR4mG6beYQWwRAXWJJWe3MIIUMQtMYZI4Nn8uO8TU1cwSU7aUg9hs
+        AoYSXW+7wJp5BewkHrxoAKthEVCVeDvxOJDNwSEqECuxaa8ZRImgxMmZT1hAbE4BLYn/W08x
+        gtjMAmYS8zY/ZIaw5SW2v50DZYtL3Hoyn2kCo9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5
+        xUZ6xYm5xaV56XrJ+bmbGIHxtu3Yzy07GLveBR9iFOBgVOLhVUhbHCvEmlhWXJl7iFGCg1lJ
+        hJdhwoJYId6UxMqq1KL8+KLSnNTiQ4ymQL9NZJYSTc4HpoK8knhDU0NzC0tDc2NzYzMLJXHe
+        DoGDMUIC6YklqdmpqQWpRTB9TBycUg2M1rOCclXkt1gxxG/5nJ2WvzBPUOUp29Zf4ZNqjm+o
+        u79lUvKy4i81UaVhW2zLF//Ve2QU3makpDiz4GDYz5/aC5x+zAvqWu0bKqqy8vSWkpnHzrOE
+        nK/95bw2KUdcwNf+w6sEb72nZZlrfix2fpp4fOanA5H8d4wXTE/dbZoX8MHp1kbDtoCVSizF
+        GYmGWsxFxYkAiZF5iM0CAAA=
+X-CMS-MailID: 20191014090211eucas1p23a0c6b43599efdeea47d13be210b5260
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191011092604eucas1p1ca11ab9c4c7508776914b0eb4f35e69b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191011092604eucas1p1ca11ab9c4c7508776914b0eb4f35e69b
+References: <CGME20191011092604eucas1p1ca11ab9c4c7508776914b0eb4f35e69b@eucas1p1.samsung.com>
+        <33a83dce-e9f0-7814-923b-763d33e70257@samsung.com>
+        <20191011100521.GA5122@bogus> <7655fb41-cd13-0bc4-e656-040e0875bab8@arm.com>
+        <2bf88cd2-9c4f-11dc-4b70-f717de891cff@samsung.com>
+        <20191011131058.GA26061@bogus>
+        <0b02b15f-38be-7a63-14cc-eabd288782eb@samsung.com>
+        <20191011134354.GA31516@bogus> <20191011144233.GA2438@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-we shouldn't call ceph_msg_put, otherwise libceph will pass
-invalid pointer to mm.
+Hi Sudeep,
 
-kernel panic - not syncing: fatal exception
-    [5452201.213885] ------------[ cut here ]------------
-    [5452201.213889] kernel BUG at mm/slub.c:3901!
-    [5452201.213938] invalid opcode: 0000 [#1] SMP PTI
-    [5452201.213971] CPU: 35 PID: 3037447 Comm: kworker/35:1 Kdump: loaded Not tainted 4.19.15 #1
-    [5452201.214020] Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 01/22/2018
-    [5452201.214088] Workqueue: ceph-msgr ceph_con_workfn [libceph]
-    [5452201.214129] RIP: 0010:kfree+0x15b/0x170
-    [5452201.214156] Code: 8b 02 f6 c4 80 75 08 49 8b 42 08 a8 01 74 1b 49 8b 02 31 f6 f6 c4 80 74 05 41 0f b6 72 51 5b 5d 41 5c 4c 89 d7 e9 95 03 f9 ff <0f> 0b 48 83 e8 01 e9 01 ff ff ff 49 83 ea 01 e9 e9 fe ff ff 90 0f
-    [5452201.214262] RSP: 0018:ffffb8c3a0607cb0 EFLAGS: 00010246
-    [5452201.214296] RAX: ffffeee840000008 RBX: ffff9130c0000000 RCX: 0000000080200016
-    [5452201.214339] RDX: 00006f0ec0000000 RSI: 0000000000000000 RDI: ffff9130c0000000
-    [5452201.214383] RBP: ffff91107f823970 R08: 0000000000000001 R09: 0000000000000000
-    [5452201.214426] R10: ffffeee840000000 R11: 0000000000000001 R12: ffffffffc076c45d
-    [5452201.214469] R13: ffff91107f823970 R14: ffff91107f8239e0 R15: ffff91107f823900
-    [5452201.214513] FS:  0000000000000000(0000) GS:ffff9110bfbc0000(0000) knlGS:0000000000000000
-    [5452201.214562] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [5452201.214598] CR2: 000055993ab29620 CR3: 0000003a1e00a003 CR4: 00000000003606e0
-    [5452201.214641] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    [5452201.214685] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    [5452201.214728] Call Trace:
-    [5452201.214759]  ceph_msg_release+0x15d/0x190 [libceph]
-    [5452201.214811]  dispatch+0x66/0xa50 [ceph]
-    [5452201.214846]  try_read+0x7f3/0x11d0 [libceph]
-    [5452201.214878]  ? dequeue_entity+0x37e/0x7e0
-    [5452201.214907]  ? pick_next_task_fair+0x291/0x610
-    [5452201.214937]  ? dequeue_task_fair+0x5d/0x700
-    [5452201.214966]  ? __switch_to+0x8c/0x470
-    [5452201.214999]  ceph_con_workfn+0xa2/0x5b0 [libceph]
-    [5452201.215033]  process_one_work+0x16b/0x370
-    [5452201.215062]  worker_thread+0x49/0x3f0
-    [5452201.215089]  kthread+0xf5/0x130
-    [5452201.215112]  ? max_active_store+0x80/0x80
-    [5452201.215139]  ? kthread_bind+0x10/0x10
-    [5452201.215167]  ret_from_fork+0x1f/0x30
+On 11.10.2019 16:42, Sudeep Holla wrote:
+> On Fri, Oct 11, 2019 at 02:43:54PM +0100, Sudeep Holla wrote:
+>> On Fri, Oct 11, 2019 at 03:15:32PM +0200, Marek Szyprowski wrote:
+>>> Hi Sudeep
+>>>
+>>> On 11.10.2019 15:10, Sudeep Holla wrote:
+>>>> On Fri, Oct 11, 2019 at 03:02:42PM +0200, Marek Szyprowski wrote:
+>>>>> Hi James,
+>>>>>
+>>>>> On 11.10.2019 12:38, James Morse wrote:
+>>>>>> Hi guys,
+>>>>>>
+>>>>>> On 11/10/2019 11:05, Sudeep Holla wrote:
+>>>>>>> On Fri, Oct 11, 2019 at 11:26:04AM +0200, Marek Szyprowski wrote:
+>>>>>>>> Recently I've got access to ARM Juno R1 board and did some tests with
+>>>>>>>> current mainline kernel on it. I'm a bit surprised that enabling
+>>>>>>>> CONFIG_PROVE_LOCKING causes a boot failure on this board. After enabling
+>>>>>>>> this Kconfig option, I get no single message from the kernel, although I
+>>>>>>>> have earlycon enabled.
+>>>>>>> I don't have Juno R1 but I tried defconfig + CONFIG_PROVE_LOCKING and
+>>>>>>> it boots fine.
+>>>>>> I just tried this on my r1, v5.4-rc1 with this configuration worked just fine.
+>>>>>>
+>>>>>> My cmdline is:
+>>>>>> | root=/dev/sda6 loglevel=9 earlycon=pl011,0x7ff80000 hugepagesz=2M hugepages=512
+>>>>>> | crashkernel=1G console=ttyAMA0 resume=/dev/sda2 no_console_suspend efi=debug
+>>>>>>
+>>>>> That is a bit strange. Here is a boot log from v5.4-rc1 with pure
+>>>>> defconfig: https://paste.debian.net/1105851/
+>>>>>
+>>>> I see from the boot log that both Image.gz and dtb being loaded at the
+>>>> same address 0x82000000, will u-boot uncompress it elsewhere after loading
+>>>> it ? Just for my understanding.
+>>> tftp downloads Image.gz to 0x82000000, then decompress it to
+>>> $kernel_addr to save transfer time
+>>>
+>>> my bootcmd is:
+>>>
+>>> tftp ${fdt_addr} juno/Image.gz; unzip ${fdt_addr} ${kernel_addr}; tftp
+>>> ${fdt_addr} juno/juno-r1.dtb; booti ${kernel_addr} - ${fdt_addr};
+>>>
+> If your ${kernel_addr}=0x80000000 or within first 32MB, then it will override
+> DTB with the image size I had(35MB). Even if kernel fits 32MB, there is a
+> chance that .bss lies beyond 32MB and it will be cleared during boot resulting
+> in DTB corruption(Andre P reminded me this)
+>
+> Can you try setting $${fdt_addr} to 0x84000000 to begin with ?
 
-Link: https://tracker.ceph.com/issues/42288
+Right, my fault. Changing fdt_addr to something higher than the default 
+0x82000000 fixed the boot issue. I wonder how I missed that, as I was 
+convinced that there is enough space for the kernel image. Sorry for the 
+noise...
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
----
- fs/ceph/mds_client.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index a8a8f84f3bbf..066358fea347 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -4635,7 +4635,7 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
- 	mutex_lock(&mdsc->mutex);
- 	if (__verify_registered_session(mdsc, s) < 0) {
- 		mutex_unlock(&mdsc->mutex);
--		goto out;
-+		return;
- 	}
- 	mutex_unlock(&mdsc->mutex);
- 
-@@ -4672,7 +4672,6 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
- 		pr_err("received unknown message type %d %s\n", type,
- 		       ceph_msg_type_name(type));
- 	}
--out:
- 	ceph_msg_put(msg);
- }
- 
+Best regards
 -- 
-2.21.0 (Apple Git-122)
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
