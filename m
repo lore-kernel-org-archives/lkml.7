@@ -2,133 +2,195 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79162ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AC8ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B63420650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ED72089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbfJNIa4 (ORCPT
+        id S1730494AbfJNIbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:30:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57902 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfJNIaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:30:55 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4517210DCC82;
-        Mon, 14 Oct 2019 08:30:55 +0000 (UTC)
-Received: from [10.36.117.10] (ovpn-117-10.ams2.redhat.com [10.36.117.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BDB8560920;
-        Mon, 14 Oct 2019 08:30:53 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/base/memory.c: Don't access uninitialized
- memmaps in soft_offline_page_store()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <20191010141200.8985-1-david@redhat.com>
- <20191011151634.0b566c9e32e8d0e11181d025@linux-foundation.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <9fd1f157-d812-3a3b-813a-d34e0cc53f96@redhat.com>
-Date:   Mon, 14 Oct 2019 10:30:52 +0200
+        Mon, 14 Oct 2019 04:31:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34860 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725936AbfJNIbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:31:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C3511ACE3;
+        Mon, 14 Oct 2019 08:30:59 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/page_owner: Don't access uninitialized memmaps when
+ reading /proc/pagetypeinfo
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20191011140638.8160-1-david@redhat.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c741894f-bae8-25ae-189e-2fe37ccda149@suse.cz>
+Date:   Mon, 14 Oct 2019 10:30:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20191011151634.0b566c9e32e8d0e11181d025@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191011140638.8160-1-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 14 Oct 2019 08:30:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.10.19 00:16, Andrew Morton wrote:
-> On Thu, 10 Oct 2019 16:12:00 +0200 David Hildenbrand <david@redhat.com> wrote:
+On 10/11/19 4:06 PM, David Hildenbrand wrote:
+> From: Qian Cai <cai@lca.pw>
 > 
->> Uninitialized memmaps contain garbage and in the worst case trigger kernel
->> BUGs, especially with CONFIG_PAGE_POISONING. They should not get
->> touched.
->>
->> Right now, when trying to soft-offline a PFN that resides on a memory
->> block that was never onlined, one gets a misleading error with
->> CONFIG_PAGE_POISONING:
->>    :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
->>    [   23.097167] soft offline: 0x150000 page already poisoned
->>
->> But the actual result depends on the garbage in the memmap.
->>
->> soft_offline_page() can only work with online pages, it returns -EIO in
->> case of ZONE_DEVICE. Make sure to only forward pages that are online
->> (iow, managed by the buddy) and, therefore, have an initialized memmap.
->>
->> Add a check against pfn_to_online_page() and similarly return -EIO.
->>
->> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
+> Uninitialized memmaps contain garbage and in the worst case trigger
+> kernel BUGs, especially with CONFIG_PAGE_POISONING. They should not get
+> touched.
 > 
-> Should this be cc:stable?
-
-I think yes, more on that below.
-
+> For example, when not onlining a memory block that is spanned by a zone
+> and reading /proc/pagetypeinfo with CONFIG_DEBUG_VM_PGFLAGS and
+> CONFIG_PAGE_POISONING, we can trigger a kernel BUG:
 > 
-> What is the relationship between this and some similar fixes in the
-> series "mm/memory_hotplug: Shrink zones before removing memory", v6?
-
-In general, they all have the same root cause. With f1dd2cd13c4b, we 
-started to initialize the memmap when onlining memory, however, we at 
-least zeroed it out when adding the memory. With d0dc12e86b319 we 
-removed the zeroing, and added conditional poisoning instead.
-
-All these BUGs can be reproduced by adding memory and keeping some 
-memory blocks offline. Most distributions either online memory directly 
-in the kernel when added or userspace onlines it via udev rules. s390x 
-is special, because there we don't online memory blocks as default in 
-user space. So on !s390x systems, these BUGs are quite hard to reproduce.
-
-With "mm/memory_hotplug: Shrink zones before removing memory" these BUGs 
-get easier to reproduce, because it is now sufficient to offline a 
-memory block that was already onlined.
-
-Also, devmem with "driver reserved memory" (for which part we don't 
-initialize the memmap) is able to trigger these BUGs, but that feature 
-is more recent AFAIK.
-
-So, cc:stable, I am not sure if it applies to all patches. Some really 
-only trigger when page poisoning is active, but don't result in any 
-damage (as so far observed). We really produce damage in case we 
-de-reference the NID/zone via the garbage memmap (and probably when 
-doing a page_to_pfn(pfn_to_page(gargabe_page))).
-
-But here, it is quite hard to tell what could happen, so I guess, if in 
-doubt, better add cc:stable?
-
+> :/# echo 1 > /sys/devices/system/memory/memory40/online
+> :/# echo 1 > /sys/devices/system/memory/memory42/online
+> :/# cat /proc/pagetypeinfo > test.file
+>   [   42.489856] page:fffff2c585200000 is uninitialized and poisoned
+>   [   42.489861] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+>   [   42.492235] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+>   [   42.493501] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+>   [   42.494533] There is not page extension available.
+>   [   42.495358] ------------[ cut here ]------------
+>   [   42.496163] kernel BUG at include/linux/mm.h:1107!
+>   [   42.497069] invalid opcode: 0000 [#1] SMP NOPTI
 > 
-> Should any of the patches in "mm/memory_hotplug: Shrink zones before
-> removing memory", v6 be cc:stable?
+> Please not that this change does not affect ZONE_DEVICE, because
+> pagetypeinfo_showmixedcount_print() is called from
+> mm/vmstat.c:pagetypeinfo_showmixedcount() only for populated zones, and
+> ZONE_DEVICE is never populated (zone->present_pages always 0).
+> 
+> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> Cc: Miles Chen <miles.chen@mediatek.com>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> [ move check to outer loop, add comment, rephrase description ]
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+> ---
+> 
+> Cai asked me to follow up on:
+> 	[PATCH] mm/page_owner: fix a crash after memory offline
+> 
+> ---
+>  mm/page_owner.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_owner.c b/mm/page_owner.c
+> index dee931184788..7d149211f6be 100644
+> --- a/mm/page_owner.c
+> +++ b/mm/page_owner.c
+> @@ -284,7 +284,8 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
+>  	 * not matter as the mixed block count will still be correct
+>  	 */
+>  	for (; pfn < end_pfn; ) {
+> -		if (!pfn_valid(pfn)) {
+> +		page = pfn_to_online_page(pfn);
+> +		if (!page) {
+>  			pfn = ALIGN(pfn + 1, MAX_ORDER_NR_PAGES);
+>  			continue;
+>  		}
+> @@ -292,13 +293,13 @@ void pagetypeinfo_showmixedcount_print(struct seq_file *m,
+>  		block_end_pfn = ALIGN(pfn + 1, pageblock_nr_pages);
+>  		block_end_pfn = min(block_end_pfn, end_pfn);
+>  
+> -		page = pfn_to_page(pfn);
+>  		pageblock_mt = get_pageblock_migratetype(page);
+>  
+>  		for (; pfn < block_end_pfn; pfn++) {
+>  			if (!pfn_valid_within(pfn))
+>  				continue;
+>  
+> +			/* The pageblock is online, no need to recheck. */
+>  			page = pfn_to_page(pfn);
+>  
+>  			if (page_zone(page) != zone)
 > 
 
-I'll go over all patches and reply to the relevant ones.
-
-
-
-So for this patch, please add:
-
-Cc: stable@vger.kernel.org # v4.13+
-
--- 
-
-Thanks,
-
-David / dhildenb
