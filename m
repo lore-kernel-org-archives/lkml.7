@@ -2,175 +2,132 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E61ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79558C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446B0207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF2C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE9Eovnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731397AbfJNLsz (ORCPT
+        id S1731526AbfJNLtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:48:55 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3750 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730300AbfJNLsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:48:55 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BFCF8377902FCE19D856;
-        Mon, 14 Oct 2019 19:48:50 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 19:48:47 +0800
-Date:   Mon, 14 Oct 2019 12:48:35 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-CC:     <jic23@kernel.org>, <dragos.bogdan@analog.com>,
-        <alexandru.ardelean@analog.com>, <stefan.popa@analog.com>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191014124835.00005645@huawei.com>
-In-Reply-To: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
-References: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 14 Oct 2019 07:49:55 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36273 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730369AbfJNLty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 07:49:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so16331184ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 04:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IyjO7e3laflS/HiaQVGN9zQLqjDYASAnzIoylBXLla0=;
+        b=bE9Eovnmob/gQtTAdbam+0ozMYerl+G5fFrF//o7FpRO2ZBT6cieTe0+0LxRfUskbN
+         zQSSiyzCeGzJsmoSmtB55DV2a8Vw/zurJqJK2B05u584M/QM2tfigu2PJgAo5eU0ZOoS
+         xu9wN1yHMk8w1bkWDf8IpGrH8qKhfh280tJckFKgvrUwkxthULUdF2dxXk2yrOa9CW3N
+         zURCh183wEZuHiiYBTYmWLxan9UtlW2HvetsLzU/c6RMKzkO+rDlQwhQ/pcexp6c5HQn
+         P54ZPr8Oxg/7ldvOh9YhtzjPHoL876JYJKQO0yQ3iHiMB4fDQJVbZ6g+979JdZC9TyXQ
+         4csw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IyjO7e3laflS/HiaQVGN9zQLqjDYASAnzIoylBXLla0=;
+        b=ANTmHAwP7ZSA7Wag+XPYPTnwPI/MM/HdGmXMdzjpMKu95dUfGq5nQYeNoTJeKGxyjZ
+         YseBZkLWIg6PSGBpB/T39PHtvR5hIpJyokovFKi2F/qWIQ7ftVs0s/KKQhfcwsrTnCRW
+         u3utREOKcYQTtl7ANff3MfSBW4DrMH8ggxC4pQSPk7yiqWkDBwkvCGIeENafLIORIqmP
+         e4a9P4sDgIySSNl4JVyY9yCms8Z09Qt+NkAz0HssPZjrxycEzooY0QkZqjciV4q1MJ2x
+         Xs4uCPLJn/H5+9H5+LYgWb+NvoyLu9rpQbCOpzMGuFGkOiV/xGTV3xtW+rWuz2Zinezu
+         lKTg==
+X-Gm-Message-State: APjAAAVuFR9FfTiEPFmCIH5qHHDpW3OVwjHbuiQMcmoFPf4D2Wfw0QWV
+        mEtc0Z3U8o4xhesf2eniRWrpe6/2h7VIpunq73E=
+X-Google-Smtp-Source: APXvYqxfndyKvV40Hy1LIzfbYH2bwyOljP/9Nv/iuUzhwJx0Z608hejivMWORMGhD0FZmbpcFyD9y8exCkOLIkRAtmQ=
+X-Received: by 2002:a2e:9205:: with SMTP id k5mr18476480ljg.172.1571053793046;
+ Mon, 14 Oct 2019 04:49:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+References: <20191010230414.647c29f34665ca26103879c4@gmail.com> <20191014103341.GA36860@jagdpanzerIV>
+In-Reply-To: <20191014103341.GA36860@jagdpanzerIV>
+From:   Vitaly Wool <vitalywool@gmail.com>
+Date:   Mon, 14 Oct 2019 13:49:41 +0200
+Message-ID: <CAMJBoFMO3jkdXMFvYAfqZ1_hnPufTRHGwpcFYqBBM2BD8dhwMQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Allow ZRAM to use any zpool-compatible backend
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        "Theodore Ts'o" <tytso@thunk.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 13 Oct 2019 11:13:47 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+Hi Sergey,
 
-> Add a device tree binding doc for AD7292 monitor and control system.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> ---
->  .../bindings/iio/adc/adi,ad7292.yaml          | 71 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> new file mode 100644
-> index 000000000000..16be9ea4194d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7292 10-Bit Monitor and Control System
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> +
-> +description: |
-> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-> +  Temperature Sensor, and GPIOs
-> +
-> +  Specifications about the part can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7292
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vref-supply:
-> +    description: |
-> +      The regulator supply for ADC and DAC reference voltage.
-> +    maxItems: 1
-> +
-> +  spi-cpha:
-> +    description: |
-> +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
-> +    maxItems: 1
-> +
-> +  diff-channels:
-> +    description: |
-> +      Empty property to tell whether VIN0 and VIN1 shall work as differential
-> +      inputs.
-> +    maxItems: 1
+On Mon, Oct 14, 2019 at 12:35 PM Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
+>
+> Hi,
+>
+> On (10/10/19 23:04), Vitaly Wool wrote:
+> [..]
+> > The coming patchset is a new take on the old issue: ZRAM can
+> > currently be used only with zsmalloc even though this may not
+> > be the optimal combination for some configurations. The previous
+> > (unsuccessful) attempt dates back to 2015 [1] and is notable for
+> > the heated discussions it has caused.
+>
+> Oh, right, I do recall it.
+>
+> > The patchset in [1] had basically the only goal of enabling
+> > ZRAM/zbud combo which had a very narrow use case. Things have
+> > changed substantially since then, and now, with z3fold used
+> > widely as a zswap backend, I, as the z3fold maintainer, am
+> > getting requests to re-interate on making it possible to use
+> > ZRAM with any zpool-compatible backend, first of all z3fold.
+>
+> A quick question, what are the technical reasons to prefer
+> allocator X over zsmalloc? Some data would help, I guess.
 
-This looks like a nice general interface, but really isn't as it only applies
-to the first two channels.
+For z3fold, the data can be found here:
+https://elinux.org/images/d/d3/Z3fold.pdf.
 
-Can you use the standard channel defintions
-Documentation/devicetree/bindings/iio/adc.txt
-to specify this?
+For zbud (which is also of interest), imagine a low-end platform with
+a simplistic HW compressor that doesn't give really high ratio. We
+still want to be able to use ZRAM (not necessarily as a swap
+partition, but rather for /home and /var) but we absolutely don't need
+zsmalloc's complexity. zbud is a perfect match here (provided that it
+can cope with PAGE_SIZE pages, yes, but it's a small patch to make
+that work) since it's unlikely that we squeeze more than 2 compressed
+pages per page with that HW compressor anyway.
 
-It may seem overly complex, but it has the benefit of being generic.
+> > The preliminary results for this work have been delivered at
+> > Linux Plumbers this year [2]. The talk at LPC, though having
+> > attracted limited interest, ended in a consensus to continue
+> > the work and pursue the goal of decoupling ZRAM from zsmalloc.
+>
+> [..]
+>
+> > [1] https://lkml.org/lkml/2015/9/14/356
+>
+> I need to re-read it, thanks for the link. IIRC, but maybe
+> I'm wrong, one of the things Minchan was not happy with was
+> increased maintenance cost. So, perhaps, this also should
+> be discuss/addressed (and maybe even in the first place).
 
-Would be something like:
+I have hard time seeing how maintenance cost is increased here :)
 
-channel@0 {
-	diff-channels = < 0 1 >
-};
-channel@2 {
-};
-vs all the channels being present, none set as diff.
-
-Thanks,
-
-Jonathan
-
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    spi0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      ad7292: ad7292@0 {
-> +        compatible = "adi,ad7292";
-> +        reg = <0>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        spi-max-frequency = <25000000>;
-> +        vref-supply = <&adc_vref>;
-> +        spi-cpha;
-> +        diff-channels;
-> +      };
-> +    }
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e78317a5f4f1..5941cfc0d6f7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -819,6 +819,7 @@ L:	linux-iio@vger.kernel.org
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
->  F:	drivers/iio/adc/ad7292.c
-> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
->  
->  ANALOG DEVICES INC AD7606 DRIVER
->  M:	Stefan Popa <stefan.popa@analog.com>
-
-
+~Vitaly
