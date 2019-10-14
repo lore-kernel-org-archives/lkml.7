@@ -2,125 +2,128 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4935EECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BBCECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAB520854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F145220854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BTLGihW/"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DhuMtUFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387900AbfJNQEv (ORCPT
+        id S2387913AbfJNQJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:04:51 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34956 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732906AbfJNQEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:04:51 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x3so14198389oig.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 09:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1/oA4GHUe8fryr8ogyJYGS6yhaGsA/XmoYYSjCn5tG8=;
-        b=BTLGihW/wv2eV8aWLaXAVOYXato+DzxslEWCR5heglTYrXl+jI4hPaIoSH3kOBgJmA
-         x8Pb0mSiFMK6BK/4u7lkzo63BHz4/wCrWJbqaxFaCIwHJnx/wUEwiSjI8TeYQXX8Rikq
-         2nudpNpEZyLND2Iil3SoZtJqHd0tcSPoS3AL7KVyUl830l7RaWy/YfZDlPSxoztcwSo/
-         47jRyNacS9iNk9zSxk1nef8kjTs12q1rGV2++B624mMUtpT3B/xyUyB2xZ74KB1JniQ0
-         MQo3UcmfRiAoIpkqML8//EDr3SaPPuu4JSwn2AJOM13TmQ0KUqPOwmNW5W77upXOY5X3
-         FZxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1/oA4GHUe8fryr8ogyJYGS6yhaGsA/XmoYYSjCn5tG8=;
-        b=ZCE8lMUNYvkJgqwtDs0mxnsIhYsE14q/8n+Cu9psv84NuZay7huG8Wa4cilZmQb+SJ
-         oan5CUghdEqSEXlgiBHTS1jZLgprDyfxLz/xjk61RC+OMkMWDQy9mkKNFUosN8mL6G+/
-         2tXmKnw1ZsXpHtQwlK5zn6WFRnLGhMHslA21ySsqf5846pI3xDy5qgiBjx0JJHLDBSkb
-         zxbc+QBLusAmpindPExwsuGF3UlTQ3YxqJQ+p59mAaJPheugrqF/2QeH9BaFzL3ewW7u
-         zSNK5qwdvMIe9wFLlEo4y91T4vN1r0DjLenQVDkqA5G2jAug5aLBqGW6A+BxBZD/A1iY
-         oV/g==
-X-Gm-Message-State: APjAAAW0nVWGUCDYfTckMd5aaLWdAsWWIKxJFeZVXfoYRhLbVCZGLwyN
-        FbzFpBwjwgRNvSfKN6eHoXfz0umFhufQ1zLO7+Ajpg==
-X-Google-Smtp-Source: APXvYqxXR3roLEhM1Q1pM7JBpKepo96dBtV/cwrCg3P9n58AzmtIzESZTptd3g+9Psex6LMGksnCpsKWDzYzpyzvh7s=
-X-Received: by 2002:a05:6808:95:: with SMTP id s21mr25291295oic.68.1571069089126;
- Mon, 14 Oct 2019 09:04:49 -0700 (PDT)
+        Mon, 14 Oct 2019 12:09:11 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41418 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731121AbfJNQJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:09:11 -0400
+Received: from zn.tnic (p200300EC2F065800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5800:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2C391EC0C84;
+        Mon, 14 Oct 2019 18:09:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571069350;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mXJL7k8d93itpw2Epm3NBVCRmKBnJ6PfnLe2dfWuHO4=;
+        b=DhuMtUFdFtMnvixXqgPx9BYpkA40oL9e0f6K1jhgwvbywuWFBOZoNoflJ+Gun6vHQXG2k0
+        zHPJg3z5lgf27mtWPuiA7S76euVATpjzCbIEpTdSZ32ARkkxkyU+0rUd3V3y4W8s1onDD7
+        t4IcQKFyLBi2gnGc7pqX+cNgi5+MvVI=
+Date:   Mon, 14 Oct 2019 18:09:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, tony.luck@intel.com,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: edac KASAN warning in experimental arm64 allmodconfig boot
+Message-ID: <20191014160901.GE4715@zn.tnic>
+References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
 MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com> <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
-In-Reply-To: <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 14 Oct 2019 18:04:22 +0200
-Message-ID: <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Pavel Emelyanov <xemul@parallels.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 13, 2019 at 3:14 AM Andy Lutomirski <luto@kernel.org> wrote:
-> [adding more people because this is going to be an ABI break, sigh]
-> On Sat, Oct 12, 2019 at 5:52 PM Daniel Colascione <dancol@google.com> wrote:
-> > On Sat, Oct 12, 2019 at 4:10 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > > On Sat, Oct 12, 2019 at 12:16 PM Daniel Colascione <dancol@google.com> wrote:
-> > > > The new secure flag makes userfaultfd use a new "secure" anonymous
-> > > > file object instead of the default one, letting security modules
-> > > > supervise userfaultfd use.
-> > > >
-> > > > Requiring that users pass a new flag lets us avoid changing the
-> > > > semantics for existing callers.
-> > >
-> > > Is there any good reason not to make this be the default?
-> > >
-> > >
-> > > The only downside I can see is that it would increase the memory usage
-> > > of userfaultfd(), but that doesn't seem like such a big deal.  A
-> > > lighter-weight alternative would be to have a single inode shared by
-> > > all userfaultfd instances, which would require a somewhat different
-> > > internal anon_inode API.
-> >
-> > I'd also prefer to just make SELinux use mandatory, but there's a
-> > nasty interaction with UFFD_EVENT_FORK. Adding a new UFFD_SECURE mode
-> > which blocks UFFD_EVENT_FORK sidesteps this problem. Maybe you know a
-> > better way to deal with it.
-[...]
-> Now that you've pointed this mechanism out, it is utterly and
-> completely broken and should be removed from the kernel outright or at
-> least severely restricted.  A .read implementation MUST NOT ACT ON THE
-> CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
-> as stdin to a setuid program.
->
-> So I think the right solution might be to attempt to *remove*
-> UFFD_EVENT_FORK.  Maybe the solution is to say that, unless the
-> creator of a userfaultfd() has global CAP_SYS_ADMIN, then it cannot
-> use UFFD_FEATURE_EVENT_FORK) and print a warning (once) when
-> UFFD_FEATURE_EVENT_FORK is allowed.  And, after some suitable
-> deprecation period, just remove it.  If it's genuinely useful, it
-> needs an entirely new API based on ioctl() or a syscall.  Or even
-> recvmsg() :)
+On Mon, Oct 14, 2019 at 04:18:49PM +0100, John Garry wrote:
+> Hi guys,
+> 
+> I'm experimenting by trying to boot an allmodconfig arm64 kernel, as
+> mentioned here:
+> https://lore.kernel.org/linux-arm-kernel/507325a3-030e-2843-0f46-7e18c60257de@huawei.com/
+> 
+> One thing that I noticed - it's hard to miss actually - is the amount of
+> complaining from KASAN about the EDAC/ghes code. Maybe this is something I
+> should not care about/red herring, or maybe something genuine. Let me know
+> what you think.
+> 
+> The kernel is v5.4-rc3, and I raised the EDAC mc debug level to get extra
+> debug prints.
+> 
+> Log below, Thanks,
+> John
+> Log snippet (I cut off after the first KASAN warning):
+> 
+> [   70.471011][    T1] random: get_random_u32 called from new_slab+0x360/0x698 with crng_init=0
+> [   70.478671][    T1] [Firmware Bug]: APEI: Invalid bit width + offset in GAR [0x94110034/64/0/3/0]
+> [   70.526585][    T1] EDAC DEBUG: edac_mc_alloc: allocating 3524 bytes for mci data (32 dimms, 32 csrows/channels)
+> [   70.542013][    T1] EDAC DEBUG: ghes_edac_dmidecode: DIMM2: Registered-DDR4 size = 16384 MB(ECC)
+> [   70.551044][    T1] EDAC DEBUG: ghes_edac_dmidecode:         type 26, detail 0x2080, width 72(total 64)
+> [   70.559986][    T1] EDAC DEBUG: edac_mc_add_mc_with_groups:
+> [   70.567082][    T1] EDAC DEBUG: edac_create_sysfs_mci_device: device mc0 created
+> [   70.575608][    T1] EDAC DEBUG: edac_create_dimm_object: device dimm2 created at location memory 2
+> [   70.585818][    T1] EDAC DEBUG: edac_create_csrow_object: device csrow2 created
+> [   70.594110][    T1] EDAC MC0: Giving out device to module ghes_edac.c controller ghes_edac: DEV ghes (INTERRUPT)
+> [   70.605936][    T1] EDAC DEBUG: edac_mc_del_mc:
+> [   70.611188][    T1] EDAC DEBUG: edac_remove_sysfs_mci_device:
+> [   70.619443][    T1] random: get_random_u32 called from kobject_put+0x8c/0x190 with crng_init=0
+> [   70.628163][    T1] kobject: 'csrow2' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 750)
+> [   70.638477][    T1] EDAC DEBUG: edac_remove_sysfs_mci_device: unregistering device dimm2
+> [   70.647903][    T1] kobject: 'dimm2' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 250)
+> [   70.658105][    T1] EDAC MC: Removed device 0 for ghes_edac.c ghes_edac: DEV ghes
+> [   70.665673][    T1] EDAC DEBUG: edac_mc_free:
+> [   70.670211][    T1] EDAC DEBUG: edac_unregister_sysfs: unregistering device mc0
+> [   70.679027][    T1] kobject: 'mc0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 500)
+> [   70.690987][    T1] EDAC DEBUG: edac_mc_del_mc:
+> [   70.695769][    T1] EDAC DEBUG: edac_mc_free:
+> [   70.700412][    T1] ------------[ cut here ]------------
+> [   70.705832][    T1] ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x48
+> [   70.716663][    T1] WARNING: CPU: 50 PID: 1 at lib/debugobjects.c:484 debug_print_object+0xec/0x130
 
-FWIW, <https://codesearch.debian.net/search?q=UFFD_FEATURE_EVENT_FORK&literal=1>
-just shows the kernel, kernel selftests, and strace code for decoding
-syscall arguments. CRIU uses it though (probably for postcopy live
-migration / lazy migration?), I guess that code isn't in debian for
-some reason.
+If I am parsing these unwrapped messages correctly (btw, pls use another
+mail client for pasting log lines - thunderbird is usually ok but I
+guess you need to configure it properly), that must be some workqueue
+object of sorts.
+
+Now, ghes_edac doesn't init the workqueue:
+
+[   70.594110][    T1] EDAC MC0: Giving out device to module ghes_edac.c controller ghes_edac: DEV ghes (INTERRUPT)
+
+as it is in interrupt mode.
+
+So the only other workqueue I see is that "delayed XXX" stuff which is in
+kobject_release().
+
+AFAICT.
+
+Do you have CONFIG_DEBUG_KOBJECT_RELEASE enabled and if so, does the
+warning go away if you disable it?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
