@@ -2,157 +2,117 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8162FECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A744ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8F021721
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7246121721
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="GW8ap/Ot"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LDIPIlBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388940AbfJNUtg (ORCPT
+        id S1731683AbfJNUyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 16:49:36 -0400
-Received: from mail-eopbgr760111.outbound.protection.outlook.com ([40.107.76.111]:23521
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387731AbfJNUtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 16:49:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MybpUUiGZnWjEdAgd7fYbEXahV/V1rVAgT/guxeLGYP2cD8pwvfnOVy34dBtjwkEaN1OKM7SvRfnKC9R6VJXgzOpN5q5skKL3XeaR9rd6vIJAPvBr9yCMBYeHjxmvahQqspmW3u7gZxhB8DQy7Lx89MqH23qWskMnl2NicRqFcabDx9I0mQGMTPcRX1Ze7acZRmFRChLcUBwfJKER/LeXVqJunXJdRKlX4VrLargZgaRwv7JrTOtuUIxWGpG++1YTMzRdKbIQzu0kxUlGUiR1icHXMIqStK6jsEsIpbNTXWtcoDFmZ6fZWKF3NpbV4Z+LqPR1B8gdg8iBRpn0QpVxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OArEe6nXYnBjam6+kgN/IG+mDckpqt8jB9TcKWjhL+8=;
- b=M/yQ3n/Nxj9iSyV8vv+9D9f9AgwrskSXaqUnK0Z9OpzsTjdC6YLmonKBlyzdPuH8CqPYQBQW9MESoa5t8TfX7KZphcvCjcEbrvnogiGhkQUe4SPLfZWNiL8cc8ddE5GVctRY+b2513j8fNtGNH3vmYebu6HOgMfFfHfGlyputdj5kY5v7oBitnNjo5fcOAkrSGSOa4DP7XP+nqhSaxEZ9H5eOALP4U+XtHNDimCIX9L1KjOetT+jyJCPqCLyGRIyA0tRszYZccZzsf3Sp+FfGYxirrEOwDNEHqpw3FFge0nv6NAhw6ZuX/yFbPH1vbemSgE4Vwk6R092HYukW8o0Gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 160.33.194.228) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=sony.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OArEe6nXYnBjam6+kgN/IG+mDckpqt8jB9TcKWjhL+8=;
- b=GW8ap/OtxWR7IboWJaCeN4ARVfmxmyY4CC3bxYgfZsVEI+/lz29dimTIgVXYOi+8wBLwn5egEbRa69BC5KS5XjTtJSaofKp/iRMl8n9HrssY0KACQ/AKYeMVlXBdiZCsBpZbM7+KPKFXBlKAXn3YYUbI9GDUDq0a48gogH+gj5c=
-Received: from MWHPR13CA0003.namprd13.prod.outlook.com (2603:10b6:300:16::13)
- by BN6PR13MB1507.namprd13.prod.outlook.com (2603:10b6:404:10f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.15; Mon, 14 Oct
- 2019 20:48:51 +0000
-Received: from CY1NAM02FT017.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by MWHPR13CA0003.outlook.office365.com
- (2603:10b6:300:16::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.6 via Frontend
- Transport; Mon, 14 Oct 2019 20:48:51 +0000
-Authentication-Results: spf=pass (sender IP is 160.33.194.228)
- smtp.mailfrom=sony.com; linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=pass action=none header.from=sony.com;
-Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
- 160.33.194.228 as permitted sender) receiver=protection.outlook.com;
- client-ip=160.33.194.228; helo=usculsndmail01v.am.sony.com;
-Received: from usculsndmail01v.am.sony.com (160.33.194.228) by
- CY1NAM02FT017.mail.protection.outlook.com (10.152.75.181) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16 via Frontend Transport; Mon, 14 Oct 2019 20:48:51 +0000
-Received: from usculsndmail12v.am.sony.com (usculsndmail12v.am.sony.com [146.215.230.103])
-        by usculsndmail01v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x9EKmn8J020884;
-        Mon, 14 Oct 2019 20:48:50 GMT
-Received: from USCULXHUB04V.am.sony.com (hubs.sonyusa.com [146.215.231.18])
-        by usculsndmail12v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x9EKmnIf008425;
-        Mon, 14 Oct 2019 20:48:49 GMT
-Received: from USCULXMSG01.am.sony.com ([fe80::b09d:6cb6:665e:d1b5]) by
- USCULXHUB04V.am.sony.com ([146.215.231.18]) with mapi id 14.03.0439.000; Mon,
- 14 Oct 2019 16:48:48 -0400
-From:   <Tim.Bird@sony.com>
-To:     <jani.nikula@linux.intel.com>, <changbin.du@gmail.com>,
-        <corbet@lwn.net>
-CC:     <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <changbin.du@gmail.com>
-Subject: RE: [PATCH] kernel-doc: rename the kernel-doc directive 'functions'
- to 'specific'
-Thread-Topic: [PATCH] kernel-doc: rename the kernel-doc directive
- 'functions' to 'specific'
-Thread-Index: AQHVgYrHjoG0ILu0Lk6IAGRKrE96jadaG2GAgACB3oA=
-Date:   Mon, 14 Oct 2019 20:48:48 +0000
-Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com>
-References: <20191013055359.23312-1-changbin.du@gmail.com>
- <875zkrd7nq.fsf@intel.com>
-In-Reply-To: <875zkrd7nq.fsf@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [146.215.228.6]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 16:54:31 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35166 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731550AbfJNUya (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 16:54:30 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 205so11054271pfw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 13:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=95ESZvb6hY/1oI03oQhYfYM4zdjk2hIsXx4a/gPdDg0=;
+        b=LDIPIlBMzwu89BYY277hY2x1yQ6+BbzLmB02F76DS3jp9EF27RWfpAGf6PCW/Zt6PK
+         W3rvy9pT/uJTuI9zriXHphkOreHYFYZ/TccSgt3DupK0Z8liwntFavnqti6aJYmA3auB
+         RT2Z7fYZyy133IoITNtgtJbGg4Nv8H/llzUuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=95ESZvb6hY/1oI03oQhYfYM4zdjk2hIsXx4a/gPdDg0=;
+        b=gp+/jrtSRcnoYoQsMJy2FomdeGjP9SWSk3G+pgtwiSrKY1QM5b1GqflXCuDcUD9cLc
+         cW9Fn/7qkwsOow99LAAmW3Jq5gGn5ZxjC0uHNYFQTxbKaJvplCFpULd/OmDd4ZoJc/iJ
+         ob7528Q//PkYAYHaW3/iUxdicVG62hRTKVXdmHgjqAkkYWVyltFbcWKMaQJrBQcthrBq
+         3GZUHJMiUT9UD8qwxn9Gj8CrKboD74DQHS6Il/79iso6NpjiWv1rKsc+WYajRaG/jN59
+         5Mp9BMRvxVLkxmIH9H86jQ7voPt/dGNsBwQRf+FD6ATmh192mLF4CV6nnASFhnxPdkf5
+         BxYg==
+X-Gm-Message-State: APjAAAX4zvLjMqQdwyPonkjj5+1pRO3WtdeuJzeqpksxrXQvVD+pg+a8
+        6ctQwM2D87Kl7FoHSirRRnoQlQ==
+X-Google-Smtp-Source: APXvYqze6dhlWjrga/yBdXEdpzKX+Qt8+IQ23tHt2i0c5hknDE1KOExAQ1qoVzk2cd889pMAIxeHVw==
+X-Received: by 2002:a17:90a:5d0f:: with SMTP id s15mr37927966pji.126.1571086469798;
+        Mon, 14 Oct 2019 13:54:29 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 11sm18080943pgd.0.2019.10.14.13.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 13:54:28 -0700 (PDT)
+Message-ID: <5da4e084.1c69fb81.567f9.4b9c@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:160.33.194.228;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(376002)(396003)(136003)(39860400002)(346002)(199004)(189003)(13464003)(8676002)(37786003)(23726003)(102836004)(6246003)(97756001)(7696005)(76176011)(5660300002)(3846002)(55016002)(6116002)(86362001)(55846006)(486006)(2876002)(33656002)(476003)(126002)(46406003)(246002)(2906002)(336012)(54906003)(356004)(11346002)(186003)(26005)(14444005)(478600001)(426003)(50466002)(4326008)(47776003)(66066001)(446003)(70206006)(110136005)(7416002)(8746002)(70586007)(8936002)(106002)(305945005)(229853002)(316002)(2201001)(7736002)(2101003)(5001870100001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR13MB1507;H:usculsndmail01v.am.sony.com;FPR:;SPF:Pass;LANG:en;PTR:mail.sonyusa.com,mail01.sonyusa.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3e15f9ef-1f4b-49bd-255a-08d750e7eb79
-X-MS-TrafficTypeDiagnostic: BN6PR13MB1507:
-X-Microsoft-Antispam-PRVS: <BN6PR13MB1507003AF9F82B961C9751ABFD900@BN6PR13MB1507.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 01901B3451
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ODSsHBKcgRD7wEsIwdsafZ04SyHtvm6qy2uPMrfx8nrVkiaJV82xR/OwG5okb99i7iEG7CUt+pn2KbJBPyp187ND0/kHxYb/7tP22z69BUTj6Wlx1EQoDSV+ElAIjXpN8C9DoU+jBgY6W7C27KRfwheVky55hswuncioRmZtMFK1kJEUyeM7Ng2QRXmSWjvzg5eD+pBeRIFTbw41R2yDlXxOkRNAOFdLDaUSiTsIqTqloaCmX36kXCqIpoFg0YZbKxmOMYBMBSA57f5ntoG9D4U+oJ5tHYpM7vs19N0ZrD/WMS6Dq2UYzCeQFl/EdGjVR1G99/WzNKsZfKa0Eg7uBmjCbjLFkVBs7/de3Fw5Ts373lbBgIV94u9kGMfIy4vxMe2QQWX45Oe9neLBGoV3iJYAf/TXPsVgSHA6TIoC3fA=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2019 20:48:51.3386
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e15f9ef-1f4b-49bd-255a-08d750e7eb79
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[160.33.194.228];Helo=[usculsndmail01v.am.sony.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB1507
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHp75Vebn48hbzqKWzV3aj4NEBCta_Fn7zOQHzsznW4=6cXLsQ@mail.gmail.com>
+References: <20191004214334.149976-1-swboyd@chromium.org> <20191004214334.149976-2-swboyd@chromium.org> <CAHp75Vebn48hbzqKWzV3aj4NEBCta_Fn7zOQHzsznW4=6cXLsQ@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Riku Voipio <riku.voipio@iki.fi>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
+User-Agent: alot/0.8.1
+Date:   Mon, 14 Oct 2019 13:54:27 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Jani Nikula on October 13, 2019 11:00 PM
-> On Sun, 13 Oct 2019, Changbin Du <changbin.du@gmail.com> wrote:
-> > The 'functions' directive is not only for functions, but also works for
-> > structs/unions. So the name is misleading. This patch renames it to
-> > 'specific', so now we have export/internal/specific directives to limit
-> > the functions/types to be included in documentation. Meanwhile we
-> improved
-> > the warning message.
+Quoting Andy Shevchenko (2019-10-14 10:50:06)
+> On Sat, Oct 5, 2019 at 12:47 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > This driver can use the of_device_get_match_data() API to simplify the
+> > code. Replace calls to of_match_device() with this newer API under the
+> > assumption that where it is called will be when we know the device is
+> > backed by a DT node. This nicely avoids referencing the match table when
+> > it is undefined with configurations where CONFIG_OF=3Dn.
 >=20
-> Agreed on "functions" being less than perfect. It directly exposes the
-> idiosyncrasies of scripts/kernel-doc. I'm not sure "specific" is any
-> better, though.
-
-I strongly agree with this.  'specific' IMHO, has no semantic value and
-I'd rather just leave the only-sometimes-wrong 'functions' than convert
-to something that obscures the meaning always.
-
+> > +       devid =3D (int)(uintptr_t)of_device_get_match_data(dev);
 >=20
-> Perhaps "symbols" would be more self-explanatory. Or, actually make
-> "functions" only work on functions, and add a separate keyword for other
-> stuff. *shrug*
-My preference would be to use 'symbols'.  I tried to come up with something
-but 'symbols' is better than anything I came up with.
-
+> > +               devid =3D (int)(uintptr_t)of_device_get_match_data(&cli=
+ent->dev);
 >=20
-> Seems like the patch is way too big. I'd probably add "symbols" (or
-> whatever) as a synonym for "functions" for starters, and convert
-> documents piecemeal, and finally drop the old one.
+> This still leaves it OF-centric.
+> Better to use device_get_match_data().
 >=20
-> The scripts/kernel-doc change should be a patch of its own.
-Agreed on these two points as well.
+> Also, I'm thinking that following may help to clean a lot of the i2c
+> client drivers
+>=20
+> static inline // perhaps no
+> const void *i2c_device_get_match_data(struct i2c_client *client, const
+> struct i2c_device_id *id)
+> {
+>   if (id)
+>     return (const void *)id->driver_data;
+>   return device_get_match_data(&client->dev);
+> }
+>=20
 
-Just adding my 2 cents.
- -- Tim
+Looks alright to me. Maybe device_get_match_data() can look at the bus
+and call some bus op if the firmware match isn't present? Then we can
+replace a bunch of these calls with device_get_match_data() and it will
+"do the right thing" regardless of what bus or firmware the device is
+running on.
+
