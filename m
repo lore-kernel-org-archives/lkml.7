@@ -2,126 +2,96 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589CEECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FEEC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FD020854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dJLj5RVT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="S+kstYHv"
+	by mail.kernel.org (Postfix) with ESMTP id 8411F20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbfJNJaJ (ORCPT
+        id S1730924AbfJNJbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:30:09 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60296 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730667AbfJNJaJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:30:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D8E71602F7; Mon, 14 Oct 2019 09:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571045405;
-        bh=4tXM//LUyG5g+XUIx5WMarfDzddVaiDxZSiBVoU808Q=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=dJLj5RVT+r1fs4hjroGiAWsYiYN8JtVuTdpYGS9MlCkDc50Dsen+1Nl/V02UIxOqE
-         uBcLsmL5qTGncl33fGlZL1H9BlBzWEG49rodTg6T5EZbikM5NCxNr/9/0EvoF1TcOv
-         IXUbMh/dgMbOnRNxmnywYiwuAKBIO1FOVvcYowfo=
-Received: from Sgrover (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 14 Oct 2019 05:31:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52528 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730667AbfJNJbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:31:18 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sgrover@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0F9B60159;
-        Mon, 14 Oct 2019 09:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571045404;
-        bh=4tXM//LUyG5g+XUIx5WMarfDzddVaiDxZSiBVoU808Q=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=S+kstYHv86rJD5p3d/0AHl5JulbKyn9ICV5ThvP+ttOFb/MElr3uZmXiRRemfMsey
-         2UvtV/zEq9J4p3aNYEXfEPQZSFBE/9JIYgZuXLf4lozDGjASHFHW/Yr9D01Yf65yn1
-         h/zym3wBtEzLpVF1w/FLFZUdDAXpTdREHvwtr8VU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0F9B60159
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sgrover@codeaurora.org
-From:   <sgrover@codeaurora.org>
-To:     "'Marco Elver'" <elver@google.com>,
-        "'Dmitry Vyukov'" <dvyukov@google.com>
-Cc:     "'kasan-dev'" <kasan-dev@googlegroups.com>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Paul E. McKenney'" <paulmck@linux.ibm.com>,
-        "'Will Deacon'" <willdeacon@google.com>,
-        "'Andrea Parri'" <parri.andrea@gmail.com>,
-        "'Alan Stern'" <stern@rowland.harvard.edu>,
-        "'Mark Rutland'" <mark.rutland@arm.com>
-References: <000001d5824d$c8b2a060$5a17e120$@codeaurora.org> <CACT4Y+aAicvQ1FYyOVbhJy62F4U6R_PXr+myNghFh8PZixfYLQ@mail.gmail.com> <CANpmjNOx7fuLLBasdEgnOCJepeufY4zo_FijsoSg0hfVgN7Ong@mail.gmail.com>
-In-Reply-To: <CANpmjNOx7fuLLBasdEgnOCJepeufY4zo_FijsoSg0hfVgN7Ong@mail.gmail.com>
-Subject: RE: KCSAN Support on ARM64 Kernel
-Date:   Mon, 14 Oct 2019 14:59:58 +0530
-Message-ID: <002801d58271$f5d01db0$e1705910$@codeaurora.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 2DDB03082E24;
+        Mon, 14 Oct 2019 09:31:18 +0000 (UTC)
+Received: from [10.36.116.28] (ovpn-116-28.ams2.redhat.com [10.36.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4890F5C1D4;
+        Mon, 14 Oct 2019 09:31:15 +0000 (UTC)
+Subject: Re: [PATCH v6 03/10] mm/memory_hotplug: Don't access uninitialized
+ memmaps in shrink_pgdat_span()
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        x86@kernel.org, Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-4-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <3d8be627-bfd6-1336-689d-345a2ed67118@redhat.com>
+Date:   Mon, 14 Oct 2019 11:31:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIkPOdSLH2Qcxx8ygFmLWl3/QxVtgJ871EyAngelYemlMA6UA==
-Content-Language: en-us
+In-Reply-To: <20191006085646.5768-4-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 14 Oct 2019 09:31:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+On 06.10.19 10:56, David Hildenbrand wrote:
+> We might use the nid of memmaps that were never initialized. For
+> example, if the memmap was poisoned, we will crash the kernel in
+> pfn_to_nid() right now. Let's use the calculated boundaries of the separate
+> zones instead. This now also avoids having to iterate over a whole bunch of
+> subsections again, after shrinking one zone.
+> 
+> Before commit d0dc12e86b31 ("mm/memory_hotplug: optimize memory
+> hotplug"), the memmap was initialized to 0 and the node was set to the
+> right value. After that commit, the node might be garbage.
+> 
+> We'll have to fix shrink_zone_span() next.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
 
-When can we expect upstream of KCSAN on kernel mainline. Any timeline?
+@Andrew, can you convert that to
 
-Regards,
-Sachin Grover
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
 
------Original Message-----
-From: Marco Elver <elver@google.com>=20
-Sent: Monday, 14 October, 2019 2:40 PM
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: sgrover@codeaurora.org; kasan-dev <kasan-dev@googlegroups.com>; LKML =
-<linux-kernel@vger.kernel.org>; Paul E. McKenney =
-<paulmck@linux.ibm.com>; Will Deacon <willdeacon@google.com>; Andrea =
-Parri <parri.andrea@gmail.com>; Alan Stern <stern@rowland.harvard.edu>; =
-Mark Rutland <mark.rutland@arm.com>
-Subject: Re: KCSAN Support on ARM64 Kernel
+and add
 
-On Mon, 14 Oct 2019 at 10:40, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Oct 14, 2019 at 7:11 AM <sgrover@codeaurora.org> wrote:
-> >
-> > Hi Dmitry,
-> >
-> > I am from Qualcomm Linux Security Team, just going through KCSAN and =
-found that there was a thread for arm64 support =
-(https://lkml.org/lkml/2019/9/20/804).
-> >
-> > Can you please tell me if KCSAN is supported on ARM64 now? Can I =
-just rebase the KCSAN branch on top of our let=E2=80=99s say android =
-mainline kernel, enable the config and run syzkaller on that for finding =
-race conditions?
-> >
-> > It would be very helpful if you reply, we want to setup this for =
-finding issues on our proprietary modules that are not part of kernel =
-mainline.
-> >
-> > Regards,
-> >
-> > Sachin Grover
->
-> +more people re KCSAN on ARM64
+Cc: stable@vger.kernel.org # v4.13+
 
-KCSAN does not yet have ARM64 support. Once it's upstream, I would =
-expect that Mark's patches (from repo linked in LKML thread) will just =
-cleanly apply to enable ARM64 support.
+-- 
 
 Thanks,
--- Marco
 
+David / dhildenb
