@@ -2,225 +2,82 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164CEECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F8CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1832083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571085540;
-	bh=v6DbFyIIfMboY5jg12xYTT9wfahoYCEtBLj+ttsigzQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I5h6DXYDLyaljLI4W4aKpCwH683s67Co41GgrcwAk+nwJBrrncSyp15JbNC4UBhuH
-	 ljDejqj/aIuTfhnWqZT/6XMZK2CTUdPMEUgEuwy3rh780MH6YVYmcVnI0PHmqOgRQI
-	 DZthFN2Y34PWZqLu6mZrMz8KvWojnITiVPNihkDo=
+	by mail.kernel.org (Postfix) with ESMTP id 27EF02083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 20:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733303AbfJNUi6 (ORCPT
+        id S2387468AbfJNUkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 16:38:58 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45826 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733194AbfJNUi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 16:38:58 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r134so12724964lff.12
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 13:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LvNlasHHPKccXox7dKQ61wjVRqsBAIykBowufugafNw=;
-        b=JHYeinNbUhDU9JOT1icXjbCc6D8tAAxdTuxxBxHbP7n5BxrRPMJN6jHCkGxuqtQsmo
-         F38havP+GnWryvYUJVgEpDkK/4ERk+FjYdhOiRWDlYL15HUvXuaNMXnyFom5PU8TxlkT
-         jhgnijOPh4hbegqJqlkHK+WVNTGc3Zb0SylD4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LvNlasHHPKccXox7dKQ61wjVRqsBAIykBowufugafNw=;
-        b=aVXEdkbyMmS4oZwhW2RR1Pr3HDsRsKfcJYqH5v1jhKBecprZpliFuXgRv/NINEoU6j
-         K9wEnglDbjw6KQlAc47o7THNax/u/Oi+OGwwcEMWFd2QIaj5jr2yj7+QMFojj/ESwVZm
-         26IvItrgnmAUZd+UTX/qC6zsnHgXYPLhFk5dFNdqS8ChNPp98q+y4Nv8F8ZduGW5fjuk
-         v+PiKzQYHzdV4QposuwoBj96gEOdSf0HSSQ0nUOkNQXoIwxk8csLuemVLGwHoGda9A0S
-         tbNq0VcRhUiD45wAVToI9KhTAIzXkvW/yegZY08GxqMido6w7p/sbwgt/zrLSijCYg+0
-         aOfg==
-X-Gm-Message-State: APjAAAW3D4DaneYl+1vtOgpWPOfbThF0/SuTZdCU/WsUV9gcTAuvo8bt
-        ymUrcRtsYSaDOuQC06KJGUfxUxjC3fY=
-X-Google-Smtp-Source: APXvYqz3Cn7vHPpWdqQxP2YDjmYENHhM5Zydioh01xAZbKm/1bWgPOaryUgqx9bOECRng2ZBLLXo5w==
-X-Received: by 2002:ac2:4a81:: with SMTP id l1mr16845922lfp.67.1571085535246;
-        Mon, 14 Oct 2019 13:38:55 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id l3sm4392433lfc.31.2019.10.14.13.38.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2019 13:38:51 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id y23so17899954lje.9
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 13:38:51 -0700 (PDT)
-X-Received: by 2002:a2e:8315:: with SMTP id a21mr10388327ljh.133.1571085530949;
- Mon, 14 Oct 2019 13:38:50 -0700 (PDT)
+        Mon, 14 Oct 2019 16:40:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53270 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730188AbfJNUkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 16:40:35 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B731308FBB1;
+        Mon, 14 Oct 2019 20:40:35 +0000 (UTC)
+Received: from krava (ovpn-204-83.brq.redhat.com [10.40.204.83])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A097C60BE2;
+        Mon, 14 Oct 2019 20:40:33 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 22:40:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 3/3] perf tools: Make 'struct map_shared' truly shared
+Message-ID: <20191014204032.GC15890@krava>
+References: <20191013151427.11941-1-jolsa@kernel.org>
+ <20191013151427.11941-4-jolsa@kernel.org>
+ <20191014031054.GJ9933@tassilo.jf.intel.com>
+ <20191014192049.GB15890@krava>
+ <20191014194619.GS9933@tassilo.jf.intel.com>
 MIME-Version: 1.0
-References: <20191011121951.nxna6hruuskvdxod@box> <20191011223818.7238-1-vgupta@synopsys.com>
- <CAHk-=whLs=TrRzmB9KRLxcPERq0QXPUUkbD8vzKzaDszBcUspg@mail.gmail.com>
- <c0979d98-7236-b7c8-bd40-173ee2e87385@gmail.com> <CAHk-=wi3WXpKJkcpgHkUMgLiX9UdXnXhSFzBd8vTWkKgFpz0+Q@mail.gmail.com>
- <8bfd023b-5c00-8355-fd0f-3b4377951e6c@gmail.com>
-In-Reply-To: <8bfd023b-5c00-8355-fd0f-3b4377951e6c@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 14 Oct 2019 13:38:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgUxgA-s4ZvxpcKDFfyoEmvcDr9Ydgo5W4s2hvrLHhP+g@mail.gmail.com>
-Message-ID: <CAHk-=wgUxgA-s4ZvxpcKDFfyoEmvcDr9Ydgo5W4s2hvrLHhP+g@mail.gmail.com>
-Subject: Re: [RFC] asm-generic/tlb: stub out pmd_free_tlb() if __PAGETABLE_PMD_FOLDED
-To:     Vineet Gupta <vineetg76@gmail.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Piggin <npiggin@gmail.com>, Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-snps-arc@lists.infradead.org, Will Deacon <will@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014194619.GS9933@tassilo.jf.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 14 Oct 2019 20:40:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:08 PM Vineet Gupta <vineetg76@gmail.com> wrote:
->
-> > And yes, pmd_clear_bad() should just go away. We have
-> >
-> >   static inline int pmd_none_or_clear_bad(pmd_t *pmd)
-> >   {
-> >         if (pmd_none(*pmd))
-> >                 return 1;
-> >         if (unlikely(pmd_bad(*pmd))) {
-> >                 pmd_clear_bad(pmd);
-> >                 return 1;
-> >         }
-> >         return 0;
-> >   }
+On Mon, Oct 14, 2019 at 12:46:19PM -0700, Andi Kleen wrote:
+> > > We may need a COW operation for this (hopefully rare) case.
+> > 
+> > so the jitted mmaps are inserted into the data file
+> > and processed during report where they can overload
+> > existing maps - thats detected before addition in:
+> > 
+> >   thread__insert_map
+> >     map_groups__fixup_overlappings
+> >       - which uses COW way -> map__clone(map, false);
+> >         to create new map
+> > 
+> > other fixups to maps are being done only for kernel maps,
+> > where we dont have a problem, because there's only one copy
+> 
+> I assume the same is true for /tmp/perf-* processing?
+> 
 
-That was a particularly bad example.
+perf-*.map processing adds only symbol for dso,
+it does not touch maps, so we're fine
 
-The pmd always exists, even in a 2-level setup.
+  dso__load -> dso__load_perf_map
 
-It's the pgd/p4d/pud that end up containing a lower level, but
-pmd_none() is never one of the fixed "doesn't exist" cases.
-
-> > Exactly what part isn't working for you?
->
-> I haven't tested that patch but I suspect even if it was broken, it would not
-> necessarily show right away with a trivial test.
->
-> Anyhow my worry/confusions starts at free_pgd_range() where
-> pgd_none_or_clear_bad(pgd) is no-op given pgd_none()/pgd_bad() are stubs for nopmd
-> case.
-
-Right. If you have a two-level setup, then p[g4u]d_none_or_clear_bad()
-should end up being no-ops.
-
-Buit then:
-
-> And the validation of pgd entry actually happens in pmd_none_or_clear_bad(pmd)
-> since there pmd actually ends up referencing pgd entry. Hence the ensuing
-> pmd_clear_bad() doesn't seem like if it could be stubbed out.
-
-Yes, you're correct, I was just "off by one" in my levels.
-
-Yeah, the folding is damn confusing. And it doesn't help that I think
-some of the code talks about the lower level being folded into the
-higher level for historical reasons, so we have those PMD_FOLDED
-macros etc, which are really about pud() just going away because pmd
-is folded inside the pud.
-
-So when the pud level is compiled away, we talk about the pmd level
-being folded into it, and then we get confusion (like mine above)
-where you end up being off by one level, because depending on how it's
-being talked about, you talk about one or the other.
-
-And it shows in the header files too. We have "pgtable-nopmd.h", which
-then defines the page table accessors not for the pmd level, but for
-the pud level.
-
-Which is why I then spout nonsense like the above about pmd_none() -
-because I was thinking of the nopmd case, but that makes the
-p*u*d_none() be always 0, not p*m*d_none().
-
-So we have this whole "off-by-one" error in our naming and thus our
-thinking, and it's really easy to just get really confused about it.
-
-We should probably get rid of the whole "PMD_FOLDED" logic, and
-instead talk about "no PUD level".
-
-It actually shows in our types too. We do this:
-
-   typedef struct { pud_t pud; } pmd_t;
-   #define PTRS_PER_PMD    1
-
-because some of the code thinks of the pmd as containing the pud.
-
-But it would probably be better to do it the other way around, and
-just consistently think of it as "pud level doesn't exist, the pud
-level just contains a pmd" instead.
-
-So we have these really odd "somethimes we think of pmd as part of a
-pud entry" vs "sometimes we think of pud as just containing a single
-pmd".
-
-And I think that latter model is the better mental model, but then we
-should have
-
-   typedef struct { pmd_t pud; } pud_t;
-   #define PTRS_PER_PUD    1
-
-instead, and we'd get
-
-   static inline pmd_t * pmd_offset(pud_t * pud, unsigned long address)
-   { return &pud->pmd; }
-
-and that would make more sense, wouldn't it?
-
-But trying to fix our odd "we seem to think about it wrong" model
-would likely be too painful to be realistic., It would involve
-renaming
-
-  nop4d.h -> nopgd.h
-  nopud.h -> nop4d.h
-  nopmd.h -> nopud.h
-
-and turning those types around (so we'd have those
-
-   typedef struct { p4d_t p4d; } pgd_t;
-   typedef struct { pud_t pud; | p4d_t;
-   typedef struct { pmd_t pmd; } pud_t;
-
-for no-pgd/no-p4d/no-pud respectively.
-
-So then a 2-level machine would only define the pmd and pte levels,
-and be done with it, because the upper levels would be defined in
-terms of those.
-
-But that's not what we do, and we mix up levels in odd and confusing ways.
-
-And now I've said pgd/pud/p4d/pmd so many times that I've confused
-myself and think I'm wrong again, and I think that historically -
-originally - we always had a pgd, and then the pmd didn't exist
-because it was folded into it. That makes sense from a x86 naming
-standpoint. Then x86 _did_ get a pmd, and then we added more levels in
-between, and other architectures did things differently.
-
-So I think the confusion is historical, and is because we've switched
-between thinking that the the lower level that doesn't exist, but is
-embedded in the upper level, and slowly converted to "it's the upper
-level that doesn't exist, and just contains the lower level"
-
-The point stands: it's confusing, and we should probably pick one
-model, and the model we pick should likely be "this level doesn't
-exist, and just wraps the lower level", so it *should* be "no pgd"/"no
-p4d"/"no pud".
-
-            Linus
+jirka
