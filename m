@@ -2,222 +2,82 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B0EECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE4EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E165D2089C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CC32089C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K9uVe0jE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbfJNVqi (ORCPT
+        id S1730762AbfJNVsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:46:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53098 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729054AbfJNVqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:46:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 27535B2D8;
-        Mon, 14 Oct 2019 21:46:36 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Joshua Kinard <kumba@gentoo.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v2] rtc: ds1685: add indirect access method and remove plat_read/plat_write
-Date:   Mon, 14 Oct 2019 23:46:21 +0200
-Message-Id: <20191014214621.25257-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Mon, 14 Oct 2019 17:48:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48190 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730586AbfJNVsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:48:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=r8+y9y2pf6LTBiDmD8ROJU1496EBIFF0Ze6tIupxL2U=; b=K9uVe0jEoGlpWh2+YYpxbI82j
+        94gnr5sqHxIwpTw7qYu9rgfRaZl4hH99mdv01m0cP3vrveXCqWMbu3ZOxIuicu0opBhchEnfJ754+
+        tqq82Ow5YhOUV3NxjE1w6it9c9Krox4SATn0EGSDqWlB070ssRUW72rEoyS5vPMhkhK6bO9r39fUQ
+        FyJOYdNh26zruSPPtzvxp98VsxBG+n53UoAE2i2rLN7R9BE4HdAvOOwK5krbXZwIc2olcX2J0hg/F
+        UzZcIMDRc+R+PXNRxkRmwOsdkhXd35e8h+NXhKfbEA3rXf4TKvIAuoMdw4ANTP2TMXgFDJdI4WTJq
+        YnL7y66EQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iK8CA-0001s1-5B; Mon, 14 Oct 2019 21:48:02 +0000
+Date:   Mon, 14 Oct 2019 14:48:02 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vineet Gupta <vineetg76@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-snps-arc@lists.infradead.org, Will Deacon <will@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [RFC] asm-generic/tlb: stub out pmd_free_tlb() if
+ __PAGETABLE_PMD_FOLDED
+Message-ID: <20191014214802.GA32665@bombadil.infradead.org>
+References: <20191011121951.nxna6hruuskvdxod@box>
+ <20191011223818.7238-1-vgupta@synopsys.com>
+ <CAHk-=whLs=TrRzmB9KRLxcPERq0QXPUUkbD8vzKzaDszBcUspg@mail.gmail.com>
+ <c0979d98-7236-b7c8-bd40-173ee2e87385@gmail.com>
+ <CAHk-=wi3WXpKJkcpgHkUMgLiX9UdXnXhSFzBd8vTWkKgFpz0+Q@mail.gmail.com>
+ <8bfd023b-5c00-8355-fd0f-3b4377951e6c@gmail.com>
+ <CAHk-=wgUxgA-s4ZvxpcKDFfyoEmvcDr9Ydgo5W4s2hvrLHhP+g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgUxgA-s4ZvxpcKDFfyoEmvcDr9Ydgo5W4s2hvrLHhP+g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGI Octane (IP30) doesn't have RTC register directly mapped into CPU
-address space, but accesses RTC registers with an address and data
-register.  This is now supported by additional access functions, which
-are selected by a new field in platform data. Removed plat_read/plat_write
-since there is no user and their usage could introduce lifetime issue,
-when functions are placed in different modules.
+On Mon, Oct 14, 2019 at 01:38:34PM -0700, Linus Torvalds wrote:
+> And now I've said pgd/pud/p4d/pmd so many times that I've confused
+> myself and think I'm wrong again, and I think that historically -
+> originally - we always had a pgd, and then the pmd didn't exist
+> because it was folded into it. That makes sense from a x86 naming
+> standpoint. Then x86 _did_ get a pmd, and then we added more levels in
+> between, and other architectures did things differently.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
-Changes in v2:
-
-- check if rtc->read and rtc->write are setup
-- spell out indirect in function names and explain difference
-  between standard and indirect functions
-
- arch/mips/sgi-ip32/ip32-platform.c |  2 +-
- drivers/rtc/rtc-ds1685.c           | 78 +++++++++++++++++++++++++-------------
- include/linux/rtc/ds1685.h         |  8 ++--
- 3 files changed, 58 insertions(+), 30 deletions(-)
-
-diff --git a/arch/mips/sgi-ip32/ip32-platform.c b/arch/mips/sgi-ip32/ip32-platform.c
-index 5a2a82148d8d..c3909bd8dd1a 100644
---- a/arch/mips/sgi-ip32/ip32-platform.c
-+++ b/arch/mips/sgi-ip32/ip32-platform.c
-@@ -115,7 +115,7 @@ ip32_rtc_platform_data[] = {
- 		.bcd_mode = true,
- 		.no_irq = false,
- 		.uie_unsupported = false,
--		.alloc_io_resources = true,
-+		.access_type = ds1685_reg_direct,
- 		.plat_prepare_poweroff = ip32_prepare_poweroff,
- 	},
- };
-diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
-index 349a8d1caca1..98d06b3ee913 100644
---- a/drivers/rtc/rtc-ds1685.c
-+++ b/drivers/rtc/rtc-ds1685.c
-@@ -31,7 +31,10 @@
- 
- 
- /* ----------------------------------------------------------------------- */
--/* Standard read/write functions if platform does not provide overrides */
-+/*
-+ *  Standard read/write
-+ *  all registers are mapped in CPU address space
-+ */
- 
- /**
-  * ds1685_read - read a value from an rtc register.
-@@ -59,6 +62,35 @@ ds1685_write(struct ds1685_priv *rtc, int reg, u8 value)
- }
- /* ----------------------------------------------------------------------- */
- 
-+/*
-+ * Indirect read/write functions
-+ * access happens via address and data register mapped in CPU address space
-+ */
-+
-+/**
-+ * ds1685_indirect_read - read a value from an rtc register.
-+ * @rtc: pointer to the ds1685 rtc structure.
-+ * @reg: the register address to read.
-+ */
-+static u8
-+ds1685_indirect_read(struct ds1685_priv *rtc, int reg)
-+{
-+	writeb(reg, rtc->regs);
-+	return readb(rtc->data);
-+}
-+
-+/**
-+ * ds1685_indirect_write - write a value to an rtc register.
-+ * @rtc: pointer to the ds1685 rtc structure.
-+ * @reg: the register address to write.
-+ * @value: value to write to the register.
-+ */
-+static void
-+ds1685_indirect_write(struct ds1685_priv *rtc, int reg, u8 value)
-+{
-+	writeb(reg, rtc->regs);
-+	writeb(value, rtc->data);
-+}
- 
- /* ----------------------------------------------------------------------- */
- /* Inlined functions */
-@@ -1062,42 +1094,36 @@ ds1685_rtc_probe(struct platform_device *pdev)
- 	if (!rtc)
- 		return -ENOMEM;
- 
--	/*
--	 * Allocate/setup any IORESOURCE_MEM resources, if required.  Not all
--	 * platforms put the RTC in an easy-access place.  Like the SGI Octane,
--	 * which attaches the RTC to a "ByteBus", hooked to a SuperIO chip
--	 * that sits behind the IOC3 PCI metadevice.
--	 */
--	if (pdata->alloc_io_resources) {
-+	/* Setup resources and access functions */
-+	switch (pdata->access_type) {
-+	case ds1685_reg_direct:
-+		rtc->regs = devm_platform_ioremap_resource(pdev, 0);
-+		if (IS_ERR(rtc->regs))
-+			return PTR_ERR(rtc->regs);
-+		rtc->read = ds1685_read;
-+		rtc->write = ds1685_write;
-+		break;
-+	case ds1685_reg_indirect:
- 		rtc->regs = devm_platform_ioremap_resource(pdev, 0);
- 		if (IS_ERR(rtc->regs))
- 			return PTR_ERR(rtc->regs);
-+		rtc->data = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(rtc->data))
-+			return PTR_ERR(rtc->data);
-+		rtc->read = ds1685_indirect_read;
-+		rtc->write = ds1685_indirect_write;
-+		break;
- 	}
- 
-+	if (!rtc->read || !rtc->write)
-+		return -ENXIO;
-+
- 	/* Get the register step size. */
- 	if (pdata->regstep > 0)
- 		rtc->regstep = pdata->regstep;
- 	else
- 		rtc->regstep = 1;
- 
--	/* Platform read function, else default if mmio setup */
--	if (pdata->plat_read)
--		rtc->read = pdata->plat_read;
--	else
--		if (pdata->alloc_io_resources)
--			rtc->read = ds1685_read;
--		else
--			return -ENXIO;
--
--	/* Platform write function, else default if mmio setup */
--	if (pdata->plat_write)
--		rtc->write = pdata->plat_write;
--	else
--		if (pdata->alloc_io_resources)
--			rtc->write = ds1685_write;
--		else
--			return -ENXIO;
--
- 	/* Platform pre-shutdown function, if defined. */
- 	if (pdata->plat_prepare_poweroff)
- 		rtc->prepare_poweroff = pdata->plat_prepare_poweroff;
-diff --git a/include/linux/rtc/ds1685.h b/include/linux/rtc/ds1685.h
-index 101c7adc05a2..67ee9d20cc5a 100644
---- a/include/linux/rtc/ds1685.h
-+++ b/include/linux/rtc/ds1685.h
-@@ -42,6 +42,7 @@
- struct ds1685_priv {
- 	struct rtc_device *dev;
- 	void __iomem *regs;
-+	void __iomem *data;
- 	u32 regstep;
- 	int irq_num;
- 	bool bcd_mode;
-@@ -70,12 +71,13 @@ struct ds1685_rtc_platform_data {
- 	const bool bcd_mode;
- 	const bool no_irq;
- 	const bool uie_unsupported;
--	const bool alloc_io_resources;
--	u8 (*plat_read)(struct ds1685_priv *, int);
--	void (*plat_write)(struct ds1685_priv *, int, u8);
- 	void (*plat_prepare_poweroff)(void);
- 	void (*plat_wake_alarm)(void);
- 	void (*plat_post_ram_clear)(void);
-+	enum {
-+		ds1685_reg_direct,
-+		ds1685_reg_indirect
-+	} access_type;
- };
- 
- 
--- 
-2.16.4
-
+Oh my goodness.  Thank you for writing all this out and finally getting
+to this point.  I was reading the whole thing thinking "This is different
+from what I remember" and then you got here.  This explains so much about
+how our MM does/doesn't work, and it's not just me that's confused ;-)
