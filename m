@@ -2,61 +2,122 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F6CECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F145ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D47A2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C53F2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a+3wPUZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbfJNSpv (ORCPT
+        id S1732371AbfJNSql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:45:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:47464 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbfJNSpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:45:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 11:45:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="278953063"
-Received: from kridax-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.7.178])
-  by orsmga001.jf.intel.com with ESMTP; 14 Oct 2019 11:45:44 -0700
-Date:   Mon, 14 Oct 2019 21:45:43 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     ivan.lazeev@gmail.com, kbuild-all@lists.01.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <20191014184543.GA13238@linux.intel.com>
-References: <20191002201212.32395-1-ivan.lazeev@gmail.com>
- <201910141623.SRwaPnfk%lkp@intel.com>
+        Mon, 14 Oct 2019 14:46:41 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3511 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfJNSql (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 14:46:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5da4c2950000>; Mon, 14 Oct 2019 11:46:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 14 Oct 2019 11:46:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 14 Oct 2019 11:46:40 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 14 Oct
+ 2019 18:46:40 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 14 Oct 2019 18:46:40 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5da4c2900000>; Mon, 14 Oct 2019 11:46:40 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+Subject: [PATCH v2 0/2] gup.c, gup_benchmark.c trivial fixes before the storm
+Date:   Mon, 14 Oct 2019 11:46:37 -0700
+Message-ID: <20191014184639.1512873-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910141623.SRwaPnfk%lkp@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571078805; bh=qk0npK+pn+bfxjHAA4vLiMmmSsmYH4obfm3nBaVQ5P0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=a+3wPUZ4Ni7vxCbt/44gYy7aOaiZolY9gjyUl+D3s62xe2b7ospotvUaGAih73ftt
+         XNDFPkBMWgRPpAuavxKVquDQ5vgj2IH3xh1ENlXCdbgzapy1WRDU5uwyoGThaFlG1X
+         Rjj+BtPHmxCJ+pD+c+yLbDf1rBaMQL+LCGnkVkctPqDffEkMNI7x3Z3ewprCc4WXAE
+         XKvkTbFhaPq4pnGI7tYnGmfeSJ9U47P5e4NAhhjEJUYqbNMKDbYkNemShzh4dJhhPc
+         9l/g/A2/CBZ+qiE+cVHPiLskW9Za7kBGgEuYgTQTV3ub2N9VjGTYQrokaB++MtUQEM
+         IhyvIF/M8BGjw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 04:32:20PM +0800, kbuild test robot wrote:
-> Hi,
-> 
-> Thank you for the patch! Perhaps something to improve:
+Hi,
 
-Please fix this and send v8 (with full change log).
+Changes since v1:
 
-/Jarkko
+1) Fixed a krobot-reported mistake, which also uncovered a pre-existing
+bug. Thanks to Kirill for recommending the fix.
+
+2) Added another small fix: changed the data type to unsigned int, as
+pointed out by Ira.
+
+2) Added a "Fixes:" line, thanks to Kirill and Aneesh for pinpointing the
+commit.
+
+3) Collected Acked-by and Suggested-by's.
+
+Original cover letter, edited slightly
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+These trivial fixes apply to today's linux.git (5.4-rc3).
+
+I found these while polishing up the Next And Final get_user_pages()+dma
+tracking patchset (which is in final testing and passing nicely...so far).
+
+Anyway, as these two patches apply cleanly both before and after the larger
+gup/dma upcoming patchset, I thought it best to send this out separately,
+in order to avoid muddying the waters more than usual.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
+
+John Hubbard (2):
+  mm/gup_benchmark: add a missing "w" to getopt string
+  mm/gup: fix a misnamed "write" argument, and a related bug
+
+ mm/gup.c                                   | 14 ++++++++------
+ tools/testing/selftests/vm/gup_benchmark.c |  2 +-
+ 2 files changed, 9 insertions(+), 7 deletions(-)
+
+--=20
+2.23.0
+
