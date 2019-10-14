@@ -2,215 +2,111 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29FAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A0BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B167921835
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571088426;
-	bh=+lFIzC8nwcFgT0bS6CLGv5ajlQHk5Qi8YrW2qfw1KQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QCSbDIr+GWR20JC8qt0G9Rc6Woy6UMbIwWp0hjUCSX+/WfTOg2UPf2w5jYYw5oh0W
-	 mynR1/Zzk4v/Lzxt+wpaq8b0hHJPoQlip9swBcTibTJoTysvHSsWW/R20QYcJNHvM9
-	 NUtWCPkrlRBHtC31LU49mW4YfWlQTG3WNb+5uRm0=
+	by mail.kernel.org (Postfix) with ESMTP id CD8942067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:36:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qlk6q3ZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388990AbfJNV1F (ORCPT
+        id S2387968AbfJNVg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 17:36:28 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58740 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731967AbfJNV0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:26:48 -0400
-Received: from earth.universe (eth-west-pareq2-46-193-2-41.wb.wifirst.net [46.193.2.41])
+        id S1731408AbfJNVg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:36:28 -0400
+Received: from zn.tnic (p200300EC2F065800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5800:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3DD220650;
-        Mon, 14 Oct 2019 21:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571088406;
-        bh=+lFIzC8nwcFgT0bS6CLGv5ajlQHk5Qi8YrW2qfw1KQU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aGW8350aqDpJ9vKAVgGscRQHllSKdI8koknozbpeArVMJJ8jASoXjaKidiRcPhlzt
-         FuXg0gpDqYU/RKfMta7y7JZq+j9OtrD+Oe+qZGeI+x3zCDmmUdHOu3cUhyr64QC1Eb
-         hQa9Ss1VV7XwCwTXdGLoFUXad893Ei+Ciu7iYJi4=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 7579A3C0CA5; Mon, 14 Oct 2019 06:32:25 +0200 (CEST)
-Date:   Mon, 14 Oct 2019 06:32:25 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 4/6] dt-bindings: power: max77650: convert the binding
- document to yaml
-Message-ID: <20191014043225.ejpyccvo3jpkvz2r@earth.universe>
-References: <20190930130246.4860-1-brgl@bgdev.pl>
- <20190930130246.4860-5-brgl@bgdev.pl>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 151951EC0C8E;
+        Mon, 14 Oct 2019 23:36:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571088987;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kNhe2TlSQJMPOaQ79SSPMH5z8CjruZRN7lsslQeR9v0=;
+        b=qlk6q3ZGBCFUJ3QdCxqIp35pdSKnkmMIS8hIIwHstgjAw/lsgw0T8tPl6ToLftvpiFL+sQ
+        C5IKqg+PB0ERoPcSGNqmspiyC71MTjiFzo/F/OX2kXYdHQ8c/x7q2w63WrrfDsyaoLdnV+
+        JjMJQ3iZKbvKJjeYwG8jp4yH12v1VLs=
+Date:   Mon, 14 Oct 2019 23:36:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, ckellner@redhat.com
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+Message-ID: <20191014213618.GK4715@zn.tnic>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+ <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lvytl443p4a5vq52"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190930130246.4860-5-brgl@bgdev.pl>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 14, 2019 at 02:21:00PM -0700, Srinivas Pandruvada wrote:
+> Some modern systems have very tight thermal tolerances. Because of this
+> they may cross thermal thresholds when running normal workloads (even
+> during boot). The CPU hardware will react by limiting power/frequency
+> and using duty cycles to bring the temperature back into normal range.
+> 
+> Thus users may see a "critical" message about the "temperature above
+> threshold" which is soon followed by "temperature/speed normal". These
+> messages are rate limited, but still may repeat every few minutes.
+> 
+> The solution here is to set a timeout when the temperature first exceeds
+> the threshold. If the CPU returns to normal before the timeout fires,
+> we skip printing any messages. If we reach the timeout, then there may be
+> a real thermal issue (e.g. inoperative or blocked fan) and we print the
+> message (together with a count of how many thermal events have occurred).
+> A rate control method is used to avoid printing repeatedly on these broken
+> systems.
+> 
+> Some experimentation with fans enabled showed that temperature returned
+> to normal on a laptop in ~4 seconds. With fans disabled it took over 10
+> seconds. Default timeout is thus set to 8 seconds, but may be changed
+> with kernel boot parameter: "x86_therm_warn_delay". This default interval
+> is twice of typical sampling interval for cooling using running average
+> power limit from user space thermal control softwares.
+> 
+> In addition a new sysfs attribute is added to show what is the maximum
+> amount of time in miili-seconds the system was in throttled state. This
+> will allow to change x86_therm_warn_delay, if required.
 
---lvytl443p4a5vq52
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This description is already *begging* for this delay value to be
+automatically set by the kernel. Putting yet another knob in front of
+the user who doesn't have a clue most of the time shows one more time
+that we haven't done our job properly by asking her to know what we
+already do.
 
-Hi,
+IOW, a simple history feedback mechanism which sets the timeout based on
+the last couple of values is much smarter. The thing would have a max
+value, of course, which, when exceeded should mean an anomaly, etc, but
+almost anything else is better than merely asking the user to make an
+educated guess.
 
-On Mon, Sep 30, 2019 at 03:02:44PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> Convert the binding document for max77650 charger module to yaml.
->=20
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
+> Suggested-by: Alan Cox <alan@linux.intel.com>
+> Commit-comment-by: Tony Luck <tony.luck@intel.com>
+  ^^^^^^^^^^^^^^^^^^
 
-Assuming, that Rob will merge the series:
+What's that?
 
-Acked-by: Sebastian Reichel <sre@kernel.org>
+-- 
+Regards/Gruss,
+    Boris.
 
--- Sebastian
-
->  .../power/supply/max77650-charger.txt         | 29 +------------
->  .../power/supply/max77650-charger.yaml        | 42 +++++++++++++++++++
->  2 files changed, 43 insertions(+), 28 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
-ger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
-xt
-> index e6d0fb6ff94e..fbab7d3ac8e3 100644
-> --- a/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> @@ -1,28 +1 @@
-> -Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> -
-> -This module is part of the MAX77650 MFD device. For more details
-> -see Documentation/devicetree/bindings/mfd/max77650.txt.
-> -
-> -The charger is represented as a sub-node of the PMIC node on the device =
-tree.
-> -
-> -Required properties:
-> ---------------------
-> -- compatible:		Must be "maxim,max77650-charger"
-> -
-> -Optional properties:
-> ---------------------
-> -- input-voltage-min-microvolt:	Minimum CHGIN regulation voltage. Must be=
- one
-> -				of: 4000000, 4100000, 4200000, 4300000,
-> -				4400000, 4500000, 4600000, 4700000.
-> -- input-current-limit-microamp:	CHGIN input current limit (in microamps)=
-=2E Must
-> -				be one of: 95000, 190000, 285000, 380000,
-> -				475000.
-> -
-> -Example:
-> ---------
-> -
-> -	charger {
-> -		compatible =3D "maxim,max77650-charger";
-> -		input-voltage-min-microvolt =3D <4200000>;
-> -		input-current-limit-microamp =3D <285000>;
-> -	};
-> +This file was moved to max77650-charger.yaml.
-> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
-ger.yaml b/Documentation/devicetree/bindings/power/supply/max77650-charger.=
-yaml
-> new file mode 100644
-> index 000000000000..9dd0dad0f948
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/supply/max77650-charger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +description: |
-> +  This module is part of the MAX77650 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/max77650.txt.
-> +
-> +  The charger is represented as a sub-node of the PMIC node on the devic=
-e tree.
-> +
-> +properties:
-> +  compatible:
-> +    const: maxim,max77650-charger
-> +
-> +  input-voltage-min-microvolt:
-> +    description:
-> +      Minimum CHGIN regulation voltage.
-> +    enum: [ 4000000, 4100000, 4200000, 4300000,
-> +            4400000, 4500000, 4600000, 4700000 ]
-> +
-> +  input-current-limit-microamp:
-> +    description:
-> +      CHGIN input current limit (in microamps).
-> +    enum: [ 95000, 190000, 285000, 380000, 475000 ]
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    charger {
-> +        compatible =3D "maxim,max77650-charger";
-> +        input-voltage-min-microvolt =3D <4200000>;
-> +        input-current-limit-microamp =3D <285000>;
-> +    };
-> --=20
-> 2.23.0
->=20
-
---lvytl443p4a5vq52
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2j+lkACgkQ2O7X88g7
-+pomCA/7BKT68Dw2GbwGBoG4yadDJGw3mu+fWzAQF5R76k+9J5ic2r+Q/Gr1M3rZ
-zbwH0Isgl1RCAa/usmx1lDMG/CWPivdz4ofnr2sX1SLYNNz/fmtcrt3TtlyXwhxs
-3DR5eQQz9lOjcF5EVMptxaYNaoQtRV6Ptu7KFf5+graYuJ9U8Zvcb7P/gfzEKMTW
-tImGYv3ZqvQye1u5OaqgZrYgnULyB1Pibjz9FFTM6EjPomJP++9+T8MSLHV3wZEA
-bhy+e6cqIrEVfCy9f9t6a9y5PyvhuAVb59AKo3e6atYa4WwKObr47iCdI2GTcg+G
-5hLD80c3tS28T0LbKgtrHrOsA3V/0qY14tlWZvnrFpoDwKy5+hGTDVsXSXAE5whj
-hpyqYEQNWy8zYsZ+F73xGGqzGPWv/MoA4mBpvTLe9fuf+TN0M35p2nbycKReW4+a
-k0pnlPDfzwmfNiEmdl3UYJkMfLZk488ljkJe1tww0d4+LKQqtVb9w9bKVxxARVtg
-F3KXegzxNjnNNl584ucPZLZwGhJzNSJ9zwMbE6GDRJFCmH4MEkrWLnaTqesk9xLn
-3+M1A3PL9Cehdt0aAqU5bzFKYbPBLgk2b4UCxl1UL6nTLgM9KS8bd05zMMDYJJfs
-+GS5YKf1vPTceX6j0kDzV/kmJTQhESPw00rZ3b4jwNpETP7GMkw=
-=MbIN
------END PGP SIGNATURE-----
-
---lvytl443p4a5vq52--
+https://people.kernel.org/tglx/notes-about-netiquette
