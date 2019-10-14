@@ -2,121 +2,101 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6976FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B638ECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4610721882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571094138;
-	bh=OTdm4D5QsUvEdMjHsLdj8VxjE2uHi2PlTnEpkKDjENw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5xbtLcMvWUHJR6BxEsplbwUvafuRif28kLcuWUMMQmQqpCXU5+k/uQ5oB/Hyjjca
-	 0iwsoQqm/gyDWjV4PfwIeMmcG4xMZj1rKRmaskPcRgjSMdxaoFdqehTEY5s7NKriYr
-	 lDlx+ewjdFj3wyV5y7iIJFetXkIpBEwQdMI+DVuo=
+	by mail.kernel.org (Postfix) with ESMTP id 07B752133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZJEoBDH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfJNXCR (ORCPT
+        id S1726422AbfJNXJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 19:02:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52584 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 19:09:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:46183 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfJNXCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 19:02:09 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726170AbfJNXJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 19:09:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2007421882;
-        Mon, 14 Oct 2019 23:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571094129;
-        bh=OTdm4D5QsUvEdMjHsLdj8VxjE2uHi2PlTnEpkKDjENw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJpX+DtDtGu93cjz7aWAU+r0YiZOe+OmJdsx+pga9hftMJB73le99HTNGE7z14IOV
-         JbvHPPe4J5+N6hMG9cWFCjhvVk/ee3JgHPYCr984TO4fMLtdTjflhGh324x65w/Sw3
-         UvKsgBnky2lpCKVk0YkUH5ARDnXg8K3KYkqL2GRY=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
-        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com, jackm@mellanox.com,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        driverdev-devel@linuxdriverproject.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 7/7] PCI/MSI: Move power state check out of pci_msi_supported()
-Date:   Mon, 14 Oct 2019 18:00:16 -0500
-Message-Id: <20191014230016.240912-8-helgaas@kernel.org>
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-In-Reply-To: <20191014230016.240912-1-helgaas@kernel.org>
-References: <20191014230016.240912-1-helgaas@kernel.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46sZ4b0JK8z9sPV;
+        Tue, 15 Oct 2019 10:09:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571094543;
+        bh=u/dXI8AwEBZADrfmz2niVNGP6gEFP31G6XIAvYsWouo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZJEoBDH2s3GcDAJn7sYSyIqnMdpQZEa0l7SFCeGEGJZoCYJtppi2JpFtV2SaLMoG+
+         /wjx7tMXVeS3+jYZ7zon9od4qe2HcomMSKGE/tP6oyYQMt2HbrvPht5amqLZ9ASdXq
+         b81rzr7Iis5nW9M5WvrwKZ1OXVZr0D1xO1wBqlzFka02oEr9i9MGEZ+770SccjM+qQ
+         Qkd1piSN4yi+3enP69IER3o5T/nQcWz9ol25+TfN9Pr+7jGbVPxguP+GusIpVmTzYT
+         IMmrTUJue5TTqjeMSfeewMvodNJjzC+q5ggneOwMploEcQT24KiPU8I7wq0tGq/ghQ
+         4zrL/D62GqaCA==
+Date:   Tue, 15 Oct 2019 10:08:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: linux-next: build warning after merge of the pm tree
+Message-ID: <20191015100855.31b8a3d5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/T0FbS7PjJzo5BfqZD96jO1M";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+--Sig_/T0FbS7PjJzo5BfqZD96jO1M
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-27e20603c54b ("PCI/MSI: Move D0 check into pci_msi_check_device()")
-moved the power state check into pci_msi_check_device(), which was
-subsequently renamed to pci_msi_supported().  This didn't change the
-behavior, since both callers checked the power state.
+Hi all,
 
-However, it doesn't fit the current "pci_msi_supported()" name, which
-should return what the device is capable of, independent of the power
-state.
+After merging the pm tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-Move the power state check back into the callers for readability.  No
-functional change intended.
+In file included from include/linux/irqchip.h:14,
+                 from arch/arm/kernel/irq.c:26:
+include/linux/acpi.h:682:31: warning: 'struct acpi_device' declared inside =
+parameter list will not be visible outside of this definition or declaration
+  682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, =
+const char *uid2)
+      |                               ^~~~~~~~~~~
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/msi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+and many more.
 
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0884bedcfc7a..20e9c729617c 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -861,7 +861,7 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
- 	if (!pci_msi_enable)
- 		return 0;
- 
--	if (!dev || dev->no_msi || dev->current_state != PCI_D0)
-+	if (!dev || dev->no_msi)
- 		return 0;
- 
- 	/*
-@@ -972,7 +972,7 @@ static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
- 	int nr_entries;
- 	int i, j;
- 
--	if (!pci_msi_supported(dev, nvec))
-+	if (!pci_msi_supported(dev, nvec) || dev->current_state != PCI_D0)
- 		return -EINVAL;
- 
- 	nr_entries = pci_msix_vec_count(dev);
-@@ -1058,7 +1058,7 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
- 	int nvec;
- 	int rc;
- 
--	if (!pci_msi_supported(dev, minvec))
-+	if (!pci_msi_supported(dev, minvec) || dev->current_state != PCI_D0)
- 		return -EINVAL;
- 
- 	/* Check whether driver already requested MSI-X IRQs */
--- 
-2.23.0.700.g56cf767bdb-goog
+Introduced by commit
 
+  d1748b57dc88 ("ACPI / utils: Introduce acpi_dev_hid_uid_match() helper")
+
+CONFIG_ACPI is not set for this build.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/T0FbS7PjJzo5BfqZD96jO1M
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2lAAcACgkQAVBC80lX
+0Gy47wf+NqYnT7/lynuFZyKNLfbY4xs3ByX2qqG6hVDOE964c1fwBKiesBk0tMNZ
+dMTUi2KTqejAVraLuJCA0/m4EEWaaGd3KMNfqiqms2sAgXm2C1j1FJ8qPUIZAhAL
+BjsrLG/qTI6KGE9qIYw9cV6rE+GsXHmkDKpIC8uZyqyso0OaQdJ8QQuY/ieXF3QW
+WmU+9RkDB/HX8bjuCUwLBH8ALCXD9RYolJ971JmypJiB1IuRQ4yplP+0OWK+etWv
+nQoRqFStt7n1nfTxI29R5/axiyI4l8hp7QduKGlpwcN6LiP1xheCy8fxkPLQudYo
+RKUdG78ast8BknB4u5DGFRCLOaCmZg==
+=YxH0
+-----END PGP SIGNATURE-----
+
+--Sig_/T0FbS7PjJzo5BfqZD96jO1M--
