@@ -2,166 +2,108 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA94C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F6CC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B106E2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBk0SJJ7"
+	by mail.kernel.org (Postfix) with ESMTP id 4F4D72067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 02:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfJNCEW (ORCPT
+        id S1729762AbfJNCIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 13 Oct 2019 22:04:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34792 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbfJNCEW (ORCPT
+        Sun, 13 Oct 2019 22:08:46 -0400
+Received: from shells.gnugeneration.com ([66.240.222.126]:48138 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729494AbfJNCIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 13 Oct 2019 22:04:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id q1so34703303ion.1;
-        Sun, 13 Oct 2019 19:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4iI1U5W50uucA2qCZykSDQfbSXg9H0XvV1EOgeR4Q54=;
-        b=tBk0SJJ7vXrv8bZK7w+nNlpDHB494vAF4ne+9m8ExOnWuXkfeLnYz+mdG12PEACUbj
-         SFcGM9jBX9hvLfLguE6FsLK0V4MhU/sc8ulSSqfeLLkiPq3Mh0E6SQCS64wpmen89qBX
-         xR+fTG13xlvClUFWHUgh/9R/uJrUYaW3ldIGkENE5s/8LUH5VupvQNqWaaJ6FOR3QWpt
-         PMFFWspQoS6ykMQV97xn544nghP/yXPEX6ZW2C8uPx2G9RALZ2wKzQ8lGx0nUrRYMPwa
-         almlZDFSnEPbeZmm++oaNq94QpOlupUPYCc81yBjj7SFPofWyiwUtusb6D8QSVOQim25
-         7wSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4iI1U5W50uucA2qCZykSDQfbSXg9H0XvV1EOgeR4Q54=;
-        b=TKFqlyX9KX8l0r1d9Z0v8EgZnrp+a6s+61xWjLrkNinNdzaN+sfucuRz5meoUnEqEX
-         XQsEZaEqdCSYMeFQ5sXm4cPB8ZeBTq7RrHSC4BXE1pga8AoGL2ZRJ4znsobZHh3YmjCA
-         dV2HvIyRkoXqi9JJYgRnYGhIejmwtyjhvNLina089Haos84l8/8KAcRsxR6i5elT7bS5
-         9WS8krsrN4XTPEt3PI+CT7IElVinGv04WHNvnRqARB6LzFanJyk484asyf8mhbL340Je
-         qufXmLSucn6ptGz9EsXrfFpIFcfzk6toW/xU7jzH9Ev/hTdvf8rYWdsMxNzUoSP4RhnB
-         KtHw==
-X-Gm-Message-State: APjAAAUboveMKvbcZ1kvofSmckPPtbbAvPKNqraZWqHmoQdoAzj7uuQD
-        zeLsPr2dsRVvQa8l/5G3aVBs9J0FQ0oUXeDVqtw=
-X-Google-Smtp-Source: APXvYqzCL+ZPCbb78l+cke7wD6MMCX5ftpHaUnOQxRSRLfL/0r+wfuIheNygiPX0GUJ9icOdgpxHkZlYy9ghZuNpixk=
-X-Received: by 2002:a02:bb0c:: with SMTP id y12mr22841824jan.96.1571018661298;
- Sun, 13 Oct 2019 19:04:21 -0700 (PDT)
+        Sun, 13 Oct 2019 22:08:45 -0400
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id 991AA1A40559; Sun, 13 Oct 2019 19:08:45 -0700 (PDT)
+Date:   Sun, 13 Oct 2019 19:08:45 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     mkrufky@linuxtv.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: cxusb: detect cxusb_ctrl_msg error in query
+Message-ID: <20191014020845.247utwi3pjbvb6il@shells.gnugeneration.com>
 MIME-Version: 1.0
-References: <000000000000805e5505945a234b@google.com> <20191009071850.258463-1-ebiggers@kernel.org>
-In-Reply-To: <20191009071850.258463-1-ebiggers@kernel.org>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sun, 13 Oct 2019 19:04:10 -0700
-Message-ID: <CABeXuvomuEY7-8SJuRDh+MS+fSE9evMudFe6KEdP+y-0D89fJw@mail.gmail.com>
-Subject: Re: [PATCH] fs/namespace.c: fix use-after-free of mount in mnt_warn_timestamp_expiry()
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the fix.
+Don't use uninitialized ircode[] in cxusb_rc_query() when
+cxusb_ctrl_msg() fails to populate its contents.
 
-Would it be better to move the check and warning to a place where the
-access is still safe?
+syzbot reported:
 
--Deepa
+dvb-usb: bulk message failed: -22 (1/-30591)
+=====================================================
+BUG: KMSAN: uninit-value in ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
+BUG: KMSAN: uninit-value in rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
+BUG: KMSAN: uninit-value in rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
+CPU: 1 PID: 11436 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events dvb_usb_read_remote_control
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x13a/0x2b0 mm/kmsan/kmsan_report.c:108
+ __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:250
+ bsearch+0x1dd/0x250 lib/bsearch.c:41
+ ir_lookup_by_scancode drivers/media/rc/rc-main.c:494 [inline]
+ rc_g_keycode_from_table drivers/media/rc/rc-main.c:582 [inline]
+ rc_keydown+0x1a6/0x6f0 drivers/media/rc/rc-main.c:816
+ cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
+ dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+ process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+ worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+ kthread+0x4b5/0x4f0 kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-> On Oct 9, 2019, at 12:19 AM, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> =EF=BB=BFFrom: Eric Biggers <ebiggers@google.com>
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:150 [inline]
+ kmsan_internal_chain_origin+0xd2/0x170 mm/kmsan/kmsan.c:314
+ __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:184
+ rc_g_keycode_from_table drivers/media/rc/rc-main.c:583 [inline]
+ rc_keydown+0x2c4/0x6f0 drivers/media/rc/rc-main.c:816
+ cxusb_rc_query+0x2e1/0x360 drivers/media/usb/dvb-usb/cxusb.c:548
+ dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
+ process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+ worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+ kthread+0x4b5/0x4f0 kernel/kthread.c:256
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
+Local variable description: ----ircode@cxusb_rc_query
+Variable was created at:
+ cxusb_rc_query+0x4d/0x360 drivers/media/usb/dvb-usb/cxusb.c:543
+ dvb_usb_read_remote_control+0xf9/0x290 drivers/media/usb/dvb-usb/dvb-usb-remote.c:261
 
-On Wed, Oct 9, 2019 at 12:19 AM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> After do_add_mount() returns success, the caller doesn't hold a
-> reference to the 'struct mount' anymore.  So it's invalid to access it
-> in mnt_warn_timestamp_expiry().
->
-> Fix it by instead passing the super_block and the mnt_flags.  It's safe
-> to access the super_block because it's pinned by fs_context::root.
->
-> Reported-by: syzbot+da4f525235510683d855@syzkaller.appspotmail.com
-> Fixes: f8b92ba67c5d ("mount: Add mount warning for impending timestamp ex=
-piry")
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  fs/namespace.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index fe0e9e1410fe..7ef8edaaed69 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2466,12 +2466,11 @@ static void set_mount_attributes(struct mount *mn=
-t, unsigned int mnt_flags)
->         unlock_mount_hash();
->  }
->
-> -static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vf=
-smount *mnt)
-> +static void mnt_warn_timestamp_expiry(struct path *mountpoint,
-> +                                     struct super_block *sb, int mnt_fla=
-gs)
->  {
-> -       struct super_block *sb =3D mnt->mnt_sb;
-> -
-> -       if (!__mnt_is_readonly(mnt) &&
-> -          (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_m=
-ax)) {
-> +       if (!(mnt_flags & MNT_READONLY) && !sb_rdonly(sb) &&
-> +           (ktime_get_real_seconds() + TIME_UPTIME_SEC_MAX > sb->s_time_=
-max)) {
->                 char *buf =3D (char *)__get_free_page(GFP_KERNEL);
->                 char *mntpath =3D buf ? d_path(mountpoint, buf, PAGE_SIZE=
-) : ERR_PTR(-ENOMEM);
->                 struct tm tm;
-> @@ -2512,7 +2511,7 @@ static int do_reconfigure_mnt(struct path *path, un=
-signed int mnt_flags)
->                 set_mount_attributes(mnt, mnt_flags);
->         up_write(&sb->s_umount);
->
-> -       mnt_warn_timestamp_expiry(path, &mnt->mnt);
-> +       mnt_warn_timestamp_expiry(path, sb, mnt_flags);
->
->         return ret;
->  }
-> @@ -2555,7 +2554,7 @@ static int do_remount(struct path *path, int ms_fla=
-gs, int sb_flags,
->                 up_write(&sb->s_umount);
->         }
->
-> -       mnt_warn_timestamp_expiry(path, &mnt->mnt);
-> +       mnt_warn_timestamp_expiry(path, sb, mnt_flags);
->
->         put_fs_context(fc);
->         return err;
-> @@ -2770,7 +2769,7 @@ static int do_new_mount_fc(struct fs_context *fc, s=
-truct path *mountpoint,
->                 return error;
->         }
->
-> -       mnt_warn_timestamp_expiry(mountpoint, mnt);
-> +       mnt_warn_timestamp_expiry(mountpoint, sb, mnt_flags);
->
->         return error;
->  }
-> --
-> 2.23.0
->
+Signed-off-by: Vito Caputo <vcaputo@pengaru.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+---
+ drivers/media/usb/dvb-usb/cxusb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
+index f02fa0a67aa4..fac19ec46089 100644
+--- a/drivers/media/usb/dvb-usb/cxusb.c
++++ b/drivers/media/usb/dvb-usb/cxusb.c
+@@ -521,7 +521,8 @@ static int cxusb_rc_query(struct dvb_usb_device *d)
+ {
+ 	u8 ircode[4];
+ 
+-	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
++	if (cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4) < 0)
++		return 0;
+ 
+ 	if (ircode[2] || ircode[3])
+ 		rc_keydown(d->rc_dev, RC_PROTO_NEC,
+-- 
+2.11.0
+
