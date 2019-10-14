@@ -2,109 +2,198 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060B6C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD32ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C5D20659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 690A920659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="eSu6PjSH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fD2zTYgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfJNJRe (ORCPT
+        id S1730795AbfJNJRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:17:34 -0400
-Received: from mout.gmx.net ([212.227.17.21]:42751 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730438AbfJNJRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:17:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1571044643;
-        bh=4WxnJGGhPUp8zJdSS6vkKY+4fSuwHopgQ3qM6bfXxxU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=eSu6PjSHSn8VWGUz9PPVC0eNVQXrCsbTltfazX4Zp37ELfuZ1ylgJ0KYEdkYLg4gI
-         EzSfn8w9VnuCtajJWX5oOPs/qp2KHc2RAKVY5RulilYh51BcI/SZSYszpRVGSf6cvD
-         RKeOFmwac3sysWbmXbN1ozUV7AoahpV8sHnC7bNo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.0.0.132] ([212.88.11.189]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M4JmT-1iKDSc3Na5-000IBB; Mon, 14
- Oct 2019 11:17:23 +0200
-Subject: Re: [PATCH] xhci: Don't use soft retry if slot id > 0
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191013003313.3497-1-bernhard.gebetsberger@gmx.at>
- <84476602-7551-b667-9803-55016e477b02@linux.intel.com>
-From:   Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>
-Message-ID: <8319a117-ed96-53f8-48ae-907c6c34898d@gmx.at>
-Date:   Mon, 14 Oct 2019 11:17:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 14 Oct 2019 05:17:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34447 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730438AbfJNJRm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:17:42 -0400
+Received: by mail-ed1-f65.google.com with SMTP id j8so2487152eds.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:17:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EZfxpi3wJn7CHGgZY3AghGLO9PJ6e7d/ikmLyqekpVw=;
+        b=fD2zTYgYVzAXQ+/DZ0dHRSWa22Fs6U2WuKPrE9lnr1Mk0qMMREr0mE55PH+8n/D1r3
+         ptC/MJadGP8PGQxBrDvp+jy/W7PxPeheACL2WtmUHp69JoLeFh+ja5VxQGaqy3cE+JAV
+         vk3agDfU+kbSAhygn11SNSGw7xnghqjA55hmg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=EZfxpi3wJn7CHGgZY3AghGLO9PJ6e7d/ikmLyqekpVw=;
+        b=RE8HSCh1GGTGyuGeEVSLRylOltZYCaqlOhZ55MDbMBm0uhYUbhjMyB38BKJjvWs+zt
+         jl7y82GtnQ08UtCQ+yIXnF9M4GwNemj4oKPreWy/z3Q4U0Al55FfXr1dbzFVPDEle7Pr
+         H3OdsoYrcfwwQIfpX4plrMbH7JuJoK1TDGwxJ1XToK6aznRFVEq6q/G8pxSQeRj5yMWN
+         QzKyubHP1mWzfLAEUPhvF4fJS7fRHV3ZzS17RX5GFwCMBHXuV4B+fZDNGZCa9R07+DlT
+         8m3dahEkJyhstlmgo4bP1bDXjareCygdskZSaj1Dcc64Nleoc40JNykOwEl9MZeim8XT
+         +DBg==
+X-Gm-Message-State: APjAAAX6CBrKQw7B4Hb7o3sFN+gAW4Jml1u9Zlj+hgz55ml5+blym4LC
+        kNHR8gAJsvVFni9w6BQRH+jyrA==
+X-Google-Smtp-Source: APXvYqyNl3B+iSLwfjR/ZObVZjTTlEO2IcVtqxZVqxSYiuhvAE8KY3zmOXkE7StB46x3ntGe0CFM1Q==
+X-Received: by 2002:a50:fa8e:: with SMTP id w14mr27409748edr.285.1571044659368;
+        Mon, 14 Oct 2019 02:17:39 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id l7sm3060647edv.84.2019.10.14.02.17.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 02:17:38 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:17:36 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     syzbot <syzbot+e7ad70d406e74d8fc9d0@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org,
+        oleg.vasilev@intel.com, omrigann@gmail.com,
+        rodrigosiqueiramelo@gmail.com, simon.ser@intel.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in vkms_gem_free_object
+Message-ID: <20191014091736.GJ11828@phenom.ffwll.local>
+Mail-Followup-To: syzbot <syzbot+e7ad70d406e74d8fc9d0@syzkaller.appspotmail.com>,
+        airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        hamohammed.sa@gmail.com, linux-kernel@vger.kernel.org,
+        oleg.vasilev@intel.com, omrigann@gmail.com,
+        rodrigosiqueiramelo@gmail.com, simon.ser@intel.com,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000006bed900594d5e99a@google.com>
 MIME-Version: 1.0
-In-Reply-To: <84476602-7551-b667-9803-55016e477b02@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:GoxKe0s5Fo0XSTngGJAuRCkv+kTx0jXMfIYt275HkW7XJ2oKno2
- MldDbYZjHNoo0X5/NFjStH/XB4m7xaxtkCQ4NK2LMcvPBbsqSJQRkJ3nCJrdn/46FdzGS5b
- 60lHuCnG8Bo9aMXAohgWX+327aWxyRKPzQlHgMWJdLErIEu7lDzu5ET02M6uS3Oz4l1MH7F
- jKKq9vQlxLU6mpvJiPl+w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SKqbYSAIWHI=:Ea0pQxGQUgg/7puz61glmk
- tehrz1IgWj0PfaFWpFmYM0E9ZgJcRPrpTIqBjI5GWr9czeGtFYbEOPE+J7Y1ZDH2vtt0crekj
- 899nfPtJGZJVESWroUAYdF7b/wN/hA+wV3te0wAw1et9gFo72rfUBvw1tqzkoPheYihcDm2zd
- fqtd5HS4METMLy5vQFdJ9Q3mTHvvVtsegtWoz0IAokUPtlKgVPSsdo6fs+VEVMF9xZouz2MXw
- otRPBmY+h8iydmnfASH4ntEleFOeoXtdhcc6wHYWAb4cxxC42AKEqoGZf8L0CPqsBEit7OaOf
- FOmFJ+dqJdS6xmKOfjewDh4Uk8LmzB7TCGpdO0j5/XRiglsgc8+HwR6iMahfRK7TBy/+9ZHbD
- yJ6jfzADehWfzfO0WkZTuNlWNRX2BwZf49PcF7q9pGCEGM+IHn0i1ZeLuYIkuQtFOp4zsH1/R
- yJH2w0SHt5V6NceTDHH57QVrA/0MbtsUQ1oOMBaCs5fAVFuIt1InsacQ/9ik7AB9JUSDOBrc9
- 7gEdjlOU//sEx+gLx/sbMgVhwNpcG9QRh2ic9csa/0/I+iXRiAX9zHahxMz+gENRsOubq8TnB
- wzNNoXvOfs20d6Dou04uV9XlVLlHAf9hzhQFnmKJ1h9IjFd7Na4bml8w3EiBxsuvSASpqrrtM
- Nn8j/4zFvF5Z+fDUmO8URb7PoSghPrM6arWEHG5+SdL/LEi8+VRigYtcA+toY2maIr97CAc0g
- cpM+a799wFi1G4fwsR0ZVli5MV66xZUTCuqsukxGaPEyJ89XrdVz2QFy+/s8OQTawYXDrr3Zr
- wYS8soooZQdop8ap2C32ByUoEqdKRztHCr7LgFAFxtAzu4nX8NK59FSHld1UD4B8YNspGJMAg
- +ZhRLVBWB6o0OtGJZ6a7Ve1oCPr8x6DO8oNcg7j/Yhi0l3l8d5/6LoV47VX+eXk1NJ62tWosW
- wsJodljg0l+/FRnpMU08RoLlq2/OobO7q4AWcHuc84hvxiC9hVB6q+a0Jlg13AONgz2LsvI9i
- jg+rDs9HmfkTT+ONFmgOimzDkQUp2nI33A/5o0M3dfecAD2tw8lmYLMsnJd4QCm/9YZyNqtnQ
- brqi198yY+obYQ1e7RRVSo2z9MYNEmkJoabvgQ48EF34f54eRx7liht/YOdSslGaDXQw1yNP9
- f/M1a8/0q3Hr8LzNLZ2nY3r/6Qhah6Ok/UY7vvMA/M+z0FG58b57t3JZoQ+CME5V33rZjxBQx
- 5vm35zKU9RXXS2IcGuhL1DQZ62xhMw1GIE1UQDq4LqO3izuadsaQPvrtOMsE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000006bed900594d5e99a@google.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 14.10.19 um 10:06 schrieb Mathias Nyman:
-> On 13.10.2019 3.33, Bernhard Gebetsberger wrote:
->> According to the xhci specification(chapter 4.6.8.1) soft retry
->> shouldn't be used if the slot id is higher than 0. Currently some usb
->> devices break on some systems because soft retry is being used when
->> there is a transaction error, without checking the slot id.
->>
-> That is not correct
->
-> Specs say that soft retry should not be used if we are dealing with a
-> FS/LS device behind a HS hub, this can be checked from the "TT Hub Slot =
-ID"
-> field in the slot context, which we do.
->
-> In xhci all devices have a slot id, so this change would prevent
-> soft retry almost completely.
->
-> Specs 4.6.8.1:
-> "Soft Retry attempts shall not be performed if the device is behind a
-> TT in a HS Hub (i.e. TT Hub Slot ID > =E2=80=980=E2=80=99)."
->
-> -Mathias
-Thanks for the explanation, I have misunderstood that part from the xhci
+On Sun, Oct 13, 2019 at 07:49:08PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    8ada228a Add linux-next specific files for 20191011
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14c30b1b600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7cf4eed5fe42c31a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e7ad70d406e74d8fc9d0
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1087d31b600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e27c53600000
+> 
+> The bug was bisected to:
+> 
+> commit 94e2ec3f7fef86506293a448273b2b4ee21e6195
+> Author: Oleg Vasilev <omrigann@gmail.com>
+> Date:   Mon Sep 30 15:59:24 2019 +0000
+> 
+>     drm/vkms: prime import support
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ef2d57600000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17ef2d57600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13ef2d57600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+e7ad70d406e74d8fc9d0@syzkaller.appspotmail.com
+> Fixes: 94e2ec3f7fef ("drm/vkms: prime import support")
 
-spec. Sorry.
+Oleg, will you be looking at this? With the reproducer and full drm
+debugging enabled it shouldn't be too hard to figure out what's going on
+heere ...
+-Daniel
 
-- Bernhard
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 9040 at drivers/gpu/drm/vkms/vkms_gem.c:37
+> vkms_gem_free_object+0x92/0xb0 drivers/gpu/drm/vkms/vkms_gem.c:37
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 9040 Comm: syz-executor028 Not tainted 5.4.0-rc2-next-20191011
+> #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  panic+0x2e3/0x75c kernel/panic.c:221
+>  __warn.cold+0x2f/0x35 kernel/panic.c:582
+>  report_bug+0x289/0x300 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+> RIP: 0010:vkms_gem_free_object+0x92/0xb0 drivers/gpu/drm/vkms/vkms_gem.c:37
+> Code: 44 68 7f fd 49 8d bc 24 f8 01 00 00 e8 c7 8d 64 fd 4c 89 e7 e8 3f 39
+> ae ff 4c 89 e7 e8 f7 9a ba fd 41 5c 5d c3 e8 1e 68 7f fd <0f> 0b eb a2 e8 15
+> 68 7f fd 0f 0b eb c8 e8 2c e7 ba fd eb b6 e8 25
+> RSP: 0018:ffff8880971df9e8 EFLAGS: 00010293
+> RAX: ffff8880989c2200 RBX: ffffffff894e5000 RCX: ffffffff83a1eda6
+> RDX: 0000000000000000 RSI: ffffffff83f3ab02 RDI: ffff8880a8c4fa78
+> RBP: ffff8880971df9f0 R08: ffff8880989c2200 R09: ffffed1012e3bf36
+> R10: ffffed1012e3bf35 R11: 0000000000000003 R12: ffff8880a8c4f800
+> R13: ffff8880a3ab8000 R14: ffffffff83f3aa70 R15: ffff8880a3ab8020
+>  drm_gem_object_free+0x100/0x220 drivers/gpu/drm/drm_gem.c:983
+>  kref_put include/linux/kref.h:65 [inline]
+>  drm_gem_object_put_unlocked drivers/gpu/drm/drm_gem.c:1017 [inline]
+>  drm_gem_object_put_unlocked+0x127/0x170 drivers/gpu/drm/drm_gem.c:1002
+>  drm_gem_object_handle_put_unlocked+0x1ad/0x2d0
+> drivers/gpu/drm/drm_gem.c:239
+>  drm_gem_object_release_handle+0x102/0x1c0 drivers/gpu/drm/drm_gem.c:261
+>  idr_for_each+0x138/0x250 lib/idr.c:208
+>  drm_gem_release+0x27/0x40 drivers/gpu/drm/drm_gem.c:939
+>  drm_file_free.part.0+0x7f4/0xc00 drivers/gpu/drm/drm_file.c:244
+>  drm_file_free drivers/gpu/drm/drm_file.c:213 [inline]
+>  drm_close_helper drivers/gpu/drm/drm_file.c:271 [inline]
+>  drm_release+0x286/0x3f0 drivers/gpu/drm/drm_file.c:443
+>  __fput+0x2ff/0x890 fs/file_table.c:280
+>  ____fput+0x16/0x20 fs/file_table.c:313
+>  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>  exit_task_work include/linux/task_work.h:22 [inline]
+>  do_exit+0x904/0x2e60 kernel/exit.c:817
+>  do_group_exit+0x135/0x360 kernel/exit.c:921
+>  __do_sys_exit_group kernel/exit.c:932 [inline]
+>  __se_sys_exit_group kernel/exit.c:930 [inline]
+>  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
+>  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x442bb8
+> Code: Bad RIP value.
+> RSP: 002b:00007ffd8fdc0b98 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000442bb8
+> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> RBP: 00000000004c24c8 R08: 00000000000000e7 R09: ffffffffffffffd0
+> R10: 00000000004002e0 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00000000006d41a0 R14: 0000000000000000 R15: 0000000000000000
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
