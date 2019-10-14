@@ -2,123 +2,88 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2EDECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E56C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835D421835
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uHtkE2zS"
+	by mail.kernel.org (Postfix) with ESMTP id 2750A217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 23:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571095519;
+	bh=AoS9bumm7eRsNMYlt9JxKKDtGznr35Rexk3AX3JJ7z4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xJ18dEfHkKYM62RcjpAJek1AbOXCx3Me0TzSxemebputfBriuOgg3PORngGl19OcF
+	 dkjHg4Y2lKf7VZlgcVzjsflzGkGW67AU6JdmB1uUd/nIzizZNZJ3Rw1Jr2fNVecQpF
+	 CYtO/9DOIZGLE20p594AX/KAY+22StaLE2JeKS7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfJNXQy (ORCPT
+        id S1726498AbfJNXXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 19:16:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:33421 "EHLO ozlabs.org"
+        Mon, 14 Oct 2019 19:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfJNXQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 19:16:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726438AbfJNXXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 19:23:48 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46sZFb1nwjz9sPV;
-        Tue, 15 Oct 2019 10:16:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571095011;
-        bh=1BwLRtBRjzVSa/TR6fEP9M6Lg20DbYIP5J1guvq/1YQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uHtkE2zSpA1ahbsnzKzxmYeFQYUY3YvPC+nUELw08G3u7PXIgCBo3OXcUEfV4gwGv
-         fpYjAAscWC64JysAq7rRGIeoL9L6GkDSZECy9F/zjMDnX7cNtxzhzGes+3GuF6QbDK
-         CoZjd6ikJZ1IH8VqczFvGjh+7HdYlkBTvwW5fnK1rK3X5El6N9HKcUXwxQPTJ+hXi3
-         9tgy1AjWVW4DK3ox+dxMAWE23xTmQt0a9nHLkv3cVS3VWeen0eprUY/5nUSn/BiQQj
-         tdv491xTtAHnW2nXr9RoX0eFRpfR3jTmDEiV22QpXX7EwmpIgttbdya5FALsRxzD2U
-         GMBi8++az4jUA==
-Date:   Tue, 15 Oct 2019 10:16:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: linux-next: build failure after merge of the pm tree (Was:
- linux-next: build warning after merge of the pm tree)
-Message-ID: <20191015101650.2a1541af@canb.auug.org.au>
-In-Reply-To: <20191015100855.31b8a3d5@canb.auug.org.au>
-References: <20191015100855.31b8a3d5@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 98A62217F9;
+        Mon, 14 Oct 2019 23:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571095428;
+        bh=AoS9bumm7eRsNMYlt9JxKKDtGznr35Rexk3AX3JJ7z4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mv7GkiSSdYCYgHVoYCHdesx8vq8x2FUIhVSFSlbxNMeits476kgsTUQpe3TL/XXim
+         kIiNjeXfnMtUH8m8AEQAT/jQYcDjPhsf9M9Gazc0aJU1/2xDtcxvhGvmne/MsC08nB
+         phnBI50cCKjQQNUs8VHxCotQkRw2fo/Pe25AMaZ0=
+Date:   Mon, 14 Oct 2019 18:23:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Kuldeep Dave <kuldeep.dave@xilinx.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Palmer Dabbelt <palmer@sifive.com>, linux-pci@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2] PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for
+ Microblaze
+Message-ID: <20191014232345.GA246093@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6GS1h5au_w04qPbsgg/ztsa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008154652.GB7903@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6GS1h5au_w04qPbsgg/ztsa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 08, 2019 at 08:46:52AM -0700, Christoph Hellwig wrote:
+> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> > index a304f5ea11b9..9d259372fbfd 100644
+> > --- a/drivers/pci/Kconfig
+> > +++ b/drivers/pci/Kconfig
+> > @@ -52,7 +52,7 @@ config PCI_MSI
+> >  	   If you don't know what to do here, say Y.
+> >  
+> >  config PCI_MSI_IRQ_DOMAIN
+> > -	def_bool ARC || ARM || ARM64 || X86 || RISCV
+> > +	def_bool ARC || ARM || ARM64 || X86 || RISCV || MICROBLAZE
+> 
+> Can you find out what the actual dependency is so that we can
+> automatically enabled this instead of the weird arch list?
 
-Hi all,
+Hi Michal, I'll wait for your response on whether it's feasible to do
+something smarter than listing every arch here.  Please ping here or
+post a v3; since I marked this patch "Changed Requested" in patchwork,
+it's fallen off my to-do list.
 
-On Tue, 15 Oct 2019 10:08:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the pm tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
->=20
-> In file included from include/linux/irqchip.h:14,
->                  from arch/arm/kernel/irq.c:26:
-> include/linux/acpi.h:682:31: warning: 'struct acpi_device' declared insid=
-e parameter list will not be visible outside of this definition or declarat=
-ion
->   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2=
-, const char *uid2)
->       |                               ^~~~~~~~~~~
->=20
-> and many more.
->=20
-> Introduced by commit
->=20
->   d1748b57dc88 ("ACPI / utils: Introduce acpi_dev_hid_uid_match() helper")
->=20
-> CONFIG_ACPI is not set for this build.
-
-This became a build failure for the powerpc ppc64_allmodconfig build:
-
-In file included from include/linux/i2c.h:13,
-                 from arch/powerpc/platforms/pasemi/misc.c:14:
-include/linux/acpi.h:682:31: error: 'struct acpi_device' declared inside pa=
-rameter list will not be visible outside of this definition or declaration =
-[-Werror]
-  682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, =
-const char *uid2)
-      |                               ^~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-(and many more)
-
-I have used the pm tree from next-20191014 for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6GS1h5au_w04qPbsgg/ztsa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2lAeIACgkQAVBC80lX
-0Gw1WAgApA7Va7ZDZwaobRWeHYmNWZJT+LW1OTciIcsmrktUcpWHO6U6UYSQF016
-sz3jdv+nktO51cMqMwyiS5OtbvM9QeFAKRxyI3fzcbDADw+3zV9/U25czAKp2GQz
-QhOrUMetEWgbEXpLo0MU4BbEjoL09SozRTi61+ah30fIx5NGncwKzGH9RXLqDE3i
-j2ogPaQI9uvv5ub1sZBmlL3zwKyRdp+xIfnop8rwc2LSmkC+dVkekqGsais4bw3p
-47KQeMauTe7zvTw1cxGuBJeYDE/VHNGCp+kd6sckyEfPMs7ZrrcUFoQ1JARStLX7
-cmf3CduLwLBKthlVtByQVRR7sY81oQ==
-=HdGr
------END PGP SIGNATURE-----
-
---Sig_/6GS1h5au_w04qPbsgg/ztsa--
+Bjorn
