@@ -2,242 +2,158 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06FEC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5F9C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F6420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C99E20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vHl8FZk3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NRfYrTFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbfJNRex (ORCPT
+        id S2388563AbfJNRe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:34:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43489 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbfJNRex (ORCPT
+        Mon, 14 Oct 2019 13:34:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33214 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbfJNRe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:34:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j18so20671197wrq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=goZ9xr3ZvDzSv2nJz6yrf4HXNzE2UZomKxVxc5DO9BY=;
-        b=vHl8FZk3irxNcBHFS6WDvNRLbzSI+2dM7zbxblpP7TrH699NnU4A9rTupP3aIW6xLI
-         1s3nVKqg749HwtV8wrwNj90Rz/dzdgcEmIkULO5n8TlL+B6U1do2uDthDToVn3+D0YP2
-         9KgM6aqtUcji4E1xaPX9PywJHKS7Cs+v8hJnM9lZJWyE2XoCv2GwTYJru5+SC4Z8hfl/
-         rv+8BvLK+Z/9arnhKtio+xT6q+iTiwV6I9bGi04EUmqVK2PkXEHChONF6QBNgpvEGZB4
-         wKKgOeuVaw+6Alc/huUKGS08Csjskopiso9M5JfZMRrALxCYDFSX/ZxvrWlPdwdadWeU
-         8vGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=goZ9xr3ZvDzSv2nJz6yrf4HXNzE2UZomKxVxc5DO9BY=;
-        b=pvIvPtl9VrF2fuY5dcWh47nnoBP6luxf6ADTalsl2QkpEHGxG90jXZYg0wmSRy58Tm
-         mpvVIBtsUPm1+uRuLPsgklemOnivljJciRDiJlFuiRNCW7+bJCQInVvsdmuNY7bVIVgJ
-         c4l2J0/qCeyqF8XJRpIKbpKeohjY88eNKblmapLEEzJKZL30Gn17u+tr1ZG+4mus/EHG
-         qHxv3+UbeEgPk1W8B0jalTlrAqHitDaQkSCZKf4JHi4Op2/R2czv5i8412xiDnibAgRN
-         k3NCne9fht1tt7Mqw493GkRyu3hdGBw9jR8wxYwdb2UbexzVWcR408nj59Tw7gBWOw8B
-         M55A==
-X-Gm-Message-State: APjAAAUghdUnhPfGnE9JjddDRzHdmiWCLZPmpL/PYxcxZ5O2VmPodmpy
-        vAsQzDY+ihY+B7pxha8ROOyVKQ==
-X-Google-Smtp-Source: APXvYqx6o+W6CiM2QYYNE1LOP02RBlpY0Gjx6cCk2+/iSWkz3HaCQgW35hyYYEVSjE7RAe42vaKioA==
-X-Received: by 2002:a05:6000:1204:: with SMTP id e4mr12865496wrx.23.1571074488594;
-        Mon, 14 Oct 2019 10:34:48 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id g185sm26164302wme.10.2019.10.14.10.34.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 10:34:47 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: soundwire: add bindings for Qcom
- controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     vkoul@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-2-srinivas.kandagatla@linaro.org>
- <20191014171241.GA24989@bogus>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <76be1a0d-43ea-44c3-ef6c-9f9a2025c7a2@linaro.org>
-Date:   Mon, 14 Oct 2019 18:34:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 14 Oct 2019 13:34:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EHTp3K055924;
+        Mon, 14 Oct 2019 17:34:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Sj5E7ri9EjF2cgNcXdjfk05LQnS3NN8JCDICViSe1l4=;
+ b=NRfYrTFxZzoOLxMcx65XLBB3ERJNQMv6n5M78L/0xlTcg1yrbwGrNSDcLoOjtucMpMiw
+ nCdS2UdRbm/zV3OryxWtaiUcBT2dhyN9Y3ciyKA+D7eqfulGWi8hxdzv2jYY+x7V2fRh
+ 7Y7PnwKF+QiHacsd2rSppbdChEsZYK01alggAyr6KWNbEFwpI6SqS1Fw44fIYvxuAzF/
+ QPSlZ9xDXQHJe/9Nec9YXT8VquHrSH0Q5X7a1Dyo118w1dad2a6ZkrO3Vf6iNpLxEUvF
+ Wy0jby1mjEKRIw9YtOHOrgKMyLBbBeD4dzwQionO6Q0mKiHajLAiYzsQ0laTRndJLz/T Dg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vk7fr2awy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 17:34:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9EHSTkp104914;
+        Mon, 14 Oct 2019 17:34:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vks076tgk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 17:34:27 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9EHYQIv015116;
+        Mon, 14 Oct 2019 17:34:26 GMT
+Received: from localhost (/10.159.144.186)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 14 Oct 2019 10:34:26 -0700
+Date:   Mon, 14 Oct 2019 10:34:24 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     sandeen@redhat.com, billodo@redhat.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhengbin13@huawei.com
+Subject: Re: [PATCH] xfs: include QUOTA, FATAL ASSERT build options in
+ XFS_BUILD_OPTIONS
+Message-ID: <20191014173424.GX13108@magnolia>
+References: <1567751206-128735-1-git-send-email-yukuai3@huawei.com>
+ <20190916162406.GY2229799@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20191014171241.GA24989@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916162406.GY2229799@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910140146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910140146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Rob for taking time to review,
-
-On 14/10/2019 18:12, Rob Herring wrote:
-> On Fri, Oct 11, 2019 at 04:44:22PM +0100, Srinivas Kandagatla wrote:
->> This patch adds bindings for Qualcomm soundwire controller.
->>
->> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
->> either integrated as part of WCD audio codecs via slimbus or
->> as part of SOC I/O.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
->>   1 file changed, 167 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+On Mon, Sep 16, 2019 at 09:24:06AM -0700, Darrick J. Wong wrote:
+> On Fri, Sep 06, 2019 at 02:26:46PM +0800, yu kuai wrote:
+> > In commit d03a2f1b9fa8 ("xfs: include WARN, REPAIR build options in
+> > XFS_BUILD_OPTIONS"), Eric pointed out that the XFS_BUILD_OPTIONS string,
+> > shown at module init time and in modinfo output, does not currently
+> > include all available build options. So, he added in CONFIG_XFS_WARN and
+> > CONFIG_XFS_REPAIR. However, this is not enough, add in CONFIG_XFS_QUOTA
+> > and CONFIG_XFS_ASSERT_FATAL. 
+> > 
+> > Signed-off-by: yu kuai <yukuai3@huawei.com>
+> > ---
+> >  fs/xfs/xfs_super.h | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/fs/xfs/xfs_super.h b/fs/xfs/xfs_super.h
+> > index 763e43d..b552cf6 100644
+> > --- a/fs/xfs/xfs_super.h
+> > +++ b/fs/xfs/xfs_super.h
+> > @@ -11,9 +11,11 @@
+> >  #ifdef CONFIG_XFS_QUOTA
+> >  extern int xfs_qm_init(void);
+> >  extern void xfs_qm_exit(void);
+> > +# define XFS_QUOTA_STRING	"quota, "
+> >  #else
+> >  # define xfs_qm_init()	(0)
+> >  # define xfs_qm_exit()	do { } while (0)
+> > +# define XFS_QUOTA_STRING
+> >  #endif
+> >  
+> >  #ifdef CONFIG_XFS_POSIX_ACL
+> > @@ -50,6 +52,12 @@ extern void xfs_qm_exit(void);
+> >  # define XFS_WARN_STRING
+> >  #endif
+> >  
+> > +#ifdef CONFIG_XFS_ASSERT_FATAL
+> > +# define XFS_ASSERT_FATAL_STRING	"fatal assert, "
 > 
-> Next time, do a DT schema.
-> 
-Sure! I can do that in next version!
+> /me wonders if the space here will screw up any scripts that try to
+> parse the logging string, but OTOH that seems pretty questionable to me.
 
->> diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
->> new file mode 100644
->> index 000000000000..436547f3b155
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
->> @@ -0,0 +1,167 @@
->> +Qualcomm SoundWire Controller Bindings
->> +
->> +
->> +This binding describes the Qualcomm SoundWire Controller along with its
->> +board specific bus parameters.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
->> +		    Example:
->> +			"qcom,soundwire-v1.3.0"
->> +			"qcom,soundwire-v1.5.0"
->> +			"qcom,soundwire-v1.6.0"
-> 
-> This needs to be the actual versions supported, not examples. Elsewhere
-> in QCom bindings, we've used standard SoC specific compatibles as there
-> never tends to be many SoCs with the same version. Anything different
-> here?
-> 
+Answer: There are already string components with spaces.
 
-These values of MAJOR MINOR and STEP are defined as part of IP spec. And 
-most of the QCom IPs follow such scheme. We can read back these values 
-from the Hardware registers.
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Having SoC Names here might not be very efficient here.
-We have used such compatibles on may QCom IPs, like BAM DMA, SLIMBus and 
-other drivers.
-
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: the base address and size of SoundWire controller
->> +		    address space.
->> +
->> +- interrupts:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should specify the SoundWire Controller IRQ
->> +
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: should be "iface" for SoundWire Controller interface clock
->> +
->> +- clocks:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: should specify the SoundWire Controller interface clock
->> +
->> +- #sound-dai-cells:
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: must be 1 for digital audio interfaces on the controller.
->> +
->> +- qcom,dout-ports:
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: must be count of data out ports
-> 
-> Up to how many?
-> 
->> +
->> +- qcom,din-ports:
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: must be count of data in ports
-> 
-> Up to how many?
-
-Up to 15 data ports in total
-
-> 
->> +
-...
-
->> +Note:
->> +	More Information on detail of encoding of these fields can be
->> +found in MIPI Alliance SoundWire 1.0 Specifications.
->> +
->> += SoundWire devices
->> +Each subnode of the bus represents SoundWire device attached to it.
->> +The properties of these nodes are defined by the individual bindings.
-> 
-> Is there some sort of addressing that needs to be defined?
-> 
-Thanks, Looks like I missed that here.
-
-it should be something like this,
-
-#address-cells = <2>;
-#size-cells = <0>;
-
-Will add the in next version.
+--D
 
 
->> +
->> += EXAMPLE
->> +The following example represents a SoundWire controller on DB845c board
->> +which has controller integrated inside WCD934x codec on SDM845 SoC.
->> +
->> +soundwire: soundwire@c85 {
->> +	compatible = "qcom,soundwire-v1.3.0";
->> +	reg = <0xc85 0x20>;
->> +	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
->> +	clocks = <&wcc>;
->> +	clock-names = "iface";
->> +	#sound-dai-cells = <1>;
->> +	qcom,dports-type = <0>;
->> +	qcom,dout-ports	= <6>;
->> +	qcom,din-ports	= <2>;
->> +	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
->> +	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
->> +	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
->> +
->> +	/* Left Speaker */
->> +	left{
+> Also, whatever happened to adding a sysfs file so that scripts (ok let's
+> be honest, xfstests) could programmatically figure out the capabilities
+> of the running xfs module?
 > 
-> space       ^
->> +		....
->> +	};
->> +
->> +	/* Right Speaker */
->> +	right{
+> --D
 > 
-> ditto
-> 
->> +		....
->> +	};
->> +};
->> -- 
->> 2.21.0
->>
+> > +#else
+> > +# define XFS_ASSERT_FATAL_STRING
+> > +#endif
+> > +
+> >  #ifdef DEBUG
+> >  # define XFS_DBG_STRING		"debug"
+> >  #else
+> > @@ -63,6 +71,8 @@ extern void xfs_qm_exit(void);
+> >  				XFS_SCRUB_STRING \
+> >  				XFS_REPAIR_STRING \
+> >  				XFS_WARN_STRING \
+> > +				XFS_QUOTA_STRING \
+> > +				XFS_ASSERT_FATAL_STRING \
+> >  				XFS_DBG_STRING /* DBG must be last */
+> >  
+> >  struct xfs_inode;
+> > -- 
+> > 2.7.4
+> > 
