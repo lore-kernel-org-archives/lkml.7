@@ -2,111 +2,118 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A0BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D03EECE58C
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8942067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB36920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 21:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qlk6q3ZG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkNSjhP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387968AbfJNVg2 (ORCPT
+        id S1730169AbfJNVnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 17:36:28 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58740 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731408AbfJNVg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 17:36:28 -0400
-Received: from zn.tnic (p200300EC2F065800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:5800:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 151951EC0C8E;
-        Mon, 14 Oct 2019 23:36:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571088987;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kNhe2TlSQJMPOaQ79SSPMH5z8CjruZRN7lsslQeR9v0=;
-        b=qlk6q3ZGBCFUJ3QdCxqIp35pdSKnkmMIS8hIIwHstgjAw/lsgw0T8tPl6ToLftvpiFL+sQ
-        C5IKqg+PB0ERoPcSGNqmspiyC71MTjiFzo/F/OX2kXYdHQ8c/x7q2w63WrrfDsyaoLdnV+
-        JjMJQ3iZKbvKJjeYwG8jp4yH12v1VLs=
-Date:   Mon, 14 Oct 2019 23:36:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, ckellner@redhat.com
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191014213618.GK4715@zn.tnic>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+        Mon, 14 Oct 2019 17:43:25 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32897 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbfJNVnY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 17:43:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so18098432ljd.0;
+        Mon, 14 Oct 2019 14:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3qwTHsJQXtLByGWGmkMogTYtmXYBCZ8p7g4dCDAH2Hc=;
+        b=GkNSjhP0eZ80orHn4cAARxiyTXcvb5pPD7FRVCWSFff5/lJaJh7m0Eym/uVAhlJAK3
+         aOHaHKdueqDalt+cb9568WOvHFiduwq/KtHwrU6C7RUEO0UvH+kOatOoFvjlusem7ElO
+         4+eiy/B13KWx8QhR4CT9z8n/JZzaCtNEUWW8qB6UdWJqss3SHN/4IMdo8S2dyTVnsMqF
+         xwGi1bJhpw2ugWX5wToPEFZTe3kTp9fijpoJ039D1UCsXOR83LYsj6ftvPMB3vEpo9oE
+         MAuZ+SddrdhSAp9zO46QStgTyDk2WaXu4jbmygCQohW7F1sk3FGynVd9IdaF/UXvAQ+l
+         qplQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3qwTHsJQXtLByGWGmkMogTYtmXYBCZ8p7g4dCDAH2Hc=;
+        b=p/qd/PizWgxx65FLuAeC6FIELa6ulIclu/RTDT+OlvGQ76yq4D+AZ1lsMHjrrmt7U5
+         HZrdBN7XJ6PaYXvfxm1ujgZuFQSCXIyWVDOlsFCQ+KsxApYP/kbIKn6aXwHnSnnV9UK6
+         j6jk+l7+GN+S30k7mNQMWrfq0A5agqTl1ZTnCqrqI21S05w81dlbGmET2p+f9kRQBmLZ
+         VdgNj3YOJMGQmYjP3PpWeNVHkhZqWdJvEm+KMFvmXTGOM6F9gu0+kNn/gCJGe/NJ0hx5
+         RRsVWI6RE1upv4TAspSI9n1zq885YV+s2gnJmA93oCkFhrrOzfFmWMpI6z/DQS08nFRo
+         FhEg==
+X-Gm-Message-State: APjAAAVmJ0t+nqCjmqHqsL4bBQH4fGIM3g6IhoThYqsN9nq0SPeQkDC9
+        8jiLLrjbHA2Am7fG6qx5IaWqBwlA9Q9sCYCyZc320hA=
+X-Google-Smtp-Source: APXvYqz3z9deyqj84FSXsg+/2ryg7LbrmoOETqAHbU2dkepNZeuB6r+Ff9HGPQY2TdsoLFO2AyX5r0FI0UrTiwWGhNM=
+X-Received: by 2002:a2e:5354:: with SMTP id t20mr20223113ljd.227.1571089402725;
+ Mon, 14 Oct 2019 14:43:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191014071531.12790-1-hslester96@gmail.com>
+In-Reply-To: <20191014071531.12790-1-hslester96@gmail.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Mon, 14 Oct 2019 14:43:11 -0700
+Message-ID: <CAKywueQY-J3g0RBF4=opP8SbhpWh-BHoHWzNEeTruxmfacnhGw@mail.gmail.com>
+Subject: Re: [PATCH] cifs: Fix missed free operations
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 02:21:00PM -0700, Srinivas Pandruvada wrote:
-> Some modern systems have very tight thermal tolerances. Because of this
-> they may cross thermal thresholds when running normal workloads (even
-> during boot). The CPU hardware will react by limiting power/frequency
-> and using duty cycles to bring the temperature back into normal range.
-> 
-> Thus users may see a "critical" message about the "temperature above
-> threshold" which is soon followed by "temperature/speed normal". These
-> messages are rate limited, but still may repeat every few minutes.
-> 
-> The solution here is to set a timeout when the temperature first exceeds
-> the threshold. If the CPU returns to normal before the timeout fires,
-> we skip printing any messages. If we reach the timeout, then there may be
-> a real thermal issue (e.g. inoperative or blocked fan) and we print the
-> message (together with a count of how many thermal events have occurred).
-> A rate control method is used to avoid printing repeatedly on these broken
-> systems.
-> 
-> Some experimentation with fans enabled showed that temperature returned
-> to normal on a laptop in ~4 seconds. With fans disabled it took over 10
-> seconds. Default timeout is thus set to 8 seconds, but may be changed
-> with kernel boot parameter: "x86_therm_warn_delay". This default interval
-> is twice of typical sampling interval for cooling using running average
-> power limit from user space thermal control softwares.
-> 
-> In addition a new sysfs attribute is added to show what is the maximum
-> amount of time in miili-seconds the system was in throttled state. This
-> will allow to change x86_therm_warn_delay, if required.
+=D0=BF=D0=BD, 14 =D0=BE=D0=BA=D1=82. 2019 =D0=B3. =D0=B2 00:18, Chuhong Yua=
+n <hslester96@gmail.com>:
+>
+> cifs_setattr_nounix has two paths which miss free operations
+> for xid and fullpath.
+> Use goto cifs_setattr_exit like other paths to fix them.
+>
+> Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable ha=
+ndles")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  fs/cifs/inode.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+> index 5dcc95b38310..df9377828e2f 100644
+> --- a/fs/cifs/inode.c
+> +++ b/fs/cifs/inode.c
+> @@ -2475,9 +2475,9 @@ cifs_setattr_nounix(struct dentry *direntry, struct=
+ iattr *attrs)
+>                         rc =3D tcon->ses->server->ops->flush(xid, tcon, &=
+wfile->fid);
+>                         cifsFileInfo_put(wfile);
+>                         if (rc)
+> -                               return rc;
+> +                               goto cifs_setattr_exit;
+>                 } else if (rc !=3D -EBADF)
+> -                       return rc;
+> +                       goto cifs_setattr_exit;
+>                 else
+>                         rc =3D 0;
+>         }
+> --
+> 2.20.1
+>
 
-This description is already *begging* for this delay value to be
-automatically set by the kernel. Putting yet another knob in front of
-the user who doesn't have a clue most of the time shows one more time
-that we haven't done our job properly by asking her to know what we
-already do.
+Looks good, thanks.
 
-IOW, a simple history feedback mechanism which sets the timeout based on
-the last couple of values is much smarter. The thing would have a max
-value, of course, which, when exceeded should mean an anomaly, etc, but
-almost anything else is better than merely asking the user to make an
-educated guess.
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 
-> Suggested-by: Alan Cox <alan@linux.intel.com>
-> Commit-comment-by: Tony Luck <tony.luck@intel.com>
-  ^^^^^^^^^^^^^^^^^^
+The original patch was tagged for stable, so, it seems that this one
+should be tagged too.
 
-What's that?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Best regards,
+Pavel Shilovsky
