@@ -2,243 +2,184 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96519ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126A5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DA120659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WjVVZQdo"
+	by mail.kernel.org (Postfix) with ESMTP id D9E0720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfJNJUm (ORCPT
+        id S1730853AbfJNJUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:20:42 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36145 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730438AbfJNJUk (ORCPT
+        Mon, 14 Oct 2019 05:20:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36230 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730656AbfJNJUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:20:40 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9E9BMpx011331;
-        Mon, 14 Oct 2019 11:20:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=hhuuQ/xWbdUGHIdjCriyvu7ExSQFVH1mUTcxcqKxezw=;
- b=WjVVZQdoEjZdAjsSHZEm2KnuVRcyv/gj+u3UP89pv3fyNSE+QYrsCJfReHv9b8OvOMoW
- gpEcVtl45pbJ5h+UaPyb61t2U9zOuAJdSdaTQPEeetz9z2fHx8y0pIjpRNL9+YYyi+VX
- wk6eov1juxcprxaL9mzZpjYslVx9aTFA5c1sndWjFlqWtZ03KNDx4JstxiQuCdmQul1Q
- de94Zv1+lnQB+AG260Qvsj2I8ndv8cCmkScETfrg4SPTpBqSampVLh8D66ohQkt8mkwn
- xIvHvN+8oZfSvUW1lsVuSBmYKz/sSvqnJxoAHsWU4S5PfS0YQoM2i0kVV6YARsSRijds fw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4kwsc42-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Oct 2019 11:20:26 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B65C010002A;
-        Mon, 14 Oct 2019 11:20:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AA4432B8C56;
-        Mon, 14 Oct 2019 11:20:25 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 14 Oct
- 2019 11:20:25 +0200
-Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 14 Oct 2019 11:20:24
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <yannick.fertre@st.com>,
-        <philippe.cornu@st.com>, <hugues.fruchet@st.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3] dt-bindings: media: Convert stm32 dcmi bindings to json-schema
-Date:   Mon, 14 Oct 2019 11:20:21 +0200
-Message-ID: <20191014092021.24020-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191014092021.24020-1-benjamin.gaignard@st.com>
-References: <20191014092021.24020-1-benjamin.gaignard@st.com>
+        Mon, 14 Oct 2019 05:20:53 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 67so13204144oto.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:20:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xjUOEbgRDLaw4YnI0948oQnDeCHJvY9Rb55iZPdCbnM=;
+        b=lypBoquiNvAUu2Z28KJB1fxgrh1AG+uNRDLvovzoXwGOn89ZzxgBRU+wfPSfWAm182
+         pgxKiQ+8r/r0/cJIKMUPCe1QuubfSCYneuHjRsDj59SFU8k/Bk3WNePVvJVH0TnFO4aD
+         EG2e/YbmzQz0/cKGYAalyvwvx6uPilYMQkorczoovxilyuuwGnH5KCp74g5Zj1mfPqDf
+         33vHu0rLUM6wPYSWkEw9qB5o/G8tLVUZtM9+1u8h4HcbTzX+kuWFAIOwITw9mxWyooY8
+         5kWr+WKvQhzH3pH0OKh8Knkws4LwdTmRtJtmOsZyWEnsttQqcW8F8V7wXzEqj4PAkzTT
+         ++2g==
+X-Gm-Message-State: APjAAAUzMr4Ul5x0Yek0661otzKdJmIeQk2X8Sfo83XXi0zXUUmlrPy8
+        Eo1usryqwa7pTyqRKyaI3hIOQhkxbonjlZf3ogo=
+X-Google-Smtp-Source: APXvYqxc0ge5Uc5HA1hXl6+nvDiXQ9l6oAVEkO+rWH5BTAlm7+7Gme2peeAi9h8vK9J6zyQZAF6SUOEo++BZFlD+pSE=
+X-Received: by 2002:a9d:70d0:: with SMTP id w16mr7478513otj.107.1571044852125;
+ Mon, 14 Oct 2019 02:20:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-14_06:2019-10-10,2019-10-14 signatures=0
+References: <20191008094006.8251-1-geert+renesas@glider.be>
+ <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
+ <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com>
+ <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com> <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 14 Oct 2019 11:20:40 +0200
+Message-ID: <CAMuHMdWZYOsJv1uQkOFRK2tZO+E8sSHEneUM-p+q5FyAmYZ9Fw@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
+To:     Joe Perches <joe@perches.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 dcmi binding to DT schema format using json-schema
+Hi Joe,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-changes in v3:
--use (GPL-2.0-only OR BSD-2-Clause) license
+On Tue, Oct 8, 2019 at 8:10 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, Oct 8, 2019 at 7:02 PM Joe Perches <joe@perches.com> wrote:
+> > On Tue, 2019-10-08 at 17:28 +0200, Geert Uytterhoeven wrote:
+> > > On Tue, Oct 8, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
+> > > > On Tue, 2019-10-08 at 11:40 +0200, Geert Uytterhoeven wrote:
+> > > > > When reading a patch file from standard input, checkpatch calls it "Your
+> > > > > patch", and reports its state as:
+> > > > >
+> > > > >     Your patch has style problems, please review.
+> > > > >
+> > > > > or:
+> > > > >
+> > > > >     Your patch has no obvious style problems and is ready for submission.
+> > > > >
+> > > > > Hence when checking multiple patches by piping them to checkpatch, e.g.
+> > > > > when checking patchwork bundles using:
+> > > > >
+> > > > >     formail -s scripts/checkpatch.pl < bundle-foo.mbox
+> > > > >
+> > > > > it is difficult to identify which patches need to be reviewed and
+> > > > > improved.
+> > > > >
+> > > > > Fix this by replacing "Your patch" by the patch subject, if present.
+> > > > []
+> > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > > []
+> > > > > @@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
+> > > > >       }
+> > > > >       while (<$FILE>) {
+> > > > >               chomp;
+> > > > > +             if ($vname eq 'Your patch') {
+> > > > > +                     my ($subject) = $_ =~ /^Subject:\s*(.*)/;
+> > > > > +                     $vname = '"' . $subject . '"' if $subject;
+> > > >
+> > > > Hi again Geert.
+> > > >
+> > > > Just some stylistic nits:
+> > > >
+> > > > $filename is not quoted so I think adding quotes
+> > > > before and after $subject may not be useful.
+> > >
+> > > Filename is indeed not quoted, but $git_commits{$filename} is.
+> >
+> > If I understand your use case, this will only show the last
+> > patch $subject of a bundle?
+>
+> False.
+> "formail -s scripts/checkpatch.pl < bundle-foo.mbox" splits
+> "bundle-foo.mbox" in separate patches, and invokes
+> "scripts/checkpatch.pl" for each of them.
+>
+> > Also, it'll show things like "duplicate signature" when multiple
+> > patches are tested in a single bundle.
+>
+> False, due to the splitting by formail.
+>
+> > For instance, if I have a git format-patch series in an output
+> > directory and do
+> >
+> > $ cat <output_dir>/*.patch | ./scripts/checkpatch.pl
+> >
+> > Bad output happen.
+>
+> Yeah, because you're concatenating all patches.
+> Currently it works for single patches only.
+>
+> > Maybe this might be better:
+>
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -2444,6 +2444,15 @@ sub process {
+> >
+> >                 my $rawline = $rawlines[$linenr - 1];
+> >
+> > +# if input from stdin, report the subject lines if they exist
+> > +               if ($filename eq '-' && !$quiet &&
+> > +                   $rawline =~ /^Subject:\s*(.*)/) {
+> > +                       report("stdin", "STDIN", '-' x length($1));
+> > +                       report("stdin", "STDIN", $1);
+> > +                       report("stdin", "STDIN", '-' x length($1));
+> > +                       %signatures = ();       # avoid duplicate signatures
+> > +               }
+> > +
+> >  # check if it's a mode change, rename or start of a patch
+> >                 if (!$in_commit_log &&
+> >                     ($line =~ /^ mode change [0-7]+ => [0-7]+ \S+\s*$/ ||
+>
+> Perhaps.  Just passing the patchwork bundle to checkpatch, and fixing
+> checkpatch to handle multiple patches in a single file was my first idea.
+> But it looked fragile, with too much state that needs to be reset.
+> I.e. the state is not limited to %signatures.  You also have to reset
+> $author inside process(), and probably a dozen other variables.
+> And make sure that future changes don't forget resetting all newly
+> introduced variables.
+>
+> Hence I settled for the solution using formail.
 
-changes in v2:
-- use BSD-2-Clause license
-- remove useless dma descriptions
-- fix clock property
-- add additionalProperties: false
-- fix reset indentation
+I gave your solution a try.
+It only enables the reset-on-next-patch feature when using stdin.
+Thanks to the printed subject, it's now obvious to which patch a
+message applies to.
+However, the output is significantly different than when passing
+a split patch series.  Can this be improved upon?
 
- .../devicetree/bindings/media/st,stm32-dcmi.txt    | 45 -----------
- .../devicetree/bindings/media/st,stm32-dcmi.yaml   | 86 ++++++++++++++++++++++
- 2 files changed, 86 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
- create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+Note that the only reason I'm using stdin is that I use formail to split
+a bundle in individual patches.  Once checkpatch supports bundles (or
+mboxes) containing multiple patches, there's no longer a need for
+using formail, and the reset-on-next-patch feature should be
+enabled unconditionally.
 
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt b/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-deleted file mode 100644
-index 3122ded82eb4..000000000000
---- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--STMicroelectronics STM32 Digital Camera Memory Interface (DCMI)
--
--Required properties:
--- compatible: "st,stm32-dcmi"
--- reg: physical base address and length of the registers set for the device
--- interrupts: should contain IRQ line for the DCMI
--- resets: reference to a reset controller,
--          see Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
--- clocks: list of clock specifiers, corresponding to entries in
--          the clock-names property
--- clock-names: must contain "mclk", which is the DCMI peripherial clock
--- pinctrl: the pincontrol settings to configure muxing properly
--           for pins that connect to DCMI device.
--           See Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml.
--- dmas: phandle to DMA controller node,
--        see Documentation/devicetree/bindings/dma/stm32-dma.txt
--- dma-names: must contain "tx", which is the transmit channel from DCMI to DMA
--
--DCMI supports a single port node with parallel bus. It should contain one
--'port' child node with child 'endpoint' node. Please refer to the bindings
--defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--
--	dcmi: dcmi@50050000 {
--		compatible = "st,stm32-dcmi";
--		reg = <0x50050000 0x400>;
--		interrupts = <78>;
--		resets = <&rcc STM32F4_AHB2_RESET(DCMI)>;
--		clocks = <&rcc 0 STM32F4_AHB2_CLOCK(DCMI)>;
--		clock-names = "mclk";
--		pinctrl-names = "default";
--		pinctrl-0 = <&dcmi_pins>;
--		dmas = <&dma2 1 1 0x414 0x3>;
--		dma-names = "tx";
--		port {
--			dcmi_0: endpoint {
--				remote-endpoint = <...>;
--				bus-width = <8>;
--				hsync-active = <0>;
--				vsync-active = <0>;
--				pclk-sample = <1>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-new file mode 100644
-index 000000000000..3fe778cb5cc3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/st,stm32-dcmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Digital Camera Memory Interface (DCMI) binding
-+
-+maintainers:
-+  - Hugues Fruchet <hugues.fruchet@st.com>
-+
-+properties:
-+  compatible:
-+    const: st,stm32-dcmi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+
-+  resets:
-+    maxItems: 1
-+
-+  port:
-+    type: object
-+    description:
-+      DCMI supports a single port node with parallel bus. It should contain
-+      one 'port' child node with child 'endpoint' node. Please refer to the
-+      bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - dmas
-+  - dma-names
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    dcmi: dcmi@4c006000 {
-+        compatible = "st,stm32-dcmi";
-+        reg = <0x4c006000 0x400>;
-+        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+        resets = <&rcc CAMITF_R>;
-+        clocks = <&rcc DCMI>;
-+        clock-names = "mclk";
-+        dmas = <&dmamux1 75 0x400 0x0d>;
-+        dma-names = "tx";
-+
-+        port {
-+             dcmi_0: endpoint {
-+                   remote-endpoint = <&ov5640_0>;
-+                   bus-width = <8>;
-+                   hsync-active = <0>;
-+                   vsync-active = <0>;
-+                   pclk-sample = <1>;
-+             };
-+        };
-+    };
-+
-+...
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.15.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
