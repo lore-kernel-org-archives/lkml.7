@@ -2,178 +2,109 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E3FECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E4CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA4D20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307DC20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="sYTwemec"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="f+QvfP7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbfJNRv0 (ORCPT
+        id S1731923AbfJNRzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:51:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33904 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730572AbfJNRv0 (ORCPT
+        Mon, 14 Oct 2019 13:55:42 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:55266 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbfJNRzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:51:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k20so3164497pgi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 10:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HcvUzuJFn+RmmqNNAbiz0FxwJB/7vqfgbxYqeMhYLjg=;
-        b=sYTwemecYiXkWr/trjdpTp/EtdmikXY4RSYj52oYXukGC0568QqCQA6Eg/5Xb+kUCb
-         FRkGQXgnQKYwuZgn4XWT7HH3VTcqXLd9EzUmRnRDRl0UHG57E8ve/RYUnKfVdJeyKAOL
-         t09d0ChGvW/6iFITFFsHGoI9EXJ5la69quBJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HcvUzuJFn+RmmqNNAbiz0FxwJB/7vqfgbxYqeMhYLjg=;
-        b=MzCnjn7d0kJA7StEGfmcIA7EResizjMNP3haAE+5YR6XHfeeWvxbdaw9/5zmqIW9Z8
-         0kjRd9qFQcUUCK7GThQGF3BHaflySsFllsMaCylAVTN0V2XhwCqqq0vcJvNoeT9oQwJk
-         5P0XY/8raZLmrBp16KW1WamfT8d2taCZEtiFkdeQmRZ9UwCdGLLrstt6E2VqR86ob3/h
-         85cwS6r1Fx7B6Jv8A9yeqE5u544f7nDgUG1aHZgAOH7jAHRXMPO1p2dDg6UM+7L/e3bq
-         RZAesVomnoezmGajl1lvLwP10Ax4n4h4mWVvwndIbMFkLlj3mOioIKglFiMKZGTBo13D
-         I/yA==
-X-Gm-Message-State: APjAAAW/P796ke/MVfq8FCi2YF1LxwhBGd48NGsUovy/JB+A3rX3xP6+
-        F5x/eoHW+CwIquQE1OoaLSrRKw==
-X-Google-Smtp-Source: APXvYqzzSJUBgjGsF23tBxWXPgEWaUGuYXnkDukQ7Y6bgqbpPThvyS8bi28u5VMF3RJUTxkrvwnYHw==
-X-Received: by 2002:aa7:9157:: with SMTP id 23mr34274904pfi.73.1571075485244;
-        Mon, 14 Oct 2019 10:51:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o60sm29178561pje.21.2019.10.14.10.51.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 10:51:24 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 13:51:23 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-kernel@lists.codethink.co.uk,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu: add declarations of undeclared items
-Message-ID: <20191014175123.GC105106@google.com>
-References: <20191011170824.30228-1-ben.dooks@codethink.co.uk>
- <20191012044430.GG2689@paulmck-ThinkPad-P72>
+        Mon, 14 Oct 2019 13:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SDASWy6gE+FtXOyKEZYjL/u1mgOB67GFmhHwMTEMUhE=; b=f+QvfP7DeSpkBAi4we9sgfzGt
+        yDnG3HOFTjtVx13lE5W6fSUqPr5u6fQ1hRqMgbEGERAYGupImDdvK/Bzm30oJ5NSsuiqTBQH520fJ
+        cecOa9mFXsT091CXvBZq4tJCSxt55R8CXLqcPjz++ZNj0SABz4VHp67VoI139i1yIR6CtfGbMDMpE
+        fiYUg3lI3b+ZGloew9xv6bUdQ6IamB1iby7PZ2OnOc5L0PlR05hULLpDLxO6n7VeMQoOBdwQ4jXSL
+        jb11p7mfRuyduuYyMkLtA7o2gdWYD1ZfH/i9i9Wp0+SDK46+qpWRxRAMqYQRvMa2QqBvvE/ryMOIl
+        EQIKzga5A==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:51238)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iK4ZA-0007dD-Pz; Mon, 14 Oct 2019 18:55:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iK4Z6-0004eU-0t; Mon, 14 Oct 2019 18:55:28 +0100
+Date:   Mon, 14 Oct 2019 18:55:27 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2 1/3] net: phylink: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <20191014175527.GQ25745@shell.armlinux.org.uk>
+References: <20191014174022.94605-1-dmitry.torokhov@gmail.com>
+ <20191014174022.94605-2-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191012044430.GG2689@paulmck-ThinkPad-P72>
+In-Reply-To: <20191014174022.94605-2-dmitry.torokhov@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 09:44:30PM -0700, Paul E. McKenney wrote:
-> On Fri, Oct 11, 2019 at 06:08:24PM +0100, Ben Dooks wrote:
-> > The rcu_state, rcu_rnp_online_cpus and rcu_dynticks_curr_cpu_in_eqs
-> > do not have declarations in a header. Add these to remove the
-> > following sparse warnings:
-> > 
-> > kernel/rcu/tree.c:87:18: warning: symbol 'rcu_state' was not declared. Should it be static?
-> > kernel/rcu/tree.c:191:15: warning: symbol 'rcu_rnp_online_cpus' was not declared. Should it be static?
-> > kernel/rcu/tree.c:297:6: warning: symbol 'rcu_dynticks_curr_cpu_in_eqs' was not declared. Should it be static?
-> > 
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+On Mon, Oct 14, 2019 at 10:40:20AM -0700, Dmitry Torokhov wrote:
+> Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), but
+> works with arbitrary firmware node.
 > 
-> Good catch!
-> 
-> However, these guys (plus one more) are actually used only in the
-> kernel/rcu/tree.o translation unit, so they can be marked static.
-> I made this change as shown below with your Reported-by.
-> 
-> Seem reasonable?
-> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: David S. Miller <davem@davemloft.net>
 
-LGTM.
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-
-> 							Thanx, Paul
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
 > 
-> ------------------------------------------------------------------------
+>  drivers/net/phy/phylink.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> commit 02995691aa76f3e52599d4f9d9d1ab23c3574f32
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Fri Oct 11 21:40:09 2019 -0700
-> 
->     rcu: Mark non-global functions and variables as static
->     
->     Each of rcu_state, rcu_rnp_online_cpus(), rcu_dynticks_curr_cpu_in_eqs(),
->     and rcu_dynticks_snap() are used only in the kernel/rcu/tree.o translation
->     unit, and may thus be marked static.  This commit therefore makes this
->     change.
->     
->     Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index b18fa3d..278798e 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -85,7 +85,7 @@ static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
->  	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
->  	.dynticks = ATOMIC_INIT(RCU_DYNTICK_CTRL_CTR),
->  };
-> -struct rcu_state rcu_state = {
-> +static struct rcu_state rcu_state = {
->  	.level = { &rcu_state.node[0] },
->  	.gp_state = RCU_GP_IDLE,
->  	.gp_seq = (0UL - 300UL) << RCU_SEQ_CTR_SHIFT,
-> @@ -189,7 +189,7 @@ EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
->   * held, but the bit corresponding to the current CPU will be stable
->   * in most contexts.
->   */
-> -unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
-> +static unsigned long rcu_rnp_online_cpus(struct rcu_node *rnp)
->  {
->  	return READ_ONCE(rnp->qsmaskinitnext);
->  }
-> @@ -295,7 +295,7 @@ static void rcu_dynticks_eqs_online(void)
->   *
->   * No ordering, as we are sampling CPU-local information.
->   */
-> -bool rcu_dynticks_curr_cpu_in_eqs(void)
-> +static bool rcu_dynticks_curr_cpu_in_eqs(void)
->  {
->  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index a5a57ca94c1a..c34ca644d47e 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -168,8 +168,8 @@ static int phylink_parse_fixedlink(struct phylink *pl,
+>  			pl->link_config.pause |= MLO_PAUSE_ASYM;
 >  
-> @@ -306,7 +306,7 @@ bool rcu_dynticks_curr_cpu_in_eqs(void)
->   * Snapshot the ->dynticks counter with full ordering so as to allow
->   * stable comparison of this counter with past and future snapshots.
->   */
-> -int rcu_dynticks_snap(struct rcu_data *rdp)
-> +static int rcu_dynticks_snap(struct rcu_data *rdp)
->  {
->  	int snap = atomic_add_return(0, &rdp->dynticks);
+>  		if (ret == 0) {
+> -			desc = fwnode_get_named_gpiod(fixed_node, "link-gpios",
+> -						      0, GPIOD_IN, "?");
+> +			desc = fwnode_gpiod_get_index(fixed_node, "link", 0,
+> +						      GPIOD_IN, "?");
 >  
-> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> index 1540542..f8e6c70 100644
-> --- a/kernel/rcu/tree.h
-> +++ b/kernel/rcu/tree.h
-> @@ -402,8 +402,6 @@ static const char *tp_rcu_varname __used __tracepoint_string = rcu_name;
->  #define RCU_NAME rcu_name
->  #endif /* #else #ifdef CONFIG_TRACING */
->  
-> -int rcu_dynticks_snap(struct rcu_data *rdp);
-> -
->  /* Forward declarations for tree_plugin.h */
->  static void rcu_bootup_announce(void);
->  static void rcu_qs(void);
+>  			if (!IS_ERR(desc))
+>  				pl->link_gpio = desc;
+> -- 
+> 2.23.0.700.g56cf767bdb-goog
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
