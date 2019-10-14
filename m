@@ -2,85 +2,175 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F21EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E61ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F4B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446B0207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbfJNLrq (ORCPT
+        id S1731397AbfJNLsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:47:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:41490 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbfJNLrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:47:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A4DE337;
-        Mon, 14 Oct 2019 04:47:45 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (unknown [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4EE483F68E;
-        Mon, 14 Oct 2019 04:47:44 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@qperret.net, stable@vger.kernel.org
-Subject: [PATCH] sched/topology: Disable sched_asym_cpucapacity on domain destruction
-Date:   Mon, 14 Oct 2019 12:47:10 +0100
-Message-Id: <20191014114710.22142-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 14 Oct 2019 07:48:55 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3750 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730300AbfJNLsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 07:48:55 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BFCF8377902FCE19D856;
+        Mon, 14 Oct 2019 19:48:50 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
+ 19:48:47 +0800
+Date:   Mon, 14 Oct 2019 12:48:35 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+CC:     <jic23@kernel.org>, <dragos.bogdan@analog.com>,
+        <alexandru.ardelean@analog.com>, <stefan.popa@analog.com>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
+Message-ID: <20191014124835.00005645@huawei.com>
+In-Reply-To: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
+References: <20191013141345.uctcutryo7pmdkem@smtp.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the static key is correctly initialized as being disabled, it will
-remain forever enabled once turned on. This means that if we start with an
-asymmetric system and hotplug out enough CPUs to end up with an SMP system,
-the static key will remain set - which is obviously wrong. We should detect
-this and turn off things like misfit migration and EAS wakeups.
+On Sun, 13 Oct 2019 11:13:47 -0300
+Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-Having that key enabled should also mandate
+> Add a device tree binding doc for AD7292 monitor and control system.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> ---
+>  .../bindings/iio/adc/adi,ad7292.yaml          | 71 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> new file mode 100644
+> index 000000000000..16be9ea4194d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7292 10-Bit Monitor and Control System
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +
+> +description: |
+> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
+> +  Temperature Sensor, and GPIOs
+> +
+> +  Specifications about the part can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7292
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vref-supply:
+> +    description: |
+> +      The regulator supply for ADC and DAC reference voltage.
+> +    maxItems: 1
+> +
+> +  spi-cpha:
+> +    description: |
+> +      See Documentation/devicetree/bindings/spi/spi-controller.yaml
+> +    maxItems: 1
+> +
+> +  diff-channels:
+> +    description: |
+> +      Empty property to tell whether VIN0 and VIN1 shall work as differential
+> +      inputs.
+> +    maxItems: 1
 
-  per_cpu(sd_asym_cpucapacity, cpu) != NULL
+This looks like a nice general interface, but really isn't as it only applies
+to the first two channels.
 
-for all CPUs, but this is obviously not true with the above.
+Can you use the standard channel defintions
+Documentation/devicetree/bindings/iio/adc.txt
+to specify this?
 
-On top of that, sched domain rebuilds first lead to attaching the NULL
-domain to the affected CPUs, which means there will be a window where the
-static key is set but the sd_asym_cpucapacity shortcut points to NULL even
-if asymmetry hasn't been hotplugged out.
+It may seem overly complex, but it has the benefit of being generic.
 
-Disable the static key when destroying domains, and let
-build_sched_domains() (re) enable it as needed.
+Would be something like:
 
-Cc: <stable@vger.kernel.org>
-Fixes: df054e8445a4 ("sched/topology: Add static_key for asymmetric CPU capacity optimizations")
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- kernel/sched/topology.c | 2 ++
- 1 file changed, 2 insertions(+)
+channel@0 {
+	diff-channels = < 0 1 >
+};
+channel@2 {
+};
+vs all the channels being present, none set as diff.
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b5667a273bf6..c49ae57a0611 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2123,7 +2123,8 @@ static void detach_destroy_domains(const struct cpumask *cpu_map)
- {
- 	int i;
- 
-+	static_branch_disable_cpuslocked(&sched_asym_cpucapacity);
-+
- 	rcu_read_lock();
- 	for_each_cpu(i, cpu_map)
- 		cpu_attach_domain(NULL, &def_root_domain, i);
---
-2.22.0
+Thanks,
+
+Jonathan
+
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      ad7292: ad7292@0 {
+> +        compatible = "adi,ad7292";
+> +        reg = <0>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        spi-max-frequency = <25000000>;
+> +        vref-supply = <&adc_vref>;
+> +        spi-cpha;
+> +        diff-channels;
+> +      };
+> +    }
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e78317a5f4f1..5941cfc0d6f7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -819,6 +819,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/adc/ad7292.c
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+>  
+>  ANALOG DEVICES INC AD7606 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+
 
