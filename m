@@ -2,143 +2,133 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B13CECE596
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173EBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D863420663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30E320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="i9GFdU88"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elRGhDdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbfJNJve (ORCPT
+        id S1731191AbfJNJwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:51:34 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:17294 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731166AbfJNJve (ORCPT
+        Mon, 14 Oct 2019 05:52:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35475 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730740AbfJNJwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:51:34 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9E9ocVs005938;
-        Mon, 14 Oct 2019 05:51:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=smtpout1;
- bh=A9pzisXF04DHMuIzASCBzW74pVCT2sixQNkp4UFLJGc=;
- b=i9GFdU88oWMHX6qt+1tzU7RauZLzOD7j15N09xU1tpX3EeXCM8/kAyknEoJPQnz9RQv8
- CcSninocD49tk+f40ENVU4oK6f2T5LM7tWrUiBtc6j7YRH54mxHP8O+s1dbn2zAk0Zt0
- HY8Ca6TrVPh+APVIVndIDJbqb2jruowGC40VzDNo+fGeWrvEzgHuixuXxTKunT8cQFGU
- p3bjXhYQwpJFuG4QQK0fSerMlokiw6b/q0dh0E2xXiccvPKxAyAsXDG2y2pGghYK3bRA
- qTRdmGml3RYOab6weiKPWcOHIwE/kzo4I3UzLhpcYA1kdlf0IHwulL9XgVIdg8udKh4f qQ== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 2vkbgqf2tv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Oct 2019 05:51:32 -0400
-Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9E9luVt117112;
-        Mon, 14 Oct 2019 05:51:31 -0400
-Received: from ausxipps306.us.dell.com (AUSXIPPS306.us.dell.com [143.166.148.156])
-        by mx0b-00154901.pphosted.com with ESMTP id 2vm4a1at0v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 05:51:31 -0400
-X-LoopCount0: from 10.166.132.134
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="388301078"
-From:   <Narendra.K@dell.com>
-To:     <ard.biesheuvel@linaro.org>
-CC:     <geert@linux-m68k.org>, <linux-efi@vger.kernel.org>,
-        <Mario.Limonciello@dell.com>, <mingo@kernel.org>,
-        <tglx@linutronix.de>, <james.morse@arm.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Topic: [PATCH v1] Ask user input only when CONFIG_X86 or
- CONFIG_COMPILE_TEST is set to y
-Thread-Index: AQHVgfgBvGXu4mhWM0KINjBW7iNITKdZVJcAgAACbYCAADKugA==
-Date:   Mon, 14 Oct 2019 09:51:25 +0000
-Message-ID: <20191014095115.GA2203@localhost.localdomain>
-References: <20191013185643.GA2583@localhost.localdomain>
- <CAMuHMdVa_UaaKEf5sSDs+8AWJL7=X5JVPWuW23qtWqK9fpEecA@mail.gmail.com>
- <CAKv+Gu-aOHbdG2T9fPp7S4PvRAVosnsnCdsdHEk5PHnSN4gBrQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-aOHbdG2T9fPp7S4PvRAVosnsnCdsdHEk5PHnSN4gBrQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <941AE1343A804141BE85CF329DF70E0D@dell.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 05:52:09 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v8so18924527wrt.2;
+        Mon, 14 Oct 2019 02:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TgbHwKMY+OVVpJwkvai2RZenJKOMFPjpVaxMPbCBN5c=;
+        b=elRGhDdYM5z0fh+u2IZyo1JzQV3H7y+UrHsWM7o/96lM7+Ebs6p8gPbSvJ3AVhwJBj
+         0NaTzI4MZEPEaXP6FqpGKddIbjjUo/h3yv+u1gRnlgcU8DFQDR0lPjDD1lxDWyHvLKqK
+         3/O6c+NKmB9mGLM3ikw52QIHKw9zDHJjlz8o2NVxkvnT8MyK0RVkOfE41JxQgyBHuZS+
+         sK0H63CzgAsyROvFwi1LQbLicVptacN6HMiQtFR/kYFrXLewZJEeKfjSGdD0taVpV33/
+         +/SoMOlx52DP38EiUcth+pT1z/j4ZsVeUg8nXnPW8OG8OCvUVZICpLt6TxV0bJCsTH/i
+         NRDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TgbHwKMY+OVVpJwkvai2RZenJKOMFPjpVaxMPbCBN5c=;
+        b=Ji+Zgwo1BSJnYe32mb3kSSurSzRHMQEQpvOt20XDBJjrg5ELwcN8+t6ddmmoe+O62e
+         QoJOA3pLIuQ46KU+xg66XEvgI8KPKN07vwK56HNQuI7QTYBLcvUDA7T0oP7368HdVfza
+         XWy7wGyTRK798KpsAQzxfpNV7P/4sN5aPxJ3f3b/rFK/X9UwAdUN9Yy7P1nR5AIi0K9l
+         zRe0W+u2xZCKiC8yVq8yqbjM19/frpCWZRVv2fcqL7gj+MAqbCqtNeCTJg/3Y87UtK6+
+         2Vt03JKSLWn/jrl+dE8vs7JlK6TBG2Df+I5o6ric4liH9EuDM+pMe0YIYQtUEz+akWuS
+         RcVA==
+X-Gm-Message-State: APjAAAVyuDdAjx9yOC6R3hs+0IRpee1YNhYd9aOvB5udUJiJh4qKUs9I
+        8KdtlJkKB7oAccoTOhLWZi2P/B3RJu8=
+X-Google-Smtp-Source: APXvYqz1DO5pTofEXIw0VuTnZxvGGS4XOx24scLh6dbp7EmJkpptvcoPoDUeJr/fbSXfHIkghsFIMw==
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr25249204wrm.104.1571046726846;
+        Mon, 14 Oct 2019 02:52:06 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:484d:bbc3:12dc:348b])
+        by smtp.gmail.com with ESMTPSA id r6sm19715339wmh.38.2019.10.14.02.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 02:52:06 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:52:00 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Introduce table of VMBus
+ protocol versions
+Message-ID: <20191014095200.GA11206@andrea.guest.corp.microsoft.com>
+References: <20191010154600.23875-1-parri.andrea@gmail.com>
+ <20191010154600.23875-2-parri.andrea@gmail.com>
+ <DM5PR21MB013798776480FFA5DCD22442D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-14_06:2019-10-10,2019-10-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910140095
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0 spamscore=0
- clxscore=1015 impostorscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1910140095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR21MB013798776480FFA5DCD22442D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 08:49:51AM +0200, Ard Biesheuvel wrote:
->=20
-> [EXTERNAL EMAIL]=20
->=20
-> On Mon, 14 Oct 2019 at 08:41, Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
-> >
-> > Hi Narendra,
-> >
-> > On Sun, Oct 13, 2019 at 8:57 PM <Narendra.K@dell.com> wrote:
-> > > From: Narendra K <Narendra.K@dell.com>
-> > >
-> > > For the EFI_RCI2_TABLE kconfig option, 'make oldconfig' asks the user
-> > > for input on platforms where the option may not be applicable. This p=
-atch
-> > > modifies the kconfig option to ask the user for input only when CONFI=
-G_X86
-> > > or CONFIG_COMPILE_TEST is set to y.
-> > >
-> > > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Fix-suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> >
-> > Suggested-by: ...?
-> >
->=20
-> Indeed
+> > @@ -244,20 +232,18 @@ int vmbus_connect(void)
+> >  	 * version.
+> >  	 */
+> > 
+> > -	version = VERSION_CURRENT;
+> > +	for (i = 0; i < ARRAY_SIZE(vmbus_versions); i++) {
+> > +		version = vmbus_versions[i];
+> > 
+> > -	do {
+> >  		ret = vmbus_negotiate_version(msginfo, version);
+> >  		if (ret == -ETIMEDOUT)
+> >  			goto cleanup;
+> > 
+> >  		if (vmbus_connection.conn_state == CONNECTED)
+> >  			break;
+> > +	}
+> > 
+> > -		version = vmbus_get_next_version(version);
+> > -	} while (version != VERSION_INVAL);
+> > -
+> > -	if (version == VERSION_INVAL)
+> > +	if (vmbus_connection.conn_state != CONNECTED)
+> >  		goto cleanup;
+> > 
+> 
+> This is a nit, but the loop exit path bugs me.  When a connection
+> is established, the loop is exited by the "break", and then
+> conn_state has to be tested again to decide whether the loop
+> exited due to getting a connection vs. hitting the end of the list.
+> Slightly cleaner in my mind would be:
+> 
+> 	for (i=0; ; i++) {
+> 		if (i == ARRAY_SIZE(vmbus_versions))
+> 			goto cleanup;
+> 
+> 		version  = vmbus_versions[i];
+> 		ret = vmbus_negotiate_version(msginfo, version);
+> 		if (ret == -ETIMEDOUT)
+> 			goto cleanup;
+> 
+> 		if (vmbus_connection.conn_state == CONNECTED)
+> 			break;
+> 	}
 
-Hi Ard/Geert,
+Indeed.  I applied this locally, for the next iteration.  Thank you for
+the review, Michael.
 
-Thank you for correcting this. Should the patch be resubmitted with
-the above change made ?
-
->=20
-> > > Signed-off-by: Narendra K <Narendra.K@dell.com>
-> >
-> > Thanks for your patch!
-> >
-> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
->=20
-> Thanks all. I'll get this queued as a fix.
-
-Thank you for review comments.
---=20
-With regards,
-Narendra K=
+  Andrea
