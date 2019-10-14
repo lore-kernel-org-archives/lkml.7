@@ -2,184 +2,97 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126A5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32101ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E0720659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C06C20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571044859;
+	bh=momcbrNXNi6e+3v35qZhKx3FkpySK3dGpNYseptPq10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ry5Gdrv/i9BcFlRWmStm8Qmtz2xbHzIoMviVduB0q9umEMlACxrVqwnI1ieOh4vJl
+	 JEPIFHwygkzmmQv06zKka+7dreyZezazK6Dqe7fLLnOs/wCF9SOKwb6GE5A1sBj4Yd
+	 h0sfSY77av0K/TyAaAwvwS8l0gMy+s5Jzcd2KU60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbfJNJUx (ORCPT
+        id S1730869AbfJNJU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:20:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36230 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730656AbfJNJUx (ORCPT
+        Mon, 14 Oct 2019 05:20:57 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45887 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730656AbfJNJU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:20:53 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 67so13204144oto.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:20:52 -0700 (PDT)
+        Mon, 14 Oct 2019 05:20:56 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r1so8551413pgj.12;
+        Mon, 14 Oct 2019 02:20:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xjUOEbgRDLaw4YnI0948oQnDeCHJvY9Rb55iZPdCbnM=;
-        b=lypBoquiNvAUu2Z28KJB1fxgrh1AG+uNRDLvovzoXwGOn89ZzxgBRU+wfPSfWAm182
-         pgxKiQ+8r/r0/cJIKMUPCe1QuubfSCYneuHjRsDj59SFU8k/Bk3WNePVvJVH0TnFO4aD
-         EG2e/YbmzQz0/cKGYAalyvwvx6uPilYMQkorczoovxilyuuwGnH5KCp74g5Zj1mfPqDf
-         33vHu0rLUM6wPYSWkEw9qB5o/G8tLVUZtM9+1u8h4HcbTzX+kuWFAIOwITw9mxWyooY8
-         5kWr+WKvQhzH3pH0OKh8Knkws4LwdTmRtJtmOsZyWEnsttQqcW8F8V7wXzEqj4PAkzTT
-         ++2g==
-X-Gm-Message-State: APjAAAUzMr4Ul5x0Yek0661otzKdJmIeQk2X8Sfo83XXi0zXUUmlrPy8
-        Eo1usryqwa7pTyqRKyaI3hIOQhkxbonjlZf3ogo=
-X-Google-Smtp-Source: APXvYqxc0ge5Uc5HA1hXl6+nvDiXQ9l6oAVEkO+rWH5BTAlm7+7Gme2peeAi9h8vK9J6zyQZAF6SUOEo++BZFlD+pSE=
-X-Received: by 2002:a9d:70d0:: with SMTP id w16mr7478513otj.107.1571044852125;
- Mon, 14 Oct 2019 02:20:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z80QF2P/utfSJTosq14dGOZH3U5rnspzRIHN6J5xfow=;
+        b=jorZTQXiOxg4InwNM34RTj+HGp8ns6ZEAQ8lIGJmTY1W7sK/dLdtN+/kHo9AWSzfxA
+         q6qkIqC2NaAszGLbX+Gas/r+otb34B3WbcYD8W2Z45EVlQNDcZn5p6RO/+HtoyR7rYnN
+         U9AEdq3o8YuHyEoaCXOF7HI8XgfgZdOdVOhSy6YCEykpxl8ayOWKflp61U+VdswHlTBc
+         TGg/3FVTotloiF4hPDyFakvWxmjU2+Nq93AAqN43l6xf6LeZlZdLWyy5mCmyKNcyvNqk
+         ww4VF5SOAjU89B0eOyG16Jn1A8QnIy/vkNAcNnj0U8ip6xZkKMPcWE9PnGP/6AzRCDr3
+         Roiw==
+X-Gm-Message-State: APjAAAUwCOybWzIXVT0IY7DHaZnmQgLbgXOlo1ix9ybwKH8+0XSRiRZk
+        iNLaP39/gvRnyF+YQwbmkWQ=
+X-Google-Smtp-Source: APXvYqzOPBH0WekcHZOXSoperMZAmy+14kCD91/1ZTagF7IA+gkuA3HNJe3CMO2I1E8cjDyeEkd/Uw==
+X-Received: by 2002:a17:90a:741:: with SMTP id s1mr35956209pje.113.1571044853994;
+        Mon, 14 Oct 2019 02:20:53 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y2sm19146917pfe.126.2019.10.14.02.20.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 02:20:52 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id C92B94021A; Mon, 14 Oct 2019 09:20:51 +0000 (UTC)
+Date:   Mon, 14 Oct 2019 09:20:51 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org, keescook@chromium.org,
+        yzaikin@google.com, akpm@linux-foundation.org,
+        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
+        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
+        schowdary@nvidia.com, urezki@gmail.com,
+        andriy.shevchenko@linux.intel.com, changbin.du@intel.com,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 linux-kselftest-test 0/3] kunit: support building
+ core/tests as modules
+Message-ID: <20191014092051.GZ16384@42.do-not-panic.com>
+References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
 MIME-Version: 1.0
-References: <20191008094006.8251-1-geert+renesas@glider.be>
- <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
- <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com>
- <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com> <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 14 Oct 2019 11:20:40 +0200
-Message-ID: <CAMuHMdWZYOsJv1uQkOFRK2tZO+E8sSHEneUM-p+q5FyAmYZ9Fw@mail.gmail.com>
-Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
-To:     Joe Perches <joe@perches.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+On Tue, Oct 08, 2019 at 03:55:43PM +0100, Alan Maguire wrote:
+> The current kunit execution model is to provide base kunit functionality
+> and tests built-in to the kernel.  The aim of this series is to allow
+> building kunit itself and tests as modules.  This in turn allows a
+> simple form of selective execution; load the module you wish to test.
+> In doing so, kunit itself (if also built as a module) will be loaded as
+> an implicit dependency.
+> 
+> Because this requires a core API modification - if a module delivers
+> multiple suites, they must be declared with the kunit_test_suites()
+> macro - we're proposing this patch as a candidate to be applied to the
+> test tree before too many kunit consumers appear.  We attempt to deal
+> with existing consumers in patch 1.
 
-On Tue, Oct 8, 2019 at 8:10 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Oct 8, 2019 at 7:02 PM Joe Perches <joe@perches.com> wrote:
-> > On Tue, 2019-10-08 at 17:28 +0200, Geert Uytterhoeven wrote:
-> > > On Tue, Oct 8, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
-> > > > On Tue, 2019-10-08 at 11:40 +0200, Geert Uytterhoeven wrote:
-> > > > > When reading a patch file from standard input, checkpatch calls it "Your
-> > > > > patch", and reports its state as:
-> > > > >
-> > > > >     Your patch has style problems, please review.
-> > > > >
-> > > > > or:
-> > > > >
-> > > > >     Your patch has no obvious style problems and is ready for submission.
-> > > > >
-> > > > > Hence when checking multiple patches by piping them to checkpatch, e.g.
-> > > > > when checking patchwork bundles using:
-> > > > >
-> > > > >     formail -s scripts/checkpatch.pl < bundle-foo.mbox
-> > > > >
-> > > > > it is difficult to identify which patches need to be reviewed and
-> > > > > improved.
-> > > > >
-> > > > > Fix this by replacing "Your patch" by the patch subject, if present.
-> > > > []
-> > > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > > []
-> > > > > @@ -1047,6 +1047,10 @@ for my $filename (@ARGV) {
-> > > > >       }
-> > > > >       while (<$FILE>) {
-> > > > >               chomp;
-> > > > > +             if ($vname eq 'Your patch') {
-> > > > > +                     my ($subject) = $_ =~ /^Subject:\s*(.*)/;
-> > > > > +                     $vname = '"' . $subject . '"' if $subject;
-> > > >
-> > > > Hi again Geert.
-> > > >
-> > > > Just some stylistic nits:
-> > > >
-> > > > $filename is not quoted so I think adding quotes
-> > > > before and after $subject may not be useful.
-> > >
-> > > Filename is indeed not quoted, but $git_commits{$filename} is.
-> >
-> > If I understand your use case, this will only show the last
-> > patch $subject of a bundle?
->
-> False.
-> "formail -s scripts/checkpatch.pl < bundle-foo.mbox" splits
-> "bundle-foo.mbox" in separate patches, and invokes
-> "scripts/checkpatch.pl" for each of them.
->
-> > Also, it'll show things like "duplicate signature" when multiple
-> > patches are tested in a single bundle.
->
-> False, due to the splitting by formail.
->
-> > For instance, if I have a git format-patch series in an output
-> > directory and do
-> >
-> > $ cat <output_dir>/*.patch | ./scripts/checkpatch.pl
-> >
-> > Bad output happen.
->
-> Yeah, because you're concatenating all patches.
-> Currently it works for single patches only.
->
-> > Maybe this might be better:
->
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -2444,6 +2444,15 @@ sub process {
-> >
-> >                 my $rawline = $rawlines[$linenr - 1];
-> >
-> > +# if input from stdin, report the subject lines if they exist
-> > +               if ($filename eq '-' && !$quiet &&
-> > +                   $rawline =~ /^Subject:\s*(.*)/) {
-> > +                       report("stdin", "STDIN", '-' x length($1));
-> > +                       report("stdin", "STDIN", $1);
-> > +                       report("stdin", "STDIN", '-' x length($1));
-> > +                       %signatures = ();       # avoid duplicate signatures
-> > +               }
-> > +
-> >  # check if it's a mode change, rename or start of a patch
-> >                 if (!$in_commit_log &&
-> >                     ($line =~ /^ mode change [0-7]+ => [0-7]+ \S+\s*$/ ||
->
-> Perhaps.  Just passing the patchwork bundle to checkpatch, and fixing
-> checkpatch to handle multiple patches in a single file was my first idea.
-> But it looked fragile, with too much state that needs to be reset.
-> I.e. the state is not limited to %signatures.  You also have to reset
-> $author inside process(), and probably a dozen other variables.
-> And make sure that future changes don't forget resetting all newly
-> introduced variables.
->
-> Hence I settled for the solution using formail.
+This is neat and makes sense to me. However the ordering of the patches
+seems odd. If modules depend on kunit module, then shouldn't that go
+first? Ie, we want this to be bisectable in proper order.
 
-I gave your solution a try.
-It only enables the reset-on-next-patch feature when using stdin.
-Thanks to the printed subject, it's now obvious to which patch a
-message applies to.
-However, the output is significantly different than when passing
-a split patch series.  Can this be improved upon?
-
-Note that the only reason I'm using stdin is that I use formail to split
-a bundle in individual patches.  Once checkpatch supports bundles (or
-mboxes) containing multiple patches, there's no longer a need for
-using formail, and the reset-on-next-patch feature should be
-enabled unconditionally.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  Luis
