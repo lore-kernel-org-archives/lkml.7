@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5618C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296CDECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFF22133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AE82133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="irihhdtC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eL0KkC/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733240AbfJNPK1 (ORCPT
+        id S1733270AbfJNPKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:10:27 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44445 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732647AbfJNPK0 (ORCPT
+        Mon, 14 Oct 2019 11:10:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45934 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732647AbfJNPKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:10:26 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w6so13978961oie.11
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:10:25 -0700 (PDT)
+        Mon, 14 Oct 2019 11:10:30 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o205so14004077oib.12
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hu8Yhu1dG5x2/sxZOgW+fGVZWm5nOL8RLM6NxRrm9l0=;
-        b=irihhdtCoJ00M0IblFdd5syP/fq3aYa9IW6f96WKv0Y8g+0kG5OZzWwJg/e9aulJz9
-         +Czl87cK+4NMVqCtZPXaQYGsFhqTOCeDgrU9Bu+doIdrW2b6FDnjdI6kLkpxO9ZlU1gn
-         OcAI3fAZql6up7es1jIfjWz6QfXGT2AGMzvZOKSEy8Ab1lezC8/1Wg2IuZMJLy8/oG2I
-         91UovkoFjQ9hmkIpeAvZ2hVqRY0894cSK/P4/8HKR5yXq5uZO7nt8gbOqqdWB+5md6KF
-         uRPY0eRgQTu2jNYlMt7nayxBWml0N9RWBUDDt3vRzJgtFGSrgdtU3v64A/oPOJ3AKPms
-         zDqA==
+        bh=n8mZzQYgCJoh/U/LtDTWoqHWL38rFTI9nqBb83t1F0I=;
+        b=eL0KkC/qG5Sqdy3584kkE+iz33uqISxvsXEGdERUa7Qba35awyW4wPPpCaQDK4Vf1r
+         A3DLF2XrRN3Lwh4n2M6qxwxu2T46oy32FbABZOdyiBDH2LNz67ggJr+I5OhDY4eeapth
+         bIGYmB1CSf53TZI51DGqJab6Wjwy5z7eYIb7P7XsOHgHr1mbV/Jf08+om+Jr88+Wba5R
+         oTzg3htSuDlhpSRZS3B1U76DkyOGgI+M99HxgN9w9xoR6tCXMFWhLG44qctxm9vFjIrm
+         5i5FtAqJuGamLA8VvOY1RqJRFB8jEkEhrNIziL8n1p3hBxPQloscS8mtFR/Ak1n5qkBB
+         6+dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hu8Yhu1dG5x2/sxZOgW+fGVZWm5nOL8RLM6NxRrm9l0=;
-        b=SWC5cGymME054pbWfjvKY5iKRvNh1wG26ylF2zDIkkaqb6hmen+ijli4LiyXHNd0+o
-         bL+PygNChWmODVvuzFXQJ016v+psA8CQcKjGd42jwbSpQkBR1EfTlKlcv2pJ4OQHEaFQ
-         24JgajaICoANJZYUtKbtzakUOZUXlVhLML8IpTGyJZ++mPpFcnW0Borj62T29xKI5EbC
-         kD5sPcGZ9AoucsmVxybUSHgkv8tTFP9iPA2yvbzTO2XbujK8pGS3N9vdZBQu7mDhpnaa
-         aWWfH1QGv4b81CVPwfQKk4dvKb9FYJ6p++J6xXgzR1uWfhzYa7XvMD7YFvPS+YdLwXKY
-         zXVg==
-X-Gm-Message-State: APjAAAWlzmEwMRofTe6fjyLt70Q4QGql5KDImJOV/SOZb+/mMaKrOOou
-        sZSXutsUKIlml1AkDjP92g3Z/ol0MAUGUDpPIAsrZQ==
-X-Google-Smtp-Source: APXvYqxgRBO57ccMJoXF7XohpTUDe0dTwguN7yslAg2GdNHydkihJbtuUSbU0W76MqJQutAlMTQAt97Y2DYP5/nF3/M=
-X-Received: by 2002:aca:5c06:: with SMTP id q6mr25208555oib.175.1571065824954;
- Mon, 14 Oct 2019 08:10:24 -0700 (PDT)
+        bh=n8mZzQYgCJoh/U/LtDTWoqHWL38rFTI9nqBb83t1F0I=;
+        b=XPsqaJg2EHVz5otrhNea3Eyto55GeZ1rFSnl9AU1h9tZn8DX2lgKlsYYZcgHxd+XXJ
+         J8OPdkVKRgjLyq4Nj0nM2Lu1MB1hDTM51+Tj1wKrfK52P8S6CI2hLqiiAK1PBVyCcdP0
+         kh0ETHxmXe92YEkJcS8mvnyzI65wdCgD6YyFQE9SMIoZHa7y6xPtl07nj4N37lXF3n10
+         mPsj22//lrzK9HZxxHFbNfr+qYYxDRryfvXeEu2CvjCFKAAgNf0lonkmzYA+5f9VjzO9
+         coEDwTHR5yf0u1Wa6RiIGHQF59vJHPrf5EXk1J/cR1qd7EuNsot2dnFwpBj1R4l6t30a
+         16nQ==
+X-Gm-Message-State: APjAAAXVBiYMGfBEgjCPBehHdHARn61S2kLzH7AYmrLgIoHVtl3IDHFB
+        0U2SCO9phgyAg6MAfVxx/kwwiliCz76SzaSjurscfA==
+X-Google-Smtp-Source: APXvYqzcVFFImqZI58K41aEG21TM6C60Hd0B7GL6/+3YeLE94vV5SzMbABckyJbt3DVKWbg2bM0mT6UlrjQp+Ume+Q4=
+X-Received: by 2002:a05:6808:95:: with SMTP id s21mr25075773oic.68.1571065827544;
+ Mon, 14 Oct 2019 08:10:27 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAG48ez1hk9d-qAPcRy9QOgNuO8u3Y_hu_3=GZoFYLY+oMdo8xg@mail.gmail.com>
- <20191012101922.24168-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20191012101922.24168-1-christian.brauner@ubuntu.com>
+ <20191012101922.24168-1-christian.brauner@ubuntu.com> <20191012102119.qq2adlnxjxrkslca@wittgenstein>
+ <abc477fb3bd8fbf7b4d7e53d079dd1d8902e54af.camel@kellner.me> <20191014103157.h2wph2ujjidsrhyw@wittgenstein>
+In-Reply-To: <20191014103157.h2wph2ujjidsrhyw@wittgenstein>
 From:   Jann Horn <jannh@google.com>
-Date:   Mon, 14 Oct 2019 17:09:58 +0200
-Message-ID: <CAG48ez0SG3LLeLtqmf5Q8aZL3J8b5XwgNbgDr72jSnq2QBac8Q@mail.gmail.com>
+Date:   Mon, 14 Oct 2019 17:10:01 +0200
+Message-ID: <CAG48ez1Yf05j2irdZxT2TA=2n3xo25KN48nRQdp_F8j14K36rA@mail.gmail.com>
 Subject: Re: [PATCH] pidfd: add NSpid entries to fdinfo
 To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+Cc:     Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Christian Kellner <christian@kellner.me>,
-        Christian Kellner <ckellner@redhat.com>,
         Aleksa Sarai <cyphar@cyphar.com>,
         Elena Reshetova <elena.reshetova@intel.com>,
         Roman Gushchin <guro@fb.com>,
@@ -81,148 +81,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:19 PM Christian Brauner
+On Mon, Oct 14, 2019 at 12:32 PM Christian Brauner
 <christian.brauner@ubuntu.com> wrote:
-> Currently, the fdinfo file of contains the field Pid:
+> On Mon, Oct 14, 2019 at 11:43:01AM +0200, Christian Kellner wrote:
+> > On Sat, 2019-10-12 at 12:21 +0200, Christian Brauner wrote:
+> > > I tried to think of cases where the first entry of Pid is not
+> > > identical
+> > > to the first entry of NSpid but I came up with none. Maybe you do,
+> > > Jann?
+> > Yeah, I don't think that can be the case. By looking at the source of
+> > 'pid_nr_ns(pid, ns)' a non-zero return means that a) 'pid' valid, ie.
+> > non-null and b) 'ns' is in the pid namespace hierarchy of 'pid' (at
+> > pid->level, i.e. "pid->numbers[ns->level].ns == ns").
 
-nit: something missing after "of"?
+Agreed.
 
-> It contains the pid a given pidfd refers to in the pid namespace of the
-> opener's procfs instance.
+> You could probably do:
+>
+> #ifdef CONFIG_PID_NS
+> seq_put_decimal_ull(m, "\nNSpid:\t", nr);
+> for (i = ns->level + 1; i <= pid->level && nr; i++)
+>         seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
+> #endif
 
-s/opener's // here and in various places below? "the opener's" is
-kinda misleading since it sounds as if it has something to do with
-task identity.
-
-> If the pid namespace of the process is not a descendant of the pid
-> namespace of the procfs instance 0 will be shown as its pid. This is
-> similar to calling getppid() on a process who's parent is out of it's
-
-nit: s/who's/whose/
-
-nit: s/it's/its/
-
-> pid namespace (e.g. when moving a process into a sibling pid namespace
-> via setns()).
-
-You can't move a process into a PID namespace via setns(), you can
-only set the PID namespace for its children; and even then, you can't
-set that to a sibling PID namespace, you can only move into descendant
-PID namespaces.
-
-> Add an NSpid field for easy retrieval of the pid in all descendant pid
-> namespaces:
-> If pid namespaces are supported this field will contain the pid a given
-> pidfd refers to for all descendant pid namespaces starting from the
-> current pid namespace of the opener's procfs instance, i.e. the first
-
-s/current // - neither tasks nor procfs instances can change which pid
-namespace they're associated with
-
-> pid entry for Pid and NSpid will be identical.
-
-*the Pid field and the first entry in the NSpid field?
-
-> If the pid namespace of the process is not a descendant of the pid
-> namespace of the procfs instance 0 will be shown as its first NSpid and
-> no other NSpid entries will be shown.
-> Note that this differs from the Pid and NSpid fields in
-> /proc/<pid>/status where Pid and NSpid are always shown relative to the
-> pid namespace of the opener's procfs instace. The difference becomes
-> obvious when sending around a pidfd between pid namespaces from
-> different trees, i.e. where no ancestoral relation is present between
-> the pid namespaces:
-> 1. sending around pidfd:
-> - create two new pid namespaces ns1 and ns2 in the initial pid namespace
->   (Also take care to create new mount namespaces in the new pid
->   namespace and mount procfs.)
-> - create a process with a pidfd in ns1
-> - send pidfd from ns1 to ns2
-> - read /proc/self/fdinfo/<pidfd> and observe that Pid and NSpid entry
->   are 0
-> - create a process with a pidfd in
-
-truncated phrase?
-
-> - open a pidfd for a process in the initial pid namespace
-> 2. sending around /proc/<pid>/status fd:
-> - create two new pid namespaces ns1 and ns2 in the initial pid namespace
->   (Also take care to create new mount namespaces in the new pid
->   namespace and mount procfs.)
-> - create a process in ns1
-> - open /proc/<pid>/status in the initial pid namespace for the process
->   you created in ns1
-> - send statusfd from initial pid namespace to ns2
-> - read statusfd and observe:
->   - that Pid will contain the pid of the process as seen from the init
->   - that NSpid will contain the pids of the process for all descendant
->     pid namespaces starting from the initial pid namespace
-
-You don't need fd passing for case 2, you can just look at the procfs
-instance that's mounted in the initial mount namespace. Using fd
-passing in this example kinda obfuscates what's going on, in my
-opinion.
-
-
-> +/**
-> + * pidfd_show_fdinfo - print information about a pidfd
-> + * @m: proc fdinfo file
-> + * @f: file referencing a pidfd
-> + *
-> + * Pid:
-> + * This function will print the pid a given pidfd refers to in the pid
-> + * namespace of the opener's procfs instance.
-> + * If the pid namespace of the process is not a descendant of the pid
-> + * namespace of the procfs instance 0 will be shown as its pid. This is
-> + * similar to calling getppid() on a process who's parent is out of it's
-> + * pid namespace (e.g. when moving a process into a sibling pid namespace
-> + * via setns()).
-> + * NSpid:
-> + * If pid namespaces are supported then this function will also print the
-> + * pid a given pidfd refers to for all descendant pid namespaces starting
-> + * from the current pid namespace of the opener's procfs instance, i.e. the
-> + * first pid entry for Pid and NSpid will be identical.
-> + * If the pid namespace of the process is not a descendant of the pid
-> + * namespace of the procfs instance 0 will be shown as its first NSpid and
-> + * no other NSpid entries will be shown.
-> + * Note that this differs from the Pid and NSpid fields in
-> + * /proc/<pid>/status where Pid and NSpid are always shown relative to the
-> + * pid namespace of the opener's procfs instace. The difference becomes
-> + * obvious when sending around a pidfd between pid namespaces from
-> + * different trees, i.e. where no ancestoral relation is present between
-> + * the pid namespaces:
-> + * 1. sending around pidfd:
-> + * - create two new pid namespaces ns1 and ns2 in the initial pid namespace
-> + *   (Also take care to create new mount namespaces in the new pid
-> + *   namespace and mount procfs.)
-> + * - create a process with a pidfd in ns1
-> + * - send pidfd from ns1 to ns2
-> + * - read /proc/self/fdinfo/<pidfd> and observe that Pid and NSpid entry
-> + *   are 0
-> + * - create a process with a pidfd in
-> + * - open a pidfd for a process in the initial pid namespace
-> + * 2. sending around /proc/<pid>/status fd:
-> + * - create two new pid namespaces ns1 and ns2 in the initial pid namespace
-> + *   (Also take care to create new mount namespaces in the new pid
-> + *   namespace and mount procfs.)
-> + * - create a process in ns1
-> + * - open /proc/<pid>/status in the initial pid namespace for the process
-> + *   you created in ns1
-> + * - send statusfd from initial pid namespace to ns2
-> + * - read statusfd and observe:
-> + *   - that Pid will contain the pid of the process as seen from the init
-> + *   - that NSpid will contain the pids of the process for all descendant
-> + *     pid namespaces starting from the initial pid namespace
-> + */
-
-See above, same problems as in the commit message. Actually, since you
-have a big comment block with this text, there's no reason to repeat
-it in the commit message, right?
-
-(By the way, only slightly related to this patch: At the moment, if
-you have a pidfd to a task that has already been reaped, and the PID
-has been reallocated to another task, the pidfd will still show up in
-/proc/*/fdinfo/* as if it referred to a non-dead process, right? Might
-be worth considering whether you want to probe ->tasks[PIDTYPE_PID] or
-->tasks[PIDTYPE_TGID] for NULL-ness when printing fdinfo, or something
-like that.)
+Personally, I dislike hiding the precondition for running the loop in
+the loop statement like that. While it makes the code more concise, it
+somewhat obfuscates the high-level logic at a first glance.
