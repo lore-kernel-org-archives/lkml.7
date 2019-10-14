@@ -2,68 +2,113 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1C4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C13C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41582084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FB1207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNlqi/Qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbfJNKIj (ORCPT
+        id S1731377AbfJNKJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:08:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:39444 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbfJNKIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:08:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4AF3337;
-        Mon, 14 Oct 2019 03:08:38 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDAAC3F718;
-        Mon, 14 Oct 2019 03:08:37 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 11:07:56 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] drivers: firmware: psci: use kernel restart handler
- functionality
-Message-ID: <20191014100756.GA4028@bogus>
-References: <20191012214735.1127009-1-stefan@agner.ch>
+        Mon, 14 Oct 2019 06:09:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34157 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730880AbfJNKJb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:09:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y135so14136035wmc.1;
+        Mon, 14 Oct 2019 03:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o2MGbH0sl7jl/AOs9onFYSQLsVIpoiec9/okAKmAn3E=;
+        b=DNlqi/Qbk92sYsfunZrpAJH79XZwsdm0TzASMQNGdRoO7DIEf+JObAoz6guoOquWx1
+         2yhAU33ZVi0MXMmaeLEGM7KmyHm0qqpa08f+jKeTuhKpTBEwJhDhSI8t5UT9M7RMv60D
+         Zh3DNr1me+EspD/8ZvY2CwKjlzszCJxeXi0aRmlD41+bEryy9N9LCDC4etF69rJr4c6e
+         FuKse1xUsVu8mNWUIH6do8L9uxtvhR8kJy10hNZoVbFPkawHxSYOP4f8Z6Si4el9rL2x
+         2N4ZdxmYBV4dKsBbLLxi19b4x+gf45GKndPNmdAwoV7ZNBWhyqDY99bA/FCH/mmgj496
+         Pvbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o2MGbH0sl7jl/AOs9onFYSQLsVIpoiec9/okAKmAn3E=;
+        b=mGfuWmONuKeDlIUVo1xpWf+rcMzjszoXGdTVGOJyj6k+DxskW6+emHxqtVVmeAuol+
+         hAbNmbu8IjH8ehWxBVejHRQMn2GzP3WWvilG0F6DDuX+ItUuGJZprE2mZ9jBwbQkudFf
+         Z/lV4fwh4PEqxOAs2vouaiQyWkEHPcAvYGp/pBKhNrS9Xhh02cG9L318z5A1QJgH/dad
+         A5torJCiCy7IBRM6UlCxMD50QcnmdxJZTNVqtcUjNYOpfSKEY29Ta/0Z2rcsl+AMj4ii
+         w7fGwZUTfAm9i5EjmS7E4MECIcU10w6PBclDSvBuRFtBBoLIwPB2XkiUg85SAZAAxsef
+         DT+g==
+X-Gm-Message-State: APjAAAWLiQIL6EEQzOeIIXdD8N4C0hklgYOwXjo/peImBQNlibahhCSi
+        SA3Bnykw2gvoSxs0Bn/mJd0=
+X-Google-Smtp-Source: APXvYqzssuGzVNBk2ayLJQK0M+PP70+MlYJlryvhbvu4J9Bzn9tkYOLIwMBLalOfn6xeyS8rK+XAYA==
+X-Received: by 2002:a1c:a708:: with SMTP id q8mr13162577wme.86.1571047768995;
+        Mon, 14 Oct 2019 03:09:28 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:484d:bbc3:12dc:348b])
+        by smtp.gmail.com with ESMTPSA id l7sm17686122wrv.77.2019.10.14.03.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 03:09:28 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 12:09:25 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol
+ versions 4.1, 5.1 and 5.2
+Message-ID: <20191014100925.GB11206@andrea.guest.corp.microsoft.com>
+References: <20191010154600.23875-1-parri.andrea@gmail.com>
+ <20191010154600.23875-3-parri.andrea@gmail.com>
+ <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191012214735.1127009-1-stefan@agner.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 11:47:35PM +0200, Stefan Agner wrote:
-> From: Stefan Agner <stefan.agner@toradex.com>
+> > @@ -182,15 +182,21 @@ static inline u32 hv_get_avail_to_write_percent(
+> >   * 2 . 4  (Windows 8)
+> >   * 3 . 0  (Windows 8 R2)
+> >   * 4 . 0  (Windows 10)
+> > + * 4 . 1  (Windows 10 RS3)
+> >   * 5 . 0  (Newer Windows 10)
+> > + * 5 . 1  (Windows 10 RS4)
+> > + * 5 . 2  (Windows Server 2019, RS5)
+> >   */
+> > 
+> >  #define VERSION_WS2008  ((0 << 16) | (13))
+> >  #define VERSION_WIN7    ((1 << 16) | (1))
+> >  #define VERSION_WIN8    ((2 << 16) | (4))
+> >  #define VERSION_WIN8_1    ((3 << 16) | (0))
+> > -#define VERSION_WIN10	((4 << 16) | (0))
+> > +#define VERSION_WIN10_V4 ((4 << 16) | (0))
 > 
-> Use the kernels restart handler to register the PSCI system reset
-> capability. The restart handler use notifier chains along with
-> priorities. This allows to use restart handlers with higher priority
-> (in case available) while still supporting PSCI.
-> 
-> Since the ARM handler had priority over the kernels restart handler
-> before this patch, use a slightly elevated priority of 160 to make
-> sure PSCI is used before most of the other handlers are called.
-> 
+> I would recommend not changing the symbol name for version 4.0.
+> The change makes it more consistent with the later VERSION_WIN10_*
+> symbols, but it doesn't fundamentally add any clarity and I'm not sure
+> it's worth the churn in the other files that have to be touched. It's a
+> judgment call, and that's just my input.
 
-There's an attempt(rather pull request[1]) to consolidate these into new
-system power/restart handler.
+My fingers were itching:  ;-) I've reverted this change, following
+your recommendation.
 
---
-Regards,
-Sudeep
-
-[1] https://lore.kernel.org/linux-arm-kernel/20191002131228.4085560-1-thierry.reding@gmail.com
+Thanks,
+  Andrea
