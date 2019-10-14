@@ -2,104 +2,68 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D4AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABADC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6068320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H09Y8AeH"
+	by mail.kernel.org (Postfix) with ESMTP id 40A3E20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbfJNR5z (ORCPT
+        id S1731042AbfJNR6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:57:55 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46432 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbfJNR5y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:57:54 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q24so8312363plr.13;
-        Mon, 14 Oct 2019 10:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TcYwlh8m3rpWuvsgEGDkIAHPtWJgLexaUieVa+euzDE=;
-        b=H09Y8AeHXNPww5ZTPyskS0U8BkXT6T/s7oAw66f1FBkQzznWYU7d7Z3Le+gLVUH8OG
-         ihgN/JetUuPSBO4ZUqUBOaxPRjAbJxSDUSON6lLJ+r1tngmnE6RYx2iOYp4MnoZB0Hv3
-         YcCUy9/AH+nujDIP0yurBRxNrYCe5qYTbHQb6sVC1J9CaLpAb6pR2e2Tq4xdssZ+Vljc
-         h/V8Ghl7tADXhjuMxRMV6gv1mvfBv1rd2knhJGaIVjJ3w5hZ+G93rYGNYtG/HRq6L1L+
-         x2AxvWIlYjFfP1d6MI5DlJroaJwmcw95HDFANcwj57hFbmJq2a4Se8WgNSjmGmXs6nzB
-         FEPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TcYwlh8m3rpWuvsgEGDkIAHPtWJgLexaUieVa+euzDE=;
-        b=uhgIr/nlmj4L465eVvO7cCYZVt2jBBJkRTvXG95OI695dyMQ4phSmm91UNRBfvviK9
-         ruLM5s0Ibyuzq5FUXR3gbHEHyK5cvwE0BnMTYfTyD84RF9HDifq8MokOQnyDxfH6jtg8
-         2aYuAExieYcfKXaoEbho+PyQE3TgZp1191Am7niV20qMmtgp6OJoFEKI3stcKiX9lLAN
-         BFuf/dhp94ma1uibnWb2SNbrVO5u9hW0VNP7kvgnfjq7XrK8fpSDX2RdBTa7bU8B+drX
-         Qj36h7QwC4GT5MsDb0nyYHquz/255TMsZbmukpklZUafAp5BVifa8+88Bi0qM5Pv6ge9
-         m7Fg==
-X-Gm-Message-State: APjAAAW/Y0jHB8U6U0NyFQGX/v7qlmqTPPKHd5DmYz1RpXMQPXF2Qf4B
-        WjeCVaPe2kxbeMzeFnnpODQ98v1tXG5wG3gNy7b9FA==
-X-Google-Smtp-Source: APXvYqxWbGeBp4YRa3Fv9Y2Tk+Lbfd+KmSMX2LOdqziPoZIrmUhQ4caKBRlBJXevhj+iuMM7w/X1cyxsYVJ3g3zIL5A=
-X-Received: by 2002:a17:902:321:: with SMTP id 30mr31388615pld.61.1571075873894;
- Mon, 14 Oct 2019 10:57:53 -0700 (PDT)
+        Mon, 14 Oct 2019 13:58:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:50306 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730864AbfJNR6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 13:58:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76E4128;
+        Mon, 14 Oct 2019 10:58:12 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA0853F6C4;
+        Mon, 14 Oct 2019 10:58:10 -0700 (PDT)
+Subject: Re: [PATCH] arm64: hibernate: check pgd table allocation
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+References: <20191014144824.159061-1-pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        vladimir.murzin@arm.com, mark.rutland@arm.com, tglx@linutronix.de
+From:   James Morse <james.morse@arm.com>
+Message-ID: <8ebe7877-93d3-dfd0-8ea3-2a4815b4f154@arm.com>
+Date:   Mon, 14 Oct 2019 18:58:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
-In-Reply-To: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 14 Oct 2019 10:57:42 -0700
-Message-ID: <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
-Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
- ingress redirection
-To:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191014144824.159061-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
-<zhiyuan2048@linux.alibaba.com> wrote:
-> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-> index 9ce073a05414..6108a64c0cd5 100644
-> --- a/net/sched/act_mirred.c
-> +++ b/net/sched/act_mirred.c
-> @@ -18,6 +18,7 @@
->  #include <linux/gfp.h>
->  #include <linux/if_arp.h>
->  #include <net/net_namespace.h>
-> +#include <net/dst.h>
->  #include <net/netlink.h>
->  #include <net/pkt_sched.h>
->  #include <net/pkt_cls.h>
-> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
->
->         if (!want_ingress)
->                 err = dev_queue_xmit(skb2);
-> -       else
-> +       else {
-> +               skb_dst_drop(skb2);
->                 err = netif_receive_skb(skb2);
-> +       }
+Hi Pavel,
 
-Good catch!
+On 14/10/2019 15:48, Pavel Tatashin wrote:
+> There is a bug in create_safe_exec_page(), when page table is allocated
+> it is not checked that table is allocated successfully:
+> 
+> But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).  Check that
+> allocation was successful.
+> 
+> Fixes: 82869ac57b5d ("arm64: kernel: Add support for hibernate/suspend-to-disk")
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
 
-I don't want to be picky, but it seems this is only needed
-when redirecting from egress to ingress, right? That is,
-ingress to ingress, or ingress to egress is okay? If not,
-please fix all the cases while you are on it?
+Reviewed-by: James Morse <james.morse@arm.com>
 
-Thanks.
+
+Thanks,
+
+James
