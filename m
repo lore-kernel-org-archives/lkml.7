@@ -2,113 +2,77 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C13C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C01C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FB1207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNlqi/Qb"
+	by mail.kernel.org (Postfix) with ESMTP id B79D7207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfJNKJc (ORCPT
+        id S1731391AbfJNKJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:09:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34157 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730880AbfJNKJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:09:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y135so14136035wmc.1;
-        Mon, 14 Oct 2019 03:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o2MGbH0sl7jl/AOs9onFYSQLsVIpoiec9/okAKmAn3E=;
-        b=DNlqi/Qbk92sYsfunZrpAJH79XZwsdm0TzASMQNGdRoO7DIEf+JObAoz6guoOquWx1
-         2yhAU33ZVi0MXMmaeLEGM7KmyHm0qqpa08f+jKeTuhKpTBEwJhDhSI8t5UT9M7RMv60D
-         Zh3DNr1me+EspD/8ZvY2CwKjlzszCJxeXi0aRmlD41+bEryy9N9LCDC4etF69rJr4c6e
-         FuKse1xUsVu8mNWUIH6do8L9uxtvhR8kJy10hNZoVbFPkawHxSYOP4f8Z6Si4el9rL2x
-         2N4ZdxmYBV4dKsBbLLxi19b4x+gf45GKndPNmdAwoV7ZNBWhyqDY99bA/FCH/mmgj496
-         Pvbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o2MGbH0sl7jl/AOs9onFYSQLsVIpoiec9/okAKmAn3E=;
-        b=mGfuWmONuKeDlIUVo1xpWf+rcMzjszoXGdTVGOJyj6k+DxskW6+emHxqtVVmeAuol+
-         hAbNmbu8IjH8ehWxBVejHRQMn2GzP3WWvilG0F6DDuX+ItUuGJZprE2mZ9jBwbQkudFf
-         Z/lV4fwh4PEqxOAs2vouaiQyWkEHPcAvYGp/pBKhNrS9Xhh02cG9L318z5A1QJgH/dad
-         A5torJCiCy7IBRM6UlCxMD50QcnmdxJZTNVqtcUjNYOpfSKEY29Ta/0Z2rcsl+AMj4ii
-         w7fGwZUTfAm9i5EjmS7E4MECIcU10w6PBclDSvBuRFtBBoLIwPB2XkiUg85SAZAAxsef
-         DT+g==
-X-Gm-Message-State: APjAAAWLiQIL6EEQzOeIIXdD8N4C0hklgYOwXjo/peImBQNlibahhCSi
-        SA3Bnykw2gvoSxs0Bn/mJd0=
-X-Google-Smtp-Source: APXvYqzssuGzVNBk2ayLJQK0M+PP70+MlYJlryvhbvu4J9Bzn9tkYOLIwMBLalOfn6xeyS8rK+XAYA==
-X-Received: by 2002:a1c:a708:: with SMTP id q8mr13162577wme.86.1571047768995;
-        Mon, 14 Oct 2019 03:09:28 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:484d:bbc3:12dc:348b])
-        by smtp.gmail.com with ESMTPSA id l7sm17686122wrv.77.2019.10.14.03.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 03:09:28 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 12:09:25 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH v2 2/3] Drivers: hv: vmbus: Enable VMBus protocol
- versions 4.1, 5.1 and 5.2
-Message-ID: <20191014100925.GB11206@andrea.guest.corp.microsoft.com>
-References: <20191010154600.23875-1-parri.andrea@gmail.com>
- <20191010154600.23875-3-parri.andrea@gmail.com>
- <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Mon, 14 Oct 2019 06:09:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:39488 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731235AbfJNKJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 06:09:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D22B3337;
+        Mon, 14 Oct 2019 03:09:50 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CDAD3F718;
+        Mon, 14 Oct 2019 03:09:50 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 11:09:45 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Marco Elver <elver@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] stop_machine: avoid potential race behaviour
+Message-ID: <20191014100943.GA41626@lakrids.cambridge.arm.com>
+References: <20191007104536.27276-1-mark.rutland@arm.com>
+ <20191008083637.GI2294@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM5PR21MB0137ACE07DCD2A6BBEC83665D7960@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191008083637.GI2294@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > @@ -182,15 +182,21 @@ static inline u32 hv_get_avail_to_write_percent(
-> >   * 2 . 4  (Windows 8)
-> >   * 3 . 0  (Windows 8 R2)
-> >   * 4 . 0  (Windows 10)
-> > + * 4 . 1  (Windows 10 RS3)
-> >   * 5 . 0  (Newer Windows 10)
-> > + * 5 . 1  (Windows 10 RS4)
-> > + * 5 . 2  (Windows Server 2019, RS5)
-> >   */
-> > 
-> >  #define VERSION_WS2008  ((0 << 16) | (13))
-> >  #define VERSION_WIN7    ((1 << 16) | (1))
-> >  #define VERSION_WIN8    ((2 << 16) | (4))
-> >  #define VERSION_WIN8_1    ((3 << 16) | (0))
-> > -#define VERSION_WIN10	((4 << 16) | (0))
-> > +#define VERSION_WIN10_V4 ((4 << 16) | (0))
+On Tue, Oct 08, 2019 at 10:36:37AM +0200, Peter Zijlstra wrote:
+> On Mon, Oct 07, 2019 at 11:45:36AM +0100, Mark Rutland wrote:
+> > Both multi_cpu_stop() and set_state() access multi_stop_data::state
+> > racily using plain accesses. These are subject to compiler
+> > transformations which could break the intended behaviour of the code,
+> > and this situation is detected by KCSAN on both arm64 and x86 (splats
+> > below).
 > 
-> I would recommend not changing the symbol name for version 4.0.
-> The change makes it more consistent with the later VERSION_WIN10_*
-> symbols, but it doesn't fundamentally add any clarity and I'm not sure
-> it's worth the churn in the other files that have to be touched. It's a
-> judgment call, and that's just my input.
+> I really don't think there is anything the compiler can do wrong here.
+> 
+> That is, I'm thinking I'd like to get this called out as a false-positive.
 
-My fingers were itching:  ;-) I've reverted this change, following
-your recommendation.
+I agree that in practice, it's very unlikely this would go wrong.
+
+There are some things the compiler could do, e.g. with re-ordering of
+volatile and plain reads of the same variable:
+
+  https://lore.kernel.org/lkml/20191003161233.GB38140@lakrids.cambridge.arm.com/
+
+... and while I agree that's vanishingly unlikely to happen here, I
+couldn't say how to rule that out without ruling out cases that would
+actually blow up in practice.
+
+> That said, the patch looks obviously fine and will help with the
+> validation effort so no real objection there.
+
+Great! Can I take that as an Acked-by?
+
+I assume this should go via the tip tree.
 
 Thanks,
-  Andrea
+Mark.
