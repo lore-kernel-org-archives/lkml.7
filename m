@@ -2,444 +2,86 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49097C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C48C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BE7207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF294207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 07:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JboMloqv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxXPOhc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbfJNHIJ (ORCPT
+        id S1730260AbfJNHIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 03:08:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30362 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730076AbfJNHIJ (ORCPT
+        Mon, 14 Oct 2019 03:08:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43367 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730227AbfJNHIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 03:08:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571036887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xcDj/VFQ6KKNr9HZ7H5PSlKT512A8eXxxKSGyEaX09w=;
-        b=JboMloqvqPQteW7hiX40e4sKFpNeQZxFKBozOAoeW2tyjwRqsgGZxAIdO7Ccint+dWWR7S
-        tZN4JiUPGa+QX8XOE7b+D0JvEmWG1XUfNPJBVQiCsM4raiIRE9KjE2WPTWwfHr6dmPmzib
-        PPsUTHGl27XYiiIPqK0VE2Gf0SwFs64=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-QRKzzIZ4M8mAgx8iRBMjFA-1; Mon, 14 Oct 2019 03:08:03 -0400
-Received: by mail-qk1-f200.google.com with SMTP id x77so16117947qka.11
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:08:03 -0700 (PDT)
+        Mon, 14 Oct 2019 03:08:15 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f21so7592998plj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 00:08:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=NguePtiRLqxxPERuaTU6qYGHlLMZjTiDWKMVkMyftlI=;
+        b=pxXPOhc4f+9VgOl55DLeIiVMic5UpGOtXZyhX9MkkzluVA6Hb9lV7/dwJcIh4u9zy8
+         DDhzHzZmg3EfkwS0ZALwQlNWzvM5U9HLaIff2voswp0oRABMadlT8GEAnhxQC+y5OIqI
+         CNqnImA3S66tx/nFbxFvfKM2+t7ZNENG3hLw+1ZM0K3VvYlbpcNBPm8lelOFTh3bXhmM
+         gMwatu4vE8ZYstGm7fkMssvWoVHgkTQ8bPVXKeqK5HaLs2F/ulm/AW7Jneyb24PLF6Fu
+         mSz7/XLFsCEn38aKUkzyf4YkusQEDcWLNREJx9njDl3z9f93jsfexS4ZUlmeCJmzf8gy
+         fubA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xcDj/VFQ6KKNr9HZ7H5PSlKT512A8eXxxKSGyEaX09w=;
-        b=DEgFsqnboHTn4eS2uoJOq12OuE+pb327NRhmwYwGAYfEVCvvuRw4Em+V2IjcSUR9ry
-         2W1x4TRqsjBgy3M5ZwFC/IawvHgWmqgMvy+J5JVrVJDvzRBhSiAoeJBhCVYsJlsNeB8l
-         h1S2sEa/hgOSmY0E9zLsFAHgHSHw4H4v0tIL8NDRGF0IgiHnVyfg8kICu3nnlL2lsYL2
-         Is9fRRsu+A5lc681N+g8lA1YmBeK3ZOanSSIRMj/sdBvzfy+HsLF+WGSNr7SWsqPNT4s
-         BUrIMjOCdb2ReWQ/oOCny3k3AJchB15jX9+uysmpLI9gsmswR9Bp9YqnhbrLBp5WDNbJ
-         cNlQ==
-X-Gm-Message-State: APjAAAW3eNkx8LaRzyHehj4kiBKC4LRTu0nVNT+8nIR95bGA+y6Lp3j1
-        8lGjbIiMmTO5ACnaq9qfQWxbXvtDMisuU0E/KggYsvBnzgMSsNgEL5eDAXaryYPLtCx0KDHIfUm
-        hjj9X3KQDO8I4aWen3LjWcF2kJ6H47xz1FvdUFXLP
-X-Received: by 2002:a0c:8eca:: with SMTP id y10mr16311528qvb.138.1571036882965;
-        Mon, 14 Oct 2019 00:08:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzFGv+JqyNjog8PLDLVA5VjVphZUuovMFYVQIvEET4YHfeklDiPu3bN+Yq9uJSJ59ucHJyQGl2e9zhdn4TRs+k=
-X-Received: by 2002:a0c:8eca:: with SMTP id y10mr16311505qvb.138.1571036882508;
- Mon, 14 Oct 2019 00:08:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <Mbf4goGxXZTfWwWtQQUke_rNf8kezpNOS9DVEVHf6RnnmjS1oRtMOJf4r14WfCC6GRYVs7gi0uZcIJ18Va2OJowzSbyMUGwLrl6I5fjW48o=@protonmail.com>
- <201910140950.uA9aSUlt%lkp@intel.com> <TKRbvHYo9MdseQJhtKe0NPnI1BAPwcVBM_mJjDhYyPD46CuOy06PNzSQ6ifxPMMzKXTsRoD2aC_AaY5L9OAovXbof8ItLNZHcXULttZnps8=@protonmail.com>
-In-Reply-To: <TKRbvHYo9MdseQJhtKe0NPnI1BAPwcVBM_mJjDhYyPD46CuOy06PNzSQ6ifxPMMzKXTsRoD2aC_AaY5L9OAovXbof8ItLNZHcXULttZnps8=@protonmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 14 Oct 2019 09:07:50 +0200
-Message-ID: <CAO-hwJLea5rAZ20Mdn8tSD1a8FfbS9RDcu2nWwLgxTtxKKsWyg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] HID: logitech: Add MX Master over Bluetooth
-To:     Mazin Rezk <mnrzk@protonmail.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-X-MC-Unique: QRKzzIZ4M8mAgx8iRBMjFA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NguePtiRLqxxPERuaTU6qYGHlLMZjTiDWKMVkMyftlI=;
+        b=jgLz2bSoJtNrMZMBjezAy8x9+BCE8RvMPC8Up6znC3nzMEfaZmNuoOVrG6BBTkxQw8
+         pLQYt3KxY9GnZYcHrfQAVu48FCYnefMnYwrD7kcgohFFIFFCLMZPAnFbDMveaYQpZ9pn
+         ZtJ2sSPH259OY+/yhSMpREe8OOAAnu9+9VudEZP3UDMCr9oxRdwWzmuqxXbRv3z8HEBF
+         qJvUbLxIhaHT7dhhVZjwED/+vPA+CFnV82M4TbhpiCORSUme7x6aqmrxgpc7oweLAoej
+         mEsCuUGvQN3EMdAMSs09ccgTKWh0CO3NyTX6fGQ7pKx81nc+Uq2JobFWu2vs+Fuw+16b
+         3FbQ==
+X-Gm-Message-State: APjAAAUdVh5FsiuQ0RcIBGNy3SnXAhk4IZSNGbLmLRc1HhlKleKESLBX
+        WA2Kt0+5hygSO2fp9QZ5IRchWw==
+X-Google-Smtp-Source: APXvYqwejRJqYN+1PN+rmvhGFte4RQiA22AwEs1KXqwUn+eV0HR/gMGjIqh5w5+BnvYjRJHsoXZdvQ==
+X-Received: by 2002:a17:902:9696:: with SMTP id n22mr26782696plp.252.1571036894371;
+        Mon, 14 Oct 2019 00:08:14 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id p190sm20619948pfb.160.2019.10.14.00.08.10
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 14 Oct 2019 00:08:13 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     linus.walleij@linaro.org, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Some improvements for hwspinlock
+Date:   Mon, 14 Oct 2019 15:07:42 +0800
+Message-Id: <cover.1571036463.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+This patch set removes the BUG_ON() from hwspinlock core and changes the
+PM runtime support to be optional.
 
-On Mon, Oct 14, 2019 at 6:35 AM Mazin Rezk <mnrzk@protonmail.com> wrote:
->
-> On Sunday, October 13, 2019 9:28 PM, kbuild test robot <lkp@intel.com> wr=
-ote:
->
-> > Hi Mazin,
-> >
-> > Thank you for the patch! Perhaps something to improve:
-> >
-> > [auto build test WARNING on linus/master]
-> > [cannot apply to v5.4-rc2 next-20191010]
-> > [if your patch is applied to the wrong git tree, please drop us a note =
-to help
-> > improve the system. BTW, we also suggest to use '--base' option to spec=
-ify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/3=
-7406982]
-> >
-> > url: https://github.com/0day-ci/linux/commits/Mazin-Rezk/HID-logitech-A=
-dd-MX-Master-over-Bluetooth/20191014-071534
-> > config: mips-allmodconfig (attached as .config)
-> > compiler: mips-linux-gcc (GCC) 7.4.0
-> > reproduce:
-> > wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make=
-.cross -O ~/bin/make.cross
-> > chmod +x ~/bin/make.cross
-> > # save the attached .config to linux build tree
-> > GCC_VERSION=3D7.4.0 make.cross ARCH=3Dmips
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot lkp@intel.com
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> > In file included from include/linux/ioport.h:15:0,
-> > from include/linux/device.h:15,
-> > from drivers/hid/hid-logitech-hidpp.c:13:
-> > drivers/hid/hid-logitech-hidpp.c: In function 'hidpp_send_rap_command_s=
-ync':
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
- 'BIT'
-> >
-> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> >                                               ^~~
-> >
-> >
-> > > > drivers/hid/hid-logitech-hidpp.c:347:26: note: in expansion of macr=
-o 'HIDPP_QUIRK_MISSING_SHORT_REPORTS'
-> >
-> >      if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
-> >
-> >                              ^
-> >
-> >
-> > drivers/hid/hid-logitech-hidpp.c: In function 'hidpp_validate_device':
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
- 'BIT'
-> >
-> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> >                                               ^~~
-> >
-> >
-> > drivers/hid/hid-logitech-hidpp.c:3496:22: note: in expansion of macro '=
-HIDPP_QUIRK_MISSING_SHORT_REPORTS'
-> > if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
-> >
-> >                          ^
-> >
-> >
-> > drivers/hid/hid-logitech-hidpp.c: At top level:
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
- 'BIT'
-> >
-> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> >                                               ^~~
-> >
-> >
-> > drivers/hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'HI=
-DPP_QUIRK_MISSING_SHORT_REPORTS'
-> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
-S
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > > > drivers/hid/hid-logitech-hidpp.c:3794:5: note: in expansion of macr=
-o 'HIDPP_QUIRK_CLASS_BLUETOOTH_LE'
-> >
-> >         HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
-> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > > > drivers/hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro=
- 'BIT'
-> >
-> >     #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> >                                               ^~~
-> >
-> >
-> > drivers/hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'HI=
-DPP_QUIRK_MISSING_SHORT_REPORTS'
-> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
-S
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/hid/hid-logitech-hidpp.c:3797:5: note: in expansion of macro 'H=
-IDPP_QUIRK_CLASS_BLUETOOTH_LE'
-> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > -----------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
--------
-> >
-> > In file included from include/linux/ioport.h:15:0,
-> > from include/linux/device.h:15,
-> > from drivers//hid/hid-logitech-hidpp.c:13:
-> > drivers//hid/hid-logitech-hidpp.c: In function 'hidpp_send_rap_command_=
-sync':
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
-IT'
-> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> > ^~~
-> > drivers//hid/hid-logitech-hidpp.c:347:26: note: in expansion of macro '=
-HIDPP_QUIRK_MISSING_SHORT_REPORTS'
-> > if (hidpp_dev->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS &&
-> >
-> >                              ^
-> >
-> >
-> > drivers//hid/hid-logitech-hidpp.c: In function 'hidpp_validate_device':
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
-IT'
-> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> > ^~~
-> > drivers//hid/hid-logitech-hidpp.c:3496:22: note: in expansion of macro =
-'HIDPP_QUIRK_MISSING_SHORT_REPORTS'
-> > if (hidpp->quirks & HIDPP_QUIRK_MISSING_SHORT_REPORTS)
-> >
-> >                          ^
-> >
-> >
-> > drivers//hid/hid-logitech-hidpp.c: At top level:
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
-IT'
-> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> > ^~~
-> > drivers//hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'H=
-IDPP_QUIRK_MISSING_SHORT_REPORTS'
-> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
-S
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers//hid/hid-logitech-hidpp.c:3794:5: note: in expansion of macro '=
-HIDPP_QUIRK_CLASS_BLUETOOTH_LE'
-> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > > > include/linux/bits.h:8:26: warning: left shift count >=3D width of =
-type [-Wshift-count-overflow]
-> >
-> >     #define BIT(nr)   (UL(1) << (nr))
-> >                              ^
-> >
-> >
-> > drivers//hid/hid-logitech-hidpp.c:74:43: note: in expansion of macro 'B=
-IT'
-> > #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> > ^~~
-> > drivers//hid/hid-logitech-hidpp.c:85:40: note: in expansion of macro 'H=
-IDPP_QUIRK_MISSING_SHORT_REPORTS'
-> > #define HIDPP_QUIRK_CLASS_BLUETOOTH_LE HIDPP_QUIRK_MISSING_SHORT_REPORT=
-S
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers//hid/hid-logitech-hidpp.c:3797:5: note: in expansion of macro '=
-HIDPP_QUIRK_CLASS_BLUETOOTH_LE'
-> > HIDPP_QUIRK_CLASS_BLUETOOTH_LE },
-> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > vim +/BIT +74 drivers/hid/hid-logitech-hidpp.c
-> >
-> > 12
-> >
-> > > 13 #include <linux/device.h>
-> >
-> >     14        #include <linux/input.h>
-> >
-> >     15        #include <linux/usb.h>
-> >
-> >     16        #include <linux/hid.h>
-> >
-> >     17        #include <linux/module.h>
-> >
-> >     18        #include <linux/slab.h>
-> >
-> >     19        #include <linux/sched.h>
-> >
-> >     20        #include <linux/sched/clock.h>
-> >
-> >     21        #include <linux/kfifo.h>
-> >
-> >     22        #include <linux/input/mt.h>
-> >
-> >     23        #include <linux/workqueue.h>
-> >
-> >     24        #include <linux/atomic.h>
-> >
-> >     25        #include <linux/fixp-arith.h>
-> >
-> >     26        #include <asm/unaligned.h>
-> >
-> >     27        #include "usbhid/usbhid.h"
-> >     28        #include "hid-ids.h"
-> >     29
-> >     30        MODULE_LICENSE("GPL");
-> >     31        MODULE_AUTHOR("Benjamin Tissoires <benjamin.tissoires@gma=
-il.com>");
-> >
-> >     32        MODULE_AUTHOR("Nestor Lopez Casado <nlopezcasad@logitech.=
-com>");
-> >
-> >     33
-> >     34        static bool disable_raw_mode;
-> >     35        module_param(disable_raw_mode, bool, 0644);
-> >     36        MODULE_PARM_DESC(disable_raw_mode,
-> >     37                "Disable Raw mode reporting for touchpads and kee=
-p firmware gestures.");
-> >     38
-> >     39        static bool disable_tap_to_click;
-> >     40        module_param(disable_tap_to_click, bool, 0644);
-> >     41        MODULE_PARM_DESC(disable_tap_to_click,
-> >     42                "Disable Tap-To-Click mode reporting for touchpad=
-s (only on the K400 currently).");
-> >     43
-> >     44        #define REPORT_ID_HIDPP_SHORT                   0x10
-> >     45        #define REPORT_ID_HIDPP_LONG                    0x11
-> >     46        #define REPORT_ID_HIDPP_VERY_LONG               0x12
-> >     47
-> >     48        #define HIDPP_REPORT_SHORT_LENGTH               7
-> >     49        #define HIDPP_REPORT_LONG_LENGTH                20
-> >     50        #define HIDPP_REPORT_VERY_LONG_MAX_LENGTH       64
-> >     51
-> >     52        #define HIDPP_SUB_ID_CONSUMER_VENDOR_KEYS       0x03
-> >     53        #define HIDPP_SUB_ID_ROLLER                     0x05
-> >     54        #define HIDPP_SUB_ID_MOUSE_EXTRA_BTNS           0x06
-> >     55
-> >     56        #define HIDPP_QUIRK_CLASS_WTP                   BIT(0)
-> >     57        #define HIDPP_QUIRK_CLASS_M560                  BIT(1)
-> >     58        #define HIDPP_QUIRK_CLASS_K400                  BIT(2)
-> >     59        #define HIDPP_QUIRK_CLASS_G920                  BIT(3)
-> >     60        #define HIDPP_QUIRK_CLASS_K750                  BIT(4)
-> >     61
-> >     62        /* bits 2..20 are reserved for classes */
-> >     63        /* #define HIDPP_QUIRK_CONNECT_EVENTS           BIT(21) d=
-isabled */
-> >     64        #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS        BIT(22)
-> >     65        #define HIDPP_QUIRK_NO_HIDINPUT                 BIT(23)
-> >     66        #define HIDPP_QUIRK_FORCE_OUTPUT_REPORTS        BIT(24)
-> >     67        #define HIDPP_QUIRK_UNIFYING                    BIT(25)
-> >     68        #define HIDPP_QUIRK_HI_RES_SCROLL_1P0           BIT(26)
-> >     69        #define HIDPP_QUIRK_HI_RES_SCROLL_X2120         BIT(27)
-> >     70        #define HIDPP_QUIRK_HI_RES_SCROLL_X2121         BIT(28)
-> >     71        #define HIDPP_QUIRK_HIDPP_WHEELS                BIT(29)
-> >     72        #define HIDPP_QUIRK_HIDPP_EXTRA_MOUSE_BTNS      BIT(30)
-> >     73        #define HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS  BIT(31)
-> >
-> >
-> > > 74 #define HIDPP_QUIRK_MISSING_SHORT_REPORTS BIT(32)
-> >
-> >     75
-> >
-> >
-> > --
-> >
-> > 0-DAY kernel test infrastructure Open Source Technology Center
-> > https://lists.01.org/pipermail/kbuild-all Intel Corporation
->
->
-> It seems that I overlooked that quirks is an unsigned long and is 32-bit
-> on some architectures. I feel like it's possible to change driver_data
-> and quirks to unsigned long long but it seems like such an unnecessarily
-> large change.
+Baolin Wang (4):
+  hwspinlock: Remove BUG_ON() from the hwspinlock core
+  hwspinlock: Let the PM runtime can be optional
+  hwspinlock: sprd: Remove redundant PM runtime implementation
+  hwspinlock: u8500_hsem: Remove redundant PM runtime implementation
 
-Yep, which is why I told you to use 0x20 and 0x1f :)
+ drivers/hwspinlock/hwspinlock_core.c |   16 ++++++++--------
+ drivers/hwspinlock/sprd_hwspinlock.c |   21 +++------------------
+ drivers/hwspinlock/u8500_hsem.c      |   19 ++++---------------
+ 3 files changed, 15 insertions(+), 41 deletions(-)
 
->
-> Since we've already reached the 32-bit limit for quirks, is it possible
-> that we could change how many bits are reserved for classes?
-
-yes, we can simply change the reserved range, this is just a comment after =
-all.
-
->
-> Also, could bit 21 be reused for HIDPP_QUIRK_MISSING_SHORT_REPORTS?
-
-unfortunately no. This is theoretically kernel API, as you can have a
-script that binds a driver and sets a custom quirk for it (by writing
-to the sysfs new_id). So if one is marked as "reserved", resuing it
-might break someone's device though really unlikely.
-
-I'd rather shrink the number of classes than reusing one quirk already used=
-.
-
-Cheers,
-Benjamin
+-- 
+1.7.9.5
 
