@@ -2,132 +2,150 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D05ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B28ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B31C21848
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571074744;
-	bh=BeOfE2wVeIOi74vfC607tsEF/haJCUIZE3jwPOevmBk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HhYSb8xD+DbbR9Q5jy3oe6S4yzDs2uNzsU9wK+NJXYevs8FmCgWC533MHuSQ/AcZ0
-	 sMJQcs7jrRK+L7Hp08rvhYDJY4P1vKBbeMOnCEBGGvyXL/pD5BtxlTkrlRMxoZS/ux
-	 A3Zhf1IkcEJQkuyGZbjmOxTLBv1mlgbkEsE4H7C0=
+	by mail.kernel.org (Postfix) with ESMTP id 4AFE120854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oY+W6Fwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388569AbfJNRjD (ORCPT
+        id S2388600AbfJNRjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:39:03 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46475 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730466AbfJNRjD (ORCPT
+        Mon, 14 Oct 2019 13:39:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52779 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730046AbfJNRjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:39:03 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k25so14405212oiw.13;
-        Mon, 14 Oct 2019 10:39:02 -0700 (PDT)
+        Mon, 14 Oct 2019 13:39:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r19so18138534wmh.2;
+        Mon, 14 Oct 2019 10:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lNZVpaEdmaJY1w+xpL+K9ZqQ92uD6Jfe5E6lniBjnvM=;
+        b=oY+W6FwfNZXtwQq+WhORdLOdfo+f4fhwM0p+Ers5h6CPfgtbEn9ww93kXBSsw2v60b
+         SMIu2UNR6PLQJQdTuB5CZKPD7tjM5zgAWc2F3LP1dYBp/mIWLyzvE+gzbroEFBRI7Dst
+         6kA8qKfdBDN33wxGZAOv+JGy3RovTItDZE4cjypr4TRa0AKUIYcxwviSXAuFpdNyQ3Ic
+         P5h5NDYnWvzIBkjBiYMxqf/jo1ONlCR+e27uF8WQwLTB2ZtajymWafYs1NlkszKw2+og
+         TjPkHU05jpgk0QnsRcXQ7aScuZgRRwSgOc6g7Xs1OdMStDrlfb3Y5KlSoZ09BW/JEGMk
+         I4Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WreGjKNejizDLrH2DJ0lAxbkyZ+jrNSgTeuzICqx9Z4=;
-        b=Ps+BXYSncxtbGCQ/GHAeLojTLAhVtin33gIyD+TrRbs37kMSMo2NurG7cCWFw79dKM
-         R4uIkUu+wSZofGcOljMq78mPQ0C15PEh6rK/0LJaXHxagVn+Paw9+5T0/ybMBcc6WhXM
-         9ekXSjbiCNLoHLQUxvb7FsWMQ3h1jG4i7njjq1U3+V6ccixmwXjKRn+Bq/3kHrnvOdcn
-         bsMVCQ6EPRndVRmW/PaBWjRWeJENPPU6NIAcOsYogRO5myerD0RSlWs01Mx11aLQ1Jws
-         p5e86swtgGsFdNXfmfHhwg/zI4eUgzGOsdxv0nv00K6DIPpIzGEy6m5845COWIxhpbiu
-         3Ghg==
-X-Gm-Message-State: APjAAAURg4u9TZjnm+g91+opGlQ9xE84rw4vRTj1DS4c1ztlOmmnC+QP
-        JZITTjVPtJDZ85xzdqjMPw==
-X-Google-Smtp-Source: APXvYqwdJv5xXQGlATBAH3wK/IT/WCXKxGy8SwE92PGPwmCT2Qv3DTyiAPc8LtnULM3NF1dE3Xu3gQ==
-X-Received: by 2002:aca:da41:: with SMTP id r62mr24442959oig.47.1571074742140;
-        Mon, 14 Oct 2019 10:39:02 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u141sm5690928oie.40.2019.10.14.10.39.01
+        bh=lNZVpaEdmaJY1w+xpL+K9ZqQ92uD6Jfe5E6lniBjnvM=;
+        b=D9UR3CoXewCGhtbjhNp34fGFEoYQeY1C08Ur0JPIb9bI9tC0tg0LxwIKVvB4xLKB6e
+         0aq4/IBm8QDfn+qcaHpt60v5AtjusUAU2lj0nOK5ZOxOJSKv10+neSU1TZGa8O/O/bqp
+         32eWqvoMfQyQUxWBmVxREsemXCJCdtfC/KgQJCJyeJV0HaPjfeOKvRkj1lL9oDkyIVXu
+         k97sJogKI5l/K39xei8qd7osC0kPI+Bcn4FL9scjcU0ark+p6iTChbpA8pXCdr35hzxB
+         kssXscgxJ5FrqLZ1v2kdpDnlYtvKVy9he1VBJNajjIm+DxtcYd9BGGlf6yHPHTo99VsJ
+         TdAA==
+X-Gm-Message-State: APjAAAXbTx4aqa4NX5v1jZvpPcd8EV5kecf0r6cREKI2vsnWVybpzwoU
+        c7+Yr5nynSeN/Hy+nNA46p4=
+X-Google-Smtp-Source: APXvYqxufY2enniRnRIxytq9WOwNI0dKAeSWrxef8cqdYzIseEmMuayKHSwg/1yhpjk+WboQkw4UeQ==
+X-Received: by 2002:a1c:bc07:: with SMTP id m7mr16018252wmf.117.1571074784999;
+        Mon, 14 Oct 2019 10:39:44 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id p5sm25687450wmi.4.2019.10.14.10.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 10:39:01 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 12:39:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
- power domains bindings
-Message-ID: <20191014173900.GA6886@bogus>
-References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
- <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
+        Mon, 14 Oct 2019 10:39:44 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 18:39:42 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 6/7] virtio: introduce a mdev based transport
+Message-ID: <20191014173942.GB5359@stefanha-x1.localdomain>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-7-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
 Content-Disposition: inline
-In-Reply-To: <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191011081557.28302-7-jasowang@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
-> 
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
-> 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
-> 
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> new file mode 100644
-> index 00000000..88d8261
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Power Domains
-> +
-> +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
-> +
-> +description: |+
-> +  Meson Secure Power Domains used in A1/C1 SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +  "#power-domain-cells":
-> +    const: 1
-> +
-> +  secure-monitor:
-> +    description: phandle to the secure-monitor node
-> +    $ref: /schemas/types.yaml#/definitions/phandle
 
-Why not just a child node of this node?
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+On Fri, Oct 11, 2019 at 04:15:56PM +0800, Jason Wang wrote:
+> +struct virtio_mdev_device {
+> +	struct virtio_device vdev;
+> +	struct mdev_device *mdev;
+> +	unsigned long version;
+> +
+> +	struct virtqueue **vqs;
+> +	/* The lock to protect virtqueue list */
+> +	spinlock_t lock;
+> +	struct list_head virtqueues;
+
+Is this a list of struct virtio_mdev_vq_info?  Please document the
+actual type in a comment.
+
+> +static int virtio_mdev_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+> +				struct virtqueue *vqs[],
+> +				vq_callback_t *callbacks[],
+> +				const char * const names[],
+> +				const bool *ctx,
+> +				struct irq_affinity *desc)
+> +{
+> +	struct virtio_mdev_device *vm_dev = to_virtio_mdev_device(vdev);
+> +	struct mdev_device *mdev = vm_get_mdev(vdev);
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
+> +	struct virtio_mdev_callback cb;
+> +	int i, err, queue_idx = 0;
+> +
+> +	vm_dev->vqs = kmalloc_array(queue_idx, sizeof(*vm_dev->vqs),
+> +				    GFP_KERNEL);
+
+kmalloc_array(0, ...)?  I would have expected nvqs instead of queue_idx
+(0).
+
+What is this the purpose of vm_dev->vqs and does anything ever access it?
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2kst4ACgkQnKSrs4Gr
+c8hQqggAsLqAScuEZRHgMYUxIlc4Hpdh283rOQFgRgPfZqq3hQ/nzKTqbn1k7DnZ
+MaXQk/GXc1/mFzEwjGVoMOJ+NiZKpj5xuVN9HqKEuDuBooykO5wKnbwkm6kAs/gG
+/10A4I5fkyOUHB+xRkaM/3g9UJgo/yB/oI7yQonKFI3VNQc/Q0vcAWUkUbyoZyZA
+WO5IJoOR9nF7g6kkYLT0ik26WZFVsBruKTsifLsCJTCQMWo8dJpvgJpGvo/k07YZ
+kWYC8J+K/SRA9gpvDBCfkPRQGMgq7CiE0C+VfoGVo11TuFd6FlkjjYmBIPXYek98
+rK1ONn6f4qY+67eRJ77oiNeFsj4eYw==
+=7Qm5
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
