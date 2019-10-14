@@ -2,183 +2,142 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68093ECE58C
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3F8ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D7521882
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571092835;
-	bh=F+BvU2ynT3mQL45LYq/lwNf6fNbzXrmBPj+eP1A4W2E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d7lbFizRqUTQgLwSr8GkpDkU0v6JsbJXtmShT1ivAEv1ybh/iRUSya8UXTQz0zLIu
-	 atfbpiVqrw3KSoB19i0sH4tXibkcaXreVX9K9sBSbnYYCPpF85wpQtRg/1whcPNesf
-	 Q8hLjsmjnMZNCTvdC2JHXk+PVTON6GY01llr9siA=
+	by mail.kernel.org (Postfix) with ESMTP id 14A2C21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfJNWkc (ORCPT
+        id S1726143AbfJNWll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 18:40:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46384 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 18:41:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21239 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfJNWkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 18:40:32 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3A2221835;
-        Mon, 14 Oct 2019 22:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571092830;
-        bh=F+BvU2ynT3mQL45LYq/lwNf6fNbzXrmBPj+eP1A4W2E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QpY6UwJMG2+5bzwrvASfxt8y8zxJ/F1VKC1nAtFH1wmDywJZUvo9iasZnlNdvdV7w
-         S+IZUMEh35OE5VpJTmdOY4TawLghWweKIX/DD/5zwZr9rVhlU3HD9PODVzP+7XMwLn
-         MSvAZNxUfOXraehJI6/nK5bwH0S86MqNa2iTvszs=
-Date:   Mon, 14 Oct 2019 15:40:29 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     syzbot <syzbot+3370fc9fb190f98c5c72@syzkaller.appspotmail.com>
-Cc:     chenjianhong2@huawei.com, jannh@google.com,
-        khlebnikov@yandex-team.ru, kirill.shutemov@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-        mike.kravetz@oracle.com, richardw.yang@linux.intel.com,
-        riel@surriel.com, sfr@canb.auug.org.au, steve.capper@arm.com,
-        syzkaller-bugs@googlegroups.com, tiny.windzz@gmail.com,
-        vbabka@suse.cz, walken@google.com, willy@infradead.org,
-        yang.shi@linux.alibaba.com
-Subject: Re: kernel BUG at include/linux/rmap.h:LINE!
-Message-Id: <20191014154029.ab909c9bf08c78bbc2404f2d@linux-foundation.org>
-In-Reply-To: <000000000000683a810594d634a2@google.com>
-References: <000000000000683a810594d634a2@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726101AbfJNWll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 18:41:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 15:41:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="207353863"
+Received: from spandruv-mobl3.jf.intel.com ([10.254.34.58])
+  by orsmga002.jf.intel.com with ESMTP; 14 Oct 2019 15:41:39 -0700
+Message-ID: <3055e340ebaba9f8fb587a11ce3f25cf33919ab3.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, ckellner@redhat.com
+Date:   Mon, 14 Oct 2019 15:41:38 -0700
+In-Reply-To: <20191014213618.GK4715@zn.tnic>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+         <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+         <20191014213618.GK4715@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 13 Oct 2019 20:10:06 -0700 syzbot <syzbot+3370fc9fb190f98c5c72@syzk=
-aller.appspotmail.com> wrote:
+On Mon, 2019-10-14 at 23:36 +0200, Borislav Petkov wrote:
+> On Mon, Oct 14, 2019 at 02:21:00PM -0700, Srinivas Pandruvada wrote:
+> > Some modern systems have very tight thermal tolerances. Because of
+> > this
+> > they may cross thermal thresholds when running normal workloads
+> > (even
+> > during boot). The CPU hardware will react by limiting
+> > power/frequency
+> > and using duty cycles to bring the temperature back into normal
+> > range.
+> > 
+> > Thus users may see a "critical" message about the "temperature
+> > above
+> > threshold" which is soon followed by "temperature/speed normal".
+> > These
+> > messages are rate limited, but still may repeat every few minutes.
+> > 
+> > The solution here is to set a timeout when the temperature first
+> > exceeds
+> > the threshold. If the CPU returns to normal before the timeout
+> > fires,
+> > we skip printing any messages. If we reach the timeout, then there
+> > may be
+> > a real thermal issue (e.g. inoperative or blocked fan) and we print
+> > the
+> > message (together with a count of how many thermal events have
+> > occurred).
+> > A rate control method is used to avoid printing repeatedly on these
+> > broken
+> > systems.
+> > 
+> > Some experimentation with fans enabled showed that temperature
+> > returned
+> > to normal on a laptop in ~4 seconds. With fans disabled it took
+> > over 10
+> > seconds. Default timeout is thus set to 8 seconds, but may be
+> > changed
+> > with kernel boot parameter: "x86_therm_warn_delay". This default
+> > interval
+> > is twice of typical sampling interval for cooling using running
+> > average
+> > power limit from user space thermal control softwares.
+> > 
+> > In addition a new sysfs attribute is added to show what is the
+> > maximum
+> > amount of time in miili-seconds the system was in throttled state.
+> > This
+> > will allow to change x86_therm_warn_delay, if required.
+> 
+> This description is already *begging* for this delay value to be
+> automatically set by the kernel. Putting yet another knob in front of
+> the user who doesn't have a clue most of the time shows one more time
+> that we haven't done our job properly by asking her to know what we
+> already do.
+I experimented on the systems released from Sandy Bridge era. But
+someone running on 10 years old system, this is a fallback mechanism.
+Don't expect that users have to tune from the default but saying with
+certainty is difficult. The source of this PROCHOT signal can be
+anything on the board.
+So some users who had issues in their systems can try with this patch.
+We can get rid of this, till it becomes real issue.
 
-> syzbot found the following crash on:
->=20
-> HEAD commit:    442630f6 Add linux-next specific files for 20191008
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11450d93600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Daf1bfeef713ee=
-fdd
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D3370fc9fb190f98=
-c5c72
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D13132d57600=
-000
->=20
-> The bug was bisected to:
->=20
-> commit 480706f51e2c3a450d2f7fc10f5af215c9d249df
-> Author: Wei Yang <richardw.yang@linux.intel.com>
-> Date:   Mon Oct 7 20:25:37 2019 +0000
->=20
->      mm/rmap.c: reuse mergeable anon_vma as parent when forking
+> 
+> IOW, a simple history feedback mechanism which sets the timeout based
+> on
+> the last couple of values is much smarter. The thing would have a max
+> value, of course, which, when exceeded should mean an anomaly, etc,
+> but
+> almost anything else is better than merely asking the user to make an
+> educated guess.
+The temperature is function of load, time and heat dissipation capacity
+of the system. I have to think more about this to come up with some
+heuristics where we still warning users about real thermal issues.
+Since value is not persistent, then next boot again will start from the
+default.
 
-Hopefully the updated version addresses this?
+> 
+> > Suggested-by: Alan Cox <alan@linux.intel.com>
+> > Commit-comment-by: Tony Luck <tony.luck@intel.com>
+> 
+>   ^^^^^^^^^^^^^^^^^^
+> 
+> What's that?
+Tony suggested this to indicate that he rewrote the commit description
+as he didn't like my description. Definitely checkpatch doesn't like
+this.
 
-
-
-From: Wei Yang <richardw.yang@linux.intel.com>
-Subject: mm/rmap.c: reuse mergeable anon_vma as parent when fork
-
-In __anon_vma_prepare(), we will try to find anon_vma if it is possible to
-reuse it.  While on fork, the logic is different.
-
-Since commit 5beb49305251 ("mm: change anon_vma linking to fix
-multi-process server scalability issue"), function anon_vma_clone() tries
-to allocate new anon_vma for child process.  But the logic here will
-allocate a new anon_vma for each vma, even in parent this vma is mergeable
-and share the same anon_vma with its sibling.  This may do better for
-scalability issue, while it is not necessary to do so especially after
-interval tree is used.
-
-Commit 7a3ef208e662 ("mm: prevent endless growth of anon_vma hierarchy")
-tries to reuse some anon_vma by counting child anon_vma and attached vmas.
-While for those mergeable anon_vmas, we can just reuse it and not
-necessary to go through the logic.
-
-After this change, kernel build test reduces 20% anon_vma allocation.
-
-Do the same kernel build test, it shows run time in sys reduced 11.6%.
-
-Origin:
-
-real    2m50.467s
-user    17m52.002s
-sys     1m51.953s
-
-real    2m48.662s
-user    17m55.464s
-sys     1m50.553s
-
-real    2m51.143s
-user    17m59.687s
-sys     1m53.600s
-
-Patched:
-
-real	2m39.933s
-user	17m1.835s
-sys	1m38.802s
-
-real	2m39.321s
-user	17m1.634s
-sys	1m39.206s
-
-real	2m39.575s
-user	17m1.420s
-sys	1m38.845s
-
-Link: http://lkml.kernel.org/r/20191011072256.16275-2-richardw.yang@linux.i=
-ntel.com
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: "J=E9r=F4me Glisse" <jglisse@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/rmap.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
---- a/mm/rmap.c~mm-rmapc-reuse-mergeable-anon_vma-as-parent-when-fork
-+++ a/mm/rmap.c
-@@ -268,6 +268,19 @@ int anon_vma_clone(struct vm_area_struct
- {
- 	struct anon_vma_chain *avc, *pavc;
- 	struct anon_vma *root =3D NULL;
-+	struct vm_area_struct *prev =3D dst->vm_prev, *pprev =3D src->vm_prev;
-+
-+	/*
-+	 * If parent share anon_vma with its vm_prev, keep this sharing in in
-+	 * child.
-+	 *
-+	 * 1. Parent has vm_prev, which implies we have vm_prev.
-+	 * 2. Parent and its vm_prev have the same anon_vma.
-+	 */
-+	if (!dst->anon_vma && src->anon_vma &&
-+	    pprev && pprev->anon_vma =3D=3D src->anon_vma)
-+		dst->anon_vma =3D prev->anon_vma;
-+
-=20
- 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
- 		struct anon_vma *anon_vma;
-_
+Thanks,
+Srinivas
 
