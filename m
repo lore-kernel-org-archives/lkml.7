@@ -2,111 +2,127 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE7AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFE2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC73621835
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:17:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qw+2kp/+"
+	by mail.kernel.org (Postfix) with ESMTP id B4A212067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571062713;
+	bh=OrX/0cJJ1bZkXK4paYon6yRNkBd7p5Rb6RxMPtz3CYA=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=dBTBWVoQLHHqYN3X1t3QcVw4dXkXGbQaSY+vpP06lMMmL1IVgcFJVwgUoqxNpGS7t
+	 EZHNXyavH/XY+olEzXsLoE2V4WdsY3w8G7d7EzK3agmyGulTKB8Bp143MVx0KUzBlw
+	 qP+x/yZy35I+UhDvcpqBJQcu2AcWdqfSxopkCqnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732663AbfJNOR2 (ORCPT
+        id S1732679AbfJNOSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:17:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52695 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732506AbfJNOR0 (ORCPT
+        Mon, 14 Oct 2019 10:18:32 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:40576 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732362AbfJNOSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:17:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r19so17475536wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 07:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WhPSwUwjAsJRbhdmE0cVGRUouZ5x8oaruQHda5jd55I=;
-        b=qw+2kp/+fl6kXsLl22YjrO0TyQy+b2qOG96cAr18nh3mIUcQO2wxOniKBJRga3bv6p
-         9gVO175nSljYfUAcAjw9jxTI1QDAAsmlRxihaiHD0ltMTQcWkjfZASaKg7Zrg0rKzyc5
-         kFWR35CpMP10S6rBiE0sZlidqw2c81x70/pVS9YXFWxXbQfXDv3Z/TWitlohxBSSLH0I
-         P34TlcmfOwb0nOjj/iyY8JJLUbbJhcr7bPt+yGE4VFH0VxHjbSW13cTO9VLCyNOU4x1F
-         GyW1IX/y5/Gt5n10NogGoISQkc3ykn+ouY3KCXlxf+UvVSWFnjKjQKKwexoQVmbk7g8u
-         mwwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WhPSwUwjAsJRbhdmE0cVGRUouZ5x8oaruQHda5jd55I=;
-        b=KDDRu5s1ZSgFKxdaW8d8b4ZqrxuzaaeKGmwE6sfRkY+iZ1I+FqTXi8DKQAMPt+UJMl
-         1vJm9yHVWjBT84/az7oiTq/xLGRbU3hlHhNzUsi4Na8FVzCF1xa9OsDOS9NRO5/m2BP2
-         up6XSHf3LbCNDuD0aU6fx1MCoMsX0lS6obLKu5mnvr+5MFW8AXVpYLBrIEquc4wCTRSA
-         CuVTLD5hoIlAXJNLe34zSP3lkOISpi0pYlIPfthLQUOZZyvSnlDY38u4eddUUZ8br4lA
-         vixAPFEI0wy2d2Nk1ac4kYltTS87L2r/3bGY55Evd1m1A8ucpRUIjwng/EuCQ6x46F/S
-         m+Hg==
-X-Gm-Message-State: APjAAAXfjAJ2zZizZwbdOk4tVVm/j0q0G9o7k1qo3JkF9ysgBlS7PrUL
-        s/FjCr5xqgwfL2meNMIBFWDYig==
-X-Google-Smtp-Source: APXvYqwyLKkJs7kEVRKHW2iMVF8t8Y3SI49VubmuzAmVzLaKXolT83XHyMDU/m35t26Bb9WZbO3Sjg==
-X-Received: by 2002:a1c:c90f:: with SMTP id f15mr15817487wmb.125.1571062643202;
-        Mon, 14 Oct 2019 07:17:23 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t83sm42708624wmt.18.2019.10.14.07.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 07:17:22 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     balbi@kernel.org, khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>, Tim <elatllat@gmail.com>
-Subject: [PATCH 3/3] arm64: dts: g12-common: add parkmode_disable_ss_quirk on DWC3 controller
-Date:   Mon, 14 Oct 2019 16:17:18 +0200
-Message-Id: <20191014141718.22603-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191014141718.22603-1-narmstrong@baylibre.com>
-References: <20191014141718.22603-1-narmstrong@baylibre.com>
+        Mon, 14 Oct 2019 10:18:32 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iK1B7-0001sz-0w; Mon, 14 Oct 2019 16:18:29 +0200
+To:     Remi Pommarel <repk@triplefau.lt>
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link  training flag
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 14 Oct 2019 15:18:28 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20191014140026.GB1426@voidbox>
+References: <20190522213351.21366-3-repk@triplefau.lt>
+ <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+ <20190930165230.GA12568@voidbox>
+ <20191001080546.GI42880@e119886-lin.cambridge.arm.com>
+ <20191013113415.3c653526@why>
+ <20191014100129.GA18832@e121166-lin.cambridge.arm.com>
+ <20191014130627.GA1426@voidbox>
+ <eda65141ee1006fe3a93a9989867dc31@www.loen.fr>
+ <20191014140026.GB1426@voidbox>
+Message-ID: <971be151d24312cc533989a64bd454b4@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: repk@triplefau.lt, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, ellierevves@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When high load on the DWC3 SuperSpee port, the controller crashed as:
-[  221.141621] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-[  221.157631] xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
-[  221.157635] xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
-[  221.159901] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-[  221.159961] hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
-[  221.160076] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
-[  221.165946] usb 2-1.1-port1: cannot reset (err = -22)
+On 2019-10-14 15:00, Remi Pommarel wrote:
+> On Mon, Oct 14, 2019 at 02:45:34PM +0100, Marc Zyngier wrote:
+>> Hi Remi,
+>>
+>> On 2019-10-14 14:06, Remi Pommarel wrote:
+>> > Hi Lorenzo, Marc,
 
-Setting the parkmode_disable_ss_quirk quirk fixes the issue.
+[...]
 
-CC: Dongjin Kim <tobetter@gmail.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+>> > Sure, I think this could be considered a fix for the following 
+>> commit :
+>> > Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI
+>> > bridge config space")
+>> >
+>> > Moreover, Marc, I am also a bit supprised that you did not have to 
+>> use
+>> > [1] to even be able to boot.
+>>
+>> No, I don't have that one, and yet the system boots fine (although 
+>> PCI
+>> doesn't get much use on this box). I guess I'm lucky...
+>>
+>> > Also if you want to be completely immune to this kind of SError 
+>> (that
+>> > could theoretically happen if the link goes down for other reasons 
+>> than
+>> > being retrained) you would have to use mainline ATF along with 
+>> [2]. But
+>> > the chances to hit that are low (could only happen in case of link
+>> > errors).
+>>
+>> Now you've got me worried. Can you point me to that ATF patch? I'm 
+>> quite
+>> curious as to how you recover from an SError on a v8.0 CPU given 
+>> that it
+>> has no syndrome information and may as well signal "CPU on fire!"...
+>>
+>
+> The patch is at [1]. Please note that this is done quite similarly 
+> for
+> rcar.
+>
+> [1] 
+> https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/1541
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 3f39e020f74e..4b002e799e5c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -2381,6 +2381,7 @@
- 				dr_mode = "host";
- 				snps,dis_u2_susphy_quirk;
- 				snps,quirk-frame-length-adjustment;
-+				snps,parkmode-disable-ss-quirk;
- 			};
- 		};
- 
+That patch, without any other information, looks quite flaky. Unless 
+there
+is a strong guarantee that ESR_EL3.ISS==2 only when the PCIe controller
+goes wrong, it looks like this only papers over the issue...
+
+That's pretty much independent from the patch at hand in this thread, 
+but
+I certainly wouldn't trust this ATF patch without some more information
+about how the fault is reported to the CPU.
+
+         M.
 -- 
-2.22.0
-
+Jazz is not dead. It just smells funny...
