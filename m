@@ -2,86 +2,179 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C6BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A9AECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBAE21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B16A21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 19:30:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nQ1GyZfP";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nQ1GyZfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbfJNT3y (ORCPT
+        id S2388887AbfJNTaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 15:29:54 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46625 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730405AbfJNT3y (ORCPT
+        Mon, 14 Oct 2019 15:30:00 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:45364 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730405AbfJNT37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 15:29:54 -0400
-X-Originating-IP: 90.76.216.45
-Received: from windsurf.home (lfbn-1-2159-45.w90-76.abo.wanadoo.fr [90.76.216.45])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id CA804FF808;
-        Mon, 14 Oct 2019 19:29:39 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 21:29:38 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before
- training link
-Message-ID: <20191014212938.14516102@windsurf.home>
-In-Reply-To: <20190522213351.21366-2-repk@triplefau.lt>
-References: <20190522213351.21366-2-repk@triplefau.lt>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4git47 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 14 Oct 2019 15:29:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D7B238EE0F8;
+        Mon, 14 Oct 2019 12:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1571081398;
+        bh=6+zVmnXVRSW3VefS05Bdkv0D9Q5z93dRC6W+RmfclTk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=nQ1GyZfPwpiIDjMS6VL+s814j9py+atSMF7mkEzVgJi1yieVXKP/AVWhFsFKwTsyM
+         vXGbwFHBw6eHku8aWG7E/A44hzTnSxtYVy4Wf3tLlBzkXHYx8XW5aJ8kbLjT25hsTg
+         wkOfTXhRUXg+guMhRuryHuyga8RDZvJ8IvMYSA+8=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9j7g9LG10Gpt; Mon, 14 Oct 2019 12:29:58 -0700 (PDT)
+Received: from [172.16.1.194] (unknown [63.64.162.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2D6F58EE0F5;
+        Mon, 14 Oct 2019 12:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1571081398;
+        bh=6+zVmnXVRSW3VefS05Bdkv0D9Q5z93dRC6W+RmfclTk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=nQ1GyZfPwpiIDjMS6VL+s814j9py+atSMF7mkEzVgJi1yieVXKP/AVWhFsFKwTsyM
+         vXGbwFHBw6eHku8aWG7E/A44hzTnSxtYVy4Wf3tLlBzkXHYx8XW5aJ8kbLjT25hsTg
+         wkOfTXhRUXg+guMhRuryHuyga8RDZvJ8IvMYSA+8=
+Message-ID: <1571081397.3728.9.camel@HansenPartnership.com>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+Cc:     Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 14 Oct 2019 12:29:57 -0700
+In-Reply-To: <20191014190033.GA15552@linux.intel.com>
+References: <20191003175854.GB19679@linux.intel.com>
+         <1570128827.5046.19.camel@linux.ibm.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+         <20191004182711.GC6945@linux.intel.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+         <20191007000520.GA17116@linux.intel.com>
+         <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+         <20191008234935.GA13926@linux.intel.com>
+         <20191008235339.GB13926@linux.intel.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+         <20191014190033.GA15552@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Remi,
-
-On Wed, 22 May 2019 23:33:50 +0200
-Remi Pommarel <repk@triplefau.lt> wrote:
-
-> When configuring pcie reset pin from gpio (e.g. initially set by
-> u-boot) to pcie function this pin goes low for a brief moment
-> asserting the PERST# signal. Thus connected device enters fundamental
-> reset process and link configuration can only begin after a minimal
-> 100ms delay (see [1]).
+On Mon, 2019-10-14 at 22:00 +0300, Jarkko Sakkinen wrote:
+> On Wed, Oct 09, 2019 at 12:11:06PM +0000, Safford, David (GE Global
+> Research, US) wrote:
+> > 
+> > > From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > Sent: Tuesday, October 8, 2019 7:54 PM
+> > > To: Ken Goldman <kgold@linux.ibm.com>
+> > > Cc: Safford, David (GE Global Research, US) <david.safford@ge.com
+> > > >; Mimi
+> > > Zohar <zohar@linux.ibm.com>; linux-integrity@vger.kernel.org;
+> > > stable@vger.kernel.org; open list:ASYMMETRIC KEYS
+> > > <keyrings@vger.kernel.org>; open list:CRYPTO API <linux-
+> > > crypto@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> > > Subject: EXT: Re: [PATCH] KEYS: asym_tpm: Switch to
+> > > get_random_bytes()
+> > > 
+> > > On Wed, Oct 09, 2019 at 02:49:35AM +0300, Jarkko Sakkinen wrote:
+> > > > On Mon, Oct 07, 2019 at 06:13:01PM -0400, Ken Goldman wrote:
+> > > > > The TPM library specification states that the TPM must comply
+> > > > > with NIST SP800-90 A.
+> > > > > 
+> > > > > https://trustedcomputinggroup.org/membership/certification/tp
+> > > > > m-certified-products/
+> > > > > 
+> > > > > shows that the TPMs get third party certification, Common
+> > > > > Criteria EAL 4+.
+> > > > > 
+> > > > > While it's theoretically possible that an attacker could
+> > > > > compromise both the TPM vendors and the evaluation agencies,
+> > > > > we do have EAL 4+ assurance against both 1 and 2.
+> > > > 
+> > > > Certifications do not equal to trust.
+> > > 
+> > > And for trusted keys the least trust solution is to do generation
+> > > with the kernel assets and sealing with TPM. With TEE the least
+> > > trust solution is equivalent.
+> > > 
+> > > Are you proposing that the kernel random number generation should
+> > > be removed? That would be my conclusion of this discussion if I
+> > > would agree any of this (I don't).
+> > > 
+> > > /Jarkko
+> > 
+> > No one is suggesting that.
+> > 
+> > You are suggesting changing the documented behavior of trusted
+> > keys, and that would cause problems for some of our use cases.
+> > While certification may not in your mind be equal to trust, it is
+> > equal to compliance with mandatory regulations.
+> > 
+> > Perhaps rather than arguing past each other, we should look into 
+> > providing users the ability to choose, as an argument to keyctl?
+> > 
+> > dave
 > 
-> Because the pin configuration comes from the "default" pinctrl it is
-> implicitly configured before the probe callback is called:
+> I'm taking my words back in the regression part as regression would
+> need really a failing system. Definitely the fixes tag should be
+> removed from my patch.
 > 
-> driver_probe_device()
->   really_probe()
->     ...
->     pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
->                            function and PERST# is asserted */
->     ...
->     drv->probe()
+> What is anyway the role of the kernel rng? Why does it exist and when
+> exactly it should be used? This exactly where the whole review
+> process throughout the "chain of command" failed misserably with
+> tpm_asym.c.
 > 
-> [1] "PCI Express Base Specification", REV. 4.0
->     PCI Express, February 19 2014, 6.6.1 Conventional Reset
+> The commit message for tpm_asym.c does not document the design choice
+> in any possible way and still was merged to the mainline.
 > 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> Before knowning the answer to the "existential" question we are
+> somewhat paralyzed on moving forward with trusted keys (e.g.
+> paralyzed to merge TEE backend).
+> 
+> Your proposal might make sense but I don't really want to say
+> anything since I'm completely cluesless of the role of the kernel
+> rng. Looks like everyone who participated to the review process of
+> tpm_asym.c, is too.
 
-It is always a bit annoying to add another 100ms in the boot path, but
-I don't see an easy alternative solution, so:
+The job of the in-kernel rng is simply to produce a mixed entropy pool
+from which we can draw random numbers.  The idea is that quite a few
+attackers have identified the rng as being a weak point in the security
+architecture of the kernel, so if we mix entropy from all the sources
+we have, you have to compromise most of them to gain some predictive
+power over the rng sequence.
 
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+The point is not how certified the TPM RNG is, the point is that it's a
+single source and if we rely on it solely for some applications, like
+trusted keys, then it gives the attackers a single known point to go
+after.  This may be impossible for script kiddies, but it won't be for
+nation states ... are you going to exclusively trust the random number
+you got from your chinese certified TPM?
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Remember also that the attack doesn't have to be to the TPM only, it
+could be the pathway by which we get the random number, which involves
+components outside of the TPM certification.
+
+James
+
