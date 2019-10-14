@@ -2,125 +2,176 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F051AECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BA3ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A4B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571071039;
-	bh=878DuIWznyHShg4KkX2cLIzJpu5yrUZVvBHYaduUPEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dPbT4ulEYbyOMe6eOIa7VZqgJ40sf1IAgZsSDpAC57ic2V62Zg0qtwOO64REypR6u
-	 XalJnI4VRv4PJC3TFjtkEGCf9vWOZAkvHqCBiSQD9XmaGvXu6Uq/hz3a2HusbspLnC
-	 WpI95zJoeG4myv9ry2LzQ98CPagFJ0VW74r3edfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0281D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 16:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbfJNQhS (ORCPT
+        id S2388161AbfJNQhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 12:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
+        Mon, 14 Oct 2019 12:37:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:2181 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732550AbfJNQhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 12:37:18 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B0B21835;
-        Mon, 14 Oct 2019 16:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571071037;
-        bh=878DuIWznyHShg4KkX2cLIzJpu5yrUZVvBHYaduUPEQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YgC2erON/ZOLaFpvCgMjE09GdR0Bmm3yDqH0L9s3AvEXcz6sb1/hC4PRdzPUj8cPv
-         vLxMrWW+5yTiWhLHlNuezjfTM/uZloh15o0D5bS2U9NPDdoBdaphejammqHKOvCoci
-         hOinQbQ2/Ybsa3vAthO7x1nAfNOhdYLYQpbZEYaY=
-Date:   Mon, 14 Oct 2019 09:37:16 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Andrew Macks <andypoo@gmail.com>, stable@kernel.org,
-        Greg KH <greg@kroah.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: Re: Regression in longterm 4.19: f2fs: use generic
- EFSBADCRC/EFSCORRUPTED
-Message-ID: <20191014163716.GA76340@jaegeuk-macbookpro.roam.corp.google.com>
-References: <CAFeYvHWC=RZJr2ZSAvRy=r1kAJU8YW-hxkZ3uBAd2OQEerKmag@mail.gmail.com>
- <CAFeYvHXQQPfu+r0kLpTXWRZJr8SFF1QyUWzOkjJYFE2_UVSrUA@mail.gmail.com>
- <20191013214440.GA20196@amd>
+        id S1732550AbfJNQhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 12:37:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 09:37:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
+   d="scan'208";a="198343502"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.57])
+  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 09:37:50 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: X86: Make fpu allocation a common function
+Date:   Tue, 15 Oct 2019 00:22:47 +0800
+Message-Id: <20191014162247.61461-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191013214440.GA20196@amd>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you so much for taking care of this.
+They are duplicated codes to create vcpu.arch.{user,guest}_fpu in VMX
+and SVM. Make them common functions.
 
-Hi Greg,
+No functional change intended.
 
-Could you please cherry-pick the below commit in -stable?
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ arch/x86/kvm/svm.c     | 20 +++-----------------
+ arch/x86/kvm/vmx/vmx.c | 20 +++-----------------
+ arch/x86/kvm/x86.h     | 26 ++++++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 34 deletions(-)
 
-38fb6d0ea34299d97b031ed64fe994158b6f8eb3
-   f2fs: use EINVAL for superblock with invalid magic
-
-Thanks,
-
-On 10/13, Pavel Machek wrote:
-> On Sat 2019-10-12 21:55:24, Andrew Macks wrote:
-> > Sorry for version typo in the previous message.
-> > 
-> > In addition to 4.19, the issue was also backported to 4.14 and 5.2.
-> > 
-> > 4.14, 4.19 and 5.2 are all missing the EINVAL fix from 5.3.
-> 
-> Ouch.
-> 
-> Well, when I seen the patch, I thought "looks like the bug is not
-> serious enough for -stable". I guess I should have spoken up.
-> 
-> Anyway, I guess we need to either revert  59a5cea41dd0a or backport
-> 38fb6d0ea34299d97b too....
-> 
-> So I guess Greg and lists need to be cc-ed... and 
-> 
-> Thanks for the report and sorry for the trouble....
-> 
-> 								Pavel
-> 
-> 
-> > Andrew.
-> > 
-> > On Sat, 12 Oct 2019 at 21:39, Andrew Macks <andypoo@gmail.com> wrote:
-> > 
-> > > Hi - there is a nasty regression which was recently introduced into
-> > > longterm 4.19.76.
-> > >
-> > > 59a5cea41dd0ae706ab83f8ecd64199aadefb493 was committed to 4.19, however it
-> > > introduces a regression that filesystems no longer mount if do_mounts
-> > > iterates through them after F2FS.  This surfaced on one of my servers as
-> > > F2FS superblock check happens before btrfs mount is attempted.
-> > >
-> > > With this code, my server panicked after kernel upgrade as btrfs mount
-> > > wasn't attempted.
-> > >
-> > > This issue has already been fixed in 5.3 with this patch in July, but it
-> > > was missed from the 4.19 backport.
-> > >
-> > > 38fb6d0ea34299d97b031ed64fe994158b6f8eb3
-> > > f2fs: use EINVAL for superblock with invalid magic
-> > >
-> > > Andypoo.
-> > >
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index e479ea9bc9da..0116a3c37a07 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -2156,21 +2156,9 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ 		goto out;
+ 	}
+ 
+-	svm->vcpu.arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-						     GFP_KERNEL_ACCOUNT);
+-	if (!svm->vcpu.arch.user_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
+-		err = -ENOMEM;
++	err = kvm_vcpu_create_fpu(&svm->vcpu);
++	if (err)
+ 		goto free_partial_svm;
+-	}
+-
+-	svm->vcpu.arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-						     GFP_KERNEL_ACCOUNT);
+-	if (!svm->vcpu.arch.guest_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
+-		err = -ENOMEM;
+-		goto free_user_fpu;
+-	}
+ 
+ 	err = kvm_vcpu_init(&svm->vcpu, kvm, id);
+ 	if (err)
+@@ -2231,9 +2219,7 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ uninit:
+ 	kvm_vcpu_uninit(&svm->vcpu);
+ free_svm:
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
+-free_user_fpu:
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.user_fpu);
++	kvm_vcpu_free_fpu(&svm->vcpu);
+ free_partial_svm:
+ 	kmem_cache_free(kvm_vcpu_cache, svm);
+ out:
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index e660e28e9ae0..53d9298ff648 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6710,21 +6710,9 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	if (!vmx)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	vmx->vcpu.arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-			GFP_KERNEL_ACCOUNT);
+-	if (!vmx->vcpu.arch.user_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
+-		err = -ENOMEM;
++	err = kvm_vcpu_create_fpu(&vmx->vcpu);
++	if (err)
+ 		goto free_partial_vcpu;
+-	}
+-
+-	vmx->vcpu.arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-			GFP_KERNEL_ACCOUNT);
+-	if (!vmx->vcpu.arch.guest_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
+-		err = -ENOMEM;
+-		goto free_user_fpu;
+-	}
+ 
+ 	vmx->vpid = allocate_vpid();
+ 
+@@ -6825,9 +6813,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	kvm_vcpu_uninit(&vmx->vcpu);
+ free_vcpu:
+ 	free_vpid(vmx->vpid);
+-	kmem_cache_free(x86_fpu_cache, vmx->vcpu.arch.guest_fpu);
+-free_user_fpu:
+-	kmem_cache_free(x86_fpu_cache, vmx->vcpu.arch.user_fpu);
++	kvm_vcpu_free_fpu(&vmx->vcpu);
+ free_partial_vcpu:
+ 	kmem_cache_free(kvm_vcpu_cache, vmx);
+ 	return ERR_PTR(err);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 45d82b8277e5..c27e7ac91337 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -367,4 +367,30 @@ static inline bool kvm_pat_valid(u64 data)
+ void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
+ void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
+ 
++static inline int kvm_vcpu_create_fpu(struct kvm_vcpu *vcpu)
++{
++	vcpu->arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
++			GFP_KERNEL_ACCOUNT);
++	if (!vcpu->arch.user_fpu) {
++		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
++		return -ENOMEM;
++	}
++
++	vcpu->arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
++			GFP_KERNEL_ACCOUNT);
++	if (!vcpu->arch.guest_fpu) {
++		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
++		kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static inline void kvm_vcpu_free_fpu(struct kvm_vcpu *vcpu)
++{
++	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
++	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
++}
++
+ #endif
+-- 
+2.19.1
 
