@@ -2,157 +2,96 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30207C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C899C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4D120873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38CD2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732283AbfJNP7B (ORCPT
+        id S1732492AbfJNP7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:59:01 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42957 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731960AbfJNP7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:59:00 -0400
-Received: by mail-vs1-f66.google.com with SMTP id m22so11110389vsl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:59:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YhZmTuECyvNatPuwMHw4UrCLmojj7sz6D63jp3de7MU=;
-        b=cn9bii7r/yhIBkbkP7/fp4o6xUMkh3cGnr1j9tpAr6Mjn20QzZfV5DjizDBY9UqFaq
-         W4un88SuqUHR5NUP00VPS7kHZPFVlbAekKT57mMYmIdlHj9y3N3pqi+JnLxL1+wO/DD9
-         RtwxsIRCJtjhFDdmt/6p2C6/lnwopcnyXd+FH1Z84+a3a4sF6hROfGoTiy0J+/aedQqh
-         X1QjxJ2NjzmvPruaHGrZqZRHg86dvQf8vmwgOOmhxohAPHgA6NEvk5b2nmFWq5qJJzJX
-         6TsAaanfHkBLvMYxYjdpGn+5OUyMr8efQUQC2a3tlA5x+T6CMbV/i8WUBsa0y2o65/IP
-         c+dQ==
-X-Gm-Message-State: APjAAAUctm7vii3xK7DO2lVjK6iQFT1h5wp/MPzKLbW9uHJFI5diop9/
-        SY447yMWxxpS3mnIUv7VXGfwj8Xw1LDz4jMZItM=
-X-Google-Smtp-Source: APXvYqwcPL8t68p5ICsXAF44cUv/Deq8Lfd1v6j50uCjwERnfswo082+5RyGFNTyE8RiX0Re8APNiEdJOCFy36neXSk=
-X-Received: by 2002:a05:6102:253:: with SMTP id a19mr17354178vsq.37.1571068739538;
- Mon, 14 Oct 2019 08:58:59 -0700 (PDT)
+        Mon, 14 Oct 2019 11:59:50 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:58387 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727038AbfJNP7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 11:59:49 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2a.mailbox.org (Postfix) with ESMTPS id 42B24A12E1;
+        Mon, 14 Oct 2019 17:59:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id rzhkEBTLWgtf; Mon, 14 Oct 2019 17:59:40 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 02:59:31 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
+ operations
+Message-ID: <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
+References: <20191012010539.6131-1-cyphar@cyphar.com>
+ <20191014154136.GF18794@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-References: <20191011054240.17782-1-james.qian.wang@arm.com> <20191011054240.17782-2-james.qian.wang@arm.com>
-In-Reply-To: <20191011054240.17782-2-james.qian.wang@arm.com>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Mon, 14 Oct 2019 11:58:48 -0400
-Message-ID: <CAKb7Uvik6MZSwCQ4QF7ed1wttfufbR-J4vNdOtYzM+1tqPE_vw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] drm/komeda: Add a new helper drm_color_ctm_s31_32_to_qm_n()
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="x7whfzqvnijraall"
+Content-Disposition: inline
+In-Reply-To: <20191014154136.GF18794@devbig004.ftw2.facebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 1:43 AM james qian wang (Arm Technology China)
-<james.qian.wang@arm.com> wrote:
->
-> Add a new helper function drm_color_ctm_s31_32_to_qm_n() for driver to
-> convert S31.32 sign-magnitude to Qm.n 2's complement that supported by
-> hardware.
->
-> Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
-> ---
->  drivers/gpu/drm/drm_color_mgmt.c | 23 +++++++++++++++++++++++
->  include/drm/drm_color_mgmt.h     |  2 ++
->  2 files changed, 25 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_color_mgmt.c b/drivers/gpu/drm/drm_color_mgmt.c
-> index 4ce5c6d8de99..3d533d0b45af 100644
-> --- a/drivers/gpu/drm/drm_color_mgmt.c
-> +++ b/drivers/gpu/drm/drm_color_mgmt.c
-> @@ -132,6 +132,29 @@ uint32_t drm_color_lut_extract(uint32_t user_input, uint32_t bit_precision)
->  }
->  EXPORT_SYMBOL(drm_color_lut_extract);
->
-> +/**
-> + * drm_color_ctm_s31_32_to_qm_n
-> + *
-> + * @user_input: input value
-> + * @m: number of integer bits
 
-Is this the full 2's complement value? i.e. including the "sign" bit
-of the 2's complement representation? I'd kinda assume that m = 32, n
-= 0 would just get me the integer portion of this, for example.
+--x7whfzqvnijraall
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> + * @n: number of fractinal bits
+On 2019-10-14, Tejun Heo <tj@kernel.org> wrote:
+> On Sat, Oct 12, 2019 at 12:05:39PM +1100, Aleksa Sarai wrote:
+> > Because pids->limit can be changed concurrently (but we don't want to
+> > take a lock because it would be needlessly expensive), use the
+> > appropriate memory barriers.
+>=20
+> I can't quite tell what problem it's fixing.  Can you elaborate a
+> scenario where the current code would break that your patch fixes?
 
-fractional
+As far as I can tell, not using *_ONCE() here means that if you had a
+process changing pids->limit from A to B, a process might be able to
+temporarily exceed pids->limit -- because pids->limit accesses are not
+protected by mutexes and the C compiler can produce confusing
+intermediate values for pids->limit[1].
 
-> + *
-> + * Convert and clamp S31.32 sign-magnitude to Qm.n 2's complement.
-> + */
-> +uint64_t drm_color_ctm_s31_32_to_qm_n(uint64_t user_input,
-> +                                     uint32_t m, uint32_t n)
-> +{
-> +       u64 mag = (user_input & ~BIT_ULL(63)) >> (32 - n);
-> +       bool negative = !!(user_input & BIT_ULL(63));
-> +       s64 val;
-> +
-> +       /* the range of signed 2s complement is [-2^n+m, 2^n+m - 1] */
+But this is more of a correctness fix than one fixing an actually
+exploitable bug -- given the kernel memory model work, it seems like a
+good idea to just use READ_ONCE() and WRITE_ONCE() for shared memory
+access.
 
-This implies that n = 32, m = 0 would actually yield a 33-bit 2's
-complement number. Is that what you meant?
+[1]: https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE
 
-> +       val = clamp_val(mag, 0, negative ? BIT(n + m) : BIT(n + m) - 1);
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-I'm going to play with numpy to convince myself that this is right
-(esp with the endpoints), but in the meanwhile, you probably want to
-use BIT_ULL in case n + m > 32 (I don't think that's the case with any
-current hardware though).
+--x7whfzqvnijraall
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +       return negative ? 0ll - val : val;
+-----BEGIN PGP SIGNATURE-----
 
-Why not just "negative ? -val : val"?
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXaSbYAAKCRCdlLljIbnQ
+ErlGAPwNNvA0NEl3lea4jocc7jw2pPmGBL5rg/Ogyourf6PDpgD+IJJGCeNm9CFT
+vQo8yItkhrGR/QEne2SQK5v1XqPseg8=
+=ZrpX
+-----END PGP SIGNATURE-----
 
-> +}
-> +EXPORT_SYMBOL(drm_color_ctm_s31_32_to_qm_n);
-> +
->  /**
->   * drm_crtc_enable_color_mgmt - enable color management properties
->   * @crtc: DRM CRTC
-> diff --git a/include/drm/drm_color_mgmt.h b/include/drm/drm_color_mgmt.h
-> index d1c662d92ab7..60fea5501886 100644
-> --- a/include/drm/drm_color_mgmt.h
-> +++ b/include/drm/drm_color_mgmt.h
-> @@ -30,6 +30,8 @@ struct drm_crtc;
->  struct drm_plane;
->
->  uint32_t drm_color_lut_extract(uint32_t user_input, uint32_t bit_precision);
-> +uint64_t drm_color_ctm_s31_32_to_qm_n(uint64_t user_input,
-> +                                     uint32_t m, uint32_t n);
->
->  void drm_crtc_enable_color_mgmt(struct drm_crtc *crtc,
->                                 uint degamma_lut_size,
-> --
-> 2.20.1
->
+--x7whfzqvnijraall--
