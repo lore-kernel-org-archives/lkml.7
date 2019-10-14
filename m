@@ -2,137 +2,147 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760DAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A70CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4579920650
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3FA2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d6h8bAnd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LD7yH42N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbfJNIKZ (ORCPT
+        id S1730191AbfJNIM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:10:25 -0400
-Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:27719
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725936AbfJNIKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:10:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gdztRfgapVG2kEx3PHGVQ5zQp+7EuCKnge9rulJHcRft5DHEybjgFXXOGM2uM21yNQ3yznqMc5FTB+USvBXT5yyX155BztioUpnOm1Dh+IDizhtcbDRWbKW3etroRKPgp5hmNk1cfbcJWmacQh09Nw63TWlscsMYIoc8bkOHDDqV36/bhukE5fHHcczOAGfm0gGX0JVjNZreBunbqf5fDnAyuYa4XmkaQoracOCTqGzpr4ZiJSkNnkJde/Cc8kr/ERhW2/D4d7w6pbCXMtMd5U6LgBax6P4ambLWmYNFDBH2Zd/I2l0HayWOC+t9+11t3iXN1UFuK+BUFkhJiSnueA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RsdcaDiZgjM6BdeYqsK3P0pA8rLqX+f0TZWoch4vjD8=;
- b=UVQ19uJNODtiHyGMM2A3nrb2yttmn5rv0MIu+JphIjthuCGa3uBBmc7kOvOwLsfMP6FtXbZ/GT2ZOOyMuVAFwMp8i/Xd1ck4eLMhlSFgNNpkY1miAPxgfZFrEy+9k+YMtL+MVgLOJurZ4j8RXXTx1IUA2u2enP9s7frwiy9Tde2RASp3zsWHkvQiCQBcTFdCtmgdNDusbsDTf7DE1HP6Ne3o87y+WX1HRiMd2qOg13RZo14hHPqp0s8HZ4aTo7IMoOtPoDS1kgHRCuZBcQsbhoKmNVIPNc3IVmN0k69T1hdojFDVQhkXDfLMB21qfFq4sPn5ZEaRPjIsI8VQX4t3Fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RsdcaDiZgjM6BdeYqsK3P0pA8rLqX+f0TZWoch4vjD8=;
- b=d6h8bAndJ/Hxf5vIZhBoGVIVO2Hul2l/G5ZWDE8LVWVuQ3r+knUbVj3tNKGY62NZ4WJG8JB39MvAk24gzLLM81QQd7dYrUsL8+ROis1C1DEaocAqekNipUiUH7zAEq6D+iBaH3UNFxHx7HWzuw8NICoAYdJ50SsW0DYmYVwoY5o=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6495.eurprd04.prod.outlook.com (20.179.233.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Mon, 14 Oct 2019 08:10:20 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561%5]) with mapi id 15.20.2347.021; Mon, 14 Oct 2019
- 08:10:20 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "J.Lambrecht@TELEVIC.com" <J.Lambrecht@televic.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1] dmaengine: imx-sdma: fix kernel hangs with SLUB slab
- allocator
-Thread-Topic: [PATCH v1] dmaengine: imx-sdma: fix kernel hangs with SLUB slab
- allocator
-Thread-Index: AQHVcr1VGWNo2EzDlEmVbBRWEyoOA6dZ5eeAgAAA+QCAAADW8A==
-Date:   Mon, 14 Oct 2019 08:10:20 +0000
-Message-ID: <VE1PR04MB66386213FCB0ADA44EB195E589900@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1569347584-3478-1-git-send-email-yibin.gong@nxp.com>
- <20191014080215.GL2654@vkoul-mobl> <20191014080544.GM2654@vkoul-mobl>
-In-Reply-To: <20191014080544.GM2654@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2a226c7a-1c48-406b-8d08-08d7507df4d7
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VE1PR04MB6495:|VE1PR04MB6495:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB64957A98BC831A805572549889900@VE1PR04MB6495.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 01901B3451
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(346002)(136003)(376002)(199004)(189003)(229853002)(486006)(6246003)(53546011)(476003)(478600001)(7416002)(6506007)(25786009)(6436002)(5660300002)(55016002)(316002)(54906003)(86362001)(2906002)(6116002)(446003)(11346002)(3846002)(9686003)(6916009)(14454004)(81156014)(66946007)(76116006)(66476007)(256004)(64756008)(33656002)(8936002)(81166006)(66556008)(14444005)(8676002)(7736002)(74316002)(305945005)(99286004)(76176011)(102836004)(7696005)(52536014)(26005)(186003)(4326008)(66066001)(71200400001)(71190400001)(4001150100001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6495;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9xBVZnQXUVUzESBrTV84z11xI5lurhaU3DOIKaNIx2h0+3Gn5SycRVyUJ9A41p9WI45DHF0H3YIEY79pq2B0Sp6JgxXFCvDgsD57z8lqBitnYeKTAZg9y9pgaeUBSq8Nq9Yl+U51oQBFAX2ZTh8k3S53UqeCjE51pxwSdcPgEgRek8iAuDiVmcUeKkgNHXIFhO0CmkVOWrR8P6NokBVB4banAgsR0PgS6Mgxpe82RtH3cT+n+2NAwhqzkCqPcRh8spGCahxIrSdjx1H9mUIJlJS+tnztZ+S3WPlbq1rKXRQBkkA1cUZXXukbfk5wgC2hIv258KMS9f8r4nJ5XWB3+HnCw81UHaWgGf7t9LL6rLmzGjqch+ko02F2Ll+dG/bMGAO0Gicx8U0ofGJsYYntPxbzb6kAQKaKz0NPOB9uD1c=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Oct 2019 04:12:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51654 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729234AbfJNIMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:12:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so16193412wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 01:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+deUZXsERBoIwuF8w37rkTqOJuJ0YNPkmp+VXhLAItk=;
+        b=LD7yH42N59JCCaLRFfXRFerOH8rkSLiF+LkhxjTWD8eNTeij5IMQn1woDobFZE2iCw
+         T7PRQ5NqIOzxbidAmveDF27g/uRI4cYMXqKO/PiT6vh6oSEh5FGBE6Qpt93GBWqnaEGH
+         lmBXwIYnLtN3udyc40lT+rQqfc2okHAYI2K6oBmuKA/w4jSTcX3jV3q0ApsAULz+4gmY
+         VlAEmK5rk0W33jfbswlq2l3XI2DuvEvHpgXpf26c0IXqlDSe7GMgnINcA03sbbgoQM7N
+         T1vcoiZ56aqBt+IXEp1ThrluAiAOm+Bm/XI852XhW4XdnC238NJb/RqDGBbxXyCEc5Yf
+         dWwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=+deUZXsERBoIwuF8w37rkTqOJuJ0YNPkmp+VXhLAItk=;
+        b=Wm7WG3h0qpqlicOWgxpWIfLmyOFkqY+ulHgF9st/Jp1oO375tHyVl9TT77yYzNRYzG
+         uNNeyICwlXyDJfdtTA87Z4tgDDV5ZsX8HIAqp6KtpQgILzA7jJZcj14NLcgdKIGWOfRi
+         8ah1J3lidaVAMqW8e+CWifcZP5rbTbtUjws4q1yWAv2ZbOOnHh7Au2uqs4NBONJKOGKS
+         vUskr7xN0U0DWbu9MssqiFATP+Mq/FnLxy2aOvkkMb/CTZgBtLa8SVZNb4gzeXHqtbCM
+         wWMBhGmtfW9PpSNXxMrpPruxrgiLYFHkW1j6Ho77/YmPrGNRrBlOER6aU+Nlwd+nk8sS
+         Prkg==
+X-Gm-Message-State: APjAAAXzJyonQzywvDAJt0no1f1Ffhj22OJSyTSW8tuSvWOT+KoqM9r+
+        uzNTj4wOlYOpXR98Khe24CRH/w==
+X-Google-Smtp-Source: APXvYqzzMPmMnU/mdIbw3oXsYhkR72iWEBpRtwUxn8lSxoffzDIn8VIjfySG7MOoXzNCS5f6xEQ2pA==
+X-Received: by 2002:a7b:ce89:: with SMTP id q9mr13965770wmj.2.1571040743235;
+        Mon, 14 Oct 2019 01:12:23 -0700 (PDT)
+Received: from dell ([2.27.167.11])
+        by smtp.gmail.com with ESMTPSA id c9sm16087692wrt.7.2019.10.14.01.12.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 14 Oct 2019 01:12:22 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 09:12:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
+Message-ID: <20191014081220.GK4545@dell>
+References: <20191007033200.13443-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a226c7a-1c48-406b-8d08-08d7507df4d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2019 08:10:20.3686
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hQJrwwCzbKgOk/4HAE7m5/JS6/Q5rUo4f9TlAijAqAgCsbAI6tSsOWRUY7c7oOkBLypiW+KsrrXL5A0tUCs8gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6495
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191007033200.13443-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-14 Vinod Koul <vkoul@kernel.org> wrote:
-> On 14-10-19, 13:32, Vinod Koul wrote:
-> > On 24-09-19, 09:49, Robin Gong wrote:
-> > > Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-> > > (41) exceed the size of structure sdma_script_start_addrs(40), thus
-> > > cause memory corrupt such as slob block header so that kernel trap
-> > > into while() loop forever in slob_free(). Please refer to below code
-> > > piece in imx-sdma.c:
-> > > for (i =3D 0; i < sdma->script_number; i++)
-> > > 	if (addr_arr[i] > 0)
-> > > 		saddr_arr[i] =3D addr_arr[i]; /* memory corrupt here */ That issue
-> > > was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
-> > > support for version 3 firmware") because
-> > > SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-> > > (38->41 3 scripts added) not align with script number added in
-> > > sdma_script_start_addrs(2 scripts).
-> >
-> > Applied, thanks
->=20
-> And after applying I noticed the patch title is not apt. The patch title =
-should
-> reflect the change and not the cause or result.
->=20
-> So I have modified the title to: "dmaengine: imx-sdma: fix size check for=
- sdma
-> script_number"
-Yes, You are right, thanks Vinod.
->=20
-> Thanks
-> --
-> ~Vinod
+On Mon, 07 Oct 2019, Bartosz Golaszewski wrote:
+
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> While working on my other series related to gpio-backlight[1] I noticed
+> that we could simplify the driver if we made the only user of platform
+> data use GPIO lookups and device properties. This series tries to do
+> that.
+> 
+> The first patch adds all necessary data structures to ecovec24. Patch
+> 2/7 unifies much of the code for both pdata and non-pdata cases. Patches
+> 3-4/7 remove unused platform data fields. Last three patches contain
+> additional improvements for the GPIO backlight driver while we're already
+> modifying it.
+> 
+> I don't have access to this HW but hopefully this works. Only compile
+> tested.
+> 
+> [1] https://lkml.org/lkml/2019/6/25/900
+> 
+> v1 -> v2:
+> - rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
+> - added additional two patches with minor improvements
+> 
+> v2 -> v3:
+> - in patch 7/7: used initializers to set values for pdata and dev local vars
+> 
+> v3 -> v4:
+> - rebased on top of v5.4-rc1
+> - removed changes that are no longer relevant after commit ec665b756e6f
+>   ("backlight: gpio-backlight: Correct initial power state handling")
+> - added patch 7/7
+> 
+> v4 ->V5:
+> - in patch 7/7: added a comment replacing the name of the function being
+>   pulled into probe()
+> 
+> Bartosz Golaszewski (7):
+>   backlight: gpio: remove unneeded include
+>   sh: ecovec24: add additional properties to the backlight device
+>   backlight: gpio: simplify the platform data handling
+>   sh: ecovec24: don't set unused fields in platform data
+>   backlight: gpio: remove unused fields from platform data
+>   backlight: gpio: use a helper variable for &pdev->dev
+>   backlight: gpio: pull gpio_backlight_initial_power_state() into probe
+> 
+>  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
+
+I guess we're just waiting for the SH Acks now?
+
+>  drivers/video/backlight/gpio_backlight.c     | 108 +++++--------------
+>  include/linux/platform_data/gpio_backlight.h |   3 -
+>  3 files changed, 53 insertions(+), 91 deletions(-)
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
