@@ -4,95 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA2FECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00739ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808232067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88AC2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571076700;
-	bh=elYOrWT12XxZHZnKT0BmRvVXjZ2vJnvOS65uG0XF5SI=;
+	s=default; t=1571076913;
+	bh=ejU6qO+W8lEEYTLPbXtt+7TgI6dl+S8RZPJyJYJH8XI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cdHNo+Vcw5U6IQUn/8toSVbkC6mcrOnZuB0u7xGceCXjbFS0aGyPJ/2DbzPJVcvWb
-	 vOhiY5BWeAa6TW0OvnZQIYdh/NjEOOoto8cHwUdAB5dqAz335v4p55FsTATL17TF7P
-	 jFkG5CUvNZQApNAbyo4JY+o7jxpUL5e0wcSv1HMA=
+	b=UVkM2T/SDStgTOONFln4SQ1qC5jIc8CglB5oeVG/xBb7IjLItEQwfx/6hZCu7Pp7C
+	 4TEZsTC6iePeOUrFwhQxkUQzCzXC5NFXg1be1PL/WaZ/8Yq4hjjw+bv0GiIY0sz0Ch
+	 E+j6JDVr5CnT9bqJcVUc8KP4H5GNtdW6tJ4qUnT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733181AbfJNSLj (ORCPT
+        id S2388725AbfJNSPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:11:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38694 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732772AbfJNSLj (ORCPT
+        Mon, 14 Oct 2019 14:15:13 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42147 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732330AbfJNSPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:11:39 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e11so14581076otl.5;
-        Mon, 14 Oct 2019 11:11:36 -0700 (PDT)
+        Mon, 14 Oct 2019 14:15:12 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c10so14596047otd.9;
+        Mon, 14 Oct 2019 11:15:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vnVDhuScvkPvo4RwDVc8DWG75Gjqf1s3V7qBRLbqCOQ=;
-        b=dau4JhbTv7pwHuRl0tCYRlrnrNNJaVui80UTEaIMoVgJqMObrDNPpF5+B382NHtybm
-         IOlVn2NTbvUTTVBt+DBgacmt4qnEZaST/7DUIJkLQK6bpngaSMr0PYtkwQA9voNvRh31
-         WDf4ovetqra4AeD/xsU0W0p52Jqdu7I2VGOaehbwtkN0YNzVyqV+fT11l8OTavfFIuhp
-         q4kzq/5qvHr8vkOxOlfbwFxlJg26vOJGy46IMd6u/6HnSYnY1YiuVIAZSQxJWWmqg871
-         EmLIi1vP2haZl62GfQcBVG0TilcTdLm+WUcwU7lfVLP0674EV/oMyUGYmrBORlpZsk5s
-         ZjFg==
-X-Gm-Message-State: APjAAAWaSQJ22A6rcTWKM1cRxknVvBel0XiQoJJ/PU2aUjcmQXWECkLi
-        jAan80yEDcvGFD9wkwq7IQ==
-X-Google-Smtp-Source: APXvYqwt3ZBPq4LqtpgI59FJFua/51xF4TfLIs6OjOADJgM4VMCS2ku/+KVb7nuJpUHzNQheLssvAg==
-X-Received: by 2002:a05:6830:1be3:: with SMTP id k3mr26208614otb.180.1571076696479;
-        Mon, 14 Oct 2019 11:11:36 -0700 (PDT)
+        bh=73oJVS4+Wov4CaoNHWnI0N3ommx1nafBqtjG04AIdio=;
+        b=RZtpz++jl+XqSw6vWw205Hn1j35K3e0LDC3lQTF98kRMXn43JcIT/75W1p0teBw3WP
+         O0pRIcYPHlZ6XE53V4jwo20G3cQHKt3InILP25j5Hy/SBLwjs9xWeUTKskuS8o/SGeH1
+         4TroOqFKMs6TZ2Q2AEcsg68Qa0CtabV4IUUEI2/pz+Noko7VnAB71bj1Q8SMwtob0jJW
+         MXw0czk9MNn2iCWKDYYTJhRCSQlQsXCkcGUpF91fHEXu147VslEjbuI2wPmmPrX1LmfU
+         CXLJu42xq33wo4TeCWCUgom6p+7AvbLLZwAkoJbgc0mFU5GjfXJfcbk657FMQijUKUKe
+         fGYQ==
+X-Gm-Message-State: APjAAAVW+iSbVhj+ooUKCG1kCIm/pmaXwPZB6bUITap5KmV3tIJmpdFI
+        bsz+fcjbqNUKboKgf6qbLCu2vX8=
+X-Google-Smtp-Source: APXvYqxVyk1pbofRFhvENaXUJqEwHRpF+qQIjgRG5uIp2ILgHRUTeT7k/T8NtpvpVOA/wJ4MAVr/2A==
+X-Received: by 2002:a9d:6b82:: with SMTP id b2mr2740392otq.56.1571076911521;
+        Mon, 14 Oct 2019 11:15:11 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t10sm5581297oib.49.2019.10.14.11.11.35
+        by smtp.gmail.com with ESMTPSA id o23sm5952876ote.67.2019.10.14.11.15.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 11:11:35 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 13:11:35 -0500
+        Mon, 14 Oct 2019 11:15:10 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 13:15:10 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
-        nicolas.ferre@microchip.com, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, claudiu.beznea@microchip.com,
-        Eugen.Hristev@microchip.com,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: sdhci-of-at91: new compatible string
- and update properties
-Message-ID: <20191014181135.GA4428@bogus>
-References: <20191011103340.26749-1-ludovic.desroches@microchip.com>
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, mark.rutland@arm.com,
+        syq@debian.org, ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        armijn@tjaldur.nl, tglx@linutronix.de, yuehaibing@huawei.com,
+        malat@debian.org, ezequiel@collabora.com, paul@crapouillou.net
+Subject: Re: [PATCH 4/6 v2] dt-bindings: MMC: Add X1000 bindings.
+Message-ID: <20191014181510.GA10839@bogus>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+ <1570857203-49192-1-git-send-email-zhouyanjie@zoho.com>
+ <1570857203-49192-5-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011103340.26749-1-ludovic.desroches@microchip.com>
+In-Reply-To: <1570857203-49192-5-git-send-email-zhouyanjie@zoho.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Oct 2019 12:33:37 +0200, Ludovic Desroches wrote:
-> There is a new compatible string for the SAM9X60 sdhci device. It involves
-> an update of the properties about the clocks stuff.
+On Sat, 12 Oct 2019 13:13:18 +0800, Zhou Yanjie wrote:
+> Add the MMC bindings for the X1000 Soc from Ingenic.
 > 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 > ---
-> 
-> Changes:
-> - v2: remove the extra example and fix node label
-> 
-> This patch conflicts with Nicolas' one: "dt-bindings: sdhci-of-at91: add
-> the microchip,sdcal-inverted property". Let me know which one has to be
-> rebased or you can handle it.
-> 
-> Ludovic
-> 
-> 
->  .../devicetree/bindings/mmc/sdhci-atmel.txt       | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/mmc/jz4740.txt | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
