@@ -2,68 +2,93 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABADC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6131ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A3E20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A573920873
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 17:59:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V60ItJYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbfJNR6N (ORCPT
+        id S1731062AbfJNR7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 13:58:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:50306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730864AbfJNR6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 13:58:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76E4128;
-        Mon, 14 Oct 2019 10:58:12 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA0853F6C4;
-        Mon, 14 Oct 2019 10:58:10 -0700 (PDT)
-Subject: Re: [PATCH] arm64: hibernate: check pgd table allocation
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-References: <20191014144824.159061-1-pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        vladimir.murzin@arm.com, mark.rutland@arm.com, tglx@linutronix.de
-From:   James Morse <james.morse@arm.com>
-Message-ID: <8ebe7877-93d3-dfd0-8ea3-2a4815b4f154@arm.com>
-Date:   Mon, 14 Oct 2019 18:58:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 14 Oct 2019 13:59:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40707 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfJNR7N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 13:59:13 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e13so2320033pga.7;
+        Mon, 14 Oct 2019 10:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XN1W11UdnVSpmM8IBnNjLEn4Slzsx790GpHtKtPVAlo=;
+        b=V60ItJYNKZfadf+Ceewo994i+FEZYS4kU89CY6CLJ2GaPSAo8Py82mDvlMV6izozS3
+         un9AB+fn72Z0RtEFjVwlQeYqgz0hNpvr9qTvV5YETqUQx1b/lzASdk9NSC+Ocvv3BRqA
+         myuHSRQQ6K5IDKPWh7IAJBuP/0tu9m3H5NXCitwRUrQZXuedisaxE69bftubVJNMPp5G
+         nR2txXx17bX0tg1CdPc7yfZXiKNGq7S/HKjC7WEJ9Cof1qgkgy6QdDHYMq9BDRILp/ub
+         sS3fDU1OMOf+gOTopKogew7GgH3K1s/5R9g6Ucy83+ki9uwE2IajqqdJvRH++pznvUf+
+         Otaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XN1W11UdnVSpmM8IBnNjLEn4Slzsx790GpHtKtPVAlo=;
+        b=oWWKR3OjaKgB7NC5iYI5QNZIVbxrP5kFpIZy0mY38cK0NwJ/KELwh+lm4BQyMpNvkT
+         j0/l5eNAw30GLr3NHxH0TvxP1sTyE+FkGe8iff0qhnebFOKBm16L9WHdGzWs3M4jUvv9
+         HP3mO5dLcuPnnbfZzcJktNx+j7i/1VXYtL/56xeMBkZZitJRyn7X88Cgg1ZqJ1vApypx
+         uC/hHlAt8qunfGAy4MFN4JO9URx6iPnHuP+mwGQayr+HCh1bitnw09VyZYFSRl8Co3fD
+         S3ew/4GLvVANX7Gaw6mdf6BMDiJCDAcwVsznKMya3O7sXF0FZSqq+ISSVNEARwMa3qlU
+         YTeg==
+X-Gm-Message-State: APjAAAVkrYem8Mt3/bsLXNgJBIqSWJ+PxMkvz/k8gv5yRlJdM0QeK0eF
+        cZR3EBgUDzi4C7QaBwz2L/G5+582K2dGDHDM1JA=
+X-Google-Smtp-Source: APXvYqzraupcIWwI76kQ4DY04c/kHa31m8HupWF67hdf3F6diQxFBi44IWY2xMjlmWlZ/dDNeOT+L8ZlW0sC7Eacqt8=
+X-Received: by 2002:a17:90a:b391:: with SMTP id e17mr38652318pjr.132.1571075952238;
+ Mon, 14 Oct 2019 10:59:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191014144824.159061-1-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 14 Oct 2019 20:59:01 +0300
+Message-ID: <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
 
-On 14/10/2019 15:48, Pavel Tatashin wrote:
-> There is a bug in create_safe_exec_page(), when page table is allocated
-> it is not checked that table is allocated successfully:
-> 
-> But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).  Check that
-> allocation was successful.
-> 
-> Fixes: 82869ac57b5d ("arm64: kernel: Add support for hibernate/suspend-to-disk")
-> 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
+Can we rather not contaminate driver with this?
 
-Reviewed-by: James Morse <james.morse@arm.com>
+Just register a separate PWM driver and export its functionality to
+GPIO, or other way around (in the latter case we actually have PCA8685
+which provides a GPIO fgunctionality).
 
-
-Thanks,
-
-James
+-- 
+With Best Regards,
+Andy Shevchenko
