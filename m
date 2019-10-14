@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656B5C47404
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A69420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433FC20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 06:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfJNGir (ORCPT
+        id S1730101AbfJNGi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 02:38:47 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:14999 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726406AbfJNGiq (ORCPT
+        Mon, 14 Oct 2019 02:38:57 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5991 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726406AbfJNGi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 02:38:46 -0400
-X-UUID: 965587b301ae4fe8b34476f710e1f97a-20191014
-X-UUID: 965587b301ae4fe8b34476f710e1f97a-20191014
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        Mon, 14 Oct 2019 02:38:56 -0400
+X-UUID: 0164e274b62c421a8e10fc6326aab591-20191014
+X-UUID: 0164e274b62c421a8e10fc6326aab591-20191014
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 219309049; Mon, 14 Oct 2019 14:38:40 +0800
+        with ESMTP id 1261292506; Mon, 14 Oct 2019 14:38:50 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 14 Oct 2019 14:38:36 +0800
+ 15.0.1395.4; Mon, 14 Oct 2019 14:38:46 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 14 Oct 2019 14:38:36 +0800
+ Transport; Mon, 14 Oct 2019 14:38:46 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Matthias Brugger <matthias.bgg@gmail.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -47,42 +47,55 @@ CC:     Evan Green <evgreen@chromium.org>,
         <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
         <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
         <chao.hao@mediatek.com>, <edison.hsieh@mediatek.com>
-Subject: [PATCH v3 1/7] iommu/mediatek: Correct the flush_iotlb_all callback
-Date:   Mon, 14 Oct 2019 14:38:15 +0800
-Message-ID: <1571035101-4213-2-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v3 2/7] iommu/mediatek: Add pgtlock in the iotlb_sync
+Date:   Mon, 14 Oct 2019 14:38:16 +0800
+Message-ID: <1571035101-4213-3-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
 References: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: F2C1779EB7F8A022E9DB73FE5ECD4AFF3BC684C1A4ADE5CDE1EA95C108C9BBB32000:8
+X-TM-SNTS-SMTP: 6E419CE018A08EE746BCEFAA9D613D0F51462EF49F84CF64C7595C095F5042E12000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the correct tlb_flush_all instead of the original one.
+The commit 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API
+TLB sync") help move the tlb_sync of unmap from v7s into the iommu
+framework. It helps add a new function "mtk_iommu_iotlb_sync", But it
+lacked the dom->pgtlock, then it will cause the variable "tlb_flush_active"
+may be changed unexpectedly, we could see this warning log randomly:
+
+mtk-iommu 10205000.iommu: Partial TLB flush timed out, falling back to
+full flush
+
+This patch adds dom->pgtlock in mtk_iommu_iotlb_sync to fix this issue.
 
 Fixes: 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API TLB sync")
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 ---
- drivers/iommu/mtk_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/mtk_iommu.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 67a483c..76b9388 100644
+index 76b9388..5f594d6 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -447,7 +447,7 @@ static size_t mtk_iommu_unmap(struct iommu_domain *domain,
- 
- static void mtk_iommu_flush_iotlb_all(struct iommu_domain *domain)
+@@ -453,7 +453,12 @@ static void mtk_iommu_flush_iotlb_all(struct iommu_domain *domain)
+ static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
+ 				 struct iommu_iotlb_gather *gather)
  {
--	mtk_iommu_tlb_sync(mtk_iommu_get_m4u_data());
-+	mtk_iommu_tlb_flush_all(mtk_iommu_get_m4u_data());
++	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
++	unsigned long flags;
++
++	spin_lock_irqsave(&dom->pgtlock, flags);
+ 	mtk_iommu_tlb_sync(mtk_iommu_get_m4u_data());
++	spin_unlock_irqrestore(&dom->pgtlock, flags);
  }
  
- static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
+ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
 -- 
 1.9.1
 
