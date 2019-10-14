@@ -2,142 +2,80 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3F8ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F71C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A2C21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A8221882
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 22:44:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571093066;
+	bh=bR1w6UoSnX74UluDNWX1wTa+jYiev1lVKk27mIadYqc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NUDHKs6N89YMnaOuX64BharqpOgiG4oX1yaXtBUzs0/nQZgxvpy1HTtR764g29KlF
+	 ox81/lRJh3zT/SLR2eSkNNx0s4xEUnVxuQ0PT5BRNwkHV5Hlrkn3ZJ74rDjMzx/APH
+	 8Y6jpVSco25hbZITgpz5+P4LYl+2s765GRJIiJMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfJNWll (ORCPT
+        id S1726180AbfJNWoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 18:41:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21239 "EHLO mga14.intel.com"
+        Mon, 14 Oct 2019 18:44:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfJNWll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 18:41:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 15:41:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,296,1566889200"; 
-   d="scan'208";a="207353863"
-Received: from spandruv-mobl3.jf.intel.com ([10.254.34.58])
-  by orsmga002.jf.intel.com with ESMTP; 14 Oct 2019 15:41:39 -0700
-Message-ID: <3055e340ebaba9f8fb587a11ce3f25cf33919ab3.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, ckellner@redhat.com
-Date:   Mon, 14 Oct 2019 15:41:38 -0700
-In-Reply-To: <20191014213618.GK4715@zn.tnic>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
-         <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
-         <20191014213618.GK4715@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+        id S1726095AbfJNWoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 18:44:25 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E6F21835;
+        Mon, 14 Oct 2019 22:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571093064;
+        bh=bR1w6UoSnX74UluDNWX1wTa+jYiev1lVKk27mIadYqc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VX64SZlgGVvm8FdahZlm6oDXPO4gIeEsrTnQbPR3Va+ueoUcERwlEsVXpOMlAnrdy
+         a9qqXuO57/DkfQ3i24e7ANndxhlSTJQfn+0uTQD2YJnB07dpkZUaj401Z9AWJdNQyN
+         CmskUWlecnXShZvGIg08xYVXTDI9siwDaYwyu5dc=
+Date:   Mon, 14 Oct 2019 15:44:23 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        etnaviv@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mm: memblock: do not enforce current limit for
+ memblock_phys* family
+Message-Id: <20191014154423.a472315834ce6a730ccbaf3f@linux-foundation.org>
+In-Reply-To: <1570915861-17633-1-git-send-email-rppt@kernel.org>
+References: <1570915861-17633-1-git-send-email-rppt@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-10-14 at 23:36 +0200, Borislav Petkov wrote:
-> On Mon, Oct 14, 2019 at 02:21:00PM -0700, Srinivas Pandruvada wrote:
-> > Some modern systems have very tight thermal tolerances. Because of
-> > this
-> > they may cross thermal thresholds when running normal workloads
-> > (even
-> > during boot). The CPU hardware will react by limiting
-> > power/frequency
-> > and using duty cycles to bring the temperature back into normal
-> > range.
-> > 
-> > Thus users may see a "critical" message about the "temperature
-> > above
-> > threshold" which is soon followed by "temperature/speed normal".
-> > These
-> > messages are rate limited, but still may repeat every few minutes.
-> > 
-> > The solution here is to set a timeout when the temperature first
-> > exceeds
-> > the threshold. If the CPU returns to normal before the timeout
-> > fires,
-> > we skip printing any messages. If we reach the timeout, then there
-> > may be
-> > a real thermal issue (e.g. inoperative or blocked fan) and we print
-> > the
-> > message (together with a count of how many thermal events have
-> > occurred).
-> > A rate control method is used to avoid printing repeatedly on these
-> > broken
-> > systems.
-> > 
-> > Some experimentation with fans enabled showed that temperature
-> > returned
-> > to normal on a laptop in ~4 seconds. With fans disabled it took
-> > over 10
-> > seconds. Default timeout is thus set to 8 seconds, but may be
-> > changed
-> > with kernel boot parameter: "x86_therm_warn_delay". This default
-> > interval
-> > is twice of typical sampling interval for cooling using running
-> > average
-> > power limit from user space thermal control softwares.
-> > 
-> > In addition a new sysfs attribute is added to show what is the
-> > maximum
-> > amount of time in miili-seconds the system was in throttled state.
-> > This
-> > will allow to change x86_therm_warn_delay, if required.
-> 
-> This description is already *begging* for this delay value to be
-> automatically set by the kernel. Putting yet another knob in front of
-> the user who doesn't have a clue most of the time shows one more time
-> that we haven't done our job properly by asking her to know what we
-> already do.
-I experimented on the systems released from Sandy Bridge era. But
-someone running on 10 years old system, this is a fallback mechanism.
-Don't expect that users have to tune from the default but saying with
-certainty is difficult. The source of this PROCHOT signal can be
-anything on the board.
-So some users who had issues in their systems can try with this patch.
-We can get rid of this, till it becomes real issue.
+On Sun, 13 Oct 2019 00:31:01 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 
+> Until commit 92d12f9544b7 ("memblock: refactor internal allocation
+> functions") the maximal address for memblock allocations was forced to
+> memblock.current_limit only for the allocation functions returning virtual
+> address. The changes introduced by that commit moved the limit enforcement
+> into the allocation core and as a result the allocation functions returning
+> physical address also started to limit allocations to
+> memblock.current_limit.
 > 
-> IOW, a simple history feedback mechanism which sets the timeout based
-> on
-> the last couple of values is much smarter. The thing would have a max
-> value, of course, which, when exceeded should mean an anomaly, etc,
-> but
-> almost anything else is better than merely asking the user to make an
-> educated guess.
-The temperature is function of load, time and heat dissipation capacity
-of the system. I have to think more about this to come up with some
-heuristics where we still warning users about real thermal issues.
-Since value is not persistent, then next boot again will start from the
-default.
+> This caused breakage of etnaviv GPU driver:
+> 
+> ...
+>
 
-> 
-> > Suggested-by: Alan Cox <alan@linux.intel.com>
-> > Commit-comment-by: Tony Luck <tony.luck@intel.com>
-> 
->   ^^^^^^^^^^^^^^^^^^
-> 
-> What's that?
-Tony suggested this to indicate that he rewrote the commit description
-as he didn't like my description. Definitely checkpatch doesn't like
-this.
-
-Thanks,
-Srinivas
-
+So I'll add a cc:stable, yes?
