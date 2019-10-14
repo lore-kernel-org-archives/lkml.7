@@ -2,30 +2,29 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8932AECE58D
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2858C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAE0207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7548F20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbfJNJ7x (ORCPT
+        id S1731267AbfJNJ74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:59:53 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3745 "EHLO huawei.com"
+        Mon, 14 Oct 2019 05:59:56 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3748 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731172AbfJNJ7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731107AbfJNJ7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 14 Oct 2019 05:59:53 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E3A768A9AA0A377671D7;
-        Mon, 14 Oct 2019 17:59:50 +0800 (CST)
+        by Forcepoint Email with ESMTP id 0A314F38F338664DE634;
+        Mon, 14 Oct 2019 17:59:51 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 14 Oct 2019 17:59:43 +0800
+ 14.3.439.0; Mon, 14 Oct 2019 17:59:42 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <stable@vger.kernel.org>
 CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <rjw@rjwysocki.net>,
@@ -37,12 +36,10 @@ CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <rjw@rjwysocki.net>,
         <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
         <guohanjun@huawei.com>, <wanghuiqiang@huawei.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH for-stable-4.19 2/3] ACPI/PPTT: Add support for ACPI 6.3 thread flag
-Date:   Mon, 14 Oct 2019 17:56:25 +0800
-Message-ID: <1571046986-231263-3-git-send-email-john.garry@huawei.com>
+Subject: [PATCH for-stable-4.19 0/3] ACPI, arm64: Backport for ACPI PPTT 6.3 thread flag
+Date:   Mon, 14 Oct 2019 17:56:23 +0800
+Message-ID: <1571046986-231263-1-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1571046986-231263-1-git-send-email-john.garry@huawei.com>
-References: <1571046986-231263-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.75]
@@ -52,116 +49,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+This series is a backport of the ACPI PPTT 6.3 thread flag feature for
+supporting arm64 systems.
 
-Commit bbd1b70639f785a970d998f35155c713f975e3ac upstream.
+The background is that some arm64 implementations are broken, in that they
+incorrectly advertise that a CPU is mutli-threaded, when it is not - the
+HiSilicon Taishanv110 rev 2, aka tsv110, being an example.
 
-ACPI 6.3 adds a flag to the CPU node to indicate whether
-the given PE is a thread. Add a function to return that
-information for a given linux logical CPU.
+This leads to the system topology being incorrect. The reason being that
+arm64 topology code uses a combination of ACPI PPTT (Processor Properties
+Topology Table) and the system MPIDR (Multiprocessor Affinity Register) MT
+bit to determine the topology.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Robert Richter <rrichter@marvell.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-[jpg: backport for 4.19, replace acpi_pptt_warn_missing()]
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/acpi/pptt.c  | 52 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/acpi.h |  5 +++++
- 2 files changed, 57 insertions(+)
+Until ACPI 6.3, the PPTT did not have any method to determine whether
+a CPU was multi-threaded, so only the MT bit is used - hence the
+broken topology for some systems.
 
-diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-index da031b1df6f5..9dbf86a0c827 100644
---- a/drivers/acpi/pptt.c
-+++ b/drivers/acpi/pptt.c
-@@ -509,6 +509,44 @@ static int find_acpi_cpu_topology_tag(unsigned int cpu, int level, int flag)
- 	return retval;
- }
- 
-+/**
-+ * check_acpi_cpu_flag() - Determine if CPU node has a flag set
-+ * @cpu: Kernel logical CPU number
-+ * @rev: The minimum PPTT revision defining the flag
-+ * @flag: The flag itself
-+ *
-+ * Check the node representing a CPU for a given flag.
-+ *
-+ * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be found or
-+ *	   the table revision isn't new enough.
-+ *	   1, any passed flag set
-+ *	   0, flag unset
-+ */
-+static int check_acpi_cpu_flag(unsigned int cpu, int rev, u32 flag)
-+{
-+	struct acpi_table_header *table;
-+	acpi_status status;
-+	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
-+	struct acpi_pptt_processor *cpu_node = NULL;
-+	int ret = -ENOENT;
-+
-+	status = acpi_get_table(ACPI_SIG_PPTT, 0, &table);
-+	if (ACPI_FAILURE(status)) {
-+		pr_warn_once("No PPTT table found, cpu topology may be inaccurate\n");
-+		return ret;
-+	}
-+
-+	if (table->revision >= rev)
-+		cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
-+
-+	if (cpu_node)
-+		ret = (cpu_node->flags & flag) != 0;
-+
-+	acpi_put_table(table);
-+
-+	return ret;
-+}
-+
- /**
-  * acpi_find_last_cache_level() - Determines the number of cache levels for a PE
-  * @cpu: Kernel logical cpu number
-@@ -573,6 +611,20 @@ int cache_setup_acpi(unsigned int cpu)
- 	return status;
- }
- 
-+/**
-+ * acpi_pptt_cpu_is_thread() - Determine if CPU is a thread
-+ * @cpu: Kernel logical CPU number
-+ *
-+ * Return: 1, a thread
-+ *         0, not a thread
-+ *         -ENOENT ,if the PPTT doesn't exist, the CPU cannot be found or
-+ *         the table revision isn't new enough.
-+ */
-+int acpi_pptt_cpu_is_thread(unsigned int cpu)
-+{
-+	return check_acpi_cpu_flag(cpu, 2, ACPI_PPTT_ACPI_PROCESSOR_IS_THREAD);
-+}
-+
- /**
-  * find_acpi_cpu_topology() - Determine a unique topology value for a given cpu
-  * @cpu: Kernel logical cpu number
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b4d23b3a2ef2..59a416dfcaaa 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1291,10 +1291,15 @@ static inline int lpit_read_residency_count_address(u64 *address)
- #endif
- 
- #ifdef CONFIG_ACPI_PPTT
-+int acpi_pptt_cpu_is_thread(unsigned int cpu);
- int find_acpi_cpu_topology(unsigned int cpu, int level);
- int find_acpi_cpu_topology_package(unsigned int cpu);
- int find_acpi_cpu_cache_topology(unsigned int cpu, int level);
- #else
-+static inline int acpi_pptt_cpu_is_thread(unsigned int cpu)
-+{
-+	return -EINVAL;
-+}
- static inline int find_acpi_cpu_topology(unsigned int cpu, int level)
- {
- 	return -EINVAL;
+In ACPI 6.3, a PPTT thread flag was introduced, which - when supported -
+would be used by the kernel to determine really if a CPU is multi-threaded
+or not, so that we don't get incorrect topology.
+
+RFC originally sent: https://lkml.org/lkml/2019/10/10/724
+
+Erik Schmauss (1):
+  ACPICA: ACPI 6.3: PPTT add additional fields in Processor Structure
+    Flags
+
+Jeremy Linton (2):
+  ACPI/PPTT: Add support for ACPI 6.3 thread flag
+  arm64: topology: Use PPTT to determine if PE is a thread
+
+ arch/arm64/kernel/topology.c | 19 ++++++++++---
+ drivers/acpi/pptt.c          | 52 ++++++++++++++++++++++++++++++++++++
+ include/acpi/actbl2.h        |  7 +++--
+ include/linux/acpi.h         |  5 ++++
+ 4 files changed, 77 insertions(+), 6 deletions(-)
+
 -- 
 2.17.1
 
