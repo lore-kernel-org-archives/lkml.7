@@ -2,209 +2,131 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED93C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926ADECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D25220659
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A6E20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfJNJjh (ORCPT
+        id S1731071AbfJNJjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:39:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55712 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725989AbfJNJjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:39:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8DFA8BDB8;
-        Mon, 14 Oct 2019 09:39:34 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 11:39:50 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 3/4] i2c: smbus: Add a way to instantiate SPD EEPROMs
- automatically
-Message-ID: <20191014113950.1f989ba6@endymion>
-In-Reply-To: <20191014113636.57b5ce89@endymion>
-References: <20191014113636.57b5ce89@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 14 Oct 2019 05:39:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:14702 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730968AbfJNJjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:39:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 02:39:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
+   d="scan'208";a="194175343"
+Received: from alinamex-mobl3.ger.corp.intel.com (HELO [10.252.56.163]) ([10.252.56.163])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Oct 2019 02:39:38 -0700
+Subject: Re: WARNING in drm_mode_createblob_ioctl
+To:     syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>,
+        airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, mripard@kernel.org, sean@poorly.run,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000b2de3a0594d8b4ca@google.com>
+ <20191014091635.GI11828@phenom.ffwll.local>
+From:   syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>
+Message-ID: <67fb1a91-7ef3-9036-2d1b-877e394bcab2@linux.intel.com>
+Date:   Mon, 14 Oct 2019 11:39:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191014091635.GI11828@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In simple cases we can instantiate SPD EEPROMs on the SMBus
-automatically. Start with just DDR2, DDR3 and DDR4 on x86 for now,
-and only for systems with no more than 4 memory slots. These
-limitations may be lifted later.
+Op 14-10-2019 om 11:16 schreef Daniel Vetter:
+> On Sun, Oct 13, 2019 at 11:09:09PM -0700, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    8ada228a Add linux-next specific files for 20191011
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=1423a87f600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=7cf4eed5fe42c31a
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=fb77e97ebf0612ee6914
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>
+>> Unfortunately, I don't have any reproducer for this crash yet.
+> Hm only thing that could go wrong is how we allocate the target for the
+> user_copy, which is an argument directly from the ioctl parameter struct.
+> Does syzbot not track that? We use the standard linux ioctl struct
+> encoding in drm.
+>
+> Otherwise I have no idea why it can't create a reliable reproducer for
+> this ... I'm also not seeing the bug, all the input validation we have
+> seems correct :-/
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
----
- drivers/i2c/i2c-smbus.c   |  104 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/i2c-smbus.h |   11 ++++
- 2 files changed, 113 insertions(+), 2 deletions(-)
+I would like to see the entire dmesg?
 
---- linux-5.3.orig/drivers/i2c/i2c-smbus.c	2019-10-04 15:04:16.601640711 +0200
-+++ linux-5.3/drivers/i2c/i2c-smbus.c	2019-10-11 13:01:59.596425003 +0200
-@@ -3,10 +3,11 @@
-  * i2c-smbus.c - SMBus extensions to the I2C protocol
-  *
-  * Copyright (C) 2008 David Brownell
-- * Copyright (C) 2010 Jean Delvare <jdelvare@suse.de>
-+ * Copyright (C) 2010-2019 Jean Delvare <jdelvare@suse.de>
-  */
- 
- #include <linux/device.h>
-+#include <linux/dmi.h>
- #include <linux/i2c.h>
- #include <linux/i2c-smbus.h>
- #include <linux/interrupt.h>
-@@ -203,6 +204,107 @@ EXPORT_SYMBOL_GPL(i2c_handle_smbus_alert
- 
- module_i2c_driver(smbalert_driver);
- 
-+/*
-+ * SPD is not part of SMBus but we include it here for convenience as the
-+ * target systems are the same.
-+ * Restrictions to automatic SPD instantiation:
-+ *  - Only works if all filled slots have the same memory type
-+ *  - Only works for DDR2, DDR3 and DDR4 for now
-+ *  - Only works on systems with 1 to 4 memory slots
-+ */
-+#if IS_ENABLED(CONFIG_DMI)
-+void i2c_register_spd(struct i2c_adapter *adap)
-+{
-+	int n, slot_count = 0, dimm_count = 0;
-+	u16 handle;
-+	u8 common_mem_type = 0x0, mem_type;
-+	u64 mem_size;
-+	const char *name;
-+
-+	while ((handle = dmi_memdev_handle(slot_count)) != 0xffff) {
-+		slot_count++;
-+
-+		/* Skip empty slots */
-+		mem_size = dmi_memdev_size(handle);
-+		if (!mem_size)
-+			continue;
-+
-+		/* Skip undefined memory type */
-+		mem_type = dmi_memdev_type(handle);
-+		if (mem_type <= 0x02)		/* Invalid, Other, Unknown */
-+			continue;
-+
-+		if (!common_mem_type) {
-+			/* First filled slot */
-+			common_mem_type = mem_type;
-+		} else {
-+			/* Check that all filled slots have the same type */
-+			if (mem_type != common_mem_type) {
-+				dev_warn(&adap->dev,
-+					 "Different memory types mixed, not instantiating SPD\n");
-+				return;
-+			}
-+		}
-+		dimm_count++;
-+	}
-+
-+	/* No useful DMI data, bail out */
-+	if (!dimm_count)
-+		return;
-+
-+	dev_info(&adap->dev, "%d/%d memory slots populated (from DMI)\n",
-+		 dimm_count, slot_count);
-+
-+	if (slot_count > 4) {
-+		dev_warn(&adap->dev,
-+			 "Systems with more than 4 memory slots not supported yet, not instantiating SPD\n");
-+		return;
-+	}
-+
-+	switch (common_mem_type) {
-+	case 0x13:	/* DDR2 */
-+	case 0x18:	/* DDR3 */
-+	case 0x1C:	/* LPDDR2 */
-+	case 0x1D:	/* LPDDR3 */
-+		name = "spd";
-+		break;
-+	case 0x1A:	/* DDR4 */
-+	case 0x1E:	/* LPDDR4 */
-+		name = "ee1004";
-+		break;
-+	default:
-+		dev_info(&adap->dev,
-+			 "Memory type 0x%02x not supported yet, not instantiating SPD\n",
-+			 common_mem_type);
-+		return;
-+	}
-+
-+	/*
-+	 * We don't know in which slots the memory modules are. We could
-+	 * try to guess from the slot names, but that would be rather complex
-+	 * and unreliable, so better probe all possible addresses until we
-+	 * have found all memory modules.
-+	 */
-+	for (n = 0; n < slot_count && dimm_count; n++) {
-+		struct i2c_board_info info;
-+		unsigned short addr_list[2];
-+
-+		memset(&info, 0, sizeof(struct i2c_board_info));
-+		strlcpy(info.type, name, I2C_NAME_SIZE);
-+		addr_list[0] = 0x50 + n;
-+		addr_list[1] = I2C_CLIENT_END;
-+
-+		if (i2c_new_probed_device(adap, &info, addr_list, NULL)) {
-+			dev_info(&adap->dev,
-+				 "Successfully instantiated SPD at 0x%hx\n",
-+				 addr_list[0]);
-+			dimm_count--;
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(i2c_register_spd);
-+#endif
-+
- MODULE_AUTHOR("Jean Delvare <jdelvare@suse.de>");
- MODULE_DESCRIPTION("SMBus protocol extensions support");
- MODULE_LICENSE("GPL");
---- linux-5.3.orig/include/linux/i2c-smbus.h	2019-10-04 15:04:16.601640711 +0200
-+++ linux-5.3/include/linux/i2c-smbus.h	2019-10-11 11:03:51.432166962 +0200
-@@ -2,7 +2,7 @@
- /*
-  * i2c-smbus.h - SMBus extensions to the I2C protocol
-  *
-- * Copyright (C) 2010 Jean Delvare <jdelvare@suse.de>
-+ * Copyright (C) 2010-2019 Jean Delvare <jdelvare@suse.de>
-  */
- 
- #ifndef _LINUX_I2C_SMBUS_H
-@@ -42,6 +42,15 @@ static inline int of_i2c_setup_smbus_ale
- {
- 	return 0;
- }
-+#endif
-+
-+#if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
-+void i2c_register_spd(struct i2c_adapter *adap);
-+#else
-+static void i2c_register_spd(struct i2c_adapter *adap)
-+{
-+	return 0;
-+}
- #endif
- 
- #endif /* _LINUX_I2C_SMBUS_H */
+in particular because it's likely WARN(1, "Buffer overflow detected (%d < %lu)!\n", size, count),
 
--- 
-Jean Delvare
-SUSE L3 Support
+so I'd like to see the size it thinks for both..
+
+> -Daniel
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
+>>
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 1 PID: 30449 at include/linux/thread_info.h:150
+>> check_copy_size include/linux/thread_info.h:150 [inline]
+>> WARNING: CPU: 1 PID: 30449 at include/linux/thread_info.h:150 copy_from_user
+>> include/linux/uaccess.h:143 [inline]
+>> WARNING: CPU: 1 PID: 30449 at include/linux/thread_info.h:150
+>> drm_mode_createblob_ioctl+0x398/0x490 drivers/gpu/drm/drm_property.c:800
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 1 PID: 30449 Comm: syz-executor.5 Not tainted 5.4.0-rc2-next-20191011
+>> #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> Call Trace:
+>>  __dump_stack lib/dump_stack.c:77 [inline]
+>>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>>  panic+0x2e3/0x75c kernel/panic.c:221
+>>  __warn.cold+0x2f/0x35 kernel/panic.c:582
+>>  report_bug+0x289/0x300 lib/bug.c:195
+>>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>>  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>>  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+>>  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+>> RIP: 0010:check_copy_size include/linux/thread_info.h:150 [inline]
+>> RIP: 0010:copy_from_user include/linux/uaccess.h:143 [inline]
+>> RIP: 0010:drm_mode_createblob_ioctl+0x398/0x490
+>> drivers/gpu/drm/drm_property.c:800
+>> Code: c1 ea 03 80 3c 02 00 0f 85 ed 00 00 00 49 89 5d 00 e8 3c 28 cb fd 4c
+>> 89 f7 e8 64 92 9e 03 31 c0 e9 75 fd ff ff e8 28 28 cb fd <0f> 0b e8 21 28 cb
+>> fd 4d 85 e4 b8 f2 ff ff ff 0f 84 5b fd ff ff 89
+>> RSP: 0018:ffff8880584efaa8 EFLAGS: 00010246
+>> RAX: 0000000000040000 RBX: ffff8880a3a90000 RCX: ffffc900109da000
+>> RDX: 0000000000040000 RSI: ffffffff83a7eaf8 RDI: 0000000000000007
+>> RBP: ffff8880584efae8 R08: ffff888096c40080 R09: ffffed1014752110
+>> R10: ffffed101475210f R11: ffff8880a3a9087f R12: ffffc90014907000
+>> R13: ffff888028aa0000 R14: 000000009a6c7969 R15: ffffc90014907058
+>>
+>>
+>> ---
+>> This bug is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>
+>> syzbot will keep track of this bug report. See:
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+
