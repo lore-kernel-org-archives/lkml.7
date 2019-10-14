@@ -3,145 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C795ECE587
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E7CECE596
 	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB3420873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B5821848
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 11:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbfJNLUF (ORCPT
+        id S1730247AbfJNLUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 07:20:05 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41188 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfJNLUE (ORCPT
+        Mon, 14 Oct 2019 07:20:13 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51485 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfJNLUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 07:20:04 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v52so24860469qtb.8;
-        Mon, 14 Oct 2019 04:20:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cuFapTftEQf9u/dtPS/P5xJow9aqFFLyRZszruAo5Bc=;
-        b=NZgw5jMo//jkehV1fNc2bm9JlM/nvbrirCVtIl28BMK+2ilyzJCuJepsfCNxNtI9SJ
-         P0uyysV3ProtLmtgYWKeWhLuKwWCQeRqc8TKSrnvoRFdzBOZx5j27j6zbN79Zs5gINJZ
-         48P4vOgGjx5g/IL7JM85qIUxCNfaV0Z52CN/EakcaYXBgFBAjgIWwgi1eIPUyJVL6khY
-         O2HM4Psl5CTz4ry9N0glI5UA4yYFwrJ38SY8XdsSxAKi/ViywkWmUFEj0owAj2d3G/Gg
-         rfkYPhjO9T7p+NEVzkwdrUm9JyzInFZQoMHF2OSEZDYemxV3ZX+ehykwSBHg/Zf3MC2q
-         Vt2A==
-X-Gm-Message-State: APjAAAUz9H9zuJLOQe63H8AD5erhoiBiDHbo2kqjB443KX9sPo1W+vGs
-        JDY9/kI+oqrH/yXg5rliUHNHXH1EGTQTljla7fc=
-X-Google-Smtp-Source: APXvYqwsnP673OnCHXRZvwy9QjA/gCKBnT6U/b+69dqA6I+lLlaW8DuwRbujiE7X6gEw4SUTnJVTK6qv7hv+OXJDmtE=
-X-Received: by 2002:a05:6214:1150:: with SMTP id b16mr30329224qvt.197.1571052003441;
- Mon, 14 Oct 2019 04:20:03 -0700 (PDT)
+        Mon, 14 Oct 2019 07:20:12 -0400
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 3b3e8a8fcf365606; Mon, 14 Oct 2019 13:20:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: PM: Consolidate runtime resume and system resume paths
+Date:   Mon, 14 Oct 2019 13:20:09 +0200
+Message-ID: <2570249.GdtrxVvIQ1@kreacher>
+In-Reply-To: <3118349.722IRLjr4b@kreacher>
+References: <20190927090202.1468-1-drake@endlessm.com> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com> <3118349.722IRLjr4b@kreacher>
 MIME-Version: 1.0
-References: <20191014061617.10296-1-daniel@0x0f.com> <20191014061617.10296-2-daniel@0x0f.com>
-In-Reply-To: <20191014061617.10296-2-daniel@0x0f.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 14 Oct 2019 13:19:46 +0200
-Message-ID: <CAK8P3a2U7U31eF_POU2=eCU+E1DH-wnR2uHr-VZYWLy25hLjKg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: mstar: Add machine for MStar infinity family SoCs
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Daniel Palmer <daniel@thingy.jp>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 8:21 AM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> Initial support for the MStar infinity/infinity3 series of Cortex A7
-> based IP camera SoCs.
->
-> These chips are interesting in that they contain a Cortex A7,
-> peripherals and system memory in a single tiny QFN package that
-> can be hand soldered allowing almost anyone to embed Linux
-> in their projects.
->
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+On Monday, October 14, 2019 12:51:31 PM CEST Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> There is an arbitrary difference between the system resume and
+> runtime resume code paths for PCI devices regarding the delay to
+> apply when switching the devices from D3cold to D0.
+> 
+> Namely, pci_restore_standard_config() used in the runtime resume
+> code path calls pci_set_power_state() which in turn invokes
+> __pci_start_power_transition() to power up the device through the
+> platform firmware and that function applies the transition delay
+> (as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
+> However, pci_pm_default_resume_early() used in the system resume
+> code path calls pci_power_up() which doesn't apply the delay at
+> all and that causes issues to occur during resume from
+> suspend-to-idle on some systems where the delay is required.
+> 
+> Since there is no reason for that difference to exist, modify
+> pci_pm_default_resume_early() to invoke pci_restore_standard_config()
+> instead of pci_power_up() and drop the latter, but in order to
+> prevent the ACPI power state values (cached by the ACPI layer) from
+> becoming stale in some cases during resume from suspend-to-RAM
+> (ACPI S3), as per commit cc2893b6af52 ("PCI: Ensure we re-enable
+> devices on resume"), refresh the ACPI power state information in
+> pci_pm_default_resume_early() in that case.
+> 
+> [Note that while this change should take the issue originally
+>  addressed by commit cc2893b6af52 ("PCI: Ensure we re-enable devices
+>  on resume") into account in a generally safer way, an alternative
+>  would be to make pci_power_up() use __pci_start_power_transition()
+>  instead of calling platform_pci_set_power_state() directly.]
+> 
+> Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+> Reported-by: Daniel Drake <drake@endlessm.com> 
+> Tested-by: Daniel Drake <drake@endlessm.com> 
+> Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/pci/pci-driver.c |    8 +++++---
+>  drivers/pci/pci.c        |   15 ---------------
+>  drivers/pci/pci.h        |    1 -
+>  3 files changed, 5 insertions(+), 19 deletions(-)
+> 
+> Index: linux-pm/drivers/pci/pci-driver.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-driver.c
+> +++ linux-pm/drivers/pci/pci-driver.c
+> @@ -523,9 +523,10 @@ static int pci_restore_standard_config(s
+>  
+>  static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+>  {
+> -	pci_power_up(pci_dev);
+> -	pci_restore_state(pci_dev);
+> -	pci_pme_restore(pci_dev);
+> +	if (pm_resume_via_firmware())
+> +		pci_refresh_power_state(pci_dev);
+
+Well, this is still not going to work if the ACPI power state after the update
+above is not D0, but the pci_update_current_state() in pci_restore_standard_config()
+returns D0, which was the case that triggered commit cc2893b6af52 IIRC.
+
+So scratch this one, please, and I'll submit the safer option.
 
 > +
-> +static void __init infinity_map_io(void)
-> +{
-> +       iotable_init(infinity_io_desc, ARRAY_SIZE(infinity_io_desc));
-> +       miu_flush = (void __iomem *)(infinity_io_desc[0].virtual
-> +                       + INFINITY_L3BRIDGE_FLUSH);
-> +       miu_status = (void __iomem *)(infinity_io_desc[0].virtual
-> +                       + INFINITY_L3BRIDGE_STATUS);
-> +}
+> +	pci_restore_standard_config(pci_dev);
+>  }
+>  
+>  /*
+> @@ -713,6 +714,7 @@ static void pci_pm_complete(struct devic
+>  		pci_power_t pre_sleep_state = pci_dev->current_state;
+>  
+>  		pci_refresh_power_state(pci_dev);
+> +		pci_update_current_state(pci_dev, pci_dev->current_state);
+>  		/*
+>  		 * On platforms with ACPI this check may also trigger for
+>  		 * devices sharing power resources if one of those power
 
-If you do this a little later in .init_machine, you can use a simple ioremap()
-rather than picking a hardcoded physical address. It looks like nothing
-uses the mapping before you set soc_mb anyway.
 
-> +static DEFINE_SPINLOCK(infinity_mb_lock);
-> +
-> +static void infinity_mb(void)
-> +{
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&infinity_mb_lock, flags);
-> +       /* toggle the flush miu pipe fire bit */
-> +       writel_relaxed(0, miu_flush);
-> +       writel_relaxed(INFINITY_L3BRIDGE_FLUSH_TRIGGER, miu_flush);
-> +       while (!(readl_relaxed(miu_status) & INFINITY_L3BRIDGE_STATUS_DONE)) {
-> +               /* wait for flush to complete */
-> +       }
-> +       spin_unlock_irqrestore(&infinity_mb_lock, flags);
-> +}
 
-Wow, this is a heavy barrier. From your description it doesn't sound like
-there is anything to be done about it unfortunately.
-
-Two possible issues I see here:
-
-* It looks like it relies on CONFIG_ARM_HEAVY_BARRIER, but your Kconfig
-  entry does not select that. In many configurations, CACHE_L2X0 would
-  be set, but there is no need for yours on the Cortex-A7.
-
-* You might get into a deadlock if you get an FIQ (NMI) interrupt while
-   holding the infinity_mb_lock, and then issue another memory barrier
-   from that handler, so you might need to use
-   local_irq_disable()+local_fiq_disable()+raw_spin_lock() here, making
-   it even more expensive.
-   Not sure if it matters in practice, as almost nothing uses fiq any more.
-   OTOH, maybe the lock is not needed at all? AFAICT if the sequence
-   gets interrupted by a handler that also calls mb(), you would still
-   continue in the original thread while observing a full l3 barrier. ;-)
-
-        Arnd
