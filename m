@@ -2,157 +2,112 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B99EECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEE4ECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE492064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EC021925
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 18:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTzV7avy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I1x1Z8t/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbfJNSA6 (ORCPT
+        id S1731654AbfJNSBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 14:00:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46348 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfJNSA5 (ORCPT
+        Mon, 14 Oct 2019 14:01:40 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33086 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfJNSBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:00:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r18so3903762eds.13;
-        Mon, 14 Oct 2019 11:00:56 -0700 (PDT)
+        Mon, 14 Oct 2019 14:01:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 60so14568607otu.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 11:01:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vQyWa6OC5nMW2WVQGplpiKZG6tNwtAjnKydlEJdldAw=;
-        b=BTzV7avy5noZHilLMuFTcRNQXWljNOYgVVEISOo4CIuNeMPYmYvkmc+E/+sM0qFxob
-         2QIZZ+7tVLh1r7eJeQbRJNqkJK677TXDLTAQ8JXVLoHJI60hxbKBPIe3xIlMDyvVKRTi
-         ao9rFGkwYRWddLkWtMkRiySDsJZp30eWmE0MouGZLlTWvmM4fJvkngSBdta5iWlEFZlO
-         Ibwi08nb8Y/qM0MVN3/V1CG9caENKLDQ/N4drou4MUkFEcI4kLq9o+GT+SP0iTtqOyU/
-         w6DTx/Kz+JlmaP9wxMTkhBczLMeINCbO8r/Qkc/ZuXpmj/jNFcJHZ3DWOgycCA1Qn9IS
-         r7kA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xyCSAk4ZobdR/xeJ0/E5vnN7i5VLU1sZ6lMD0865OQ8=;
+        b=I1x1Z8t/J1yynjUcQTaYcMAGlN47njD35U9306oaZGwet7E/ZBWTyw79fMty3Sa/RK
+         jNwz8QvsXEa/3cyF5QkHhhHLve/QinyFaA7Agy9aj1p+AnR+z3j8k6lrs03DUL228MFg
+         l8iUcJTUJpDvM//PJdKIhYQodgVX5aUDpuo940IIeoCN64AO9s5qtLgop0i1e3e7Fyul
+         v4NeG2eK6T1TFr3P9I8Pgf8GUBhq3m9BYkcppXzd4WbWMSo17r2krD+y2MbewOxpBPnG
+         62TsJgRjY2rTFg93oghC2gS0WVUXZaNMWTxA7mikuTmITqWLzKgrZSohb1WMiZZ5qzmJ
+         QR6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vQyWa6OC5nMW2WVQGplpiKZG6tNwtAjnKydlEJdldAw=;
-        b=Ifu88pRvuAFO9vC28C6TmMS7lQYFFhfDVDWTqEu+ltyH3LzKJc4Lli2Buh4ifj+omi
-         bU2MLucDqVlTjNpC5eBNeYaoqZnEjg9nsssuJ7w39icLRLq5wC3FTPcrRxh5O336bGc3
-         jgqeGK3nex6kWlXEh8x8Q3uIyCrdYYDY6itE8FUFpkHO4MlbZl4TJhWuPp5sejRj36L6
-         ijDgrxEPewmZ7E0o8jSB4AmWHsVT4JFb0GUwmh8jQaPiUwSW5gkOPvgIJf1dmPItbUhm
-         mLZa0KKS8IGp24GqMS6QCHLYQkaOysLWPk9gxcSHDBNYXqX9aYP7vVstRIZxxqKBCT3b
-         sSwQ==
-X-Gm-Message-State: APjAAAW8r18k1HrAhWz5QGSVmdJ2+weukTjLrdnKbX6TppNmjDbdUeJ4
-        VbCNh75MGNhrDe3oZSzUDBGG+rdo
-X-Google-Smtp-Source: APXvYqykC7fDAqxl/5vUmUxhu3JBS7WBVVkSY/ZrTMq1S7z2QoVnj2FLqEDT+SMFdU7++K3zrHxhgQ==
-X-Received: by 2002:aa7:ca52:: with SMTP id j18mr29318868edt.299.1571076056199;
-        Mon, 14 Oct 2019 11:00:56 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j9sm3255183edt.15.2019.10.14.11.00.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 11:00:55 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: rockchip: remove some tabs and spaces from dtsi files
-Date:   Mon, 14 Oct 2019 20:00:45 +0200
-Message-Id: <20191014180045.11804-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xyCSAk4ZobdR/xeJ0/E5vnN7i5VLU1sZ6lMD0865OQ8=;
+        b=QdPgBPUFQ5juA2lWdXAbDh/2tOSgvUScmFcRu32ty4tYjBInEI6PNalUTAT+sRqsKN
+         ExV+mHhXoYaHkoqbx1Az3eBcR2mpbk2HV6Vq2Ar8845PTU2HcCEhrP74QJ4qjNI8hfJu
+         w54KXVhbSBBx61jKeRk9P0WIdK/Gtbh0R61ZIHk+5kY5noxMN6u2nWsaAN8IQE8NhN3c
+         6s0+UlAZvzj0AxW9TRu5d+CLEVeBg1ZQStKqBnxycO2e0oHtkvSfzc62u32B5gZWQcjv
+         t8Ix/sq2Lul7Ekej3/oQz5/qINcBPQIVreUd0J1g+mTEgyqA3wQKlUppaNRB7UH4iCSS
+         Mxhg==
+X-Gm-Message-State: APjAAAUcL/GTj2ycCdFtAa+oQNo9VtAJMYB+QlG/aNgXyJZn+PIQrx4x
+        DOwM/O3ljVmlTpg1e9kkbKPqNp9VPeG8YptFEMi/Tg==
+X-Google-Smtp-Source: APXvYqzVsft4JN8B/GJGRX09Dvv1lrQER8w/xEy+w3Z8782YyTQT2VRjA+RR6H607O8jyRrySTOiA2k4j9ly9K9xLKs=
+X-Received: by 2002:a9d:6e92:: with SMTP id a18mr24524365otr.313.1571076097842;
+ Mon, 14 Oct 2019 11:01:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com> <CAHS8izN1Q7XH84Srem_McB+Jz67-fu6KPCMQjzbnPDTPzgwC2A@mail.gmail.com>
+ <CAHS8izNhZc8zsdf=eXU5L_ouKwk9s00S-Q21P=QA+vAF3BsXcg@mail.gmail.com> <f042aba0-7e0f-80c5-1285-6b6fd2b3cbac@oracle.com>
+In-Reply-To: <f042aba0-7e0f-80c5-1285-6b6fd2b3cbac@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 14 Oct 2019 11:01:26 -0700
+Message-ID: <CAHS8izOkcsrCVSu-O2oBVB6NErJmUp+=HC8dDFxZ8fUZt=dgBg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup the Rockchip dtsi files a little bit
-by removing some tabs and spaces.
+On Mon, Oct 14, 2019 at 10:33 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 10/11/19 1:41 PM, Mina Almasry wrote:
+> > On Fri, Oct 11, 2019 at 12:10 PM Mina Almasry <almasrymina@google.com> wrote:
+> >>
+> >> On Mon, Sep 23, 2019 at 10:47 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >>>
+> >>> On 9/19/19 3:24 PM, Mina Almasry wrote:
+> >>
+> >> Mike, note your suggestion above to check if the page hugetlb_cgroup
+> >> is null doesn't work if we want to keep the current counter working
+> >> the same: the page will always have a hugetlb_cgroup that points that
+> >> contains the old counter. Any ideas how to apply this new counter
+> >> behavior to a private NORESERVE mappings? Is there maybe a flag I can
+> >> set on the pages at allocation time that I can read on free time to
+> >> know whether to uncharge the hugetlb_cgroup or not?
+> >
+> > Reading the code and asking around a bit, it seems the pointer to the
+> > hugetlb_cgroup is in page[2].private. Is it reasonable to use
+> > page[3].private to store the hugetlb_cgroup to uncharge for the new
+> > counter and increment HUGETLB_CGROUP_MIN_ORDER to 3? I think that
+> > would solve my problem. When allocating a private NORESERVE page, set
+> > page[3].private to the hugetlb_cgroup to uncharge, then on
+> > free_huge_page, check page[3].private, if it is non-NULL, uncharge the
+> > new counter on it.
+>
+> Sorry for not responding sooner.  This approach should work, and it looks like
+> you have a v6 of the series.  I'll take a look.
+>
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk3036.dtsi           |  4 ++--
- arch/arm/boot/dts/rk3288-rock2-som.dtsi |  2 +-
- arch/arm/boot/dts/rk3288-tinker.dtsi    | 14 +++++---------
- 3 files changed, 8 insertions(+), 12 deletions(-)
+Great! Thanks! That's the approach I went with in v6.
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index c776321b2..c70182c5a 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -696,8 +696,8 @@
- 
- 		hdmi {
- 			hdmi_ctl: hdmi-ctl {
--				rockchip,pins = <1 RK_PB0  1 &pcfg_pull_none>,
--						<1 RK_PB1  1 &pcfg_pull_none>,
-+				rockchip,pins = <1 RK_PB0 1 &pcfg_pull_none>,
-+						<1 RK_PB1 1 &pcfg_pull_none>,
- 						<1 RK_PB2 1 &pcfg_pull_none>,
- 						<1 RK_PB3 1 &pcfg_pull_none>;
- 			};
-diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-index 9f9e2bfd1..14aebd447 100644
---- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-@@ -237,7 +237,7 @@
- 
- 	gmac {
- 		phy_rst: phy-rst {
--			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO  &pcfg_output_high>;
-+			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_output_high>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-index 81e4e953d..0aeef23ca 100644
---- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-+++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-@@ -382,18 +382,15 @@
- 
- 	pmic {
- 		pmic_int: pmic-int {
--			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO \
--					&pcfg_pull_up>;
-+			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
- 
- 		dvs_1: dvs-1 {
--			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO \
--					&pcfg_pull_down>;
-+			rockchip,pins = <0 RK_PB3 RK_FUNC_GPIO &pcfg_pull_down>;
- 		};
- 
- 		dvs_2: dvs-2 {
--			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO \
--					&pcfg_pull_down>;
-+			rockchip,pins = <0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_down>;
- 		};
- 	};
- 
-@@ -406,8 +403,7 @@
- 		};
- 
- 		sdmmc_clk: sdmmc-clk {
--			rockchip,pins = <6 RK_PC4 1 \
--					&pcfg_pull_none_drv_8ma>;
-+			rockchip,pins = <6 RK_PC4 1 &pcfg_pull_none_drv_8ma>;
- 		};
- 
- 		sdmmc_cmd: sdmmc-cmd {
-@@ -432,7 +428,7 @@
- 	sdio {
- 		wifi_enable: wifi-enable {
- 			rockchip,pins = <4 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>,
--				<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-+					<4 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
- };
--- 
-2.11.0
-
+> --
+> Mike Kravetz
