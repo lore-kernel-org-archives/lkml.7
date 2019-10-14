@@ -2,92 +2,155 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10864ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64964C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D625B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392C220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JK9+D8JY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbfJNIPV (ORCPT
+        id S1730318AbfJNIQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:15:21 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57744 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728883AbfJNIPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:15:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 157D8BF304DC5C62F497;
-        Mon, 14 Oct 2019 16:15:19 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
- 16:15:13 +0800
-Subject: [PATCH 1/2] perf/ring_buffer: Modify the parameter type of
- perf_mmap_free_page()
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.co>, <namhyung@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <4d308608-54e2-05fa-5a1a-9cb7b4986bd1@huawei.com>
-Message-ID: <e6ae3f0c-d04c-50f9-544a-aee3b30330cd@huawei.com>
-Date:   Mon, 14 Oct 2019 16:14:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 14 Oct 2019 04:16:06 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43915 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729234AbfJNIQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:16:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id v2so36058020iob.10
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 01:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=t44CqyvdXypuwtzNTJ7ymJovfCkTaCpIACjq52B13FE=;
+        b=JK9+D8JY6bxWRDbYtmDx//zrK7L0P5ZaJiOA1u2JTy/ek0rC1FVjF5jbx8SF6OPnwM
+         y36p/5at+welqaHGrpeciApYazXiC0HEwjfvfqfT75fnauattpvVQgA5+JjHIIw5Epe+
+         BFm5EzGuJgp3mNjZOZTQrvS0bqwWhoOVOOhDa7eYnntod0vH1L3sRwunV3OTS7MhWLLR
+         bdBgCHLnxqmC6n+VjUzcb/2EDArfWypGehE2YtuxWMKu51XpQg4M8+T5JmjUUPVxT/eV
+         scRYIVaE5rhUNQtV8KHYgGmvdShVcQqKfqdI907x6Kf447HKopmeuc22GHcH8S+3lmxp
+         6hfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=t44CqyvdXypuwtzNTJ7ymJovfCkTaCpIACjq52B13FE=;
+        b=fhsr0Maud5uGwIBEw+hRh+v3tZLoZnKWvjo3xd07n3Sm+AYoX9CWfQml8lrJMC+PUa
+         EJ5qwACvngjgjhOdz7tOcntixbXj9NFQteXHaFRN/4PJhPaeZeGHGo8N77XWyRXbsDdV
+         40pjAQRlYSyTVN6p7E9JCmDo0ee6VFPyccFPTb5RU0vzZb3feKBzjWBWva18BaAbaK5f
+         UXQ4Ijsjm6GeEkN29QrjdHIf8DRfVKNOJhFJf9djhdOWWvX90ZsbDg9NA3aMiH5gWIe7
+         kDrwSzxVxABl/lRnAOw5Orqtzad9Aj94SIPHh5t+wwdDzeMQlwhxYbJTlCfwFE/K3cp4
+         yB4w==
+X-Gm-Message-State: APjAAAVFEEW0Z7OqDrRGUaZ8skGwh7/W9nsVQUUr3uvtzypfjI1yRWhP
+        w9L95D+woyq9KUAPy2yFZr+zGfLPrEzCcCUdsCUGpQ==
+X-Google-Smtp-Source: APXvYqwLQ8EL+87kFnJZAnOI6uFthuTZJqtrvmnMJN6wDA31bnQPrVHdctZs00tKOaFLcdTgP9uegvfD+UtrZuLktaY=
+X-Received: by 2002:a05:6602:248e:: with SMTP id g14mr19829138ioe.6.1571040964440;
+ Mon, 14 Oct 2019 01:16:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4d308608-54e2-05fa-5a1a-9cb7b4986bd1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <20191007033200.13443-1-brgl@bgdev.pl> <20191014081220.GK4545@dell>
+In-Reply-To: <20191014081220.GK4545@dell>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 14 Oct 2019 10:15:53 +0200
+Message-ID: <CAMRc=MfSiJY-85ZHM_aSxUDc6LkbG1FidRFgTHtbZy6hHiQ+iw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
+To:     Lee Jones <lee.jones@linaro.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>, linux-sh@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In perf_mmap_free_page(), the unsigned long type is converted to the
-pointer type, but where the call is made, the pointer type is converted
-to the unsigned long type. There is no need to do these operations.
+pon., 14 pa=C5=BA 2019 o 10:12 Lee Jones <lee.jones@linaro.org> napisa=C5=
+=82(a):
+>
+> On Mon, 07 Oct 2019, Bartosz Golaszewski wrote:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > While working on my other series related to gpio-backlight[1] I noticed
+> > that we could simplify the driver if we made the only user of platform
+> > data use GPIO lookups and device properties. This series tries to do
+> > that.
+> >
+> > The first patch adds all necessary data structures to ecovec24. Patch
+> > 2/7 unifies much of the code for both pdata and non-pdata cases. Patche=
+s
+> > 3-4/7 remove unused platform data fields. Last three patches contain
+> > additional improvements for the GPIO backlight driver while we're alrea=
+dy
+> > modifying it.
+> >
+> > I don't have access to this HW but hopefully this works. Only compile
+> > tested.
+> >
+> > [1] https://lkml.org/lkml/2019/6/25/900
+> >
+> > v1 -> v2:
+> > - rebased on top of v5.3-rc1 and adjusted to the recent changes from An=
+dy
+> > - added additional two patches with minor improvements
+> >
+> > v2 -> v3:
+> > - in patch 7/7: used initializers to set values for pdata and dev local=
+ vars
+> >
+> > v3 -> v4:
+> > - rebased on top of v5.4-rc1
+> > - removed changes that are no longer relevant after commit ec665b756e6f
+> >   ("backlight: gpio-backlight: Correct initial power state handling")
+> > - added patch 7/7
+> >
+> > v4 ->V5:
+> > - in patch 7/7: added a comment replacing the name of the function bein=
+g
+> >   pulled into probe()
+> >
+> > Bartosz Golaszewski (7):
+> >   backlight: gpio: remove unneeded include
+> >   sh: ecovec24: add additional properties to the backlight device
+> >   backlight: gpio: simplify the platform data handling
+> >   sh: ecovec24: don't set unused fields in platform data
+> >   backlight: gpio: remove unused fields from platform data
+> >   backlight: gpio: use a helper variable for &pdev->dev
+> >   backlight: gpio: pull gpio_backlight_initial_power_state() into probe
+> >
+> >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
+>
+> I guess we're just waiting for the SH Acks now?
+>
 
-Modify the parameter type of perf_mmap_free_page() to pointer type.
+We've been waiting for them for a couple months now - the sh patches
+haven't changed since v1...
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- kernel/events/ring_buffer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Rich, Yoshinori - could you ack this so that it can go in for v5.5?
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index ffb59a4..abc145c 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -799,9 +799,9 @@ struct ring_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 	return NULL;
- }
+Thanks,
+Bartosz
 
--static void perf_mmap_free_page(unsigned long addr)
-+static void perf_mmap_free_page(void *addr)
- {
--	struct page *page = virt_to_page((void *)addr);
-+	struct page *page = virt_to_page(addr);
-
- 	page->mapping = NULL;
- 	__free_page(page);
-@@ -811,9 +811,9 @@ void rb_free(struct ring_buffer *rb)
- {
- 	int i;
-
--	perf_mmap_free_page((unsigned long)rb->user_page);
-+	perf_mmap_free_page(rb->user_page);
- 	for (i = 0; i < rb->nr_pages; i++)
--		perf_mmap_free_page((unsigned long)rb->data_pages[i]);
-+		perf_mmap_free_page(rb->data_pages[i]);
- 	kfree(rb);
- }
-
--- 
-2.7.4
-
+> >  drivers/video/backlight/gpio_backlight.c     | 108 +++++--------------
+> >  include/linux/platform_data/gpio_backlight.h |   3 -
+> >  3 files changed, 53 insertions(+), 91 deletions(-)
+> >
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
