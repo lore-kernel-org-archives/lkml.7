@@ -2,119 +2,185 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB77C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E26FECE58E
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68FC20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVyG1ovb"
+	by mail.kernel.org (Postfix) with ESMTP id D2BB22067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 15:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571067410;
+	bh=NqvBgdwSA+pMae6RvJKOrl3aiBbLsxTrb1TUYOFqgWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P1csMacWHo7SZXQ/5Ce5lVi2P0Zz0cV+eQHQf1IAfwg4j9tU4dNBR7UQ8RCSi3Mi8
+	 /ZAnHMVxUpI2674OdLk/JRW0RhS+NyxvPi9+Y+dPUgAo1rNmd+u4LeLj8RSJiHTN/v
+	 P2s43+DRumZdCLRiD+lEO8sZsExBNd82/DFwiU1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387605AbfJNPgZ (ORCPT
+        id S2387627AbfJNPgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 11:36:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40164 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730828AbfJNPgY (ORCPT
+        Mon, 14 Oct 2019 11:36:49 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33784 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730005AbfJNPgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 11:36:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so10600384pfb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 08:36:23 -0700 (PDT)
+        Mon, 14 Oct 2019 11:36:49 -0400
+Received: by mail-qk1-f194.google.com with SMTP id x134so16289565qkb.0;
+        Mon, 14 Oct 2019 08:36:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/yjgZhJlzmYmxj7+A0FInNB+01Y4Ffyd19ePmcPESes=;
-        b=CVyG1ovbA8RGQ16T8ML7L8LxbGahjwShjcdQlTH3lmTzTAJ0nwEn02/iyJpBhuIa40
-         QSMgqet7U40/IYTyqdpf2v8oonnIGq+4pYocfb2XiIC/XjHbzlxnUqmuH7+2PzjEHh4H
-         mlecS7R/xoy4e5pJd6IniOpI2cI9PP4FIlnHzpIop4Q1ix+Q6Z6ybDk/BESizhnPWHJ8
-         E3sbjbz08X+suDdzP+K5z3VHMarROko3ztjrl4EVjlkmBXEP0i+qZ/S3f1+N/k8puu8H
-         PjKRiHVumJRCTerVRRTpxzRGW5nJliDpIHPEUOZHxMSjeyG60K3yktU9U8kpwavBuSEo
-         rIeg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=8ii9GkNQF57widzi6dRQGr51T/dzE7TsndlvaF7OsW8=;
+        b=r1TO/YMWXsi2uiW+1nZxHeJZZ6OXIRuaRETVasx1CAn06XE1RDJfK1Akh0taYLNLPH
+         JMdUrX5bmQUzVgVEv4iIHHeGkzbKaQkhzczAKS2UgPYO2t7pszXFgfrQet4Rml1jsyxs
+         AJbDw+tDMuXcaOPa6yVAWIdeBIVOwv4Ei9P9g4++4S4/UIRzupP3Hlz1JeryH5qm/7I8
+         +C4FHUYG+OPRZawTdTYsxKlh94IIfKXBthPSIjjBPSv2TPI1+7ChXXOyN0TfBUA7IZla
+         xCXkLpuG05dKVSESBXZd45ZGGBjecBoxM/E9MltjLyhoStrluNpQh1sh1oC7XQT0FcJR
+         dmZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/yjgZhJlzmYmxj7+A0FInNB+01Y4Ffyd19ePmcPESes=;
-        b=jBK+XfeNVCMpdKL+zIpP7wP9WU/k8ZlemUKNVc5cLvFnBC/S3X1jTtHqyFRQATzcQi
-         2UZG3N+coGe24f/B3nEusd/Ce36j9ByJGrgns0vgxiKDObNW0YkQw2SrDH3W6S/OseRT
-         bmYVmD2KMHHb0vHEhvakNXcFDXHO29E0y3w7RahDOErTtwcfStKNApDUrc772/TRP5eG
-         vHY+wrCLOcGE9xk4pDUsyrrUqAoThonMp5mPEIgKoHdF/58fydNXAjEKv2BF2NCugSyt
-         z2q/0CpzXw8SfgUemQF4+8+r3sdoOpLtOqti2wwGhLDHzCyyliJtzRWih5itP2Jsy0dR
-         eOeQ==
-X-Gm-Message-State: APjAAAXH4qCV8n9HvX1gvZZxZnr+VPw7LTtPHQiPm6v0Dh/EClytWEiJ
-        /9HDNu7i2/rvziGMu/FAuj8=
-X-Google-Smtp-Source: APXvYqxyZmsDru8Wwba7bFjE9IMY/SwryjQcDZdhSqry9+5Ap2Hn5lQl3Gkf6865K3CcZpAPyPBKYQ==
-X-Received: by 2002:a17:90a:6302:: with SMTP id e2mr36003590pjj.20.1571067382494;
-        Mon, 14 Oct 2019 08:36:22 -0700 (PDT)
-Received: from localhost.localdomain (155-97-232-235.usahousing.utah.edu. [155.97.232.235])
-        by smtp.googlemail.com with ESMTPSA id q76sm41142648pfc.86.2019.10.14.08.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 08:36:22 -0700 (PDT)
-From:   Tuowen Zhao <ztuowen@gmail.com>
-To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
-Cc:     Tuowen Zhao <ztuowen@gmail.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 2/2] mfd: intel-lpss: use devm_ioremap_uc for MMIO
-Date:   Mon, 14 Oct 2019 09:33:44 -0600
-Message-Id: <20191014153344.8996-2-ztuowen@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191014153344.8996-1-ztuowen@gmail.com>
-References: <20191014153344.8996-1-ztuowen@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=8ii9GkNQF57widzi6dRQGr51T/dzE7TsndlvaF7OsW8=;
+        b=PdwYkaEJ4mztepLc1vDCVccp6GiwB7TDC4u+unfy3VMPiwmDuU2XQYp3TQ60x/BSwJ
+         hnmZTi0L8ovYQ0qoLtbV/In3X51j23zb0lNjaZV1nFVPE3RFHBlXmVlvgQR6QLD188Ri
+         lav+bDRWiQxjE9bs4Dzbg5SoEpT1qf++IdXb/MMSQO7mAmtte3tPEPOYbXMZs9YEU1Vw
+         nH+OVBD4tPurWQ6kv/fZ1vPrgMVu6bY/KOQM3S8HEQ0Pa6/HNPZ9/eHsr779x3+8p3/8
+         kAcAPaMiFAQ1fp2sTPBFLvdzY6pZB3X/VbyMs7SSb0eQA2wCCA+AyV5hwulpHrwdiHNz
+         bhFQ==
+X-Gm-Message-State: APjAAAVbW90bUzQGRgqCNRCXvS/a3Qfa2c8P424KG4rmwOGtcCn95GQn
+        8bVe9CMu26tAq9hhN33tly4=
+X-Google-Smtp-Source: APXvYqzAsrcnF+JJ/I0dg3MAHDz0lpPNCmFZN0NmQcLIo25p98r4L0YJFw/GPUXl0zTzDuogP8QvyA==
+X-Received: by 2002:a37:e50f:: with SMTP id e15mr30253159qkg.192.1571067407828;
+        Mon, 14 Oct 2019 08:36:47 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:50c5])
+        by smtp.gmail.com with ESMTPSA id h68sm8292326qkf.2.2019.10.14.08.36.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 08:36:46 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 08:36:43 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     hannes@cmpxchg.org, clm@fb.com, dennisz@fb.com,
+        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
+        newella@fb.com, lizefan@huawei.com, axboe@kernel.dk,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Rik van Riel <riel@surriel.com>, josef@toxicpanda.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20191014153643.GD18794@devbig004.ftw2.facebook.com>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190828220600.2527417-9-tj@kernel.org>
+ <20190910125513.GA6399@blackbody.suse.cz>
+ <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
+ <20191003145106.GC6678@blackbody.suse.cz>
+ <20191003164552.GA3247445@devbig004.ftw2.facebook.com>
+ <20191009153629.GA5400@blackbody.suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191009153629.GA5400@blackbody.suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
-in MTRR. This will cause the system to hang during boot. If possible,
-this bug could be corrected with a firmware update.
+Hello,
 
-This patch use devm_ioremap_uc to overwrite/ignore the MTRR settings
-by forcing the use of strongly uncachable pages for intel-lpss.
+On Wed, Oct 09, 2019 at 05:36:29PM +0200, Michal Koutný wrote:
+> Because I'm not fully convinced using the root cgroup for the latter is
+> a good idea and I don't have a better one (what about
+> /sys/kernel/cgroup/?), I'd like to question the former to potentially
+> postpone finding the place for its parameters :-)
 
-The BIOS bug is present on Dell XPS 13 7390 2-in-1:
+Yeah, I mean, I don't know.  If these params were useful outside
+iocost controller itself, under /sys/block would be a better place but
+it's kind tightly tied to vrate.  We likely can talk on the subject
+for a really long time probalby because there's no clearly technically
+better choice here, so...
 
-[    0.001734]   5 base 4000000000 mask 6000000000 write-combining
+> On Wed, Aug 28, 2019 at 03:05:58PM -0700, Tejun Heo <tj@kernel.org> wrote:
+> > [...]
+> > Please see the top comment in blk-iocost.c and documentation for
+> > more details.
+> I admit I did't grasp the explanations in the cgroup-v2.rst, perhaps
+> some of the explanations from blk-iocost.c would be useful there as
+> well.
+> 
+> IIUC, the controls are supposed to be abstracted and generic to express
+> high-level ideas and be independent of particular details.
+> Here a bunch of parameters is introduced whose tuning may become a
+> complex optimization task.
+> 
+> What is the metric that is the QoS controller striving to guarantee?
+> How does it differ from the io.latency policy?
 
-4000000000-7fffffffff : PCI Bus 0000:00
-  4000000000-400fffffff : 0000:00:02.0 (i915)
-  4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
+Yeah, it's kinda unfortunate that it requires this many parameters but
+at least my opinion is that that's reflecting the inherent
+complexities of the underlying devices and how workloads interact with
+them.  Andy knows and can explain this a lot better than me but here's
+what's we're working on:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
-Cc: <stable@vger.kernel.org>
-Tested-by: AceLan Kao <acelan.kao@canonical.com>
-Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/intel-lpss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For the cost model, the plan is to build a database of model-specific
+model parameters which are loaded during boot.  The cost model
+parameters are pretty straight forward to determine, so hopefully this
+won't be too difficult.
 
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index bfe4ff337581..b0f0781a6b9c 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -384,7 +384,7 @@ int intel_lpss_probe(struct device *dev,
- 	if (!lpss)
- 		return -ENOMEM;
- 
--	lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
-+	lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
- 				  LPSS_PRIV_SIZE);
- 	if (!lpss->priv)
- 		return -ENOMEM;
+For QoS parameters, Andy is currently working on a method to determine
+the set of parametesr which are at the edge of total work cliff -
+ie. the point where tighetning QoS params further starts reducing the
+total amount of work the device can do significantly.  This would be
+the neutral parameters to use for a given device unless there are
+overriding latency requirements, so it's likely that this can be part
+of the model-specific parameter set.
+
+We're currently deploying the controller to a lot of machines and
+gathering data to verify model accuracies and controller behaviors.
+It's working pretty well already and once the methods become more
+mature, we'll upstream them (whichever projects they end up
+belonging).
+
+
+> > [...] 
+> > + * 2-2. Vrate Adjustment
+> > + * [...] When this delay becomes noticeable, it's a clear
+> > + * indication that the device is saturated and we lower the vrate.  This
+> > + * saturation signal is fairly conservative as it only triggers when both
+> > + * hardware and software queues are filled up, and is used as the default
+> > + * busy signal.
+> (The following paragraph is based only on naïve understanding of the
+> block layer.) So the device's vrate is lowered, causing its vtime
+> growing slower, i.e.  postponing issuing an IO later for all cgroups
+> accessing the device. But what's the purpose of this? If the queues fill
+> up, wouldn't be all naturally pushed back by the longer queue time
+> anyway? And wouldn't slowing down the device's vtime just cause queueing
+> elsewhere?
+
+Nothing can issue IOs indefinitely without some of them completing and
+the total amount of work a workload can do is conjoined with the
+completion latencies.  Most IO devices have queue depth which is at
+some level reasonable given the performance characteritics of the
+device; otherwise, the device would develop a really fat pipe in it
+which can frustrate various use cases.  On top, block layer adds some
+limited amount of queueing to avoid command bubbles (2x qd, usually),
+so, while definitely not stringent in any way, the queueing is already
+regulated so that things don't get too crazy.
+
+Regulating based on qd may not be enough for latency sensitive
+synchronous workloads; however, for a lot of workloads such as reading
+file contents or copying them which have in-kernel windowing
+mechanisms, it can provide a reasonable level of protection to keep
+the effectiveness of the windowing mechanisms without sacrificing
+noticeable level of total work.
+
+Thanks.
+
 -- 
-2.23.0
-
+tejun
