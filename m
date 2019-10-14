@@ -2,143 +2,81 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976A0ECE58E
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E80C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79EF920854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3406820854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 14:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732872AbfJNOmM (ORCPT
+        id S1732882AbfJNOnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 10:42:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52182 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfJNOmL (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 10:42:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 97E9A18C8921;
-        Mon, 14 Oct 2019 14:42:11 +0000 (UTC)
-Received: from krava (unknown [10.40.205.218])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 50AB1600CD;
-        Mon, 14 Oct 2019 14:42:09 +0000 (UTC)
-Date:   Mon, 14 Oct 2019 16:42:08 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf stat: Support --all-kernel/--all-user
-Message-ID: <20191014144208.GC9700@krava>
-References: <20191011050545.3899-1-yao.jin@linux.intel.com>
+        Mon, 14 Oct 2019 10:43:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3754 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732362AbfJNOne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 10:43:34 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 10FAAC7B7A72E24E84C1;
+        Mon, 14 Oct 2019 22:43:31 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 14 Oct 2019
+ 22:43:21 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <narmstrong@baylibre.com>, <jbrunet@baylibre.com>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <khilman@baylibre.com>
+CC:     <linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] clk: meson: axg-audio: use devm_platform_ioremap_resource() to simplify code
+Date:   Mon, 14 Oct 2019 22:43:16 +0800
+Message-ID: <20191014144316.18696-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011050545.3899-1-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 14 Oct 2019 14:42:11 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 01:05:45PM +0800, Jin Yao wrote:
-> perf record has supported --all-kernel / --all-user to configure all
-> used events to run in kernel space or run in user space. But perf
-> stat doesn't support these options.
-> 
-> It would be useful to support these options in perf-stat too to keep
-> the same semantics.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/clk/meson/axg-audio.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-thanks,
-jirka
+diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+index 18b23cd..d7d7cff 100644
+--- a/drivers/clk/meson/axg-audio.c
++++ b/drivers/clk/meson/axg-audio.c
+@@ -1016,7 +1016,6 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+ 	const struct audioclk_data *data;
+ 	struct axg_audio_reset_data *rst;
+ 	struct regmap *map;
+-	struct resource *res;
+ 	void __iomem *regs;
+ 	struct clk_hw *hw;
+ 	int ret, i;
+@@ -1025,8 +1024,7 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -EINVAL;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	regs = devm_ioremap_resource(dev, res);
++	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+ 
+-- 
+2.7.4
 
-> ---
->  tools/perf/Documentation/perf-stat.txt |  6 ++++++
->  tools/perf/builtin-stat.c              |  6 ++++++
->  tools/perf/util/stat.c                 | 10 ++++++++++
->  tools/perf/util/stat.h                 |  2 ++
->  4 files changed, 24 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 930c51c01201..a9af4e440e80 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -323,6 +323,12 @@ The output is SMI cycles%, equals to (aperf - unhalted core cycles) / aperf
->  
->  Users who wants to get the actual value can apply --no-metric-only.
->  
-> +--all-kernel::
-> +Configure all used events to run in kernel space.
-> +
-> +--all-user::
-> +Configure all used events to run in user space.
-> +
->  EXAMPLES
->  --------
->  
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 468fc49420ce..c88d4e118409 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -803,6 +803,12 @@ static struct option stat_options[] = {
->  	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
->  		     "monitor specified metrics or metric groups (separated by ,)",
->  		     parse_metric_groups),
-> +	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
-> +			 "Configure all used events to run in kernel space.",
-> +			 PARSE_OPT_EXCLUSIVE),
-> +	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
-> +			 "Configure all used events to run in user space.",
-> +			 PARSE_OPT_EXCLUSIVE),
->  	OPT_END()
->  };
->  
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index ebdd130557fb..6822e4ffe224 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -490,6 +490,16 @@ int create_perf_stat_counter(struct evsel *evsel,
->  	if (config->identifier)
->  		attr->sample_type = PERF_SAMPLE_IDENTIFIER;
->  
-> +	if (config->all_user) {
-> +		attr->exclude_kernel = 1;
-> +		attr->exclude_user   = 0;
-> +	}
-> +
-> +	if (config->all_kernel) {
-> +		attr->exclude_kernel = 0;
-> +		attr->exclude_user   = 1;
-> +	}
-> +
->  	/*
->  	 * Disabling all counters initially, they will be enabled
->  	 * either manually by us or by kernel via enable_on_exec
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index edbeb2f63e8d..081c4a5113c6 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -106,6 +106,8 @@ struct perf_stat_config {
->  	bool			 big_num;
->  	bool			 no_merge;
->  	bool			 walltime_run_table;
-> +	bool			 all_kernel;
-> +	bool			 all_user;
->  	FILE			*output;
->  	unsigned int		 interval;
->  	unsigned int		 timeout;
-> -- 
-> 2.17.1
-> 
+
