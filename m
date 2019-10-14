@@ -2,135 +2,101 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4866ECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19478ECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9AF20854
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE62420854
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 10:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RMjhVzS3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIR2++nx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731647AbfJNKtO (ORCPT
+        id S1731689AbfJNKtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 06:49:14 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52200 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731235AbfJNKtO (ORCPT
+        Mon, 14 Oct 2019 06:49:33 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34686 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731235AbfJNKtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 06:49:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9EAnA94083798;
-        Mon, 14 Oct 2019 05:49:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571050150;
-        bh=CO22/vweVUdYki61a8n0uM9ME48CwXyB/hDV+RVN4oU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RMjhVzS3ImQaDnsTaTt16b6L6ZSW7UhdttuuVGxn90u2Om5Fkhb90WXomFar68Hha
-         oFaX03A70w7ylblGHwmKMRcgXAAcUeuzwnK3oPNU4ai0AfmuAhwoxk2EGXqOZnBn1n
-         fzqfwk2Dde2zfqpLClBSoxnudBYWyzCsjsAfsGoI=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9EAnA5F129483
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 14 Oct 2019 05:49:10 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 14
- Oct 2019 05:49:04 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 14 Oct 2019 05:49:04 -0500
-Received: from [10.250.99.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9EAn8ft120141;
-        Mon, 14 Oct 2019 05:49:08 -0500
-Subject: Re: [PATCH v5 3/3] leds: Add control of the voltage/current regulator
- to the LED core
-To:     Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-CC:     <daniel.thompson@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dmurphy@ti.com>,
-        <tomi.valkeinen@ti.com>
-References: <20190923102059.17818-1-jjhiblot@ti.com>
- <20190923102059.17818-4-jjhiblot@ti.com>
- <3e648fab-638f-4aa0-dda9-8ddba6562751@gmail.com> <20191013120937.GK5653@amd>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <eb8c0df1-0d5b-11d0-9965-3192fa5675f3@ti.com>
-Date:   Mon, 14 Oct 2019 12:49:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 14 Oct 2019 06:49:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b128so10206753pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 03:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G8gq+lqSm5yWW7F43kBEhlO9mPcNo/sio34AqrTnoDs=;
+        b=CIR2++nx6vd8Bz16k75idHqdvJPPUggJHKxR0wLUTH39CO7V5PzsdoM/D4Cl+k7hyo
+         Gw7UFJe+mT5+cXWe9dIZ72glFDdSIFAbDa+G1XpiS+HtlwHLCMDZjNMrkE/g9VPFFBp+
+         R3mcqDEhevL++epc29HvSaFesu8qAIF86+zutNohVYL+deOc2iccMu4XOocxhlbYeCVN
+         7sMr5J6c50ESBVVdbsDa/VHCZzLy+oa8WGngXomAn3NyGRHltavsgM3JaDRkSnL6diQX
+         YpOHyVJ5xETzTd3DzAft0NjYBLENis2h6cIfRDAawqTlsEABmHhWWpnfazaEWWQqyX/T
+         fKgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G8gq+lqSm5yWW7F43kBEhlO9mPcNo/sio34AqrTnoDs=;
+        b=uRPJtsS/ESOtKecPLZRjfrdmgHWMctvxyA2Dft2KJtcau0NpF2k5RFaj4fxexA5JrU
+         8XfPEzjw+yzwLIMMkqzkDeOxwZJAg08mpXIAXJC/MQjlw2gLmUkEOIFzT5CHSGqMaLxi
+         RJFgfkf3mqXfta9WkV85meU75sjn4ZAjlOf4kOABDMl8PhOrbcrqdgpC7UHvau/NHwxK
+         aZoT0BG6hB84XjZ8RuYmubheIJGDTQV74BWGlwONXJSuv4OLZ0Wcq7F6OjjrfZcot7E4
+         LdkvzT8FBKEWWGF8HzX7x6rO2CmuIu8jRwOmmvffBQ3oJ3o8yp5DHgvrr1i29kew4DFq
+         CJTA==
+X-Gm-Message-State: APjAAAVWtO0eZgTmYK1tzYv5ogEUhh+gx3OMUJ3nHlXJWDMJNwcv3kNg
+        zIX3glu29a7wz/ZBCyV5IYU=
+X-Google-Smtp-Source: APXvYqxK+ACvb4vfK9cMbR0YJ3hmK6bo06YPieT5XWqEJ3eDQ98ONnljFCgnR5I1vhonY95PgbLgOA==
+X-Received: by 2002:a17:90a:8002:: with SMTP id b2mr715256pjn.39.1571050172348;
+        Mon, 14 Oct 2019 03:49:32 -0700 (PDT)
+Received: from localhost ([211.246.68.186])
+        by smtp.gmail.com with ESMTPSA id m68sm18688281pfb.122.2019.10.14.03.49.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 03:49:31 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 19:47:17 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Vitaly Wool <vitalywool@gmail.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Theodore Ts'o <tytso@thunk.org>
+Subject: Re: [PATCH 3/3] zram: use common zpool interface
+Message-ID: <20191014104717.GA43868@jagdpanzerIV>
+References: <20191010230414.647c29f34665ca26103879c4@gmail.com>
+ <20191010232030.af6444879413e76a780cd27e@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191013120937.GK5653@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010232030.af6444879413e76a780cd27e@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (10/10/19 23:20), Vitaly Wool wrote:
+[..]
+>  static const char *default_compressor = "lzo-rle";
+>  
+> +#define BACKEND_PAR_BUF_SIZE	32
+> +static char backend_par_buf[BACKEND_PAR_BUF_SIZE];
 
-On 13/10/2019 14:09, Pavel Machek wrote:
-> Hi!
->
->> I must say I'm not a big fan of this change.
->> It adds a bunch of code to the LED core and gives small
->> functionality in a reward. It may also influence maximum
->> software blinking rate, so I'd rather avoid calling
->> regulator_enable/disable when timer trigger is set.
->>
->> It will of course require more code.
->>
->> Since AFAIR Pavel was original proponent of this change then
->> I'd like to see his opinion before we move on to discussing
->> possible improvements to this patch.
-> Was I?
->
-> Okay, this series looks quite confusing to me. First, 1/3 looks
-> "interesting" (would have to analyze it way more).
->
-> Second, 3/3... So we have a LED driver _and_ a regulator? So yes, the
-> chip driving a LED is usually ... voltage/current regulator. What is
-> second regulator doing there? Is that a common setup?
+We can have multiple zram devices (zram0 .. zramN), I guess it
+would make sense not to force all devices to use one particular
+allocator (e.g. see comp_algorithm_store()).
 
-This is quite common with current-sink LED drivers.
+If the motivation for the patch set is that zsmalloc does not
+perform equally well for various data access patterns, then the
+same is true for any other allocator. Thus, I think, we need to
+have a per-device 'allocator' knob.
 
-The setup looks like this:
-
-+-----------+
-|           |
-| Regulator |
-|           +------------------------+
-|           |                        |
-+-----------+                      __|__
-                                    \   /
-          +---------------------+    \ / led
-          |                     |     V
-          |    Led Driver       |   --+--
-          |                     |     |
-          |                     |     |
-          |                +----------+
-          |              \      |
-          |               \     |
-          |                +    |
-          |                |    |
-          +---------------------+
-                           |
-                        +--+--+
-                        ///////
-
-
-Only the regulator usually does not supply only one LED.
-
-JJ
-
-
->
-> Best regards,
-> 								Pavel
-> 								
+	-ss
