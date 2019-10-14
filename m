@@ -2,79 +2,143 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5340EECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705BFECE587
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC40206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 08:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40716207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZDLfHIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730632AbfJNI6t (ORCPT
+        id S1730639AbfJNJBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 04:58:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43474 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730354AbfJNI6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:58:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 01:58:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,295,1566889200"; 
-   d="scan'208";a="207929957"
-Received: from vkuppusa-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.39.77])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2019 01:58:41 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions' to 'specific'
-In-Reply-To: <20191013055359.23312-1-changbin.du@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191013055359.23312-1-changbin.du@gmail.com>
-Date:   Mon, 14 Oct 2019 11:59:37 +0300
-Message-ID: <875zkrd7nq.fsf@intel.com>
+        Mon, 14 Oct 2019 05:01:11 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38481 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730544AbfJNJBK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:01:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h195so10020148pfe.5;
+        Mon, 14 Oct 2019 02:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PbTD0I60GSh6vo2clQRoXHKv0wnjYHftDLcQtXDhKQ8=;
+        b=HZDLfHIR7a7a6S4ceGXMBLioZ5g2C8evGK0qdnQjAMcoYOMFP87sBeU2tOM+gFn1SN
+         nk0e+7ngdgZ22Sut5YK3yzDuuit1cxpUgetxk7rjIlZtwByVE55z8ZgXkh+sLgxUSahc
+         MyoUK/ecqm17Ak2Pqt5Pt64joHOTVwwlljuB9fsu5GeROcqqcn3jWDUFCM+wT5vnj90x
+         qqQAgzkNTQ3tdlruc49hEmYbfD9PZScqnXwj00sujNKkYW3FKm+3Gt2WnX3uyadXCU9U
+         PE3HR61AxoQgkoFuLshnn1oR0AmZsCcHQrEEmzlkZvL7CsDV16qFDqu2NsRbkvIwBlEJ
+         dASw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PbTD0I60GSh6vo2clQRoXHKv0wnjYHftDLcQtXDhKQ8=;
+        b=VVYM7qlWloUHfW6wIcxteyresHEIMvg6GOgYuaB1FIiOz1KAqbfIWENTXMfTaZtxo8
+         qCEIhhR/7E77P7jievJwyhbc5J/wLpazQ1b+dhMqPwCTBtDI8jFf/kK1vdbFNGHAlaXQ
+         +ownZ1Vzu3qjc/v2HJpLHiPMTjBolWG/DKBLUAPcEi0ERj94oj28sx6CWVjZ843OU4Te
+         4As1C+wqsbE196NRdehRzGpMqj7WMOuEA0Z05A7acpaahYj1XacRS5JnP7zCCtsIWpf/
+         OzmE0auE4FFIg1AuoFbrxqXal13efKAFMZQqRN0pA+USh8cxkc3XoVLaLHGZTusVuU0A
+         MY7g==
+X-Gm-Message-State: APjAAAWFPb8bX/TY23BnYgHwqPcZUMumHRvdrW20hjt4KAq3FMogvN2S
+        UKw65LC6TKQjgMd8Ih3yQ4Ppz+R6JYc=
+X-Google-Smtp-Source: APXvYqw5glUkNF3sk3ZQxU4/KsL6ZW4MrUvH7bkze8fN1Ogp/oNGHPdRApsmzVY3LFDrrizDgPa8dw==
+X-Received: by 2002:aa7:96ba:: with SMTP id g26mr32035784pfk.132.1571043669838;
+        Mon, 14 Oct 2019 02:01:09 -0700 (PDT)
+Received: from MacBook-Pro.jd.com ([111.200.23.6])
+        by smtp.googlemail.com with ESMTPSA id e192sm22063103pfh.83.2019.10.14.02.01.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 14 Oct 2019 02:01:09 -0700 (PDT)
+From:   Yanhu Cao <gmayyyha@gmail.com>
+To:     jlayton@kernel.org
+Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
+Subject: [PATCH] function dispatch should return if mds session does not exist
+Date:   Mon, 14 Oct 2019 17:00:59 +0800
+Message-Id: <20191014090059.21871-1-gmayyyha@gmail.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 13 Oct 2019, Changbin Du <changbin.du@gmail.com> wrote:
-> The 'functions' directive is not only for functions, but also works for
-> structs/unions. So the name is misleading. This patch renames it to
-> 'specific', so now we have export/internal/specific directives to limit
-> the functions/types to be included in documentation. Meanwhile we improved
-> the warning message.
+we shouldn't call ceph_msg_put, otherwise libceph will pass
+invalid pointer to mm.
 
-Agreed on "functions" being less than perfect. It directly exposes the
-idiosyncrasies of scripts/kernel-doc. I'm not sure "specific" is any
-better, though.
+kernel panic - not syncing: fatal exception
+    [5452201.213885] ------------[ cut here ]------------
+    [5452201.213889] kernel BUG at mm/slub.c:3901!
+    [5452201.213938] invalid opcode: 0000 [#1] SMP PTI
+    [5452201.213971] CPU: 35 PID: 3037447 Comm: kworker/35:1 Kdump: loaded Not tainted 4.19.15 #1
+    [5452201.214020] Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 01/22/2018
+    [5452201.214088] Workqueue: ceph-msgr ceph_con_workfn [libceph]
+    [5452201.214129] RIP: 0010:kfree+0x15b/0x170
+    [5452201.214156] Code: 8b 02 f6 c4 80 75 08 49 8b 42 08 a8 01 74 1b 49 8b 02 31 f6 f6 c4 80 74 05 41 0f b6 72 51 5b 5d 41 5c 4c 89 d7 e9 95 03 f9 ff <0f> 0b 48 83 e8 01 e9 01 ff ff ff 49 83 ea 01 e9 e9 fe ff ff 90 0f
+    [5452201.214262] RSP: 0018:ffffb8c3a0607cb0 EFLAGS: 00010246
+    [5452201.214296] RAX: ffffeee840000008 RBX: ffff9130c0000000 RCX: 0000000080200016
+    [5452201.214339] RDX: 00006f0ec0000000 RSI: 0000000000000000 RDI: ffff9130c0000000
+    [5452201.214383] RBP: ffff91107f823970 R08: 0000000000000001 R09: 0000000000000000
+    [5452201.214426] R10: ffffeee840000000 R11: 0000000000000001 R12: ffffffffc076c45d
+    [5452201.214469] R13: ffff91107f823970 R14: ffff91107f8239e0 R15: ffff91107f823900
+    [5452201.214513] FS:  0000000000000000(0000) GS:ffff9110bfbc0000(0000) knlGS:0000000000000000
+    [5452201.214562] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    [5452201.214598] CR2: 000055993ab29620 CR3: 0000003a1e00a003 CR4: 00000000003606e0
+    [5452201.214641] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+    [5452201.214685] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+    [5452201.214728] Call Trace:
+    [5452201.214759]  ceph_msg_release+0x15d/0x190 [libceph]
+    [5452201.214811]  dispatch+0x66/0xa50 [ceph]
+    [5452201.214846]  try_read+0x7f3/0x11d0 [libceph]
+    [5452201.214878]  ? dequeue_entity+0x37e/0x7e0
+    [5452201.214907]  ? pick_next_task_fair+0x291/0x610
+    [5452201.214937]  ? dequeue_task_fair+0x5d/0x700
+    [5452201.214966]  ? __switch_to+0x8c/0x470
+    [5452201.214999]  ceph_con_workfn+0xa2/0x5b0 [libceph]
+    [5452201.215033]  process_one_work+0x16b/0x370
+    [5452201.215062]  worker_thread+0x49/0x3f0
+    [5452201.215089]  kthread+0xf5/0x130
+    [5452201.215112]  ? max_active_store+0x80/0x80
+    [5452201.215139]  ? kthread_bind+0x10/0x10
+    [5452201.215167]  ret_from_fork+0x1f/0x30
 
-Perhaps "symbols" would be more self-explanatory. Or, actually make
-"functions" only work on functions, and add a separate keyword for other
-stuff. *shrug*
+Link: https://tracker.ceph.com/issues/42288
 
-Seems like the patch is way too big. I'd probably add "symbols" (or
-whatever) as a synonym for "functions" for starters, and convert
-documents piecemeal, and finally drop the old one.
+Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+---
+ fs/ceph/mds_client.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-The scripts/kernel-doc change should be a patch of its own.
-
-BR,
-Jani.
-
-
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index a8a8f84f3bbf..066358fea347 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -4635,7 +4635,7 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
+ 	mutex_lock(&mdsc->mutex);
+ 	if (__verify_registered_session(mdsc, s) < 0) {
+ 		mutex_unlock(&mdsc->mutex);
+-		goto out;
++		return;
+ 	}
+ 	mutex_unlock(&mdsc->mutex);
+ 
+@@ -4672,7 +4672,6 @@ static void dispatch(struct ceph_connection *con, struct ceph_msg *msg)
+ 		pr_err("received unknown message type %d %s\n", type,
+ 		       ceph_msg_type_name(type));
+ 	}
+-out:
+ 	ceph_msg_put(msg);
+ }
+ 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.21.0 (Apple Git-122)
+
