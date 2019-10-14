@@ -2,230 +2,132 @@ Return-Path: <SRS0=TxL2=YH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3CAECE587
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EFC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896BB207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720A820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 14 Oct 2019 09:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JHMIPH9J"
+	dkim=pass (1024-bit key) header.d=kellner.me header.i=@kellner.me header.b="m3pH2RmG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fBdXfPY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfJNJro (ORCPT
+        id S1731082AbfJNJvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 05:47:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33349 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730915AbfJNJro (ORCPT
+        Mon, 14 Oct 2019 05:51:00 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:40583 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730872AbfJNJvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 05:47:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571046461;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nT2RrZtaq6JmJmsrID6t8B00LKO1nf8nFaNNyvXimHw=;
-        b=JHMIPH9JPBbeoxRVge8e3RjpH/Pgwr3B+89R5tZfFl82p+Do0kGVZun68fzRss2A6GWyLG
-        McrARU/Li1wlNZMllIpOf6bjwaszhi/6byqDgzCaMUWZi+4qfNDkNdJW16yBXZADo5i/gD
-        ggdCx4oDIMekDzVzWOkfnO1UdtRDhGc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-sERe_wB8MdSiPMwMQv60wA-1; Mon, 14 Oct 2019 05:47:40 -0400
-Received: by mail-qt1-f200.google.com with SMTP id s14so17424964qtn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 02:47:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tikxGi43a/ogHMQeUvt4yKFgetbCPvcttFBIabbyj28=;
-        b=pKOWiYRC/NWK44unEajgE1sY5bjv7ufLSEQtC6wbSBtWCjDLMvO08u6+badNx7Wjhy
-         2PWUzVoRYDWpAMWuIvmyKqL00BHIMCMcgm/Hv/Faiskk0mNQAHw+SuBmJTXMRQPEFgoz
-         Wgb6to61waIyuc0Djew31I0vEWpZbL2eo87CCCNCbIMfqB5x0gjO32JA58qWzFS55h/a
-         G6STM6G/SSyClxm1u3FLVAzqmzcp7woPTK99GoKxbYag9319Ep4lJBSkgw/Jx9+/i2E4
-         2Pai29fl+jZgRLjpA5ZtYtQRj/nh6eDi+Qq/ykb0ZQCxHRHfAmKxiRIIkRU2Jf7+WzG8
-         pMMA==
-X-Gm-Message-State: APjAAAXWRhMtKJ0AcF7u8RN5SjjGBLIw3Wc1gKuRbIoO3RSCkjyoHge4
-        pTsXRGWBKaBmbwOJyMrSvKkZd8TGuEiz0lrfKOasqL3S4tOICOjJ9GwyZYyjIzuhWoF1tTP/9eB
-        giT5FbQzFN5nN+bs5YzcTNXEDfRWGxORGrMMvi64n
-X-Received: by 2002:a05:620a:1116:: with SMTP id o22mr28156590qkk.170.1571046459959;
-        Mon, 14 Oct 2019 02:47:39 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyvbOFBLvfatVqxwW5o/shLYzkTaBsdCKuYpQDE01FDeDZTKqGCvPGRPGzVzTMn3Bd8hBCS7VgMz21JW+/5Pmo=
-X-Received: by 2002:a05:620a:1116:: with SMTP id o22mr28156570qkk.170.1571046459697;
- Mon, 14 Oct 2019 02:47:39 -0700 (PDT)
+        Mon, 14 Oct 2019 05:51:00 -0400
+X-Greylist: delayed 467 seconds by postgrey-1.27 at vger.kernel.org; Mon, 14 Oct 2019 05:50:59 EDT
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.west.internal (Postfix) with ESMTP id 5D19F735;
+        Mon, 14 Oct 2019 05:43:10 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 14 Oct 2019 05:43:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kellner.me; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=mesmtp;
+         bh=g0eFRemBLYbt3Vj8rAn5r0iCJcP4iC+nMgPsp2aeyxQ=; b=m3pH2RmGh+mj
+        wgvkt8KKNTsOw/RCIpYWpPBZ9rvYpsYphyRZ4YEAuhQHTYFsGa6SR22GK7aHS3BF
+        kjKgFdK5SZpgFRxOdNyN36n/3I9JmIokiTyUqahDnD9DvVaMbeeE52QEnVRWV/Wq
+        AFO9J3gtmaeGLYBMtulGsshEe90KKCQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=g0eFRemBLYbt3Vj8rAn5r0iCJcP4iC+nMgPsp2aey
+        xQ=; b=fBdXfPY7DPkJHy3ntlbPfzGqGoe/3gzTG01r694FV4htyZypSAuCJ6qwJ
+        uCzw1sWz+HpgCIo7uQLa9TB6z4TXqHxKiXGS9E/6Caywos3hNxCC/gjKHr7X99q+
+        p2r7uKqq+IaKPAOjQwm87WGHMXpRRnTg136+xzlaAbHQXjgh2I0EoBRqbVG05WeD
+        l9iJBDmAa8smMKTFfoLdPRJw0fTr5pXkdGw3v4Do7s/3op1bk67Jbbh9kS0NE6TT
+        MjoqyEOUPckhDxg9gVMTcSXiCCaLajbpkvNzp9BgXIuPtZ2IW4FVsS1Ds8oPKxCd
+        9PhMDv7Nqz/SYtcO0hBPflt5oIyVg==
+X-ME-Sender: <xms:LEOkXXp57ew_RQs5nL-MEIIyL2yyaxsz0bzuyR4NxxtsnUFssL77ug>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjedugddvtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpeevhhhrihhs
+    thhirghnucfmvghllhhnvghruceotghhrhhishhtihgrnheskhgvlhhlnhgvrhdrmhgvqe
+    enucfkphepkeelrdduiedrudehfedrudelieenucfrrghrrghmpehmrghilhhfrhhomhep
+    tghhrhhishhtihgrnheskhgvlhhlnhgvrhdrmhgvnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:LEOkXWR0v9fgMY1-TaHjvEQ9XWwFpBerHqNWmL-nvZfXCyL4GpewVA>
+    <xmx:LEOkXW7PuSdgAhpFcUPXbcxytFTnX2ZyCSrHWkhmwI1cX409JEvbUg>
+    <xmx:LEOkXaPMjwqqU0vq2AAH0R7Fk77oYoTzNyooSq30qDIW5Zh0-3FhDw>
+    <xmx:LUOkXcTLCneCSW0YV5A1iIvhjvw1J2XhdkfVVA7RjyJAeImeb40M-xb2e7k>
+Received: from hanada.local (cable-89-16-153-196.cust.telecolumbus.net [89.16.153.196])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AB6348005B;
+        Mon, 14 Oct 2019 05:43:05 -0400 (EDT)
+Message-ID: <abc477fb3bd8fbf7b4d7e53d079dd1d8902e54af.camel@kellner.me>
+Subject: Re: [PATCH] pidfd: add NSpid entries to fdinfo
+From:   Christian Kellner <christian@kellner.me>
+To:     Christian Brauner <christian.brauner@ubuntu.com>, jannh@google.com
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org, cyphar@cyphar.com,
+        elena.reshetova@intel.com, guro@fb.com, ldv@altlinux.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, viro@zeniv.linux.org.uk
+Date:   Mon, 14 Oct 2019 11:43:01 +0200
+In-Reply-To: <20191012102119.qq2adlnxjxrkslca@wittgenstein>
+References: <CAG48ez1hk9d-qAPcRy9QOgNuO8u3Y_hu_3=GZoFYLY+oMdo8xg@mail.gmail.com>
+         <20191012101922.24168-1-christian.brauner@ubuntu.com>
+         <20191012102119.qq2adlnxjxrkslca@wittgenstein>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-References: <20191007051240.4410-1-andrew.smirnov@gmail.com>
- <20191007051240.4410-4-andrew.smirnov@gmail.com> <CAO-hwJJ8tp4Rqte-umv9e=S5evR5oJTErsNR0Wk-z8wcbtR0wg@mail.gmail.com>
- <CAHQ1cqHCYiaEXck3LMGBwYiHVDQcF=XuF=kHJ4f_v1ea6hDR2g@mail.gmail.com>
- <CAO-hwJ+HZEhn_riNwrODKSySt4aP4RzZq+omYDAF-7q5dLQR1Q@mail.gmail.com> <CAHQ1cqHNca22fAWMnLFBuD-txb7MvdFrY9bY2A9uViq4P5Cikg@mail.gmail.com>
-In-Reply-To: <CAHQ1cqHNca22fAWMnLFBuD-txb7MvdFrY9bY2A9uViq4P5Cikg@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 14 Oct 2019 11:47:28 +0200
-Message-ID: <CAO-hwJK65mHghXDkb4=b5e04eoG6gMiU2AuV=pLUWU8xN_yJ2w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] HID: logitech-hidpp: add G920 device validation quirk
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Mazin Rezk <mnrzk@protonmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-X-MC-Unique: sERe_wB8MdSiPMwMQv60wA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 12, 2019 at 1:33 AM Andrey Smirnov <andrew.smirnov@gmail.com> w=
-rote:
->
-> On Fri, Oct 11, 2019 at 3:33 PM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > On Fri, Oct 11, 2019 at 9:39 PM Andrey Smirnov <andrew.smirnov@gmail.co=
-m> wrote:
-> > >
-> > > On Fri, Oct 11, 2019 at 7:56 AM Benjamin Tissoires
-> > > <benjamin.tissoires@redhat.com> wrote:
-> > > >
-> > > > On Mon, Oct 7, 2019 at 7:13 AM Andrey Smirnov <andrew.smirnov@gmail=
-.com> wrote:
-> > > > >
-> > > > > G920 device only advertises REPORT_ID_HIDPP_LONG and
-> > > > > REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so queryi=
-ng
-> > > > > for REPORT_ID_HIDPP_SHORT with optional=3Dfalse will always fail =
-and
-> > > > > prevent G920 to be recognized as a valid HID++ device.
-> > > > >
-> > > > > Modify hidpp_validate_device() to check only REPORT_ID_HIDPP_LONG=
- with
-> > > > > optional=3Dfalse on G920 to fix this.
-> > > > >
-> > > > > Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ device=
-s to be handled by this module")
-> > > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204191
-> > > > > Reported-by: Sam Bazely <sambazley@fastmail.com>
-> > > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > > > Cc: Jiri Kosina <jikos@kernel.org>
-> > > > > Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > > > Cc: Henrik Rydberg <rydberg@bitmath.org>
-> > > > > Cc: Sam Bazely <sambazley@fastmail.com>
-> > > > > Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> > > > > Cc: Austin Palmer <austinp@valvesoftware.com>
-> > > > > Cc: linux-input@vger.kernel.org
-> > > > > Cc: linux-kernel@vger.kernel.org
-> > > > > Cc: stable@vger.kernel.org
-> > > > > ---
-> > > > >  drivers/hid/hid-logitech-hidpp.c | 6 ++++++
-> > > > >  1 file changed, 6 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-l=
-ogitech-hidpp.c
-> > > > > index cadf36d6c6f3..f415bf398e17 100644
-> > > > > --- a/drivers/hid/hid-logitech-hidpp.c
-> > > > > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > > > > @@ -3511,6 +3511,12 @@ static bool hidpp_validate_report(struct h=
-id_device *hdev, int id,
-> > > > >
-> > > > >  static bool hidpp_validate_device(struct hid_device *hdev)
-> > > > >  {
-> > > > > +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
-> > > > > +
-> > > > > +       if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
-> > > > > +               return hidpp_validate_report(hdev, REPORT_ID_HIDP=
-P_LONG,
-> > > > > +                                            HIDPP_REPORT_SHORT_L=
-ENGTH, false);
-> > > > > +
-> > > >
-> > > > with https://patchwork.kernel.org/patch/11184749/ we also have a ne=
-ed
-> > > > for such a trick for BLE mice.
-> > > >
-> > > > I wonder if we should not have a more common way of validating the =
-devices
-> > > >
-> > >
-> > > What about just checking for:
-> > >
-> > > hidpp_validate_report(REPORT_ID_HIDPP_SHORT,
-> > >                                     HIDPP_REPORT_SHORT_LENGTH, true) =
-||
-> > > hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
-> > >                                     HIDPP_REPORT_LONG_LENGTH, true);
-> > >
-> > > and probably dropping the "optional" argument for
-> > > hidpp_validate_report()? Original code allows there to be devices
-> > > supporting shorts reports only, but it seems that devices that suppor=
-t
-> > > only long reports are legitimate too, so maybe the only "invalid"
-> > > combination is if both are invalid length or missing?
-> >
-> > Well, the problem is we also want to detect 2 things:
-> > - devices that do not have any of the HID++ collections, and handle
-> > them as generic ones (the second mouse/keyboard collection in the
-> > gaming mice should still be exported by the driver, or this will kill
-> > the macros / rebinding capabilities
-> > - malicious devices that pretends to have a HID++ collection but want
-> > to trigger a buffer overflow by having a shorter than expected report
-> > length
-> >
-> > Point 2 above should still be fine, but point 1 is why we have the
-> > enforcement of the HID++ short report in the first place.
-> >
->
-> It sounds like the result of hidpp_validate_report() can't really be
-> contained in a bool. If we modify it to return -EINVAL for bogus
-> report length, -ENOTSUPP if report ID is not supported and 0 if
-> everything is valid we should be able to capture all valid permutation
-> by checking for with
->
-> int id_short =3D hidpp_validate_report(ID_SHORT);
-> int id_long  =3D hidpp_validate_report(ID_LONG);
->
-> return (!id_short && !id_long) || (id_short =3D=3D -ENOTSUPP && !id_long)
-> || (id_long =3D=3D -ENOTSUPP && !id_short)
->
-> no?
+On Sat, 2019-10-12 at 12:21 +0200, Christian Brauner wrote:
+> I think this might be more what we want.
+Yep, indeed.
 
-Sounds like a good idea.
+> I tried to think of cases where the first entry of Pid is not
+> identical
+> to the first entry of NSpid but I came up with none. Maybe you do,
+> Jann?
+Yeah, I don't think that can be the case. By looking at the source of
+'pid_nr_ns(pid, ns)' a non-zero return means that a) 'pid' valid, ie.
+non-null and b) 'ns' is in the pid namespace hierarchy of 'pid' (at
+pid->level, i.e. "pid->numbers[ns->level].ns == ns").
 
-There is a few changes I'd like to do on this proposal:
-- ideally, we should also check on very long HID++ reports, but as
-d71b18f7c79993 ("HID: logitech-hidpp: do not hardcode very long report
-length") mentioned, we should probably ensure that those very long
-reports are at least bigger than HIDPP_REPORT_LONG_LENGTH and shorter
-than HIDPP_REPORT_VERY_LONG_MAX_LENGTH.
+> Christian, this is just a quick stab I took. Feel free to pick this
+> up as a template.
+Thanks! I slightly re-worked it, with the reasoning above in mind, to
+get rid of one of the branches:
 
-- the boolean operation has a risk of being quite hard to follow if we
-now have 3 IDs to check. So we would need a few comments for each
-operation to explain which is which.
++#ifdef CONFIG_PID_NS
++	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
++	if (nr) {
++		int i;
++
++		/* If nr is non-zero it means that 'pid' is valid and that
++		 * ns, i.e. the pid namespace associated with the procfs
++		 * instance, is in the pid namespace hierarchy of pid.
++		 * Start at one level below and print all descending pids.
++		 */
++		for (i = ns->level + 1; i <= pid->level; i++) {
++			ns = pid->numbers[i].ns;
++			seq_put_decimal_ull(m, "\t", pid_nr_ns(pid, ns));
++		}
++	}
++#endif
 
-- maybe we should exit earlier if any of the id_short, id_long or
-id_very_long is -EINVAL, as this should be detected has a hard failure
+But I now just realized that with the very same reasoning, if nr is
+non-zero, we don't need to redo all the checks and can just do:
 
-- the choice of the return codes should be changed:
-  * ENOTSUPP is defined for the NFSv3 protocol, and I think ENOENT (no
-such file or directory) or ENXIO (No such device or address) might be
-better
-  * EINVAL is for an invalid argument of a function, and here the
-argument is correct, but the device is not. Maybe EBADR (Invalid
-request descriptor)?
+for (i = ns->level + 1; i <= pid->level; i++)
+	seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
 
-If we can get this patch in stable soon, this would also help of the
-BLE series Mazin is currently working on.
+If this sounds good to you I resend the patches with the change above.
 
-Cheers,
-Benjamin
+Thanks,
+Christian
 
