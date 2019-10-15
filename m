@@ -2,146 +2,156 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BE4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33F9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99CA20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7819820854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Mh7ytiFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732557AbfJOTrC (ORCPT
+        id S1732452AbfJOTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:47:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44654 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfJOTrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:47:02 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4593A2A09AD
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 19:47:01 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id a15so1560901wrr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 12:47:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JUDMnzFf/AJg2T0GjQljTk8M2MDyg/AQ482kn8kGySo=;
-        b=Q3uWDFINcOAqUouLjDVbEP2f9SZQUKWeFzrzMw1/NQCPe77dHtCx2GAiMw41rT3jPb
-         NCSL9nUb9DiXpHdYbxpjer0UKPMCFE19mvvMWf+RQwp42J4rXVM8Bp4Ug+h99gfkK3Un
-         6ob0caguAGrC/A6D8JuwC3jhfumWYhXrYHOztSD+Hz5ONxKmWX/oltHlLL/HcpnekQQy
-         xGCi1sLIpaTUwOeqIqT0odV0DkKA8gT4/UFKEQOCFAgjqtywQtgq/9Aozvukxfm07ndQ
-         riy5LQ2pqw/iMfQ4VFHxvis5tFaQCr2ynvEmmx6gxsByz+HY7KfpQMo7ibpA6YZ5VJ+6
-         TpNg==
-X-Gm-Message-State: APjAAAXaCpC+uFsEC0dA3p6N2AhU6rNJoar4vxyxKMngd7mUB9U+gvqh
-        z3aQXOpriQSG5OIWEgzP93mbxwE+54NyS1CybeTn64ifFXHOAoF+nZPz0axKU8376vEh49klZj3
-        IScrokhpj/p0DZWW1E2+dc1uk
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr33243548wrw.182.1571168819891;
-        Tue, 15 Oct 2019 12:46:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxKncfKk0ZDjD/mAm3dZRAQyVQ+iLyC2oCnuIGL0d4Nl3NDjg7qLC99QPB29CvDvGDpBauxtw==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr33243530wrw.182.1571168819564;
-        Tue, 15 Oct 2019 12:46:59 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ddc7:c53c:581a:7f3e? ([2001:b07:6468:f312:ddc7:c53c:581a:7f3e])
-        by smtp.gmail.com with ESMTPSA id g13sm18499321wrm.42.2019.10.15.12.46.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 12:46:58 -0700 (PDT)
-Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20190928172323.14663-1-aarcange@redhat.com>
- <20190928172323.14663-13-aarcange@redhat.com>
- <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
- <20191015164952.GE331@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
+        Tue, 15 Oct 2019 15:51:53 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.109]:35354 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726111AbfJOTvw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 15:51:52 -0400
+X-Greylist: delayed 1468 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 15:51:50 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 35050401671FC
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:27:10 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id KSTOiDdhSW4frKSTOipzBT; Tue, 15 Oct 2019 14:27:10 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NgAyl+0UZAXb+bx6ZeAq16cdATKDnWxNUBuvyE8TbS4=; b=Mh7ytiFD8n+xzqSNnrzgwh6P1l
+        oyb69xwe/mEzLw2zuRGTbpyYlYdsghE+3MS1Hw/WXdIB97NV2huc49UeMW2QpGlbjDsuxSgxBowJo
+        QfmzaX7CCCnIe73hLlFhWE/2+JheocXTX6UIg6Dg7Lgo/zm4+5ngVME1hS6cA/XwY3Y9rJER9UpKG
+        rsrXRuonDlPsTa9LaSIFVM0GwkPlJBNVVYxxKGNuzNjuvAEWr4vRo3gnZsxVBDYTNto+e+DWdmjtK
+        4UFQqgAtZ9TICQjMOm9+cT7KPfePSKHb/cVnqnPTwMnD7JeEdmvODfurw5n7ftwHdt6AbT22R9LwG
+        nK/EQSXg==;
+Received: from [187.192.22.73] (port=43084 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1iKSTN-0025iD-Rh; Tue, 15 Oct 2019 14:27:09 -0500
+Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix misuse of strcmp() function
+To:     ayman.bagabas@gmail.com, Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191015182549.GA13772@embeddedor>
+ <336c7fa6eebdbada759c9ad30a0a6b85af6f6c58.camel@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Openpgp: preference=signencrypt
-Message-ID: <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
-Date:   Tue, 15 Oct 2019 21:46:58 +0200
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <d5f4164f-7cee-3fdb-49ce-4e1d1d70572a@embeddedor.com>
+Date:   Tue, 15 Oct 2019 14:26:47 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015164952.GE331@redhat.com>
+In-Reply-To: <336c7fa6eebdbada759c9ad30a0a6b85af6f6c58.camel@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.22.73
+X-Source-L: No
+X-Exim-ID: 1iKSTN-0025iD-Rh
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.22.73]:43084
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/19 18:49, Andrea Arcangeli wrote:
-> On Tue, Oct 15, 2019 at 10:28:39AM +0200, Paolo Bonzini wrote:
->> If you're including EXIT_REASON_EPT_MISCONFIG (MMIO access) then you
->> should include EXIT_REASON_IO_INSTRUCTION too.  Depending on the devices
->> that are in the guest, the doorbell register might be MMIO or PIO.
+Hi Ayman,
+
+On 10/15/19 14:08, ayman.bagabas@gmail.com wrote:
+
+>>  	/* Huawei laptops come with one battery only */
+>> -	if (strcmp(battery->desc->name, "BAT") != 1)
 > 
-> The fact outb/inb devices exists isn't the question here. The question
-> you should clarify is: which of the PIO devices is performance
-> critical as much as MMIO with virtio/vhost?
-
-virtio 0.9 uses PIO.
-
-> I mean even on real hardware those devices aren't performance critical.
-
-On virtual machines they're actually faster than MMIO because they don't
-need to go through page table walks.
-
->> So, the difference between my suggested list (which I admit is just
->> based on conjecture, not benchmarking) is that you add
->> EXIT_REASON_PAUSE_INSTRUCTION, EXIT_REASON_PENDING_INTERRUPT,
->> EXIT_REASON_EXTERNAL_INTERRUPT, EXIT_REASON_HLT, EXIT_REASON_MSR_READ,
->> EXIT_REASON_CPUID.
->>
->> Which of these make a difference for the hrtimer testcase?  It's of
->> course totally fine to use benchmarks to prove that my intuition was
->> bad---but you must also use them to show why your intuition is right. :)
+> Note we don't have a battery number in BATx, strcmp would return 1 if
+> battery->desc->name is "BAT0" or any one digit. This is a desired
+> behavior where some Huawei laptops identify the first battery as "BAT1"
+> and this would match if name is greater than "BAT" by one digit.
 > 
-> The hrtimer flood hits on this:
+
+Great to know this is not a bug. I don't think there is any
+other instance in the whole codebase like this one: strcmp(...) != 1
+So, that's an odd thing to see...  Maybe you can consider adding
+the whole description above as a code comment? :)
+
+> Maybe strcmp(battery->desc->name, "BAT") < 0 is a better way to go.
 > 
->            MSR_WRITE     338793    56.54%     5.51%      0.33us     34.44us      0.44us ( +-   0.20% )
->    PENDING_INTERRUPT     168431    28.11%     2.52%      0.36us     32.06us      0.40us ( +-   0.28% )
->     PREEMPTION_TIMER      91723    15.31%     1.32%      0.34us     30.51us      0.39us ( +-   0.41% )
->   EXTERNAL_INTERRUPT        234     0.04%     0.00%      0.25us      5.53us      0.43us ( +-   5.67% )
->                  HLT         65     0.01%    90.64%      0.49us 319933.79us  37562.71us ( +-  21.68% )
->             MSR_READ          6     0.00%     0.00%      0.67us      1.96us      1.06us ( +-  17.97% )
->        EPT_MISCONFIG          6     0.00%     0.01%      3.09us    105.50us     26.76us ( +-  62.10% )
-> 
-> PENDING_INTERRUPT is the big missing thing in your list. It probably
-> accounts for the bulk of slowdown from your list.
 
-Makes sense.
+Yeah; this is bit more specific.
 
-> However I could imagine other loads with higher external
-> interrupt/hlt/rdmsr than the hrtimer one so I didn't drop those.
-External interrupts should only tick at 1 Hz on nohz_full kernels,
-and even at 1000 Hz (if physical CPUs are not isolated) it should not
-really matter.  We can include it since it has such a short handler so
-the cost of retpolines is in % much more than other exits.
-
-HLT is certainly a slow path, the guest only invokes if things such as
-NAPI interrupt mitigation have failed.  As long as the guest stays in
-halted state for a microsecond or so, the cost of retpoline will all but
-disappear.
-
-RDMSR again shouldn't be there, guests sometimes read the PMTimer (which
-is an I/O port) or TSC but for example do not really ever read the APIC
-TMCCT.
-
-> I'm pretty sure HLT/EXTERNAL_INTERRUPT/PENDING_INTERRUPT should be
-> included.
-> I also wonder if VMCALL should be added, certain loads hit on fairly
-> frequent VMCALL, but none of the one I benchmarked.
-
-I agree for external interrupt and pending interrupt, and VMCALL is fine
-too.  In addition I'd add I/O instructions which are useful for some
-guests and also for benchmarking (e.g. vmexit.flat has both IN and OUT
-tests).
-
-Paolo
+Thanks!
+--
+Gustavo
