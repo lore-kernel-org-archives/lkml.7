@@ -2,105 +2,136 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F90ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71419ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD3621925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473562064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571146618;
+	bh=Lh3gUOxuzxYIzfbryzFH5J8YBK8MTzOYjOrLSH1iECQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gmZjTJ/izSHEFAw0Luu4lmO9POa0cTQE6020yEsplIO6SYzOXhfZ/TxbvVSB7XTry
+	 zs1s0lSUCDPk267SGO8kvNMF1bHooUCelDnpMCIaJu0lG5qbisi/u9C6+PL2j6xtXo
+	 Wu7rHXRl9k1DXCXiHocpUY//OfYk9il7+yIopTjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbfJONgq (ORCPT
+        id S1732050AbfJONgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 09:36:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbfJONgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:36:46 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728880AbfJONgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:36:53 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855752064A;
-        Tue, 15 Oct 2019 13:36:44 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 09:36:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
-        joe.lawrence@redhat.com, jpoimboe@redhat.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191015093642.72e872d0@gandalf.local.home>
-In-Reply-To: <alpine.LSU.2.21.1910151244550.30206@pobox.suse.cz>
-References: <20191014105923.29607-1-mbenes@suse.cz>
-        <20191014111719.141bd4fa@gandalf.local.home>
-        <20191015074540.bxehllisibls3kk7@pathway.suse.cz>
-        <alpine.LSU.2.21.1910151244550.30206@pobox.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09CD321A49;
+        Tue, 15 Oct 2019 13:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571146612;
+        bh=Lh3gUOxuzxYIzfbryzFH5J8YBK8MTzOYjOrLSH1iECQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SVdKnnRtv6N+AuRGXmT+CvC20RbJvOKot2xgYuMq/RpeAQtfMWF0SDW5rI8S4oiyj
+         783MHOK0MeowEn1QmynwKJS5kH+7ig+RbSPpaQpU/Y1FYLuBNG32oEjt6FFGKkh+vC
+         qSMVGlxG7opZINeoK0zcStHvzDntbyrWMN08u5SU=
+Received: by mail-qk1-f170.google.com with SMTP id f16so19152385qkl.9;
+        Tue, 15 Oct 2019 06:36:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAWR7HJRWAg1v3seqP5GRVy7Z0mHyd1NOZ+8YJpAVY4ywnolD3mE
+        WcIO9ZeaJqkdLvCN0Kfc+pQv0sACCOJ7CS0s/A==
+X-Google-Smtp-Source: APXvYqypirVCKVCRTL7nRtAYwMId0v/R2tSXy313ZY3pYHRXJuh7KZFwlJGt2xV9T7SPrVcWBZmRcO4Mo8Wu7toa2tg=
+X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr4163163qkl.152.1571146611108;
+ Tue, 15 Oct 2019 06:36:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
+ <20191011154423.2506-2-srinivas.kandagatla@linaro.org> <20191014171241.GA24989@bogus>
+ <76be1a0d-43ea-44c3-ef6c-9f9a2025c7a2@linaro.org> <CAL_Jsq+ZBhh2A3yLtOyReHHAET_bvM-ygBtRXeFihAxf0jvDKQ@mail.gmail.com>
+ <f7977140-c103-7d0d-9523-2212e1029598@linaro.org>
+In-Reply-To: <f7977140-c103-7d0d-9523-2212e1029598@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 15 Oct 2019 08:36:39 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJLmPGBxEkmZMTBMpp5xsnHq0SYg8+RQPsjnUfbHrrf5Q@mail.gmail.com>
+Message-ID: <CAL_JsqJLmPGBxEkmZMTBMpp5xsnHq0SYg8+RQPsjnUfbHrrf5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: soundwire: add bindings for Qcom controller
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 12:50:59 +0200 (CEST)
-Miroslav Benes <mbenes@suse.cz> wrote:
+On Tue, Oct 15, 2019 at 7:22 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 15/10/2019 12:35, Rob Herring wrote:
+> > On Mon, Oct 14, 2019 at 12:34 PM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org> wrote:
+> >>
+> >> Thanks Rob for taking time to review,
+> >>
+> >> On 14/10/2019 18:12, Rob Herring wrote:
+> >>> On Fri, Oct 11, 2019 at 04:44:22PM +0100, Srinivas Kandagatla wrote:
+> >>>> This patch adds bindings for Qualcomm soundwire controller.
+> >>>>
+> >>>> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+> >>>> either integrated as part of WCD audio codecs via slimbus or
+> >>>> as part of SOC I/O.
+> >>>>
+> >>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >>>> ---
+> >>>>    .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
+> >>>>    1 file changed, 167 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+> >>>
+> >>> Next time, do a DT schema.
+> >>>
+> >> Sure! I can do that in next version!
+> >
+> > I meant the next binding you write, not v4. However, ...
+> >
+> > [...]
+> >
+> >>>> += SoundWire devices
+> >>>> +Each subnode of the bus represents SoundWire device attached to it.
+> >>>> +The properties of these nodes are defined by the individual bindings.
+> >>>
+> >>> Is there some sort of addressing that needs to be defined?
+> >>>
+> >> Thanks, Looks like I missed that here.
+> >>
+> >> it should be something like this,
+> >>
+> >> #address-cells = <2>;
+> >> #size-cells = <0>;
+> >>
+> >> Will add the in next version.
+> >
+> > You need a common soundwire binding for this. You also need to define
+> > the format of 'reg' and unit addresses. And it needs to be a schema.
+> > So perhaps this binding too should be.
+>
+> We already have a common SoundWire bindings in mainline for this
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml?h=v5.4-rc3
 
-> > > > @@ -6752,12 +6764,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
-> > > >  		ftrace_startup_sysctl();
-> > > >  
-> > > >  	} else {
-> > > > +		if (is_permanent_ops_registered()) {
-> > > > +			ftrace_enabled = last_ftrace_enabled;  
-> > > 
-> > > Although this is not incorrect, but may be somewhat confusing.
-> > > 
-> > > At this location, last_ftrace_enabled is always true.
-> > > 
-> > > I'm thinking this would be better to simply set it to false here.  
-> > 
-> > IMHO, we want to set ftrace_enabled = true here.
+Indeed... :)
 
-Yes, I meant true (don't know why I said false :-/ )
+> Should this binding just make a reference to it instead of duplicating
+> this same info here?
 
-> > 
-> > It was set to "false" by writing to the sysfs file. But the change
-> > gets rejected. ftrace will stay enabled. So, we should set
-> > the value back to "true".  
-> 
-> That's correct.
-> 
-> I can make it explicit as proposed. I just thought that 'ftrace_enabled = 
-> last_ftrace_enabled' was clear enough given Petr's explanation.
-> 
-> > > > +			ret = -EBUSY;
-> > > > +			goto out;
-> > > > +		}
-> > > > +
-> > > >  		/* stopping ftrace calls (just send to ftrace_stub) */
-> > > >  		ftrace_trace_function = ftrace_stub;
-> > > >  
-> > > >  		ftrace_shutdown_sysctl();
-> > > >  	}
-> > > >  
-> > > > +	last_ftrace_enabled = !!ftrace_enabled;
-> > > >   out:  
-> > > 
-> > > And move the assignment of last_ftrace_enabled to after the "out:"
-> > > label.  
-> > 
-> > This change might make sense anyway. But it is not strictly necessary
-> > from my POV.  
-> 
-> If it stays before "out:" label, last_ftrace_enabled is set if and only if 
-> it has to be set. I think it is better, but I can, of course, move it in 
-> v3 if Steven prefers it.
+Yes, that should be sufficient.
 
-I don't have any strong feelings here. If you want to keep it like
-this, I wont argue.
-
--- Steve
-
+Rob
