@@ -5,27 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B81FECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE89C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6357920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9BF21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571138005;
-	bh=MaVl7uKk/dp0BX5Q2sXCB9kYi4Gq5Sme5xs3MEgYxlY=;
+	s=default; t=1571138008;
+	bh=DFuBlUVNu9UW7erosnTFrJZ9Ww2zHEShf+Mz7Y45/a4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ocINDBU/xGrNeJmc53ZIGLMQCUn7cF6YSiz/TDu2J4WekMh+WMQOEeeIOMy5r7Rkp
-	 O2iXTZIJ3LRAqdo8v5vp/HBLH1pp4aXFdHY/6RctVM15Dojxo0KsX7u+BqOAtLqz5a
-	 layvn64E/BPE5zWGuZAzQ7/695LwcfmfVWjnCxL4=
+	b=c2GJ8vofWZY86uIdOf6eod1PIZFDbkvIXQZfo9D6m7+OF9y8mXpiVPEuXwlIjG2EN
+	 yQnAwAz43WPJLQjdz93ITGy3Mc0hmqFh/NGBCSL9EbV7MxQbfHL+vVZbNw1E40mMvi
+	 7SxyMp/jSMzX+4YSJq4mJx/jyBtSdUsIEoHCLZGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbfJOLNY (ORCPT
+        id S1732051AbfJOLN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:13:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50408 "EHLO
+        Tue, 15 Oct 2019 07:13:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50460 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731748AbfJOLM3 (ORCPT
+        with ESMTP id S1731758AbfJOLM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 07:12:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1DVh9UecgU3Om0hFKJyJzEeWH8DVtuUEIaWKy+MoWsU=; b=RmpxbFRFtO0q
-        qzCPcOfZMyyV6hHCr8XsBUAwEEsDrwfVD3JZrsoCOMLE1iX8iY7xnQxEfN13D3Uc2gWlwTDIJ5WTY
-        n9Ukkac2qxjVg74uPyfkyDOZVmglFzfD79I5dWvSK80HVRAjthW/xfQcunojJgFA7L5vLtp3G2nR5
-        zTn5A=;
+        List-Archive; bh=SS+GQ758n0tok8uAi2IAvQDQHUGGy2vhXECqaYim69w=; b=kPqwQP9DNq7E
+        VaHOBsJXH0vFkEpWwMHD8fUI8HRV0Up+AQZghuDA3YnogwTAdmZxeF7IhYI3kQEb5ucd72xIbsBCy
+        zWi1MMPuZdjGiD1Kx+z8RA2jis1acR+jgDzkKG2/IPBDI7WLEbIO5vHr5pPuJB22vvsi5Si5ln97V
+        UuNCo=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iKKkZ-00020s-Gl; Tue, 15 Oct 2019 11:12:23 +0000
+        id 1iKKkZ-000210-O7; Tue, 15 Oct 2019 11:12:23 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EA4622741DCA; Tue, 15 Oct 2019 12:12:22 +0100 (BST)
+        id 3B81127419E4; Tue, 15 Oct 2019 12:12:23 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc:     baolin.wang@linaro.org, bcm-kernel-feedback-list@broadcom.com,
@@ -54,11 +54,11 @@ Cc:     baolin.wang@linaro.org, bcm-kernel-feedback-list@broadcom.com,
         linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, orsonzhai@gmail.com,
         zhang.lyra@gmail.com
-Subject: Applied "spi: implement SW control for CS times" to the spi tree
-In-Reply-To: <20190926105147.7839-16-alexandru.ardelean@analog.com>
+Subject: Applied "spi: tegra114: change format for `spi_set_cs_timing()` function" to the spi tree
+In-Reply-To: <20190926105147.7839-15-alexandru.ardelean@analog.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191015111222.EA4622741DCA@ypsilon.sirena.org.uk>
-Date:   Tue, 15 Oct 2019 12:12:22 +0100 (BST)
+Message-Id: <20191015111223.3B81127419E4@ypsilon.sirena.org.uk>
+Date:   Tue, 15 Oct 2019 12:12:23 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: implement SW control for CS times
+   spi: tegra114: change format for `spi_set_cs_timing()` function
 
 has been applied to the spi tree at
 
@@ -91,130 +91,133 @@ to this mail.
 Thanks,
 Mark
 
-From 25093bdeb6bcae728e12e3795261dbd3677060a9 Mon Sep 17 00:00:00 2001
+From 8105936684681195d9073880b06a123b2e316811 Mon Sep 17 00:00:00 2001
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Date: Thu, 26 Sep 2019 13:51:43 +0300
-Subject: [PATCH] spi: implement SW control for CS times
+Date: Thu, 26 Sep 2019 13:51:42 +0300
+Subject: [PATCH] spi: tegra114: change format for `spi_set_cs_timing()`
+ function
 
-This change implements CS control for setup, hold & inactive delays.
+The initial version of `spi_set_cs_timing()` was implemented with
+consideration only for clock-cycles as delay.
 
-The `cs_setup` delay is completely new, and can help with cases where
-asserting the CS, also brings the device out of power-sleep, where there
-needs to be a longer (than usual), before transferring data.
-
-The `cs_hold` time can overlap with the `delay` (or `delay_usecs`) from an
-SPI transfer. The main difference is that `cs_hold` implies that CS will be
-de-asserted.
-
-The `cs_inactive` delay does not have a clear use-case yet. It has been
-implemented mostly because the `spi_set_cs_timing()` function implements
-it. To some degree, this could overlap or replace `cs_change_delay`, but
-this will require more consideration/investigation in the future.
-
-All these delays have been added to the `spi_controller` struct, as they
-would typically be configured by calling `spi_set_cs_timing()` after an
-`spi_setup()` call.
-
-Software-mode for CS control, implies that the `set_cs_timing()` hook has
-not been provided for the `spi_controller` object.
+For cases like `CS setup` time, it's sometimes needed that micro-seconds
+(or nano-seconds) are required, or sometimes even longer delays, for cases
+where the device needs a little longer to start transferring that after CS
+is asserted.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lore.kernel.org/r/20190926105147.7839-16-alexandru.ardelean@analog.com
+Link: https://lore.kernel.org/r/20190926105147.7839-15-alexandru.ardelean@analog.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi.c       | 45 ++++++++++++++++++++++++++++++++++++++++-
- include/linux/spi/spi.h |  5 +++++
- 2 files changed, 49 insertions(+), 1 deletion(-)
+ drivers/spi/spi-tegra114.c | 22 ++++++++++++++++++++--
+ drivers/spi/spi.c          | 16 ++++++++++------
+ include/linux/spi/spi.h    |  9 ++++++---
+ 3 files changed, 36 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 6beeb363515c..21628b0728f1 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -775,6 +775,15 @@ int spi_register_board_info(struct spi_board_info const *info, unsigned n)
- 
- static void spi_set_cs(struct spi_device *spi, bool enable)
- {
-+	bool enable1 = enable;
-+
-+	if (!spi->controller->set_cs_timing) {
-+		if (enable1)
-+			spi_delay_exec(&spi->controller->cs_setup, NULL);
-+		else
-+			spi_delay_exec(&spi->controller->cs_hold, NULL);
-+	}
-+
- 	if (spi->mode & SPI_CS_HIGH)
- 		enable = !enable;
- 
-@@ -800,6 +809,11 @@ static void spi_set_cs(struct spi_device *spi, bool enable)
- 	} else if (spi->controller->set_cs) {
- 		spi->controller->set_cs(spi, !enable);
- 	}
-+
-+	if (!spi->controller->set_cs_timing) {
-+		if (!enable1)
-+			spi_delay_exec(&spi->controller->cs_inactive, NULL);
-+	}
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 8133dc49d34f..e6a450d9b4f0 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -723,15 +723,31 @@ static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
+ 	dma_release_channel(dma_chan);
  }
  
- #ifdef CONFIG_HAS_DMA
-@@ -3278,10 +3292,39 @@ EXPORT_SYMBOL_GPL(spi_setup);
- int spi_set_cs_timing(struct spi_device *spi, struct spi_delay *setup,
- 		      struct spi_delay *hold, struct spi_delay *inactive)
+-static void tegra_spi_set_hw_cs_timing(struct spi_device *spi, u8 setup_dly,
+-				       u8 hold_dly, u8 inactive_dly)
++static int tegra_spi_set_hw_cs_timing(struct spi_device *spi,
++				      struct spi_delay *setup,
++				      struct spi_delay *hold,
++				      struct spi_delay *inactive)
  {
-+	size_t len;
-+
- 	if (spi->controller->set_cs_timing)
- 		return spi->controller->set_cs_timing(spi, setup, hold,
- 						      inactive);
--	return -ENOTSUPP;
-+
-+	if ((setup && setup->unit == SPI_DELAY_UNIT_SCK) ||
-+	    (hold && hold->unit == SPI_DELAY_UNIT_SCK) ||
-+	    (inactive && inactive->unit == SPI_DELAY_UNIT_SCK)) {
+ 	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
++	u8 setup_dly, hold_dly, inactive_dly;
+ 	u32 setup_hold;
+ 	u32 spi_cs_timing;
+ 	u32 inactive_cycles;
+ 	u8 cs_state;
+ 
++	if ((setup && setup->unit != SPI_DELAY_UNIT_SCK) ||
++	    (hold && hold->unit != SPI_DELAY_UNIT_SCK) ||
++	    (inactive && inactive->unit != SPI_DELAY_UNIT_SCK)) {
 +		dev_err(&spi->dev,
-+			"Clock-cycle delays for CS not supported in SW mode\n");
-+		return -ENOTSUPP;
++			"Invalid delay unit %d, should be SPI_DELAY_UNIT_SCK\n",
++			SPI_DELAY_UNIT_SCK);
++		return -EINVAL;
 +	}
 +
-+	len = sizeof(struct spi_delay);
++	setup_dly = setup ? setup->value : 0;
++	hold_dly = hold ? hold->value : 0;
++	inactive_dly = inactive ? inactive->value : 0;
 +
-+	/* copy delays to controller */
-+	if (setup)
-+		memcpy(&spi->controller->cs_setup, setup, len);
-+	else
-+		memset(&spi->controller->cs_setup, 0, len);
-+
-+	if (hold)
-+		memcpy(&spi->controller->cs_hold, hold, len);
-+	else
-+		memset(&spi->controller->cs_hold, 0, len);
-+
-+	if (inactive)
-+		memcpy(&spi->controller->cs_inactive, inactive, len);
-+	else
-+		memset(&spi->controller->cs_inactive, 0, len);
+ 	setup_dly = min_t(u8, setup_dly, MAX_SETUP_HOLD_CYCLES);
+ 	hold_dly = min_t(u8, hold_dly, MAX_SETUP_HOLD_CYCLES);
+ 	if (setup_dly && hold_dly) {
+@@ -758,6 +774,8 @@ static void tegra_spi_set_hw_cs_timing(struct spi_device *spi, u8 setup_dly,
+ 		tspi->spi_cs_timing2 = spi_cs_timing;
+ 		tegra_spi_writel(tspi, spi_cs_timing, SPI_CS_TIMING2);
+ 	}
 +
 +	return 0;
+ }
+ 
+ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 2e448078a117..6beeb363515c 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -3269,15 +3269,19 @@ EXPORT_SYMBOL_GPL(spi_setup);
+ /**
+  * spi_set_cs_timing - configure CS setup, hold, and inactive delays
+  * @spi: the device that requires specific CS timing configuration
+- * @setup: CS setup time in terms of clock count
+- * @hold: CS hold time in terms of clock count
+- * @inactive_dly: CS inactive delay between transfers in terms of clock count
++ * @setup: CS setup time specified via @spi_delay
++ * @hold: CS hold time specified via @spi_delay
++ * @inactive: CS inactive delay between transfers specified via @spi_delay
++ *
++ * Return: zero on success, else a negative error code.
+  */
+-void spi_set_cs_timing(struct spi_device *spi, u8 setup, u8 hold,
+-		       u8 inactive_dly)
++int spi_set_cs_timing(struct spi_device *spi, struct spi_delay *setup,
++		      struct spi_delay *hold, struct spi_delay *inactive)
+ {
+ 	if (spi->controller->set_cs_timing)
+-		spi->controller->set_cs_timing(spi, setup, hold, inactive_dly);
++		return spi->controller->set_cs_timing(spi, setup, hold,
++						      inactive);
++	return -ENOTSUPP;
  }
  EXPORT_SYMBOL_GPL(spi_set_cs_timing);
  
 diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index f9b4ba2db08d..cfd87b18f077 100644
+index fe5b85df2c79..f9b4ba2db08d 100644
 --- a/include/linux/spi/spi.h
 +++ b/include/linux/spi/spi.h
-@@ -609,6 +609,11 @@ struct spi_controller {
- 	/* Optimized handlers for SPI memory-like operations. */
- 	const struct spi_controller_mem_ops *mem_ops;
+@@ -524,8 +524,8 @@ struct spi_controller {
+ 	 * to configure specific CS timing through spi_set_cs_timing() after
+ 	 * spi_setup().
+ 	 */
+-	void (*set_cs_timing)(struct spi_device *spi, u8 setup_clk_cycles,
+-			      u8 hold_clk_cycles, u8 inactive_clk_cycles);
++	int (*set_cs_timing)(struct spi_device *spi, struct spi_delay *setup,
++			     struct spi_delay *hold, struct spi_delay *inactive);
  
-+	/* CS delays */
-+	struct spi_delay	cs_setup;
-+	struct spi_delay	cs_hold;
-+	struct spi_delay	cs_inactive;
-+
- 	/* gpio chip select */
- 	int			*cs_gpios;
- 	struct gpio_desc	**cs_gpiods;
+ 	/* bidirectional bulk transfers
+ 	 *
+@@ -1068,7 +1068,10 @@ static inline void spi_message_free(struct spi_message *m)
+ 	kfree(m);
+ }
+ 
+-extern void spi_set_cs_timing(struct spi_device *spi, u8 setup, u8 hold, u8 inactive_dly);
++extern int spi_set_cs_timing(struct spi_device *spi,
++			     struct spi_delay *setup,
++			     struct spi_delay *hold,
++			     struct spi_delay *inactive);
+ 
+ extern int spi_setup(struct spi_device *spi);
+ extern int spi_async(struct spi_device *spi, struct spi_message *message);
 -- 
 2.20.1
 
