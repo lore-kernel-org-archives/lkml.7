@@ -2,215 +2,70 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CA4ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258A9ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344C320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571174399;
-	bh=tFH0RpF7MH8BWShpOUukFtDYRilP1u7nfzftqEqVy7E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C2CW8o96ucXr/fJKPyc6rAYSIkJneezOx9/GejeDe9UxNjscEPQFAJzrsmcmbQSsX
-	 otviIYhUMo4Hrr97SYYm3ubdE+6LQxhQJDPbIHm8SVTRX6YKo3qgS6iAl7yTWRwVpy
-	 xrhE9XTpfzbKEM2fYk3fNyXt60Po4gyVDHy8iYUM=
+	by mail.kernel.org (Postfix) with ESMTP id F300F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbfJOVT6 (ORCPT
+        id S1729288AbfJOVUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:19:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39208 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfJOVT5 (ORCPT
+        Tue, 15 Oct 2019 17:20:25 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50698 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbfJOVUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:19:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s22so18257509otr.6;
-        Tue, 15 Oct 2019 14:19:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NwSWuftbUgGHTdFPApJuvKNyN7XsdaW8Fit8ZchKBoY=;
-        b=f9mdMu/W313556x+fpQGwusdUAWLKUf7ag+Le16N/FkC3BX8AQPFPgX3N2TAffD3Cz
-         b9hV1rBClNFOyieg8joIOQZZLNoJyH+PXNOSehLgVvyN0bM2TzBwujtdybgR5cEBbWt7
-         OsKoHYmYjufEkMoTuTIjhztta5SVGTkflPr+iJ9KJ7s6flyDzNRLLmApOAgiw4MG5tXg
-         FOCiiYJoRt0STgmk0pebJmiad+PMq+KktxF2YodtOkOr2sEsa49i3SxVRawze6cv/qJD
-         ZNqj+YyunKDyiXltSUu8aBtN6bTJB4RVukspFsPRFQh6VyJCGFQ003MOJZYWkurBMUjE
-         u4Kg==
-X-Gm-Message-State: APjAAAVsUsUukcI1A0kYrL8uZl731GHquztMi/NW4SaDC9pqLxoIXb3K
-        QBY2KbC3tBwecvAShRGcdLdZFSUzWRMYgDLD+LOTJK4x
-X-Google-Smtp-Source: APXvYqyLsJtoxGgofhwR5hK08b0Hi0cbUYi2KdDemnuwKHLLcBnxJN18buv98ShZJEGWZ/HnpNdz0w6c/YNNOgjXIs4=
-X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr31684717oth.266.1571174396197;
- Tue, 15 Oct 2019 14:19:56 -0700 (PDT)
+        Tue, 15 Oct 2019 17:20:25 -0400
+Received: from dread.disaster.area (pa49-181-198-88.pa.nsw.optusnet.com.au [49.181.198.88])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 49BCF362940;
+        Wed, 16 Oct 2019 08:20:22 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iKUEu-0000bN-Oj; Wed, 16 Oct 2019 08:20:20 +1100
+Date:   Wed, 16 Oct 2019 08:20:20 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] xfs: initialize iomap->flags in xfs_bmbt_to_iomap
+Message-ID: <20191015212020.GU16973@dread.disaster.area>
+References: <20191015154345.13052-1-hch@lst.de>
+ <20191015154345.13052-2-hch@lst.de>
 MIME-Version: 1.0
-References: <5720276.eiOaOx1Qyb@kreacher> <20191015192013.GA115182@google.com>
-In-Reply-To: <20191015192013.GA115182@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 15 Oct 2019 23:19:44 +0200
-Message-ID: <CAJZ5v0jFSML6cf5Z6ot2vZs9b3QomYLM3SaDMvooTmngeSCcBQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Fix pci_power_up()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015154345.13052-2-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=ocld+OpnWJCUTqzFQA3oTA==:117 a=ocld+OpnWJCUTqzFQA3oTA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=lhxiFK1EMG2CG1D2i8wA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 9:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Oct 14, 2019 at 01:25:00PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > There is an arbitrary difference between the system resume and
-> > runtime resume code paths for PCI devices regarding the delay to
-> > apply when switching the devices from D3cold to D0.
-> >
-> > Namely, pci_restore_standard_config() used in the runtime resume
-> > code path calls pci_set_power_state() which in turn invokes
-> > __pci_start_power_transition() to power up the device through the
-> > platform firmware and that function applies the transition delay
-> > (as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-> > However, pci_pm_default_resume_early() used in the system resume
-> > code path calls pci_power_up() which doesn't apply the delay at
-> > all and that causes issues to occur during resume from
-> > suspend-to-idle on some systems where the delay is required.
-> >
-> > Since there is no reason for that difference to exist, modify
-> > pci_power_up() to follow pci_set_power_state() more closely and
-> > invoke __pci_start_power_transition() from there to call the
-> > platform firmware to power up the device (in case that's necessary).
-> >
-> > Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-> > Reported-by: Daniel Drake <drake@endlessm.com>
-> > Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Daniel, please test this one.
-> >
-> > ---
-> >  drivers/pci/pci.c |   24 +++++++++++-------------
-> >  1 file changed, 11 insertions(+), 13 deletions(-)
-> >
-> > Index: linux-pm/drivers/pci/pci.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci.c
-> > +++ linux-pm/drivers/pci/pci.c
-> > @@ -959,19 +959,6 @@ void pci_refresh_power_state(struct pci_
-> >  }
-> >
-> >  /**
-> > - * pci_power_up - Put the given device into D0 forcibly
-> > - * @dev: PCI device to power up
-> > - */
-> > -void pci_power_up(struct pci_dev *dev)
-> > -{
-> > -     if (platform_pci_power_manageable(dev))
-> > -             platform_pci_set_power_state(dev, PCI_D0);
-> > -
-> > -     pci_raw_set_power_state(dev, PCI_D0);
-> > -     pci_update_current_state(dev, PCI_D0);
-> > -}
-> > -
-> > -/**
-> >   * pci_platform_power_transition - Use platform to change device power state
-> >   * @dev: PCI device to handle.
-> >   * @state: State to put the device into.
-> > @@ -1154,6 +1141,17 @@ int pci_set_power_state(struct pci_dev *
-> >  EXPORT_SYMBOL(pci_set_power_state);
-> >
-> >  /**
-> > + * pci_power_up - Put the given device into D0 forcibly
->
-> Not specifically for this patch, but what does "forcibly" mean?
->
-> > + * @dev: PCI device to power up
-> > + */
-> > +void pci_power_up(struct pci_dev *dev)
-> > +{
-> > +     __pci_start_power_transition(dev, PCI_D0);
-> > +     pci_raw_set_power_state(dev, PCI_D0);
-> > +     pci_update_current_state(dev, PCI_D0);
->
-> There's not very much difference between:
->
->   pci_power_up(dev);
->
-> and
->
->   pci_set_power_state(dev, PCI_D0);
->
-> It looks like the main difference is that pci_set_power_state() calls
-> __pci_complete_power_transition(), which ultimately calls
-> acpi_pci_set_power_state() (for ACPI systems).
+On Tue, Oct 15, 2019 at 05:43:34PM +0200, Christoph Hellwig wrote:
+> Currently we don't overwrite the flags field in the iomap in
+> xfs_bmbt_to_iomap.  This works fine with 0-initialized iomaps on stack,
+> but is harmful once we want to be able to reuse an iomap in the
+> writeback code.  Replace the shared paramter with a set of initial
+> flags an thus ensures the flags field is always reinitialized.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yes, it does, for power states deeper than D0, which is not the case here.
+Looks fine.
 
-The main difference is the dev->current_state == state check in
-pci_set_power_state(), but in the resume case specifically
-dev->current_state == PCI_D0 doesn't matter, because the real power
-state of the device may be different.
-
-> So maybe "forcibly" means something like "ignoring any platform power
-> management methods"?
-
-It means "go into D0 no matter what the current cached value is".
-
->  It's not obvious to me when we should skip the
-> platform stuff or whether the skipping should be done at the high
-> level (like calling either pci_power_up() or pci_set_power_state()) or
-> at a lower level (e.g., if everybody called pci_set_power_state() and
-> it could internally tell whether we're skipping the platform part).
-
-For transitions into D0 __pci_start_power_transition() is the platform
-stuff, so we don't skip it and the other things that are present in
-pci_set_power_state() and are not there in pci_power_up() are simply
-unnecessary for transitions to D0.
-
-> If we could unify the paths as much as possible, that would be nice,
-> but if it's not feasible, it's not feasible.
-
-It kind of is, but I'd prefer to do it on top of this patch.
-
-First, the pci_update_current_state() in pci_power_up() can be moved
-to pci_pm_default_resume_early() which is the only caller of
-pci_power_up(). [The role of that pci_update_current_state() is to
-change the current_state value to D3cold if the device is not
-accessible (or the platform firmware says that it is D3cold, which may
-be the case after a failing attempt to use it to switch the device
-over to D0).]  Next, if pci_power_up() is modified to return the
-return value of pci_raw_set_power_state(), pci_set_power_state() can
-be implemented (roughly) as
-
-sanitize the state argument
-
-if (dev->current_state == state)
-        return 0;
-
-if (state == PCI_D0)
-        return pci_power_up();
-
-carry out a transition into a deeper power state.
-
-And so pci_power_up() will be used by pci_set_power_state(), for
-transitions into D0, and (directly) by pci_pm_default_resume_early().
-
-How does that sound?
-
-> If you'd like me to push this for v5.4, let me know, otherwise you
-> can apply my:
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-I will, thanks!
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+-- 
+Dave Chinner
+david@fromorbit.com
