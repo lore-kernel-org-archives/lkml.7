@@ -2,244 +2,145 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48384ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59ACECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC8920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B348620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:27:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfwjUb2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387762AbfJOU1W (ORCPT
+        id S2387820AbfJOU11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 16:27:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25556 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726776AbfJOU1V (ORCPT
+        Tue, 15 Oct 2019 16:27:27 -0400
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:36053 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387773AbfJOU10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 16:27:21 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9FKQvN1063017;
-        Tue, 15 Oct 2019 16:27:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnkcabjyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Oct 2019 16:27:16 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9FKRCcg063794;
-        Tue, 15 Oct 2019 16:27:16 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnkcabjyd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Oct 2019 16:27:16 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9FKPQwI016693;
-        Tue, 15 Oct 2019 20:27:18 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01wdc.us.ibm.com with ESMTP id 2vk6f6pcve-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Oct 2019 20:27:18 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9FKRE3l54919542
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 20:27:14 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0643AB2064;
-        Tue, 15 Oct 2019 20:27:14 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61A90B205F;
-        Tue, 15 Oct 2019 20:27:13 +0000 (GMT)
-Received: from [9.85.158.63] (unknown [9.85.158.63])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 15 Oct 2019 20:27:13 +0000 (GMT)
-Subject: Re: [PATCH v6 00/10] s390: vfio-ap: dynamic configuration support
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com
-References: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
- <20191008124807.49022238.pasic@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <7ef87fe0-8d6c-f626-4fa0-da56e1077a0b@linux.ibm.com>
-Date:   Tue, 15 Oct 2019 16:27:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 15 Oct 2019 16:27:26 -0400
+Received: by mail-oi1-f179.google.com with SMTP id k20so18022029oih.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 13:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3gs7JtL/w3i6/+vkCf5VuZ5WSCpvMGTgZQy5oiexumQ=;
+        b=EfwjUb2QBc+8WAOHALTflt5AdbmetoVvNXUPGtdO2MVBAWFO1Dp51cZPMTzX13Gnh2
+         uSXEbX4Gt3G14at0fp95gzr3UCNq83TfUCRpcL4rf+/ya8xmV8N6ioHenhAs/UJinUCa
+         4ihMWKy+jNgwi6DDW+33jngGdhGvSsMtwc/mgTnQUE+dDOKSHmEumkslzf3/qJFiB+l6
+         CJRrykKFYp349d5t3Lyg6nDSTe13kNaBk4RxuaRC1zS6lnIRoI02Vv7MeQAAPKyHCPjj
+         LnxhtsBEVeL/0pEuIMv4FdnOMbMWW4iXIxG66Dpil+Si4gPJ5a1Y8V0/x22txxZBuAt4
+         xX9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3gs7JtL/w3i6/+vkCf5VuZ5WSCpvMGTgZQy5oiexumQ=;
+        b=bGn6RoYsXM9trngOOwet9LjCamASItXgXh+qIFU9LcZuloxMJbhpJDpa96gC/72aZ0
+         oBx0MBjN26mbAgGr+2Isy4VzxyliEEeRcMcL/6Bi1lYs6MMsw87WwNWUpteb5iTGbAL0
+         QLkAmv8DtimS4qW8/Ly23iAnOsNTpAY77KAstF1I6OS26Z911ccen1ADgTQCEggTgOBG
+         OlwDCIZKVmQJTpjpTfM51bdHkfbelvANLTs7tvM0f5TrFLczFjNCiT+u4GvDX+Mqz4GU
+         AzsW83LJGUJNY+rhEQhTiPam0+HcrcQe3/5keVstaUBHpvvu/w8LJ5hdTUypDNJ9jLxk
+         nOaw==
+X-Gm-Message-State: APjAAAVhDbL0AzPfDCKanhnXNPt9+O9Htz89RF/FLN2ajGhhuISjRfaP
+        yB5wW5/AZVLONzcspQus10qHx5vF
+X-Google-Smtp-Source: APXvYqzrO7X+eLgL9lPADvCwj3hSEGT6lF0nxiUVkzh6UXoDBCSg1naOCCMsw9JCFAfY74gjbP3/4Q==
+X-Received: by 2002:aca:e109:: with SMTP id y9mr74986oig.27.1571171245657;
+        Tue, 15 Oct 2019 13:27:25 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id 101sm7188094otd.18.2019.10.15.13.27.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 13:27:24 -0700 (PDT)
+Subject: Re: Build failures since 5.4-rc3
+To:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>
+References: <2da85bba-ab2a-b993-be1a-c98222819b37@lwfinger.net>
+ <44f9a9bde7cf7885a8e55a52260b59240cb9a157.camel@perches.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <bf0fbe49-65ec-e110-e937-b3b18df126c0@lwfinger.net>
+Date:   Tue, 15 Oct 2019 15:27:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191008124807.49022238.pasic@linux.ibm.com>
+In-Reply-To: <44f9a9bde7cf7885a8e55a52260b59240cb9a157.camel@perches.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910150175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/8/19 6:48 AM, Halil Pasic wrote:
-> On Fri, 13 Sep 2019 17:26:48 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On 10/15/19 2:32 PM, Joe Perches wrote:
 > 
->> The current design for AP pass-through does not support making dynamic
->> changes to the AP matrix of a running guest resulting in three deficiencies
->> this patch series is intended to mitigate:
->>
->> 1. Adapters, domains and control domains can not be added to or removed
->>     from a running guest. In order to modify a guest's AP configuration,
->>     the guest must be terminated; only then can AP resources be assigned
->>     to or unassigned from the guest's matrix mdev. The new AP configuration
->>     becomes available to the guest when it is subsequently restarted.
->>
->> 2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
->>     be modified by a root user without any restrictions. A change to either
->>     mask can result in AP queue devices being unbound from the vfio_ap
->>     device driver and bound to a zcrypt device driver even if a guest is
->>     using the queues, thus giving the host access to the guest's private
->>     crypto data and vice versa.
->>
->> 3. The APQNs derived from the Cartesian product of the APIDs of the
->>     adapters and APQIs of the domains assigned to a matrix mdev must
->>     reference an AP queue device bound to the vfio_ap device driver.
->>
->> This patch series introduces the following changes to the current design
->> to alleviate the shortcomings described above as well as to implement more
->> of the AP architecture:
->>
->> 1. A root user will be prevented from making changes to the AP bus's
->>     /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
->>     changes from the vfio_ap device driver to a zcrypt driver when the APQN
->>     is assigned to a matrix mdev.
->>
->> 2. The sysfs bind/unbind interfaces will be disabled for the vfio_ap
->>     device driver.
->>
+> Hey Larry.
 > 
-> Doesn't this have the potential of breaking some userspace stuff that
-> might be out there?
+> 
+> Looks like this should be:
+> 
+> #define FALL_THROUGH __attribute__((__fallthrough__))
+> 
+> and there appear to be many of these #defines that
+> use __attribute__((foo)) where foo does not use the
+> double underscored prefix and suffix form
+> 
+> I also downloaded and trivially attempted to build vbox
+> without success, but I don't find this #define anywhere
+> in the sources.  Clues?
+> 
+> $ git clone git://github.com/mirror/vbox.git
+> $ cd vbox
+> 
+> $ git grep FALL_THROUGH
+> $
+> 
+> $ ./configure
+> Checking for environment: Determined build machine: linux.amd64, target machine: linux.amd64, OK.
+> Checking for kBuild:
+>    ** kmk (variable KBUILDDIR) not found!
+> Check /home/joe/vbox/configure.log for details
+> 
+> 
+> $ cat configure.log
+> # Log file generated by
+> #
+> #   './configure '
+> #
+> 
+> ***** Checking environment *****
+> Determined build machine: linux.amd64, target machine: linux.amd64
+> 
+> 
+> ***** Checking kBuild *****
+> ** kmk (variable KBUILDDIR) not found!
+> 
+> $
 
-I have decided to leave these interfaces enabled.
+I am the maintainer of VirtualBox for openSUSE, and it is their version that has 
+the problem.
 
-> 
->> 3. Allow AP resources to be assigned to or removed from a matrix mdev
->>     while a guest is using it and hot plug the resource into or hot unplug
->>     the resource from the running guest.
-> 
-> This looks like a natural extension of the interface -- i.e. should not
-> break any userspace.
+The original code had the following macro definitions:
 
-We agree
+# define RT_FALL_THROUGH()      __attribute__((fallthrough))
+#define RT_FALL_THRU()          RT_FALL_THROUGH()
 
-> 
->>
->> 4. Allow assignment of an AP adapter or domain to a matrix mdev even if it
->>     results in assignment of an APQN that does not reference an AP queue
->>     device bound to the vfio_ap device driver, as long as the APQN is owned
->>     by the vfio_ap driver. Allowing over-provisioning of AP resources
->>     better models the architecture which does not preclude assigning AP
->>     resources that are not yet available in the system. If/when the queue
->>     becomes available to the host, it will immediately also become available
->>     to the guest.
-> 
-> Same here -- I don't think this change breaks any userspace.
+The code uses both forms interchangeably. That failed - I think the () fooled 
+the compiler.
 
-We agree here also
+I replaced those with
 
-> 
->>
->> 1. Rationale for changes to AP bus's apmask/aqmask interfaces:
->> ----------------------------------------------------------
->> Due to the extremely sensitive nature of cryptographic data, it is
->> imperative that great care be taken to ensure that such data is secured.
->> Allowing a root user, either inadvertently or maliciously, to configure
->> these masks such that a queue is shared between the host and a guest is
->> not only avoidable, it is advisable. It was suggested that this scenario
->> is better handled in user space with management software, but that does
->> not preclude a malicious administrator from using the sysfs interfaces
->> to gain access to a guest's crypto data. It was also suggested that this
->> scenario could be avoided by taking access to the adapter away from the
->> guest and zeroing out the queues prior to the vfio_ap driver releasing the
->> device; however, stealing an adapter in use from a guest as a by-product
->> of an operation is bad and will likely cause problems for the guest
->> unnecessarily. It was decided that the most effective solution with the
->> least number of negative side effects is to prevent the situation at the
->> source.
->>
->> 2. Rationale for disabling bind/unbind interfaces for vfio_ap driver:
->> -----------------------------------------------------------------
->> By disabling the bind/unbind interfaces for the vfio_ap device driver,
->> the user is forced to use the AP bus's apmask/aqmask interfaces to control
->> the probing and removing of AP queues. There are two primary reasons for
->> disabling the bind/unbind interfaces for the vfio_ap device driver:
->>
->> * The device architecture does not provide a means to prevent unbinding
->>    a device from a device driver, so an AP queue device can be unbound
->>    from the vfio_ap driver even when the queue is in use by a guest. By
->>    disabling the unbind interface, the user is forced to use the AP bus's
->>    apmask/aqmask interfaces which will prevent this.
->>
-> 
-> Isn't this fixed by your filtering (if implemented correctly)? BTW I believe
-> it solves the problem regardless whether the unbind was triggered by the
-> drivers unbind attribute or by a[pq]mask.
+#define FALL_THROUGH          __attribute__((__fallthrough__))
+#define RT_FALL_THRU()          FALL_THROUGH
+#define RT_FALL_THROUGH()       FALL_THROUGH
 
-IMHO, it would be better if we didn't rely on the filtering because when
-an unbind is done, the filtering will remove access to the entire
-adapter. My goal was to limit the need for filtering to unbinds
-triggered by AP deconfiguration via the SE or SCLP command over which we
-have no control. We can control all other scenarios except for when an
-adapter goes away for some other reason such as a failure.
+My initial try was without the underscores around fallthrough, which caused a 
+conflict with the one in your changes. Putting them back resulted in code that 
+builds fine. Thanks for the help.
 
-> 
->> * Binding of AP queues is controlled by the AP bus /sys/bus/ap/apmask and
->>    /sys/bus/ap/aqmask interfaces. If the masks indicate that an APQN is
->>    owned by zcrypt, trying to bind it to the vfio_ap device driver will
->>    fail; therefore, the bind interface is somewhat redundant and certainly
->>    unnecessary.
->>    
-> 
-> [..]
-> 
->> Tony Krowiak (10):
->>    s390: vfio-ap: Refactor vfio_ap driver probe and remove callbacks
->>    s390: vfio-ap: allow assignment of unavailable AP resources to mdev
->>      device
->>    s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
->>    s390: vfio-ap: filter CRYCB bits for unavailable queue devices
->>    s390: vfio-ap: sysfs attribute to display the guest CRYCB
->>    s390: vfio-ap: update guest CRYCB in vfio_ap probe and remove
->>      callbacks
->>    s390: zcrypt: driver callback to indicate resource in use
->>    s390: vfio-ap: implement in-use callback for vfio_ap driver
->>    s390: vfio-ap: added versioning to vfio_ap module
->>    s390: vfio-ap: update documentation
-> 
-> I believe it would be worthwhile to reorder the patches (fixes and
-> re-factoring first, the features).
-
-Suggestions?
-
-> 
-> Regards,
-> Halil
-> 
->>
->>   Documentation/s390/vfio-ap.rst        | 899 +++++++++++++++++++++++++---------
->>   drivers/s390/crypto/ap_bus.c          | 144 +++++-
->>   drivers/s390/crypto/ap_bus.h          |   4 +
->>   drivers/s390/crypto/vfio_ap_drv.c     |  27 +-
->>   drivers/s390/crypto/vfio_ap_ops.c     | 610 ++++++++++++++---------
->>   drivers/s390/crypto/vfio_ap_private.h |  12 +-
->>   6 files changed, 1200 insertions(+), 496 deletions(-)
->>
-> 
+Larry
 
