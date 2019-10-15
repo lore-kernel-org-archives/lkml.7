@@ -2,112 +2,153 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A2AECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67603ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF86205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B75205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbfJOMKe (ORCPT
+        id S1731866AbfJOMKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:10:34 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:45324 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728652AbfJOMKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:10:22 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKLeX-00016l-FO; Tue, 15 Oct 2019 13:10:13 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKLeX-0004uN-1N; Tue, 15 Oct 2019 13:10:13 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: make internal data static
-Date:   Tue, 15 Oct 2019 13:10:12 +0100
-Message-Id: <20191015121012.18824-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 15 Oct 2019 08:10:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726540AbfJOMKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:10:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0F0B0B397;
+        Tue, 15 Oct 2019 12:10:01 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v10 0/6] Use MFD framework for SGI IOC3 drivers
+Date:   Tue, 15 Oct 2019 14:09:45 +0200
+Message-Id: <20191015120953.2597-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The event_class_ftrace_##call and event_##call do not seem
-to be used outside of trace_export.c so make them both static
-to avoid a number of sparse warnings:
+SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
+NIC (number in a can), GPIO and a byte  bus. By attaching a
+SuperIO chip to it, it also supports serial lines and a parallel
+port. The chip is used on a variety of SGI systems with different
+configurations. This patchset moves code out of the network driver,
+which doesn't belong there, into its new place a MFD driver and
+specific platform drivers for the different subfunctions.
 
-kernel/trace/trace_entries.h:59:1: warning: symbol 'event_class_ftrace_function' was not declared. Should it be static?
-kernel/trace/trace_entries.h:59:1: warning: symbol '__event_function' was not declared. Should it be static?
-kernel/trace/trace_entries.h:77:1: warning: symbol 'event_class_ftrace_funcgraph_entry' was not declared. Should it be static?
-kernel/trace/trace_entries.h:77:1: warning: symbol '__event_funcgraph_entry' was not declared. Should it be static?
-kernel/trace/trace_entries.h:93:1: warning: symbol 'event_class_ftrace_funcgraph_exit' was not declared. Should it be static?
-kernel/trace/trace_entries.h:93:1: warning: symbol '__event_funcgraph_exit' was not declared. Should it be static?
-kernel/trace/trace_entries.h:129:1: warning: symbol 'event_class_ftrace_context_switch' was not declared. Should it be static?
-kernel/trace/trace_entries.h:129:1: warning: symbol '__event_context_switch' was not declared. Should it be static?
-kernel/trace/trace_entries.h:149:1: warning: symbol 'event_class_ftrace_wakeup' was not declared. Should it be static?
-kernel/trace/trace_entries.h:149:1: warning: symbol '__event_wakeup' was not declared. Should it be static?
-kernel/trace/trace_entries.h:171:1: warning: symbol 'event_class_ftrace_kernel_stack' was not declared. Should it be static?
-kernel/trace/trace_entries.h:171:1: warning: symbol '__event_kernel_stack' was not declared. Should it be static?
-kernel/trace/trace_entries.h:191:1: warning: symbol 'event_class_ftrace_user_stack' was not declared. Should it be static?
-kernel/trace/trace_entries.h:191:1: warning: symbol '__event_user_stack' was not declared. Should it be static?
-kernel/trace/trace_entries.h:214:1: warning: symbol 'event_class_ftrace_bprint' was not declared. Should it be static?
-kernel/trace/trace_entries.h:214:1: warning: symbol '__event_bprint' was not declared. Should it be static?
-kernel/trace/trace_entries.h:230:1: warning: symbol 'event_class_ftrace_print' was not declared. Should it be static?
-kernel/trace/trace_entries.h:230:1: warning: symbol '__event_print' was not declared. Should it be static?
-kernel/trace/trace_entries.h:247:1: warning: symbol 'event_class_ftrace_raw_data' was not declared. Should it be static?
-kernel/trace/trace_entries.h:247:1: warning: symbol '__event_raw_data' was not declared. Should it be static?
-kernel/trace/trace_entries.h:262:1: warning: symbol 'event_class_ftrace_bputs' was not declared. Should it be static?
-kernel/trace/trace_entries.h:262:1: warning: symbol '__event_bputs' was not declared. Should it be static?
-kernel/trace/trace_entries.h:277:1: warning: symbol 'event_class_ftrace_mmiotrace_rw' was not declared. Should it be static?
-kernel/trace/trace_entries.h:277:1: warning: symbol '__event_mmiotrace_rw' was not declared. Should it be static?
-kernel/trace/trace_entries.h:298:1: warning: symbol 'event_class_ftrace_mmiotrace_map' was not declared. Should it be static?
-kernel/trace/trace_entries.h:298:1: warning: symbol '__event_mmiotrace_map' was not declared. Should it be static?
-kernel/trace/trace_entries.h:322:1: warning: symbol 'event_class_ftrace_branch' was not declared. Should it be static?
-kernel/trace/trace_entries.h:322:1: warning: symbol '__event_branch' was not declared. Should it be static?
-kernel/trace/trace_entries.h:343:1: warning: symbol 'event_class_ftrace_hwlat' was not declared. Should it be static?
-kernel/trace/trace_entries.h:343:1: warning: symbol '__event_hwlat' was not declared. Should it be static?
+Changes in v10:
+ - generation of fake subdevice ID had vendor and device ID swapped
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/trace/trace_export.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes in v9:
+ - remove generated MFD devices, when driver is removed or in case
+   of a mfd device setup error
+ - remove irq domain, if setup of mfd devices failed
+ - pci_iounmap on exit/error cases
+ - added irq domain unmap function
 
-diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
-index 45630a76ed3a..2e6d2e9741cc 100644
---- a/kernel/trace/trace_export.c
-+++ b/kernel/trace/trace_export.c
-@@ -171,7 +171,7 @@ ftrace_define_fields_##name(struct trace_event_call *event_call)	\
- #define FTRACE_ENTRY_REG(call, struct_name, etype, tstruct, print, filter,\
- 			 regfn)						\
- 									\
--struct trace_event_class __refdata event_class_ftrace_##call = {	\
-+static struct trace_event_class __refdata event_class_ftrace_##call = {	\
- 	.system			= __stringify(TRACE_SYSTEM),		\
- 	.define_fields		= ftrace_define_fields_##call,		\
- 	.fields			= LIST_HEAD_INIT(event_class_ftrace_##call.fields),\
-@@ -187,7 +187,7 @@ struct trace_event_call __used event_##call = {				\
- 	.print_fmt		= print,				\
- 	.flags			= TRACE_EVENT_FL_IGNORE_ENABLE,		\
- };									\
--struct trace_event_call __used						\
-+static struct trace_event_call __used						\
- __attribute__((section("_ftrace_events"))) *__event_##call = &event_##call;
- 
- #undef FTRACE_ENTRY
+Changes in v8:
+ - Re-worked comments in drivers/mfd/ioc3.c
+ - Added select CRC16 to ioc3-eth.c
+ - Patches 1 and 2 are already taken to mips-next, but
+   for completeness of the series they are still included.
+   What's missing to get the remaining 3 patches via the MIPS
+   tree is an ack from a network maintainer
+
+Changes in v7:
+ - added patch to enable ethernet phy for Origin 200 systems
+ - depend on 64bit for ioc3 mfd driver
+
+Changes in v6:
+ - dropped patches accepted for v5.4-rc1
+ - moved serio patch to ip30 patch series
+ - adapted nvmem patch
+
+Changes in v5:
+ - requested by Jakub I've splited ioc3 ethernet driver changes into
+   more steps to make the transition more visible; on the way there 
+   I've "checkpatched" the driver and reduced code reorderings
+ - dropped all uint16_t and uint32_t
+ - added nvmem API extension to the documenation file
+ - changed to use request_irq/free_irq in serio driver
+ - removed wrong kfree() in serio error path
+
+Changes in v4:
+ - added w1 drivers to the series after merge in 5.3 failed because
+   of no response from maintainer and other parts of this series
+   won't work without that drivers
+ - moved ip30 systemboard support to the ip30 series, which will
+   deal with rtc oddity Lee found
+ - converted to use devm_platform_ioremap_resource
+ - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
+ - fixed reverse christmas order in ioc3-eth.c
+ - formating issue found by Lee
+ - re-worked irq request/free in serio driver to avoid crashes during
+   probe/remove
+
+Changes in v3:
+ - use 1-wire subsystem for handling proms
+ - pci-xtalk driver uses prom information to create PCI subsystem
+   ids for use in MFD driver
+ - changed MFD driver to only use static declared mfd_cells
+ - added IP30 system board setup to MFD driver
+ - mac address is now read from ioc3-eth driver with nvmem framework
+
+Changes in v2:
+ - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
+ - merged IP27 RTC removal and 8250 serial driver addition into
+   main MFD patch to keep patches bisectable
+
+Thomas Bogendoerfer (6):
+  nvmem: core: add nvmem_device_find
+  MIPS: PCI: use information from 1-wire PROM for IOC3 detection
+  MIPS: PCI: Fix fake subdevice ID for IOC3
+  mfd: ioc3: Add driver for SGI IOC3 chip
+  MIPS: SGI-IP27: fix readb/writeb addressing
+  MIPS: SGI-IP27: Enable ethernet phy on second Origin 200 module
+
+ Documentation/driver-api/nvmem.rst            |   2 +
+ arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
+ arch/mips/include/asm/pci/bridge.h            |   1 +
+ arch/mips/include/asm/sn/ioc3.h               |  47 +-
+ arch/mips/pci/pci-ip27.c                      |  22 +
+ arch/mips/pci/pci-xtalk-bridge.c              | 135 +++++-
+ arch/mips/sgi-ip27/ip27-timer.c               |  20 -
+ arch/mips/sgi-ip27/ip27-xtalk.c               |  38 +-
+ drivers/mfd/Kconfig                           |  13 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ioc3.c                            | 605 ++++++++++++++++++++++++++
+ drivers/net/ethernet/sgi/Kconfig              |   5 +-
+ drivers/net/ethernet/sgi/ioc3-eth.c           | 561 +++++-------------------
+ drivers/nvmem/core.c                          |  61 ++-
+ drivers/rtc/rtc-m48t35.c                      |  11 +
+ drivers/tty/serial/8250/8250_ioc3.c           |  98 +++++
+ drivers/tty/serial/8250/Kconfig               |  11 +
+ drivers/tty/serial/8250/Makefile              |   1 +
+ include/linux/nvmem-consumer.h                |   9 +
+ 19 files changed, 1097 insertions(+), 548 deletions(-)
+ create mode 100644 drivers/mfd/ioc3.c
+ create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
+
 -- 
-2.23.0
+2.16.4
 
