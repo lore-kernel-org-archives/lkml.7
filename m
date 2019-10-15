@@ -2,85 +2,76 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C51AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921F3ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF5C20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:04:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="iexJ4OXO"
+	by mail.kernel.org (Postfix) with ESMTP id 5F60021925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571148312;
+	bh=iNdFITxGoV/+QqRd9iQcdX3LKbCrRpdY6xzLl71y/EI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zVXfJwt036Fd2QbaSLXHYMIF9A7N3Scd/XhOTfjbamWl5nsVQ4h50L9I9EpLCpy/O
+	 9CH7rWqfyAeoLtf9pnm2HYfipucjeHFwXDXl+0t6NdCjAOAH1V5wpxqhky4TNXnWE1
+	 jLmI4xjjI8tPqnishuJAKYfDaFRGBJLOj04OWBVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732367AbfJOOEt (ORCPT
+        id S1732431AbfJOOFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:04:49 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:45050 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728880AbfJOOEs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:04:48 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 93D7C2E150F;
-        Tue, 15 Oct 2019 17:04:45 +0300 (MSK)
-Received: from myt5-6212ef07a9ec.qloud-c.yandex.net (myt5-6212ef07a9ec.qloud-c.yandex.net [2a02:6b8:c12:3b2d:0:640:6212:ef07])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id TQ8yEn6Bxb-4iOilYj0;
-        Tue, 15 Oct 2019 17:04:45 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1571148285; bh=gapCxVyFjCKK96iTj5+/HTSHg4pVE+p4wO6AeL1O5js=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=iexJ4OXOHRyfvZOijhnDLG/OTy9p46fATNnCRuDS3uURs4zONzQOCug4kegm8PrUp
-         r7YEtJsOfu0s8iXkRLCF4KwchV8t6Db1ylKADx0+jrNc/0CO6Pt0LvfyXyw82hKy5R
-         vhqiRKrwvDQqEd2HUE6UbUXWLI2/HLIwQLMBxmbQ=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:7005::1:13])
-        by myt5-6212ef07a9ec.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id KzKUEhJ4eP-4iGWHmeE;
-        Tue, 15 Oct 2019 17:04:44 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
- mem_cgroup_move_account
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <157112699975.7360.1062614888388489788.stgit@buzz>
- <20191015135348.GA139269@cmpxchg.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <89171a94-8b6f-e949-0078-10fa8fd26dfc@yandex-team.ru>
-Date:   Tue, 15 Oct 2019 17:04:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 10:05:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38310 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732292AbfJOOFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:05:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 88132AFBB;
+        Tue, 15 Oct 2019 14:05:09 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 16:05:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Guilherme G. Piccoli" <guilherme@gpiccoli.net>
+Cc:     Guilherme Piccoli <gpiccoli@canonical.com>, Qian Cai <cai@lca.pw>,
+        linux-mm@kvack.org, mike.kravetz@oracle.com,
+        linux-kernel@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
+Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages
+ creation
+Message-ID: <20191015140508.GJ317@dhcp22.suse.cz>
+References: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
+ <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
+ <CAHD1Q_x+m0ZT_xfLV3j6ma3Cc88fk9KnoS4yytS=PHBvJN7nnQ@mail.gmail.com>
+ <20191015121803.GB24932@dhcp22.suse.cz>
+ <b6617b4b-bcab-3b40-7d46-46a5d9682856@gpiccoli.net>
 MIME-Version: 1.0
-In-Reply-To: <20191015135348.GA139269@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6617b4b-bcab-3b40-7d46-46a5d9682856@gpiccoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 16.53, Johannes Weiner wrote:
-> On Tue, Oct 15, 2019 at 11:09:59AM +0300, Konstantin Khlebnikov wrote:
->> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
->> These counters needs update when page is moved between cgroups.
->>
->> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+On Tue 15-10-19 10:58:36, Guilherme G. Piccoli wrote:
+> On 10/15/19 9:18 AM, Michal Hocko wrote:
+> > I do agree with Qian Cai here. Kdump kernel requires a very tailored
+> > environment considering it is running in a very restricted
+> > configuration. The hugetlb pre-allocation sounds like a tooling problem
+> > and should be fixed at that layer.
+> > 
 > 
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> Please mention in the changelog that currently is nobody *consuming*
-> the lruvec versions of these counters and that there is no
-> user-visible effect. Thanks
-> 
+> Hi Michal, thanks for your response. Can you suggest me a current way of
+> preventing hugepages for being created, using userspace? The goal for this
+> patch is exactly this, introduce such a way.
 
-Maybe just kill all these per-lruvec counters?
-I see only one user which have no alternative data source: WORKINGSET_ACTIVATE.
-
-This will save some memory: 32 * sizeof(long) * nr_nodes * nr_cpus bytes
+Simply restrict the environment to not allocate any hugepages? Kdump
+already controls the kernel command line and it also starts only a very
+minimal subset of services. So who is allocating those hugepages?
+sysctls should be already excluded by default as Qian mentioned.
+-- 
+Michal Hocko
+SUSE Labs
