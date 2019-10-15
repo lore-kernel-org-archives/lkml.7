@@ -2,207 +2,88 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80BCECE596
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212BDECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC7121848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pSwXFH/T"
+	by mail.kernel.org (Postfix) with ESMTP id 00A7921928
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfJOL3L (ORCPT
+        id S1727520AbfJOL3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:29:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:49985 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfJOL3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:29:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46stVV0Fdwz9sPF;
-        Tue, 15 Oct 2019 22:29:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1571138947;
-        bh=eiKZbgxz3hog9R6u0egOQIZApWFVFlSoBtdgdYJ0/7M=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pSwXFH/TU4AQEX6P4+z7GJgQHQpZIu4f600CBCxsdk7/jdhlUsPsBqITeS3a2SO38
-         WgDfoyvdxP0b5cyDRcSlwQcdMBhxyjzC4jtXjoYkGrVyL1XSGjnQQ3EDN25UB/zKQy
-         LhEvwLbABdpgn4rLBDMqSPiFjk9tIB6WIH1Mrxw82EaCdZx3jZWqRAKADTJFzeZKRS
-         gfcqU5PIuXq34hKfsvjBN5EkdBuhcAYBthiH8enDclevZBoX+zkD0grkbpJyCs2m3n
-         oqLoBOudkskUdlLWT61d3/Kt7z1h+wJGq6X1vrA70Eoq3f8Lb1YyHilhr8474UWPJq
-         3RDu+U0k8sRow==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [PATCH v7 4/8] powerpc/ima: add measurement rules to ima arch specific policy
-In-Reply-To: <1570497267-13672-5-git-send-email-nayna@linux.ibm.com>
-References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com> <1570497267-13672-5-git-send-email-nayna@linux.ibm.com>
-Date:   Tue, 15 Oct 2019 22:29:02 +1100
-Message-ID: <8736fuuu0x.fsf@mpe.ellerman.id.au>
+        Tue, 15 Oct 2019 07:29:15 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:27113
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726430AbfJOL3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:29:14 -0400
+X-IronPort-AV: E=Sophos;i="5.67,299,1566856800"; 
+   d="scan'208";a="322762634"
+Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 13:29:12 +0200
+Date:   Tue, 15 Oct 2019 13:29:12 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: remove casts to
+ pointers in kfree
+In-Reply-To: <20191015112637.20824-1-wambui.karugax@gmail.com>
+Message-ID: <alpine.DEB.2.21.1910151328500.2818@hadrien>
+References: <20191015112637.20824-1-wambui.karugax@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nayna Jain <nayna@linux.ibm.com> writes:
-> This patch adds the measurement rules to the arch specific policies on
-> trusted boot enabled systems.
+
+
+On Tue, 15 Oct 2019, Wambui Karuga wrote:
+
+> Remove unnecessary casts in pointer types passed to kfree.
 >
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+
 > ---
->  arch/powerpc/kernel/ima_arch.c | 45 +++++++++++++++++++++++++++++++---
->  1 file changed, 42 insertions(+), 3 deletions(-)
+>  drivers/staging/rtl8723bs/core/rtw_mlme.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-> index c22d82965eb4..88bfe4a1a9a5 100644
-> --- a/arch/powerpc/kernel/ima_arch.c
-> +++ b/arch/powerpc/kernel/ima_arch.c
-> @@ -12,8 +12,19 @@ bool arch_ima_get_secureboot(void)
->  	return is_powerpc_os_secureboot_enabled();
->  }
->  
-> -/* Defines IMA appraise rules for secureboot */
-> +/*
-> + * The "arch_rules" contains both the securebot and trustedboot rules for adding
-> + * the kexec kernel image and kernel modules file hashes to the IMA measurement
-> + * list and verifying the file signatures against known good values.
-> + *
-> + * The "appraise_type=imasig|modsig" option allows the good signature to be
-> + * stored as an xattr or as an appended signature. The "template=ima-modsig"
-> + * option includes the appended signature, when available, in the IMA
-> + * measurement list.
-> + */
->  static const char *const arch_rules[] = {
-> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
-> +	"measure func=MODULE_CHECK template=ima-modsig",
->  	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->  #if !IS_ENABLED(CONFIG_MODULE_SIG_FORCE)
->  	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-> @@ -22,12 +33,40 @@ static const char *const arch_rules[] = {
->  };
->  
->  /*
-> - * Returns the relevant IMA arch policies based on the system secureboot state.
-> + * The "measure_rules" are enabled only on "trustedboot" enabled systems.
-> + * These rules add the kexec kernel image and kernel modules file hashes to
-> + * the IMA measurement list.
-> + */
-> +static const char *const measure_rules[] = {
-> +	"measure func=KEXEC_KERNEL_CHECK",
-> +	"measure func=MODULE_CHECK",
-
-Why do these ones not have "template=ima-modsig" on the end?
-
-> +	NULL
-> +};
-> +
-> +/*
-> + * Returns the relevant IMA arch policies based on the system secureboot
-> + * and trustedboot state.
->   */
->  const char *const *arch_get_ima_policy(void)
->  {
-> -	if (is_powerpc_os_secureboot_enabled())
-> +	const char *const *rules;
-> +	int offset = 0;
-> +
-> +	for (rules = arch_rules; *rules != NULL; rules++) {
-> +		if (strncmp(*rules, "appraise", 8) == 0)
-> +			break;
-> +		offset++;
-> +	}
-
-This seems like kind of a hack, doesn't it? :)
-
-What we really want is three sets of rules isn't it? But some of them
-are shared between the different sets. But they just have to be flat
-arrays of strings.
-
-I think it would probably be cleaner to just use a #define for the
-shared part of the rules, eg something like:
-
-#ifdef CONFIG_MODULE_SIG_FORCE
-#define APPRAISE_MODULE
-#else
-#define APPRAISE_MODULE \
-	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
-#endif
-
-#define APPRAISE_KERNEL \
-	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig"
-
-#define MEASURE_KERNEL \
-	"measure func=KEXEC_KERNEL_CHECK"
-
-#define MEASURE_MODULE \
-	"measure func=MODULE_CHECK"
-
-#define APPEND_TEMPLATE_IMA_MODSIG		\
-	" template=ima-modsig"
-
-static const char *const secure_and_trusted_rules[] = {
-	MEASURE_KERNEL APPEND_TEMPLATE_IMA_MODSIG,
-	MEASURE_MODULE APPEND_TEMPLATE_IMA_MODSIG,
-	APPRAISE_KERNEL,
-	APPRAISE_MODULE
-	NULL
-};
-
-static const char *const secure_rules[] = {
-	APPRAISE_KERNEL,
-	APPRAISE_MODULE
-	NULL
-};
-
-static const char *const trusted_rules[] = {
-	MEASURE_KERNEL,
-	MEASURE_MODULE,
-	NULL
-};
-
-
-> +
-> +	if (is_powerpc_os_secureboot_enabled()
-> +	    && is_powerpc_trustedboot_enabled())
->  		return arch_rules;
->  
-> +	if (is_powerpc_os_secureboot_enabled())
-> +		return arch_rules + offset;
-> +
-> +	if (is_powerpc_trustedboot_enabled())
-> +		return measure_rules;
-
-Those is_foo() routines print each time they're called don't they? So on
-a system with only trusted boot I think that will print:
-
-	secureboot mode disabled
-	secureboot mode disabled
-	trustedboot mode enabled
-
-Which is a bit verbose :)
-
-cheers
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> index 3030ae5b6b6d..71fcb466019a 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+> @@ -2155,7 +2155,7 @@ sint rtw_set_auth(struct adapter *adapter, struct security_priv *psecuritypriv)
+>
+>  	psetauthparm = rtw_zmalloc(sizeof(struct setauth_parm));
+>  	if (!psetauthparm) {
+> -		kfree((unsigned char *)pcmd);
+> +		kfree(pcmd);
+>  		res = _FAIL;
+>  		goto exit;
+>  	}
+> @@ -2238,7 +2238,7 @@ sint rtw_set_key(struct adapter *adapter, struct security_priv *psecuritypriv, s
+>  	if (enqueue) {
+>  		pcmd = rtw_zmalloc(sizeof(struct cmd_obj));
+>  		if (!pcmd) {
+> -			kfree((unsigned char *)psetkeyparm);
+> +			kfree(psetkeyparm);
+>  			res = _FAIL;  /* try again */
+>  			goto exit;
+>  		}
+> --
+> 2.23.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191015112637.20824-1-wambui.karugax%40gmail.com.
+>
