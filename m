@@ -2,96 +2,121 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDF2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C06ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F25920854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B648A20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732407AbfJOOBt (ORCPT
+        id S1732316AbfJOOCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:01:49 -0400
-Received: from mga03.intel.com ([134.134.136.65]:10250 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732170AbfJOOBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:01:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 07:01:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
-   d="scan'208";a="220428257"
-Received: from spandruv-mobl3.jf.intel.com ([10.254.34.58])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Oct 2019 07:01:47 -0700
-Message-ID: <1cbbc768361bdf6e9058d9173fa9ef9ba965feba.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, ckellner@redhat.com
-Date:   Tue, 15 Oct 2019 07:01:46 -0700
-In-Reply-To: <20191015084614.GB596@zn.tnic>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
-         <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
-         <20191014213618.GK4715@zn.tnic>
-         <3055e340ebaba9f8fb587a11ce3f25cf33919ab3.camel@linux.intel.com>
-         <20191015084614.GB596@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 15 Oct 2019 10:02:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37206 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732011AbfJOOCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:02:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B4FC9B2C5;
+        Tue, 15 Oct 2019 14:02:39 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 16:02:38 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
+        jikos@kernel.org, pmladek@suse.com, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
+In-Reply-To: <f82e57ce-f33f-4ace-514e-75fcba42b5ba@redhat.com>
+Message-ID: <alpine.LSU.2.21.1910151555430.13169@pobox.suse.cz>
+References: <20191014105923.29607-1-mbenes@suse.cz> <20191014223100.GA16608@redhat.com> <alpine.LSU.2.21.1910151259220.30206@pobox.suse.cz> <f82e57ce-f33f-4ace-514e-75fcba42b5ba@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-15 at 10:46 +0200, Borislav Petkov wrote:
-> On Mon, Oct 14, 2019 at 03:41:38PM -0700, Srinivas Pandruvada wrote:
-> > So some users who had issues in their systems can try with this
-> > patch.
-> > We can get rid of this, till it becomes real issue.
-> 
-> We don't add command line parameters which we maybe can get rid of
-> later.
-I am saying the same.
-We will not have command line parameter, till this is a problem.
+On Tue, 15 Oct 2019, Joe Lawrence wrote:
 
-Thanks,
-Srinivas
+> On 10/15/19 7:23 AM, Miroslav Benes wrote:
+> >> Hi Miroslav,
+> >>
+> >> Maybe we should add a test to verify this new behavior?  See sample
+> >> version below (lightly tested).  We can add to this one, or patch
+> >> seperately if you prefer.
+> > 
+> > Thanks a lot, Joe. It looks nice. I'll include it in v3. One question
+> > below.
+> >   
+> >> -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
+> >>
+> >>   
+> >> >From c8c9f22e3816ca4c90ab7e7159d2ce536eaa5fad Mon Sep 17 00:00:00 2001
+> >> From: Joe Lawrence <joe.lawrence@redhat.com>
+> >> Date: Mon, 14 Oct 2019 18:25:01 -0400
+> >> Subject: [PATCH] selftests/livepatch: test interaction with ftrace_enabled
+> >>
+> >> Since livepatching depends upon ftrace handlers to implement "patched"
+> >> functionality, verify that the ftrace_enabled sysctl value interacts
+> >> with livepatch registration as expected.
+> >>
+> >> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> >> ---
+> >>   tools/testing/selftests/livepatch/Makefile    |  3 +-
+> >>   .../testing/selftests/livepatch/functions.sh  | 18 +++++
+> >>   .../selftests/livepatch/test-ftrace.sh        | 65 +++++++++++++++++++
+> >>   3 files changed, 85 insertions(+), 1 deletion(-)
+> >>   create mode 100755 tools/testing/selftests/livepatch/test-ftrace.sh
+> >>
+> >> diff --git a/tools/testing/selftests/livepatch/Makefile
+> >> b/tools/testing/selftests/livepatch/Makefile
+> >> index fd405402c3ff..1886d9d94b88 100644
+> >> --- a/tools/testing/selftests/livepatch/Makefile
+> >> +++ b/tools/testing/selftests/livepatch/Makefile
+> >> @@ -4,6 +4,7 @@ TEST_PROGS_EXTENDED := functions.sh
+> >>   TEST_PROGS := \
+> >>    test-livepatch.sh \
+> >>    test-callbacks.sh \
+> >> -	test-shadow-vars.sh
+> >> +	test-shadow-vars.sh \
+> >> +	test-ftrace.sh
+> >>   
+> >>   include ../lib.mk
+> >> diff --git a/tools/testing/selftests/livepatch/functions.sh
+> >> b/tools/testing/selftests/livepatch/functions.sh
+> >> index 79b0affd21fb..556252efece0 100644
+> >> --- a/tools/testing/selftests/livepatch/functions.sh
+> >> +++ b/tools/testing/selftests/livepatch/functions.sh
+> >> @@ -52,6 +52,24 @@ function set_dynamic_debug() {
+> >>   		EOF
+> >>   }
+> >>   
+> >> +function push_ftrace_enabled() {
+> >> +	FTRACE_ENABLED=$(sysctl --values kernel.ftrace_enabled)
+> >> +}
+> > 
+> > Shouldn't we call push_ftrace_enabled() somewhere at the beginning of the
+> > test script? set_dynamic_debug() calls its push_dynamic_debug() directly,
+> > but set_ftrace_enabled() is different, because it is called more than once
+> > in the script.
+> > 
+> > One could argue that ftrace_enabled has to be true at the beginning of
+> > testing anyway, but I think it would be cleaner. Btw, we should probably
+> > guarantee that ftrace_enabled is true when livepatch selftests are
+> > invoked.
+> > 
+> 
+> Ah yes, that occurred to me while creating that piece of the patch. Something
+> like setup_test_config() that pushes both ftrace and the debugfs, etc. would
+> be cleaner for all scripts.  If you're onboard with that idea, I can make that
+> revision.
 
-> 
-> > The temperature is function of load, time and heat dissipation
-> > capacity
-> > of the system. I have to think more about this to come up with some
-> > heuristics where we still warning users about real thermal issues.
-> > Since value is not persistent, then next boot again will start from
-> > the
-> > default.
-> 
-> Yes, and the fact that each machine's temperature is influenced by
-> the
-> specific *individual* environment and load the machine runs, shows
-> that
-> you need to adjust this timeout automatically and dynamically.
-> 
-> With the command line parameter you're basically putting the onus on
-> the
-> user to do that which is just silly. And then she'd need to do it
-> during
-> runtime too, if the ambient temperature or machine load, etc,
-> changes.
-> 
-> The whole thing is crying "dynamic".
-> 
-> For a simple example, see mce_timer_fn() where we switch to polling
-> during CMCI storms.
-> 
+Yes, that would be perfect. Thanks.
 
+Miroslav
