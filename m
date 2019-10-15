@@ -2,89 +2,259 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB4FECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039542089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893AF21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571137025;
-	bh=dnP3I0453xbeVkzuRn8mK2w4ROoFLtsCNmpT7EIfIag=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rclKkTR5c9y56+MoVbDr/Hy/LEPdPISEod362y2ZkEY1LhvkuXq9+HKSPTGQEcSbJ
-	 NdB/bXw6H1mN7wMCPK9LB2ND1+QNVRWdQ2qoMXZcczllIhHpkJ6rw7QDUeoXDxMy5j
-	 u7cRWaV3mb48MLuQitFJj73Ntia5m5M2zzFUr5Ds=
+	s=default; t=1571137041;
+	bh=DOazOHrhGYjtGI/8yMNyg8pFGwNff+cPJ7RtuF6t/OE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Ea6v82BTk2TKO/L5OGzj1IN6ndFUg84fvjSjTzfCG5SH0D0CpUsgrkVJVg9wlX9MR
+	 011Uwp3iRmegU1BfZWjcBn0lfbPaLa4qnPqtXVwMyga/dqkYf5/cu0+0tFBazSCHaw
+	 DpI7jwPxvAG97GVwLozDC/ZPv7ahFEBU0ArlxvEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731559AbfJOK5D (ORCPT
+        id S1731614AbfJOK5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 06:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfJOK5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:57:03 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726054AbfJOK5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:57:20 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [76.14.14.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D2022089C;
-        Tue, 15 Oct 2019 10:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CBDC217F9;
+        Tue, 15 Oct 2019 10:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571137022;
-        bh=dnP3I0453xbeVkzuRn8mK2w4ROoFLtsCNmpT7EIfIag=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QKavsu1JJ+lWqRq6CjnZhVIjctg+IY/PV9dF9xhF8VoDcGdoIeBRMoWgBOS0D9+Wm
-         IGQ1d8UvXzFDvVPxtGrN4MXnfBrkPikyGwm3Ctt526DUxbglBE/s14ksmkPX7GjAV3
-         0CqnX7V59XaiOg31KdIaN83Sc4W4gFWus9e/4xLM=
-Received: by mail-qk1-f178.google.com with SMTP id y144so18690477qkb.7;
-        Tue, 15 Oct 2019 03:57:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAVjrCQ0ZXB1m5LToUzP1k76oBlUyo1ls2bXXuBsHwo+MyI8gNPQ
-        VUDkVkEte4LFjsJzOo+SfiGgJ2nC7PCu76VTkPc=
-X-Google-Smtp-Source: APXvYqx5kf8mO8pPHFCbswwtKKpCHJvQQ4CmZ5SlTPttYVBGa3KdYKwperC0jTheIvv74XdcpMO16DAeIwuW4Ujexos=
-X-Received: by 2002:a37:6689:: with SMTP id a131mr32134156qkc.345.1571137021649;
- Tue, 15 Oct 2019 03:57:01 -0700 (PDT)
+        s=default; t=1571137038;
+        bh=DOazOHrhGYjtGI/8yMNyg8pFGwNff+cPJ7RtuF6t/OE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=rqLhKWnfSJARtfDtPPblsKgNaT72Z6D7E+ms1Uml6ipZCCwA7Ooy3fbtrHmRPIV0+
+         4+9rbRTY7TAQiZ9me3FbwCyTOoNXAZQcrDVbtM/llRDMs8vGItMXuPCHZakSvl6+OD
+         XXhg+zQAa7dD0//J6aH4UrwtJ7gVeMmSV5XHr4ic=
+Date:   Tue, 15 Oct 2019 03:57:16 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Sterba <dsterba@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Marco Elver <elver@google.com>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2] rcu: make PREEMPT_RCU to be a decoration of TREE_RCU
+Message-ID: <20191015105716.GR2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191015020023.GO2689@paulmck-ThinkPad-P72>
+ <20191015025559.829-1-laijs@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191015103502.13156-1-parri.andrea@gmail.com>
-In-Reply-To: <20191015103502.13156-1-parri.andrea@gmail.com>
-From:   Wei Liu <wei.liu@kernel.org>
-Date:   Tue, 15 Oct 2019 11:56:50 +0100
-X-Gmail-Original-Message-ID: <CAHd7Wqxzs54nQ_x_uCCSBQV9eW1p-CD9J+64DmV67abxMbJDWA@mail.gmail.com>
-Message-ID: <CAHd7Wqxzs54nQ_x_uCCSBQV9eW1p-CD9J+64DmV67abxMbJDWA@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        x86@kernel.org, "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015025559.829-1-laijs@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 at 11:35, Andrea Parri <parri.andrea@gmail.com> wrote:
->
-> Michael reported that the x86/hyperv initialization code printed the
-> following dmesg when running in a VM on Hyper-V:
->
->   [    0.000738] Booting paravirtualized kernel on bare hardware
->
-> Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
-> with this addition, the dmesg read:
->
->   [    0.000172] Booting paravirtualized kernel on Hyper-V
->
-> Reported-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+On Tue, Oct 15, 2019 at 02:55:57AM +0000, Lai Jiangshan wrote:
+> Currently PREEMPT_RCU and TREE_RCU are "contrary" configs
+> when they can't be both on. But PREEMPT_RCU is actually a kind
+> of TREE_RCU in the implementation. It seams to be appropriate
+> to make PREEMPT_RCU to be a decorative option of TREE_RCU.
+> 
+> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org> 
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Applied for further review and testing, thank you both!
+
+							Thanx, Paul
+
+> ---
+> Changed from v1:
+> 	Rebased on -rcu "dev" branch
+>  include/linux/rcupdate.h   |  4 ++--
+>  include/trace/events/rcu.h |  4 ++--
+>  kernel/rcu/Kconfig         | 13 +++++++------
+>  kernel/rcu/Makefile        |  1 -
+>  kernel/rcu/rcu.h           |  2 +-
+>  kernel/rcu/update.c        |  2 +-
+>  kernel/sysctl.c            |  2 +-
+>  7 files changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index c6351314cbe6..4dcf46985922 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -167,7 +167,7 @@ do { \
+>   * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
+>   */
+>  
+> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+> +#if defined(CONFIG_TREE_RCU)
+>  #include <linux/rcutree.h>
+>  #elif defined(CONFIG_TINY_RCU)
+>  #include <linux/rcutiny.h>
+> @@ -585,7 +585,7 @@ do {									      \
+>   * read-side critical section that would block in a !PREEMPT kernel.
+>   * But if you want the full story, read on!
+>   *
+> - * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
+> + * In non-preemptible RCU implementations (pure TREE_RCU and TINY_RCU),
+>   * it is illegal to block while in an RCU read-side critical section.
+>   * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
+>   * kernel builds, RCU read-side critical sections may be preempted,
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index 35a384ec78b5..5e49b06e8104 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -41,7 +41,7 @@ TRACE_EVENT(rcu_utilization,
+>  	TP_printk("%s", __entry->s)
+>  );
+>  
+> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+> +#if defined(CONFIG_TREE_RCU)
+>  
+>  /*
+>   * Tracepoint for grace-period events.  Takes a string identifying the
+> @@ -432,7 +432,7 @@ TRACE_EVENT_RCU(rcu_fqs,
+>  		  __entry->cpu, __entry->qsevent)
+>  );
+>  
+> -#endif /* #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) */
+> +#endif /* #if defined(CONFIG_TREE_RCU) */
+>  
+>  /*
+>   * Tracepoint for dyntick-idle entry/exit events.  These take a string
+> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+> index 7644eda17d62..0303934e6ef0 100644
+> --- a/kernel/rcu/Kconfig
+> +++ b/kernel/rcu/Kconfig
+> @@ -7,7 +7,7 @@ menu "RCU Subsystem"
+>  
+>  config TREE_RCU
+>  	bool
+> -	default y if !PREEMPTION && SMP
+> +	default y if SMP
+>  	help
+>  	  This option selects the RCU implementation that is
+>  	  designed for very large SMP system with hundreds or
+> @@ -17,6 +17,7 @@ config TREE_RCU
+>  config PREEMPT_RCU
+>  	bool
+>  	default y if PREEMPTION
+> +	select TREE_RCU
+>  	help
+>  	  This option selects the RCU implementation that is
+>  	  designed for very large SMP systems with hundreds or
+> @@ -78,7 +79,7 @@ config TASKS_RCU
+>  	  user-mode execution as quiescent states.
+>  
+>  config RCU_STALL_COMMON
+> -	def_bool ( TREE_RCU || PREEMPT_RCU )
+> +	def_bool TREE_RCU
+>  	help
+>  	  This option enables RCU CPU stall code that is common between
+>  	  the TINY and TREE variants of RCU.  The purpose is to allow
+> @@ -86,13 +87,13 @@ config RCU_STALL_COMMON
+>  	  making these warnings mandatory for the tree variants.
+>  
+>  config RCU_NEED_SEGCBLIST
+> -	def_bool ( TREE_RCU || PREEMPT_RCU || TREE_SRCU )
+> +	def_bool ( TREE_RCU || TREE_SRCU )
+>  
+>  config RCU_FANOUT
+>  	int "Tree-based hierarchical RCU fanout value"
+>  	range 2 64 if 64BIT
+>  	range 2 32 if !64BIT
+> -	depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
+> +	depends on TREE_RCU && RCU_EXPERT
+>  	default 64 if 64BIT
+>  	default 32 if !64BIT
+>  	help
+> @@ -112,7 +113,7 @@ config RCU_FANOUT_LEAF
+>  	int "Tree-based hierarchical RCU leaf-level fanout value"
+>  	range 2 64 if 64BIT
+>  	range 2 32 if !64BIT
+> -	depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
+> +	depends on TREE_RCU && RCU_EXPERT
+>  	default 16
+>  	help
+>  	  This option controls the leaf-level fanout of hierarchical
+> @@ -187,7 +188,7 @@ config RCU_BOOST_DELAY
+>  
+>  config RCU_NOCB_CPU
+>  	bool "Offload RCU callback processing from boot-selected CPUs"
+> -	depends on TREE_RCU || PREEMPT_RCU
+> +	depends on TREE_RCU
+>  	depends on RCU_EXPERT || NO_HZ_FULL
+>  	default n
+>  	help
+> diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
+> index 020e8b6a644b..82d5fba48b2f 100644
+> --- a/kernel/rcu/Makefile
+> +++ b/kernel/rcu/Makefile
+> @@ -9,6 +9,5 @@ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
+>  obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
+>  obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
+>  obj-$(CONFIG_TREE_RCU) += tree.o
+> -obj-$(CONFIG_PREEMPT_RCU) += tree.o
+>  obj-$(CONFIG_TINY_RCU) += tiny.o
+>  obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
+> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> index c30a1f7dbd15..a7ab2a023dd3 100644
+> --- a/kernel/rcu/rcu.h
+> +++ b/kernel/rcu/rcu.h
+> @@ -427,7 +427,7 @@ enum rcutorture_type {
+>  	INVALID_RCU_FLAVOR
+>  };
+>  
+> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+> +#if defined(CONFIG_TREE_RCU)
+>  void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
+>  			    unsigned long *gp_seq);
+>  void do_trace_rcu_torture_read(const char *rcutorturename,
+> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> index 196487762b96..2f529470cafa 100644
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -437,7 +437,7 @@ struct debug_obj_descr rcuhead_debug_descr = {
+>  EXPORT_SYMBOL_GPL(rcuhead_debug_descr);
+>  #endif /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
+>  
+> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) || defined(CONFIG_RCU_TRACE)
+> +#if defined(CONFIG_TREE_RCU) || defined(CONFIG_RCU_TRACE)
+>  void do_trace_rcu_torture_read(const char *rcutorturename, struct rcu_head *rhp,
+>  			       unsigned long secs,
+>  			       unsigned long c_old, unsigned long c)
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 00fcea236eba..2ace158a4d72 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1268,7 +1268,7 @@ static struct ctl_table kern_table[] = {
+>  		.proc_handler	= proc_do_static_key,
+>  	},
+>  #endif
+> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+> +#if defined(CONFIG_TREE_RCU)
+>  	{
+>  		.procname	= "panic_on_rcu_stall",
+>  		.data		= &sysctl_panic_on_rcu_stall,
+> -- 
+> 2.20.1
+> 
