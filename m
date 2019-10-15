@@ -2,101 +2,123 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12112C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1747BECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDB62064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D1921848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PanbLKwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfJOIiV (ORCPT
+        id S1729258AbfJOIig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:38:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3716 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726275AbfJOIiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:38:21 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9B850CAF8BBCA47091DA;
-        Tue, 15 Oct 2019 16:38:18 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 16:38:10 +0800
-Subject: Re: [PATCH 2/3] arm64: configs: unset CMDLINE_FORCE
-To:     Anders Roxell <anders.roxell@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>
-References: <20190926193030.5843-1-anders.roxell@linaro.org>
- <20190926193030.5843-4-anders.roxell@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        <linux@armlinux.org.uk>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <fc64ee58-8b21-1d3e-7e05-e0959f468f95@huawei.com>
-Date:   Tue, 15 Oct 2019 09:38:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190926193030.5843-4-anders.roxell@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+        Tue, 15 Oct 2019 04:38:36 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45953 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfJOIig (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:38:36 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z67so18382735qkb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 01:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=uWQ6Z/m/ZDOV1Cq6uOj2bgGUSJ4jAFpiEa/ETfmRIz0=;
+        b=PanbLKwT95zYTPNoDfQLUrTe8LpcDTpB/+8zrQaOJvO5wRF0jR9uiFNODKCeXO3ZDd
+         mCzV7G00OU7j/SbdNN1vSsAPox72wynTKGJ+h3bQHnOA3u+fe7MW89YxKHBoSKuODn/L
+         /gfF2y3pCE1SDIPiURbC5llKyb/x9gxYP34ad0GzStWE0temDtHhQlOty9MHNha+ylh0
+         7x1EwgUAdTd3PyFwwh/RBMwROq3TXjUPMbRc4nFXlL9PMtlAdyUjSDI5zJzMU576dwDx
+         2SV9i1yIhN0j5VEHttttOtgB33kx3KbHGhinH5R2m5EnpMQbAiYCQdgTfBF2jcfNzraZ
+         ODkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=uWQ6Z/m/ZDOV1Cq6uOj2bgGUSJ4jAFpiEa/ETfmRIz0=;
+        b=KDQUcoibXjjCfM8l0T212qbWVkqZm1czwUpq1p5UASKeo2jk9mjAA9+x8we1Qe0Noj
+         RcrzJkPLc7jwG8yXGZ1zXZaGCIUmsl7IbkvTHz8I/WOtVcXusrKKMeR0kwXETT/o4+QW
+         dX8cQj8OARdlNUIVaMnyo2s3yswnuksX4TAEOx0Fg9ryBfeCHznMo1TDnch/sb+fuGwb
+         X2dROMjnK5oU6HxxsWivtJZgD2582gdT8Gm8vlft4sDGblwwENOmuqMZcepivB867dtZ
+         aiLi0P8cGofTxH6hz/OkTP0RnQpUwjWkFhjgIndI0+SoSgZQr63DUpIuAh4zVtIq7c/U
+         D/4g==
+X-Gm-Message-State: APjAAAVA0FMxYTgR3DaBj7GmioJFJ+sda0hVwm1YvxtBr42iRXPUQ3M2
+        TKTV32xQO6ng01K6eUPYFjg5uA==
+X-Google-Smtp-Source: APXvYqwsK2EsGslXg9ZERZ0s0xLmXi6sseHDBOW4+UFU6how9/uDB3OrwnIXla2BLbjasR6UBLcqNw==
+X-Received: by 2002:ae9:f707:: with SMTP id s7mr26514828qkg.82.1571128715239;
+        Tue, 15 Oct 2019 01:38:35 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 22sm9035786qkj.0.2019.10.15.01.38.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 01:38:34 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V2] hugetlb: Add nohugepages parameter to prevent hugepages creation
+Date:   Tue, 15 Oct 2019 04:38:33 -0400
+Message-Id: <3340809E-6529-4A14-9D42-B14D7E54A8F3@lca.pw>
+References: <20191015045158.5297-1-gpiccoli@canonical.com>
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
+        linux-kernel@vger.kernel.org, jay.vosburgh@canonical.com,
+        kernel@gpiccoli.net
+In-Reply-To: <20191015045158.5297-1-gpiccoli@canonical.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+X-Mailer: iPhone Mail (17A860)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/09/2019 20:30, Anders Roxell wrote:
-> When building allmodconfig KCONFIG_ALLCONFIG=$(pwd)/arch/arm64/configs/defconfig
-> CONFIG_CMDLINE_FORCE gets enabled. Which forces the user to pass the
-> full cmdline to CONFIG_CMDLINE="...".
->
-> Rework so that we disable CONFIG_CMDLINE_FORCE in the defconfig file so
-> we don't have to pass in the CONFIG_CMDLINE="..." when building an
-> allmodconfig kernel. Since CONFIG_CMDLINE_FORCE is unset default, so
-> when doing 'make savedefconfig' CONFIG_CMDLINE_FORCE will be dropped.
->
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+
+
+> On Oct 15, 2019, at 12:52 AM, Guilherme G. Piccoli <gpiccoli@canonical.com=
+> wrote:
+>=20
+> Kdump kernels won't benefit from hugepages - in fact it's quite opposite,
+> it may be the case hugepages on kdump kernel can lead to OOM if kernel
+> gets unable to allocate demanded pages due to the fact the preallocated
+> hugepages are consuming a lot of memory.
+>=20
+> This patch proposes a new kernel parameter to prevent the creation of
+> HugeTLB hugepages - we currently don't have a way to do that. We can
+> even have kdump scripts removing the kernel command-line options to
+> set hugepages, but it's not straightforward to prevent sysctl/sysfs
+> configuration, given it happens in later boot or anytime when the
+> system is running.
+>=20
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
 > ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 52a32b53b2ed..878f379d8d84 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -854,3 +854,4 @@ CONFIG_MAGIC_SYSRQ=y
->  CONFIG_DEBUG_KERNEL=y
->  # CONFIG_SCHED_DEBUG is not set
->  CONFIG_MEMTEST=y
-> +# CONFIG_CMDLINE_FORCE is not set
+> .../admin-guide/kernel-parameters.txt         |  4 +++
+> fs/hugetlbfs/inode.c                          |  5 ++--
+> include/linux/hugetlb.h                       |  7 ++++++
+> mm/hugetlb.c                                  | 25 +++++++++++++------
+> 4 files changed, 32 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentati=
+on/admin-guide/kernel-parameters.txt
+> index a84a83f8881e..061bec851114 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2982,6 +2982,10 @@
+>=20
+>    nohugeiomap    [KNL,x86,PPC] Disable kernel huge I/O mappings.
+>=20
+> +    nohugepages    [KNL] Disable HugeTLB hugepages completely, preventing=
 
-This was my initial idea for an alternative Kconfig change:
+> +            its setting either by kernel parameter or sysfs;
+> +            useful specially in kdump kernel.
+> +
+>    nosmt        [KNL,S390] Disable symmetric multithreading (SMT).
+>            Equivalent to smt=3D1.
 
---->8---
-
-According to the comment for CMDLINE, we should at least have the root 
-device defined. So if CMDLINE is "", then it can not be defined so 
-disallow CMDLINE_FORCE in this scenario.
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 950a56b71ff0..6f3bff2f385e 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1580,6 +1580,7 @@ config CMDLINE
-
-  config CMDLINE_FORCE
-         bool "Always use the default kernel command string"
-+       depends on CMDLINE != ""
-         help
-           Always use the default kernel command string, even if the boot
-           loader passes other arguments to the kernel.
-
->
-
-
+No, it does make much sense to even mention kdump here at all as a justifica=
+tion. If somebody blindly set sysfs in the kdump kernel, it will be garbage i=
+n and garbage out. It is trivial enough to disable it, as it is what have be=
+en done in enterprise distros implementation of kdump where it has no such p=
+roblem for a decade.=
