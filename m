@@ -2,248 +2,155 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D26ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661A8ECE595
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3532168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y1zTKzdT"
+	by mail.kernel.org (Postfix) with ESMTP id 45FE4214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732565AbfJOONn (ORCPT
+        id S1732580AbfJOONo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:13:43 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35410 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732514AbfJOONk (ORCPT
+        Tue, 15 Oct 2019 10:13:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39662 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732547AbfJOONm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:13:40 -0400
-Received: by mail-vs1-f67.google.com with SMTP id s7so13263818vsl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b/eFKQ/v4cr/yPgp0izVLyHlXJnLa4HICmgwi01lXvc=;
-        b=y1zTKzdTdmsrc43HicE1W4OcK2myObdXuvjFUiN6jPSz0v4CsQcuh/7ktoHHvscwUe
-         WAwmr+69J8UQWkzDEau4wVhaYHdaO4IdBaGAc7OY4t7+8gjIaturNOu7H8P+woacKeaX
-         Q2AZx29vX20cH0G+wE6lGHbjFqhEgd6TDQt5NFwoEMYBFVyy98pBTsVcCU/gKEmrlJdN
-         kXucwpHKaYU3S/aY7SwELglpgMrbYVpYBXYvalu8VW/Qx9KsRMtEKMtH8+zawqcSiAaB
-         Tm6cWyWtdfchVHsvvoCwiwb379LpR2fZ0vwCzFIUCU3Atp7GrKAl4d9J2wJ6rvb4hXrN
-         eWsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b/eFKQ/v4cr/yPgp0izVLyHlXJnLa4HICmgwi01lXvc=;
-        b=LrxNmrtKT37VqzjAewU0A7BUkjkr1tYTGKePNMt7X67N0+8Mf2IKKQPtEiRMzz+Tr2
-         TaM0pU/xNPM+qMZpyIX5pKzceuEKLDBsLo3wec8HJoHzvTfPr0QvCTs7x1y7XQOYJGo8
-         2SVQxrrdINVVCWCksGnjoEuliWfCDgnQG29jd+IvHDjqBwjIsGl6F2TPoN4CpXjTtksc
-         uZQmnzzv9Qf771CZwe7bHKjMflIwBi7H8iMmuf2bTYmLb9xuotH/qmZ+CiHnvw0qsrgD
-         kDOCDFlotUluf88yGx4wjhX4rRK7nLlocT1URjtNkCc4NO6ZAl836e+7u2D7/ThZmTLz
-         wTzg==
-X-Gm-Message-State: APjAAAWf9vMCL1Hpj03MyZIUr83qAM1pzVeO3FD8WbkwkJM9cocMEehS
-        hsrhSzM5GlZqMY1/YT67shjf+JdtAreH+iPoDOLjdQ==
-X-Google-Smtp-Source: APXvYqxluszvLcVxMEdWdPelTTF58EOAxfZDkgM4jA/rH5H2Cc2i74AuIVwFlZIgVdMLDs2o7gG3CCQM2jc+SegK0h8=
-X-Received: by 2002:a05:6102:5e1:: with SMTP id w1mr4153604vsf.191.1571148818927;
- Tue, 15 Oct 2019 07:13:38 -0700 (PDT)
+        Tue, 15 Oct 2019 10:13:42 -0400
+Received: from [213.220.153.21] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iKNZy-0004YA-L2; Tue, 15 Oct 2019 14:13:38 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Christian Kellner <christian@kellner.me>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-api@vger.kernel.org
+Subject: [PATCH 1/2] pidfd: verify task is alive when printing fdinfo
+Date:   Tue, 15 Oct 2019 16:13:31 +0200
+Message-Id: <20191015141332.4055-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-11-arnd@arndb.de>
-In-Reply-To: <20191010203043.1241612-11-arnd@arndb.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 15 Oct 2019 16:13:02 +0200
-Message-ID: <CAPDyKFqkRApT-q4ssi1Hn2cmLY=0K7bKXdo-D42q+xACFcC9dQ@mail.gmail.com>
-Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-pwm@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        linux-serial@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Olof Johansson <olof@lixom.net>,
-        linux-spi@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 at 22:38, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> These can be build completely independently, so split
-> the two Kconfig symbols.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/Kconfig.debug        | 6 +++---
->  arch/arm/Makefile             | 1 -
->  arch/arm/plat-samsung/Kconfig | 2 +-
->  drivers/mmc/host/Kconfig      | 2 +-
->  drivers/pwm/Kconfig           | 2 +-
->  drivers/spi/Kconfig           | 2 +-
->  drivers/tty/serial/Kconfig    | 2 +-
->  sound/soc/samsung/Kconfig     | 2 +-
->  8 files changed, 9 insertions(+), 10 deletions(-)
+Currently, when a task is dead we still print the pid it used to use in
+the fdinfo files of its pidfds. This doesn't make much sense since the
+pid may have already been reused. So verify that the task is still
+alive. If the task is not alive anymore, we will print -1. This allows
+us to differentiate between a task not being present in a given pid
+namespace - in which case we already print 0 - and a task having been
+reaped.
 
-For the mmc parts:
+Note that this uses PIDTYPE_PID for the check. Technically, we could've
+checked PIDTYPE_TGID since pidfds currently only refer to thread-group
+leaders but if they won't anymore in the future then this check becomes
+problematic without it being immediately obvious to non-experts imho. If
+a thread is created via clone(CLONE_THREAD) than struct pid has a single
+non-empty list pid->tasks[PIDTYPE_PID] and this pid can't be used as a
+PIDTYPE_TGID meaning pid->tasks[PIDTYPE_TGID] will return NULL even
+though the thread-group leader might still be very much alive. We could
+be more complicated and do something like:
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+bool alive = false;
+rcu_read_lock();
+struct task_struct *tsk = pid_task(pid, PIDTYPE_PID);
+if (tsk && task_tgid(tsk))
+	alive = true;
+rcu_read_unlock();
 
-Kind regards
-Uffe
+but it's really not worth it. We already have created a pidfd and we
+thus know it refers to a thread-group leader. Checking PIDTYPE_PID is
+fine and is easier to maintain should we ever allow pidfds to refer to
+threads.
 
+Cc: Jann Horn <jannh@google.com>
+Cc: Christian Kellner <christian@kellner.me>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-api@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ kernel/fork.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
->
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 9c4f2d6deb06..4c4e97ae4fcb 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -998,7 +998,7 @@ choice
->                   via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
->
->         config DEBUG_S3C_UART0
-> -               depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +               depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->                 select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->                 select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->                 select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> @@ -1010,7 +1010,7 @@ choice
->                   by the boot-loader before use.
->
->         config DEBUG_S3C_UART1
-> -               depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +               depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->                 select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->                 select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->                 select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> @@ -1022,7 +1022,7 @@ choice
->                   by the boot-loader before use.
->
->         config DEBUG_S3C_UART2
-> -               depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +               depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->                 select DEBUG_EXYNOS_UART if ARCH_EXYNOS
->                 select DEBUG_S3C24XX_UART if ARCH_S3C24XX
->                 select DEBUG_S3C64XX_UART if ARCH_S3C64XX
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index f492d7c338fe..a1bc15cda751 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)                += spear
->  # by CONFIG_* macro name.
->  plat-$(CONFIG_ARCH_OMAP)       += omap
->  plat-$(CONFIG_ARCH_S3C64XX)    += samsung
-> -plat-$(CONFIG_ARCH_S5PV210)    += samsung
->  plat-$(CONFIG_PLAT_ORION)      += orion
->  plat-$(CONFIG_PLAT_PXA)                += pxa
->  plat-$(CONFIG_PLAT_S3C24XX)    += samsung
-> diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-> index 740bdb23f38a..1530946cc672 100644
-> --- a/arch/arm/plat-samsung/Kconfig
-> +++ b/arch/arm/plat-samsung/Kconfig
-> @@ -4,7 +4,7 @@
->
->  config PLAT_SAMSUNG
->         bool
-> -       depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
-> +       depends on PLAT_S3C24XX || ARCH_S3C64XX
->         default y
->         select GENERIC_IRQ_CHIP
->         select NO_IOPORT_MAP
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 400a581c918c..16a0e5430b44 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -275,7 +275,7 @@ config MMC_SDHCI_TEGRA
->
->  config MMC_SDHCI_S3C
->         tristate "SDHCI support on Samsung S3C SoC"
-> -       depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_EXYNOS)
-> +       depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS)
->         help
->           This selects the Secure Digital Host Controller Interface (SDHCI)
->           often referrered to as the HSMMC block in some of the Samsung S3C
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index e3a2518503ed..8eb738cac0c7 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -394,7 +394,7 @@ config PWM_ROCKCHIP
->
->  config PWM_SAMSUNG
->         tristate "Samsung PWM support"
-> -       depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +       depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->         help
->           Generic PWM framework driver for Samsung.
->
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 6f7fdcbb9151..355391ee643d 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -625,7 +625,7 @@ config SPI_S3C24XX_FIQ
->
->  config SPI_S3C64XX
->         tristate "Samsung S3C64XX series type SPI"
-> -       depends on (PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST)
-> +       depends on (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST)
->         help
->           SPI driver for Samsung S3C64XX and newer SoCs.
->
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 4789b5d62f63..17f01cf3009c 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -237,7 +237,7 @@ config SERIAL_CLPS711X_CONSOLE
->
->  config SERIAL_SAMSUNG
->         tristate "Samsung SoC serial support"
-> -       depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +       depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
->         select SERIAL_CORE
->         help
->           Support for the on-chip UARTs on the Samsung S3C24XX series CPUs,
-> diff --git a/sound/soc/samsung/Kconfig b/sound/soc/samsung/Kconfig
-> index 638983123d8f..7a0035dd9995 100644
-> --- a/sound/soc/samsung/Kconfig
-> +++ b/sound/soc/samsung/Kconfig
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  menuconfig SND_SOC_SAMSUNG
->         tristate "ASoC support for Samsung"
-> -       depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
-> +       depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
->         depends on COMMON_CLK
->         select SND_SOC_GENERIC_DMAENGINE_PCM
->         ---help---
-> --
-> 2.20.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 782986962d47..a67944a5e542 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1695,6 +1695,18 @@ static int pidfd_release(struct inode *inode, struct file *file)
+ }
+ 
+ #ifdef CONFIG_PROC_FS
++static inline bool task_alive(struct pid *pid)
++{
++	bool alive = true;
++
++	rcu_read_lock();
++	if (!pid_task(pid, PIDTYPE_PID))
++		alive = false;
++	rcu_read_unlock();
++
++	return alive;
++}
++
+ /**
+  * pidfd_show_fdinfo - print information about a pidfd
+  * @m: proc fdinfo file
+@@ -1732,15 +1744,20 @@ static int pidfd_release(struct inode *inode, struct file *file)
+  */
+ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ {
+-	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+ 	struct pid *pid = f->private_data;
+-	pid_t nr = pid_nr_ns(pid, ns);
++	struct pid_namespace *ns;
++	pid_t nr = -1;
++
++	if (likely(task_alive(pid))) {
++		ns = proc_pid_ns(file_inode(m->file));
++		nr = pid_nr_ns(pid, ns);
++	}
+ 
+-	seq_put_decimal_ull(m, "Pid:\t", nr);
++	seq_put_decimal_ll(m, "Pid:\t", nr);
+ 
+ #ifdef CONFIG_PID_NS
+-	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
+-	if (nr) {
++	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
++	if (nr > 0) {
+ 		int i;
+ 
+ 		/* If nr is non-zero it means that 'pid' is valid and that
+@@ -1749,7 +1766,7 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ 		 * Start at one below the already printed level.
+ 		 */
+ 		for (i = ns->level + 1; i <= pid->level; i++)
+-			seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
++			seq_put_decimal_ll(m, "\t", pid->numbers[i].nr);
+ 	}
+ #endif
+ 	seq_putc(m, '\n');
+-- 
+2.23.0
+
