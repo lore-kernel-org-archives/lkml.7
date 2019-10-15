@@ -2,191 +2,118 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57925ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782C6ECE595
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282C720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4400520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DewrhvQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388117AbfJOUfS (ORCPT
+        id S2388262AbfJOUf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 16:35:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54800 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbfJOUfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 16:35:17 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 23A7D8E1CE8;
-        Tue, 15 Oct 2019 20:35:17 +0000 (UTC)
-Received: from mail (ovpn-124-232.rdu2.redhat.com [10.10.124.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5FA95DA8C;
-        Tue, 15 Oct 2019 20:35:16 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 16:35:16 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-Message-ID: <20191015203516.GF331@redhat.com>
-References: <20190928172323.14663-1-aarcange@redhat.com>
- <20190928172323.14663-13-aarcange@redhat.com>
- <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
- <20191015164952.GE331@redhat.com>
- <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
+        Tue, 15 Oct 2019 16:35:59 -0400
+Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:45539
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388181AbfJOUf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 16:35:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K8zt+/St0O61QbcFOpKr0kc2Hj47H4QmCATV4qTy0mkGpCkeS6VR8DHBMQEY5uxckSpFDwv0mEDUseH14zmgrsl6NyAiAGTsyhtu1p0S56AYP2KyZklFCQiWS5ElFXGEta9aJkIToOh8Sk/l8ngMf/mM0dKPfuUWLTKCN4jvLH3xLdiU1wQUaKcX0Pg6VOEhoKJKsESvw9iBvPQFhJOqzjIx8WwoB+bwtDegMTRSvsT/ITCWQd2RVQCkwWsGf/kqG3TGxSDO18wlI+mPbNiONyeRqPMu/2cZAHi5oNNoLDy1PKlhFH0nnbzO/tgObXQXLQTp/0yCVzZnOpkI/DZYcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TcopBE6NeTqqMktisYVTDBusYpcrpWWjjMiFZ7GOUzY=;
+ b=T1MXFKeScRck1uZh5VrmN3TsNSzP31m4Vc5E6YRHPb24Whi2f8caaZB+kY31qZq4yZhV1MBn66/8VwAxt+rbeOYeUzQpbp2Sto9yfBp3aQBaxW2itwG6NPS/w3MnQQEVitDBlcx8dYFUObUkp2v9HvJe162EDMhHLucYjyI73cpMinbmDp832P/NZtJVz2NiFKpYHt06TlopPyGk7Xb6UbHV6kCFmTQOPlATaZ3NZLTDF1HnSeZdJY9fR57pj8EAN91CZ666TYmzNelLBeTuqASpHCdd05UmnJSwnpmxTKsHZihif6LEdWg3uS60KJ+NQi6/PIMdQz1i7kNtwwtxNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TcopBE6NeTqqMktisYVTDBusYpcrpWWjjMiFZ7GOUzY=;
+ b=DewrhvQkSuhnT5A9UL1mHb5bSYlVhIsJ/ZQB1Jbi55YpeAI9jANOkWJQYKZnjUn/OezrBHGrapfWVzmiFXudj1EyVTHbw29SgL0KSreSONOqsdmwXvijZHZmQtEA5655Y5TBuI3zTCvM5q1JPlTPblK16TVRZGx3mFLlFEDvmrg=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
+ VI1PR05MB5597.eurprd05.prod.outlook.com (20.177.203.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.19; Tue, 15 Oct 2019 20:35:54 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::f42d:b87a:e6b2:f841]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::f42d:b87a:e6b2:f841%7]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
+ 20:35:54 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "navid.emamdoost@gmail.com" <navid.emamdoost@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Bodong Wang <bodong@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        "emamd001@umn.edu" <emamd001@umn.edu>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "smccaman@umn.edu" <smccaman@umn.edu>,
+        "leon@kernel.org" <leon@kernel.org>, "kjlu@umn.edu" <kjlu@umn.edu>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx5: prevent memory leak in mlx5_fpga_conn_create_cq
+Thread-Topic: [PATCH] net/mlx5: prevent memory leak in
+ mlx5_fpga_conn_create_cq
+Thread-Index: AQHVc1A9npAQKe9mq0SefCQK7t6REac/NdgAgB0TzQA=
+Date:   Tue, 15 Oct 2019 20:35:54 +0000
+Message-ID: <ded2700707fbf0919a123e17228a0a26913379e8.camel@mellanox.com>
+References: <20190925032038.22943-1-navid.emamdoost@gmail.com>
+         <20190927.103328.1345010550910672678.davem@davemloft.net>
+In-Reply-To: <20190927.103328.1345010550910672678.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 339faeff-3c6e-4208-a4fb-08d751af46ee
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR05MB5597:|VI1PR05MB5597:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB55971C273C6D2034A11AE393BE930@VI1PR05MB5597.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 01917B1794
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(199004)(189003)(2906002)(256004)(76176011)(8936002)(316002)(3846002)(6116002)(6506007)(6512007)(102836004)(4326008)(81156014)(6246003)(229853002)(8676002)(6436002)(81166006)(478600001)(2616005)(6486002)(11346002)(446003)(476003)(25786009)(486006)(186003)(58126008)(99286004)(86362001)(7736002)(26005)(305945005)(71200400001)(71190400001)(36756003)(110136005)(54906003)(4744005)(118296001)(91956017)(76116006)(64756008)(66556008)(66446008)(66476007)(66946007)(2501003)(66066001)(14454004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5597;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 25PsR9B082nK71LoaElt989qllu3Q5qCEQLEC8130Tret23nNyQVeS6Fi/yqEnB14WAW4drZfXahFkZvcrroVZKsgiRsVNUJ5kk/cg/txYQAcjKr+ng9t29Uaws7wmoSGcQQJp8KuZF/0EhX47fKffTv45eW/jec8YIySNlYTGbS5ti4tinkUkEY7s1yVWPNDbg3Q+DTg5pgQOSwRcknRKZ4klu7og8KYcUb83ZYkkuK0JuoZjOsMutK4q9fTLjCYF7Efvwu/IZCF0I3qw7ZAT6viLyydr3v5EQRGYFM6ruLQbniCePbHhO6cHZR9N/Y/m75zm5hBH4qzyOOGlH67Nuh+uiWo9IiHXgMXQJxasB4jhZhoKfrLh9MkFcDIGmCxbplu94lAC68eIA9/v0gCcIt+OCdJS85IzwvU2akueY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <06B99AB5F2C33B40868ADBB60567EE36@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Tue, 15 Oct 2019 20:35:17 +0000 (UTC)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 339faeff-3c6e-4208-a4fb-08d751af46ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 20:35:54.5427
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aeFmyVwr9xYfe4g3kA80D7g0stgQNgKpxuXtzYvEVmw4Q7SbfG+mjIWGhpr0KcG5BDtU8vlvIIbKTUiChZDKwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5597
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:46:58PM +0200, Paolo Bonzini wrote:
-> On 15/10/19 18:49, Andrea Arcangeli wrote:
-> > On Tue, Oct 15, 2019 at 10:28:39AM +0200, Paolo Bonzini wrote:
-> >> If you're including EXIT_REASON_EPT_MISCONFIG (MMIO access) then you
-> >> should include EXIT_REASON_IO_INSTRUCTION too.  Depending on the devices
-> >> that are in the guest, the doorbell register might be MMIO or PIO.
-> > 
-> > The fact outb/inb devices exists isn't the question here. The question
-> > you should clarify is: which of the PIO devices is performance
-> > critical as much as MMIO with virtio/vhost?
-> 
-> virtio 0.9 uses PIO.
-
-0.9 is a 12 years old protocol replaced several years ago. Anybody who
-needs high performance won't be running it, the others can't perform
-well to begin with, so I'm not sure exactly how it's relevant in this
-microoptimization context. We're not optimizing for emulated devices
-or other old stuff either.
-
-> On virtual machines they're actually faster than MMIO because they don't
-> need to go through page table walks.
-
-And how does it help that they're faster if current virtio stopped
-using them and nothing else recent uses PIO?
-
-> HLT is certainly a slow path, the guest only invokes if things such as
-
-Your idea that HLT is a certainly is a slow path is only correct if
-you assume the host is IDLE, but the host is never idle if you use
-virt for consolidation.
-
-From the point of view of the host, HLT is like every other vmexit.
-
-> NAPI interrupt mitigation have failed.  As long as the guest stays in
-> halted state for a microsecond or so, the cost of retpoline will all but
-> disappear.
-
-The only thing that matters is the number of HLT vmexit per second and
-you just need to measure the number of HLT vmexits to tell it's
-needed.
-
-I've several workloads including eBPF tracing, not related to
-interrupts (that in turn cannot be mitigated by NAPI) that schedule
-frequently and hit 100k+ of HLT vmexits per second and the host is all
-but idle. There's no need of hardware interrupt to wake up tasks and
-schedule in the guest, scheduler IPIs and timers are more than enough.
-
-The only thing that can mitigate that is the cpuidle haltpoll driver,
-but it hit upstream a few months ago, all most recent enterprise
-guest OS won't have it yet.
-
-All it matters is how many vmexits per second there are, everything
-else including "why" they happen and what those vmexists means for the
-guest, is irrelevant, or it would be relevant only if the host was
-guaranteed to be idle but there's no such guarantee.
-
-If the host is using all idle CPUs to compute in the background
-(i.e. building the kernel) with SCHED_IDLE the HLT retpoline cost will
-not be any different than any other vmexit retpoline cost and easy
-+100k HLT exit per second certainly puts it in the measurable
-territory.
-
-Here's a random example:
-
-             VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time 
-
-                 HLT     101128    75.33%    99.66%      0.43us 901000.66us    310.88us ( +-   8.46% )
-              VMCALL      14089    10.50%     0.10%      1.32us     84.99us      2.14us ( +-   0.90% )
-           MSR_WRITE       8246     6.14%     0.03%      0.33us     32.79us      1.05us ( +-   1.51% )
-       EPT_VIOLATION       6312     4.70%     0.18%      0.50us  26426.07us      8.90us ( +-  48.58% )
-    PREEMPTION_TIMER       1730     1.29%     0.01%      0.55us     26.81us      1.60us ( +-   3.48% )
-  EXTERNAL_INTERRUPT       1329     0.99%     0.03%      0.27us    944.88us      6.04us ( +-  20.52% )
-       EPT_MISCONFIG        982     0.73%     0.01%      0.42us    137.68us      2.05us ( +-   9.88% )
-   PENDING_INTERRUPT        308     0.23%     0.00%      0.44us      4.32us      0.73us ( +-   2.57% )
-   PAUSE_INSTRUCTION         58     0.04%     0.00%      0.32us     18.55us      1.48us ( +-  23.12% )
-            MSR_READ         35     0.03%     0.00%      0.78us      5.55us      2.07us ( +-  10.74% )
-               CPUID         24     0.02%     0.00%      0.27us      2.20us      0.59us ( +-  13.43% )
-
-# careful despite the verifier promise that eBPF shouldn't be kernel
-# crashing this may be kernel crashing because there's no verifier at
-# all that verifies that the eBPF function calls available depending
-# on the hooking point can actually be invoked from the kernel hooking
-# points they're invoked from. this is why I tested it in a VM
-bpftrace -e 'kprobe:*interrupt* { @ = count() }'
-
-Other example with a pipe loop that just bounces a byte across a pipe
-with two processes:
-
-             VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time 
-
-           MSR_WRITE     498945    80.49%     4.10%      0.33us     42.73us      0.44us ( +-   0.12% )
-                 HLT     118474    19.11%    95.88%      0.33us 707693.05us     43.56us ( +-  24.23% )
-    PREEMPTION_TIMER       1004     0.16%     0.01%      0.38us     25.47us      0.67us ( +-   5.69% )
-   PENDING_INTERRUPT        894     0.14%     0.01%      0.37us     20.98us      0.49us ( +-   4.94% )
-  EXTERNAL_INTERRUPT        518     0.08%     0.00%      0.26us     20.59us      0.51us ( +-   8.09% )
-            MSR_READ          8     0.00%     0.00%      0.66us      1.37us      0.92us ( +-   9.19% )
-       EPT_MISCONFIG          6     0.00%     0.00%      3.18us     32.71us     12.60us ( +-  43.58% )
-   PAUSE_INSTRUCTION          3     0.00%     0.00%      0.59us      1.69us      1.07us ( +-  30.38% )
-
-We wouldn't need to apply the cpuidle-haltpoll driver if HLT wasn't
-such a frequent vmexit that deserves to have its retpoline cost, not
-multiplied by 100000 times per second.
-
-Over time if everything will turn out to use the cpuidle-haltpoll
-driver by default (that however can increase the host CPU usage on
-laptops) we can consider removing the HLT optimization, we're not
-remotely there yet.
-
-> RDMSR again shouldn't be there, guests sometimes read the PMTimer (which
-> is an I/O port) or TSC but for example do not really ever read the APIC
-> TMCCT.
-
-We can try to drop RDMSR, and see if it's measurable. I already tried
-to re-add some of those retpolines but it was slower and this was the
-fastest combination that I got, I don't recall if I tried with RDMSR
-and PAUSE alone but I can try again.
-
-> > I'm pretty sure HLT/EXTERNAL_INTERRUPT/PENDING_INTERRUPT should be
-> > included.
-> > I also wonder if VMCALL should be added, certain loads hit on fairly
-> > frequent VMCALL, but none of the one I benchmarked.
-> 
-> I agree for external interrupt and pending interrupt, and VMCALL is fine
-> too.  In addition I'd add I/O instructions which are useful for some
-> guests and also for benchmarking (e.g. vmexit.flat has both IN and OUT
-> tests).
-
-Isn't it faster to use cpuid for benchmarking? I mean we don't want to
-pay for more than one branch for benchmarking (even cpuid is
-questionable in the long term, but for now it's handy to have), and
-unlike inb/outb, cpuid runs occasionally in all real life workloads
-(including in guest userland) so between inb/outb, I'd rather prefer
-to use cpuid as the benchmark vector because at least it has a chance
-to help real workloads a bit too.
-
-Thanks,
-Andrea
+T24gRnJpLCAyMDE5LTA5LTI3IGF0IDEwOjMzICswMjAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
+IEZyb206IE5hdmlkIEVtYW1kb29zdCA8bmF2aWQuZW1hbWRvb3N0QGdtYWlsLmNvbT4NCj4gRGF0
+ZTogVHVlLCAyNCBTZXAgMjAxOSAyMjoyMDozNCAtMDUwMA0KPiANCj4gPiBJbiBtbHg1X2ZwZ2Ff
+Y29ubl9jcmVhdGVfY3EgaWYgbWx4NV92ZWN0b3IyZXFuIGZhaWxzIHRoZSBhbGxvY2F0ZWQNCj4g
+PiBtZW1vcnkgc2hvdWxkIGJlIHJlbGVhc2VkLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE5h
+dmlkIEVtYW1kb29zdCA8bmF2aWQuZW1hbWRvb3N0QGdtYWlsLmNvbT4NCj4gDQo+IFNhZWVkLCBw
+bGVhc2UgcXVldWUgdGhpcyB1cC4NCg0KQXBwbGllZCB0byBuZXQtbWx4NSBicmFuY2ggd2lsbCBz
+ZW5kIGl0IHRvIG5ldCBicmFuY2ggc2hvcnRseS4NCg==
