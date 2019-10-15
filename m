@@ -2,111 +2,95 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A73C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFADECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C6F2089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC412089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbfJOKvE (ORCPT
+        id S1730285AbfJOKxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:51:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39368 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731364AbfJOKvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:51:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E6CBB4C2;
-        Tue, 15 Oct 2019 10:51:00 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 12:50:59 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Steven Rostedt <rostedt@goodmis.org>, jikos@kernel.org,
-        joe.lawrence@redhat.com, jpoimboe@redhat.com, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
-In-Reply-To: <20191015074540.bxehllisibls3kk7@pathway.suse.cz>
-Message-ID: <alpine.LSU.2.21.1910151244550.30206@pobox.suse.cz>
-References: <20191014105923.29607-1-mbenes@suse.cz> <20191014111719.141bd4fa@gandalf.local.home> <20191015074540.bxehllisibls3kk7@pathway.suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 15 Oct 2019 06:53:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44630 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbfJOKxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:53:24 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9D767811D8
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:53:23 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id p6so5165034wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:53:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=p/1yabDz8qKhRFkalHkrj4947RSYeZJkszdmHrfnxwc=;
+        b=sfgd/10vGH73hWKS3FSdB0PuTSqWNapAy4zQSn5jRImLrz8HDllDW4mT6rXX2faxFg
+         r8yaP3o6sr3cddbCC5fHTUardC7TBQayC639NKgouvrz7/aonvqfR95azFAYeBZB+Wwc
+         xW7ybCFKDsN/Xzsy63PrmCTNcZ8ZNhN3gBy+TMLHFW6SkcQJN5nmAFbSu/2Gmgtg68fU
+         7WWLjLOU1FYdDvJgVzXouYh4QojhcvgWySh/lvSmTp4eIuAzKatEkC8eDDyL06Hd+PZY
+         OPll/tRmQrI+HHyIT8+y8MaVwySSlvLzqL/8qV4WybTZZfUXi6gNtYX7SLqCvsFTkwvC
+         Cwvg==
+X-Gm-Message-State: APjAAAUKp14W8DHjuoTLYf/HOMnGQ7w9WNnLMPuKD8aC0zcejTVXvpOd
+        lyOc3LGz+uhQjP01csOe9S4z4mNovySQaHm2gmFK6TZhUXEq//XPzUVB1n7ARoK+lnB6mVqeFW0
+        FFmWcSMekEOmMfdce750s1nvk
+X-Received: by 2002:adf:eb0f:: with SMTP id s15mr28329223wrn.97.1571136802294;
+        Tue, 15 Oct 2019 03:53:22 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwu0QYUpkH9lGGmecEb8XIlX9PlulVL8sYPAzG3x9q/fyyIX2pqIq4BlP6J6f9jD1VdvCLLWQ==
+X-Received: by 2002:adf:eb0f:: with SMTP id s15mr28329205wrn.97.1571136802066;
+        Tue, 15 Oct 2019 03:53:22 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id g17sm16952765wrq.58.2019.10.15.03.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 03:53:21 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
+In-Reply-To: <20191014183723.GE22962@linux.intel.com>
+References: <20191014162247.61461-1-xiaoyao.li@intel.com> <87y2xn462e.fsf@vitty.brq.redhat.com> <20191014183723.GE22962@linux.intel.com>
+Date:   Tue, 15 Oct 2019 12:53:20 +0200
+Message-ID: <87v9sq46vz.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019, Petr Mladek wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> On Mon 2019-10-14 11:17:19, Steven Rostedt wrote:
-> > On Mon, 14 Oct 2019 12:59:23 +0200
-> > Miroslav Benes <mbenes@suse.cz> wrote:
-> > 
-> > >  int
-> > >  ftrace_enable_sysctl(struct ctl_table *table, int write,
-> > >  		     void __user *buffer, size_t *lenp,
-> > > @@ -6740,8 +6754,6 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
-> > >  	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
-> > >  		goto out;
-> > >  
-> > > -	last_ftrace_enabled = !!ftrace_enabled;
-> > > -
-> > >  	if (ftrace_enabled) {
-> > >  
-> > >  		/* we are starting ftrace again */
-> > > @@ -6752,12 +6764,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
-> > >  		ftrace_startup_sysctl();
-> > >  
-> > >  	} else {
-> > > +		if (is_permanent_ops_registered()) {
-> > > +			ftrace_enabled = last_ftrace_enabled;
-> > 
-> > Although this is not incorrect, but may be somewhat confusing.
-> > 
-> > At this location, last_ftrace_enabled is always true.
-> > 
-> > I'm thinking this would be better to simply set it to false here.
-> 
-> IMHO, we want to set ftrace_enabled = true here.
-> 
-> It was set to "false" by writing to the sysfs file. But the change
-> gets rejected. ftrace will stay enabled. So, we should set
-> the value back to "true".
+> On Mon, Oct 14, 2019 at 06:58:49PM +0200, Vitaly Kuznetsov wrote:
+>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>> 
+>> > They are duplicated codes to create vcpu.arch.{user,guest}_fpu in VMX
+>> > and SVM. Make them common functions.
+>> >
+>> > No functional change intended.
+>> 
+>> Would it rather make sense to move this code to
+>> kvm_arch_vcpu_create()/kvm_arch_vcpu_destroy() instead?
+>
+> Does it make sense?  Yes.  Would it actually work?  No.  Well, not without
+> other shenanigans.
+>
+> FPU allocation can't be placed after the call to .create_vcpu() becuase
+> it's consumed in kvm_arch_vcpu_init().   FPU allocation can't come before
+> .create_vcpu() because the vCPU struct itself hasn't been allocated.
 
-That's correct.
+A very theoretical question: why do we have 'struct vcpu' embedded in
+vcpu_vmx/vcpu_svm and not the other way around (e.g. in a union)? That
+would've allowed us to allocate memory in common code and then fill in
+vendor-specific details in .create_vcpu().
 
-I can make it explicit as proposed. I just thought that 'ftrace_enabled = 
-last_ftrace_enabled' was clear enough given Petr's explanation.
-
-> > > +			ret = -EBUSY;
-> > > +			goto out;
-> > > +		}
-> > > +
-> > >  		/* stopping ftrace calls (just send to ftrace_stub) */
-> > >  		ftrace_trace_function = ftrace_stub;
-> > >  
-> > >  		ftrace_shutdown_sysctl();
-> > >  	}
-> > >  
-> > > +	last_ftrace_enabled = !!ftrace_enabled;
-> > >   out:
-> > 
-> > And move the assignment of last_ftrace_enabled to after the "out:"
-> > label.
-> 
-> This change might make sense anyway. But it is not strictly necessary
-> from my POV.
-
-If it stays before "out:" label, last_ftrace_enabled is set if and only if 
-it has to be set. I think it is better, but I can, of course, move it in 
-v3 if Steven prefers it.
-
-Thanks
-Miroslav
-
-
+-- 
+Vitaly
