@@ -7,50 +7,61 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED4BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FEECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D072086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085592086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfJOFcc convert rfc822-to-8bit (ORCPT
+        id S1728926AbfJOFdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:32:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42160 "EHLO
+        Tue, 15 Oct 2019 01:33:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42268 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbfJOFcO (ORCPT
+        with ESMTP id S1728726AbfJOFc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:32:14 -0400
+        Tue, 15 Oct 2019 01:32:29 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFRG-0000M7-2Q; Tue, 15 Oct 2019 07:32:06 +0200
+        id 1iKFR5-0000Cc-3U; Tue, 15 Oct 2019 07:31:55 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9F2B71C0671;
-        Tue, 15 Oct 2019 07:31:46 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 05:31:46 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F5AA1C03AB;
+        Tue, 15 Oct 2019 07:31:42 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 05:31:42 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf trace: Allow choosing how to augment the
- tracepoint arguments
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+Subject: [tip: perf/core] perf tools: Avoid 'sample_reg_masks' being const + weak
+Cc:     Ian Rogers <irogers@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        clang-built-linux@googlegroups.com, Guo Ren <guoren@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-o8qdluotkcb3b1x2gjqrejcl@git.kernel.org>
-References: <tip-o8qdluotkcb3b1x2gjqrejcl@git.kernel.org>
+In-Reply-To: <20191001003623.255186-1-irogers@google.com>
+References: <20191001003623.255186-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <157111750652.12254.5582029482419632958.tip-bot2@tip-bot2>
+Message-ID: <157111750226.12254.8803927521747525091.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -61,230 +72,274 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f11b2803bb88655d90b88c787710b53100913bff
-Gitweb:        https://git.kernel.org/tip/f11b2803bb88655d90b88c787710b53100913bff
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Fri, 04 Oct 2019 15:28:13 -03:00
+Commit-ID:     42466b9f29b415c254dc4c2f4618e2a96951a406
+Gitweb:        https://git.kernel.org/tip/42466b9f29b415c254dc4c2f4618e2a96951a406
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Mon, 30 Sep 2019 17:36:23 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 07 Oct 2019 12:22:18 -03:00
+CommitterDate: Thu, 10 Oct 2019 09:29:33 -03:00
 
-perf trace: Allow choosing how to augment the tracepoint arguments
+perf tools: Avoid 'sample_reg_masks' being const + weak
 
-So far we used the libtraceevent printing routines when showing
-tracepoint arguments, but since 'perf trace' has a lot of beautifiers
-for syscall arguments, and since some of those can be used to augment
-tracepoint arguments, add a routine to make use of those beautifiers
-and allow the user to choose which one to use.
+Being const + weak breaks with some compilers that constant-propagate
+from the weak symbol. This behavior is outside of the specification, but
+in LLVM is chosen to match GCC's behavior.
 
-The default now is to use the same beautifiers used for the strace-like
-sys_enter+sys_exit lines, but the user can choose the libtraceevent ones
-by either using the:
+LLVM's implementation was set in this patch:
 
-    perf trace --libtraceevent_print
+  https://github.com/llvm/llvm-project/commit/f49573d1eedcf1e44893d5a062ac1b72c8419646
 
-command line option, or by setting:
+A const + weak symbol is set to be weak_odr:
 
-  # cat ~/.perfconfig
-  [trace]
-	tracepoint_beautifiers = libtraceevent
+  https://llvm.org/docs/LangRef.html
 
-For instance, here are some examples:
+ODR is one definition rule, and given there is one constant definition
+constant-propagation is possible. It is possible to get this code to
+miscompile with LLVM when applying link time optimization. As compilers
+become more aggressive, this is likely to break in more instances.
 
-  # perf trace -e sched:*switch,*sleep,sched:*wakeup,exit*,sched:*exit sleep 1
-       0.000 sched:sched_wakeup(comm: "perf", pid: 5273 (perf), prio: 120, success: 1, target_cpu: 6)
-       0.621 nanosleep(rqtp: 0x7ffdd06d1140, rmtp: NULL) ...
-       0.628 sched:sched_switch(prev_comm: "sleep", prev_pid: 5273 (sleep), prev_prio: 120, prev_state: 1, next_comm: "swapper/6", next_pid: 0, next_prio: 120)
-    1000.879 sched:sched_wakeup(comm: "sleep", pid: 5273 (sleep), prio: 120, success: 1, target_cpu: 6)
-       0.621  ... [continued]: nanosleep())          = 0
-    1001.026 exit_group(error_code: 0)               = ?
-    1001.216 sched:sched_process_exit(comm: "sleep", pid: 5273 (sleep), prio: 120)
-  #
+Move the definition of sample_reg_masks to the conditional part of
+perf_regs.h and guard usage with HAVE_PERF_REGS_SUPPORT. This avoids the
+weak symbol.
 
-And then using libtraceevent, as before:
+Fix an issue when HAVE_PERF_REGS_SUPPORT isn't defined from patch v1.
+In v3, add perf_regs.c for architectures that HAVE_PERF_REGS_SUPPORT but
+don't declare sample_regs_masks.
 
-  # perf trace --libtraceevent_print -e sched:*switch,*sleep,sched:*wakeup,exit*,sched:*exit sleep 1
-       0.000 sched:sched_wakeup(comm=perf pid=5288 prio=120 target_cpu=001)
-       0.739 nanosleep(rqtp: 0x7ffeba6c2f40, rmtp: NULL) ...
-       0.747 sched:sched_switch(prev_comm=sleep prev_pid=5288 prev_prio=120 prev_state=S ==> next_comm=swapper/1 next_pid=0 next_prio=120)
-    1000.902 sched:sched_wakeup(comm=sleep pid=5288 prio=120 target_cpu=001)
-       0.739  ... [continued]: nanosleep())          = 0
-    1001.012 exit_group(error_code: 0)               = ?
-  #
+Further notes:
 
-The new default allocates an array of 'struct syscall_arg_fmt' for the
-tracepoint arguments and, just like with syscall arguments, tries to
-find suitable syscall_arg__scnprintf_NAME() routines to augment those
-tracepoint arguments based on their type (as in the tracefs "format"
-file), or even in their name + type, for instance arguntents with names
-ending in "fd" with type "int" get the fd scnprintf beautifier attached,
-etc.
+Jiri asked:
 
-Soon this will take advantage of the kernel BTF information to augment
-enumerations based on the tracefs "format" type info.
+  "Is this just a precaution or you actualy saw some breakage?"
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Ian answered:
+
+  "We saw a breakage with clang with thinlto enabled for linking. Our
+   compiler team had recently seen, and were surprised by, a similar issue
+   and were able to dig out the weak ODR issue."
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: clang-built-linux@googlegroups.com
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-riscv@lists.infradead.org
+Cc: Mao Han <han_mao@c-sky.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-o8qdluotkcb3b1x2gjqrejcl@git.kernel.org
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20191001003623.255186-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt |  5 +-
- tools/perf/Documentation/perf-trace.txt  |  5 +-
- tools/perf/builtin-trace.c               | 83 ++++++++++++++++++++++-
- 3 files changed, 90 insertions(+), 3 deletions(-)
+ tools/perf/arch/arm/util/Build         | 2 ++
+ tools/perf/arch/arm/util/perf_regs.c   | 6 ++++++
+ tools/perf/arch/arm64/util/Build       | 1 +
+ tools/perf/arch/arm64/util/perf_regs.c | 6 ++++++
+ tools/perf/arch/csky/util/Build        | 2 ++
+ tools/perf/arch/csky/util/perf_regs.c  | 6 ++++++
+ tools/perf/arch/riscv/util/Build       | 2 ++
+ tools/perf/arch/riscv/util/perf_regs.c | 6 ++++++
+ tools/perf/arch/s390/util/Build        | 1 +
+ tools/perf/arch/s390/util/perf_regs.c  | 6 ++++++
+ tools/perf/util/parse-regs-options.c   | 8 ++++++--
+ tools/perf/util/perf_regs.c            | 4 ----
+ tools/perf/util/perf_regs.h            | 4 ++--
+ 13 files changed, 46 insertions(+), 8 deletions(-)
+ create mode 100644 tools/perf/arch/arm/util/perf_regs.c
+ create mode 100644 tools/perf/arch/arm64/util/perf_regs.c
+ create mode 100644 tools/perf/arch/csky/util/perf_regs.c
+ create mode 100644 tools/perf/arch/riscv/util/perf_regs.c
+ create mode 100644 tools/perf/arch/s390/util/perf_regs.c
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index c599623..c4dd23c 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -561,6 +561,11 @@ trace.*::
- 	trace.show_zeros::
- 		Do not suppress syscall arguments that are equal to zero.
+diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
+index 296f0ea..37fc637 100644
+--- a/tools/perf/arch/arm/util/Build
++++ b/tools/perf/arch/arm/util/Build
+@@ -1,3 +1,5 @@
++perf-y += perf_regs.o
++
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
  
-+	trace.tracepoint_beautifiers::
-+		Use "libtraceevent" to use that library to augment the tracepoint arguments,
-+		"libbeauty", the default, to use the same argument beautifiers used in the
-+		strace-like sys_enter+sys_exit lines.
+ perf-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
+new file mode 100644
+index 0000000..2864e2e
+--- /dev/null
++++ b/tools/perf/arch/arm/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../util/perf_regs.h"
 +
- llvm.*::
- 	llvm.clang-path::
- 		Path to clang. If omit, search it from $PATH.
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index 25b74fd..ba16cd5 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -219,6 +219,11 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
- 	may happen, for instance, when a thread gets migrated to a different CPU
- 	while processing a syscall.
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 3cde540..0a7782c 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -1,4 +1,5 @@
+ perf-y += header.o
++perf-y += perf_regs.o
+ perf-y += sym-handling.o
+ perf-$(CONFIG_DWARF)     += dwarf-regs.o
+ perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
+new file mode 100644
+index 0000000..2864e2e
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../util/perf_regs.h"
++
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
+index 1160bb2..7d30501 100644
+--- a/tools/perf/arch/csky/util/Build
++++ b/tools/perf/arch/csky/util/Build
+@@ -1,2 +1,4 @@
++perf-y += perf_regs.o
++
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
+new file mode 100644
+index 0000000..2864e2e
+--- /dev/null
++++ b/tools/perf/arch/csky/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../util/perf_regs.h"
++
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
+index 1160bb2..7d30501 100644
+--- a/tools/perf/arch/riscv/util/Build
++++ b/tools/perf/arch/riscv/util/Build
+@@ -1,2 +1,4 @@
++perf-y += perf_regs.o
++
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+new file mode 100644
+index 0000000..2864e2e
+--- /dev/null
++++ b/tools/perf/arch/riscv/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../util/perf_regs.h"
++
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
+index 22797f0..3d9d0f4 100644
+--- a/tools/perf/arch/s390/util/Build
++++ b/tools/perf/arch/s390/util/Build
+@@ -1,5 +1,6 @@
+ perf-y += header.o
+ perf-y += kvm-stat.o
++perf-y += perf_regs.o
  
-+--libtraceevent_print::
-+	Use libtraceevent to print tracepoint arguments. By default 'perf trace' uses
-+	the same beautifiers used in the strace-like enter+exit lines to augment the
-+	tracepoint arguments.
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
+new file mode 100644
+index 0000000..2864e2e
+--- /dev/null
++++ b/tools/perf/arch/s390/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../util/perf_regs.h"
 +
- --map-dump::
- 	Dump BPF maps setup by events passed via -e, for instance the augmented_raw_syscalls
- 	living in tools/perf/examples/bpf/augmented_raw_syscalls.c. For now this
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 297aeaa..8303d83 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -175,6 +175,7 @@ struct trace {
- 	bool			print_sample;
- 	bool			show_tool_stats;
- 	bool			trace_syscalls;
-+	bool			libtraceevent_print;
- 	bool			kernel_syscallchains;
- 	s16			args_alignment;
- 	bool			show_tstamp;
-@@ -2397,6 +2398,71 @@ static void bpf_output__fprintf(struct trace *trace,
- 	++trace->nr_events_printed;
- }
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+index ef46c28..e687497 100644
+--- a/tools/perf/util/parse-regs-options.c
++++ b/tools/perf/util/parse-regs-options.c
+@@ -13,7 +13,7 @@ static int
+ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ {
+ 	uint64_t *mode = (uint64_t *)opt->value;
+-	const struct sample_reg *r;
++	const struct sample_reg *r = NULL;
+ 	char *s, *os = NULL, *p;
+ 	int ret = -1;
+ 	uint64_t mask;
+@@ -46,19 +46,23 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
  
-+static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel, struct perf_sample *sample,
-+				       struct thread *thread, void *augmented_args, int augmented_args_size)
-+{
-+	char bf[2048];
-+	size_t size = sizeof(bf);
-+	struct tep_format_field *field = evsel->tp_format->format.fields;
-+	struct syscall_arg_fmt *arg = evsel->priv;
-+	size_t printed = 0;
-+	unsigned long val;
-+	u8 bit = 1;
-+	struct syscall_arg syscall_arg = {
-+		.augmented = {
-+			.size = augmented_args_size,
-+			.args = augmented_args,
-+		},
-+		.idx	= 0,
-+		.mask	= 0,
-+		.trace  = trace,
-+		.thread = thread,
-+		.show_string_prefix = trace->show_string_prefix,
-+	};
-+
-+	for (; field && arg; field = field->next, ++syscall_arg.idx, bit <<= 1, ++arg) {
-+		if (syscall_arg.mask & bit)
-+			continue;
-+
-+		syscall_arg.fmt = arg;
-+		if (field->flags & TEP_FIELD_IS_ARRAY)
-+			val = (uintptr_t)(sample->raw_data + field->offset);
-+		else
-+			val = format_field__intval(field, sample, evsel->needs_swap);
-+		/*
-+		 * Some syscall args need some mask, most don't and
-+		 * return val untouched.
-+		 */
-+		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
-+
-+		/*
-+		 * Suppress this argument if its value is zero and
-+		 * and we don't have a string associated in an
-+		 * strarray for it.
-+		 */
-+		if (val == 0 &&
-+		    !trace->show_zeros &&
-+		    !((arg->show_zero ||
-+		       arg->scnprintf == SCA_STRARRAY ||
-+		       arg->scnprintf == SCA_STRARRAYS) &&
-+		      arg->parm))
-+			continue;
-+
-+		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-+
-+		/*
-+		 * XXX Perhaps we should have a show_tp_arg_names,
-+		 * leaving show_arg_names just for syscalls?
-+		 */
-+		if (1 || trace->show_arg_names)
-+			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
-+
-+		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
-+	}
-+
-+	return printed + fprintf(trace->output, "%s", bf);
-+}
-+
- static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 				union perf_event *event __maybe_unused,
- 				struct perf_sample *sample)
-@@ -2457,9 +2523,13 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
- 	} else if (evsel->tp_format) {
- 		if (strncmp(evsel->tp_format->name, "sys_enter_", 10) ||
- 		    trace__fprintf_sys_enter(trace, evsel, sample)) {
--			event_format__fprintf(evsel->tp_format, sample->cpu,
--					      sample->raw_data, sample->raw_size,
--					      trace->output);
-+			if (trace->libtraceevent_print) {
-+				event_format__fprintf(evsel->tp_format, sample->cpu,
-+						      sample->raw_data, sample->raw_size,
-+						      trace->output);
-+			} else {
-+				trace__fprintf_tp_fields(trace, evsel, sample, thread, NULL, 0);
-+			}
- 			++trace->nr_events_printed;
+ 			if (!strcmp(s, "?")) {
+ 				fprintf(stderr, "available registers: ");
++#ifdef HAVE_PERF_REGS_SUPPORT
+ 				for (r = sample_reg_masks; r->name; r++) {
+ 					if (r->mask & mask)
+ 						fprintf(stderr, "%s ", r->name);
+ 				}
++#endif
+ 				fputc('\n', stderr);
+ 				/* just printing available regs */
+ 				return -1;
+ 			}
++#ifdef HAVE_PERF_REGS_SUPPORT
+ 			for (r = sample_reg_masks; r->name; r++) {
+ 				if ((r->mask & mask) && !strcasecmp(s, r->name))
+ 					break;
+ 			}
+-			if (!r->name) {
++#endif
++			if (!r || !r->name) {
+ 				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+ 					    s, intr ? "-I" : "--user-regs=");
+ 				goto error;
+diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+index 2774cec..5ee47ae 100644
+--- a/tools/perf/util/perf_regs.c
++++ b/tools/perf/util/perf_regs.c
+@@ -3,10 +3,6 @@
+ #include "perf_regs.h"
+ #include "event.h"
  
- 			if (evsel->max_events != ULONG_MAX && ++evsel->nr_events_printed == evsel->max_events) {
-@@ -4150,6 +4220,11 @@ static int trace__config(const char *var, const char *value, void *arg)
- 		int args_alignment = 0;
- 		if (perf_config_int(&args_alignment, var, value) == 0)
- 			trace->args_alignment = args_alignment;
-+	} else if (!strcmp(var, "trace.tracepoint_beautifiers")) {
-+		if (strcasecmp(value, "libtraceevent") == 0)
-+			trace->libtraceevent_print = true;
-+		else if (strcasecmp(value, "libbeauty") == 0)
-+			trace->libtraceevent_print = false;
- 	}
- out:
- 	return err;
-@@ -4239,6 +4314,8 @@ int cmd_trace(int argc, const char **argv)
- 	OPT_CALLBACK(0, "call-graph", &trace.opts,
- 		     "record_mode[,record_size]", record_callchain_help,
- 		     &record_parse_callchain_opt),
-+	OPT_BOOLEAN(0, "libtraceevent_print", &trace.libtraceevent_print,
-+		    "Use libtraceevent to print the tracepoint arguments."),
- 	OPT_BOOLEAN(0, "kernel-syscall-graph", &trace.kernel_syscallchains,
- 		    "Show the kernel callchains on the syscall exit path"),
- 	OPT_ULONG(0, "max-events", &trace.max_events,
+-const struct sample_reg __weak sample_reg_masks[] = {
+-	SMPL_REG_END
+-};
+-
+ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
+ 				 char **new_op __maybe_unused)
+ {
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index 47fe34e..e014c2c 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -15,8 +15,6 @@ struct sample_reg {
+ #define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
+ #define SMPL_REG_END { .name = NULL }
+ 
+-extern const struct sample_reg sample_reg_masks[];
+-
+ enum {
+ 	SDT_ARG_VALID = 0,
+ 	SDT_ARG_SKIP,
+@@ -27,6 +25,8 @@ uint64_t arch__intr_reg_mask(void);
+ uint64_t arch__user_reg_mask(void);
+ 
+ #ifdef HAVE_PERF_REGS_SUPPORT
++extern const struct sample_reg sample_reg_masks[];
++
+ #include <perf_regs.h>
+ 
+ #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
