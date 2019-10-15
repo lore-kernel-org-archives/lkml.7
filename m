@@ -2,168 +2,92 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316E6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8348DECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F304F20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D5520854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1bYUzxc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tts+80eo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbfJOSai (ORCPT
+        id S2389154AbfJOSb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:30:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35558 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfJOSai (ORCPT
+        Tue, 15 Oct 2019 14:31:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53496 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfJOSb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:30:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y21so137468wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 11:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fzFVXgcr+SbryhCTIPWP1x78uV1MrL2l3mggmZnG6J0=;
-        b=d1bYUzxclgcIwQyGom6nQU9FbRAuZmgiWTJXIBD5CvPkiODLcyyeIH5MOmgIY5qegO
-         wF9rakwLnWkpSmQS7tuNvPqrIV4uY42XgwNk9G+8FFAJs3YrSvMGseDiXQphlRKvwwpj
-         QDiPkjXQKBwyUMwZurpk0auizQkZlIDGnKV9JzTvAMK07ogKXnNVfKPZUFqfNfgFhoWV
-         Jl/NGyisdi4XUPts9Ku7O0WnFdjKBRJRQAjsLO8ApfiVQcDk/WNiqXxU1ElOmVa/1fr9
-         EuU0BVoz6u0pWJau3jxbISHWYBhp9nVITAudMISOYVUTmt/NJB8yPRp9LZMsJcnjAbDj
-         s17Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fzFVXgcr+SbryhCTIPWP1x78uV1MrL2l3mggmZnG6J0=;
-        b=LOwAimDz3mpYFYUhVH80sOvH47zEfTJRYyuv9QCRFPLpUDx3e7BnrAioze6SQCp4zL
-         mNYzboUUhLPGTNlMoBAuoriQnYZ8qTEYeucjs7U10GKhBF8kWjyM1fmZw/SRDCQWUfZY
-         kxcodZvD7MBJOJji9s47yY+QRyoc9471BwBiyW5FQ8ZHIp9pWx8WZxLPxq6Nksb5ehfr
-         rpOHSzzJcwA3/Zb2AAYlf0/pBjRWJunJMc+7Pmu00Rj7PhghjPnaiw5x8DCWZIoLvk2u
-         YHpZQMzIVSdcaO7w0dO3R4BxobXqCygH0eFmW92aB9AOW40KIaTFEpBv8OMv36w4Z4Eo
-         oAhQ==
-X-Gm-Message-State: APjAAAVnHqs7VFVtlZK7KRqg0dhC0c/UYtrY0IvEc3ffI9Lj9eeGgdau
-        TbrEIzw8n9FUEbt4fFZuIIdWGiTwbz/yAiQ2Nmg=
-X-Google-Smtp-Source: APXvYqw5mjBI9MyTnIQNVNmV4S5NIMpCWobeJtM4nSdr7tbShHIZntss/bw3jdnI/nRWI/84Xu5NwnHBlop2AsFW3/U=
-X-Received: by 2002:a1c:d0:: with SMTP id 199mr21418272wma.67.1571164236355;
- Tue, 15 Oct 2019 11:30:36 -0700 (PDT)
+        Tue, 15 Oct 2019 14:31:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bjWhRvmBu/9tIPXtTGlEAeo+oND2q0OkwQG+bo937CE=; b=Tts+80eoSLUNV0Kg/vYeeRGfb
+        WIg4IRkYCBa2fuaOECG04EmD0G4W1321pfG0wyBH+ssBRgUS9dIeC9DSNMns4QlQXv9VJZLNpGQO2
+        6veSBUEWWqxOX81tvwexeAgWM+R8l8lmhAToKQApxJtY/3CXsvzHup9pZIjR5mM6eV6pFYluV2VuL
+        +92d/B6WN8Hn8+19IlEmcuCh1vl9SnL3VFTj5UpXQiWUY+KjGXih5dEGs8v2QEf0h+76b8b9TwNl6
+        M7Mxy309oiVsN/TFL87XVd5vbub8DMlYqzmypUugYWiP5gqKLdsfe+Zafi2mNFSmUKK5XS/5bRf/9
+        XdP8LFVVg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKRba-0005Zw-AU; Tue, 15 Oct 2019 18:31:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4F817300B8D;
+        Tue, 15 Oct 2019 20:30:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D0E6129A873DD; Tue, 15 Oct 2019 20:31:30 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 20:31:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, rabin@rab.in,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, james.morse@arm.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191015183130.GR2359@hirez.programming.kicks-ass.net>
+References: <20191009224135.2dcf7767@oasis.local.home>
+ <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <20191015144258.GQ2359@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
- <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com> <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
- <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
-In-Reply-To: <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 15 Oct 2019 14:30:23 -0400
-Message-ID: <CADnq5_P55aRJ-1VVz2uKA=xpddyi0BvDcXqPD=xVpw3aJZrzng@mail.gmail.com>
-Subject: Re: AMDGPU and 16B stack alignment
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        Matthias Kaehlcke <mka@google.com>,
-        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015144258.GQ2359@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 2:07 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Oct 15, 2019 at 12:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, Oct 15, 2019 at 9:08 AM S, Shirish <sshankar@amd.com> wrote:
-> > > On 10/15/2019 3:52 AM, Nick Desaulniers wrote:
-> >
-> > > My gcc build fails with below errors:
-> > >
-> > > dcn_calcs.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
-> > >
-> > > dcn_calc_math.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
->
-> I was able to reproduce this failure on pre-7.1 versions of GCC.  It
-> seems that when:
-> 1. code is using doubles
-> 2. setting -mpreferred-stack-boundary=3 -mno-sse2, ie. 8B stack alignment
-> than GCC produces that error:
-> https://godbolt.org/z/7T8nbH
->
-> That's already a tall order of constraints, so it's understandable
-> that the compiler would just error likely during instruction
-> selection, but was eventually taught how to solve such constraints.
->
-> > >
-> > > While GPF observed on clang builds seem to be fixed.
->
-> Thanks for the report.  Your testing these patches is invaluable, Shirish!
->
-> >
-> > Ok, so it seems that gcc insists on having at least 2^4 bytes stack
-> > alignment when
-> > SSE is enabled on x86-64, but does not actually rely on that for
-> > correct operation
-> > unless it's using sse2. So -msse always has to be paired with
-> >  -mpreferred-stack-boundary=3.
->
-> Seemingly only for older versions of GCC, pre 7.1.
->
-> >
-> > For clang, it sounds like the opposite is true: when passing 16 byte
-> > stack alignment
-> > and having sse/sse2 enabled, it requires the incoming stack to be 16
-> > byte aligned,
->
-> I don't think it requires the incoming stack to be 16B aligned for
-> sse2, I think it requires the incoming and current stack alignment to
-> match. Today it does not, which is why we observe GPFs.
->
-> > but passing 8 byte alignment makes it do the right thing.
-> >
-> > So, should we just always pass $(call cc-option, -mpreferred-stack-boundary=4)
-> > to get the desired outcome on both?
->
-> Hmmm...I would have liked to remove it outright, as it is an ABI
-> mismatch that is likely to result in instability and non-fun-to-debug
-> runtime issues in the future.  I suspect my patch does work for GCC
-> 7.1+.  The question is: Do we want to either:
-> 1. mark AMDGPU broken for GCC < 7.1, or
-> 2. continue supporting it via stack alignment mismatch?
->
-> 2 is brittle, and may break at any point in the future, but if it's
-> working for someone it does make me feel bad to outright disable it.
-> What I'd image 2 looks like is (psuedo code in a Makefile):
+On Tue, Oct 15, 2019 at 04:42:58PM +0200, Peter Zijlstra wrote:
+> On Tue, Oct 15, 2019 at 03:56:34PM +0200, Peter Zijlstra wrote:
+> > Right, the problem is set_all_modules_text_*(), that relies on COMING
+> > having made the protection changes.
+> > 
+> > After the x86 changes, there's only 2 more architectures that use that
+> > function. I'll work on getting those converted and then we can delete
+> > that function and worry no more about it.
+> 
+> Here's a possible patch for arch/arm, which only leaves arch/nds32/.
 
-Well, it's been working as is for years now, at least with gcc, so I'd
-hate to break that.
-
-Alex
-
->
-> if CC_IS_GCC && GCC_VERSION < 7.1:
->   set stack alignment to 16B and hope for the best
->
-> So my diff would be amended to keep the stack alignment flags, but
-> only to support GCC < 7.1.  And that assumes my change compiles with
-> GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
-> feel even more confident if someone with hardware to test on and GCC
-> 7.1+ could boot test).
-> --
-> Thanks,
-> ~Nick Desaulniers
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+*sigh*, so I'd written the patching code for nds32, but then discovered
+it doesn't have STRICT_MODULE_RWX and therefore we can simply delete the
+thing.
