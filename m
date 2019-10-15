@@ -2,114 +2,120 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F9ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E4AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEAE2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E832064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QvK8ywLH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M44lzqYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfJOLq5 (ORCPT
+        id S1729411AbfJOLrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:46:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40004 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfJOLq4 (ORCPT
+        Tue, 15 Oct 2019 07:47:10 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43704 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfJOLrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:46:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FBhkSG128247;
-        Tue, 15 Oct 2019 11:46:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=ioUB4OQf3/crC1d3UdNJzo0k+yaINfoF6RwTYIRdMeQ=;
- b=QvK8ywLH5JaiDsQE3ecSFMabz320gTsm4Sm0RdNVx5DmU2HrT9HxLW1ccMsVu4ecceMy
- e4d94b9IXtuR/3fbUySwJCXRQhk3NpIrSTLNbd55Mc2W6UpGD3apmDqf8nkRlqsb4oK+
- RqEPPKNsGzueaHwItZGFz3iFnxJ1Idgro778uwnwqFQl00s0fNGP4SxXiEVynXHgNoAk
- FYsd0yn4QHppJUKQtZ3MLH4oXOrMTe6/QocMyXjR4CUaIVtX1ZBbX3bam6gBZ/lhwox2
- pAvfFpqH823ddIWa3ksadguwRcdQDmw4okk3avH7ukgRhFLadPpSTYOA9de039qzoCBA ow== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7fr73e0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 11:46:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FBhIWM154785;
-        Tue, 15 Oct 2019 11:46:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2vn7181c5u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 11:46:30 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FBkSab025252;
-        Tue, 15 Oct 2019 11:46:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 11:46:27 +0000
-Date:   Tue, 15 Oct 2019 14:46:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     gregkh@linuxfoundation.org, jarias.linux@gmail.com,
-        julia.lawall@lip6.fr, colin.king@canonical.com,
-        hdegoede@redhat.com, hariprasad.kelam@gmail.com,
-        nachukannan@gmail.com, pakki001@umn.edu, hardiksingh.k@gmail.com,
-        nishkadg.linux@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] staging: rtl8723bs: remove unnecessary null check
-Message-ID: <20191015114618.GG4774@kadam>
-References: <20191015114053.23496-1-yuehaibing@huawei.com>
+        Tue, 15 Oct 2019 07:47:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j18so23447287wrq.10;
+        Tue, 15 Oct 2019 04:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rFh15VrB4DEKcYfjt476nNyBnV2R8iO+x5S3m+Zx9s=;
+        b=M44lzqYZ55PCUtw3DvsrdQZn/ARc2y7bf3Hs+7Tj2fei/jNSDBfdWh8cfXKTOAKsvY
+         SHBv/u9sMAP43yNXWl6wBlr/leLB/Xuqni4a+YYvCQtR7yQN5R68epVhwzU+XsKyjeWL
+         kGDErTlZZhuc9so36ovhMRIf6P1VE8xM7UIbrLULMmsYRLAoPO8t0zY/3eccNgWeyb3y
+         qFSQfD69DPfuX3E/abCstS+DW5K6Ct+roBaizDHaBuUxincE2mpMvsMyieSsxvEcI04C
+         JT+MHdwFI9OczZFDIFcpUYLaXxcO1NsgDFB+ZGEWFQew9k+NZAqaofjWtQy3iox9unY9
+         xLrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rFh15VrB4DEKcYfjt476nNyBnV2R8iO+x5S3m+Zx9s=;
+        b=p4uWHH7GymW+MzlBjqvFd7sGmfvQpo6/Hc8Dr0ytNW43uMVouz4TVkvRNcdBRK0VxC
+         AlT5RUwUWWAkcVN7/qLxL1zowA4/hNbWlFs/9uECpxEbQNM1j2Fo5MDKGGWj349T0ykM
+         mTEtc15tEQzu6IZ4A+IoPlW9whSN6ru83zEuDJpTVZtwVoONxsEqRhdu56oWEamlOeBZ
+         ZX3wjVauxwmMRY5trKc+ViOK/Ht/BnMRDJESnJiINgG47JdgiFffyp5S/rPmJIM+FaRb
+         3Jh12pSeBYOZHoxxMNDZ92CYycOZEeC/2n3/ryX5SLALXEaScu1J1IQaO/IiPeRPwxzl
+         Pegw==
+X-Gm-Message-State: APjAAAX83mIMumSqlw4KJYEE3KkYXblQdrfuI1iWgY94zPMK86Sj2mmJ
+        TH+00ccSwbPqwiLgZtwaxQJDEAjJUaI3qw==
+X-Google-Smtp-Source: APXvYqzfLHeVyovVfvjsOtMX1WbIcgz8S/+Bh0XBIL8YKw8jbzwdIlKeIIEmB8ocHE7M5CxvuheMJw==
+X-Received: by 2002:a5d:540d:: with SMTP id g13mr26160793wrv.8.1571140026937;
+        Tue, 15 Oct 2019 04:47:06 -0700 (PDT)
+Received: from andrea.corp.microsoft.com ([2a01:110:8012:1010:8d42:cc61:bfff:65c2])
+        by smtp.gmail.com with ESMTPSA id u11sm20237307wmd.32.2019.10.15.04.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 04:47:05 -0700 (PDT)
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v3 0/3] Drivers: hv: vmbus: Miscellaneous improvements
+Date:   Tue, 15 Oct 2019 13:46:43 +0200
+Message-Id: <20191015114646.15354-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015114053.23496-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150110
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 07:40:53PM +0800, YueHaibing wrote:
-> Null check before kfree is redundant, so remove it.
-> This is detected by coccinelle.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_xmit.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> index 7011c2a..4597f4f 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> @@ -2210,8 +2210,7 @@ void rtw_free_hwxmits(struct adapter *padapter)
->  	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
->  
->  	hwxmits = pxmitpriv->hwxmits;
-> -	if (hwxmits)
-> -		kfree(hwxmits);
-> +	kfree(hwxmits);
+Hi all,
 
-Just do:
+The patchset:
 
-	kfree(pxmitpriv->hwxmits);
+  - refactors the VMBus negotiation code by introducing the table of
+    VMBus protocol versions (patch 1/3),
 
-regards,
-dan carpenter
+  - enables VMBus protocol version 4.1, 5.1 and 5.2 (patch 2/3),
+
+  - introduces a module parameter to cap the VMBus protocol versions
+    which a guest can negotiate with the hypervisor (patch 3/3).
+
+Thanks,
+  Andrea
+
+---
+Changes since v2 ([1]):
+  - refactor the loop exit path in vmbus_connect() (Michael Kelley)
+  - do not rename VERSION_WIN10 (Michael Kelley)
+
+Changes since v1 ([2]):
+  - remove the VERSION_INVAL macro (Vitaly Kuznetsov and Dexuan Cui)
+  - make the table of VMBus protocol versions static (Dexuan Cui)
+  - enable VMBus protocol version 4.1 (Michael Kelley)
+  - introduce module parameter to cap the VMBus version (Dexuan Cui)
+
+[1] https://lkml.kernel.org/r/20191010154600.23875-1-parri.andrea@gmail.com
+[2] https://lkml.kernel.org/r/20191007163115.26197-1-parri.andrea@gmail.com
+
+Andrea Parri (3):
+  Drivers: hv: vmbus: Introduce table of VMBus protocol versions
+  Drivers: hv: vmbus: Enable VMBus protocol versions 4.1, 5.1 and 5.2
+  Drivers: hv: vmbus: Add module parameter to cap the VMBus version
+
+ drivers/hv/connection.c | 72 +++++++++++++++++++++--------------------
+ drivers/hv/vmbus_drv.c  |  3 +-
+ include/linux/hyperv.h  | 12 ++++---
+ 3 files changed, 45 insertions(+), 42 deletions(-)
+
+-- 
+2.23.0
 
