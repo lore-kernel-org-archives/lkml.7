@@ -2,413 +2,127 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1CCC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A6BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05B32089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DE120640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X8nT/XO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfJOFpq (ORCPT
+        id S1726880AbfJOFu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:45:46 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:36219 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfJOFpq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:45:46 -0400
-Received: from [10.28.19.63] (10.28.19.63) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 15 Oct
- 2019 13:45:47 +0800
-Subject: Re: [PATCH 3/4] watchdog: add meson secure watchdog driver
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1570874721-36077-1-git-send-email-xingyu.chen@amlogic.com>
- <1570874721-36077-4-git-send-email-xingyu.chen@amlogic.com>
- <07e8aef0-c991-f212-d500-c5ce77b3dea3@roeck-us.net>
- <51912003-658e-d290-d4db-130808caf6cd@amlogic.com>
- <1c2ac5b1-4ba4-b4e9-8775-b1597d9aae99@roeck-us.net>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <753ce57b-f271-2d21-7d55-b0014f21b39c@amlogic.com>
-Date:   Tue, 15 Oct 2019 13:45:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 01:50:59 -0400
+Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:19072
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725810AbfJOFu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:50:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ELY57xr4yMUOlNEOd55lrSTnLP+CE1iPJ0oA1jpi56WYxPum2cShYZtdTGfOU4QbXQlLHy5SjNG/dbfyPzW65DPq1L57dut8Prz0UjABv5uzTEkg3Bk7CcKC324rG0nyyAu1WzZUqZ69lZnTf9yGM9DRL+elK6DnaxBkOZLiWuxmNgYxJoZlD5LyDjbnqNDFAvgj4HPhllb1jjK3PmqFCVJJNdnRrbUVPM8hocLRYfzmHSYlf5cceVyVFvNF1kpKTe+zetDVN1dp465Ir0b4vBe3/viI6JdK4aMDUQnmsnVr71cFWMDLtpvbt3H7Vi2p/zuHREy8jDqpVK1Z4E6q7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WjzFNTHCG23SlbeJl0H44Z+zJGpZV2SGgKGWxjZmLdk=;
+ b=Hw/UBx5XZXMmmeG/uJro/25KUWCYXPzPOU+gzGUQbKxkYlLeIyAF1dm5AgszK0CZAA9xgPLrCFk4aG9jAD4Q+ffOC7rrVlmKLWzJeCb3f/IneJpGl86n0KyagxLM5aL7pdeaxRJf5AKad6yf8fQ/EVmz1BhqbDJExVIIk8rj5PfjNeZvA5Offoi5XdmF/ZfXMBy9aEj6KrAFcGY50UsJ7BpM+Un0CoGf3ibWODP9yTGw3MT2leRnFFjg/V9evZWATI07MARu56cnkd4E1qKtnVPf0zkgsNWk5vjAIEEbHrqGRGmYWY88LhzItSjJSx5cEBsAYpf3wdVOkzmCCHXZQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WjzFNTHCG23SlbeJl0H44Z+zJGpZV2SGgKGWxjZmLdk=;
+ b=X8nT/XO1PfCFYPQ6JU+1J0Mdgk7FiwEZLgOcLEhFSQgr/S/2Ew+c1jZicgKRvORVz3nV8awqnRpZfBTIYdBP3VNFzWyZI//FEufs9KPsxdYDf/Ieo2uemyPIsJuk2iCmJuDFjS0wD4y8ejqe7aAxwHO6rTQixh+lbCbIOMviAWU=
+Received: from VI1PR04MB6237.eurprd04.prod.outlook.com (20.179.24.74) by
+ VI1PR04MB3312.eurprd04.prod.outlook.com (10.170.228.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Tue, 15 Oct 2019 05:50:54 +0000
+Received: from VI1PR04MB6237.eurprd04.prod.outlook.com
+ ([fe80::79d2:e4fd:999e:51d2]) by VI1PR04MB6237.eurprd04.prod.outlook.com
+ ([fe80::79d2:e4fd:999e:51d2%5]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
+ 05:50:54 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Re: Re: [PATCH v2 4/5] dt-bindings: display: imx: add bindings
+ for DCSS
+Thread-Topic: Re: Re: [PATCH v2 4/5] dt-bindings: display: imx: add bindings
+ for DCSS
+Thread-Index: AQHVgxyBUXlZiNASZka8wKs20g3JQw==
+Date:   Tue, 15 Oct 2019 05:50:53 +0000
+Message-ID: <20191015055052.GC14065@fsr-ub1664-121>
+References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
+ <1570025100-5634-5-git-send-email-laurentiu.palcu@nxp.com>
+ <20191011145042.GA15680@bogus> <20191014080327.GB14065@fsr-ub1664-121>
+ <CAL_JsqJZHq=jDoK66bTHK+oqSvdrFh9x5a_cNe1hkFdALfs8vw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJZHq=jDoK66bTHK+oqSvdrFh9x5a_cNe1hkFdALfs8vw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.palcu@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8d26cc2f-ee70-479e-d529-08d75133a46f
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR04MB3312:|VI1PR04MB3312:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB33129D0523297C5207D2471CFF930@VI1PR04MB3312.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:655;
+x-forefront-prvs: 01917B1794
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(5660300002)(4744005)(102836004)(446003)(11346002)(305945005)(476003)(1076003)(6916009)(44832011)(26005)(186003)(486006)(6116002)(3846002)(7416002)(316002)(54906003)(6512007)(9686003)(33716001)(229853002)(6436002)(6486002)(86362001)(7736002)(2906002)(33656002)(66066001)(76176011)(99286004)(4326008)(25786009)(6246003)(14454004)(53546011)(6506007)(478600001)(8936002)(8676002)(81156014)(81166006)(71190400001)(71200400001)(66446008)(64756008)(256004)(66946007)(66556008)(66476007)(91956017)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3312;H:VI1PR04MB6237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AFihUvc/61t9AzaMQn9gWN6VkriSOoXvruI8M82kzB7ldwzy60zcqSKOWCrOOtYiAHyAQELrWWUS2CFmMjdPsK9GPmyBcQTEuuyzqCKQfmMJvlfQOoAkq48er7BZ6/zeTNRN1FXNu0xmsruZuiQkQIsUFG8TDPNV88QfMDUELLFEesKgVtatMQapdMBcWsKm+t/dNogpt9XpZvg0lA4YHW03J5qOfxGfrOhH1Jcqlyz8VRNGZ0sMu1L+JJYfft3sRwJPC5+3DJTHxQ0P72u7Vi4uHauAWsKYFs1QNDLrlzv95aZTqI5lXjTHZxNTVjIzHAZHeGCERVxK4kibmiOeoS5Rz2XgCrtTBq4IpNwJnfp0DDq0dYVgIzKyI/pPMRZSoQrsrDIbtUnuZyfzgCiYPytK4V3sbDxc2ToKbZDZeB8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6BC6007A97DA9349A753B4E9FAA529AB@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1c2ac5b1-4ba4-b4e9-8775-b1597d9aae99@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.19.63]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d26cc2f-ee70-479e-d529-08d75133a46f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 05:50:53.9469
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JAkTkge+ikPFISRJD77jeYUKqTVBMm7m6FFyGmoEqPL6Cvosc92iaqNaHNTxiRH7m3V3mAtRpSVuTFJVNPK3Cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3312
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Guenter
-
-On 2019/10/14 21:49, Guenter Roeck wrote:
-> On 10/14/19 4:42 AM, Xingyu Chen wrote:
->> Hi, Guenter
->> Thanks for your review.
->>
->> On 2019/10/12 22:29, Guenter Roeck wrote:
->>> On 10/12/19 3:05 AM, Xingyu Chen wrote:
->>>> The watchdog controller on the Meson-A/C series SoCs is moved to secure
->>>> world, watchdog operation needs to be done in secure EL3 mode via ATF,
->>>> Non-secure world can call SMC instruction to trap to AFT for watchdog
->>>> operation.
->>>>
->>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->>>> ---
->>>>   drivers/watchdog/Kconfig         |  16 +++
->>>>   drivers/watchdog/Makefile        |   1 +
->>>>   drivers/watchdog/meson_sec_wdt.c | 205 
->>>> +++++++++++++++++++++++++++++++++++++++
->>>>   3 files changed, 222 insertions(+)
->>>>   create mode 100644 drivers/watchdog/meson_sec_wdt.c
->>>>
->>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>>> index 58e7c10..e6b0707 100644
->>>> --- a/drivers/watchdog/Kconfig
->>>> +++ b/drivers/watchdog/Kconfig
->>>> @@ -826,6 +826,22 @@ config MESON_GXBB_WATCHDOG
->>>>         To compile this driver as a module, choose M here: the
->>>>         module will be called meson_gxbb_wdt.
->>>> +config MESON_SEC_WATCHDOG
->>>> +    tristate "Amlogic Meson Secure watchdog support"
->>>> +    depends on ARCH_MESON || COMPILE_TEST
->>>
->>> Did you try COMPILE_TEST (eg allmodconfig) on, say x86_64 ?
->>> AFAICS the meson sm calls are only available if MESON_SM is
->>> enabled, and that depends on both ARCH_MESON and ARM64_4K_PAGES.
->>> This dependency is not expressed here, and neither is enabled
->>> with COMPILE_TEST.Sorry, I have't done this kind of test before for 
->>> this patchset. There
->> is a kernel build error which related to the current driver when i try 
->> to use allmodconfig with x86. I will fix it by adding "depends on 
->> MESON_SM" in next version.
->>>
->>>> +    select WATCHDOG_CORE
->>>> +    help
->>>> +      The watchdog controller on the Meson-A/C series SoCs is moved to
->>>> +      secure world, watchdog operation needs to be done in secure EL3
->>>> +      mode via ATF, non-secure world can call SMC instruction to trap
->>>> +      to ATF for the watchdog operation.
->>>> +
->>>> +      Say Y here if watchdog controller on Meson SoCs is located in
->>>> +      secure world.
->>>> +
->>>> +      To compile this driver as a module, choose M here: the
->>>> +      module will be called meson_sec_wdt.
->>>> +
->>>>   config MESON_WATCHDOG
->>>>       tristate "Amlogic Meson SoCs watchdog support"
->>>>       depends on ARCH_MESON || COMPILE_TEST
->>>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->>>> index 2ee352b..5e6b73d 100644
->>>> --- a/drivers/watchdog/Makefile
->>>> +++ b/drivers/watchdog/Makefile
->>>> @@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
->>>>   obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
->>>>   obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
->>>>   obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
->>>> +obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
->>>>   obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
->>>>   obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
->>>>   obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
->>>> diff --git a/drivers/watchdog/meson_sec_wdt.c 
->>>> b/drivers/watchdog/meson_sec_wdt.c
->>>> new file mode 100644
->>>> index 00000000..2b5357c
->>>> --- /dev/null
->>>> +++ b/drivers/watchdog/meson_sec_wdt.c
->>>> @@ -0,0 +1,205 @@
->>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>>> +/*
->>>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->>>> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
->>>> + *
->>>> + */
->>>> +#include <linux/err.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/types.h>
->>>> +#include <linux/watchdog.h>
->>>> +#include <linux/firmware/meson/meson_sm.h>
->>>> +
->>>> +#define MESON_SIP_WDT_DISABLE        0x1
->>>> +#define MESON_SIP_WDT_ENABLE        0x2
->>>> +#define MESON_SIP_WDT_PING        0x3
->>>> +#define MESON_SIP_WDT_INIT        0x4
->>>> +#define MESON_SIP_WDT_RESETNOW        0x5
->>>> +#define MESON_SIP_WDT_SETTIMEOUT    0x6
->>>> +#define MESON_SIP_WDT_GETTIMELEFT    0x7
->>>> +
->>>> +#define DEFAULT_TIMEOUT            30 /* seconds */
->>>> +
->>>> +/*
->>>> + * Watchdog timer tick is set to 1ms in secfw side, and tick count is
->>>> + * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
->>>> + * timeout value is 0xffff ms.
->>>> + */
->>>> +#define MAX_TIMEOUT_MS            0xFFFF
->>>> +
->>>> +struct meson_sec_wdt {
->>>> +    struct watchdog_device wdt_dev;
->>>> +    struct meson_sm_firmware *fw;
->>>> +};
->>>> +
->>>> +static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
->>>> +{
->>>> +    int ret;
->>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>>> +
->>>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>>> +                MESON_SIP_WDT_ENABLE, 0, 0, 0, 0); > +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    return 0;
->>>
->>> This is equivalent to
->>>      return ret;
->>> or even
->>>      return meson_sm_call(...);
->>> I will fix it in next version.
->>>> +}
->>>> +
->>>> +static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
->>>> +{
->>>> +    int ret;
->>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>>> +
->>>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>>> +                MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    return 0;
->>>
->>> Same as above.
->> I will fix it in next version.
->>>
->>>> +}
->>>> +
->>>> +static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
->>>> +{
->>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>>> +
->>>> +    meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>>> +              MESON_SIP_WDT_PING, 0, 0, 0, 0);
->>>> +
->>>> +    return 0;
->>>
->>> Why ignore errors ?
->> I will fix it as above.
->>>
->>>> +}
->>>> +
->>>> +static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
->>>> +                     unsigned int timeout)
->>>> +{
->>>> +    int ret;
->>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>>> +
->>>> +    wdt_dev->timeout = timeout;
->>>> +    meson_sec_wdt_ping(wdt_dev);
->>>> +
->>>
->>> Unconditionally ? Also, the core does that after setting the 
->>> timeoutIt is used to avoid watchdog timer expire once the timeout is 
->>> updated, 
->> and that the watchdog_ping from core not been invoked. If it is 
->> considered useless, i will remove it.
->>
-> 
-> As mentioned, the core sends a ping immediately after the update.
-Ok, I will remove it in next version, Thanks
-> 
->>>
->>>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, NULL,
->>>> +                MESON_SIP_WDT_SETTIMEOUT,
->>>> +                wdt_dev->timeout, 0, 0, 0);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    return 0;
->>>
->>> same as above.
->> I will fix it in next version.
->>>
->>>> +}
->>>> +
->>>> +static unsigned int meson_sec_wdt_get_timeleft(struct 
->>>> watchdog_device *wdt_dev)
->>>> +{
->>>> +    int ret;
->>>> +    int timeleft;
->>>> +    struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
->>>> +
->>>> +    ret = meson_sm_call(data->fw, SM_WATCHDOG_OPS, &timeleft,
->>>> +                MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
->>>> +
->>>> +    if (ret)
->>>> +        return 0;
->>>
->>> Really ? Why ? 0 is most definitely incorrect here.
->> I just want to return a invalid value after I failed to get valid 
->> timeleft. Could you tell me what is corrent value ?
-> 
-> Why not return the error ?
-I will return the error in next version, Thanks for your suggestion.
-> 
->>>
->>>> +
->>>> +    return timeleft;
->>>> +}
->>>> +
->>>> +static const struct watchdog_ops meson_sec_wdt_ops = {
->>>> +    .start = meson_sec_wdt_start,
->>>> +    .stop = meson_sec_wdt_stop,
->>>> +    .ping = meson_sec_wdt_ping,
->>>> +    .set_timeout = meson_sec_wdt_set_timeout,
->>>> +    .get_timeleft = meson_sec_wdt_get_timeleft,
->>>> +};
->>>> +
->>>> +static const struct watchdog_info meson_sec_wdt_info = {
->>>> +    .identity = "Meson Secure Watchdog Timer",
->>>> +    .options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | 
->>>> WDIOF_MAGICCLOSE,
->>>> +};
->>>> +
->>>> +static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
->>>> +{
->>>> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
->>>> +
->>>> +    if (watchdog_active(&data->wdt_dev))
->>>> +        meson_sec_wdt_start(&data->wdt_dev);
->>>
->>> No error return ?
->> I will fix it in next version
->>>
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
->>>> +{
->>>> +    struct meson_sec_wdt *data = dev_get_drvdata(dev);
->>>> +
->>>> +    if (watchdog_active(&data->wdt_dev))
->>>> +        meson_sec_wdt_stop(&data->wdt_dev);
->>>
->>> No error return ?
->> same as above
->>>
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
->>>> +    SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, 
->>>> meson_sec_wdt_resume)
->>>> +};
->>>> +
->>>> +static const struct of_device_id meson_sec_wdt_dt_ids[] = {
->>>> +     { .compatible = "amlogic,meson-sec-wdt", },
->>>> +     { /* sentinel */ },
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, meson_sec_wdt_dt_ids);
->>>> +
->>>> +static int meson_sec_wdt_probe(struct platform_device *pdev)
->>>> +{
->>>> +    struct device *dev = &pdev->dev;
->>>> +    struct meson_sec_wdt *data;
->>>> +    struct device_node *sm_np;
->>>> +    int ret;
->>>> +
->>>> +    data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->>>> +    if (!data)
->>>> +        return -ENOMEM;
->>>> +
->>>> +    sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
->>>> +    if (!sm_np) {
->>>> +        dev_err(&pdev->dev, "no secure-monitor node\n");
->>>> +        return -ENODEV;
->>>
->>> ENODEV is wrong here.
->> I found some drivers use the ENODEV in this case, Eg:
->> - ./watchdog/ts4800_wdt.c -122
->> - ./nvmem/meson-efuse.c   -55
->> ...
->>
->> Could you tell me which error code is more suitable in this case ?
->>
-> 
-> Yes, I understand, with Millions of LOC to choose from, you will
-> find examples for everything somewhere in the Linux kernel.
-> That doesn't mean it is a good idea.
-> 
-> The property is listed as mandatory, so EINVAL would probably be
-> most appropriate, unless DT handling proposes a different error code
-> in such situations.
-Thanks for your help, I will replace ENODEV with EINVAL in next version.
-> 
->>>
->>>> +    }
->>>> +
->>>> +    data->fw = meson_sm_get(sm_np);
->>>> +    of_node_put(sm_np);
->>>> +    if (!data->fw)
->>>> +        return -EPROBE_DEFER;
->>>
->>> How do you know ?
->> The fw pointer is static variable which is initialized to NULL. if it 
->> is equal to NULL, and indicate the meson_sm driver is not registered, 
->> then wdt driver use EPROBE_DEFER to defer probe.
->>>
->>>> +
->>>> +    platform_set_drvdata(pdev, data);
->>>> +
->>>> +    data->wdt_dev.parent = dev;
->>>> +    data->wdt_dev.info = &meson_sec_wdt_info;
->>>> +    data->wdt_dev.ops = &meson_sec_wdt_ops;
->>>> +    data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
->>>> +    data->wdt_dev.min_timeout = 1;
->>>> +    data->wdt_dev.timeout = DEFAULT_TIMEOUT;
->>>> +    watchdog_set_drvdata(&data->wdt_dev, data);
->>>> +
->>> No watchdog_init_timeout() ? Any special reason for not supporting
->>> to set the timeout with a devicetree property ?
->> I want to keep consistency with previous meson watchdog driver.
->> as follows:
->> - meson_gxbb_wdt.c
->> - meson_wdt.c
->>
-> 
-> Yes, again, it is possible to find examples for pretty much everything
-> in the linux kernel. But, sure, as you wish.
-Thank you again.
-> 
-> Guenter
-> 
-> .
-> 
+SGkgUm9iLA0KDQpPbiBNb24sIE9jdCAxNCwgMjAxOSBhdCAwODoyMzo1MUFNIC0wNTAwLCBSb2Ig
+SGVycmluZyB3cm90ZToNCj4gT24gTW9uLCBPY3QgMTQsIDIwMTkgYXQgMzowMyBBTSBMYXVyZW50
+aXUgUGFsY3UgPGxhdXJlbnRpdS5wYWxjdUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEhpIFJv
+YiwNCj4gPg0KPiA+IE9uIEZyaSwgT2N0IDExLCAyMDE5IGF0IDA5OjUwOjQyQU0gLTA1MDAsIFJv
+YiBIZXJyaW5nIHdyb3RlOg0KPiA+ID4gOnU/d2M/P201P14/456+P300LT8/entiPz8/cj8rP9eA
+dT8/P9inPz8/PyMgPz8gPz9layA/Pz8/P1c/Sj8/Pz9ePyg/Pz9ofT8/LT8/entiPz8/cj9aPz8/
+Pys/alcuPyBcP2/bindiPyA/dispPz8/P2wgPyBiPyAmPz8sPyY/P86+Pz8/Pz8/Pz8/Pz8/Pz8/
+P1c/Pz8hanggd86iP8erPyonPz8reT9ePz9eP006Pz8/cumentatPz8/dT8/cT9reT/bindiPyA/
+dispPz8/P2wgPyBiPyAmPz8sPyY/PyA/Pz8gdT8/Pz/erj8/Pz8gP0c/Pz9oDQo+ID4NCj4gPiBP
+ayEgTm90IHN1cmUgaG93IHRvIGFkZHJlc3MgdGhpcyB0aG91Z2guLi4gOikNCj4gDQo+IFlvdXIg
+bWFpbCB3YXMgYmFzZTY0IHdoaWNoIGlkZWFsbHkgc2hvdWxkIGJlIGF2b2lkZWQgb24gbWFpbGxp
+c3RzLiBNeQ0KPiBzY3JpcHRpbmcgdHJpZXMgdG8gZGVhbCB3aXRoIGl0LCBidXQgZmFpbGVkIG9i
+dmlvdXNseS4NCg0KU29ycnkgYWJvdXQgdGhhdC4uLiA6LyBXZSd2ZSBoYWQgdGhpcyBpc3N1ZSBm
+b3IgYSB3aGlsZSBub3cgYW5kIEkNCnRob3VnaHQgaXQgZ290IGZpeGVkLiBPdXIgZW1haWwgc2Vy
+dmVyIGJlaW5nIHRvbyAic21hcnQiLi4uDQoNClRoYW5rcywNCkxhdXJlbnRpdQ0KDQo+IFdoYXQg
+SSBzYWlkDQo+IHdhczoNCj4gDQo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPg==
