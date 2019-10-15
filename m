@@ -2,80 +2,83 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E91C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D3ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B7A2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9296C2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571149600;
+	bh=5nnNdAf6WXH+v00l5Zeozfrj8EhYQJPb342rxJehYoo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dkCckz/uHyfuBdP+tbOAv437uV2HUzP9Uvag2PdDr2Uve5sHGsqhNlN+KgfZUZYb4
+	 pAS8iAp7HoPKclmnibuaCdYZOIiOp/6R71xVIeR950XaOQIZCX+eIZOlO49TJxKwJI
+	 pnZDe3UBP18NxNbSCfP/I/Ync7kisBNS34WmEYqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732655AbfJOOZK (ORCPT
+        id S1732659AbfJOO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:25:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44084 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732050AbfJOOZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:25:09 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8F4A91629CC662650C3C;
-        Tue, 15 Oct 2019 22:25:07 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 22:24:56 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kgene@kernel.org>, <krzk@kernel.org>, <s.nawrocki@samsung.com>,
-        <tomasz.figa@gmail.com>, <cw00.choi@samsung.com>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] clk: s3c2410: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 15 Oct 2019 22:24:24 +0800
-Message-ID: <20191015142424.25944-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 15 Oct 2019 10:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732050AbfJOO0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:26:38 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B4F2168B;
+        Tue, 15 Oct 2019 14:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571149598;
+        bh=5nnNdAf6WXH+v00l5Zeozfrj8EhYQJPb342rxJehYoo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w6kJzt5rCxA+Nlnc6hyIEBdHPLR9CJR6dh6IqwJ/WXAz5GRdYwAlefDCa5ef3V271
+         ls2UZPhGQCoIqPOU4JcYp3QDCydF113tQQy89ztJklOt0nRytgyFF1PR5PBOLiY/+V
+         OovPE2XgvnVLIRFhxz5FdEp8dIte+utA3TCTK5Y0=
+Received: by mail-qt1-f173.google.com with SMTP id c21so30764130qtj.12;
+        Tue, 15 Oct 2019 07:26:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAXHoNnpul/Mmefy6IG707ulo6YzPf1+U0KtjUZvOylO461wk7qi
+        2xhzWn4LBz/sdbJYDfFFensVIO1SUNXiBRsnvIc=
+X-Google-Smtp-Source: APXvYqxJeXGDIDIxntmOPHKIT4TVJ5vltdtc+3C0nxOmveI8caoOTLYE4Qxbn38fdBc1CblJtiI19abZIqkd7fxC1QQ=
+X-Received: by 2002:ad4:4503:: with SMTP id k3mr1579944qvu.155.1571149597331;
+ Tue, 15 Oct 2019 07:26:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20191015114646.15354-1-parri.andrea@gmail.com>
+In-Reply-To: <20191015114646.15354-1-parri.andrea@gmail.com>
+From:   Wei Liu <wei.liu@kernel.org>
+Date:   Tue, 15 Oct 2019 15:26:26 +0100
+X-Gmail-Original-Message-ID: <CAHd7Wqx8VzTdyo_e7NxYg83kgV27HSeKdpij3+s=VR6GZT197A@mail.gmail.com>
+Message-ID: <CAHd7Wqx8VzTdyo_e7NxYg83kgV27HSeKdpij3+s=VR6GZT197A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Drivers: hv: vmbus: Miscellaneous improvements
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Tue, 15 Oct 2019 at 12:47, Andrea Parri <parri.andrea@gmail.com> wrote:
+[...]
+> [1] https://lkml.kernel.org/r/20191010154600.23875-1-parri.andrea@gmail.com
+> [2] https://lkml.kernel.org/r/20191007163115.26197-1-parri.andrea@gmail.com
+>
+> Andrea Parri (3):
+>   Drivers: hv: vmbus: Introduce table of VMBus protocol versions
+>   Drivers: hv: vmbus: Enable VMBus protocol versions 4.1, 5.1 and 5.2
+>   Drivers: hv: vmbus: Add module parameter to cap the VMBus version
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clk/samsung/clk-s3c2410-dclk.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+For the whole series:
 
-diff --git a/drivers/clk/samsung/clk-s3c2410-dclk.c b/drivers/clk/samsung/clk-s3c2410-dclk.c
-index 1281672..7dad909 100644
---- a/drivers/clk/samsung/clk-s3c2410-dclk.c
-+++ b/drivers/clk/samsung/clk-s3c2410-dclk.c
-@@ -238,7 +238,6 @@ static SIMPLE_DEV_PM_OPS(s3c24xx_dclk_pm_ops,
- static int s3c24xx_dclk_probe(struct platform_device *pdev)
- {
- 	struct s3c24xx_dclk *s3c24xx_dclk;
--	struct resource *mem;
- 	struct s3c24xx_dclk_drv_data *dclk_variant;
- 	struct clk_hw **clk_table;
- 	int ret, i;
-@@ -257,8 +256,7 @@ static int s3c24xx_dclk_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, s3c24xx_dclk);
- 	spin_lock_init(&s3c24xx_dclk->dclk_lock);
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	s3c24xx_dclk->base = devm_ioremap_resource(&pdev->dev, mem);
-+	s3c24xx_dclk->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(s3c24xx_dclk->base))
- 		return PTR_ERR(s3c24xx_dclk->base);
- 
--- 
-2.7.4
-
-
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
