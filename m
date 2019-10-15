@@ -2,90 +2,85 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D8DECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C51AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B499221928
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF5C20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="iexJ4OXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732448AbfJOODR (ORCPT
+        id S1732367AbfJOOEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:03:17 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42585 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732170AbfJOODQ (ORCPT
+        Tue, 15 Oct 2019 10:04:49 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:45050 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728880AbfJOOEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:03:16 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i185so16845042oif.9;
-        Tue, 15 Oct 2019 07:03:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lOjJLF7sukvj2eKb65vV1HI25D8NmeruWTF/C6krm1Q=;
-        b=bjxevdDoTVfJ4gqJeH+FKT9XM3NZqH/LwPfYRFhcWwHSxLfriO01Jtn3V3Mpqczqkb
-         LHlhvvYXAC1asDG8OYBRWESpcyepJzeITzH8wJF1aGOnpzjo4HZa2/fmeB7duk4iK60D
-         6cmKCskWo6zDJqebLvmK+nGDo3p3sac6VRDBgSOZDIvXh+k0o+Q7NuIazdB12u4/5J2o
-         p4iYV5VEOBGkXcgsmvMlFfz8q03YTtll/OWlaRSRQeFx9lKyu/CWptHZiq/VLSQpIt57
-         T+vjBMCm5WZ7YkYVSFolmAqB4fDIrw86s7eYFt/xCnN61SEYJZu1YMvGJ+ijCEvOC2n/
-         GrHQ==
-X-Gm-Message-State: APjAAAXrZWDPydm8xYtfDoRmP0OQfVER1D/MsaTCIKJDeVDUy8LTkV4u
-        0TrAcL1KCCdnhN5HoPz69/CYpjC9ihAw13LzsVI=
-X-Google-Smtp-Source: APXvYqyr2Z8Smipppw7iBN2DU7emj0QxlbQzT35YfXNX6ZmXYwoICBBJd/mbfEEWv1S0yH9hYhQVJ4X3dWgp6QTqlV4=
-X-Received: by 2002:aca:882:: with SMTP id 124mr29310652oii.54.1571148195408;
- Tue, 15 Oct 2019 07:03:15 -0700 (PDT)
+        Tue, 15 Oct 2019 10:04:48 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 93D7C2E150F;
+        Tue, 15 Oct 2019 17:04:45 +0300 (MSK)
+Received: from myt5-6212ef07a9ec.qloud-c.yandex.net (myt5-6212ef07a9ec.qloud-c.yandex.net [2a02:6b8:c12:3b2d:0:640:6212:ef07])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id TQ8yEn6Bxb-4iOilYj0;
+        Tue, 15 Oct 2019 17:04:45 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1571148285; bh=gapCxVyFjCKK96iTj5+/HTSHg4pVE+p4wO6AeL1O5js=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=iexJ4OXOHRyfvZOijhnDLG/OTy9p46fATNnCRuDS3uURs4zONzQOCug4kegm8PrUp
+         r7YEtJsOfu0s8iXkRLCF4KwchV8t6Db1ylKADx0+jrNc/0CO6Pt0LvfyXyw82hKy5R
+         vhqiRKrwvDQqEd2HUE6UbUXWLI2/HLIwQLMBxmbQ=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:7005::1:13])
+        by myt5-6212ef07a9ec.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id KzKUEhJ4eP-4iGWHmeE;
+        Tue, 15 Oct 2019 17:04:44 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
+ mem_cgroup_move_account
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <157112699975.7360.1062614888388489788.stgit@buzz>
+ <20191015135348.GA139269@cmpxchg.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <89171a94-8b6f-e949-0078-10fa8fd26dfc@yandex-team.ru>
+Date:   Tue, 15 Oct 2019 17:04:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org> <20191015104621.62514-2-jacopo+renesas@jmondi.org>
-In-Reply-To: <20191015104621.62514-2-jacopo+renesas@jmondi.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 15 Oct 2019 16:03:04 +0200
-Message-ID: <CAMuHMdVr=eVJWMC=oHsfUE8=ODj8aMw2Wq1nr0Cd+ngxW7nuMA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/8] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191015135348.GA139269@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+On 15/10/2019 16.53, Johannes Weiner wrote:
+> On Tue, Oct 15, 2019 at 11:09:59AM +0300, Konstantin Khlebnikov wrote:
+>> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
+>> These counters needs update when page is moved between cgroups.
+>>
+>> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> 
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> 
+> Please mention in the changelog that currently is nobody *consuming*
+> the lruvec versions of these counters and that there is no
+> user-visible effect. Thanks
+> 
 
-On Tue, Oct 15, 2019 at 12:44 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add device tree bindings documentation for the Renesas R-Car Display
-> Unit Color Management Module.
->
-> CMM is the image enhancement module available on each R-Car DU video
-> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+Maybe just kill all these per-lruvec counters?
+I see only one user which have no alternative data source: WORKINGSET_ACTIVATE.
 
-V2H is excluded, too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+This will save some memory: 32 * sizeof(long) * nr_nodes * nr_cpus bytes
