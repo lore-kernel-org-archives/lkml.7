@@ -2,128 +2,113 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEEAECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A43C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C25F20640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FC920640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="o9XGBBs9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfJOQMg (ORCPT
+        id S1732717AbfJOQNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:12:36 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48756 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfJOQMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:12:36 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1iKPQn-0007OY-LU; Tue, 15 Oct 2019 10:12:18 -0600
-To:     Christoph Hellwig <hch@infradead.org>,
-        Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        alexios.zavras@intel.com, ming.lei@redhat.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        Jason Gunthorpe <jgg@ziepe.ca>, christophe.leroy@c-s.fr,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <1569885755-10947-1-git-send-email-alan.mikhak@sifive.com>
- <20191007061324.GB17978@infradead.org>
- <CABEDWGyovfKuXsNpfhsSCJ0sryg3EpAsaqRTHxBGC9LFM+=dww@mail.gmail.com>
- <CABEDWGxZaJp17jhd-CPqc+n9ZjYzvp63PymfMo0JVd=jzQEizQ@mail.gmail.com>
- <20191015095522.GA22551@infradead.org>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a218d5bd-93cd-2332-de95-195ccbe41995@deltatee.com>
-Date:   Tue, 15 Oct 2019 10:12:11 -0600
+        Tue, 15 Oct 2019 12:13:42 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41281 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfJOQNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:13:41 -0400
+Received: by mail-io1-f67.google.com with SMTP id n26so47132962ioj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 09:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7czjHeR/FYw7akeQYJ1942FO11nkZtthgVwneKW5uvk=;
+        b=o9XGBBs9WdsZoPM4Xp2XRT3UqqzpM17jhvw7ktI5q0Edsw8K2MrsOFEJoH6bMrVb45
+         k6NlaB5CIDT5y/uhk+bJHPAbIAzdNtZM3XS7ZV0bqt5sXn6osREMH6DDBKgzvCjMizNl
+         uxBMCdAlPDZSzlPBI6UHPnbQPLDOoAtLqYpFulKfCBGQFuSh0fkVttCEjdQiErfDo6PF
+         o1VuVtiCPL1M0JORafeFgSDGfqoVDBGOog5a5CPm1Pca2HQAFliP6+B2trLRWOxf0zyl
+         6SrvtmOQ9RTZiS68/6r0/pGdaazpjCHBUez6idMJOwu6Wo8dlJvSUrIcpwgfnfmfYReu
+         pdqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7czjHeR/FYw7akeQYJ1942FO11nkZtthgVwneKW5uvk=;
+        b=kFttmJiQOFT+ml7kWvNeLRDAtMkmdXn9vVzr8beS4m0LA+jjKsoFHqgMgMW9arUPIX
+         mbt3g/E5ngdtCeYNFpQo0KLMeFksQUpkUFAYlJV68N96BHxBe4V3Br91drbutFNlwO1y
+         IyO+fmv9+4+H81tyNBMSdyOKeZR8HUYkmZDhYvqWj3QBZfWXG7o+MvyR2fZ4hPsgcTH2
+         XSN0boRDfSdPGCZ+y/yMm6Z6C/i5cX+LGjpvjUdEEGe5hNjkX6wTAezcTCS/l28FFcs1
+         27bxpTi86sx+FN9iSQSrARqeZZBzVAoSKXBsmNz7ZdHWgqBPV0OdOqVe764L6iJaHOFy
+         l8pQ==
+X-Gm-Message-State: APjAAAVJtzNorKjrNPeL0mX3VaUBSINklf4lfLNs9G7+/TGxirTj3sH9
+        T3KHpaOFikq3PRNtwkiCEz3e/A==
+X-Google-Smtp-Source: APXvYqyjH0HLXuoo2Q17ycX0CesZ6wuNYKJsBuQyWNrIqamUmXePJxoXgbY3yt+wO4RmNzb/2vmQTg==
+X-Received: by 2002:a6b:b54a:: with SMTP id e71mr25689901iof.132.1571156020825;
+        Tue, 15 Oct 2019 09:13:40 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id q3sm14539813ioi.68.2019.10.15.09.13.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 09:13:39 -0700 (PDT)
+Subject: Re: [PATCH block/for-linus] blkcg: Fix multiple bugs in
+ blkcg_activate_policy()
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        linux-block@vger.kernel.org
+References: <alpine.DEB.2.21.1910151232480.2818@hadrien>
+ <20191015154827.GK18794@devbig004.ftw2.facebook.com>
+ <07cbc404-65db-b236-9ae2-558197b8cdb6@kernel.dk>
+ <20191015160347.GM18794@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8406cdae-fa26-3db5-f97d-347059cdbc16@kernel.dk>
+Date:   Tue, 15 Oct 2019 10:13:38 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015095522.GA22551@infradead.org>
+In-Reply-To: <20191015160347.GM18794@devbig004.ftw2.facebook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: paul.walmsley@sifive.com, palmer@sifive.com, christophe.leroy@c-s.fr, jgg@ziepe.ca, tglx@linutronix.de, gregkh@linuxfoundation.org, ming.lei@redhat.com, alexios.zavras@intel.com, martin.petersen@oracle.com, linux-kernel@vger.kernel.org, alan.mikhak@sifive.com, hch@infradead.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] scatterlist: Validate page before calling PageSlab()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-10-15 3:55 a.m., Christoph Hellwig wrote:
-> On Mon, Oct 07, 2019 at 02:13:51PM -0700, Alan Mikhak wrote:
->>> My goal is to not modify the Linux NVMe target code at all. The NVMe
->>> endpoint function driver currently does the work that is required.
+On 10/15/19 10:03 AM, Tejun Heo wrote:
+> blkcg_activate_policy() has the following bugs.
 > 
-> You will have to do some modifications, as for example in PCIe you can
-> have a n:1 relationship between SQs and CQs.  And you need to handle
-> the Create/Delete SQ/CQ commands, but not the fabrics commands.  And
-> modifying subsystems in Linux is perfectly acceptable, that is how they
-> improve.
+> * cf09a8ee19ad ("blkcg: pass @q and @blkcg into
+>    blkcg_pol_alloc_pd_fn()") added @blkcg to ->pd_alloc_fn(); however,
+>    blkcg_activate_policy() ends up using pd's allocated for the root
+>    blkcg for all preallocations, so ->pd_init_fn() for non-root blkcgs
+>    can be passed in pd's which are allocated for the root blkcg.
 > 
-> Do you have a pointer to your code?
+>    For blk-iocost, this means that ->pd_init_fn() can write beyond the
+>    end of the allocated object as it determines the length of the flex
+>    array at the end based on the blkcg's nesting level.
 > 
->>> In my current platform, there are no page struct backing for the PCIe
->>> memory address space.
+> * Each pd is initialized as they get allocated.  If alloc fails, the
+>    policy will get freed with pd's initialized on it.
 > 
-> In Linux there aren't struct pages for physical memory remapped using
-> ioremap().  But if you want to feed them to the I/O subsystem you have
-> to use devm_memremap_pages to create a page backing.  Assuming you are
-> on a RISC-V platform given your affiliation you'll need to ensure your
-> kernel allows for ZONE_DEVICE pages, which Logan (added to Cc) has been
-> working on.  I don't remember what the current status is.
-
-The last patchset submission was here [1]. It had some issues but the
-main one was that they wanted the page tables to be created and removed
-dynamically. I took a crack at it and ran into some issues and haven't
-had time to touch it since. I was waiting to see how arm64[2] solves
-similar problems and then maybe it can be made common.
-
-It's also a bit of a PITA because the RISC-V hardware we have with hacky
-PCI support is fragile and stopped working on recent kernels, last I
-tried. So this hasn't been a priority for us.
-
->> Please consider the following information and cost estimate in
->> bytes for requiring page structs for PCI memory if used with
->> scatterlists. For example, a 128GB PCI memory address space
->> could require as much as 256MB of system memory just for
->> page struct backing. In a 1GB 64-bit system with flat memory
->> model, that consumes 25% of available memory. However,
->> not all of the 128GB PCI memory may be mapped for use at
->> a given time depending on the application. The cost of PCI
->> page structs is an upfront cost to be paid at system start.
+> * After the above partial failure, the partial pds are not freed.
 > 
-> I know the pages are costly.  But once you want to feed them through
-> subsystems that do expect pages you'll have to do that.  And anything
-> using scatterlists currently does.  A little hack here and there isn't
-> going to solve that.
+> This patch fixes all the above issues by
 > 
+> * Restructuring blkcg_activate_policy() so that alloc and init passes
+>    are separate.  Init takes place only after all allocs succeeded and
+>    on failure all allocated pds are freed.
+> 
+> * Unifying and fixing the cleanup of the remaining pd_prealloc.
 
-Agreed. I tried expanding the SG-list to allow for page-less entries and
-it was a much bigger mess than what you describe.
+Great thanks, applied.
 
-Also, I think your analysis is a bit unfair, we don't need to create
-pages for the entire 128GB of PCI memory space, we typically only need
-the BARs of a subset of devices which is far less. If a system has only
-1GB of memory it probably doesn't actually have 128GB of PCI bar spaces
-that are sensibly usable.
+-- 
+Jens Axboe
 
-Yes, it would be nice to get rid of this overhead, but that's a much
-bigger long-term project.
-
-Logan
-
-
-[1]
-https://lore.kernel.org/linux-riscv/20190327213643.23789-1-logang@deltatee.com/
-[2]
-https://lore.kernel.org/linux-arm-kernel/1570788852-12402-1-git-send-email-anshuman.khandual@arm.com/
