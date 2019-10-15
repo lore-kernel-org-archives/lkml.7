@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FE1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF06ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A831820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7935720873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388364AbfJOQzf (ORCPT
+        id S2388375AbfJOQzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:55:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:46844 "EHLO mga11.intel.com"
+        Tue, 15 Oct 2019 12:55:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:46855 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfJOQza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:55:30 -0400
+        id S1726362AbfJOQzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:55:37 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 09:55:30 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 09:55:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
-   d="scan'208";a="201811351"
+   d="scan'208";a="201811368"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.57])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Oct 2019 09:55:28 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Oct 2019 09:55:34 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -38,9 +38,9 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
         Joerg Roedel <joro@8bytes.org>
 Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup functions
-Date:   Wed, 16 Oct 2019 00:40:30 +0800
-Message-Id: <20191015164033.87276-2-xiaoyao.li@intel.com>
+Subject: [PATCH 4/4] KVM: X86: Make vcpu's FPU allocation a common function
+Date:   Wed, 16 Oct 2019 00:40:33 +0800
+Message-Id: <20191015164033.87276-5-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20191015164033.87276-1-xiaoyao.li@intel.com>
 References: <20191015164033.87276-1-xiaoyao.li@intel.com>
@@ -51,75 +51,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
-to match what they really do.
+They are duplicated codes to create vcpu.arch.{user,guest}_fpu in VMX
+and SVM. Make them common functions and delay it a little bit later
+after .create_vcpu.
 
-No functional change.
+No functional change intended.
 
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 2 +-
- arch/x86/kvm/vmx/nested.h | 2 +-
- arch/x86/kvm/vmx/vmx.c    | 9 +++------
- 3 files changed, 5 insertions(+), 8 deletions(-)
+ arch/x86/kvm/svm.c     | 18 ------------------
+ arch/x86/kvm/vmx/vmx.c | 18 ------------------
+ arch/x86/kvm/x86.c     | 24 ++++++++++++++++++++++++
+ 3 files changed, 24 insertions(+), 36 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 5e231da00310..7935422d311f 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 	return ret;
- }
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index d35ef5456462..cbb5f5b9a9e7 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -2181,20 +2181,6 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	if (!svm)
+ 		goto out;
  
--void nested_vmx_vcpu_setup(void)
-+void nested_vmx_vmcs_setup(void)
- {
- 	if (enable_shadow_vmcs) {
- 		vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 187d39bf0bf1..2be1ba7482c9 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
- 				bool apicv);
- void nested_vmx_hardware_unsetup(void);
- __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
--void nested_vmx_vcpu_setup(void);
-+void nested_vmx_vmcs_setup(void);
- void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
- int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry);
- bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
+-	svm->vcpu.arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-						     GFP_KERNEL_ACCOUNT);
+-	if (!svm->vcpu.arch.user_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
+-		goto free_partial_svm;
+-	}
+-
+-	svm->vcpu.arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-						     GFP_KERNEL_ACCOUNT);
+-	if (!svm->vcpu.arch.guest_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
+-		goto free_user_fpu;
+-	}
+-
+ 	page = alloc_page(GFP_KERNEL_ACCOUNT);
+ 	if (!page)
+ 		goto free_svm;
+@@ -2228,10 +2214,6 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
+ free_page1:
+ 	__free_page(page);
+ free_svm:
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
+-free_user_fpu:
+-	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.user_fpu);
+-free_partial_svm:
+ 	kmem_cache_free(kvm_vcpu_cache, svm);
+ out:
+ 	return ERR_PTR(err);
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e660e28e9ae0..58b77a882426 100644
+index 2f54a3bcb6a5..183112604f04 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
+@@ -6773,20 +6773,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	if (!vmx)
+ 		goto out;
  
- #define VMX_XSS_EXIT_BITMAP 0
+-	vmx->vcpu.arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-			GFP_KERNEL_ACCOUNT);
+-	if (!vmx->vcpu.arch.user_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
+-		goto free_partial_vcpu;
+-	}
+-
+-	vmx->vcpu.arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
+-			GFP_KERNEL_ACCOUNT);
+-	if (!vmx->vcpu.arch.guest_fpu) {
+-		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
+-		goto free_user_fpu;
+-	}
+-
+ 	vmx->vpid = allocate_vpid();
  
--/*
-- * Sets up the vmcs for emulated real mode.
-- */
--static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
-+static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+ 	/*
+@@ -6822,10 +6808,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	vmx_destroy_pml_buffer(vmx);
+ free_vcpu:
+ 	free_vpid(vmx->vpid);
+-	kmem_cache_free(x86_fpu_cache, vmx->vcpu.arch.guest_fpu);
+-free_user_fpu:
+-	kmem_cache_free(x86_fpu_cache, vmx->vcpu.arch.user_fpu);
+-free_partial_vcpu:
+ 	kmem_cache_free(kvm_vcpu_cache, vmx);
+ out:
+ 	return ERR_PTR(err);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fd9f1a1f0f01..c4b477a9c7f6 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9021,6 +9021,26 @@ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
+ 	free_cpumask_var(wbinvd_dirty_mask);
+ }
+ 
++static int kvm_vcpu_create_fpu(struct kvm_vcpu *vcpu)
++{
++	vcpu->arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
++			GFP_KERNEL_ACCOUNT);
++	if (vcpu->arch.user_fpu) {
++		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
++		return -ENOMEM;
++	}
++
++	vcpu->arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
++			GFP_KERNEL_ACCOUNT);
++	if (vcpu->arch.guest_fpu) {
++		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
++		kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
+ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 						unsigned int id)
  {
- 	int i;
+@@ -9036,6 +9056,10 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 	if (IS_ERR(vcpu))
+ 		return vcpu;
  
- 	if (nested)
--		nested_vmx_vcpu_setup();
-+		nested_vmx_vmcs_setup();
- 
- 	if (cpu_has_vmx_msr_bitmap())
- 		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
-@@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
- 	cpu = get_cpu();
- 	vmx_vcpu_load(&vmx->vcpu, cpu);
- 	vmx->vcpu.cpu = cpu;
--	vmx_vcpu_setup(vmx);
-+	vmx_vmcs_setup(vmx);
- 	vmx_vcpu_put(&vmx->vcpu);
- 	put_cpu();
- 	if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
++	err = kvm_vcpu_create_fpu(vcpu);
++	if (err)
++		return ERR_PTR(err);
++
+ 	err = kvm_vcpu_init(vcpu, kvm, id);
+ 	if (err) {
+ 		kvm_x86_ops->vcpu_free(vcpu);
 -- 
 2.19.1
 
