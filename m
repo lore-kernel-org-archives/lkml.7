@@ -2,71 +2,151 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2058C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A74ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8234A20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3AA20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OppXpEm0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OppXpEm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfJOMbA (ORCPT
+        id S1729567AbfJOMbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:31:00 -0400
-Received: from 8bytes.org ([81.169.241.247]:47552 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbfJOMbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:31:00 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 27D5E2DF; Tue, 15 Oct 2019 14:30:58 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 14:30:53 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
-        ming-fan.chen@mediatek.com
-Subject: Re: [PATCH] memory: mtk-smi: Add PM suspend and resume ops
-Message-ID: <20191015123053.GA17570@8bytes.org>
-References: <1570622373-16413-1-git-send-email-yong.wu@mediatek.com>
+        Tue, 15 Oct 2019 08:31:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:32842 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729160AbfJOMbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:31:04 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5A7FD60779; Tue, 15 Oct 2019 12:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571142663;
+        bh=TnUctFmJdgiG2TefwmFK0I39R2+MxLcs+91vSZwCffg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OppXpEm0hs6r7XYWoHIQcgDNtWF317ZS27liX3lvkdLLkVHm5sNgcwwnDd/HVxE5g
+         jKGzumqGXp6GvC+I250D68Y9Jt/jbYlgIU5rNwBX67RlVuEIFIrlrXUpY6J40X5UpE
+         Q2V13yPpCrpqNk3Dd+7Lmh+BsI9YELVRPNj3/G0M=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6A7360588;
+        Tue, 15 Oct 2019 12:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571142663;
+        bh=TnUctFmJdgiG2TefwmFK0I39R2+MxLcs+91vSZwCffg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OppXpEm0hs6r7XYWoHIQcgDNtWF317ZS27liX3lvkdLLkVHm5sNgcwwnDd/HVxE5g
+         jKGzumqGXp6GvC+I250D68Y9Jt/jbYlgIU5rNwBX67RlVuEIFIrlrXUpY6J40X5UpE
+         Q2V13yPpCrpqNk3Dd+7Lmh+BsI9YELVRPNj3/G0M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6A7360588
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: pull-request: wireless-drivers 2019-10-15
+Date:   Tue, 15 Oct 2019 15:30:59 +0300
+Message-ID: <87eezexkak.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570622373-16413-1-git-send-email-yong.wu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 07:59:33PM +0800, Yong Wu wrote:
-> In the commit 4f0a1a1ae351 ("memory: mtk-smi: Invoke pm runtime_callback
-> to enable clocks"), we use pm_runtime callback to enable/disable the smi
-> larb clocks. It will cause the larb's clock may not be disabled when
-> suspend. That is because device_prepare will call pm_runtime_get_noresume
-> which will keep the larb's PM runtime status still is active when suspend,
-> then it won't enter our pm_runtime suspend callback to disable the
-> corresponding clocks.
-> 
-> This patch adds suspend pm_ops to force disable the clocks, Use "LATE" to
-> make sure it disable the larb's clocks after the multimedia devices.
-> 
-> Fixes: 4f0a1a1ae351 ("memory: mtk-smi: Invoke pm runtime_callback to enable clocks")
-> Signed-off-by: Anan Sun <anan.sun@mediatek.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
-> base on v5.4-rc1.
-> ---
->  drivers/memory/mtk-smi.c | 4 ++++
->  1 file changed, 4 insertions(+)
+Hi Dave,
 
-Applied, thanks.
+here's a pull request to net tree for v5.4, more info below. Please let
+me know if there are any problems.
 
+Kalle
+
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-10-15
+
+for you to fetch changes up to d79749f7716d9dc32fa2d5075f6ec29aac63c76d:
+
+  ath10k: fix latency issue for QCA988x (2019-10-14 11:43:36 +0300)
+
+----------------------------------------------------------------
+wireless-drivers fixes for 5.4
+
+Second set of fixes for 5.4. ath10k regression and iwlwifi BAD_COMMAND
+bug are the ones getting most reports at the moment.
+
+ath10k
+
+* fix throughput regression on QCA98XX
+
+iwlwifi
+
+* fix initialization of 3168 devices (the infamous BAD_COMMAND bug)
+
+* other smaller fixes
+
+rt2x00
+
+* don't include input-polldev.h header
+
+* fix hw reset to work during first 5 minutes of system run
+
+----------------------------------------------------------------
+Dmitry Torokhov (1):
+      rt2x00: remove input-polldev.h header
+
+Haim Dreyfuss (1):
+      iwlwifi: mvm: force single phy init
+
+Johannes Berg (2):
+      iwlwifi: pcie: fix indexing in command dump for new HW
+      iwlwifi: pcie: fix rb_allocator workqueue allocation
+
+Kalle Valo (1):
+      Merge tag 'iwlwifi-for-kalle-2019-10-09' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+
+Luca Coelho (4):
+      iwlwifi: don't access trans_cfg via cfg
+      iwlwifi: fix ACPI table revision checks
+      iwlwifi: exclude GEO SAR support for 3168
+      iwlwifi: pcie: change qu with jf devices to use qu configuration
+
+Miaoqing Pan (1):
+      ath10k: fix latency issue for QCA988x
+
+Naftali Goldstein (1):
+      iwlwifi: mvm: fix race in sync rx queue notification
+
+Navid Emamdoost (2):
+      iwlwifi: dbg_ini: fix memory leak in alloc_sgtable
+      iwlwifi: pcie: fix memory leaks in iwl_pcie_ctxt_info_gen3_init
+
+Stanislaw Gruszka (1):
+      rt2x00: initialize last_reset
+
+ drivers/net/wireless/ath/ath10k/core.c             |  15 +-
+ drivers/net/wireless/intel/iwlwifi/fw/acpi.c       |  10 +-
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c        |   1 +
+ drivers/net/wireless/intel/iwlwifi/iwl-io.h        |  12 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c        |  43 +++-
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c  |   9 +-
+ .../wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c   |  36 ++-
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c      | 274 ++++++++++-----------
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |  25 +-
+ drivers/net/wireless/ralink/rt2x00/rt2x00.h        |   1 -
+ drivers/net/wireless/ralink/rt2x00/rt2x00debug.c   |   2 +-
+ 11 files changed, 239 insertions(+), 189 deletions(-)
