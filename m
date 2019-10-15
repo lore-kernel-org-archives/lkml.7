@@ -2,102 +2,87 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C1DECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAACC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8538B218DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF73D218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbfJONWA (ORCPT
+        id S1731894AbfJONZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:22:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44390 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbfJONV7 (ORCPT
+        Tue, 15 Oct 2019 09:25:24 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:47848 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbfJONZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:21:59 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKMls-0000Un-DJ; Tue, 15 Oct 2019 15:21:52 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F061E1C0105;
-        Tue, 15 Oct 2019 15:21:51 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 13:21:51 -0000
-From:   "tip-bot2 for Andrea Parri" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/hyperv: Set pv_info.name to "Hyper-V"
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Liu <wei.liu@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191015103502.13156-1-parri.andrea@gmail.com>
-References: <20191015103502.13156-1-parri.andrea@gmail.com>
+        Tue, 15 Oct 2019 09:25:24 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKMpE-00037l-4J; Tue, 15 Oct 2019 14:25:20 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKMpD-0005gg-GA; Tue, 15 Oct 2019 14:25:19 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fsnotify: move declaration of fsnotify_mark_connector_cachep to fsnotify.h
+Date:   Tue, 15 Oct 2019 14:25:18 +0100
+Message-Id: <20191015132518.21819-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Message-ID: <157114571175.29376.11945481236719792102.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Move fsnotify_mark_connector_cachep to fsnotify.h to properly
+share it with the user in mark.c and avoid the following warning
+from sparse:
 
-Commit-ID:     628270ef628af6712ee99771b583feb667a7f1bc
-Gitweb:        https://git.kernel.org/tip/628270ef628af6712ee99771b583feb667a7f1bc
-Author:        Andrea Parri <parri.andrea@gmail.com>
-AuthorDate:    Tue, 15 Oct 2019 12:35:02 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 15 Oct 2019 15:18:17 +02:00
+fs/notify/mark.c:82:19: warning: symbol 'fsnotify_mark_connector_cachep' was not declared. Should it be static?
 
-x86/hyperv: Set pv_info.name to "Hyper-V"
-
-Michael reported that the x86/hyperv initialization code prints the
-following dmesg when running in a VM on Hyper-V:
-
-  [    0.000738] Booting paravirtualized kernel on bare hardware
-
-Let the x86/hyperv initialization code set pv_info.name to "Hyper-V" so
-dmesg reports correctly:
-
-  [    0.000172] Booting paravirtualized kernel on Hyper-V
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lkml.kernel.org/r/20191015103502.13156-1-parri.andrea@gmail.com
-
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 2 ++
- 1 file changed, 2 insertions(+)
+Cc: Jan Kara <jack@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/notify/fsnotify.c | 2 --
+ fs/notify/fsnotify.h | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 267daad..e7f0776 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -216,6 +216,8 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
+diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
+index 2ecef6155fc0..3e77b728a22b 100644
+--- a/fs/notify/fsnotify.c
++++ b/fs/notify/fsnotify.c
+@@ -381,8 +381,6 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
+ }
+ EXPORT_SYMBOL_GPL(fsnotify);
  
-+	pv_info.name = "Hyper-V";
+-extern struct kmem_cache *fsnotify_mark_connector_cachep;
+-
+ static __init int fsnotify_init(void)
+ {
+ 	int ret;
+diff --git a/fs/notify/fsnotify.h b/fs/notify/fsnotify.h
+index f3462828a0e2..ff2063ec6b0f 100644
+--- a/fs/notify/fsnotify.h
++++ b/fs/notify/fsnotify.h
+@@ -65,4 +65,6 @@ extern void __fsnotify_update_child_dentry_flags(struct inode *inode);
+ extern struct fsnotify_event_holder *fsnotify_alloc_event_holder(void);
+ extern void fsnotify_destroy_event_holder(struct fsnotify_event_holder *holder);
+ 
++extern struct kmem_cache *fsnotify_mark_connector_cachep;
 +
- 	/*
- 	 * Extract the features and hints
- 	 */
+ #endif	/* __FS_NOTIFY_FSNOTIFY_H_ */
+-- 
+2.23.0
+
