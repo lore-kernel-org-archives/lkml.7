@@ -2,156 +2,402 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33F9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F0FECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7819820854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A2620854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Mh7ytiFD"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rQGmLZeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732452AbfJOTvx (ORCPT
+        id S1732619AbfJOTxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:51:53 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.109]:35354 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726111AbfJOTvw (ORCPT
+        Tue, 15 Oct 2019 15:53:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58238 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732360AbfJOTxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:51:52 -0400
-X-Greylist: delayed 1468 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 15:51:50 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 35050401671FC
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:27:10 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id KSTOiDdhSW4frKSTOipzBT; Tue, 15 Oct 2019 14:27:10 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NgAyl+0UZAXb+bx6ZeAq16cdATKDnWxNUBuvyE8TbS4=; b=Mh7ytiFD8n+xzqSNnrzgwh6P1l
-        oyb69xwe/mEzLw2zuRGTbpyYlYdsghE+3MS1Hw/WXdIB97NV2huc49UeMW2QpGlbjDsuxSgxBowJo
-        QfmzaX7CCCnIe73hLlFhWE/2+JheocXTX6UIg6Dg7Lgo/zm4+5ngVME1hS6cA/XwY3Y9rJER9UpKG
-        rsrXRuonDlPsTa9LaSIFVM0GwkPlJBNVVYxxKGNuzNjuvAEWr4vRo3gnZsxVBDYTNto+e+DWdmjtK
-        4UFQqgAtZ9TICQjMOm9+cT7KPfePSKHb/cVnqnPTwMnD7JeEdmvODfurw5n7ftwHdt6AbT22R9LwG
-        nK/EQSXg==;
-Received: from [187.192.22.73] (port=43084 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iKSTN-0025iD-Rh; Tue, 15 Oct 2019 14:27:09 -0500
-Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix misuse of strcmp() function
-To:     ayman.bagabas@gmail.com, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191015182549.GA13772@embeddedor>
- <336c7fa6eebdbada759c9ad30a0a6b85af6f6c58.camel@gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <d5f4164f-7cee-3fdb-49ce-4e1d1d70572a@embeddedor.com>
-Date:   Tue, 15 Oct 2019 14:26:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 15:53:18 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 35A75324;
+        Tue, 15 Oct 2019 21:53:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571169195;
+        bh=AXnSfoAUPw7k65nBdJ9ShK9DA3Tijo7S+tapv/YFv28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rQGmLZeKxHahA0+LB5QWwgU+eg8N2m5Y8MekRWnUR6r6GCU3ZfKL4tSPqIaRHYn1B
+         /E4SacalqpKBM7frFyg5pkEu7uGE40YUsDauDghfbYLsZ0RG5w+8nuSWOab4jjLBTu
+         L2No+ahlCfRKDLzBQhY01tSRnYkOEiQFVA11dA4o=
+Date:   Tue, 15 Oct 2019 22:53:12 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/8] drm: rcar-du: crtc: Control CMM operations
+Message-ID: <20191015195312.GC19403@pendragon.ideasonboard.com>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20191015104621.62514-6-jacopo+renesas@jmondi.org>
+ <42ae76b8-c65f-8c5e-e83a-fc6a422d2624@ideasonboard.com>
+ <20191015133752.oyb3p6iyr3ekjxic@uno.localdomain>
+ <20191015175422.GN4875@pendragon.ideasonboard.com>
+ <20191015191754.hil5xc45lbzn3226@uno.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <336c7fa6eebdbada759c9ad30a0a6b85af6f6c58.camel@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.22.73
-X-Source-L: No
-X-Exim-ID: 1iKSTN-0025iD-Rh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.22.73]:43084
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+In-Reply-To: <20191015191754.hil5xc45lbzn3226@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ayman,
+Hi Jacopo,
 
-On 10/15/19 14:08, ayman.bagabas@gmail.com wrote:
-
->>  	/* Huawei laptops come with one battery only */
->> -	if (strcmp(battery->desc->name, "BAT") != 1)
+On Tue, Oct 15, 2019 at 09:17:54PM +0200, Jacopo Mondi wrote:
+> On Tue, Oct 15, 2019 at 08:54:22PM +0300, Laurent Pinchart wrote:
+> > On Tue, Oct 15, 2019 at 03:37:52PM +0200, Jacopo Mondi wrote:
+> >> On Tue, Oct 15, 2019 at 02:15:35PM +0100, Kieran Bingham wrote:
+> >>> On 15/10/2019 11:46, Jacopo Mondi wrote:
+> >>>> Implement CMM handling in the crtc begin and enable atomic callbacks,
+> >>>> and enable CMM unit through the Display Extensional Functions
+> >>>
+> >>> Extensional ?
+> >>>
+> >>> Perhaps this should just be Display Extension Functions?
+> >>> Wow - that's actually what they call it in the data-sheet.
+> >>>
+> >>>> register at group setup time.
+> >>>
+> >>> Only a trivial extra blank line below that I can find... so
+> >>>
+> >>> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >>>
+> >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>>> ---
+> >>>>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 79 +++++++++++++++++++++++++
+> >>>>  drivers/gpu/drm/rcar-du/rcar_du_group.c |  5 ++
+> >>>>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  |  5 ++
+> >>>>  3 files changed, 89 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> >>>> index 23f1d6cc1719..4bc50a3f4a00 100644
+> >>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> >>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> >>>> @@ -21,6 +21,7 @@
+> >>>>  #include <drm/drm_plane_helper.h>
+> >>>>  #include <drm/drm_vblank.h>
+> >>>>
+> >>>> +#include "rcar_cmm.h"
+> >>>>  #include "rcar_du_crtc.h"
+> >>>>  #include "rcar_du_drv.h"
+> >>>>  #include "rcar_du_encoder.h"
+> >>>> @@ -474,6 +475,70 @@ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
+> >>>>  	rcar_du_crtc_finish_page_flip(rcrtc);
+> >>>>  }
+> >>>>
+> >>>> +/* -----------------------------------------------------------------------------
+> >>>> + * Color Management Module (CMM)
+> >>>> + */
+> >
+> > Missing blank line.
+> >
+> >>>> +static int rcar_du_cmm_enable(struct drm_crtc *crtc)
+> >>>> +{
+> >>>> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> >>>> +
+> >>>> +	if (!rcrtc->cmm)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	return rcar_cmm_enable(rcrtc->cmm);
+> >>>> +}
+> >>>> +
+> >>>> +static void rcar_du_cmm_disable(struct drm_crtc *crtc)
+> >>>> +{
+> >>>> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> >>>> +
+> >>>> +	if (!rcrtc->cmm)
+> >>>> +		return;
+> >>>> +
+> >>>> +	rcar_cmm_disable(rcrtc->cmm);
+> >>>> +}
+> >
+> > I think I would have inlined those two functions in their only call site
+> > as
+> >
+> > 	if (rcrtc->cmm)
+> > 		rcar_cmm_enable(rcrtc->cmm);
+> >
+> > but that's up to you.
 > 
-> Note we don't have a battery number in BATx, strcmp would return 1 if
-> battery->desc->name is "BAT0" or any one digit. This is a desired
-> behavior where some Huawei laptops identify the first battery as "BAT1"
-> and this would match if name is greater than "BAT" by one digit.
+> Mmm, I preferred to avoid if() in the caller, but as this is a small
+> increment to an existing big driver, I'll go for the most consistent
+> way
 > 
-
-Great to know this is not a bug. I don't think there is any
-other instance in the whole codebase like this one: strcmp(...) != 1
-So, that's an odd thing to see...  Maybe you can consider adding
-the whole description above as a code comment? :)
-
-> Maybe strcmp(battery->desc->name, "BAT") < 0 is a better way to go.
+> >>>> +
+> >>>> +static int rcar_du_cmm_check(struct drm_crtc *crtc,
+> >>>> +			     struct drm_crtc_state *state)
+> >>>> +{
+> >>>> +	struct drm_property_blob *drm_lut = state->gamma_lut;
+> >>>> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> >>>> +	struct device *dev = rcrtc->dev->dev;
+> >>>> +
+> >>>> +	if (!rcrtc->cmm || !drm_lut)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	/* We only accept fully populated LUT tables. */
+> >>>> +	if (CM2_LUT_SIZE * sizeof(struct drm_color_lut) !=
+> >>>> +	    drm_lut->length) {
+> >
+> > How about
+> >
+> > 	if (drm_color_lut_size(drm_lut) != CM2_LUT_SIZE)
+> >
+> > ?
 > 
+> Better :)
+> 
+> >>>> +		dev_err(dev, "invalid gamma lut size: %lu bytes\n",
+> >>>> +			drm_lut->length);
+> >>>> +		return -EINVAL;
+> >>>> +	}
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static void rcar_du_cmm_setup(struct drm_crtc *crtc)
+> >>>> +{
+> >>>> +	struct drm_property_blob *drm_lut = crtc->state->gamma_lut;
+> >>>> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> >>>> +	struct rcar_cmm_config cmm_config = {};
+> >>>> +
+> >>>> +	if (!rcrtc->cmm)
+> >>>> +		return;
+> >>>> +
+> >>>> +	if (drm_lut) {
+> >>>> +		cmm_config.lut.enable = true;
+> >>>> +		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
+> >>>> +
+> >>>> +	} else {
+> >>>> +		cmm_config.lut.enable = false;
+> >>>> +	}
+> >
+> > This could be changed to
+> >
+> > 	if (drm_lut)
+> > 		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
+> >
+> > if we dropped the enable field.
+> 
+> Dropping enable seems good
+> 
+> >>>> +
+> >>>> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> >>>> +}
+> >>>> +
+> >>>>  /* -----------------------------------------------------------------------------
+> >>>>   * Start/Stop and Suspend/Resume
+> >>>>   */
+> >>>> @@ -619,6 +684,8 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+> >>>>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> >>>>  		rcar_du_vsp_disable(rcrtc);
+> >>>>
+> >>>> +	rcar_du_cmm_disable(crtc);
+> >>>> +
+> >>>>  	/*
+> >>>>  	 * Select switch sync mode. This stops display operation and configures
+> >>>>  	 * the HSYNC and VSYNC signals as inputs.
+> >>>> @@ -631,6 +698,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+> >>>>  					   DSYSR_TVM_SWITCH);
+> >>>>
+> >>>>  	rcar_du_group_start_stop(rcrtc->group, false);
+> >>>> +
+> >>>
+> >>> Extra blank line...
+> >>
+> >> Thanks for spotting this. I'm quite sure I run checkpatch (I just
+> >> re-did) and not warnings for the extra white space in the previous
+> >> patch, or this extra blank line o_0
+> >>
+> >>>>  }
+> >>>>
+> >>>>  /* -----------------------------------------------------------------------------
+> >>>> @@ -642,6 +710,11 @@ static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
+> >>>>  {
+> >>>>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(state);
+> >>>>  	struct drm_encoder *encoder;
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	ret = rcar_du_cmm_check(crtc, state);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>>
+> >>>>  	/* Store the routes from the CRTC output to the DU outputs. */
+> >>>>  	rstate->outputs = 0;
+> >>>> @@ -667,6 +740,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+> >>>>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
+> >>>>  	struct rcar_du_device *rcdu = rcrtc->dev;
+> >>>>
+> >>>> +	rcar_du_cmm_enable(crtc);
+> >>>>  	rcar_du_crtc_get(rcrtc);
+> >>>>
+> >>>>  	/*
+> >>>> @@ -686,6 +760,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+> >>>>  	}
+> >>>>
+> >>>>  	rcar_du_crtc_start(rcrtc);
+> >>>> +	rcar_du_cmm_setup(crtc);
+> >
+> > This is the only part that really bothers me, we setup the LUT after
+> > starting the CRTC, so the first frame will be output with a disabled
+> > LUT, or possibly even with the LUT enabled in the middle of the frame.
+> 
+> I tested by programming a gamma_table to the very first frame, and the
+> table gets set. I cannot tell at the naked eye if it actually takes effect
+> on the first one though :)
+> 
+> > Do I recall correctly that moving setup before start causes issues ?
+> > Could you explain what happens ?
+> 
+> Simply, the machine hangs :0
+> 
+> The chip manual prescribes to ("35A.3.2 CMM Setting")
+> 
+> 4) LUT Activation: Set LUT_EN bit of CMM_LUT_CTRL register to 1
+> 5) DU Activation
+> 6) LUT updates: (In case of single buffer mode)
+>         Any accesses to update LUT table after next frame start,
+>         output value from CMM is not guaranteed.
+> 
+> What we do is actually
+> 5) 4) 6) as 4 and 6 happens in cmm_setup()
+> 
+> It seems anyway from point 6 description that there are not many ways
+> to programm a LUT table -before- DU activation, but it might depends
+> if DU activation implies only clock and power activation, or the
+> actual routing and compositor activation as it happens in
+> rcar_du_crtc_start().
+> 
+> I could actually try to program the CMM just before the VSP compositor
+> is activated... Is it worth it ?
 
-Yeah; this is bit more specific.
+Whatever could give us a better understanding of the problem could be
+useful I think. Maybe you could send this question to Renesas, to figure
+out what the recommended way to program the LUT for the first frame is ?
+Maybe we'll be told it's not possible for some reason, but at least we
+will then know for sure.
 
-Thanks!
---
-Gustavo
+I'm fine doing so on top of this series, but then I'd like a TODO item
+here to explain the problem (and of course I'd like you to ask Renesas
+about it :-)).
+
+> >>>>  }
+> >>>>
+> >>>>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> >>>> @@ -739,6 +814,10 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
+> >>>>  	 */
+> >>>>  	rcar_du_crtc_get(rcrtc);
+> >>>>
+> >>>> +	/* If the active state changed, we let .atomic_enable handle CMM. */
+> >>>> +	if (crtc->state->color_mgmt_changed && !crtc->state->active_changed)
+> >>>> +		rcar_du_cmm_setup(crtc);
+> >>>
+> >>> Aha, this is quite neat for handling the timings.
+> >>
+> >> Yes, much more streamlined than what we had. Thanks Sean and Ezequiel :)
+> >
+> > Yes, it guarantees that the CRTC is enabled, so we should be safe with
+> > the assumption from patch 3/8 that rcar_du_cmm_setup() is always called
+> > with the CMM enabled.
+> >
+> > Interestingly though, this doesn't implement atomicity. That will be a
+> > very interesting challenge. We should use double buffering of the LUT in
+> > the CMM to avoid it being modified in the middle of the frame, but how
+> > to update it in sync with the commit, and thus the VSP, remains to be
+> > researched.
+> >
+> > Could you maybe add a TODO comment in patch 3/8 to mention that we
+> > should use double buffering ?
+> 
+> Yes, that should probably be supported
+> 
+> >>>> +
+> >>>>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> >>>>  		rcar_du_vsp_atomic_begin(rcrtc);
+> >>>>  }
+> >>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> >>>> index 9eee47969e77..583de800a66d 100644
+> >>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> >>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> >>>> @@ -135,6 +135,7 @@ static void rcar_du_group_setup_didsr(struct rcar_du_group *rgrp)
+> >>>>  static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+> >>>>  {
+> >>>>  	struct rcar_du_device *rcdu = rgrp->dev;
+> >>>> +	u32 defr7 = DEFR7_CODE;
+> >>>>
+> >>>>  	/* Enable extended features */
+> >>>>  	rcar_du_group_write(rgrp, DEFR, DEFR_CODE | DEFR_DEFE);
+> >>>> @@ -147,6 +148,10 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+> >>>>
+> >>>>  	rcar_du_group_setup_pins(rgrp);
+> >>>>
+> >
+> > Could you please add a comment here to mention that we shouldn't route
+> > through CMM if no color management feature is used ?
+> >
+> > 	/*
+> > 	 * TODO: Handling routing the DU output to CMM dynamically, as we should
+> > 	 * bypass CMM completely when no color management feature is used.
+> > 	 */
+> 
+> I'm not sure I get what you mean. If CMM is not enabled we do not
+> enable the corresponding DEFR7_CMMEx
+> 
+> Or do you mean we should disable CMM if not gamma_table (or CLU table,
+> or other CMM functions) is provided ? I assume if any of those
+> functions is not enabled the pixels are not routed through the CMM (in
+> example if LUT_EN is not set, not lookup is performed). Am I wrong ?
+
+If the LUT is disabled then the CMM will by pass the LUT, but pixels
+will still go through the CMM. We could, when all color correction is
+disabled, disable CMM completely, which would require controlling DEFR7
+dynamically. This should save a bit of power.
+
+> >>>> +	defr7 |= (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> >>>> +		 (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> >>>> +	rcar_du_group_write(rgrp, DEFR7, defr7);
+> >>>> +
+> >>>>  	if (rcdu->info->gen >= 2) {
+> >>>>  		rcar_du_group_setup_defr8(rgrp);
+> >>>>  		rcar_du_group_setup_didsr(rgrp);
+> >>>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> >>>> index bc87f080b170..fb9964949368 100644
+> >>>> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> >>>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> >>>> @@ -197,6 +197,11 @@
+> >>>>  #define DEFR6_MLOS1		(1 << 2)
+> >>>>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+> >>>>
+> >>>> +#define DEFR7			0x000ec
+> >>>> +#define DEFR7_CODE		(0x7779 << 16)
+> >>>> +#define DEFR7_CMME1		BIT(6)
+> >>>> +#define DEFR7_CMME0		BIT(4)
+> >>>> +
+> >>>>  /* -----------------------------------------------------------------------------
+> >>>>   * R8A7790-only Control Registers
+> >>>>   */
+
+-- 
+Regards,
+
+Laurent Pinchart
