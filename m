@@ -7,82 +7,72 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEADAECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BA3ECE595
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD62721848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95D321848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfJOMS7 (ORCPT
+        id S1728206AbfJOMUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:18:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52888 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbfJOMS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:18:59 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A3809619C7E085F0916D;
-        Tue, 15 Oct 2019 20:18:56 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 20:18:49 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <matthias.bgg@gmail.com>, <rfontana@redhat.com>,
-        <allison@lohutok.net>, <tglx@linutronix.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] clk: mediatek: mt7622: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 15 Oct 2019 20:17:35 +0800
-Message-ID: <20191015121735.26228-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 15 Oct 2019 08:20:00 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:45599 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfJOMUA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:20:00 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKLnu-0001Lj-2W; Tue, 15 Oct 2019 13:19:54 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKLnt-0003tA-L7; Tue, 15 Oct 2019 13:19:53 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSv4: add declaration of current_stateid
+Date:   Tue, 15 Oct 2019 13:19:53 +0100
+Message-Id: <20191015121953.14905-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+The current_stateid is exported from nfs4state.c but not
+declared in any of the headers. Add to nfs4_fs.h to
+remove the following warning:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+fs/nfs/nfs4state.c:80:20: warning: symbol 'current_stateid' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- drivers/clk/mediatek/clk-mt7622.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/nfs/nfs4_fs.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/mediatek/clk-mt7622.c b/drivers/clk/mediatek/clk-mt7622.c
-index 8190dab..ef5947e1 100644
---- a/drivers/clk/mediatek/clk-mt7622.c
-+++ b/drivers/clk/mediatek/clk-mt7622.c
-@@ -614,9 +614,8 @@ static int mtk_topckgen_init(struct platform_device *pdev)
- 	struct clk_onecell_data *clk_data;
- 	void __iomem *base;
- 	struct device_node *node = pdev->dev.of_node;
--	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 16b2e5cc3e94..330f45268060 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -445,6 +445,8 @@ extern void nfs4_set_lease_period(struct nfs_client *clp,
  
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
  
-@@ -695,9 +694,8 @@ static int mtk_pericfg_init(struct platform_device *pdev)
- 	void __iomem *base;
- 	int r;
- 	struct device_node *node = pdev->dev.of_node;
--	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
+ /* nfs4state.c */
++extern const nfs4_stateid current_stateid;
++
+ const struct cred *nfs4_get_clid_cred(struct nfs_client *clp);
+ const struct cred *nfs4_get_machine_cred(struct nfs_client *clp);
+ const struct cred *nfs4_get_renew_cred(struct nfs_client *clp);
 -- 
-2.7.4
-
+2.23.0
 
