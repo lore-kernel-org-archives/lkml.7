@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE2ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA93C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8317A214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4C221835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbfJOTUn (ORCPT
+        id S2389703AbfJOTUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:20:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45647 "EHLO
+        Tue, 15 Oct 2019 15:20:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45649 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389374AbfJOTSl (ORCPT
+        with ESMTP id S2389376AbfJOTSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 15:18:41 -0400
 Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1iKSL7-00067i-HB; Tue, 15 Oct 2019 21:18:37 +0200
+        id 1iKSL8-00067i-BZ; Tue, 15 Oct 2019 21:18:38 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+Cc:     tglx@linutronix.de, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 15/34] parisc: Use CONFIG_PREEMPTION
-Date:   Tue, 15 Oct 2019 21:18:02 +0200
-Message-Id: <20191015191821.11479-16-bigeasy@linutronix.de>
+Subject: [PATCH 17/34] s390: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:18:04 +0200
+Message-Id: <20191015191821.11479-18-bigeasy@linutronix.de>
 In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
 References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -48,72 +49,81 @@ CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
 Both PREEMPT and PREEMPT_RT require the same functionality which today
 depends on CONFIG_PREEMPT.
 
-Switch the entry code over to use CONFIG_PREEMPTION.
+Switch the preemption and entry code over to use CONFIG_PREEMPTION. Add
+PREEMPT_RT output to die().
 
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-parisc@vger.kernel.org
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-[bigeasy: +Kconfig]
+[bigeasy: +Kconfig, dumpstack.c]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/parisc/Kconfig        |  2 +-
- arch/parisc/kernel/entry.S | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/s390/Kconfig               | 2 +-
+ arch/s390/include/asm/preempt.h | 4 ++--
+ arch/s390/kernel/dumpstack.c    | 2 ++
+ arch/s390/kernel/entry.S        | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index b16237c95ea33..593e4014cef84 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -81,7 +81,7 @@ config STACK_GROWSUP
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 43a81d0ad5074..33d968175038e 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -30,7 +30,7 @@ config GENERIC_BUG_RELATIVE_POINTERS
+ 	def_bool y
+=20
  config GENERIC_LOCKBREAK
- 	bool
- 	default y
--	depends on SMP && PREEMPT
-+	depends on SMP && PREEMPTION
+-	def_bool y if PREEMPT
++	def_bool y if PREEMPTTION
 =20
- config ARCH_HAS_ILOG2_U32
- 	bool
-diff --git a/arch/parisc/kernel/entry.S b/arch/parisc/kernel/entry.S
-index 1d1d748c227f0..de212948de74e 100644
---- a/arch/parisc/kernel/entry.S
-+++ b/arch/parisc/kernel/entry.S
-@@ -940,14 +940,14 @@ ENTRY(intr_return)
- 	rfi
- 	nop
+ config PGSTE
+ 	def_bool y if KVM
+diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preemp=
+t.h
+index b5ea9e14c017a..6ede29907fbf7 100644
+--- a/arch/s390/include/asm/preempt.h
++++ b/arch/s390/include/asm/preempt.h
+@@ -130,11 +130,11 @@ static inline bool should_resched(int preempt_offset)
 =20
--#ifndef CONFIG_PREEMPT
-+#ifndef CONFIG_PREEMPTION
- # define intr_do_preempt	intr_restore
--#endif /* !CONFIG_PREEMPT */
-+#endif /* !CONFIG_PREEMPTION */
+ #endif /* CONFIG_HAVE_MARCH_Z196_FEATURES */
 =20
- 	.import schedule,code
- intr_do_resched:
- 	/* Only call schedule on return to userspace. If we're returning
--	 * to kernel space, we may schedule if CONFIG_PREEMPT, otherwise
-+	 * to kernel space, we may schedule if CONFIG_PREEMPTION, otherwise
- 	 * we jump back to intr_restore.
- 	 */
- 	LDREG	PT_IASQ0(%r16), %r20
-@@ -979,7 +979,7 @@ ENTRY(intr_return)
- 	 * and preempt_count is 0. otherwise, we continue on
- 	 * our merry way back to the current running task.
- 	 */
 -#ifdef CONFIG_PREEMPT
 +#ifdef CONFIG_PREEMPTION
- 	.import preempt_schedule_irq,code
- intr_do_preempt:
- 	rsm	PSW_SM_I, %r0		/* disable interrupts */
-@@ -999,7 +999,7 @@ ENTRY(intr_return)
- 	nop
-=20
- 	b,n	intr_restore		/* ssm PSW_SM_I done by intr_restore */
+ extern asmlinkage void preempt_schedule(void);
+ #define __preempt_schedule() preempt_schedule()
+ extern asmlinkage void preempt_schedule_notrace(void);
+ #define __preempt_schedule_notrace() preempt_schedule_notrace()
 -#endif /* CONFIG_PREEMPT */
 +#endif /* CONFIG_PREEMPTION */
 =20
- 	/*
- 	 * External interrupts.
+ #endif /* __ASM_PREEMPT_H */
+diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
+index 34bdc60c0b11d..8e38447be4653 100644
+--- a/arch/s390/kernel/dumpstack.c
++++ b/arch/s390/kernel/dumpstack.c
+@@ -194,6 +194,8 @@ void die(struct pt_regs *regs, const char *str)
+ 	       regs->int_code >> 17, ++die_counter);
+ #ifdef CONFIG_PREEMPT
+ 	pr_cont("PREEMPT ");
++#elif defined(CONFIG_PREEMPT_RT)
++	pr_cont("PREEMPT_RT ");
+ #endif
+ 	pr_cont("SMP ");
+ 	if (debug_pagealloc_enabled())
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 270d1d145761b..9205add8481d5 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -790,7 +790,7 @@ ENTRY(io_int_handler)
+ .Lio_work:
+ 	tm	__PT_PSW+1(%r11),0x01	# returning to user ?
+ 	jo	.Lio_work_user		# yes -> do resched & signal
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	# check for preemptive scheduling
+ 	icm	%r0,15,__LC_PREEMPT_COUNT
+ 	jnz	.Lio_restore		# preemption is disabled
 --=20
 2.23.0
 
