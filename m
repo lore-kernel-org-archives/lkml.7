@@ -2,82 +2,171 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C7EECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D9AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCDC217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="U45dslVB"
+	by mail.kernel.org (Postfix) with ESMTP id ABB3E20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfJOKXy (ORCPT
+        id S1730455AbfJOKZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:23:54 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42789 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730414AbfJOKXy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:23:54 -0400
-Received: by mail-qk1-f194.google.com with SMTP id f16so18625666qkl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EiFTh2EPuAUilSBW5ORtAUE6MmP+CQvo3ee4BGaXRP8=;
-        b=U45dslVBzK6iRCuucnnbxu4+GCuSzO3Ei/0ucSX4K8EjANTVkf+iAPpMN6gwUCsgbo
-         WmN2/0o4wBrGPENc7soFUzNydyHN9ikjkH8Sem6xPn5EzKId+TdO5I9lcSoD2pdW7rqe
-         z09CkC8vjZLHYFE1wb6DZjaOVNuhScy8HgKqEC03WzclEbfJ3AoJMNBkkiQy0S15jjAT
-         WnOSonWmS0HGUY93F0brGMrQfhdIa3cglZn1wh+WCWJmT4MU3g9L5J69YbosFrW6THnv
-         l8pdVRF1Z2hXBaDs0xlvyiWKYv0QyvrfYFp2Xh+WBT1t/mnobB13ND8ciCtwT78Y3n5Z
-         tjgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EiFTh2EPuAUilSBW5ORtAUE6MmP+CQvo3ee4BGaXRP8=;
-        b=gWxdw83Wr+A62TGxdgn3KuIM3McRuHQ8VPGmSTb32dQ4o4GyivWxFKkdG8P4sAm8jo
-         6biAnV1tsW9DaELPIcy579wcVOM4oiHWD/us+KYDVfbqOfWjG+CqKVS2EhydoInX8SZh
-         B7zZ5HY3C3tkkI4W3zYiuEVLygT3USBH9S4auVCxDH2Ay9keWVBGFU46mAvmsoI50GO7
-         8RTxAhXgGRashBMBQHZCdZmbzQ11C1NS8lMDBCrqHZjSxrSVTRLw2aQMSlEjcYjGWX54
-         nJcMxuCon/u7DU5fciEUM7jvc56r/lA3Mc+EhC+gppYdT76vD2bNQMrJcogTKl6NPAUI
-         7c+g==
-X-Gm-Message-State: APjAAAX9Z4b/wO9TNJcGgIdGuBwFkpQXn2u81oAhkh1oRNoftJ7iPWFu
-        XON1EG8DByyv9MkHjQxFo33AIV3VT5WCC2Plb2/D5WXg
-X-Google-Smtp-Source: APXvYqzGTN80R3a4qRjY873LTjorS2tyON7Y6AGjgssje3QxI7bcUcplUcJW2iGLhsDqXnHFEVIKcGyQzcQzDeMU+j4=
-X-Received: by 2002:a37:5f46:: with SMTP id t67mr33208312qkb.220.1571135032293;
- Tue, 15 Oct 2019 03:23:52 -0700 (PDT)
+        Tue, 15 Oct 2019 06:25:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:34562 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728185AbfJOKZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:25:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 630E428;
+        Tue, 15 Oct 2019 03:25:02 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F1AA3F68E;
+        Tue, 15 Oct 2019 03:25:01 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 11:24:59 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
+ capability
+Message-ID: <20191015102459.GV27757@arm.com>
+References: <20191010171517.28782-1-suzuki.poulose@arm.com>
+ <20191010171517.28782-2-suzuki.poulose@arm.com>
+ <20191011113620.GG27757@arm.com>
+ <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
+ <20191011142137.GH27757@arm.com>
+ <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
+ <20191014145204.GS27757@arm.com>
+ <12e002e7-42e8-c205-e42c-3348359d2f98@arm.com>
+ <20191014155009.GM24047@e103592.cambridge.arm.com>
+ <CAKv+Gu83oa3+DKNFowVkE=mZfLorAvGQ3GVPiZtsXzQBcsMCWg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191015101608.4566-1-chiu@endlessm.com>
-In-Reply-To: <20191015101608.4566-1-chiu@endlessm.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Tue, 15 Oct 2019 18:23:41 +0800
-Message-ID: <CAB4CAwecqN5G348+OW0k=h_QaKahTo_Mb9E+pFCP=GjTLJjpMA@mail.gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: fix connection failure issue after warm reboot
-To:     Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu83oa3+DKNFowVkE=mZfLorAvGQ3GVPiZtsXzQBcsMCWg@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 6:16 PM Chris Chiu <chiu@endlessm.com> wrote:
->
-> ---
-> 2.23.0
->
-Please ignore this message since it's not properly titled and no
-detail description.
-Sorry for inconvenience.
+On Mon, Oct 14, 2019 at 06:57:30PM +0200, Ard Biesheuvel wrote:
+> On Mon, 14 Oct 2019 at 17:50, Dave P Martin <Dave.Martin@arm.com> wrote:
+> >
+> > On Mon, Oct 14, 2019 at 04:45:40PM +0100, Suzuki K Poulose wrote:
+> > >
+> > >
+> > > On 14/10/2019 15:52, Dave Martin wrote:
+> > > > On Fri, Oct 11, 2019 at 06:28:43PM +0100, Suzuki K Poulose wrote:
+> > > >>
+> > > >>
+> > > >> On 11/10/2019 15:21, Dave Martin wrote:
+> > > >>> On Fri, Oct 11, 2019 at 01:13:18PM +0100, Suzuki K Poulose wrote: > Hi Dave
+> > > >>>>
+> > > >>>> On 11/10/2019 12:36, Dave Martin wrote:
+> > > >>>>> On Thu, Oct 10, 2019 at 06:15:15PM +0100, Suzuki K Poulose wrote:
+> > > >>>>>> The NO_FPSIMD capability is defined with scope SYSTEM, which implies
+> > > >>>>>> that the "absence" of FP/SIMD on at least one CPU is detected only
+> > > >>>>>> after all the SMP CPUs are brought up. However, we use the status
+> > > >>>>>> of this capability for every context switch. So, let us change
+> > > >>>>>> the scop to LOCAL_CPU to allow the detection of this capability
+> > > >>>>>> as and when the first CPU without FP is brought up.
+> > > >>>>>>
+> > > >>>>>> Also, the current type allows hotplugged CPU to be brought up without
+> > > >>>>>> FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
+> > > >>>>>> up. Fix both of these issues by changing the capability to
+> > > >>>>>> BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
+> > > >>>>>>
+> > > >>>>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+> > > >>>>>> Cc: Will Deacon <will@kernel.org>
+> > > >>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+> > > >>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > >>>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > >>>>>> ---
+> > > >>>>>>   arch/arm64/kernel/cpufeature.c | 2 +-
+> > > >>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >>>>>>
+> > > >>>>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > > >>>>>> index 9323bcc40a58..0f9eace6c64b 100644
+> > > >>>>>> --- a/arch/arm64/kernel/cpufeature.c
+> > > >>>>>> +++ b/arch/arm64/kernel/cpufeature.c
+> > > >>>>>> @@ -1361,7 +1361,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+> > > >>>>>>        {
+> > > >>>>>>                /* FP/SIMD is not implemented */
+> > > >>>>>>                .capability = ARM64_HAS_NO_FPSIMD,
+> > > >>>>>> -              .type = ARM64_CPUCAP_SYSTEM_FEATURE,
+> > > >>>>>> +              .type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
+> > > >>>>>
+> > > >>>>> ARM64_HAS_NO_FPSIMD is really a disability, not a capability.
+> > > >>>>>
+> > > >>>>> Although we have other things that smell like this (CPU errata for
+> > > >>>>> example), I wonder whether inverting the meaning in the case would
+> > > >>>>> make the situation easier to understand.
+> > > >>>>
+> > > >>>> Yes, it is indeed a disability, more on that below.
+> > > >>>>
+> > > >>>>>
+> > > >>>>> So, we'd have ARM64_HAS_FPSIMD, with a minimum (signed) feature field
+> > > >>>>> value of 0.  Then this just looks like an ARM64_CPUCAP_SYSTEM_FEATURE
+> > > >>>>> IIUC.  We'd just need to invert the sense of the check in
+> > > >>>>> system_supports_fpsimd().
+> > > >>>>
+> > > >>>> This is particularly something we want to avoid with this patch. We want
+> > > >>>> to make sure that we have the up-to-date status of the disability right
+> > > >>>> when it happens. i.e, a CPU without FP/SIMD is brought up. With SYSTEM_FEATURE
+> > > >>>> you have to wait until we bring all the CPUs up. Also, for HAS_FPSIMD,
+> > > >>>> you must wait until all the CPUs are up, unlike the negated capability.
+> > > >>>
+> > > >>> I don't see why waiting for the random defective early CPU to come up is
+> > > >>> better than waiting for all the early CPUs to come up and then deciding.
+> > > >>>
+> > > >>> Kernel-mode NEON aside, the status of this cap should not matter until
+> > > >>> we enter userspace for the first time.
+> > > >>>
+> > > >>> The only issue is if e.g., crypto drivers that can use kernel-mode NEON
+> > > >>> probe for it before all early CPUs are up, and so cache the wrong
+> > > >>> decision.  The current approach doesn't cope with that anyway AFAICT.
+> > > >>
+> > > >> This approach does in fact. With LOCAL_CPU scope, the moment a defective
+> > > >> CPU turns up, we mark the "capability" and thus the kernel cannot use
+> > > >> the neon then onwards, unlike the existing case where we have time till
+> > > >> we boot all the CPUs (even when the boot CPU may be defective).
+> > > >
+> > > > I guess that makes sense.
+> > > >
+> > > > I'm now wondering what happens if anything tries to use kernel-mode NEON
+> > > > before SVE is initialised -- which doesn't happen until cpufeatures
+> > > > configures the system features.
+> > > >
+> > > > I don't think your proposed change makes anything worse here, but it may
+> > > > need looking into.
+> > >
+> > > We could throw in a WARN_ON() in kernel_neon() to make sure that the SVE
+> > > is initialised ?
+> >
+> > Could do, at least as an experiment.
+> >
+> > Ard, do you have any thoughts on this?
+> >
+> 
+> All in-kernel NEON code checks whether the NEON is usable, so I'd
+> expect that check to return 'false' if it is too early in the boot for
+> the NEON to be used at all.
 
-Chris
+My concern is that the check may be done once, at probe time, for crypto
+drivers.  If probing happens before system_supports_fpsimd() has
+stabilised, we may be stuck with the wrong probe decision.
+
+So: are crypto drivers and kernel_mode_neon() users definitely only
+probed _after_ all early CPUs are up?
+
+Cheers
+---Dave
