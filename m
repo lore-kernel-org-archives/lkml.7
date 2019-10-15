@@ -2,142 +2,94 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A40C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1815C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3654F21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="07Ro9DoD"
+	by mail.kernel.org (Postfix) with ESMTP id C4C472067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfJOHNQ (ORCPT
+        id S1727282AbfJOHTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 03:13:16 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46491 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfJOHNQ (ORCPT
+        Tue, 15 Oct 2019 03:19:22 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38178 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfJOHTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 03:13:16 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r18so5286208eds.13
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 00:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=42biyvPrM31S02FsXUC0MU+0R6tD+Grhb6Q0nsVz7Ds=;
-        b=07Ro9DoDUOV+hGr1z0pDvrhKuUGay3/l/niOQeWdwuMjtweQYy+ib4C04lop8neHRr
-         /Cofqv91xBd/zu/rW9CypWngXIM8TzIgl7XxcJ67lxemRhucFI/u0g+2HAA2gxwqVhV4
-         KqjjYjMw/bYk4EUR3ureh4UkvD30pN6OGzo7UscckZ+S3FknLUL4VY6kDkP308LPA9Qv
-         +XgM84b5fGWauxm24KYhW7chdXFiPbnB+lPx7pvpaM8TF7/bwjeY+xAbZlerS3cMLFnc
-         wXw7GCgaF9SCJDU0+TrJoSNVDxpbaodv03bNgmVOZQrJVvsgmSe2MS3nmbgHgPnPdvBQ
-         hnEQ==
+        Tue, 15 Oct 2019 03:19:21 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so29149582qta.5
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 00:19:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=42biyvPrM31S02FsXUC0MU+0R6tD+Grhb6Q0nsVz7Ds=;
-        b=Hm7Egk4XG8z8wd9RtqExmTwSOpcp/LR+v36hcQCNpo9tWjEfrEvTQgBe52Gblt6mjN
-         uLwZwcOa1XraRYrjOSmQQefxnpVPIVML7CrzCm1BpDqtubVSpFuQ7ux1lguoaKIkOo4R
-         MBQezai5ADAINH/44hfmQ5VA1fB6C3DGpkAF5SC/FtB1T8s8ZY99rk9vXa24VZkzpi81
-         qYArSiE3cN/mW5wgM32rx6tEzgOfHmBr/YjeMv2OcbB9mHdPPvTQTig4yG4OYH/0zsvB
-         h/0llEs9+aqKf/wPRDF/eaIykED10Zlh6KnhCZYiXmiIkGXKxOea+qv+jrrEXO0bY6pZ
-         KFhQ==
-X-Gm-Message-State: APjAAAWTdESKh9tPd9zSwwFQUL1RX6z7gtXkJXojADinW+feM6TSFFJc
-        ZESFKs5Iuyy7JZbp2lr/ds+nOw==
-X-Google-Smtp-Source: APXvYqzkDKmEoyVN1f2OTnxxt1B+9UZ1DrV5ZExNh0mPSF0Uip8kLTW7XTtAyZQSYQT8uaXQrE7MCQ==
-X-Received: by 2002:a50:bac2:: with SMTP id x60mr31916901ede.96.1571123594739;
-        Tue, 15 Oct 2019 00:13:14 -0700 (PDT)
-Received: from netronome.com (penelope-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:c685:8ff:fe7c:9971])
-        by smtp.gmail.com with ESMTPSA id p4sm3575649eda.56.2019.10.15.00.13.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 15 Oct 2019 00:13:13 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 09:13:12 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Jeroen Hofstee <jhofstee@victronenergy.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Pankaj Sharma <pankj.sharma@samsung.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wg@grandegger.com" <wg@grandegger.com>,
-        "mkl@pengutronix.de" <mkl@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>,
-        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "pankaj.dubey@samsung.com" <pankaj.dubey@samsung.com>,
-        "rcsekar@samsung.com" <rcsekar@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-Subject: Re: [PATCH] can: m_can: fix boolreturn.cocci warnings
-Message-ID: <20191015071311.yssgqhoax46lfa7l@netronome.com>
-References: <1571052844-22633-1-git-send-email-pankj.sharma@samsung.com>
- <20191014150428.xhhc43ovkxm6oxf2@332d0cec05f4>
- <20191015055718.mypn63s2ovgwipk3@netronome.com>
- <9ad7810b-2205-3227-7ef9-0272f3714839@victronenergy.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qv7Az5tD/2XKPoU73wFDWyAMqFq/42sDZyfm822TJb4=;
+        b=HSZ7759lULRSm51Y2uVkg96Ys1NfIwYuiEWs3E5iJipT5zJZLR5QTTFGSmN5JAE8QQ
+         BZpe+Swpid3D1qd5hy2fa9NpvapPuLhackONp24jK7OeDOf8v8IO9bi+22brA3Pu6Jjb
+         S7u08fCxAsSGYmhvEthEBQpl0c/v8p5A/YiTnJChyXJBDlHyC0PZMsL1EzAeFb93WgPd
+         UIg83V7frNx+qr3COf3MdKKPiuYZOkGLbhIHE+U9NZd78gEM6NBn8CjZ1B/8jmfTjlXE
+         3ARgb+QN37tD/bcyqPV7atp/sKV0KCF/m3rYtSndFKUxQR1zU+h6N1ACr8B9afTYPgMt
+         bDqg==
+X-Gm-Message-State: APjAAAVNrwbH2SmBn4/CBhuSLGE16KBeo2fwWf8YkGH5ffyFvoBY98eO
+        PeN95yz34BDPLxOL5a5jDASbBq9jjBnklAMPdlQ=
+X-Google-Smtp-Source: APXvYqwEf7+nYwWc61OYEaNaRzAZ8uh3kP2DVnSCpuosyoqHQiMTeGmwjT2VpKWTH2nEMXm6Ffgs1TODM9UjJHE55vs=
+X-Received: by 2002:a05:6214:1150:: with SMTP id b16mr35117488qvt.197.1571123960489;
+ Tue, 15 Oct 2019 00:19:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ad7810b-2205-3227-7ef9-0272f3714839@victronenergy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
+ <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com>
+In-Reply-To: <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 15 Oct 2019 09:19:04 +0200
+Message-ID: <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
+Subject: Re: AMDGPU and 16B stack alignment
+To:     "S, Shirish" <sshankar@amd.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
+        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 06:37:54AM +0000, Jeroen Hofstee wrote:
-> Hi,
-> 
-> On 10/15/19 7:57 AM, Simon Horman wrote:
-> > On Mon, Oct 14, 2019 at 11:04:28PM +0800, kbuild test robot wrote:
-> >> From: kbuild test robot <lkp@intel.com>
-> >>
-> >> drivers/net/can/m_can/m_can.c:783:9-10: WARNING: return of 0/1 in function 'is_protocol_err' with return type bool
-> >>
-> >>   Return statements in functions returning bool should use
-> >>   true/false instead of 1/0.
-> >> Generated by: scripts/coccinelle/misc/boolreturn.cocci
-> >>
-> >> Fixes: 46946163ac61 ("can: m_can: add support for handling arbitration error")
-> >> CC: Pankaj Sharma <pankj.sharma@samsung.com>
-> >> Signed-off-by: kbuild test robot <lkp@intel.com>
-> >> ---
-> >>
-> >> url:    https://github.com/0day-ci/linux/commits/Pankaj-Sharma/can-m_can-add-support-for-handling-arbitration-error/20191014-193532
-> >>
-> >>   m_can.c |    4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> --- a/drivers/net/can/m_can/m_can.c
-> >> +++ b/drivers/net/can/m_can/m_can.c
-> >> @@ -780,9 +780,9 @@ static inline bool is_lec_err(u32 psr)
-> >>   static inline bool is_protocol_err(u32 irqstatus)
-> >>   {
-> >>   	if (irqstatus & IR_ERR_LEC_31X)
-> >> -		return 1;
-> >> +		return true;
-> >>   	else
-> >> -		return 0;
-> >> +		return false;
-> >>   }
-> >>   
-> >>   static int m_can_handle_protocol_error(struct net_device *dev, u32 irqstatus)
-> >>
-> > <2c>
-> > Perhaps the following is a nicer way to express this (completely untested):
-> >
-> > 	return !!(irqstatus & IR_ERR_LEC_31X);
-> > </2c>
-> 
-> 
-> Really...., !! for bool / _Bool types? why not simply:
-> 
-> static inline bool is_protocol_err(u32 irqstatus)
-> 	return irqstatus & IR_ERR_LEC_31X;
-> }
+On Tue, Oct 15, 2019 at 9:08 AM S, Shirish <sshankar@amd.com> wrote:
+> On 10/15/2019 3:52 AM, Nick Desaulniers wrote:
 
-Good point, silly me.
+> My gcc build fails with below errors:
+>
+> dcn_calcs.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
+>
+> dcn_calc_math.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
+>
+> While GPF observed on clang builds seem to be fixed.
+
+Ok, so it seems that gcc insists on having at least 2^4 bytes stack
+alignment when
+SSE is enabled on x86-64, but does not actually rely on that for
+correct operation
+unless it's using sse2. So -msse always has to be paired with
+ -mpreferred-stack-boundary=3.
+
+For clang, it sounds like the opposite is true: when passing 16 byte
+stack alignment
+and having sse/sse2 enabled, it requires the incoming stack to be 16
+byte aligned,
+but passing 8 byte alignment makes it do the right thing.
+
+So, should we just always pass $(call cc-option, -mpreferred-stack-boundary=4)
+to get the desired outcome on both?
+
+       Arnd
