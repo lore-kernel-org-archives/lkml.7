@@ -2,127 +2,79 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D614ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B992EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4918C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mEDe4FAh"
+	by mail.kernel.org (Postfix) with ESMTP id 8CDBE2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732675AbfJOO0m (ORCPT
+        id S1732691AbfJOO07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:26:42 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55748 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732050AbfJOO0k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:26:40 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6066B324;
-        Tue, 15 Oct 2019 16:26:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1571149598;
-        bh=hSdNGSSn5zc6mkejUmeqIoT8CVOAQ/twmh0YdLHeH+o=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mEDe4FAheoUDNwti7vv8FKUNaowQCfW1YFt/S+SvDJtxZOPsbMHfBKWw3G+DMAI01
-         rpFSW2xzRslhHapJtvtGno4nMPinthakiNafukrcXzCkhp65xy2pph3khkkI+rJgS5
-         t0nzccfeMmxoU7me05bt9PnE4edElreGkhEmqRaw=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v5 3/8] drm: rcar-du: Add support for CMM
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20191015104621.62514-4-jacopo+renesas@jmondi.org>
- <2aefe646-45db-aafa-b22b-e1cf9616259d@ideasonboard.com>
- <20191015133320.uj4y5twxfkyopqi5@uno.localdomain>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <2e6e5e8d-e502-5957-5708-4e4d7ef84d8e@ideasonboard.com>
-Date:   Tue, 15 Oct 2019 15:26:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 15 Oct 2019 10:26:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45148 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732050AbfJOO07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:26:59 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4CB0152FA015268CFAAA;
+        Tue, 15 Oct 2019 22:26:56 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 22:26:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
+        <michal.simek@xilinx.com>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] can: xilinx_can: use devm_platform_ioremap_resource() to simplify code
+Date:   Tue, 15 Oct 2019 22:26:19 +0800
+Message-ID: <20191015142619.17148-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20191015133320.uj4y5twxfkyopqi5@uno.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 14:33, Jacopo Mondi wrote:
-> Hi Kieran, thanks for review
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-<snip>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/can/xilinx_can.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->>> +config DRM_RCAR_CMM
->>> +	bool "R-Car DU Color Management Module (CMM) Support"
->>> +	depends on DRM && OF
->>> +	depends on DRM_RCAR_DU
->>
->>
->> DRM_RCAR_DU already depends on both DRM && OF, so I wonder if those are
->> needed to be specified explicitly.
->>
->> Doesn't hurt of course, but I see DRM_RCAR_DW_HDMI does the same, and so
->> does DRM_RCAR_LVDS, so I don't think you need to remove it.
->>
-> 
-> I did the same as it is done for HDMI and LVDS here. The extra
-> dependencies could be dropped yes, I chose to be consistent.
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index 911b343..5d45c50 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -1652,7 +1652,6 @@ MODULE_DEVICE_TABLE(of, xcan_of_match);
+  */
+ static int xcan_probe(struct platform_device *pdev)
+ {
+-	struct resource *res; /* IO mem resources */
+ 	struct net_device *ndev;
+ 	struct xcan_priv *priv;
+ 	const struct of_device_id *of_id;
+@@ -1664,8 +1663,7 @@ static int xcan_probe(struct platform_device *pdev)
+ 	const char *hw_tx_max_property;
+ 
+ 	/* Get the virtual base address for the device */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	addr = devm_ioremap_resource(&pdev->dev, res);
++	addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(addr)) {
+ 		ret = PTR_ERR(addr);
+ 		goto err;
+-- 
+2.7.4
 
-Consistent is fine with me.
 
-
-<snip>
-
->>> +struct rcar_cmm {
->>> +	void __iomem *base;
->>> +
->>> +	/*
->>> +	 * @lut:		1D-LUT status
->>> +	 * @lut.enabled:	1D-LUT enabled flag
->>> +	 */
->>> +	struct {
->>> +		bool enabled;
->>> +	} lut;
->>
->> This used to be a more complex structure in an earlier version storing a
->> cached version of the table. Now that the cached entry is removed, does
->> this need to be such a complex structure rather than just say, a bool
->> lut_enabled?
->>
->> (We will soon add an equivalent clu_enabled too, but I don't know what
->> other per-table options we'll need.)
->>
->> In fact, we'll potentially have other options specific to the HGO, and
->> CSC at some point in the future - so grouping by entity is indeed a good
->> thing IMO.
-> 
-> You are right, I pondered a bit it this was worth it, but I assume the
-> other CMM functions would have required some more complex fields so I
-> chose to keep it separate. I have no problem to make this a
-> lut_enabled, but I fear as soon as we support say, double buffering
-> for the lut, having a dedicated struct would be nice.
-> 
-> Is it ok if I keep this the way it is?
-
-Certainly fine for me. (That's what I tried to imply with "so grouping
-by entity is indeed a good thing IMO.")
-
-<snip>
---
-Kieran
