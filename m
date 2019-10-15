@@ -2,111 +2,85 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86C5ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA26C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA21C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89092064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="axlssqB+"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UhqyUbUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388248AbfJOQwS (ORCPT
+        id S2388284AbfJOQy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:52:18 -0400
-Received: from vulcan.natalenko.name ([104.207.131.136]:45772 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfJOQwS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:52:18 -0400
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        Tue, 15 Oct 2019 12:54:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56338 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbfJOQy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:54:26 -0400
+Received: from zn.tnic (p200300EC2F157800C5C9C957E5FD72EA.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:7800:c5c9:c957:e5fd:72ea])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id 08E8B600D27;
-        Tue, 15 Oct 2019 18:52:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1571158333;
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 48D971EC0C9F;
+        Tue, 15 Oct 2019 18:54:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571158463;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gP7dY/174GGdD6usTpaalR67cnmsiaPwYD5OpFcQfyY=;
-        b=axlssqB+DUWqk4taqLCosVffDK8d64AuWwQ15V7uZqtx7iDctmvnRYOYKT+W9sQ0eHsN/C
-        6jIbhyD9Sm2mIWuhiqx2sZThjUyh0zi3Yu4hB2KMVydbuj2Tr1PQqK7Q9NC5gMNnk2RdV6
-        ZU1x93AcuTKJFTxW0B76PTLkE+3Rtj0=
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=rnMDMAxve5tu5ORyg7bCimEqvhkoKSIi/WDG5Ckj2mw=;
+        b=UhqyUbUZxF1aKEZWmjOecjXQ40If2V00t93Kg4amOFs1vb1YblTprErgXmjYAMMbFs1i2U
+        rBG4AYHzxbTMLCTcsNJJf17cTI1+Sh6IITzgESuitrr3eMc1W3eIWHwig8gGPLDTSj8piu
+        pPldqgdkCAB3vxJ1gR+l+JfeKn/aG08=
+Date:   Tue, 15 Oct 2019 18:54:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-ia64@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-xtensa@linux-xtensa.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
+Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+Message-ID: <20191015165412.GD596@zn.tnic>
+References: <20191011000609.29728-1-keescook@chromium.org>
+ <20191011000609.29728-2-keescook@chromium.org>
+ <20191011082519.GI9749@gate.crashing.org>
+ <201910110910.48270FC97@keescook>
+ <20191011162552.GK9749@gate.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 15 Oct 2019 18:52:12 +0200
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Lorenzo Bianconi <lorenzo@kernel.org>
-Cc:     linux-mediatek@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: mt76x2e hardware restart
-In-Reply-To: <20191012165028.GA8739@lore-desk-wlan.lan>
-References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
- <c6d621759c190f7810d898765115f3b4@natalenko.name>
- <9d581001e2e6cece418329842b2b0959@natalenko.name>
- <20191012165028.GA8739@lore-desk-wlan.lan>
-Message-ID: <f7695bc79d40bbc96744a639b1243027@natalenko.name>
-X-Sender: oleksandr@natalenko.name
-User-Agent: Roundcube Webmail/1.3.10
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=arc-20170712; t=1571158333;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gP7dY/174GGdD6usTpaalR67cnmsiaPwYD5OpFcQfyY=;
-        b=DRapKaMH9Ss4+Y57MDmNYSjvx33aSfwXUw8own30SGyjDa5AMl64qaMDNsqvPX7/s1RUlT
-        /QkkeIHxPcKgKgp5SWsPB7WS+D/aWzg/vXK6aNsqs0cbcnq0AIxk4q1eaPz/BTo77lmKqr
-        7yVWwSxfpPnFqoATcwt0citzVM5lIws=
-ARC-Seal: i=1; s=arc-20170712; d=natalenko.name; t=1571158333; a=rsa-sha256;
-        cv=none;
-        b=PesOlooj33cKhM+/mIkE91p8YnsF/RM+XyufMQ7N+HwXFSwngv2bnoT5IKQRxPvK2kLS4e
-        7/Ja/w9ZpmQ8oiIZboZ0nmfG8W7ad/eC012N804Ng5944lJbgzAaNEkQWMq1YRUDsdWJZ9
-        ez1OhgcRkIU+TO6ThLjdLvcKF9Rbz7k=
-ARC-Authentication-Results: i=1;
-        vulcan.natalenko.name;
-        auth=pass smtp.auth=oleksandr@natalenko.name smtp.mailfrom=oleksandr@natalenko.name
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191011162552.GK9749@gate.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey.
+On Fri, Oct 11, 2019 at 11:25:52AM -0500, Segher Boessenkool wrote:
+> Names *matter*, internal names doubly so.  So why replace a good name with
+> a worse name?  Because it is slightly less work for you?
 
-On 12.10.2019 18:50, Lorenzo Bianconi wrote:
-> sorry for the delay. Felix and me worked on this issue today. Could you 
-> please
-> try if the following patch fixes your issue?
+So if we agree on the name "notes" and we decide to rename the other
+arches, this should all be done in a separate patchset anyway, and ontop
+of this one. And I believe Kees wouldn't mind doing it ontop since he's
+gotten his hands dirty already. :-P
 
-Thanks for the answer and the IRC discussion. As agreed I've applied [1] 
-and [2], and have just swapped the card to try it again. So far, it 
-works fine in 5 GHz band in 802.11ac mode as an AP.
-
-I'll give it more load with my phone over evening, and we can discuss 
-what to do next (if needed) tomorrow again. Or feel free to drop me an 
-email today.
-
-Thanks for your efforts.
-
-[1] 
-https://github.com/LorenzoBianconi/wireless-drivers-next/commit/cf3436c42a297967235a9c9778620c585100529e.patch
-[2] 
-https://github.com/LorenzoBianconi/wireless-drivers-next/commit/aad256eb62620f9646d39c1aa69234f50c89eed8.patch
+Thx.
 
 -- 
-   Oleksandr Natalenko (post-factum)
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
