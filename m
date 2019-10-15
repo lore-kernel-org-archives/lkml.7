@@ -2,159 +2,132 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B68C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3A22064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dMv5o/28"
+	by mail.kernel.org (Postfix) with ESMTP id E03462064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbfJOIkI (ORCPT
+        id S1729342AbfJOIlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:40:08 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39215 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfJOIkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:40:08 -0400
-Received: by mail-yw1-f67.google.com with SMTP id n11so7052107ywn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 01:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AqJilFgL4FnU7FTEYnrwYFbssjg64wIXPF6xmLsOmPw=;
-        b=dMv5o/28lV5eqQ6bsstF+8kQTU23HpHM7uGA1mQx9OL8DufixiTQBhQczwb9OZFYYd
-         7W3cA2GyJed1k6hXVr/2rwc3AX6DJgZ3fQkDiaw+7l1yVgu2ZIXaPzA9kX08sm87OeAM
-         FHNxHoazD5b78yRw0zB7eEiE82F/JskUc7JsqDiXies4CyeBbO2EKG4DTSl32NqdhIfx
-         6h7ICpf2yVbyT4NB4KWkpjk22CMGUG0adfxOhwVuaxE/drTDYt2FMC9CvUWdvcJPn64q
-         H5oj5wSKb/hqXX3KhJalYdybL5MxH3ZboqDcmr0V8yvqmkIGQIMxj1j2P4/8zTvqfjOb
-         zHMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AqJilFgL4FnU7FTEYnrwYFbssjg64wIXPF6xmLsOmPw=;
-        b=SsR7UMR26cTNVLa4Yh5ajcmLjDoNVS31qfYX55XMs+OZDJyMwVo2yhQfcm2aOOIMV1
-         XWQEtJC/B5G7kgPic9LusRjkQ6Yjqp0vAIX6afvmFQzwkStR1VuF10BvDyItNSXdurdy
-         gFe3gIMtYUC+vRp45PtDskuP97PujX+FkvhghFnnXFFwvi8xyfLVvqQtxlgXGJJO4xrc
-         8z1X6lfBB6exvGyT9neW2XMlzkVgbEja+Bali+oxX+s1EvQn6C+xuCGfMbUSEG+E6wC8
-         ASNLx4eeo+2S1tX1oLdH+IlmqlKbgL0b3RTOMkG074geKBfIAuXsaBSyl6EOlzKiVnYE
-         Vgqw==
-X-Gm-Message-State: APjAAAVbFqOJHXV6TldleN2+0XGsvYncZN5kDVFVlBfiJDfOev14gJ4v
-        7HJLXZM+3GwbOIGA4QDytS6V3ZUTbw4PRJ2qrUTwCA==
-X-Google-Smtp-Source: APXvYqzu3fgAZn0e8gU0Hx3m9VF7LBh6xTjczQQEqITtlLvVTjf0aPPLvwy/C+DdGBt9KgMh8hPRtceTv89bTUbMWlA=
-X-Received: by 2002:a81:996:: with SMTP id 144mr16495099ywj.57.1571128807207;
- Tue, 15 Oct 2019 01:40:07 -0700 (PDT)
+        Tue, 15 Oct 2019 04:41:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59925 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfJOIlF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:41:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4990230860CB;
+        Tue, 15 Oct 2019 08:41:05 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 56F3A5D9CD;
+        Tue, 15 Oct 2019 08:41:03 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 10:41:02 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
+ block for stdio
+Message-ID: <20191015084102.GA10951@krava>
+References: <20191015053350.13909-1-yao.jin@linux.intel.com>
+ <20191015053350.13909-4-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <20191010073055.183635-1-suleiman@google.com> <20191010073055.183635-3-suleiman@google.com>
- <2e6e5b14-fa68-67bd-1436-293659c8d92c@redhat.com>
-In-Reply-To: <2e6e5b14-fa68-67bd-1436-293659c8d92c@redhat.com>
-From:   Suleiman Souhlal <suleiman@google.com>
-Date:   Tue, 15 Oct 2019 17:39:55 +0900
-Message-ID: <CABCjUKAsO9bOW9-VW1gk0O_U=9V6Zhft8LjpcqXVbDVTvWJ5Hw@mail.gmail.com>
-Subject: Re: [RFC v2 2/2] x86/kvmclock: Introduce kvm-hostclock clocksource.
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     rkrcmar@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, Suleiman Souhlal <ssouhlal@freebsd.org>,
-        tfiga@chromium.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015053350.13909-4-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 15 Oct 2019 08:41:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 7:55 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 10/10/19 09:30, Suleiman Souhlal wrote:
-> > +kvm_hostclock_enable(struct clocksource *cs)
-> > +{
-> > +     pv_timekeeper_enabled = 1;
-> > +
-> > +     old_vclock_mode = kvm_clock.archdata.vclock_mode;
-> > +     kvm_clock.archdata.vclock_mode = VCLOCK_TSC;
-> > +     return 0;
-> > +}
-> > +
-> > +static void
-> > +kvm_hostclock_disable(struct clocksource *cs)
-> > +{
-> > +     pv_timekeeper_enabled = 0;
-> > +     kvm_clock.archdata.vclock_mode = old_vclock_mode;
-> > +}
-> > +
->
-> Why do you poke at kvm_clock?  Instead you should add
->
->         .archdata               = { .vclock_mode = VCLOCK_TSC },
->
-> to the kvm_hostclock declaration.
+On Tue, Oct 15, 2019 at 01:33:48PM +0800, Jin Yao wrote:
 
-Yeah, what I was doing does not make sense.
+SNIP
 
-> Please also check that the invariant TSC CPUID bit
-> CPUID[0x80000007].EDX[8] is set before enabling this feature.
+> +enum {
+> +	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV,
+> +	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+> +	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+> +	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+> +	PERF_HPP_REPORT__BLOCK_RANGE,
+> +	PERF_HPP_REPORT__BLOCK_DSO,
+> +	PERF_HPP_REPORT__BLOCK_MAX_INDEX
+> +};
+> +
+> +static struct block_fmt block_fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
+> +
+> +static struct block_header_column{
+> +	const char *name;
+> +	int width;
+> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
+> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
+> +		.name = "Sampled Cycles%",
+> +		.width = 15,
+> +	},
+> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
+> +		.name = "Sampled Cycles",
+> +		.width = 14,
+> +	},
+> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
+> +		.name = "Avg Cycles%",
+> +		.width = 11,
+> +	},
+> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
+> +		.name = "Avg Cycles",
+> +		.width = 10,
+> +	},
+> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
+> +		.name = "[Program Block Range]",
+> +		.width = 70,
+> +	},
+> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
+> +		.name = "Shared Object",
+> +		.width = 20,
+> +	}
+>  };
 
-Will do.
+so we already have support for multiple columns,
+why don't you add those as 'struct sort_entry' objects?
 
->
-> Paolo
->
-> > +     pvtk = &pv_timekeeper;
-> > +     do {
-> > +             gen = pvtk_read_begin(pvtk);
-> > +             if (!(pv_timekeeper.flags & PVCLOCK_TIMEKEEPER_ENABLED))
-> > +                     return;
-> > +
-> > +             pvclock_copy_into_read_base(pvtk, &tk->tkr_mono,
-> > +                 &pvtk->tkr_mono);
-> > +             pvclock_copy_into_read_base(pvtk, &tk->tkr_raw, &pvtk->tkr_raw);
-> > +
-> > +             tk->xtime_sec = pvtk->xtime_sec;
-> > +             tk->ktime_sec = pvtk->ktime_sec;
-> > +             tk->wall_to_monotonic.tv_sec = pvtk->wall_to_monotonic_sec;
-> > +             tk->wall_to_monotonic.tv_nsec = pvtk->wall_to_monotonic_nsec;
-> > +             tk->offs_real = pvtk->offs_real;
-> > +             tk->offs_boot = pvtk->offs_boot;
-> > +             tk->offs_tai = pvtk->offs_tai;
-> > +             tk->raw_sec = pvtk->raw_sec;
-> > +     } while (pvtk_read_retry(pvtk, gen));
-> > +}
-> > +
->
-> Should you write an "enabled value" (basically the flags) into pvtk as well?
+SNIP
 
-I think we have that already (pvtk->flags).
-I'll change the if statement above to use pvtk instead of pv_timekeeper.
+> +{
+> +	struct block_hist *bh = &rep->block_hist;
+> +
+> +	get_block_hists(hists, bh, rep);
+> +	symbol_conf.report_individual_block = true;
+> +	hists__fprintf(&bh->block_hists, true, 0, 0, 0,
+> +		       stdout, true);
+> +	hists__delete_entries(&bh->block_hists);
+> +	return 0;
+> +}
+> +
+>  static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>  					 struct report *rep,
+>  					 const char *help)
+> @@ -500,6 +900,12 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>  			continue;
+>  
+>  		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
+> +
+> +		if (rep->total_cycles) {
+> +			hists__fprintf_all_blocks(hists, rep);
 
-> > +kvm_hostclock_init(void)
-> > +{
-> > +     unsigned long pa;
-> > +
-> > +     pa = __pa(&pv_timekeeper);
-> > +     wrmsrl(MSR_KVM_TIMEKEEPER_EN, pa);
->
->
-> As Vitaly said, a new CPUID bit must be defined in
-> Documentation/virt/kvm/cpuid.txt, and used here.  Also please make bit 0
-> an enable bit.
+so this call kicks all the block info setup/count/print, right?
 
-I think I might not be able to move the enable bit to 0 because we
-need the generation count (pvclock_timekeeper.gen) to be the first
-word of the struct due to the way we copy the data to userspace,
-similarly to how kvm_setup_pvclock_page() does it.
+I thingk it shouldn't be in the output code, but in the code before..
+from what I see you could count block_info counts during the sample
+processing, no?
 
-I also noticed the comment in kvm_copy_into_pvtk() references the
-wrong function, which I will fix in the next revision.
-
-Thanks for the feedback.
-
--- Suleiman
+jirka
