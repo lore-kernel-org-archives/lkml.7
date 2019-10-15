@@ -2,132 +2,70 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65C0ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA51ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB942089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="da1+odWx"
+	by mail.kernel.org (Postfix) with ESMTP id 4DEE4217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfJOExv (ORCPT
+        id S1728116AbfJOE7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 00:53:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46053 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727959AbfJOExv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 00:53:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id c25so42887005iot.12;
-        Mon, 14 Oct 2019 21:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FoyKK6+CZHtzLvyc+hXa9rZT9/61RNMGYHQKvCgAsn8=;
-        b=da1+odWxWl7gUFhDl9t6DAPPjvv49NvV4J800iLoARhJP8025HZn3Kxd/DL6c6uO8P
-         GFWRHn1nDwbjzHP+Fy5RLnWWBYInr8ZrFkwjETeXTznLEa6Mrf3oTePwZie/0zzI3pq8
-         3H556MItZnzFM0oZIjoEL2ydVfi+OEpbzBIkpW9E1PGbwFNf2MMU/kKgQ6aRozQRiQIm
-         ygkRH2h/xDqS2hvCa1UD0WRTidtODYmBjAnoBRKHvdEMZmoPnufZNxqLzh2MKuoLocHb
-         7ZrwAP92LrsOk1ywJCXH6FKRFORrdKoRtUNICv1A69XGGWNgjAjD6us1nCtDSsPDvszE
-         SQeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FoyKK6+CZHtzLvyc+hXa9rZT9/61RNMGYHQKvCgAsn8=;
-        b=XUeanHdwJ+UV1GKqS3qvFEpi1OLMs7nNtA7f/mqjm8I9hqycx83xmkp8H2yNJkBo5x
-         nB5Fdsiat48Ye3yvK0q0VQW1mV7FDbTBnPsRtEQuietbgqA6jpglYRrgEWI6KGq4Odfy
-         sbcrpsWT8i/JyS1e88fMtxC2Q6gVgMXluJUV6NiXc8QIPlWWCrSjkhu6wdyVvsDq/Yhv
-         adT8eu6K8CMYFRClZSGACKRVcomSylMTe9/3NeyUG4HeXhnAHMRivb6H/eaqMBRTR4B4
-         txzr4ao8Yo4n0mp+rSlm7vtu69em0FP4eyURO9clEbZJ7TkGJt+/yIf4mYN/Hhy5HVPW
-         6YgA==
-X-Gm-Message-State: APjAAAWE/tx11O7I/LrSWgA+PbWPk+zzSztz3Pg7CqBYD7LFSzvXGn96
-        DHVLAEQcz046+73z2n0CQphVDiytdRJLlUu+xVk=
-X-Google-Smtp-Source: APXvYqyQZ42Wzz4Mil0VtK34oFTpJ7nzC1L+Te3pMJBnDtnnJhfH6Tb5NGwSDCztaKyQCoaC83210VSdDSzpC57w4ow=
-X-Received: by 2002:a6b:fa12:: with SMTP id p18mr14453335ioh.272.1571115230075;
- Mon, 14 Oct 2019 21:53:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191014071531.12790-1-hslester96@gmail.com> <CAKywueQY-J3g0RBF4=opP8SbhpWh-BHoHWzNEeTruxmfacnhGw@mail.gmail.com>
-In-Reply-To: <CAKywueQY-J3g0RBF4=opP8SbhpWh-BHoHWzNEeTruxmfacnhGw@mail.gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Mon, 14 Oct 2019 23:53:38 -0500
-Message-ID: <CAH2r5msPBvF298mWgz_1Jx9svHY1NyqNti4G9TUaNdEqg=A=CQ@mail.gmail.com>
-Subject: Re: [PATCH] cifs: Fix missed free operations
-To:     Pavel Shilovsky <piastryyy@gmail.com>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 15 Oct 2019 00:59:37 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49544 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbfJOE7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 00:59:37 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 127D11A0789;
+        Tue, 15 Oct 2019 06:59:35 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2CD121A0287;
+        Tue, 15 Oct 2019 06:59:31 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0D36140305;
+        Tue, 15 Oct 2019 12:59:25 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: [v2,1/2] dt-bindings: i2c: add property idle-state
+Date:   Tue, 15 Oct 2019 12:48:38 +0800
+Message-Id: <20191015044839.23746-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merged into cifs-2.6.git for-next and cc: stable for 5.3
+This adds property idle-state
 
-On Mon, Oct 14, 2019 at 4:43 PM Pavel Shilovsky via samba-technical
-<samba-technical@lists.samba.org> wrote:
->
-> =D0=BF=D0=BD, 14 =D0=BE=D0=BA=D1=82. 2019 =D0=B3. =D0=B2 00:18, Chuhong Y=
-uan <hslester96@gmail.com>:
-> >
-> > cifs_setattr_nounix has two paths which miss free operations
-> > for xid and fullpath.
-> > Use goto cifs_setattr_exit like other paths to fix them.
-> >
-> > Fixes: aa081859b10c ("cifs: flush before set-info if we have writeable =
-handles")
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  fs/cifs/inode.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-> > index 5dcc95b38310..df9377828e2f 100644
-> > --- a/fs/cifs/inode.c
-> > +++ b/fs/cifs/inode.c
-> > @@ -2475,9 +2475,9 @@ cifs_setattr_nounix(struct dentry *direntry, stru=
-ct iattr *attrs)
-> >                         rc =3D tcon->ses->server->ops->flush(xid, tcon,=
- &wfile->fid);
-> >                         cifsFileInfo_put(wfile);
-> >                         if (rc)
-> > -                               return rc;
-> > +                               goto cifs_setattr_exit;
-> >                 } else if (rc !=3D -EBADF)
-> > -                       return rc;
-> > +                       goto cifs_setattr_exit;
-> >                 else
-> >                         rc =3D 0;
-> >         }
-> > --
-> > 2.20.1
-> >
->
-> Looks good, thanks.
->
-> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
->
-> The original patch was tagged for stable, so, it seems that this one
-> should be tagged too.
->
-> --
-> Best regards,
-> Pavel Shilovsky
->
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v2:
+	- update subject and description
+	- add property idle-state
 
+ Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
---=20
-Thanks,
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index 30ac6a60f041..2c7875d338fb 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -34,6 +34,7 @@ Optional Properties:
+     - first cell is the pin number
+     - second cell is used to specify flags.
+     See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++  - idle-state: Please refer to Documentation/devicetree/bindings/mux/mux-controller.txt
+ 
+ Example:
+ 
+-- 
+2.17.1
 
-Steve
