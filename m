@@ -2,82 +2,205 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C828ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3927C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA4E2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3DBE20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbfJOONr (ORCPT
+        id S1732608AbfJOONy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:13:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44588 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732500AbfJOONq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:13:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 30A43B450;
-        Tue, 15 Oct 2019 14:13:44 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 16:13:41 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Jessica Yu <jeyu@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-In-Reply-To: <20191015135634.GK2328@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
-References: <20191007081945.10951536.8@infradead.org> <20191008104335.6fcd78c9@gandalf.local.home> <20191009224135.2dcf7767@oasis.local.home> <20191010092054.GR2311@hirez.programming.kicks-ass.net> <20191010091956.48fbcf42@gandalf.local.home>
- <20191010140513.GT2311@hirez.programming.kicks-ass.net> <20191010115449.22044b53@gandalf.local.home> <20191010172819.GS2328@hirez.programming.kicks-ass.net> <20191011125903.GN2359@hirez.programming.kicks-ass.net> <20191015130739.GA23565@linux-8ccs>
- <20191015135634.GK2328@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 15 Oct 2019 10:13:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39661 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732546AbfJOONl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:13:41 -0400
+Received: from [213.220.153.21] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iKNZz-0004YA-8W; Tue, 15 Oct 2019 14:13:39 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Christian Kellner <christian@kellner.me>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 2/2] test: verify fdinfo for pidfd of reaped process
+Date:   Tue, 15 Oct 2019 16:13:32 +0200
+Message-Id: <20191015141332.4055-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191015141332.4055-1-christian.brauner@ubuntu.com>
+References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ live-patching ML CCed ]
+Test that the fdinfo field of a pidfd referring to a dead process
+correctly shows Pid: -1 and NSpid: -1.
 
-On Tue, 15 Oct 2019, Peter Zijlstra wrote:
+Cc: Christian Kellner <christian@kellner.me>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ .../selftests/pidfd/pidfd_fdinfo_test.c       | 59 ++++++++++++++-----
+ 1 file changed, 45 insertions(+), 14 deletions(-)
 
-> On Tue, Oct 15, 2019 at 03:07:40PM +0200, Jessica Yu wrote:
-> 
-> > > The fact that it is executable; also the fact that you do it right after
-> > > we mark it ro. Flipping the memory protections back and forth is just
-> > > really poor everything.
-> > > 
-> > > Once this ftrace thing is sorted, we'll change x86 to _refuse_ to make
-> > > executable (kernel) memory writable.
-> > 
-> > Not sure if relevant, but just thought I'd clarify: IIRC,
-> > klp_module_coming() is not poking the coming module, but it calls
-> > module_enable_ro() on itself (the livepatch module) so it can apply
-> > relocations and such on the new code, which lives inside the livepatch
-> > module, and it needs to possibly do this numerous times over the
-> > lifetime of the patch module for any coming module it is responsible
-> > for patching (i.e., call module_enable_ro() on the patch module, not
-> > necessarily the coming module). So I am not be sure why
-> > klp_module_coming() should be moved before complete_formation(). I
-> > hope I'm remembering the details correctly, livepatch folks feel free
-> > to chime in if I'm incorrect here.
-> 
-> You mean it does module_disable_ro() ? That would be broken and it needs
-> to be fixed. Can some livepatch person explain what it does and why?
+diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+index 3721be994abd..22558524f71c 100644
+--- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+@@ -113,11 +113,15 @@ static struct child clone_newns(int (*fn)(void *), void *args,
+ 	return ret;
+ }
+ 
++static inline void child_close(struct child *child)
++{
++	close(child->fd);
++}
++
+ static inline int child_join(struct child *child, struct error *err)
+ {
+ 	int r;
+ 
+-	(void)close(child->fd);
+ 	r = wait_for_pid(child->pid);
+ 	if (r < 0)
+ 		error_set(err, PIDFD_ERROR, "waitpid failed (ret %d, errno %d)",
+@@ -128,6 +132,12 @@ static inline int child_join(struct child *child, struct error *err)
+ 	return r;
+ }
+ 
++static inline int child_join_close(struct child *child, struct error *err)
++{
++	child_close(child);
++	return child_join(child, err);
++}
++
+ static inline void trim_newline(char *str)
+ {
+ 	char *pos = strrchr(str, '\n');
+@@ -136,8 +146,8 @@ static inline void trim_newline(char *str)
+ 		*pos = '\0';
+ }
+ 
+-static int verify_fdinfo_nspid(int pidfd, struct error *err,
+-			       const char *expect, ...)
++static int verify_fdinfo(int pidfd, struct error *err, const char *prefix,
++			 size_t prefix_len, const char *expect, ...)
+ {
+ 	char buffer[512] = {0, };
+ 	char path[512] = {0, };
+@@ -160,17 +170,20 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
+ 				 pidfd);
+ 
+ 	while (getline(&line, &n, f) != -1) {
+-		if (strncmp(line, "NSpid:", 6))
++		char *val;
++
++		if (strncmp(line, prefix, prefix_len))
+ 			continue;
+ 
+ 		found = 1;
+ 
+-		r = strcmp(line + 6, buffer);
++		val = line + prefix_len;
++		r = strcmp(val, buffer);
+ 		if (r != 0) {
+ 			trim_newline(line);
+ 			trim_newline(buffer);
+-			error_set(err, PIDFD_FAIL, "NSpid: '%s' != '%s'",
+-				  line + 6, buffer);
++			error_set(err, PIDFD_FAIL, "%s '%s' != '%s'",
++				  prefix, val, buffer);
+ 		}
+ 		break;
+ 	}
+@@ -179,8 +192,8 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
+ 	fclose(f);
+ 
+ 	if (found == 0)
+-		return error_set(err, PIDFD_FAIL, "NSpid not found for fd %d",
+-				 pidfd);
++		return error_set(err, PIDFD_FAIL, "%s not found for fd %d",
++				 prefix, pidfd);
+ 
+ 	return PIDFD_PASS;
+ }
+@@ -213,7 +226,7 @@ static int child_fdinfo_nspid_test(void *args)
+ 	}
+ 
+ 	pidfd = *(int *)args;
+-	r = verify_fdinfo_nspid(pidfd, &err, "\t0\n");
++	r = verify_fdinfo(pidfd, &err, "NSpid:", 6, "\t0\n");
+ 
+ 	if (r != PIDFD_PASS)
+ 		ksft_print_msg("NSpid fdinfo check failed: %s\n", err.msg);
+@@ -242,24 +255,42 @@ static void test_pidfd_fdinfo_nspid(void)
+ 	/* The children will have pid 1 in the new pid namespace,
+ 	 * so the line must be 'NSPid:\t<pid>\t1'.
+ 	 */
+-	verify_fdinfo_nspid(a.fd, &err, "\t%d\t%d\n", a.pid, 1);
+-	verify_fdinfo_nspid(b.fd, &err, "\t%d\t%d\n", b.pid, 1);
++	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t%d\t%d\n", a.pid, 1);
++	verify_fdinfo(b.fd, &err, "NSpid:", 6, "\t%d\t%d\n", b.pid, 1);
+ 
+ 	/* wait for the process, check the exit status and set
+ 	 * 'err' accordingly, if it is not already set.
+ 	 */
++	child_join_close(&a, &err);
++	child_join_close(&b, &err);
++
++	error_report(&err, test_name);
++}
++
++static void test_pidfd_dead_fdinfo(void)
++{
++	struct child a;
++	struct error err = {0, };
++	const char *test_name = "pidfd check fdinfo for dead process";
++
++	/* Create a new child in a new pid and mount namespace */
++	a = clone_newns(child_fdinfo_nspid_test, NULL, &err);
++	error_check(&err, test_name);
+ 	child_join(&a, &err);
+-	child_join(&b, &err);
+ 
++	verify_fdinfo(a.fd, &err, "Pid:", 4, "\t-1\n");
++	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t-1\n");
++	child_close(&a);
+ 	error_report(&err, test_name);
+ }
+ 
+ int main(int argc, char **argv)
+ {
+ 	ksft_print_header();
+-	ksft_set_plan(1);
++	ksft_set_plan(2);
+ 
+ 	test_pidfd_fdinfo_nspid();
++	test_pidfd_dead_fdinfo();
+ 
+ 	return ksft_exit_pass();
+ }
+-- 
+2.23.0
 
-Yes, it does. klp_module_coming() calls module_disable_ro() on all 
-patching modules which patch the coming module in order to call 
-apply_relocate_add(). New (patching) code for a module can be relocated 
-only when the relevant module is loaded.
-
-Miroslav
