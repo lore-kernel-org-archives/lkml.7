@@ -2,127 +2,123 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57487C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9565AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FAC20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623B920854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="jSR7MU4K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtV2pRbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732991AbfJOPPO (ORCPT
+        id S1733173AbfJOPQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:15:14 -0400
-Received: from mail-eopbgr140095.outbound.protection.outlook.com ([40.107.14.95]:42563
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725991AbfJOPPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:15:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YqCDlfbRJz5G+fdHsSzgTOUJXC767VXVHbucVQIAXl5ExupOr8Dw0tUivMi9LhKnfja1udunKDl8seQnxgxKJnZrHs8OZLhWafIAzt7U0v2wXN6AApg7lnYPgc3fcrw7BAt2lcBf6ck9Opn0A2vFNsrvUQ79zO1C7//rJ2gZrZ7utPMU6H7b7yDQpyH9WIngbvk2OfGRVgX8ssRkBKIyjGWQlwaomrmLULUmcP5z91MxuTgIe6ogq8UBHIDK+N+KwI1W4fwKWPyMRC8Imw3nMJilpcg/yiFjCKoVXW+ZRWhsDfSs2GNY9AMCCmn0tekE9KRdugmbTiW13br9pNHW7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YptdA8tON/ni7QNB0imlRUTP7z7lsyrx/9hKaZgFX+g=;
- b=UNe+Vbm9W2HvvcT2Ui2wgbN/SVvU2frA2s0OIBjknJqfjUFlXTqADTV+gY5xlrYzgZGML1fjIRtqpeREiXz90WyUNXRmsPsCUjzUAOpMVOmQPsm74BNVN7gkwEtapgfEYOj6Horeg081LMXM/ZXidHYDKR4YOy0JoOscYvQyYHnlww5tu8QkJ+382V/FiyGCzZriTqoCxkPLslfzVeVKqqNS4V8s/FWT6Esgi0vH8zg6porXEvAFCSWePoMZDiTLULNhCN+9NXDk3xu/tuUHv7xZLMavwwIpTMRvB4jfqApPn7VTOEEW1bF5FOGISiL7/jslwAEUqvRp6kfS5j2RAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YptdA8tON/ni7QNB0imlRUTP7z7lsyrx/9hKaZgFX+g=;
- b=jSR7MU4KjGCfRfPRHJjUH1/5wP8Jqu8NQAShu9+SmDuQncuCDmz+zrvzFYQVXLbuozYpNkf1N1ef8p0oYdoNiqTd6pOGLh7KQ0MG6OUe+M5dHCD2vXIitdLUCMLiriK0xB1fBMgoqsXl5NrTZAc3h+mHMH8YRYlczDa8zaeobbA=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3433.eurprd02.prod.outlook.com (52.134.70.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.21; Tue, 15 Oct 2019 15:15:07 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
- 15:15:06 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [v2,1/2] dt-bindings: i2c: add property idle-state
-Thread-Topic: [v2,1/2] dt-bindings: i2c: add property idle-state
-Thread-Index: AQHVgxVY3ClkKjJCH0u1LxNx3XxuOKdb0HQA
-Date:   Tue, 15 Oct 2019 15:15:06 +0000
-Message-ID: <996277d6-1c0b-6080-4565-ce3aad77e09e@axentia.se>
-References: <20191015044839.23746-1-biwen.li@nxp.com>
-In-Reply-To: <20191015044839.23746-1-biwen.li@nxp.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1P192CA0023.EURP192.PROD.OUTLOOK.COM (2603:10a6:3:fe::33)
- To DB3PR0202MB3434.eurprd02.prod.outlook.com (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1b478a5-4e39-41ca-4520-08d75182761b
-x-ms-traffictypediagnostic: DB3PR0202MB3433:
-x-microsoft-antispam-prvs: <DB3PR0202MB343336B3E629C9C10198CA11BC930@DB3PR0202MB3433.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01917B1794
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(346002)(396003)(136003)(366004)(37524003)(199004)(189003)(66066001)(65956001)(54906003)(36756003)(26005)(31686004)(8676002)(7736002)(4326008)(66946007)(71190400001)(71200400001)(229853002)(6512007)(256004)(14444005)(64756008)(66446008)(386003)(66476007)(66556008)(65806001)(2906002)(5660300002)(6506007)(86362001)(508600001)(53546011)(102836004)(110136005)(11346002)(186003)(76176011)(446003)(486006)(25786009)(14454004)(316002)(99286004)(6486002)(4001150100001)(3846002)(8936002)(31696002)(6246003)(2616005)(305945005)(52116002)(6436002)(476003)(6116002)(58126008)(81166006)(2501003)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3433;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gyf4CcFjnj8NhBPn34/gvTutnsPnhGYsVXJrpUDi/Dr6+gx6bVBbE9vAm1Au8j22UHF9gBelPh4hruYRUCTIMeosMekhEHmQJeA1MSooTVGMrOmMQMcqYTGBGyLcf7EC2WiASb3R7jHjmMJRRha+gj85+kvyrL6aoNhKN8x5ymsxCYGlx2Xf+clM/AtQUbcnRlM3/WbLUIcYOpXzOrBjMY1qGzES1XVdWtJF6VBSeNUBKqzfnEoJE+DAZDHXTkYEEZwFfLm5k5pYsJXwWadK5Dp/dBkXOClM5c4IKeGoWTuQU25WDKXsZ7idurCRpM+u5+to2owElsYMnt56KrmP3U8N4/Q3YzAcwtyNbW1YCH06vxgOUYNF/h5sv/ec2O7pnVgC8WtkpD1iq/qAffFcx92uDzywc3D6TvojcVfLgTY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9A11C3CE2F3F944E8498AB63151EFCF6@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 15 Oct 2019 11:16:40 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34555 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfJOPQj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:16:39 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q203so19520673qke.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 08:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+ENnod06Caqrg5Ljmd87Yt4qbZaP4wpuUAg7bNHk8J4=;
+        b=ZtV2pRbzJrdjOAavwR4CV6KQ2imC9IgxWDRlw5OB4ercMkjI8kjmROVznvr5lXxprU
+         v7AgVXax9XBSGgV+EOpkHw+VxdCVe6Hps1hASeiT23QeQIU3Zdohh1ZscheySwuTPBTU
+         6DCw/wiDoTgOIvlovSibjXDAzEladZWAr42iLi/miHlpX98mGBDmUN+U5ioPAq9PT9ez
+         pHDlxju/mIFLZhVti5aN0rExgBWXCD10ynXTIxTLr13BQAIkOByef6zeZw1tOnFLaTKP
+         fl7+aeUgK1sa0kAySn/xMfWU1WJbuLqmzfwyp+k7NM/HOVOJodGTgPjxoIEa0+eFpByt
+         3tpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+ENnod06Caqrg5Ljmd87Yt4qbZaP4wpuUAg7bNHk8J4=;
+        b=DOAV4BXI+cI93FWIMFUqgkWoFK8WPjfCoJQAqEfqtGM58w0vuUGqkBuhqjrKFUwXs4
+         X9sFIFe48fJjQW3S0l8V7CTGK98Tt01wgWfBJeHiiuLayDUSINIHcCKeX1n0iV0B2spm
+         0Gj4IIvmK9ovZbtmJCbyVLfevddQav28wBMEclZ0NiEoM1lRkrKewG1tmYXzUhJ0ckIf
+         /CCzEYZUDUx4Hynfi26gri/Z6HX856sdUVLShQD4gR8PTlxwX06mCXI9vG+sqaEvYDcu
+         5d7q9EhocV6acnWUcIz5WCXsuvSoOcuEBWrGykp0k2tzG4XaDmEz9NIMgtnTbcmiUHiH
+         4e2w==
+X-Gm-Message-State: APjAAAUodfGS44QCDs1YtLjY49APpngirdgU4Nsj4XAj9EE5hWopJtjm
+        skO+z6NrYGpKBNl+n0sHwpUdrNUAj28=
+X-Google-Smtp-Source: APXvYqyg/MlStVdsNtHAjUoR7cprEw40wf5ZHaHg4lEEtE6K7OZFZWjnIkpEiWT1TI0/Iknr+6LCXQ==
+X-Received: by 2002:a05:620a:126e:: with SMTP id b14mr36729394qkl.470.1571152598903;
+        Tue, 15 Oct 2019 08:16:38 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id j5sm9471723qkd.56.2019.10.15.08.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 08:16:37 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6404C4DD66; Tue, 15 Oct 2019 12:16:35 -0300 (-03)
+Date:   Tue, 15 Oct 2019 12:16:35 -0300
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com, will@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 0/4] HiSilicon hip08 uncore PMU events additions
+Message-ID: <20191015151635.GE25820@kernel.org>
+References: <1567612484-195727-1-git-send-email-john.garry@huawei.com>
+ <80d5b29a-64fe-7c0f-6e5d-74a030851fd8@hisilicon.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1b478a5-4e39-41ca-4520-08d75182761b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 15:15:06.8239
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GinMkKyR6LgaUwOt493Q7gFEB+SJ+MWAEa3GCDXWVAF0p2LSxB4RZ+1PmFyinZJH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3433
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80d5b29a-64fe-7c0f-6e5d-74a030851fd8@hisilicon.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0xNSAwNjo0OCwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgYWRkcyBwcm9wZXJ0
-eSBpZGxlLXN0YXRlDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhw
-LmNvbT4NCj4gLS0tDQo+IENoYW5nZSBpbiB2MjoNCj4gCS0gdXBkYXRlIHN1YmplY3QgYW5kIGRl
-c2NyaXB0aW9uDQo+IAktIGFkZCBwcm9wZXJ0eSBpZGxlLXN0YXRlDQo+IA0KPiAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtbXV4LXBjYTk1NHgudHh0IHwgMSArDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQN
-Cj4gaW5kZXggMzBhYzZhNjBmMDQxLi4yYzc4NzVkMzM4ZmIgMTAwNjQ0DQo+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLW11eC1wY2E5NTR4LnR4dA0KPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0
-eC50eHQNCj4gQEAgLTM0LDYgKzM0LDcgQEAgT3B0aW9uYWwgUHJvcGVydGllczoNCj4gICAgICAt
-IGZpcnN0IGNlbGwgaXMgdGhlIHBpbiBudW1iZXINCj4gICAgICAtIHNlY29uZCBjZWxsIGlzIHVz
-ZWQgdG8gc3BlY2lmeSBmbGFncy4NCj4gICAgICBTZWUgYWxzbyBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQNCj4gKyAg
-LSBpZGxlLXN0YXRlOiBQbGVhc2UgcmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL211eC9tdXgtY29udHJvbGxlci50eHQNCj4gIA0KPiAgRXhhbXBsZToNCj4gIA0KPiAN
-Cg0KQXMgcGVyIG15IGNvbW1lbnRzIG9uIHRoZSBjb2RlLCB5b3Ugc2hvdWxkIG1lbnRpb24gdGhh
-dCBpZGxlLXN0YXRlLCBpZiBwcmVzZW50LA0Kb3ZlcnJpZGVzIGkyYy1tdXgtaWRsZS1kaXNjb25u
-ZWN0LiBJIGFsc28gdGhpbmsgeW91IHNob3VsZCBrZWVwIGlkbGUtc3RhdGUNCmFuZCBpMmMtbXV4
-LWlkbGUtZGlzY29ubmVjdCByaWdodCBuZXh0IHRvIGVhY2ggb3RoZXIuDQoNCkNoZWVycywNClBl
-dGVyDQo=
+Em Wed, Oct 09, 2019 at 09:14:45AM +0800, Shaokun Zhang escreveu:
+> Hi John,
+> 
+> Thanks for your nice work, these are useful for performance profiling
+> if anyone is unfamiliar with the uncore PMU events on hip08.
+
+> For this patchset, please feel free to add
+> Reviewed-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+
+Thanks, added and applied,
+
+- Arnaldo
+ 
+> Thanks,
+> Shaokun
+> 
+> On 2019/9/4 23:54, John Garry wrote:
+> > This patchset adds some missing uncore PMU events for the hip08 arm64
+> > platform.
+> > 
+> > The missing events were originally mentioned in
+> > https://lkml.org/lkml/2019/6/14/645, when upstreaming the JSONs initially.
+> > 
+> > It also includes a fix for a DDRC eventname.
+> > 
+> > John Garry (4):
+> >   perf jevents: Fix Hisi hip08 DDRC PMU eventname
+> >   perf jevents: Add some missing events for Hisi hip08 DDRC PMU
+> >   perf jevents: Add some missing events for Hisi hip08 L3C PMU
+> >   perf jevents: Add some missing events for Hisi hip08 HHA PMU
+> > 
+> >  .../arm64/hisilicon/hip08/uncore-ddrc.json    | 16 +++++-
+> >  .../arm64/hisilicon/hip08/uncore-hha.json     | 23 +++++++-
+> >  .../arm64/hisilicon/hip08/uncore-l3c.json     | 56 +++++++++++++++++++
+> >  3 files changed, 93 insertions(+), 2 deletions(-)
+> > 
+
+-- 
+
+- Arnaldo
