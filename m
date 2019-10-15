@@ -2,109 +2,88 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D53C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB641ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2A420640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8909520640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZiPdzHa"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="u+qaMwgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbfJOQNw (ORCPT
+        id S2387786AbfJOQN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:13:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40619 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfJOQNv (ORCPT
+        Tue, 15 Oct 2019 12:13:59 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:45689 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfJOQN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:13:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so12779855pfb.7;
-        Tue, 15 Oct 2019 09:13:51 -0700 (PDT)
+        Tue, 15 Oct 2019 12:13:59 -0400
+Received: by mail-io1-f45.google.com with SMTP id c25so47117894iot.12
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 09:13:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QMLeDmrBfu8L9JXe6ClGJAZaALXBboTs7aJjY2tzHE8=;
-        b=SZiPdzHa3MKUnPhz8+AUs7ksEAv4jGGFTSHj1J7sdp7fn8o587GY9JMSqDNB9I0wpa
-         6nFDwv+SEIV3HpAALiOnWmtYfNgbT/VCTkiVFOe+1HHcjL9OqdG5wyXfU+rpt3OdyWUr
-         lvTMD4IHjEH8vTYqj17z5E9x4aFu4KbDQ78IN2zmwO4ovRzniH56z/arbWdUh3fThTAu
-         arNQY0lMGzGiC6IXnua6296aHfVGbOnSOwUbBRHm4cLd6jMBCSp/sqp1GvEOIOl8Uazo
-         +vdGacAktDgHcKxYpJetg4s/shhZJLxG5yw/GjqzQOVbJY5JjLGT4XMp2mO1kWNzWJgF
-         jo+g==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rU/+8akjRAvTL7N8wg4KbTqoywqv6btBqqn9U4LLFqE=;
+        b=u+qaMwgfXAfVKV0E+B4XMOdHhl4FUf12KD075kgSX5lRTPiGAR0R1Rr0cYKqN3R0oN
+         cdh+qNDmfo7hBQvMMuK2Lh2xio7Ju7CJkA5uuKlF1F9nCitSHJl5x0Pbh6dx/tet7UyR
+         TY8dLSFHx0qXag5LNqxNsRbiDVHeUTCsbOTwEv9iY3KcMP0V2fvhVYMelTaoiDRD7Q3Q
+         U7Uv1ooByljjegb9WNJRTwFLWtX/+5qRCeWhAQGpOAIWq93iPq3Hdl90w884D0U54mxa
+         QC4JgKYU6s3/reDXJuuMiQF/FaikxHX81KdLpzgJjnIGY2CkltlK/uNG0sIb1/aP3Owq
+         UqWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QMLeDmrBfu8L9JXe6ClGJAZaALXBboTs7aJjY2tzHE8=;
-        b=aLqAkBdkAdH1W08/cd7Lvo/Ia75NqzYBBfa4CVh2KEthgmL77kZc8TkZYR3ra6Vpc/
-         IuUxukHspbm09Aci3DUIutJXwXdMYeI/cfziX3EBytKBRPeRiah8O+BdXbrEAsoZkfbI
-         Ad0E5b/EjgC626/ZHUhDDIesymZ25TQpLtvz0T4RoidviKlXmbIISVLJIAOzLsAJ9DTg
-         9whAR2xVssgt1AmBCbILX9S/jjgqt0o6k0GJUiU4ObBCiuA/h76pW3/mOTqrJ4XlQwIK
-         0AnOfY2qI75MYa8g1moxbGjpOJOq4RRowIsvymF373Yp4l1N2SoxmlzAU0x0ipn16Avv
-         tMOg==
-X-Gm-Message-State: APjAAAUwhluO4Phoj3Me5hxNQTdaQGmpG6xdCFvO9Scrg1b7/gi1ASRh
-        HDrWr+d9AWQtOuXn4aCGXIA=
-X-Google-Smtp-Source: APXvYqx0jr5OJ/tnFIQb/PMk2gKB/BvNcnTF8qf1O/Y0SSoqKsaJzH1hreY1ig6kz9DW7w6+By27vQ==
-X-Received: by 2002:a17:90a:a891:: with SMTP id h17mr44330994pjq.32.1571156030704;
-        Tue, 15 Oct 2019 09:13:50 -0700 (PDT)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:537:9e2a:d73:bfaf:e15e:cd77])
-        by smtp.gmail.com with ESMTPSA id e4sm19548753pff.22.2019.10.15.09.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 09:13:49 -0700 (PDT)
-From:   madhuparnabhowmik04@gmail.com
-To:     sre@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] Power: supply: abx500_chargalg.c: Fixed a code indentation error
-Date:   Tue, 15 Oct 2019 21:43:41 +0530
-Message-Id: <20191015161341.26868-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rU/+8akjRAvTL7N8wg4KbTqoywqv6btBqqn9U4LLFqE=;
+        b=hiflGAcXnW/rjdaMIfoX92WGM5tFBwpDCABj9L20jW7MGVv97Bf8uKb3rPEmPxTKly
+         bZtCnl61Sd9OWLj20kRfX/DOpNVDmTLfTXfTvias+KE/BSeTEqY8FZR3EFvCgAimY6lI
+         lUVQrckLVFhfbk2ufU8459sdYMC96GeSwfK9HEU8Sb1QGiIPXEFkrfPy3W4tWJ5TUk/u
+         uWViqFP6bSaA8XG+WhIdMdtKS3DSulJVA4IhV76Y31APtfY8fOdwj8XujHTOz0uPcoOM
+         Ehvvbuje6i2wq9iQxTW4pLsqCPbw54p6hUTN2SJ+vdVgaFP9BNrs82oNcOvLxVKLLOiy
+         0EfQ==
+X-Gm-Message-State: APjAAAWDqUFUdfyMt8Ygl6pnGZueAWq0P7JqMP+C1s4kRj/1jcc5Sg7K
+        mG6XNnj29HQ+7EfJIbESMCOj8g==
+X-Google-Smtp-Source: APXvYqzA6cG1fMcPKnZtqMNSW9pHLqrz5GDW6l3mVkAYSA6+aaPICjTTfIRIXd3Uc62TcRRCFWbGVQ==
+X-Received: by 2002:a6b:8e11:: with SMTP id q17mr42771166iod.194.1571156036827;
+        Tue, 15 Oct 2019 09:13:56 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 26sm3036267ilx.47.2019.10.15.09.13.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 09:13:55 -0700 (PDT)
+Subject: Re: [PATCH block/for-linus] blk-rq-qos: fix first node deletion of
+ rq_qos_del()
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Josef Bacik <josef@toxicpanda.com>
+References: <20191015154927.GL18794@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c3c4f871-b241-d18f-08eb-9bd1cf1c6d0a@kernel.dk>
+Date:   Tue, 15 Oct 2019 10:13:54 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191015154927.GL18794@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On 10/15/19 9:49 AM, Tejun Heo wrote:
+> rq_qos_del() incorrectly assigns the node being deleted to the head if
+> it was the first on the list in the !prev path.  Fix it by iterating
+> with ** instead.
 
-Fixed Code indentation error caused due to using spaces
-instead of tabs.
-The error reported by checkpatch.pl is:
- ERROR: code indent should use tabs where possible
-The warning reported by checkpatch.pl is:
- WARNING: please, no spaces at the start of a line
+Well, that's unfortunate... Applied.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/power/supply/abx500_chargalg.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/power/supply/abx500_chargalg.c b/drivers/power/supply/abx500_chargalg.c
-index 23757fb10479..e6e37d4f20e4 100644
---- a/drivers/power/supply/abx500_chargalg.c
-+++ b/drivers/power/supply/abx500_chargalg.c
-@@ -354,13 +354,13 @@ static int abx500_chargalg_check_charger_enable(struct abx500_chargalg *di)
- 
- 	if (di->chg_info.charger_type & USB_CHG) {
- 		return di->usb_chg->ops.check_enable(di->usb_chg,
--                         di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
--                         di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
-+			di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
-+			di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
- 	} else if ((di->chg_info.charger_type & AC_CHG) &&
- 		   !(di->ac_chg->external)) {
- 		return di->ac_chg->ops.check_enable(di->ac_chg,
--                         di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
--                         di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
-+			di->bm->bat_type[di->bm->batt_id].normal_vol_lvl,
-+			di->bm->bat_type[di->bm->batt_id].normal_cur_lvl);
- 	}
- 	return 0;
- }
 -- 
-2.17.1
+Jens Axboe
 
