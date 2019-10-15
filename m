@@ -2,148 +2,248 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F96CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E6DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E572089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="rQw+KLl4"
+	by mail.kernel.org (Postfix) with ESMTP id 1D4A82089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbfJOKtX (ORCPT
+        id S1731526AbfJOKt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:49:23 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:39022 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731434AbfJOKtT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:49:19 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 7E4802E0AD4;
-        Tue, 15 Oct 2019 13:49:16 +0300 (MSK)
-Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 7rrsh8uytn-nFq8PcE2;
-        Tue, 15 Oct 2019 13:49:16 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1571136556; bh=kAMGDxkAbOPo3YYQfmMwLm3qVE+lcF5C9p9mjMh3EfA=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=rQw+KLl4HkAqtmwhezss/Z53Dxs7y2+bj/AoPhBWVauUKB4M0XyZWTOlyM1sV6kfO
-         u2G0uWq5uOz9iVde1iKyTrtI3zgvE3QzuUkrwlYkIi0uL+/HQGVeuAZkBmr2A7BX9j
-         GHxfA+S3RCAXieYfCJFzif4whnfoVGqMxtZBg86o=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by vla5-2bf13a090f43.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id tdH7LpAdpl-nFJCDZSi;
-        Tue, 15 Oct 2019 13:49:15 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
- mem_cgroup_move_account
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <157112699975.7360.1062614888388489788.stgit@buzz>
- <20191015082048.GU317@dhcp22.suse.cz>
- <3b73e301-ea4a-5edb-9360-2ae9b4ad9f69@yandex-team.ru>
- <20191015103623.GX317@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <31cab57d-6e79-33cb-1a58-99065c6e7b82@yandex-team.ru>
-Date:   Tue, 15 Oct 2019 13:49:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191015103623.GX317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+        Tue, 15 Oct 2019 06:49:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:35212 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731402AbfJOKtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:49:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A92481000;
+        Tue, 15 Oct 2019 03:49:19 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B1B7B3F68E;
+        Tue, 15 Oct 2019 03:49:14 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        jianyong.wu@arm.com, nd@arm.com
+Subject: [PATCH v5 5/6] ptp: arm64: Enable ptp_kvm for arm64
+Date:   Tue, 15 Oct 2019 18:48:21 +0800
+Message-Id: <20191015104822.13890-6-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191015104822.13890-1-jianyong.wu@arm.com>
+References: <20191015104822.13890-1-jianyong.wu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 13.36, Michal Hocko wrote:
-> On Tue 15-10-19 11:44:22, Konstantin Khlebnikov wrote:
->> On 15/10/2019 11.20, Michal Hocko wrote:
->>> On Tue 15-10-19 11:09:59, Konstantin Khlebnikov wrote:
->>>> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
->>>> These counters needs update when page is moved between cgroups.
->>>
->>> Please describe the user visible effect.
->>
->> Surprisingly I don't see any users at this moment.
->> So, there is no effect in mainline kernel.
-> 
-> Those counters are exported right? Or do we exclude them for v1?
+Currently in arm64 virtualization environment, there is no mechanism to
+keep time sync between guest and host. Time in guest will drift compared
+with host after boot up as they may both use third party time sources
+to correct their time respectively. The time deviation will be in order
+of milliseconds but some scenarios ask for higher time precision, like
+in cloud envirenment, we want all the VMs running in the host aquire the
+same level accuracy from host clock.
 
-It seems per-lruvec statistics is not exposed anywhere.
-And per-lruvec NR_FILE_MAPPED, NR_FILE_DIRTY, NR_WRITEBACK never had users.
+Use of kvm ptp clock, which choose the host clock source clock as a
+reference clock to sync time clock between guest and host has been adopted
+by x86 which makes the time sync order from milliseconds to nanoseconds.
 
-I've found this because I'm using mem_cgroup_move_account for recharging
-pages at mlock and playing right now with debug for memory cgroup which
-validates statistics and counters when cgroup dies.
+This patch enable kvm ptp on arm64 and we get the similar clock drift as
+found with x86 with kvm ptp.
 
-> 
->>>> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
->>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->>>
->>> We want Cc: stable I suspect because broken stats might be really
->>> misleading.
->>>
->>> The patch looks ok to me otherwise
->>> Acked-by: Michal Hocko <mhocko@suse.com>
->>>
->>>> ---
->>>>    mm/memcontrol.c |   18 ++++++++++++------
->>>>    1 file changed, 12 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->>>> index bdac56009a38..363106578876 100644
->>>> --- a/mm/memcontrol.c
->>>> +++ b/mm/memcontrol.c
->>>> @@ -5420,6 +5420,8 @@ static int mem_cgroup_move_account(struct page *page,
->>>>    				   struct mem_cgroup *from,
->>>>    				   struct mem_cgroup *to)
->>>>    {
->>>> +	struct lruvec *from_vec, *to_vec;
->>>> +	struct pglist_data *pgdat;
->>>>    	unsigned long flags;
->>>>    	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
->>>>    	int ret;
->>>> @@ -5443,11 +5445,15 @@ static int mem_cgroup_move_account(struct page *page,
->>>>    	anon = PageAnon(page);
->>>> +	pgdat = page_pgdat(page);
->>>> +	from_vec = mem_cgroup_lruvec(pgdat, from);
->>>> +	to_vec = mem_cgroup_lruvec(pgdat, to);
->>>> +
->>>>    	spin_lock_irqsave(&from->move_lock, flags);
->>>>    	if (!anon && page_mapped(page)) {
->>>> -		__mod_memcg_state(from, NR_FILE_MAPPED, -nr_pages);
->>>> -		__mod_memcg_state(to, NR_FILE_MAPPED, nr_pages);
->>>> +		__mod_lruvec_state(from_vec, NR_FILE_MAPPED, -nr_pages);
->>>> +		__mod_lruvec_state(to_vec, NR_FILE_MAPPED, nr_pages);
->>>>    	}
->>>>    	/*
->>>> @@ -5459,14 +5465,14 @@ static int mem_cgroup_move_account(struct page *page,
->>>>    		struct address_space *mapping = page_mapping(page);
->>>>    		if (mapping_cap_account_dirty(mapping)) {
->>>> -			__mod_memcg_state(from, NR_FILE_DIRTY, -nr_pages);
->>>> -			__mod_memcg_state(to, NR_FILE_DIRTY, nr_pages);
->>>> +			__mod_lruvec_state(from_vec, NR_FILE_DIRTY, -nr_pages);
->>>> +			__mod_lruvec_state(to_vec, NR_FILE_DIRTY, nr_pages);
->>>>    		}
->>>>    	}
->>>>    	if (PageWriteback(page)) {
->>>> -		__mod_memcg_state(from, NR_WRITEBACK, -nr_pages);
->>>> -		__mod_memcg_state(to, NR_WRITEBACK, nr_pages);
->>>> +		__mod_lruvec_state(from_vec, NR_WRITEBACK, -nr_pages);
->>>> +		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
->>>>    	}
->>>>    #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>
-> 
+Test result comparison between with kvm ptp and without it in arm64 are
+as follows. This test derived from the result of command 'chronyc
+sources'. we should take more cure of the last sample column which shows
+the offset between the local clock and the source at the last measurement.
+
+no kvm ptp in guest:
+MS Name/IP address   Stratum Poll Reach LastRx Last sample
+========================================================================
+^* dns1.synet.edu.cn      2   6   377    13  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    21  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    29  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    37  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    45  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    53  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    61  +1040us[+1581us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377     4   -130us[ +796us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    12   -130us[ +796us] +/-   21ms
+^* dns1.synet.edu.cn      2   6   377    20   -130us[ +796us] +/-   21ms
+
+in host:
+MS Name/IP address   Stratum Poll Reach LastRx Last sample
+========================================================================
+^* 120.25.115.20          2   7   377    72   -470us[ -603us] +/-   18ms
+^* 120.25.115.20          2   7   377    92   -470us[ -603us] +/-   18ms
+^* 120.25.115.20          2   7   377   112   -470us[ -603us] +/-   18ms
+^* 120.25.115.20          2   7   377     2   +872ns[-6808ns] +/-   17ms
+^* 120.25.115.20          2   7   377    22   +872ns[-6808ns] +/-   17ms
+^* 120.25.115.20          2   7   377    43   +872ns[-6808ns] +/-   17ms
+^* 120.25.115.20          2   7   377    63   +872ns[-6808ns] +/-   17ms
+^* 120.25.115.20          2   7   377    83   +872ns[-6808ns] +/-   17ms
+^* 120.25.115.20          2   7   377   103   +872ns[-6808ns] +/-   17ms
+^* 120.25.115.20          2   7   377   123   +872ns[-6808ns] +/-   17ms
+
+The dns1.synet.edu.cn is the network reference clock for guest and
+120.25.115.20 is the network reference clock for host. we can't get the
+clock error between guest and host directly, but a roughly estimated value
+will be in order of hundreds of us to ms.
+
+with kvm ptp in guest:
+chrony has been disabled in host to remove the disturb by network clock.
+
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+========================================================================
+* PHC0                    0   3   377     8     -7ns[   +1ns] +/-    3ns
+* PHC0                    0   3   377     8     +1ns[  +16ns] +/-    3ns
+* PHC0                    0   3   377     6     -4ns[   -0ns] +/-    6ns
+* PHC0                    0   3   377     6     -8ns[  -12ns] +/-    5ns
+* PHC0                    0   3   377     5     +2ns[   +4ns] +/-    4ns
+* PHC0                    0   3   377    13     +2ns[   +4ns] +/-    4ns
+* PHC0                    0   3   377    12     -4ns[   -6ns] +/-    4ns
+* PHC0                    0   3   377    11     -8ns[  -11ns] +/-    6ns
+* PHC0                    0   3   377    10    -14ns[  -20ns] +/-    4ns
+* PHC0                    0   3   377     8     +4ns[   +5ns] +/-    4ns
+
+The PHC0 is the ptp clock which choose the host clock as its source
+clock. So we can be sure to say that the clock error between host and guest
+is in order of ns.
+
+Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+---
+ drivers/clocksource/arm_arch_timer.c | 22 ++++++++++++
+ drivers/ptp/Kconfig                  |  2 +-
+ drivers/ptp/ptp_kvm_arm64.c          | 54 ++++++++++++++++++++++++++++
+ drivers/ptp/ptp_kvm_common.c         |  2 +-
+ 4 files changed, 78 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 3597f1f27b10..3e1fd794451f 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -1639,3 +1639,25 @@ bool is_arm_arch_counter(void *cs)
+ {
+ 	return (struct clocksource *)cs == &clocksource_counter;
+ }
++
++#if IS_ENABLED(CONFIG_PTP_1588_CLOCK_KVM)
++#include <linux/arm-smccc.h>
++int kvm_arch_ptp_get_clock_fn(unsigned long *cycle, struct timespec64 *ts,
++			      struct clocksource **cs)
++{
++	struct arm_smccc_res hvc_res;
++	ktime_t ktime_overall;
++
++	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID, &hvc_res);
++	if ((long)(hvc_res.a0) < 0)
++		return -EOPNOTSUPP;
++
++	ktime_overall = hvc_res.a0 << 32 | hvc_res.a1;
++	*ts = ktime_to_timespec64(ktime_overall);
++	*cycle = hvc_res.a2 << 32 | hvc_res.a3;
++	*cs = &clocksource_counter;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(kvm_arch_ptp_get_clock_fn);
++#endif
+diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+index 9b8fee5178e8..3c31ff8eb05f 100644
+--- a/drivers/ptp/Kconfig
++++ b/drivers/ptp/Kconfig
+@@ -110,7 +110,7 @@ config PTP_1588_CLOCK_PCH
+ config PTP_1588_CLOCK_KVM
+ 	tristate "KVM virtual PTP clock"
+ 	depends on PTP_1588_CLOCK
+-	depends on KVM_GUEST && X86
++	depends on KVM_GUEST && X86 || ARM64 && ARM_ARCH_TIMER
+ 	default y
+ 	help
+ 	  This driver adds support for using kvm infrastructure as a PTP
+diff --git a/drivers/ptp/ptp_kvm_arm64.c b/drivers/ptp/ptp_kvm_arm64.c
+new file mode 100644
+index 000000000000..7c697f20904f
+--- /dev/null
++++ b/drivers/ptp/ptp_kvm_arm64.c
+@@ -0,0 +1,54 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ *  Virtual PTP 1588 clock for use with KVM guests
++ *  Copyright (C) 2019 ARM Ltd.
++ *  All Rights Reserved
++ */
++
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <asm/hypervisor.h>
++#include <linux/module.h>
++#include <linux/psci.h>
++#include <linux/arm-smccc.h>
++#include <linux/timecounter.h>
++#include <linux/sched/clock.h>
++#include <asm/arch_timer.h>
++
++int kvm_arch_ptp_init(void)
++{
++	struct arm_smccc_res hvc_res;
++
++	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID,
++			     &hvc_res);
++	if ((long)(hvc_res.a0) < 0)
++		return -EOPNOTSUPP;
++
++	return 0;
++}
++
++int kvm_arch_ptp_get_clock_generic(struct timespec64 *ts,
++				   struct arm_smccc_res *hvc_res)
++{
++	u64 ns;
++	ktime_t ktime_overall;
++
++	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID,
++				  hvc_res);
++	if ((long)(hvc_res->a0) < 0)
++		return -EOPNOTSUPP;
++
++	ktime_overall = hvc_res->a0 << 32 | hvc_res->a1;
++	*ts = ktime_to_timespec64(ktime_overall);
++
++	return 0;
++}
++
++int kvm_arch_ptp_get_clock(struct timespec64 *ts)
++{
++	struct arm_smccc_res hvc_res;
++
++	kvm_arch_ptp_get_clock_generic(ts, &hvc_res);
++
++	return 0;
++}
+diff --git a/drivers/ptp/ptp_kvm_common.c b/drivers/ptp/ptp_kvm_common.c
+index d8f215186904..c0b445fa6144 100644
+--- a/drivers/ptp/ptp_kvm_common.c
++++ b/drivers/ptp/ptp_kvm_common.c
+@@ -138,7 +138,7 @@ static int __init ptp_kvm_init(void)
+ 	int ret;
+ 
+ 	ret = kvm_arch_ptp_init();
+-	if (!ret)
++	if (ret)
+ 		return -EOPNOTSUPP;
+ 
+ 	kvm_ptp_clock.caps = ptp_kvm_caps;
+-- 
+2.17.1
+
