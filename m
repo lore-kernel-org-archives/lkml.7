@@ -4,154 +4,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823CCECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D88ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5C32086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218DF20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571162893;
-	bh=5AnmJWnwSLd45t+Cg3Vuhkl5YGkWgQB/xzBwzn/ZTNQ=;
+	s=default; t=1571162915;
+	bh=2vnG9zvitjyN5YRzL5mKaObhzjkQF1sodt7gWZ0dIcY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hy5+7gdncfupMaev6jzTqpO9KQ1MqC+p5eB7vpb8GnwKUZobyD2lDC8YHM+dFaPps
-	 R17CIIwwIRJ+f1LfiR0BsNCcenFSnXWFwdJvLev/2QVOl7LiLQgFtzJgPHEdG6qa1C
-	 lRYR2dLKOXgwFJ7uVWqvi4IWSchcmvPA1bGKL9fs=
+	b=Jv6Pi69RojslmdUQNyyMSTaDnohVPxic/OYQn9V12z8vM5goA3nKUzbecYknaDUj1
+	 C/5izwZcL6FUD40RiEluXheWFgWa7eprZFMXtlx0e43ibgcGhoh34p+/CaNmtA7WF/
+	 X1h7lCzq5Mmnw6S82Imigoc0bz2gc26dTWr7RZFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389041AbfJOSIM (ORCPT
+        id S2389048AbfJOSIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:08:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39740 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 14:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfJOSIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:08:11 -0400
+        id S1725820AbfJOSId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 14:08:33 -0400
 Received: from localhost (unknown [38.98.37.135])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB3620659;
-        Tue, 15 Oct 2019 18:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81CBB2086A;
+        Tue, 15 Oct 2019 18:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571162890;
-        bh=5AnmJWnwSLd45t+Cg3Vuhkl5YGkWgQB/xzBwzn/ZTNQ=;
+        s=default; t=1571162912;
+        bh=2vnG9zvitjyN5YRzL5mKaObhzjkQF1sodt7gWZ0dIcY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bzzJ8FU6Wp971eJ1oy+xtv0AxDMMXHoC32JRAFGGLP6TugImeZF2hNNI6JBe5oaG0
-         7/+XL8BpBWi0stVAC8iXLkGDKUX51ZrssNGCOyJSbOPnmbfpKOQLLh6r/Z7CENqbyf
-         vIJ+AKdLDfp5VEKiZPyhpkxevylD3OaUvyEa1hqY=
-Date:   Tue, 15 Oct 2019 19:54:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH] serial: core: Use cons->index for preferred console
- registration
-Message-ID: <20191015175422.GA1072965@kroah.com>
-References: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
- <CAMuHMdWY2VsY-CyAxSvpm1XYicAWqU7NORSQofQ+T195DwyLUg@mail.gmail.com>
- <7284590f-2b74-1b47-2d61-783ad8d5f46f@monstr.eu>
- <CAMuHMdWZYALZB1bP5Mtoq4Nj5iubzdWBf1vRY9Mh5QvjCDhBgA@mail.gmail.com>
- <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
+        b=yAT3GUSAolCquTvf0Pp53cAn87OGSGsmXvt3fY4x0HaTP066nxrMrhNi7XLAlokKE
+         NWsDhq+FLeSto9SRMOpINc6fpIPqogRq0L018DXZmvmzfgy4z30ezv6OJoGgL3JTax
+         /P2UHzW5dXogVigVJRFOU5dlh8rj9MaA1vY2KC/Q=
+Date:   Tue, 15 Oct 2019 19:55:55 +0200
+From:   reg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     zhangfei <zhangfei.gao@linaro.org>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v5 2/3] uacce: add uacce driver
+Message-ID: <20191015175555.GB1072965@kroah.com>
+References: <1571035735-31882-1-git-send-email-zhangfei.gao@linaro.org>
+ <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
+ <20191014113231.00002967@huawei.com>
+ <e71edf57-8449-e8d1-01ba-aed3ecf379e1@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e71edf57-8449-e8d1-01ba-aed3ecf379e1@linaro.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 04:36:56PM +0200, Michal Simek wrote:
-> On 15. 10. 19 11:51, Geert Uytterhoeven wrote:
-> > Hi Michal,
-> > 
-> > On Tue, Oct 15, 2019 at 11:22 AM Michal Simek <monstr@monstr.eu> wrote:
-> >> On 15. 10. 19 11:19, Geert Uytterhoeven wrote:
-> >>> On Mon, Sep 2, 2019 at 4:29 PM Michal Simek <michal.simek@xilinx.com> wrote:
-> >>>> The reason for this patch is xilinx_uartps driver which create one dynamic
-> >>>> instance per IP with unique major and minor combinations. drv->nr is in
-> >>>> this case all the time setup to 1. That means that uport->line is all the
-> >>>> time setup to 0 and drv->tty_driver->name_base is doing shift in name to
-> >>>> for example ttyPS3.
-> >>>>
-> >>>> register_console() is looping over console_cmdline array and looking for
-> >>>> proper name/index combination which is in our case ttyPS/3.
-> >>>> That's why every instance of driver needs to be registered with proper
-> >>>> combination of name/number (ttyPS/3). Using uport->line is doing
-> >>>> registration with ttyPS/0 which is wrong that's why proper console index
-> >>>> should be used which is in cons->index field.
-> >>>>
-> >>>> Also it is visible that recording console should be done based on
-> >>>> information about console not about the port but in most cases numbers are
-> >>>> the same and xilinx_uartps is only one exception now.
-> >>>>
-> >>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >>>
-> >>> This is now commit 91daae03188e0dd1 ("serial: core: Use cons->index
-> >>> for preferred console registration") in tty-next.
-> >>>
-> >>> This has been bisected to break the serial console on (at least)
-> >>> r8a7791/koelsch and r8a7795/h3-salvator-xs.
-> >>>
-> >>> The line "printk: console [ttySC0] enabled" is no longer printed.
-> >>> The system continues booting without any serial console output, and the
-> >>> login prompt never appears on the serial console.
-> >>>
-> >>> Reverting this commit fixes the issue.
-> >>
-> >> Sorry for trouble with this patch. Can you please point me to dts files
-> >> for these boards and also what's the value you have in uport->line and
-> > 
-> > arch/arm/boot/dts/r8a7791-koelsch.dts
-> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-> > 
-> >> uport->cons->index?
-> > 
-> > On r8a7791/koelsch:
-> > 
-> >     Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
-> >     platform serial8250: uport->line = 0, uport->cons->index = -1
-> >     platform serial8250: uport->line = 1, uport->cons->index = -1
-> >     platform serial8250: uport->line = 2, uport->cons->index = -1
-> >     platform serial8250: uport->line = 3, uport->cons->index = -1
-> >     SuperH (H)SCI(F) driver initialized
-> >   * sh-sci e6e60000.serial: uport->line = 0, uport->cons->index = -1
-> >   * e6e60000.serial: ttySC0 at MMIO 0xe6e60000 (irq = 79, base_baud =
-> > 0) is a scif
-> >     printk: console [ttySC0] enabled
-> >     sh-sci e6e68000.serial: uport->line = 1, uport->cons->index = 0
-> >     e6e68000.serial: ttySC1 at MMIO 0xe6e68000 (irq = 80, base_baud =
-> > 0) is a scif
-> > 
-> > On r8a7795/salvator-xs:
-> > 
-> >     sh-sci e6550000.serial: uport->line = 1, uport->cons->index = -1
-> >     e6550000.serial: ttySC1 at MMIO 0xe6550000 (irq = 34, base_baud =
-> > 0) is a hscif
-> >   * sh-sci e6e88000.serial: uport->line = 0, uport->cons->index = -1
-> >   * e6e88000.serial: ttySC0 at MMIO 0xe6e88000 (irq = 120, base_baud =
-> > 0) is a scif
-> >     printk: console [ttySC0] enabled
-> > 
-> > Actual serial consoles marked with *.
-> > 
-> > There are no 8250 serial ports in the system, shmobile_defconfig just includes
-> > driver support for it.
+On Tue, Oct 15, 2019 at 03:39:00PM +0800, zhangfei wrote:
+> Hi, Jonathan
 > 
-> ok. I will take a look at why it is not initialized in this case. Do you
-> have any qemu available for these boards?
-> 
-> Greg: Please revert this patch I will investigate why it is failing.
+> On 2019/10/14 下午6:32, Jonathan Cameron wrote:
+> > On Mon, 14 Oct 2019 14:48:54 +0800
+> > Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+> > 
+> > > From: Kenneth Lee <liguozhu@hisilicon.com>
+> > > 
+> > > Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+> > > provide Shared Virtual Addressing (SVA) between accelerators and processes.
+> > > So accelerator can access any data structure of the main cpu.
+> > > This differs from the data sharing between cpu and io device, which share
+> > > data content rather than address.
+> > > Since unified address, hardware and user space of process can share the
+> > > same virtual address in the communication.
+> > > 
+> > > Uacce create a chrdev for every registration, the queue is allocated to
+> > > the process when the chrdev is opened. Then the process can access the
+> > > hardware resource by interact with the queue file. By mmap the queue
+> > > file space to user space, the process can directly put requests to the
+> > > hardware without syscall to the kernel space.
+> > > 
+> > > Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+> > > Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+> > > Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> > > Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > Hi,
+> > 
+> > Some superficial comments from me.
+> Thanks for the suggestion.
+> > > +/*
+> > > + * While user space releases a queue, all the relatives on the queue
+> > > + * should be released immediately by this putting.
+> > This one needs rewording but I'm not quite sure what
+> > relatives are in this case.
+> > > + */
+> > > +static long uacce_put_queue(struct uacce_queue *q)
+> > > +{
+> > > +	struct uacce_device *uacce = q->uacce;
+> > > +
+> > > +	mutex_lock(&uacce_mutex);
+> > > +
+> > > +	if ((q->state == UACCE_Q_STARTED) && uacce->ops->stop_queue)
+> > > +		uacce->ops->stop_queue(q);
+> > > +
+> > > +	if ((q->state == UACCE_Q_INIT || q->state == UACCE_Q_STARTED) &&
+> > > +	     uacce->ops->put_queue)
+> > > +		uacce->ops->put_queue(q);
+> > > +
+> > > +	q->state = UACCE_Q_ZOMBIE;
+> > > +	mutex_unlock(&uacce_mutex);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > ..
+> > 
+> > > +
+> > > +static ssize_t qfrs_size_show(struct device *dev,
+> > > +				struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	struct uacce_device *uacce = to_uacce_device(dev);
+> > > +	unsigned long size;
+> > > +	int i, ret;
+> > > +
+> > > +	for (i = 0, ret = 0; i < UACCE_QFRT_MAX; i++) {
+> > > +		size = uacce->qf_pg_size[i] << PAGE_SHIFT;
+> > > +		if (i == UACCE_QFRT_SS)
+> > > +			break;
+> > > +		ret += sprintf(buf + ret, "%lu\t", size);
+> > > +	}
+> > > +	ret += sprintf(buf + ret, "%lu\n", size);
+> > > +
+> > > +	return ret;
+> > > +}
+> > This may break the sysfs rule of one thing per file.  If you have
+> > multiple regions, they should probably each have their own file
+> > to give their size.
+> Is the rule must be applied?
 
-Which patch exactly?  Can you provide a revert?  That makes it easiest
-for me.
+Yes, it always must be followed.  Please fix.
 
-thanks,
-
-greg k-h
