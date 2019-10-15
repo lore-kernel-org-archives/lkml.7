@@ -2,109 +2,96 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10689C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659BCC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C5821835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F942089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:30:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ng85Gh/P";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YKJ0erlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfJOHWU (ORCPT
+        id S1727463AbfJOHaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 03:22:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725802AbfJOHWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 03:22:20 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9F6AA85273C0512E6435;
-        Tue, 15 Oct 2019 15:22:17 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 15 Oct
- 2019 15:22:14 +0800
-Subject: Re: [PATCH] f2fs: fix to avoid memory leakage in f2fs_listxattr
-To:     Randall Huang <huangrandall@google.com>, <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20191009032019.6954-1-huangrandall@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <efddfbc3-bd31-b9fb-48de-decb01d01001@huawei.com>
-Date:   Tue, 15 Oct 2019 15:22:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191009032019.6954-1-huangrandall@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Tue, 15 Oct 2019 03:30:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51518 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfJOHaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 03:30:13 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1C57B607EF; Tue, 15 Oct 2019 07:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571124613;
+        bh=gWI5vS4LE2mM1KgFOZqFpR0hhNVS/xdT8FfifKIimMo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ng85Gh/PH2Amof+QeGPgy6g23SzlglLv12iiZwhPMS153MF9IKU6/M/ocUstx2kYh
+         V12q6RCYKjqO+bv4sdPNUiH8JIZFtLFBooQlsyZaoUY1cFftvLGspAGwUMED8XfjcN
+         PmMrFHo/2zo/8vX/W9s0crvCSK0tciAZe/9swwS4=
+Received: from mojha-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C326760A43;
+        Tue, 15 Oct 2019 07:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571124612;
+        bh=gWI5vS4LE2mM1KgFOZqFpR0hhNVS/xdT8FfifKIimMo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YKJ0erluDlold+ao0gXTJLwRHAygJPeCMBh40ytwx48uWpmjXIE2UZKE47tcSXFJz
+         p8B7I1WImtXcHpIYwNVOesOA10eKhqQkuqRHBYMOusej6uOZg2KAc32pey0zChkglt
+         GotwiPfpgTE02I62i+8w+bEyMhh2X2fiLCh/Kq/s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C326760A43
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+From:   Mukesh Ojha <mojha@codeaurora.org>
+To:     john.stultz@linaro.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mukesh Ojha <mojha@codeaurora.org>
+Subject: [PATCH 1/3] time/jiffies: Fixes some typo
+Date:   Tue, 15 Oct 2019 13:00:03 +0530
+Message-Id: <1571124603-9334-1-git-send-email-mojha@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randall,
+accuratly => accurately
 
-On 2019/10/9 11:20, Randall Huang wrote:
-> In f2fs_listxattr, there is no boundary check before
-> memcpy e_name to buffer.
-> If the e_name_len is corrupted,
-> unexpected memory contents may be returned to the buffer.
-> 
-> Signed-off-by: Randall Huang <huangrandall@google.com>
-> ---
->  fs/f2fs/xattr.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-> index b32c45621679..acc3663970cd 100644
-> --- a/fs/f2fs/xattr.c
-> +++ b/fs/f2fs/xattr.c
-> @@ -538,8 +538,9 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
->  ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
->  {
->  	struct inode *inode = d_inode(dentry);
-> +	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
->  	struct f2fs_xattr_entry *entry;
-> -	void *base_addr;
-> +	void *base_addr, *last_base_addr;
->  	int error = 0;
->  	size_t rest = buffer_size;
->  
-> @@ -549,6 +550,8 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
->  	if (error)
->  		return error;
->  
-> +	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
-> +
->  	list_for_each_xattr(entry, base_addr) {
->  		const struct xattr_handler *handler =
->  			f2fs_xattr_handler(entry->e_name_index);
-> @@ -559,6 +562,15 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
->  		if (!handler || (handler->list && !handler->list(dentry)))
->  			continue;
->  
-> +		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
-> +			(void *)XATTR_NEXT_ENTRY(entry) > last_base_addr) {
-> +			f2fs_err(F2FS_I_SB(inode), "inode (%lu) has corrupted xattr",
-> +						inode->i_ino);
-> +			set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
-> +			error = -EFSCORRUPTED;
-> +			goto cleanup;
-> +		}
+while at it change `clock source` to clocksource to make
+it align with its usage at other places.
 
-Could you relocate sanity check to the place before we check handler? As I'm
-thinking we should always check validation of current entry before using its
-field (entry->index).
+Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+---
+ kernel/time/jiffies.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
+index d23b434..e7f08f2 100644
+--- a/kernel/time/jiffies.c
++++ b/kernel/time/jiffies.c
+@@ -39,12 +39,12 @@ static u64 jiffies_read(struct clocksource *cs)
+ 
+ /*
+  * The Jiffies based clocksource is the lowest common
+- * denominator clock source which should function on
++ * denominator clocksource which should function on
+  * all systems. It has the same coarse resolution as
+  * the timer interrupt frequency HZ and it suffers
+  * inaccuracies caused by missed or lost timer
+  * interrupts and the inability for the timer
+- * interrupt hardware to accuratly tick at the
++ * interrupt hardware to accurately tick at the
+  * requested HZ value. It is also not recommended
+  * for "tick-less" systems.
+  */
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-> +
->  		prefix = xattr_prefix(handler);
->  		prefix_len = strlen(prefix);
->  		size = prefix_len + entry->e_name_len + 1;
-> 
