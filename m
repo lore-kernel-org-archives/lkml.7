@@ -2,94 +2,90 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2AEECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB03C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0FB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54E9217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571127644;
+	bh=X0OIrA720x+aDqrTqdN+5ag6q1BbkecqENaXJV6YsTQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gaYrx/AQ1Flu5S93XMO5lup7mlu3s0nygZbLscBrlgEJmBr4LNk/OR7QlJWexOL9u
+	 FgSAM7kxxaVXP/iPYg9GiVWEElw7Tw6/vzl5Flr1aJoM8DRruZvr8xMXBbVJfroPIZ
+	 o62z3vqMSorDYxtf/RHzTsM/svIy1C4OGkOkaego=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfJOIQe (ORCPT
+        id S1728575AbfJOIUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:16:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3715 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728638AbfJOIQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:16:34 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 684F722A77D763E6CFE1;
-        Tue, 15 Oct 2019 16:16:30 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 16:16:22 +0800
-Subject: Re: [PATCH for-stable-5.3 1/2] ACPI/PPTT: Add support for ACPI 6.3
- thread flag
-To:     Sasha Levin <sashal@kernel.org>
-References: <1571054162-71090-1-git-send-email-john.garry@huawei.com>
- <1571054162-71090-2-git-send-email-john.garry@huawei.com>
- <20191014232958.GC31224@sasha-vm>
-CC:     <stable@vger.kernel.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <sudeep.holla@arm.com>, <rrichter@marvell.com>,
-        <jeremy.linton@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linuxarm@huawei.com>, <gregkh@linuxfoundation.org>,
-        <guohanjun@huawei.com>, <wanghuiqiang@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <635a839b-bc1e-37ab-bd47-a554acc9b282@huawei.com>
-Date:   Tue, 15 Oct 2019 09:16:13 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Tue, 15 Oct 2019 04:20:42 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44438 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfJOIUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:20:42 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 21so16124756otj.11;
+        Tue, 15 Oct 2019 01:20:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X0OIrA720x+aDqrTqdN+5ag6q1BbkecqENaXJV6YsTQ=;
+        b=V3Mgap19ZaURZpOwEaYH2av4/SNFhmcklNrV/lpnzysAFaRPISirzTRBarISsjM/D9
+         o/fwMD+0yGVwVQbrrK7CYrtOQWZgEzvLBxVJFxiIuzxGGBRYJ0k6cRhcTNGl0iv6Mj9C
+         AwzdoWpGPWy3Xsnq7S6VzLdQAtycKxXlbGoQpWeQO1UYq1Q3ZNzc4c3AwIB2tbrSZQ+P
+         D7njqroghd4noAwt2CMqXAHnBX342mHd2/kmqPOlK6RlOvTLaY3QOvxkXILmJ//jsb2X
+         q7UL4isLzH/V7MM9VKch9GxbI+IPwomhxQa7sS0KHbkHhTYPlIJ71yy2oAnRrtoiQ+nb
+         XE9w==
+X-Gm-Message-State: APjAAAXruq4XjPkezyUBav1AMSsv01U/xbBtDhUdV8Ja+v11s3cdDWJw
+        df0VIXIxMbL2tM1F7Cd90E9oDMPJqNm1GIpi3tM=
+X-Google-Smtp-Source: APXvYqxCVgqWHDr4+LFcWfZ0MfOsz6lGzoPw9ZwtG9f2jjSZEvZAKIktmnMZIzUaU1PCNCBBaH3SAN3yCwj+Z96Fwew=
+X-Received: by 2002:a9d:459b:: with SMTP id x27mr26564657ote.167.1571127641248;
+ Tue, 15 Oct 2019 01:20:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191014232958.GC31224@sasha-vm>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+References: <20190927090202.1468-1-drake@endlessm.com> <CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com>
+ <3118349.722IRLjr4b@kreacher> <5720276.eiOaOx1Qyb@kreacher> <CAD8Lp45rKeLs5xSvS9ffs+G0D5iLMn5-MWypqCKWCn0jGdfGHQ@mail.gmail.com>
+In-Reply-To: <CAD8Lp45rKeLs5xSvS9ffs+G0D5iLMn5-MWypqCKWCn0jGdfGHQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 15 Oct 2019 10:20:29 +0200
+Message-ID: <CAJZ5v0jCzGrijtfnVz8jq0-QRhETau9rzvEt4jiXtwWauV9vPQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Fix pci_power_up()
+To:     Daniel Drake <drake@endlessm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 00:29, Sasha Levin wrote:
-> On Mon, Oct 14, 2019 at 07:56:01PM +0800, John Garry wrote:
->> From: Jeremy Linton <jeremy.linton@arm.com>
->>
->> Commit bbd1b70639f785a970d998f35155c713f975e3ac upstream.
->>
->> ACPI 6.3 adds a flag to the CPU node to indicate whether
->> the given PE is a thread. Add a function to return that
->> information for a given linux logical CPU.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
->> Reviewed-by: Robert Richter <rrichter@marvell.com>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Signed-off-by: Will Deacon <will@kernel.org>
->> Signed-off-by: John Garry <john.garry@huawei.com>
+On Tue, Oct 15, 2019 at 7:11 AM Daniel Drake <drake@endlessm.com> wrote:
 >
-> How far back should these patches be backported?
+> On Mon, Oct 14, 2019 at 7:25 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > Since there is no reason for that difference to exist, modify
+> > pci_power_up() to follow pci_set_power_state() more closely and
+> > invoke __pci_start_power_transition() from there to call the
+> > platform firmware to power up the device (in case that's necessary).
+> >
+> > Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+> > Reported-by: Daniel Drake <drake@endlessm.com>
+> > Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > Daniel, please test this one.
 >
+> This one is working too, thanks
 
-Hi Sasha,
+Thank you!
 
-This patchset is for 5.3, and I sent a separate patchset for 4.19, since 
-the backport is a little different and required some hand modification - 
- 
-https://lore.kernel.org/linux-arm-kernel/1571046986-231263-1-git-send-email-john.garry@huawei.com/. 
-4.19 is as far back as we want.
-
-Please note that the patches in this 5.3 series are relevant for 5.2 
-also, but since 5.2 is EOL, I didn't mention it. We did test 5.2, so you 
-can add there also.
-
-Please let me know if any more questions.
-
-All the best,
-John
-
-
-
+Bjorn, any concerns?
