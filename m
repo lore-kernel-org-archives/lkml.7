@@ -2,137 +2,71 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A766C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DD5ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1072064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etwkzRt3"
+	by mail.kernel.org (Postfix) with ESMTP id 733B52064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbfJOLr2 (ORCPT
+        id S1729525AbfJOLsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:47:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45048 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729481AbfJOLr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:47:27 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z9so23453701wrl.11;
-        Tue, 15 Oct 2019 04:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ulsuWsmw6ywU37e9HkaAdJcm6nrsJHw0aJd0sjrTDpg=;
-        b=etwkzRt382aFYCF9p0y+RlbPcJwDiADZape6hsbFYpfFkGYZzpuQdMhY02YM2yYKJ/
-         jb1mCI+HoT0QSy8L/MDHaIgi9n0Bv7I+5L7aNudoQ59Z35gAI8ZG+dqNFW54PHlTcWtF
-         JKyxJjoqBQR/8y+frdOmiPTSH7kUcp41WAZtTNu91uljdvnupB83/sqVWG5iGiTRtCa7
-         oSY7cZTFodDiQ83bc5nehZ2InQMslMJJQbwpsP3mCnmky9nxX1A2HubOMC1qTsnnXBHQ
-         ostqP2GJlH4Wj6NiWOQjGCSi4j2LTdBUA/PSSiNS7VanhD/89Wx++Gx2Q30SlqHhBb6t
-         J4vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ulsuWsmw6ywU37e9HkaAdJcm6nrsJHw0aJd0sjrTDpg=;
-        b=TFm/ahci/zbx5eGkdcBMEiIH48/bGzmZWNrQhZP+dHMLnUMRdigdSmEa3yskuaTAh7
-         a92+QADoCfQXt8Zgejd3LM5StPu+ifLgz173CAQR7V/lKcS/eNjYH5qhpY3WuL+ghWJ+
-         0Lp5PphEsdj54+AD38FdT530wWrGrLf1m0+1G+77zcHic7zzfROWQnvOiUjvoGXLHQAp
-         KrTmae9KDdrEBrjd50/QvNcvfbSrXcqVFYUcs5swLj7zDJI6nPNrCt+gBpzenHgNj1jo
-         y1WwQGfoab4XXVyKdG18euVWu5iqpEjZPGkrRSXph2kIGJdKz8TbcqGnh/VrGHXCRRR4
-         XCCQ==
-X-Gm-Message-State: APjAAAWi3Sag/1Me3812i8QikER8RyBJORoGcZB4VuVih/lwoaKGDcLB
-        g+sX/ILPNdITxW5C01SCvUrqzJF2eexWmA==
-X-Google-Smtp-Source: APXvYqzDFx/Jn+FF3XP9lfJUfdUNjQ2QHplgf/Xs3th4bCzywAppyk8BSnmo7qsZ03A6IQpXxgHHGg==
-X-Received: by 2002:adf:f441:: with SMTP id f1mr32187954wrp.340.1571140044294;
-        Tue, 15 Oct 2019 04:47:24 -0700 (PDT)
-Received: from andrea.corp.microsoft.com ([2a01:110:8012:1010:8d42:cc61:bfff:65c2])
-        by smtp.gmail.com with ESMTPSA id u11sm20237307wmd.32.2019.10.15.04.47.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 04:47:23 -0700 (PDT)
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: [PATCH v3 3/3] Drivers: hv: vmbus: Add module parameter to cap the VMBus version
-Date:   Tue, 15 Oct 2019 13:46:46 +0200
-Message-Id: <20191015114646.15354-4-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191015114646.15354-1-parri.andrea@gmail.com>
-References: <20191015114646.15354-1-parri.andrea@gmail.com>
+        Tue, 15 Oct 2019 07:48:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3763 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728386AbfJOLsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:48:13 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8A3E82110A68FC938004;
+        Tue, 15 Oct 2019 19:48:10 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 19:48:02 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <santosh.shilimkar@oracle.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <rds-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net/rds: Remove unnecessary null check
+Date:   Tue, 15 Oct 2019 19:47:36 +0800
+Message-ID: <20191015114736.16928-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, Linux guests negotiate the VMBus version with Hyper-V
-and use the highest available VMBus version they can connect to.
-This has some drawbacks: by using the highest available version,
-certain code paths are never executed and can not be tested when
-the guest runs on the newest host.
+Null check before dma_pool_destroy is redundant, so remove it.
+This is detected by coccinelle.
 
-Add the module parameter "max_version", to upper-bound the VMBus
-versions guests can negotiate.
-
-Suggested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/hv/connection.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/rds/ib.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index cadfb34b38d80..0475be4356dd7 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -14,6 +14,7 @@
- #include <linux/wait.h>
- #include <linux/delay.h>
- #include <linux/mm.h>
-+#include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/hyperv.h>
-@@ -55,6 +56,16 @@ static __u32 vmbus_versions[] = {
- 	VERSION_WS2008
- };
+diff --git a/net/rds/ib.c b/net/rds/ib.c
+index 62d4ebe..3fd5f40 100644
+--- a/net/rds/ib.c
++++ b/net/rds/ib.c
+@@ -108,8 +108,7 @@ static void rds_ib_dev_free(struct work_struct *work)
+ 		rds_ib_destroy_mr_pool(rds_ibdev->mr_1m_pool);
+ 	if (rds_ibdev->pd)
+ 		ib_dealloc_pd(rds_ibdev->pd);
+-	if (rds_ibdev->rid_hdrs_pool)
+-		dma_pool_destroy(rds_ibdev->rid_hdrs_pool);
++	dma_pool_destroy(rds_ibdev->rid_hdrs_pool);
  
-+/*
-+ * Maximal VMBus protocol version guests can negotiate.  Useful to cap the
-+ * VMBus version for testing and debugging purpose.
-+ */
-+static uint max_version = VERSION_WIN10_V5_2;
-+
-+module_param(max_version, uint, S_IRUGO);
-+MODULE_PARM_DESC(max_version,
-+		 "Maximal VMBus protocol version which can be negotiated");
-+
- int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 version)
- {
- 	int ret = 0;
-@@ -240,6 +251,8 @@ int vmbus_connect(void)
- 			goto cleanup;
- 
- 		version = vmbus_versions[i];
-+		if (version > max_version)
-+			continue;
- 
- 		ret = vmbus_negotiate_version(msginfo, version);
- 		if (ret == -ETIMEDOUT)
+ 	list_for_each_entry_safe(i_ipaddr, i_next, &rds_ibdev->ipaddr_list, list) {
+ 		list_del(&i_ipaddr->list);
 -- 
-2.23.0
+2.7.4
+
 
