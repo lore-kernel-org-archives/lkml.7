@@ -2,137 +2,153 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88316ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0632721835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD55218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KXldssEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfJOLYF (ORCPT
+        id S1727687AbfJOLYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:24:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:36282 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfJOLYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:24:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAE3D1000;
-        Tue, 15 Oct 2019 04:24:04 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC9373F68E;
-        Tue, 15 Oct 2019 04:24:02 -0700 (PDT)
-Subject: Re: [PATCH v3 4/7] iommu/mediatek: Delete the leaf in the tlb flush
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>, youlin.pei@mediatek.com,
-        anan.sun@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
-        cui.zhang@mediatek.com, srv_heupstream@mediatek.com,
-        chao.hao@mediatek.com, edison.hsieh@mediatek.com,
-        linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
- <1571035101-4213-5-git-send-email-yong.wu@mediatek.com>
- <20c74c20-864e-88af-3c58-ad3bb7600bcc@arm.com>
- <1571117118.19130.81.camel@mhfsdcap03>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <888d299a-b314-2735-bc73-dd68b92c33af@arm.com>
-Date:   Tue, 15 Oct 2019 12:24:01 +0100
+        Tue, 15 Oct 2019 07:24:09 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41082 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfJOLYG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:24:06 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9FBNt9L109230;
+        Tue, 15 Oct 2019 06:23:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571138635;
+        bh=JtonZDXxyNuqLG8pQHZ0YDPt2+49Y+aRH6v4JFO9anw=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=KXldssEfQzIdpm/xL8bImgE+7Ze0Bn9jIXXOnN70YnNZKpAMKNdcwEo0QGf1J7Ho6
+         stYsk6C5V/k+6jw6wWWXVDJqsklMPsFPRUJcuvAo5qOvyNWz10sCxyTWkfpxedJvBp
+         hiJnDWmiw6Hq46Tx/xcwFpuTYDsy2XmeiSj8KrPk=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9FBNtMH052386
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Oct 2019 06:23:55 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
+ Oct 2019 06:23:48 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 15 Oct 2019 06:23:55 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9FBNmk2109164;
+        Tue, 15 Oct 2019 06:23:50 -0500
+Subject: Re: [PATCH] PCI:cadence:Driver refactored to use as a core library.
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>
+References: <1569861768-10109-1-git-send-email-tjoseph@cadence.com>
+ <03a8af4b-96bb-48b6-a79b-7db3a2ee59d0@ti.com>
+Message-ID: <ba7cf838-dc20-2007-cbf4-e8fbcd49e69f@ti.com>
+Date:   Tue, 15 Oct 2019 16:53:20 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1571117118.19130.81.camel@mhfsdcap03>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <03a8af4b-96bb-48b6-a79b-7db3a2ee59d0@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 06:25, Yong Wu wrote:
-> On Mon, 2019-10-14 at 15:22 +0100, Robin Murphy wrote:
->> On 14/10/2019 07:38, Yong Wu wrote:
->>> In our tlb range flush, we don't care the "leaf". Remove it to simplify
->>> the code. no functional change.
+Hi Tom,
+
+On 01/10/19 4:45 PM, Kishon Vijay Abraham I wrote:
+> Hi Tom,
+> 
+> On 30/09/19 10:12 PM, Tom Joseph wrote:
+>> All the platform related APIs/Structures in the driver has been extracted
+>>  out to a separate file (pcie-cadence-plat.c). This will enable the
+>>  driver to be used as a core library, which could be used by other
+>>  platform drivers.Testing was done using simulation environment.
 >>
->> Presumably you don't care about the granule either?
-> 
-> Yes. I only keep "granule" to satisfy the format of "tlb_flush_walk",
-> then it's no need add a new helper function.
-
-Ah, I'd failed to make the connection that it ends up wired in directly 
-to the callbacks in patch #5 - indeed there's no point churning the 
-mtk_iommu_tlb_add_flush_nosync() callsites here if they're just getting 
-removed later anyway. In that case,
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
->>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
->>> ---
->>>    drivers/iommu/mtk_iommu.c | 16 ++++------------
->>>    1 file changed, 4 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
->>> index 8712afc..19f936c 100644
->>> --- a/drivers/iommu/mtk_iommu.c
->>> +++ b/drivers/iommu/mtk_iommu.c
->>> @@ -174,8 +174,7 @@ static void mtk_iommu_tlb_flush_all(void *cookie)
->>>    }
->>>    
->>>    static void mtk_iommu_tlb_add_flush_nosync(unsigned long iova, size_t size,
->>> -					   size_t granule, bool leaf,
->>> -					   void *cookie)
->>> +					   size_t granule, void *cookie)
->>>    {
->>>    	struct mtk_iommu_data *data = cookie;
->>>    
->>> @@ -219,14 +218,7 @@ static void mtk_iommu_tlb_sync(void *cookie)
->>>    static void mtk_iommu_tlb_flush_walk(unsigned long iova, size_t size,
->>>    				     size_t granule, void *cookie)
->>>    {
->>> -	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, false, cookie);
->>> -	mtk_iommu_tlb_sync(cookie);
->>> -}
->>> -
->>> -static void mtk_iommu_tlb_flush_leaf(unsigned long iova, size_t size,
->>> -				     size_t granule, void *cookie)
->>> -{
->>> -	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, true, cookie);
->>> +	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, cookie);
->>>    	mtk_iommu_tlb_sync(cookie);
->>>    }
->>>    
->>> @@ -245,7 +237,7 @@ static void mtk_iommu_tlb_flush_page_nosync(struct iommu_iotlb_gather *gather,
->>>    static const struct iommu_flush_ops mtk_iommu_flush_ops = {
->>>    	.tlb_flush_all = mtk_iommu_tlb_flush_all,
->>>    	.tlb_flush_walk = mtk_iommu_tlb_flush_walk,
->>> -	.tlb_flush_leaf = mtk_iommu_tlb_flush_leaf,
->>> +	.tlb_flush_leaf = mtk_iommu_tlb_flush_walk,
->>>    	.tlb_add_page = mtk_iommu_tlb_flush_page_nosync,
->>>    };
->>>    
->>> @@ -475,7 +467,7 @@ static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
->>>    		spin_lock_irqsave(&dom->pgtlock, flags);
->>>    
->>>    	mtk_iommu_tlb_add_flush_nosync(gather->start, length, gather->pgsize,
->>> -				       false, data);
->>> +				       data);
->>>    	mtk_iommu_tlb_sync(data);
->>>    
->>>    	if (!is_in_gather)
->>>
+>> Signed-off-by: Tom Joseph <tjoseph@cadence.com>
+>> ---
+>>  drivers/pci/controller/Kconfig             |  35 +++++++
+>>  drivers/pci/controller/Makefile            |   1 +
+>>  drivers/pci/controller/pcie-cadence-ep.c   |  78 ++-------------
+>>  drivers/pci/controller/pcie-cadence-host.c |  77 +++------------
+>>  drivers/pci/controller/pcie-cadence-plat.c | 154 +++++++++++++++++++++++++++++
+>>  drivers/pci/controller/pcie-cadence.h      |  69 +++++++++++++
+>>  6 files changed, 278 insertions(+), 136 deletions(-)
+>>  create mode 100644 drivers/pci/controller/pcie-cadence-plat.c
 >>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
-> 
+
+<snip>
+
+>> diff --git a/drivers/pci/controller/pcie-cadence-plat.c b/drivers/pci/controller/pcie-cadence-plat.c
+>> new file mode 100644
+>> index 0000000..274615d
+>> --- /dev/null
+>> +++ b/drivers/pci/controller/pcie-cadence-plat.c
+>> @@ -0,0 +1,154 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2019 Cadence
+>> +// Cadence PCIe platform  driver.
+>> +// Author: Tom Joseph <tjoseph@cadence.com>
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_pci.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/of_device.h>
+>> +#include "pcie-cadence.h"
+>> +
+>> +/**
+>> + * struct cdns_plat_pcie - private data for this PCIe platform driver
+>> + * @pcie: Cadence PCIe controller
+>> + * @regmap: pointer to PCIe device
+>> + * @is_rc: Set to 1 indicates the PCIe controller mode is Root Complex,
+>> + *         if 0 it is in Endpoint mode.
+>> + */
+>> +struct cdns_plat_pcie {
+>> +	struct cdns_pcie        *pcie;
+>> +	bool is_rc;
+>> +};
+>> +
+>> +struct cdns_plat_pcie_of_data {
+>> +	bool is_rc;
+>> +};
+>> +
+>> +static const struct of_device_id cdns_plat_pcie_of_match[];
+>> +
+>> +int cdns_plat_pcie_link_control(struct cdns_pcie *pcie, bool start)
+>> +{
+>> +	pr_debug(" %s called\n", __func__);
+>> +	return 0;
+>> +}
+>> +
+>> +bool cdns_plat_pcie_link_status(struct cdns_pcie *pcie)
+
+How do you get cdns_plat_pcie from pcie? Cadence plat doesn't need it however
+the platform specific base address will be stored in the platform specific
+structure (struct cdns_plat_pcie here) which will be used for performing
+controller configuration.
+
+I think you can just move *dev to struct cdns_pcie from struct
+cdns_pcie_ep/struct cdns_pcie_rc and use dev_get_drvdata here to get platform
+specific structure.
+
+Thanks
+Kishon
