@@ -2,55 +2,117 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D612ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FA9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BD921A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0117821848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T5ySigM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfJOLkt (ORCPT
+        id S1729150AbfJOLl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:40:49 -0400
-Received: from 8bytes.org ([81.169.241.247]:47474 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbfJOLks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:40:48 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E6A532D9; Tue, 15 Oct 2019 13:40:46 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 13:40:45 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/intel: Use fallback generic_device_group() for
- ACPI devices
-Message-ID: <20191015114045.GJ14518@8bytes.org>
-References: <20191004205554.21055-1-chris@chris-wilson.co.uk>
+        Tue, 15 Oct 2019 07:41:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34012 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfJOLl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:41:26 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FBdB9E123641;
+        Tue, 15 Oct 2019 11:41:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=MTHyrFVhEf+mLJzIsQVQff04UKmAu7hCbBg+TGgC/9k=;
+ b=T5ySigM+ybCEeiHhQUAJhUQGLp8N/8O/AeZ5MwJGACTC4T2YPgxs7gRwVQldjUsU/5O4
+ FthThZJvVWNbaviu0u16g69Wpy53HGnOhQNkUsSzD10zn/DbIPK6jcWbg595xb6gRzXB
+ LP3z/QpkiVjvztSJTtqwHl55CHjuU3U34n77GaO/eQyF9s1wIvJgjPA+rErDKcgBjTfe
+ KvQqmS0cET2XrpEvulPBE9B1vfBcbCBrR/pwNQ3/al6VkHXQZbRGZAhSvTN1c8fGNKkG
+ eFfPfts7gyDPrBjZUz8prfHx2iYCIyWzIrP4YjRDhnMHSTHhfqDjPnwbSzz4BWBnFK2E FA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vk7fr72nk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 11:41:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FBbsNl139432;
+        Tue, 15 Oct 2019 11:41:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vn71810d6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 11:41:19 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FBfHqW001675;
+        Tue, 15 Oct 2019 11:41:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 11:41:17 +0000
+Date:   Tue, 15 Oct 2019 14:41:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191015114108.GF4774@kadam>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
+ <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+ <20191010113034.GN13286@kadam>
+ <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191004205554.21055-1-chris@chris-wilson.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 09:55:54PM +0100, Chris Wilson wrote:
-> [    2.073922] DMAR: ACPI device "INT33C2:00" under DMAR at fed91000 as 00:15.1
-> [    2.073983] DMAR: ACPI device "INT33C3:00" under DMAR at fed91000 as 00:15.2
-> [    2.074027] DMAR: ACPI device "INT33C0:00" under DMAR at fed91000 as 00:15.3
-> [    2.074072] DMAR: ACPI device "INT33C1:00" under DMAR at fed91000 as 00:15.4
+On Tue, Oct 15, 2019 at 01:24:50PM +0200, Alexander Gordeev wrote:
+> On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
+> > On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
+> > > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
+> > > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > > > > > +	struct avalon_dma_desc *desc;
+> > > > > > > +	struct virt_dma_desc *vdesc;
+> > > > > > > +	bool rd_done;
+> > > > > > > +	bool wr_done;
+> > > > > > > +
+> > > > > > > +	spin_lock(lock);
+> 
+> [*]
 
-I think just using generic_device_group() is not enough here. You need
-to mach the device-id of the ACPI device with the PCI hierarchy and find
-the right group there. You can look at the AMD IOMMU drivers
-acpihid_device_group() function for some inspiration.
+[ snip ]
 
-Regards,
+> I struggle to realize how the spinlock I use (see [*] above) does not
+> protect the reader.
 
-	Joerg
+Argh....  I'm really sorry.  I completely didn't see the spinlock.  :P
+
+I am embarrassed.  Wow...
+
+regards,
+dan carpenter
 
