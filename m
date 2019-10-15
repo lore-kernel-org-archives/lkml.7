@@ -2,366 +2,118 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0376FECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B35ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA1E2089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49AB2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PkZ7vh3Q"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="HyO5Tt59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfJOKPg (ORCPT
+        id S1730245AbfJOKQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:15:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54833 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbfJOKPg (ORCPT
+        Tue, 15 Oct 2019 06:16:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42299 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfJOKQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:15:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p7so20208152wmp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:15:31 -0700 (PDT)
+        Tue, 15 Oct 2019 06:16:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f14so6734892pgi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=dsTN37zqLPbHqWUNaQt3DZge8bkuIetBxQBrj56qdws=;
-        b=PkZ7vh3QFYqGkdLdYVLHzTELeuKMP1XgaFXLFli9A9Frgsl+dy5L3G/7w9qBuyHYc0
-         WUZXlKXXyJum9iqw9SuhkY8hVwmqr552hYCMJLAo7/9UeKpCPaEQkyjqE1mxBXVJx7Dz
-         dYx9Tymlq8OMWVZQasJ3Z/DAPmL4tAKEtwUcWYh+CT3OUHhURw2wyVRanXYpFZUhOxBI
-         oGIuaTwqIAaCbp3nj2Pdswb4tHzdusjJxQIh/QKY0gIIDdrPa2v5MgwHtpeRkDlNDReY
-         H/k1reXk21EZsq+FmFQqpCGcf9ZDroa7QnSIPhp0eh54JIXJNSj/2Set4reSUrZdawY5
-         CngQ==
+        bh=YyF2qg/Mhc4XEhGEeCU7TNWSjed5NzKyuCiBwgDTeok=;
+        b=HyO5Tt59GXKnrGY+7LLGuEkSKL44f7b0LahkEZrWPyGOEgwfP9XhkgKA6vLMD1WZqX
+         9NLdthg8oZNElo8bSkoMfzoO8e2rwSsxlVaxeBbj4tonHGiTfZG8UJfuUcYe4xQTc/3O
+         b48BI9elpB7LeoPX4mxI15ORrtisztT+hKwLIjW1NrAeadOP6rgghtu5WaQdP7lkCq6B
+         R+wdrxm4EJhh8GB3uhfhq4aDpFQ2mopfT4bkGwYQUbca15LR/SO0wpMVlvpvvzLBhWqp
+         jmApCL4kHkTCR8OURej7ubIG4YgD/xC5V/ODAZk/Ry72wlzcG/31+qQeejNWadxY5RkX
+         fV4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dsTN37zqLPbHqWUNaQt3DZge8bkuIetBxQBrj56qdws=;
-        b=l1fz6NQomuomSi372dg4jKLRMNZS4Pj2959UxvqvoON+t6pKDYubpK3faB0yuwyGfN
-         lNqhZ9NFd3hayBYz4WcH271JTb+1ATSkZdNUKxsmt4TSiuwTbXfo0Roh+RMTld29cRUG
-         7gKxo8niAA2NSv4RW8i+qDuaoRtDpwZq0nIoDDl5UoVtWkXKR0zsxN5AfYSpifhJc0AG
-         s5F4fs1X/AUyT7lfPTp6KemLgKXmS/E0Pt/nJFwGTmkXylJPh2qzqn8xnW7fbC4CzVhe
-         oVqaP+UB59Ku/r7JctqxD62HLe+w3h/G3ONrWHjV9nwNRh9wN/xlQbtYzm11IdNQB/9P
-         4qlg==
-X-Gm-Message-State: APjAAAW7qFQrfKAJ0UY76b+g8vUur8Ih70OV6ErkP+eMXDTcmI8pYS73
-        VeGUlDggWmtUHtoz2xKkhIqPHO3Buzw=
-X-Google-Smtp-Source: APXvYqyLDmlu02Tb7cVNegMrohZZIT4o75IgH8mj4B1UNrja8PRCTfIpRVH457Tt+YQ+lB/GkWWpag==
-X-Received: by 2002:a1c:7401:: with SMTP id p1mr17912443wmc.144.1571134530075;
-        Tue, 15 Oct 2019 03:15:30 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:2d16:691b:1fc4:c4bb? ([2a01:e34:ed2f:f020:2d16:691b:1fc4:c4bb])
-        by smtp.googlemail.com with ESMTPSA id z9sm22826433wrp.26.2019.10.15.03.15.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 03:15:29 -0700 (PDT)
-Subject: Re: [PATCH V4 1/3] cpuidle: play_idle: Make play_idle more flexible
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rjw@rjwysocki.net
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
-        <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191004083205.29302-1-daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d2058797-5b31-326c-34ad-6d7b9bd01f19@linaro.org>
-Date:   Tue, 15 Oct 2019 12:15:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YyF2qg/Mhc4XEhGEeCU7TNWSjed5NzKyuCiBwgDTeok=;
+        b=LdrYCP17R3QAdVZ/t/tkCDKZ7t/24sFlkm68NxK+FifvBLEl7ZZu+etUGXcLxxqRye
+         f7zhFp7nNSIHvplWCtOgeU/6z66WOkMDjTpDUMV/it+jMDnet/VTwP5+RgFYyNmxR0MK
+         78Ra51VrHduWKxGPiybegp3ix/Lq9lJY3OgIWfXzvhdkoAB9dNR9IMX/LrkSRpUTWWO/
+         HuP/qWKhrQYzxKzz1tKv65gzCJjzma1rdonMICRInkIkgm/WfOma6rzfw7JTb50P7CM2
+         Uk6+OR5+sgvIon2UPCfmhlpw2u4XqU7YwOnydHD8dewYexxB3raMsDip5mXTeFhVUV9P
+         TvEg==
+X-Gm-Message-State: APjAAAUjDyPUvQotje8VKmyW0LUFNBM+kFBaKIICaNQXcocEg5luEBdR
+        thjCTn8VAaQl+BmNRPyY72Hmcg==
+X-Google-Smtp-Source: APXvYqy0xGbbo5vxBCjyi2D1txW1Xhaykdn/3hUyo1fQuxdB/nRiboXKJ4vr/m3wedCmwKaVbLlPxA==
+X-Received: by 2002:a17:90a:ac12:: with SMTP id o18mr25640079pjq.93.1571134579228;
+        Tue, 15 Oct 2019 03:16:19 -0700 (PDT)
+Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
+        by smtp.gmail.com with ESMTPSA id f15sm19639288pfd.141.2019.10.15.03.16.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 15 Oct 2019 03:16:18 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: [PATCH] rtl8xxxu: fix connection failure issue after warm reboot
+Date:   Tue, 15 Oct 2019 18:16:08 +0800
+Message-Id: <20191015101608.4566-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <20191004083205.29302-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
+ 3 files changed, 5 insertions(+)
 
-Hi Rafael,
-
-can we consider this series for the next kernel version ?
-
-Thanks
-
-
-On 04/10/2019 10:32, Daniel Lezcano wrote:
-> The play_idle function has two users, the intel powerclamp and the
-> idle_injection.
-> 
-> The idle injection cooling device uses the function via the
-> idle_injection powercap's APIs. Unfortunately, play_idle is currently
-> limited by the idle state depth: by default the deepest idle state is
-> selected. On the ARM[64] platforms, most of the time it is the cluster
-> idle state, the exit latency and the residency can be very high. That
-> reduces the scope of the idle injection usage because the impact on
-> the performances can be very significant.
-> 
-> If the idle injection cycles can be done with a shallow state like a
-> retention state, the cooling effect would eventually give similar
-> results than the cpufreq cooling device.
-> 
-> In order to prepare the function to receive an idle state parameter,
-> let's replace the 'use_deepest_state' boolean field with 'use_state'
-> and use this value to enter the specific idle state.
-> 
-> The current code keeps the default behavior which is go to the deepest
-> idle state.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  drivers/cpuidle/cpuidle.c | 21 +++++++++++----------
->  include/linux/cpuidle.h   | 13 ++++++-------
->  kernel/sched/idle.c       | 10 +++++-----
->  3 files changed, 22 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 0895b988fa92..f8b54f277589 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -99,31 +99,31 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->  }
->  
->  /**
-> - * cpuidle_use_deepest_state - Set/clear governor override flag.
-> - * @enable: New value of the flag.
-> + * cpuidle_use_state - Force the cpuidle framework to enter an idle state.
-> + * @state: An integer for an idle state
->   *
-> - * Set/unset the current CPU to use the deepest idle state (override governors
-> - * going forward if set).
-> + * Specify an idle state the cpuidle framework must step in and bypass
-> + * the idle state selection process.
->   */
-> -void cpuidle_use_deepest_state(bool enable)
-> +void cpuidle_use_state(int state)
->  {
->  	struct cpuidle_device *dev;
->  
->  	preempt_disable();
->  	dev = cpuidle_get_device();
->  	if (dev)
-> -		dev->use_deepest_state = enable;
-> +		dev->use_state = state;
->  	preempt_enable();
->  }
->  
->  /**
->   * cpuidle_find_deepest_state - Find the deepest available idle state.
-> - * @drv: cpuidle driver for the given CPU.
-> - * @dev: cpuidle device for the given CPU.
->   */
-> -int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
-> -			       struct cpuidle_device *dev)
-> +int cpuidle_find_deepest_state(void)
->  {
-> +	struct cpuidle_device *dev = cpuidle_get_device();
-> +	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
-> +
->  	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
->  }
->  
-> @@ -554,6 +554,7 @@ static void __cpuidle_unregister_device(struct cpuidle_device *dev)
->  static void __cpuidle_device_init(struct cpuidle_device *dev)
->  {
->  	memset(dev->states_usage, 0, sizeof(dev->states_usage));
-> +	dev->use_state = CPUIDLE_STATE_NOUSE;
->  	dev->last_residency = 0;
->  	dev->next_hrtimer = 0;
->  }
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index 2dc4c6b19c25..ba0751b26e37 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -15,6 +15,7 @@
->  #include <linux/list.h>
->  #include <linux/hrtimer.h>
->  
-> +#define CPUIDLE_STATE_NOUSE	-1
->  #define CPUIDLE_STATE_MAX	10
->  #define CPUIDLE_NAME_LEN	16
->  #define CPUIDLE_DESC_LEN	32
-> @@ -80,11 +81,11 @@ struct cpuidle_driver_kobj;
->  struct cpuidle_device {
->  	unsigned int		registered:1;
->  	unsigned int		enabled:1;
-> -	unsigned int		use_deepest_state:1;
->  	unsigned int		poll_time_limit:1;
->  	unsigned int		cpu;
->  	ktime_t			next_hrtimer;
->  
-> +	int			use_state;
->  	int			last_state_idx;
->  	int			last_residency;
->  	u64			poll_limit_ns;
-> @@ -203,19 +204,17 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
->  #endif
->  
->  #ifdef CONFIG_CPU_IDLE
-> -extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
-> -				      struct cpuidle_device *dev);
-> +extern int cpuidle_find_deepest_state(void);
->  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->  				struct cpuidle_device *dev);
-> -extern void cpuidle_use_deepest_state(bool enable);
-> +extern void cpuidle_use_state(int state);
->  #else
-> -static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
-> -					     struct cpuidle_device *dev)
-> +static inline int cpuidle_find_deepest_state(void)
->  {return -ENODEV; }
->  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->  				       struct cpuidle_device *dev)
->  {return -ENODEV; }
-> -static inline void cpuidle_use_deepest_state(bool enable)
-> +static inline void cpuidle_use_state(int state)
->  {
->  }
->  #endif
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index b98283fc6914..17da9cb309e1 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -165,7 +165,8 @@ static void cpuidle_idle_call(void)
->  	 * until a proper wakeup interrupt happens.
->  	 */
->  
-> -	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
-> +	if (idle_should_enter_s2idle() ||
-> +	    dev->use_state != CPUIDLE_STATE_NOUSE) {
->  		if (idle_should_enter_s2idle()) {
->  			rcu_idle_enter();
->  
-> @@ -181,8 +182,7 @@ static void cpuidle_idle_call(void)
->  		tick_nohz_idle_stop_tick();
->  		rcu_idle_enter();
->  
-> -		next_state = cpuidle_find_deepest_state(drv, dev);
-> -		call_cpuidle(drv, dev, next_state);
-> +		call_cpuidle(drv, dev, dev->use_state);
->  	} else {
->  		bool stop_tick = true;
->  
-> @@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
->  	rcu_sleep_check();
->  	preempt_disable();
->  	current->flags |= PF_IDLE;
-> -	cpuidle_use_deepest_state(true);
-> +	cpuidle_use_state(cpuidle_find_deepest_state());
->  
->  	it.done = 0;
->  	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> @@ -339,7 +339,7 @@ void play_idle(unsigned long duration_us)
->  	while (!READ_ONCE(it.done))
->  		do_idle();
->  
-> -	cpuidle_use_deepest_state(false);
-> +	cpuidle_use_state(CPUIDLE_STATE_NOUSE);
->  	current->flags &= ~PF_IDLE;
->  
->  	preempt_fold_need_resched();
-> 
-
-
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index 22e95b11bfbb..fd2ad7d07335 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1425,6 +1425,7 @@ struct rtl8xxxu_fileops {
+ 	u8 has_s0s1:1;
+ 	u8 has_tx_report:1;
+ 	u8 gen2_thermal_meter:1;
++        u8 needs_full_init:1;
+ 	u32 adda_1t_init;
+ 	u32 adda_1t_path_on;
+ 	u32 adda_2t_path_on_a;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index 9ba661b3d767..fef1a91489a5 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -1668,6 +1668,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
+ 	.has_s0s1 = 1,
+ 	.has_tx_report = 1,
+ 	.gen2_thermal_meter = 1,
++        .needs_full_init = 1,
+ 	.adda_1t_init = 0x01c00014,
+ 	.adda_1t_path_on = 0x01c00014,
+ 	.adda_2t_path_on_a = 0x01c00014,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index e4c1b08c8070..8420cb269b8d 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3900,6 +3900,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 	else
+ 		macpower = true;
+ 
++	if (fops->needs_full_init)
++		macpower = false;
++
+ 	ret = fops->power_on(priv);
+ 	if (ret < 0) {
+ 		dev_warn(dev, "%s: Failed power on\n", __func__);
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.23.0
 
