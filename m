@@ -2,159 +2,141 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8EBECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDB4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0957D2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41C220640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:55:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRXATf+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733167AbfJOOxW (ORCPT
+        id S1733053AbfJOOzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:53:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2652 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732567AbfJOOxW (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:53:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 07:53:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
-   d="scan'208";a="225443107"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.211.195]) ([10.254.211.195])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Oct 2019 07:53:19 -0700
-Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
- block for stdio
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191015053350.13909-1-yao.jin@linux.intel.com>
- <20191015053350.13909-4-yao.jin@linux.intel.com>
- <20191015084102.GA10951@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <6882f3ae-0f8d-5a01-7fd5-5b9f9c93f9ac@linux.intel.com>
-Date:   Tue, 15 Oct 2019 22:53:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 10:55:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46524 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732567AbfJOOzq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:55:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so12624656pfg.13;
+        Tue, 15 Oct 2019 07:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MoRLQz9qQnnVM1y2LSZvCw9MdLFXu/hnDRgkUKNBBAM=;
+        b=KRXATf+InZy/eTJ79BVO3AuOMNIRR9ivYDZCSXLPTJHC8PkUoymSBomp5F+30QsIeJ
+         5uADk1qDojD3CeFNgHP4uDnZvCRTR1ft4zYh5mfuKF6bnaSF34vWaNgg4tBvvP1TwH6F
+         +TOPa677gZ2o1S16WPdKqhpglnhQtjT3SGxfaIvHipYHISC7J0ixhFHwgeSOFZ0jqxzs
+         89y1/RjkRiAyrGuINClu04IIXEhFlfvnVdp1kH26aBIfePmGG4fcE02TurHrpbviZoti
+         GOYeULbCjGEIsYux0/FwNdkUzhdew/+E1MVfAABzRxmNKlFOjNAZ8wYIgrhVS1WiGh8O
+         Rf5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MoRLQz9qQnnVM1y2LSZvCw9MdLFXu/hnDRgkUKNBBAM=;
+        b=gg92unOTLeXiLlYQ0+EHwjc/pJXfR22fDMjDC9RUgPl8aKXU2hNej8rmP8sNoRVFhR
+         zew8o/wJjYs/xco2+2lXda5hBMQRz/PzohSLE6AL6ctERPq/CaYCFwbh2nrkQ2wODHWX
+         sSpQOuLkk4BBa+erGCIuXlYQTvK0pW1SLbeFyBWxXyAbSE4+1Ws4H5D7YnQHPgDmShjk
+         kBbGOpMBOshlOA2OQvHcbEQe0A7NVSP8bUXCxZfkTX6ePW8b2HM8AJgmc9ZxWIQWS35B
+         eTkDWj7aZlMUKdoEsJZzcDTsfCSMeZZuzXucawLZIUPnYJ+avYt9u6GMyQncfZqzpdGz
+         +0lA==
+X-Gm-Message-State: APjAAAUVKICMeHIZfbs6MGx7ivioNFPbbtmfa9veaoAy/nKHtEybVigd
+        cqterRaQ+oYnb2acCpg8lH8Xo5hw/qIdA/JA4pY=
+X-Google-Smtp-Source: APXvYqwWayIy4dorcceC8cFJAO2Cz1ku9tnUs2bwH8eIXgX2wsHGADypAxGKaidt82Vy4YqTRdm3kw0I6URbc2idDKU=
+X-Received: by 2002:a63:d0a:: with SMTP id c10mr37925179pgl.203.1571151344336;
+ Tue, 15 Oct 2019 07:55:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191015084102.GA10951@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+ <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com> <20191015163055.0d8f44e5@xps13>
+In-Reply-To: <20191015163055.0d8f44e5@xps13>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 15 Oct 2019 17:55:33 +0300
+Message-ID: <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/15/2019 4:41 PM, Jiri Olsa wrote:
-> On Tue, Oct 15, 2019 at 01:33:48PM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->> +enum {
->> +	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV,
->> +	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
->> +	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
->> +	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
->> +	PERF_HPP_REPORT__BLOCK_RANGE,
->> +	PERF_HPP_REPORT__BLOCK_DSO,
->> +	PERF_HPP_REPORT__BLOCK_MAX_INDEX
->> +};
->> +
->> +static struct block_fmt block_fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
->> +
->> +static struct block_header_column{
->> +	const char *name;
->> +	int width;
->> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
->> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
->> +		.name = "Sampled Cycles%",
->> +		.width = 15,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
->> +		.name = "Sampled Cycles",
->> +		.width = 14,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
->> +		.name = "Avg Cycles%",
->> +		.width = 11,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
->> +		.name = "Avg Cycles",
->> +		.width = 10,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
->> +		.name = "[Program Block Range]",
->> +		.width = 70,
->> +	},
->> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
->> +		.name = "Shared Object",
->> +		.width = 20,
->> +	}
->>   };
-> 
-> so we already have support for multiple columns,
-> why don't you add those as 'struct sort_entry' objects?
-> 
-
-For 'struct sort_entry' objects, do you mean I should reuse the 
-"sort_dso" which has been implemented yet in util/sort.c?
-
-For other columns, it looks we can't reuse the existing sort_entry objects.
-
-> SNIP
-> 
->> +{
->> +	struct block_hist *bh = &rep->block_hist;
->> +
->> +	get_block_hists(hists, bh, rep);
->> +	symbol_conf.report_individual_block = true;
->> +	hists__fprintf(&bh->block_hists, true, 0, 0, 0,
->> +		       stdout, true);
->> +	hists__delete_entries(&bh->block_hists);
->> +	return 0;
->> +}
->> +
->>   static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->>   					 struct report *rep,
->>   					 const char *help)
->> @@ -500,6 +900,12 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->>   			continue;
->>   
->>   		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
->> +
->> +		if (rep->total_cycles) {
->> +			hists__fprintf_all_blocks(hists, rep);
-> 
-> so this call kicks all the block info setup/count/print, right?
-> 
-
-Yes, all in this call.
-
-> I thingk it shouldn't be in the output code, but in the code before..
-> from what I see you could count block_info counts during the sample
-> processing, no?
+On Tue, Oct 15, 2019 at 5:30 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 >
+> Hi Andy,
+>
+> Thanks for the feedback.
+>
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Mon, 14 Oct 2019
+> 20:59:01 +0300:
+>
+> > On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > >
+> > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > functions but can also manage the intensity on each of its ports with
+> > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > bits per output). The period is always 32kHz, only the duty-cycle may
+> > > be changed. One can use any output as GPIO or PWM.
+> >
+> > Can we rather not contaminate driver with this?
+> >
+> > Just register a separate PWM driver and export its functionality to
+> > GPIO, or other way around (in the latter case we actually have PCA8685
+> > which provides a GPIO fgunctionality).
+> >
+>
+> I understand your concern but I am not sure to understand which
+> solution you have in mind. In the former case, could you explain a bit
+> more what you are thinking about? Would linking the PWM support with
+> the GPIO driver (code would be located in another .c file) work for
+> you? Or maybe you would prefer an MFD on top of the GPIO driver?
+>
+> As for the later case, I am not willing to re-implement GPIO support in
+> an alternate driver for an already supported chip, it is too much work
+> for the time I can spend on it.
 
-In sample processing, we just get all symbols and account the cycles per 
-symbol. We need to create/count the block_info at some points after the 
-sample processing.
 
-Maybe it's not very good to put block info setup/count/print in a call, 
-but it's really not easy to process the block_info during the sample 
-processing.
+drivers/pwm/pwm-max7313.c:
 
-Thanks
-Jin Yao
+probe(platform_device)
+{
+  struct regmap = pdata;
+  ...
+}
 
-> jirka
-> 
+--- 8< --- 8< ---
+drivers/gpio/gpio-pca953x.c:
+
+probe()
+{
+  struct regmap rm;
+...
+  if (dev_has_pwm)
+   pca953x_register_pwm_driver(rm);
+...
+}
+
+In the above regmap may be replaced with some (shared) container.
+
+Or other way around. PWM registers GPIO (which actually I prefer since
+we have PCA9685 case where PWM provides GPIO functionality, though via
+different means)
+
+-- 
+With Best Regards,
+Andy Shevchenko
