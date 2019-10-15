@@ -2,99 +2,155 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DD7ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D12ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8E82064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571176150;
-	bh=xHnNpqc3N61JqT/+Rx2uGWGhU95oyzbi5PShcD2/BKg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O3P01GRWNagfgXqOkrHnoKdQdQrMmHoPr7kAM3GFCoW+TwM8maZ1fGOfag43kDBEo
-	 72s+5idiSGlZPWduh4g7vlPWvmjep6lZUxiHM6GMWlSrCnV1xpi4LSC/uiuhCjrqHw
-	 4qYXi1R3CtrU3RKiknDZHiTne8dddAooLWhjXFzw=
+	by mail.kernel.org (Postfix) with ESMTP id 82DE92064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388276AbfJOVtG (ORCPT
+        id S2388487AbfJOVtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:49:06 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38726 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfJOVtD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:49:03 -0400
-Received: by mail-lj1-f195.google.com with SMTP id b20so21841403ljj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wItDXbX3LEWoTo1/kp4dk8aeAZ/2xJzKQP/tyONQ97k=;
-        b=hzBYiXjPBdQglMHyHwZdH7Hfwgp8qRgeHE6/0plo981vFS0npABggAoHWs92Y0M4j4
-         6yInWWbjRDRm/aBcc9LUQovQyVPjXs9u2abaLNMMyRfQw3SRznL+/RbI8WTdojuOz1np
-         +b80D6JSR28AZDW+EGzyd7AudQJVj7qyOksd4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wItDXbX3LEWoTo1/kp4dk8aeAZ/2xJzKQP/tyONQ97k=;
-        b=Zb2DSQb84rMTjOHpXwIXEwsMhJ0+1Ay4I+EjIdGfvG/TkhW/cRaURHVOoSI15qbuyA
-         dJitIq6dLAOzl2Eqef66pYqEqGMaZH8coKByQN0+rs3kVFM81TG48xE8XSwDo/835a3O
-         blzEGzwDoAivoF9XiLDOrMR5S/d4uReXPNkuoHGbkxplR4zZsf5HHZuc28KiKswous9t
-         6fzMZcS1TL6mTzPKAzTNs6zcsW+g57kcJnNwZ9soSc114O3Y0fT2mN2LXznvytldUoJh
-         Q27Tsae75qQEsqf2i24W5T3MwqlyFPiDhAdRKlvpNXlMR8WyUpxKxYUa+NAlUpqeLXiU
-         eOQQ==
-X-Gm-Message-State: APjAAAVv93JQZ5G9LqP1gOmrgVPUr29+SBAzcGDemDZP2ZmJTww+3R3y
-        3BWhotpi518xnR24vlgcfRFuJTHPcj0=
-X-Google-Smtp-Source: APXvYqyiVPGFSwmJcMom5H1/F7MbLgdSm4aydtjMMA476umVmuC8Qieu1vxqBqAUvQW8hwsGcorGbw==
-X-Received: by 2002:a2e:55d7:: with SMTP id g84mr24223235lje.255.1571176140244;
-        Tue, 15 Oct 2019 14:49:00 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id q24sm5258562ljj.6.2019.10.15.14.48.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 14:48:59 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id 195so2723350lfj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:48:59 -0700 (PDT)
-X-Received: by 2002:a19:5504:: with SMTP id n4mr4137650lfe.106.1571176138790;
- Tue, 15 Oct 2019 14:48:58 -0700 (PDT)
+        Tue, 15 Oct 2019 17:49:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727845AbfJOVtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 17:49:13 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6A141307D97F;
+        Tue, 15 Oct 2019 21:49:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EC106012E;
+        Tue, 15 Oct 2019 21:49:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 09/21] uapi: General notification queue definitions
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 15 Oct 2019 22:49:09 +0100
+Message-ID: <157117614968.15019.16151148059437139065.stgit@warthog.procyon.org.uk>
+In-Reply-To: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
+References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <20191015191926.9281-1-vgupta@synopsys.com> <20191015191926.9281-2-vgupta@synopsys.com>
-In-Reply-To: <20191015191926.9281-2-vgupta@synopsys.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 15 Oct 2019 14:48:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
-Message-ID: <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-snps-arc@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 15 Oct 2019 21:49:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 12:19 PM Vineet Gupta
-<Vineet.Gupta1@synopsys.com> wrote:
->
-> This is a non-functional change anyways since ARC has software page walker
-> with 2 lookup levels (pgd -> pte)
+Add UAPI definitions for the general notification queue, including the
+following pieces:
 
-Could we encourage other architectures to do the same, and get rid of
-all uses of __ARCH_USE_5LEVEL_HACK?
+ (*) struct watch_notification.
 
-            Linus
+     This is the metadata header for notification messages.  It includes a
+     type and subtype that indicate the source of the message
+     (eg. WATCH_TYPE_MOUNT_NOTIFY) and the kind of the message
+     (eg. NOTIFY_MOUNT_NEW_MOUNT).
+
+     The header also contains an information field that conveys the
+     following information:
+
+	- WATCH_INFO_LENGTH.  The size of the entry (entries are variable
+          length).
+
+	- WATCH_INFO_ID.  The watch ID specified when the watchpoint was
+          set.
+
+	- WATCH_INFO_TYPE_INFO.  (Sub)type-specific information.
+
+	- WATCH_INFO_FLAG_*.  Flag bits overlain on the type-specific
+          information.  For use by the type.
+
+     All the information in the header can be used in filtering messages at
+     the point of writing into the buffer.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ include/uapi/linux/watch_queue.h |   55 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 include/uapi/linux/watch_queue.h
+
+diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
+new file mode 100644
+index 000000000000..d90c5488d666
+--- /dev/null
++++ b/include/uapi/linux/watch_queue.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_LINUX_WATCH_QUEUE_H
++#define _UAPI_LINUX_WATCH_QUEUE_H
++
++#include <linux/types.h>
++
++enum watch_notification_type {
++	WATCH_TYPE_META		= 0,	/* Special record */
++	WATCH_TYPE___NR		= 1
++};
++
++enum watch_meta_notification_subtype {
++	WATCH_META_REMOVAL_NOTIFICATION	= 0,	/* Watched object was removed */
++	WATCH_META_LOSS_NOTIFICATION	= 1,	/* Data loss occurred */
++};
++
++/*
++ * Notification record header.  This is aligned to 64-bits so that subclasses
++ * can contain __u64 fields.
++ */
++struct watch_notification {
++	__u32			type:24;	/* enum watch_notification_type */
++	__u32			subtype:8;	/* Type-specific subtype (filterable) */
++	__u32			info;
++#define WATCH_INFO_LENGTH	0x0000007f	/* Length of record / sizeof(watch_notification) */
++#define WATCH_INFO_LENGTH__SHIFT 0
++#define WATCH_INFO_ID		0x0000ff00	/* ID of watchpoint, if type-appropriate */
++#define WATCH_INFO_ID__SHIFT	8
++#define WATCH_INFO_TYPE_INFO	0xffff0000	/* Type-specific info */
++#define WATCH_INFO_TYPE_INFO__SHIFT 16
++#define WATCH_INFO_FLAG_0	0x00010000	/* Type-specific info, flag bit 0 */
++#define WATCH_INFO_FLAG_1	0x00020000	/* ... */
++#define WATCH_INFO_FLAG_2	0x00040000
++#define WATCH_INFO_FLAG_3	0x00080000
++#define WATCH_INFO_FLAG_4	0x00100000
++#define WATCH_INFO_FLAG_5	0x00200000
++#define WATCH_INFO_FLAG_6	0x00400000
++#define WATCH_INFO_FLAG_7	0x00800000
++};
++
++
++/*
++ * Extended watch removal notification.  This is used optionally if the type
++ * wants to indicate an identifier for the object being watched, if there is
++ * such.  This can be distinguished by the length.
++ *
++ * type -> WATCH_TYPE_META
++ * subtype -> WATCH_META_REMOVAL_NOTIFICATION
++ */
++struct watch_notification_removal {
++	struct watch_notification watch;
++	__u64	id;		/* Type-dependent identifier */
++};
++
++#endif /* _UAPI_LINUX_WATCH_QUEUE_H */
+
