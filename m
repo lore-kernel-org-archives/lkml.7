@@ -2,101 +2,252 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E24ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C7ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD2A2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9A320854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571179153;
-	bh=ZZ1tkLH6Evl6gaSnOj/4I8fnnuCBE15LMoxDF1dxmkM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FkswXBx/xHX0goOtHc/LzCvOERey13Qv4Xromt20WHhjXc57C6sejQgQr4I1pErQA
-	 7XBggBxjI6o01Va4+E+a8CJxBJz9ar3Wo9knPlMJbLN14mUMJMCeusuLegB74t+g0J
-	 HW8YiyxRSKwEnY6xvAlCq9QBIJQvzaccYGVCmnTI=
+	s=default; t=1571179164;
+	bh=hAVovort2JCsXfMx25ROErzRjEx4WfY00RUbBk1pWTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IYjHQ6FaP65mS5tpZLq1lXlQX00K5QCgmt0Qejqql8prbJ6tbwi4Ncb6JgyhaTA76
+	 ck9sZgKll1wf6mGyZWyF+4r0i3PZBRGA+Aydr5r7MKvjJklLOHS/xuLdUCo13rWSKk
+	 12cd2J+23esoFjcE6dU5N6GKX2j20vyGbcWUmH40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732983AbfJOWjM (ORCPT
+        id S2389968AbfJOWjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:39:12 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34539 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732775AbfJOWjL (ORCPT
+        Tue, 15 Oct 2019 18:39:23 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34185 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732775AbfJOWjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:39:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j19so21946343lja.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:39:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fon9Xqueqx/Fq0wGHnHqEDUCXyflZLUwsevU6fmx6jE=;
-        b=SIEI+eyzsLvgKQSWy68fNU4waAO3JnvS6nzHr5/fZu5+F3lS+ninFSB5dUKCVryHZ+
-         kl8H8QJRcmYfRoBpcYQdlcvyFYmbnE5AhMRuYRji7sgqsBgEDlqfBvGU7GUQWJu2UMf7
-         6W/csLC8ZHTI+HN72RKiuRYhkxOOMexsvDhzA=
+        Tue, 15 Oct 2019 18:39:22 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 83so18335888oii.1;
+        Tue, 15 Oct 2019 15:39:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fon9Xqueqx/Fq0wGHnHqEDUCXyflZLUwsevU6fmx6jE=;
-        b=tz2fV6+rx/OFuGnXohp9D2THamucFJGP7pymYrdMX6gWRLS4N8ZfkFXkfKDQ2Ejcby
-         ItqSRhTdMSrNiZU2MqP3B+P4bd0VkNlID4/ivZYiIvcMViyINvfsbaurNVfgDhOdi+fg
-         52EbAOMWLYd+KdViIVJOL/Z5C6QpjjlN0i6Kd2uvLdYrOpfCztDFUn8W1pdqHFlLMom8
-         JRLNf/CK+qsoPo9XMCXwuHeLSg4b/nh3MUhJD8DEb/rEXIYef8N8A4cjKEjkFjIJgcDV
-         oOlp9pCvUX1rL2UVyAMIJwpMnzcmtlyTBq43E4Q9njZDnww9zCi69GV2pMWkbp0zVIei
-         E20w==
-X-Gm-Message-State: APjAAAVEgC1F1UxqRMwNNeNY8wIF0MMN4hYZbTrzkgsRz23u9vI3Wrmb
-        hUkgBHc7R/G900keU9sNT3aTEl2fquE=
-X-Google-Smtp-Source: APXvYqzdGBZG1Ya5kS05O9OAlNXgBSsEz4FKifFhDRQxIZ7O5Ua0AgK1vBxHV6SXVSYD5dFLW8++wQ==
-X-Received: by 2002:a2e:a0ca:: with SMTP id f10mr13675890ljm.84.1571179149469;
-        Tue, 15 Oct 2019 15:39:09 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id i190sm1271584lfi.45.2019.10.15.15.39.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 15:39:09 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id r2so15728983lfn.8
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:39:09 -0700 (PDT)
-X-Received: by 2002:a19:5504:: with SMTP id n4mr4230778lfe.106.1571178744104;
- Tue, 15 Oct 2019 15:32:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Egjzk0ycS6uGAiZgrL7dEKAam8R3Prs2rZCZ9pP9rt4=;
+        b=MWPiqj59Ex8qFPp2oPzg4Ov7RKVg7IBui9nES4J6xI58frblkvGFCDazMi+bLJJV4O
+         kX3sBdnXefGtx7QSuKq75CZMXXR+PBQ6Y2l8/dJAeu+5p8ZpEXJ24N7ZGwh0CU7zdBms
+         RsI31dGTEkcyzRCe8Dls3N4PsOoNRZX/QfiCnrAte7QAXuGU4i4RTStldTNJFojj2syI
+         csnfzgDxsy1h/W1JZppS5dhCugVoUiEAN7UwdNSdlvpTiL03r4YVl79pZtZDezffkqaV
+         Orpuv8DuT0H3tn9EjU77oL7dyIz0RxveEw4w0whDpDg2+Moucw6c9cb8KOWxfnNmAw2J
+         mLfQ==
+X-Gm-Message-State: APjAAAURsuXkWIz/grB/JL0FKvjcJG8wXYamxPxbKJ/cI9zKhDCAA2Q3
+        eDCeMHQu2KbZmxqRUyu2bg==
+X-Google-Smtp-Source: APXvYqxm7a6bczSWgIPH0k7QKCRb1myMosLNn1AgIfZbHlkIYmgEaQQKFFbuGfrEfqHavxgerjgDQw==
+X-Received: by 2002:aca:f492:: with SMTP id s140mr792180oih.83.1571179159904;
+        Tue, 15 Oct 2019 15:39:19 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 23sm184295oir.50.2019.10.15.15.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 15:39:19 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 17:39:18 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: atmel-tcb: convert bindings to
+ json-schema
+Message-ID: <20191015223918.GA26590@bogus>
+References: <20191009224006.5021-1-alexandre.belloni@bootlin.com>
+ <20191009224006.5021-2-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 15 Oct 2019 15:32:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whfCy+WCZ5SXZGi4QEhxXm=EjZjj4R9+o4q-QR3saMyfg@mail.gmail.com>
-Message-ID: <CAHk-=whfCy+WCZ5SXZGi4QEhxXm=EjZjj4R9+o4q-QR3saMyfg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/21] pipe: Keyrings, Block and USB notifications
-To:     David Howells <dhowells@redhat.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009224006.5021-2-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aside from the two small comments, the pipe side looked reasonable,
-but I stopped looking when the patches moved on to the notificaiton
-part, and maybe I missed something in the earlier ones too.
+On Thu, Oct 10, 2019 at 12:39:59AM +0200, Alexandre Belloni wrote:
+> Convert Atmel Timer Counter Blocks bindings to DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+> Cc: Rob Herring <robh+dt@kernel.org>
+> 
+>  .../bindings/mfd/atmel,at91rm9200-tcb.yaml    | 89 +++++++++++++++++++
+>  .../devicetree/bindings/mfd/atmel-tcb.txt     | 56 ------------
+>  2 files changed, 89 insertions(+), 56 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
+> new file mode 100644
+> index 000000000000..4d9247fc0593
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel,at91rm9200-tcb.yaml
+> @@ -0,0 +1,89 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/mfd/atmel,at91rm9200-tcb.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Atmel Timer Counter Block
+> +
+> +maintainers:
+> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> +
+> +description: |
+> +  The Atmel (now Microchip) SoCs have timers named Timer Counter Block. Each
+> +  timer has three channels with two counters each.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - atmel,at91rm9200-tcb
+> +          - atmel,at91sam9x5-tcb
+> +      - const: simple-mfd
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      List of interrupts. One interrupt per TCB channel if available or one
+> +      interrupt for the TC block
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    description:
+> +      List of clock names. Always includes t0_clk and slow clk. Also includes
+> +      t1_clk and t2_clk if a clock per channel is available.
+> +    minItems: 2
+> +    maxItems: 4
+> +    items:
+> +      enum:
+> +        - t0_clk
+> +        - t1_clk
+> +        - t2_clk
+> +        - slow_clk
+> +
+> +  clocks:
+> +    minItems: 2
+> +    maxItems: 4
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
 
-Which does bring me to the meat of this email: can we please keep the
-pipe cleanups and prepwork (and benchmarking) as a separate patch
-series? I'd like that to be done separately from the notification
-code, since it's re-organization and cleanup - while the eventual goal
-is to be able to add messages to the pipe atomically, I think the
-series makes sense (and should make sense) on its own.
+What happened to the child nodes?
 
-          Linus
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +
+> +examples:
+> +  - |
+> +    /* One interrupt per TC block: */
+> +        tcb0: timer@fff7c000 {
+> +                compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                reg = <0xfff7c000 0x100>;
+> +                interrupts = <18 4>;
+> +                clocks = <&tcb0_clk>, <&clk32k>;
+> +                clock-names = "t0_clk", "slow_clk";
+> +        };
+> +
+> +    /* One interrupt per TC channel in a TC block: */
+> +        tcb1: timer@fffdc000 {
+> +                compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                reg = <0xfffdc000 0x100>;
+> +                interrupts = <26 4>, <27 4>, <28 4>;
+> +                clocks = <&tcb1_clk>, <&clk32k>;
+> +                clock-names = "t0_clk", "slow_clk";
+> +        };
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> deleted file mode 100644
+> index c4a83e364cb6..000000000000
+> --- a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -* Device tree bindings for Atmel Timer Counter Blocks
+> -- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
+> -  <chip> can be "at91rm9200" or "at91sam9x5"
+> -- reg: Should contain registers location and length
+> -- #address-cells: has to be 1
+> -- #size-cells: has to be 0
+> -- interrupts: Should contain all interrupts for the TC block
+> -  Note that you can specify several interrupt cells if the TC
+> -  block has one interrupt per channel.
+> -- clock-names: tuple listing input clock names.
+> -	Required elements: "t0_clk", "slow_clk"
+> -	Optional elements: "t1_clk", "t2_clk"
+> -- clocks: phandles to input clocks.
+> -
+> -The TCB can expose multiple subdevices:
+> - * a timer
+> -   - compatible: Should be "atmel,tcb-timer"
+> -   - reg: Should contain the TCB channels to be used. If the
+> -     counter width is 16 bits (at91rm9200-tcb), two consecutive
+> -     channels are needed. Else, only one channel will be used.
+> -
+> -Examples:
+> -
+> -One interrupt per TC block:
+> -	tcb0: timer@fff7c000 {
+> -		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		reg = <0xfff7c000 0x100>;
+> -		interrupts = <18 4>;
+> -		clocks = <&tcb0_clk>, <&clk32k>;
+> -		clock-names = "t0_clk", "slow_clk";
+> -
+> -		timer@0 {
+> -			compatible = "atmel,tcb-timer";
+> -			reg = <0>, <1>;
+> -		};
+> -
+> -		timer@2 {
+> -			compatible = "atmel,tcb-timer";
+> -			reg = <2>;
+> -		};
+> -	};
+> -
+> -One interrupt per TC channel in a TC block:
+> -	tcb1: timer@fffdc000 {
+> -		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		reg = <0xfffdc000 0x100>;
+> -		interrupts = <26 4>, <27 4>, <28 4>;
+> -		clocks = <&tcb1_clk>, <&clk32k>;
+> -		clock-names = "t0_clk", "slow_clk";
+> -	};
+> -
+> -
+> -- 
+> 2.21.0
+> 
