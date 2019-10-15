@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D70C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777ABECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B8A21A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEF021925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbfJOFbu (ORCPT
+        id S1728378AbfJOFbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 15 Oct 2019 01:31:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41880 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:41878 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbfJOFbt (ORCPT
+        with ESMTP id S1728173AbfJOFbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 01:31:49 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFQm-0008SG-W9; Tue, 15 Oct 2019 07:31:37 +0200
+        id 1iKFQo-0008Sp-CY; Tue, 15 Oct 2019 07:31:38 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 78AC71C0105;
-        Tue, 15 Oct 2019 07:31:36 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 05:31:36 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 17A8C1C0450;
+        Tue, 15 Oct 2019 07:31:38 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 05:31:37 -0000
 From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Centralize map refcnt setting
+Subject: [tip: perf/core] libperf: Introduce perf_evlist_mmap_ops::mmap callback
 Cc:     Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Michael Petlan <mpetlan@redhat.com>,
@@ -42,10 +42,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191007125344.14268-23-jolsa@kernel.org>
-References: <20191007125344.14268-23-jolsa@kernel.org>
+In-Reply-To: <20191007125344.14268-18-jolsa@kernel.org>
+References: <20191007125344.14268-18-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157111749642.12254.5807565002595821879.tip-bot2@tip-bot2>
+Message-ID: <157111749790.12254.16074880570008173641.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,113 +61,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     285aaeac8c5d537b56b70169e21ac29ae5caa8e1
-Gitweb:        https://git.kernel.org/tip/285aaeac8c5d537b56b70169e21ac29ae5caa8e1
+Commit-ID:     b5911e7ac28cb34f21b7380915ce98518078f114
+Gitweb:        https://git.kernel.org/tip/b5911e7ac28cb34f21b7380915ce98518078f114
 Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Mon, 07 Oct 2019 14:53:30 +02:00
+AuthorDate:    Mon, 07 Oct 2019 14:53:25 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 10 Oct 2019 12:52:41 -03:00
+CommitterDate: Thu, 10 Oct 2019 12:22:21 -03:00
 
-libperf: Centralize map refcnt setting
+libperf: Introduce perf_evlist_mmap_ops::mmap callback
 
-Currently when a new map is mmapped we set its refcnt to 2 in the
-perf_evlist_mmap_ops::mmap callback.
+Add the perf_evlist_mmap_ops::mmap callback to be called in
+mmap_per_evsel() to actually mmap the map.
 
-Every mmap gets its refcnt set to 2 when it's first mmaped:
+Add libperf's perf_evlist__mmap_cb_mmap() function as libperf's mmap
+callback.
 
-  - 1 for the current user, which will be taken out by a call to
-    perf_evlist__munmap_filtered(), where we find out there's
-    no more data comming from kernel to this mmap.
-
-  - 1 for the drain code where in perf_mmap__consume() the mmap
-    is released if it is empty.
-
-Move this common setup into libperf's generic code before the mmap
-callback is called.
+New mmaped map gets refcount set to 2 in mmap__mmap(), we follow that in
+mmap callback. We will move this to common place after we switch to
+perf_evlist__mmap().
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-23-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-18-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c | 30 +++++++++++++++---------------
- tools/perf/util/mmap.c  | 15 ---------------
- 2 files changed, 15 insertions(+), 30 deletions(-)
+ tools/perf/lib/evlist.c                  | 29 ++++++++++++++++++++---
+ tools/perf/lib/include/internal/evlist.h |  3 ++-
+ 2 files changed, 29 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index b697226..f9a802d 100644
+index 4f49de5..b697226 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -362,21 +362,6 @@ static int
- perf_evlist__mmap_cb_mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
- 			  int output, int cpu)
- {
--	/*
--	 * The last one will be done at perf_mmap__consume(), so that we
--	 * make sure we don't prevent tools from consuming every last event in
--	 * the ring buffer.
--	 *
--	 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
--	 * anymore, but the last events for it are still in the ring buffer,
--	 * waiting to be consumed.
--	 *
--	 * Tools can chose to ignore this at their own discretion, but the
--	 * evlist layer can't just drop it when filtering events in
--	 * perf_evlist__filter_pollfd().
--	 */
--	refcount_set(&map->refcnt, 2);
--
- 	return perf_mmap__mmap(map, mp, output, cpu);
- }
+@@ -359,6 +359,28 @@ perf_evlist__mmap_cb_get(struct perf_evlist *evlist, bool overwrite, int idx)
+ #define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
  
-@@ -418,6 +403,21 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ static int
++perf_evlist__mmap_cb_mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
++			  int output, int cpu)
++{
++	/*
++	 * The last one will be done at perf_mmap__consume(), so that we
++	 * make sure we don't prevent tools from consuming every last event in
++	 * the ring buffer.
++	 *
++	 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
++	 * anymore, but the last events for it are still in the ring buffer,
++	 * waiting to be consumed.
++	 *
++	 * Tools can chose to ignore this at their own discretion, but the
++	 * evlist layer can't just drop it when filtering events in
++	 * perf_evlist__filter_pollfd().
++	 */
++	refcount_set(&map->refcnt, 2);
++
++	return perf_mmap__mmap(map, mp, output, cpu);
++}
++
++static int
+ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 	       int idx, struct perf_mmap_param *mp, int cpu_idx,
+ 	       int thread, int *_output, int *_output_overwrite)
+@@ -396,7 +418,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
  		if (*output == -1) {
  			*output = fd;
  
-+			/*
-+			 * The last one will be done at perf_mmap__consume(), so that we
-+			 * make sure we don't prevent tools from consuming every last event in
-+			 * the ring buffer.
-+			 *
-+			 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
-+			 * anymore, but the last events for it are still in the ring buffer,
-+			 * waiting to be consumed.
-+			 *
-+			 * Tools can chose to ignore this at their own discretion, but the
-+			 * evlist layer can't just drop it when filtering events in
-+			 * perf_evlist__filter_pollfd().
-+			 */
-+			refcount_set(&map->refcnt, 2);
-+
- 			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
+-			if (perf_mmap__mmap(map, mp, *output, evlist_cpu) < 0)
++			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
  				return -1;
  		} else {
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 2a8bf0a..063d1b9 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -243,21 +243,6 @@ static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params 
+ 			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
+@@ -488,7 +510,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 	const struct perf_cpu_map *cpus = evlist->cpus;
+ 	const struct perf_thread_map *threads = evlist->threads;
  
- int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+-	if (!ops || !ops->get)
++	if (!ops || !ops->get || !ops->mmap)
+ 		return -EINVAL;
+ 
+ 	if (!evlist->mmap)
+@@ -513,7 +535,8 @@ int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
  {
--	/*
--	 * The last one will be done at perf_mmap__consume(), so that we
--	 * make sure we don't prevent tools from consuming every last event in
--	 * the ring buffer.
--	 *
--	 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
--	 * anymore, but the last events for it are still in the ring buffer,
--	 * waiting to be consumed.
--	 *
--	 * Tools can chose to ignore this at their own discretion, but the
--	 * evlist layer can't just drop it when filtering events in
--	 * perf_evlist__filter_pollfd().
--	 */
--	refcount_set(&map->core.refcnt, 2);
--
- 	if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
- 		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
- 			  errno);
+ 	struct perf_mmap_param mp;
+ 	struct perf_evlist_mmap_ops ops = {
+-		.get = perf_evlist__mmap_cb_get,
++		.get  = perf_evlist__mmap_cb_get,
++		.mmap = perf_evlist__mmap_cb_mmap,
+ 	};
+ 
+ 	evlist->mmap_len = (pages + 1) * page_size;
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index 9bc3a21..b201970 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -31,10 +31,13 @@ typedef void
+ (*perf_evlist_mmap__cb_idx_t)(struct perf_evlist*, struct perf_mmap_param*, int, bool);
+ typedef struct perf_mmap*
+ (*perf_evlist_mmap__cb_get_t)(struct perf_evlist*, bool, int);
++typedef int
++(*perf_evlist_mmap__cb_mmap_t)(struct perf_mmap*, struct perf_mmap_param*, int, int);
+ 
+ struct perf_evlist_mmap_ops {
+ 	perf_evlist_mmap__cb_idx_t	idx;
+ 	perf_evlist_mmap__cb_get_t	get;
++	perf_evlist_mmap__cb_mmap_t	mmap;
+ };
+ 
+ int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
