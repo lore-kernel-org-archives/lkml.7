@@ -2,93 +2,194 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBA5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEB1ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7D421835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571121736;
-	bh=rysVRgS2FyWINWo6N494AjxosS0+rfoIKEY8cnAlqSA=;
-	h=Date:In-Reply-To:References:Subject:To:CC:From:List-ID:From;
-	b=eREZuI7+gRp/l4Uhl5CjX1UHQyMsjhLFLfc0CFzR80dW4wdAzhdj+Hf+oyKOSKJB5
-	 tJLL81NFYN1iY1taPcVfwFTchUBZtve8DuTB7nSVKv6q9mKcyilkWHKZOxQQN8MWL4
-	 rvHsMlqWM1e66LNyZJNa2ho7j3lYCC3X9mCiPU0A=
+	by mail.kernel.org (Postfix) with ESMTP id EA28920854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip2jE3zI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfJOGmP (ORCPT
+        id S1727482AbfJOGqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 02:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfJOGmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 02:42:14 -0400
-Received: from [172.20.185.47] (unknown [151.9.251.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E23320872;
-        Tue, 15 Oct 2019 06:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571121734;
-        bh=rysVRgS2FyWINWo6N494AjxosS0+rfoIKEY8cnAlqSA=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=WJ1RiJWg0ldBHseqfrvp5PmB2jl/7wc3M+Lc/btmiZF+qOzXjamufdias7ll/sXEJ
-         QwS1noye5k0R7HoaydsDEqHqK5e/mvsfAeXgrBzGgtAaYQ5tDA/4/k6x302+mFvcxj
-         QnD2Xs8HFk6dR3yYBKakkri/5m/87RAUPZ70FxNQ=
-Date:   Tue, 15 Oct 2019 08:42:07 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191014154423.a472315834ce6a730ccbaf3f@linux-foundation.org>
-References: <1570915861-17633-1-git-send-email-rppt@kernel.org> <20191014154423.a472315834ce6a730ccbaf3f@linux-foundation.org>
+        Tue, 15 Oct 2019 02:46:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42038 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfJOGqs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 02:46:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so22279886wrw.9;
+        Mon, 14 Oct 2019 23:46:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1D5BNf7xXmUCNM3AxBUssRSS1OVYajR36F9GifIvR1I=;
+        b=Ip2jE3zIq4TaPSh8//NQPy3L2FxPMrEFnJaqH81XFa2FXV2NuqpUcheSZZfB1bbxT9
+         Vz7ivNQLLGwswNtWa9ihM2uAMkblZ23OpDsE5IrM1tbmx+z7xZ33QSI6tMV3Gv8F39HU
+         l0512ASCzGx2p/D03dPW9zuSKFTggkB0YJJzl/3aYjIwacNzukZhHFKCHjVJ1se1sK7r
+         jqJXyU8ASyc6IPoSHqUdQKbZQqzDOnTHYrV3g6gUGMSs/pCn6HidONlW1i7lWtZEZ+e7
+         VNkseLve1I1qxjzV/1G92xYDrgmvqj9mUYE8U6XccN4Uymy/nZxZAkpHYuKisR7VAtHP
+         s9QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1D5BNf7xXmUCNM3AxBUssRSS1OVYajR36F9GifIvR1I=;
+        b=Fe7XufR4YvcP882Th+Q4MtftBpsie/fQq3g4kD0bucHRyUmi/d00nT0QovIs3lcNQq
+         G4bZQtPXZpIoFxSagBoz2fPSKKkypz7LrcEh7gI1p4CvgvPVXjAS/kWwC4m5ErUJIv0a
+         CgnFJjN+U+RdIGNPtJC732XvBXmVbYgwH2f+TPjrre3lFb+3B2TCRJbXgt/C7fTJ22Ow
+         t9RtvhIR8eL14O4JLAAzxL+NAY+j29K5Hxg19xoF5P43q/ZTpKshtOu0gohUB2iinYe7
+         A6y3GmqNrW30yNMFIymOicerLg/eMzcQ9qw3Y3ssJgbjamgtd2D+ws5KILr5EIewZlDu
+         Xd4A==
+X-Gm-Message-State: APjAAAUn7k8vw6RT0K0SNu6D2LFTo3Q25JqsEkdkP0UiEylKNXrSZH4a
+        jzlbKizRUBJCX7TWte5JLISmeS7zmuCQjaiIuWDUgaLM
+X-Google-Smtp-Source: APXvYqxYHgsW6AU1zv7iOrGXS79KJdYrWtjUmUDEhqJflfSuKkb1L6dMoARCpxwmPq8EBOm/HfH/pSWOiz3G3JkKYmw=
+X-Received: by 2002:a5d:4ace:: with SMTP id y14mr17671304wrs.131.1571122005276;
+ Mon, 14 Oct 2019 23:46:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] mm: memblock: do not enforce current limit for memblock_phys* family
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Adam Ford <aford173@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        etnaviv@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-From:   Mike Rapoport <rppt@kernel.org>
-Message-ID: <43610D35-58EE-4019-B979-EAE3F4781EAA@kernel.org>
+References: <20191011110149.79d529c4@canb.auug.org.au>
+In-Reply-To: <20191011110149.79d529c4@canb.auug.org.au>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 15 Oct 2019 09:46:33 +0300
+Message-ID: <CAEnQRZDONh-HcPnKPV_ieTNqVKJkxfNZ_7hd+KEut85tY=BMcQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On October 15, 2019 12:44:23 AM GMT+02:00, Andrew Morton <akpm@linux-founda=
-tion=2Eorg> wrote:
->On Sun, 13 Oct 2019 00:31:01 +0300 Mike Rapoport <rppt@kernel=2Eorg>
->wrote:
->
->> Until commit 92d12f9544b7 ("memblock: refactor internal allocation
->> functions") the maximal address for memblock allocations was forced
->to
->> memblock=2Ecurrent_limit only for the allocation functions returning
->virtual
->> address=2E The changes introduced by that commit moved the limit
->enforcement
->> into the allocation core and as a result the allocation functions
->returning
->> physical address also started to limit allocations to
->> memblock=2Ecurrent_limit=2E
->>=20
->> This caused breakage of etnaviv GPU driver:
->>=20
->> =2E=2E=2E
->>
->
->So I'll add a cc:stable, yes?
+Hi Stephen,
 
-Yeah, right=2E Somehow I've missed that=2E=2E=2E
+On Fri, Oct 11, 2019 at 3:04 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the sound-asoc tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> In file included from include/sound/sof/dai-imx.h:11,
+>                  from <command-line>:
+> include/sound/sof/header.h:125:2: error: unknown type name 'uint32_t'
+>   125 |  uint32_t size;   /**< size of structure */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:136:2: error: unknown type name 'uint32_t'
+>   136 |  uint32_t size;   /**< size of structure */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:137:2: error: unknown type name 'uint32_t'
+>   137 |  uint32_t cmd;   /**< SOF_IPC_GLB_ + cmd */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:146:2: error: unknown type name 'int32_t'
+>   146 |  int32_t error;   /**< negative error numbers */
+>       |  ^~~~~~~
+> include/sound/sof/header.h:160:2: error: unknown type name 'uint32_t'
+>   160 |  uint32_t count;  /**< count of 0 means end of compound sequence */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:167:2: error: unknown type name 'uint32_t'
+>   167 |  uint32_t arch;  /* Identifier of architecture */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:168:2: error: unknown type name 'uint32_t'
+>   168 |  uint32_t totalsize; /* Total size of oops message */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:175:2: error: unknown type name 'uint32_t'
+>   175 |  uint32_t configidhi; /* ConfigID hi 32bits */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:176:2: error: unknown type name 'uint32_t'
+>   176 |  uint32_t configidlo; /* ConfigID lo 32bits */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:177:2: error: unknown type name 'uint32_t'
+>   177 |  uint32_t numaregs; /* Special regs num */
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:178:2: error: unknown type name 'uint32_t'
+>   178 |  uint32_t stackoffset; /* Offset to stack pointer from beginning of
+>       |  ^~~~~~~~
+> include/sound/sof/header.h:181:2: error: unknown type name 'uint32_t'
+>   181 |  uint32_t stackptr; /* Stack ptr */
+>       |  ^~~~~~~~
+> In file included from <command-line>:
+> include/sound/sof/dai-imx.h:18:2: error: unknown type name 'uint16_t'
+>    18 |  uint16_t reserved1;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:19:2: error: unknown type name 'uint16_t'
+>    19 |  uint16_t mclk_id;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:20:2: error: unknown type name 'uint32_t'
+>    20 |  uint32_t mclk_direction;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:22:2: error: unknown type name 'uint32_t'
+>    22 |  uint32_t mclk_rate; /* MCLK frequency in Hz */
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:23:2: error: unknown type name 'uint32_t'
+>    23 |  uint32_t fsync_rate; /* FSYNC frequency in Hz */
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:24:2: error: unknown type name 'uint32_t'
+>    24 |  uint32_t bclk_rate; /* BCLK frequency in Hz */
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:27:2: error: unknown type name 'uint32_t'
+>    27 |  uint32_t tdm_slots;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:28:2: error: unknown type name 'uint32_t'
+>    28 |  uint32_t rx_slots;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:29:2: error: unknown type name 'uint32_t'
+>    29 |  uint32_t tx_slots;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:30:2: error: unknown type name 'uint16_t'
+>    30 |  uint16_t tdm_slot_width;
+>       |  ^~~~~~~~
+> include/sound/sof/dai-imx.h:31:2: error: unknown type name 'uint16_t'
+>    31 |  uint16_t reserved2; /* alignment */
+>       |  ^~~~~~~~
+>
+> Caused by commit
+>
+>   b4be427683cf ("ASoC: SOF: imx: Describe ESAI parameters to be sent to DSP")
+>
+> I added the following fix for today (include/sound/sof/header.h
+> probably should have something similar):
 
---=20
-Sincerely yours,
-Mike
+Thanks for doing this! Is this patch in linux-next already? I couldn't find it.
+
+For include/sound/sof/header.h Morimoto-san sent a patch to alsa-devel.
+
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 11 Oct 2019 10:56:46 +1100
+> Subject: [PATCH] ASOC: SOF: dai-imx.h needs linux/types.h
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/sound/sof/dai-imx.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/sound/sof/dai-imx.h b/include/sound/sof/dai-imx.h
+> index e02fb0b0fae1..31ccb87a8273 100644
+> --- a/include/sound/sof/dai-imx.h
+> +++ b/include/sound/sof/dai-imx.h
+> @@ -8,6 +8,7 @@
+>  #ifndef __INCLUDE_SOUND_SOF_DAI_IMX_H__
+>  #define __INCLUDE_SOUND_SOF_DAI_IMX_H__
+>
+> +#include <linux/types.h>
+>  #include <sound/sof/header.h>
+>
+>  /* ESAI Configuration Request - SOF_IPC_DAI_ESAI_CONFIG */
+> --
+> 2.23.0
+>
+> --
+> Cheers,
+> Stephen Rothwell
