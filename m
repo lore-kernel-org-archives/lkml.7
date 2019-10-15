@@ -2,117 +2,92 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FA9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBD2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0117821848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635CC21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T5ySigM+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bBI3tFvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfJOLl0 (ORCPT
+        id S1729206AbfJOLmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:41:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34012 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfJOLl0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:41:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FBdB9E123641;
-        Tue, 15 Oct 2019 11:41:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=MTHyrFVhEf+mLJzIsQVQff04UKmAu7hCbBg+TGgC/9k=;
- b=T5ySigM+ybCEeiHhQUAJhUQGLp8N/8O/AeZ5MwJGACTC4T2YPgxs7gRwVQldjUsU/5O4
- FthThZJvVWNbaviu0u16g69Wpy53HGnOhQNkUsSzD10zn/DbIPK6jcWbg595xb6gRzXB
- LP3z/QpkiVjvztSJTtqwHl55CHjuU3U34n77GaO/eQyF9s1wIvJgjPA+rErDKcgBjTfe
- KvQqmS0cET2XrpEvulPBE9B1vfBcbCBrR/pwNQ3/al6VkHXQZbRGZAhSvTN1c8fGNKkG
- eFfPfts7gyDPrBjZUz8prfHx2iYCIyWzIrP4YjRDhnMHSTHhfqDjPnwbSzz4BWBnFK2E FA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7fr72nk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 11:41:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FBbsNl139432;
-        Tue, 15 Oct 2019 11:41:20 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vn71810d6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 11:41:19 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FBfHqW001675;
-        Tue, 15 Oct 2019 11:41:18 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 11:41:17 +0000
-Date:   Tue, 15 Oct 2019 14:41:08 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191015114108.GF4774@kadam>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
- <20191009121441.GM25098@kadam>
- <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
- <20191009185323.GG13286@kadam>
- <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
- <20191010113034.GN13286@kadam>
- <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+        Tue, 15 Oct 2019 07:42:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:36887 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbfJOLmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:42:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46stpB2Vf8z9sPF;
+        Tue, 15 Oct 2019 22:42:42 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571139762;
+        bh=GzuSXvwCsW5qF4JT5b2HN3qZva4w3uLIyiYuDHbFckA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bBI3tFvysNsS3jE+Hy7eUTigqI0rcezmGhgObJfPGfzsgJNOD0kdbmfRJTrM7bp/+
+         G7A3ZTeo4NApvwBvbc4JHK5FHRjw7dqCKNAnmfRhTKyfDk/38XzeVMrQjJkOU5h0Qj
+         jFLkvk1S4nguuFc4v57hMBeMs6oJNTXL+/oJttJEZUyU5qX6eDGLJJPaUpg9ISbnLy
+         1jrKLDwiDXTDZ1THQl4nn54tvHeIfK7D9x5Fde5DMYdwp7UVK2k71fE9wDGEw/4/4l
+         XW+ubjsewOCMuPRwnR8o8csHaacd5KLYXqwIx2HDiZH0PaqoL7C73WsFGJVzBAdRWO
+         XU8S3mjHkZ4hw==
+Date:   Tue, 15 Oct 2019 22:42:41 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
+Message-ID: <20191015224241.1a485d5d@canb.auug.org.au>
+In-Reply-To: <CAHp75Vfv7hzqO=U3AwDs8OuKL_rs9+Sx0DknnAi6WN342iSpHQ@mail.gmail.com>
+References: <20191015130006.39f58992@canb.auug.org.au>
+        <CAHp75Vfv7hzqO=U3AwDs8OuKL_rs9+Sx0DknnAi6WN342iSpHQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150109
+Content-Type: multipart/signed; boundary="Sig_/AlH65u3khJPw=1hotxSS7al";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:24:50PM +0200, Alexander Gordeev wrote:
-> On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
-> > On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
-> > > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
-> > > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> > > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-> > > > > > > +	struct avalon_dma_desc *desc;
-> > > > > > > +	struct virt_dma_desc *vdesc;
-> > > > > > > +	bool rd_done;
-> > > > > > > +	bool wr_done;
-> > > > > > > +
-> > > > > > > +	spin_lock(lock);
-> 
-> [*]
+--Sig_/AlH65u3khJPw=1hotxSS7al
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[ snip ]
+Hi Andy,
 
-> I struggle to realize how the spinlock I use (see [*] above) does not
-> protect the reader.
+On Tue, 15 Oct 2019 11:04:29 +0300 Andy Shevchenko <andy.shevchenko@gmail.c=
+om> wrote:
+>
+> Oops, thank you for pointing out, should be fixed.
 
-Argh....  I'm really sorry.  I completely didn't see the spinlock.  :P
+Excellent, thanks.
 
-I am embarrassed.  Wow...
+--=20
+Cheers,
+Stephen Rothwell
 
-regards,
-dan carpenter
+--Sig_/AlH65u3khJPw=1hotxSS7al
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2lsLEACgkQAVBC80lX
+0Gy+mgf/TiQL2aTj7YcyG4XIzf8W4bf4hC/qxynHPaK9oMM5StJMxkNv8hU6plta
+1utr9QplMT6tRBNeS9lMEp77YO8HX33NcksuggFUagjmiAJm9D3XdkFIZ09OcBla
+cWaDadz4LoCJYT8s8nIQJN2bpxVM0JKbKM7qoeK40R8l9lvPA2usrVyFA27a4HJl
+Sf0yBs73AIFLw0bSYqCetWUp0u9cfz2Qw+z0fi6fVyBECXckHkancgzujlOrEVt2
+lOLPW5qZcCAJYZix8LLurhcR36uDHXsDkYTRcLe8091fcQURAj9WOakYV5bcGz8R
+fXktwqSdSyyFcIUxT3qOJ3eHMazYQg==
+=dLW5
+-----END PGP SIGNATURE-----
+
+--Sig_/AlH65u3khJPw=1hotxSS7al--
