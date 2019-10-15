@@ -2,132 +2,264 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E69ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628F3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1678221848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2268F21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="N3nEbHkq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rhGTsL53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbfJONGh (ORCPT
+        id S1730620AbfJONGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:06:37 -0400
-Received: from mail-eopbgr730097.outbound.protection.outlook.com ([40.107.73.97]:32999
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728607AbfJONGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:06:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KHDcGZwVm4HiMmI4zNWtdylm0jcD6jkdGLtHzpNfryGMuLRssONni1+MRolW2mdfwiPcEfSq6ph03vka6FySkeiKafuXkj8idD6Snr5UNIcMJ1AViWwF3AjRLc3ZGxHLR7Bol+JJfz3CTJl1ATtMk0Y+MaMAFx6VWEgvElSf9CGpyrLS/WplJ9R1Vo/lm02wublT3UhoZfps2Jo8mAG+vQ4QuxOqQYDC+ZFxsSKl2nBepLnxXw4cTZaq3HiBKbTn0R73P1LqYCRRUIDm5DlQ2JLM20E8ppU/aYa+uDwRyAoBNpHCWn077CNXKA/q/Z6OwQhL+adTWzsAH5OMMZzMDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JwkSsJ7uUmCNGWcnEbwtdw9Hc8H6403x4LdJH20u79Q=;
- b=ceyMaQVxSuzHegND5nVJ4UIflH9yB72vZTHTdSbnzgVx+b55jqTyAmV5AGGBTrl6kh5/2p0ZAMQsVXD8TrpOc8LaZFmw2HNU6bWPJgxVbQVur+j+F+z6MzvbVh5zvECP5BhFqtSrgI6vg52YrZRxg682UpWWRri+O6ADtI7JHGeKttr/jNDr1xknZsn3dxdSUBAWGOS/G0em43YEzp8vy1PEJTa7w/GdD1tOGhjVlf1sR2vlRYK7PpHByI0i24Gn3mjv7M3GpgEMmE4HtR/q2KDZFdVx5jW7Byk300H32uYWabsTMkoPKZqoyXoybDeyOQ/jISgr8dcnpXjJ1+mDTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JwkSsJ7uUmCNGWcnEbwtdw9Hc8H6403x4LdJH20u79Q=;
- b=N3nEbHkqV9NebWjssPkDcXtoRPS6xeq2YuXfXiQ2yyNl3TK1VNMW/t3Q2bwtc48217QGb8Mfr5cTyZdHRYW+3qB2JZWyKWxMIEfj7lu5heGcZuKqXjeYcXN+l7x+CKAxlVFTy6tId1R4rebOvpEICKkK2m2XpdK3ByIy97aEWII=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0188.namprd21.prod.outlook.com (10.173.173.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.4; Tue, 15 Oct 2019 13:06:33 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.023; Tue, 15 Oct
- 2019 13:06:33 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, vkuznets <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Subject: RE: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-Thread-Topic: [PATCH v2] x86/hyperv: Set pv_info.name to "Hyper-V"
-Thread-Index: AQHVg0RIF4xP+GrFYUaioMALFqP6h6dbq8mA
-Date:   Tue, 15 Oct 2019 13:06:33 +0000
-Message-ID: <DM5PR21MB01377F713A553FCF721EF99DD7930@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191015103502.13156-1-parri.andrea@gmail.com>
-In-Reply-To: <20191015103502.13156-1-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-15T13:06:31.2366612Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5a42cd8a-92d9-4e4c-9cdb-10505339effc;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65103363-64da-47a8-53a6-08d751708104
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR21MB0188:|DM5PR21MB0188:|DM5PR21MB0188:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB01882523B9FF0143C52267F1D7930@DM5PR21MB0188.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 01917B1794
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(199004)(189003)(7416002)(9686003)(14454004)(66446008)(33656002)(2201001)(66476007)(76116006)(66066001)(2906002)(11346002)(7696005)(6246003)(74316002)(99286004)(446003)(186003)(66556008)(66946007)(64756008)(76176011)(10090500001)(6436002)(256004)(55016002)(25786009)(71200400001)(26005)(4326008)(8676002)(102836004)(81156014)(81166006)(229853002)(6506007)(5660300002)(4744005)(6116002)(8990500004)(86362001)(71190400001)(8936002)(478600001)(486006)(316002)(22452003)(10290500003)(2501003)(110136005)(54906003)(7736002)(476003)(305945005)(3846002)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0188;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TdIz54meN3WPOpWH/wQXIk95ATAZ3I8JxxdoWlApC8iqTUAKaiqN4zHVWzcQf6PUEC2Kd+J6qUmhlDZBvm3+vzCt8iJR9uV1eMyfQMFv3Wiq1uJcEqGQymX3teIQ9y7K6rUBXpc9SsXVwuI650IUMN0ylU2ZTwMFmZA0/GVsSI0Me/qNdYKJ+Qy8cNtj1ZoQJ9biWeNfb4rgT+l6qSBsQajvrXZWCAD7kBD4jWYmTC5sC6tYtYcIskpnm0mYxN7Q1Toz1v7Hk5pUogwUW296SJVSovpMHo7z/62cfI56jEeC0aZ/eD9Yp5ptzev0+0Bknhg+iFgc9A4Iq/d+n38d/GS1akqzCX+UpeSJjD9jU29Z5pHSmTnA4EBphbLp9SGdUQeIQj4dCCIq3NP5O3UZAxEpC7hfVN7r0SQ+NX5pzgk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 15 Oct 2019 09:06:43 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41824 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbfJONGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:06:43 -0400
+Received: by mail-vs1-f65.google.com with SMTP id l2so13054225vsr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 06:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rNOlv3NjVeyQoBdu+mBLCof6nCnJjTRih3rxG6wI0Rc=;
+        b=rhGTsL53yetLxs9HbEFP3SVNGZ9WhPPu9ZCP6S56L3oRjry+hL6HOwj6DDwx+fF3IF
+         bwbs7XGCZiyKjvfTtmZIDnYEGTRDiqZwrae6vRyCqpqHfIX8LEtDBDVQcebexP6hs4dq
+         fm0TSVFFlHaFuH4zthVu6co0xNQvYWDyFVHxNrpD03GqZRj5XOV3qBkZJ6iZ0kFdUpzB
+         p2XnlitTTNrN0x/qDI1oWYKBqckkREo271eo58exPHfJ00z3+cLdADTe0zHD2/uvc7co
+         WhaFhkn+ZqSjn9l9+BZJ6iPmf6wHCHXSXG+dp3ibdZtK7LjxlYCAnBmWSDVQItj+vZXP
+         yKew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rNOlv3NjVeyQoBdu+mBLCof6nCnJjTRih3rxG6wI0Rc=;
+        b=M8I4YBnqaz2slI6f98fxnSzZBAQDAyN92RMxuqFKF0BRAOOnu3qZZ2GbbBEQcTNp4T
+         bDIYUSiXn+/o7v1lT4iV4ytDwvbG8AedjhtOVLWfHppoJNkyG3uanqZwmSe+egY+9rSE
+         dYKfBc9SzyZ8U2gRS8/5GJrGXAtXelVqgVJ6AnxB/HpMeb11V4PQjpdZkIEc830e3oTR
+         YMh7lCXSLEuWc/N2Cc/A13QR1hHUS8NrUb1JFM9OY8Ly1ny4KVrp4r+KAw7tWcPejN3f
+         oKgrmyvQIghHk81aiOHvqr57x6DsldL5Lr9ooVdvc/y1M0/bz0a0RSgpVZ0HZXISamsz
+         V0Ug==
+X-Gm-Message-State: APjAAAUtrZkimyVFEMGHMK4DpBscvGcAbgm79T1nQobVXwJqaZFy4zdS
+        7Ka2SGk2imGDsBb9J77zPFO/93uhZizfUw61L9J/3w==
+X-Google-Smtp-Source: APXvYqypVfUGTpAza4VLnzEyKjqobPPXW581gBdi2BYaMn0ijCdmNFl+uKP1xChRfG9KdmJKJ2jsBna1yMSk93SxYOY=
+X-Received: by 2002:a67:ef89:: with SMTP id r9mr20648010vsp.200.1571144801705;
+ Tue, 15 Oct 2019 06:06:41 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65103363-64da-47a8-53a6-08d751708104
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 13:06:33.7496
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gtu2ncpU4LwARKevawn1OfSc3IKaUPxIhxT55DcHKVli3VucGqnKIkjtTC083hHKzs9FqGoxfcFuxnswAiq77MnNV1jQwe40Kz8/c2gnZyk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0188
+References: <20191004083205.29302-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20191004083205.29302-1-daniel.lezcano@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 15 Oct 2019 15:06:04 +0200
+Message-ID: <CAPDyKFo4WE4trWhxcxDcp1S+uPb6OJBY=-+fYht9k_4DpuQrNQ@mail.gmail.com>
+Subject: Re: [PATCH V4 1/3] cpuidle: play_idle: Make play_idle more flexible
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Tuesday, October 15, 2019=
- 3:35 AM
->=20
-> Michael reported that the x86/hyperv initialization code printed the
-> following dmesg when running in a VM on Hyper-V:
->=20
->   [    0.000738] Booting paravirtualized kernel on bare hardware
->=20
-> Let the x86/hyperv initialization code set pv_info.name to "Hyper-V";
-> with this addition, the dmesg read:
->=20
->   [    0.000172] Booting paravirtualized kernel on Hyper-V
->=20
-> Reported-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+On Fri, 4 Oct 2019 at 10:32, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> The play_idle function has two users, the intel powerclamp and the
+> idle_injection.
+>
+> The idle injection cooling device uses the function via the
+> idle_injection powercap's APIs. Unfortunately, play_idle is currently
+> limited by the idle state depth: by default the deepest idle state is
+> selected. On the ARM[64] platforms, most of the time it is the cluster
+> idle state, the exit latency and the residency can be very high. That
+> reduces the scope of the idle injection usage because the impact on
+> the performances can be very significant.
+>
+> If the idle injection cycles can be done with a shallow state like a
+> retention state, the cooling effect would eventually give similar
+> results than the cpufreq cooling device.
+>
+> In order to prepare the function to receive an idle state parameter,
+> let's replace the 'use_deepest_state' boolean field with 'use_state'
+> and use this value to enter the specific idle state.
+>
+> The current code keeps the default behavior which is go to the deepest
+> idle state.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  drivers/cpuidle/cpuidle.c | 21 +++++++++++----------
+>  include/linux/cpuidle.h   | 13 ++++++-------
+>  kernel/sched/idle.c       | 10 +++++-----
+>  3 files changed, 22 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index 0895b988fa92..f8b54f277589 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -99,31 +99,31 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+>  }
+>
+>  /**
+> - * cpuidle_use_deepest_state - Set/clear governor override flag.
+> - * @enable: New value of the flag.
+> + * cpuidle_use_state - Force the cpuidle framework to enter an idle state.
+> + * @state: An integer for an idle state
+>   *
+> - * Set/unset the current CPU to use the deepest idle state (override governors
+> - * going forward if set).
+> + * Specify an idle state the cpuidle framework must step in and bypass
+> + * the idle state selection process.
+>   */
+> -void cpuidle_use_deepest_state(bool enable)
+> +void cpuidle_use_state(int state)
+>  {
+>         struct cpuidle_device *dev;
+>
+>         preempt_disable();
+>         dev = cpuidle_get_device();
+>         if (dev)
+> -               dev->use_deepest_state = enable;
+> +               dev->use_state = state;
+>         preempt_enable();
+>  }
+>
+>  /**
+>   * cpuidle_find_deepest_state - Find the deepest available idle state.
+> - * @drv: cpuidle driver for the given CPU.
+> - * @dev: cpuidle device for the given CPU.
+>   */
+> -int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+> -                              struct cpuidle_device *dev)
+> +int cpuidle_find_deepest_state(void)
+>  {
+> +       struct cpuidle_device *dev = cpuidle_get_device();
+> +       struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
+> +
+>         return find_deepest_state(drv, dev, UINT_MAX, 0, false);
+>  }
+>
+> @@ -554,6 +554,7 @@ static void __cpuidle_unregister_device(struct cpuidle_device *dev)
+>  static void __cpuidle_device_init(struct cpuidle_device *dev)
+>  {
+>         memset(dev->states_usage, 0, sizeof(dev->states_usage));
+> +       dev->use_state = CPUIDLE_STATE_NOUSE;
+>         dev->last_residency = 0;
+>         dev->next_hrtimer = 0;
+>  }
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index 2dc4c6b19c25..ba0751b26e37 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/list.h>
+>  #include <linux/hrtimer.h>
+>
+> +#define CPUIDLE_STATE_NOUSE    -1
+>  #define CPUIDLE_STATE_MAX      10
+>  #define CPUIDLE_NAME_LEN       16
+>  #define CPUIDLE_DESC_LEN       32
+> @@ -80,11 +81,11 @@ struct cpuidle_driver_kobj;
+>  struct cpuidle_device {
+>         unsigned int            registered:1;
+>         unsigned int            enabled:1;
+> -       unsigned int            use_deepest_state:1;
+>         unsigned int            poll_time_limit:1;
+>         unsigned int            cpu;
+>         ktime_t                 next_hrtimer;
+>
+> +       int                     use_state;
+>         int                     last_state_idx;
+>         int                     last_residency;
+>         u64                     poll_limit_ns;
+> @@ -203,19 +204,17 @@ static inline struct cpuidle_device *cpuidle_get_device(void) {return NULL; }
+>  #endif
+>
+>  #ifdef CONFIG_CPU_IDLE
+> -extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+> -                                     struct cpuidle_device *dev);
+> +extern int cpuidle_find_deepest_state(void);
+>  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+>                                 struct cpuidle_device *dev);
+> -extern void cpuidle_use_deepest_state(bool enable);
+> +extern void cpuidle_use_state(int state);
+>  #else
+> -static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+> -                                            struct cpuidle_device *dev)
+> +static inline int cpuidle_find_deepest_state(void)
+>  {return -ENODEV; }
+>  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
+>                                        struct cpuidle_device *dev)
+>  {return -ENODEV; }
+> -static inline void cpuidle_use_deepest_state(bool enable)
+> +static inline void cpuidle_use_state(int state)
+>  {
+>  }
+>  #endif
+> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> index b98283fc6914..17da9cb309e1 100644
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -165,7 +165,8 @@ static void cpuidle_idle_call(void)
+>          * until a proper wakeup interrupt happens.
+>          */
+>
+> -       if (idle_should_enter_s2idle() || dev->use_deepest_state) {
+> +       if (idle_should_enter_s2idle() ||
+> +           dev->use_state != CPUIDLE_STATE_NOUSE) {
+>                 if (idle_should_enter_s2idle()) {
+>                         rcu_idle_enter();
+>
+> @@ -181,8 +182,7 @@ static void cpuidle_idle_call(void)
+>                 tick_nohz_idle_stop_tick();
+>                 rcu_idle_enter();
+>
+> -               next_state = cpuidle_find_deepest_state(drv, dev);
+> -               call_cpuidle(drv, dev, next_state);
+> +               call_cpuidle(drv, dev, dev->use_state);
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+This doesn't look correct to me.
+
+More precisely, in the s2idle case, we always pick the deepest state.
+But from the change above, we would invoke call_cpuidle() with
+CPUIDLE_STATE_NOUSE, right!?
+
+>         } else {
+>                 bool stop_tick = true;
+>
+> @@ -328,7 +328,7 @@ void play_idle(unsigned long duration_us)
+>         rcu_sleep_check();
+>         preempt_disable();
+>         current->flags |= PF_IDLE;
+> -       cpuidle_use_deepest_state(true);
+> +       cpuidle_use_state(cpuidle_find_deepest_state());
+>
+>         it.done = 0;
+>         hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> @@ -339,7 +339,7 @@ void play_idle(unsigned long duration_us)
+>         while (!READ_ONCE(it.done))
+>                 do_idle();
+>
+> -       cpuidle_use_deepest_state(false);
+> +       cpuidle_use_state(CPUIDLE_STATE_NOUSE);
+>         current->flags &= ~PF_IDLE;
+>
+>         preempt_fold_need_resched();
+> --
+> 2.17.1
+>
+
+Kind regards
+Uffe
