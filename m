@@ -2,281 +2,115 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CED2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A46ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8072089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C692321835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:53:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jex/AY+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfJOIui (ORCPT
+        id S1727726AbfJOIxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:50:38 -0400
-Received: from mga12.intel.com ([192.55.52.136]:54791 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfJOIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:50:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 01:50:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,298,1566889200"; 
-   d="scan'208";a="225353910"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Oct 2019 01:50:35 -0700
-Date:   Tue, 15 Oct 2019 16:53:40 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-Subject: Re: [PATCH v5 1/9] Documentation: Introduce EPT based Subpage
- Protection
-Message-ID: <20191015085340.GA5118@local-michael-cet-test>
-References: <20190917085304.16987-1-weijiang.yang@intel.com>
- <20190917085304.16987-2-weijiang.yang@intel.com>
- <CALMp9eT+P5QTGy=LfZzMozkTC7jdEhbupbfza2tTE3U1grtZkQ@mail.gmail.com>
+        Tue, 15 Oct 2019 04:53:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33898 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfJOIxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:53:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rjzfeDkzQ8oFBeoh7Q4dFwyvzdrmkuKDk9XLQ2RCZI0=; b=jex/AY+8LPcFbFDopQFRs728j
+        hbf53hXlnzhV5Tg5fBA1nC4sBisXRxJ26gVuLqpYyKHpHBUw4LedocCb8ui6WUgU01mWKnl7ugC8v
+        8mxBJlXHxLFML1/EMzFyyX3aBEpWOCcgyeewa8Xd8R11gXokjH8zd8Wl33oPlhDXGd7hEp8MQJyVp
+        bn/5+vldBedLJKPitHRSqe2GpZENcTZJdH4Q15qnbEUc6en55zoh+7huXS4HEU4jjxEPePxebk3Kd
+        ZGxWxQMdeW2uJZRrxYwR2uG8Cjtr0DO+cGy60qFx6QxSW5dvhqFCJfy54c4iuQD9vmAdgW7fwz/09
+        ZwChxmAMA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKIZg-0000hy-G3; Tue, 15 Oct 2019 08:53:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42F553032F8;
+        Tue, 15 Oct 2019 10:52:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9F35C28B550CD; Tue, 15 Oct 2019 10:52:57 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 10:52:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        bberg@redhat.com, x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        ckellner@redhat.com
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+Message-ID: <20191015085257.GE2311@hirez.programming.kicks-ass.net>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+ <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+ <20191014213618.GK4715@zn.tnic>
+ <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALMp9eT+P5QTGy=LfZzMozkTC7jdEhbupbfza2tTE3U1grtZkQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 01:31:08PM -0700, Jim Mattson wrote:
-> On Tue, Sep 17, 2019 at 1:52 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
-> >
-> > Co-developed-by: yi.z.zhang@linux.intel.com
-> > Signed-off-by: yi.z.zhang@linux.intel.com
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  Documentation/virtual/kvm/spp_kvm.txt | 178 ++++++++++++++++++++++++++
-> >  1 file changed, 178 insertions(+)
-> >  create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
-> >
-> > diff --git a/Documentation/virtual/kvm/spp_kvm.txt b/Documentation/virtual/kvm/spp_kvm.txt
-> > new file mode 100644
-> > index 000000000000..1bd1c11d0a99
-> > --- /dev/null
-> > +++ b/Documentation/virtual/kvm/spp_kvm.txt
-> > @@ -0,0 +1,178 @@
-> > +EPT-Based Sub-Page Protection (SPP) for KVM
-> > +====================================================
-> > +
-> > +1.Overview
-> > +  EPT-based Sub-Page Protection(SPP) allows VMM to specify
-> > +  fine-grained(128byte per sub-page) write-protection for guest physical
-> > +  memory. When it's enabled, the CPU enforces write-access permission
-> > +  for the sub-pages within a 4KB page, if corresponding bit is set in
-> > +  permission vector, write to sub-page region is allowed, otherwise,
-> > +  it's prevented with a EPT violation.
-> > +
-> > +  *Note*: In current implementation, SPP is exclusive with nested flag,
-> > +  if it's on, SPP feature won't work.
-> > +
-> > +2.SPP Operation
-> > +  Sub-Page Protection Table (SPPT) is introduced to manage sub-page
-> > +  write-access permission.
-> > +
-> > +  It is active when:
-> > +  a) nested flag is turned off.
-> > +  b) "sub-page write protection" VM-execution control is 1.
-> > +  c) SPP is initialized with KVM_INIT_SPP ioctl.
-> > +  d) Sub-page permissions are set with KVM_SUBPAGES_SET_ACCESS ioctl.
-> > +     see below sections for details.
-> > +
-> > +  __________________________________________________________________________
-> > +
-> > +  How SPP hardware works:
-> > +  __________________________________________________________________________
-> > +
-> > +  Guest write access --> GPA --> Walk EPT --> EPT leaf entry -----|
-> > +  |---------------------------------------------------------------|
-> > +  |-> if VMexec_control.spp && ept_leaf_entry.spp_bit (bit 61)
-> > +       |
-> > +       |-> <false> --> EPT legacy behavior
-> > +       |
-> > +       |
-> > +       |-> <true>  --> if ept_leaf_entry.writable
-> > +                        |
-> > +                        |-> <true>  --> Ignore SPP
-> > +                        |
-> > +                        |-> <false> --> GPA --> Walk SPP 4-level table--|
-> > +                                                                        |
-> > +  |------------<----------get-the-SPPT-point-from-VMCS-filed-----<------|
-> /filed/field/
-> > +  |
-> > +  Walk SPP L4E table
-> > +  |
-> > +  |---> if-entry-misconfiguration ------------>-------|-------<---------|
-> > +   |                                                  |                 |
-> > +  else                                                |                 |
-> > +   |                                                  |                 |
-> > +   |   |------------------SPP VMexit<-----------------|                 |
-> > +   |   |                                                                |
-> > +   |   |-> exit_qualification & sppt_misconfig --> sppt misconfig       |
-> > +   |   |                                                                |
-> > +   |   |-> exit_qualification & sppt_miss --> sppt miss                 |
-> > +   |---|                                                                |
-> > +       |                                                                |
-> > +  walk SPPT L3E--|--> if-entry-misconfiguration------------>------------|
-> > +                 |                                                      |
-> > +                else                                                    |
-> > +                 |                                                      |
-> > +                 |                                                      |
-> > +          walk SPPT L2E --|--> if-entry-misconfiguration-------->-------|
-> > +                          |                                             |
-> > +                         else                                           |
-> > +                          |                                             |
-> > +                          |                                             |
-> > +                   walk SPPT L1E --|-> if-entry-misconfiguration--->----|
-> > +                                   |
-> > +                                 else
-> > +                                   |
-> > +                                   |-> if sub-page writable
-> > +                                   |-> <true>  allow, write access
-> > +                                   |-> <false> disallow, EPT violation
-> > +  ______________________________________________________________________________
-> > +
-> > +3.IOCTL Interfaces
-> > +
-> > +    KVM_INIT_SPP:
-> > +    Allocate storage for sub-page permission vectors and SPPT root page.
-> > +
-> > +    KVM_SUBPAGES_GET_ACCESS:
-> > +    Get sub-page write permission vectors for given continuous guest pages.
-> /continuous/contiguous/
-Thanks for all the corrections.
-
-> > +
-> > +    KVM_SUBPAGES_SET_ACCESS
-> > +    Set SPP bit in EPT leaf entries for given continuous guest pages. The
-> /continuous/contiguous/
-> > +    actual SPPT setup is triggered when SPP miss vm-exit is handled.
-> > +
-> > +    /* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
-> > +    struct kvm_subpage_info {
-> > +       __u64 gfn; /* the first page gfn of the continuous pages */
-> /continuous/contiguous/
-> > +       __u64 npages; /* number of 4K pages */
-> > +       __u64 *access_map; /* sub-page write-access bitmap array */
-> > +    };
-> > +
-> > +    #define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
-> > +    #define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
-> > +    #define KVM_INIT_SPP              _IOW(KVMIO,  0x4b, __u64)
+On Mon, Oct 14, 2019 at 03:27:35PM -0700, Luck, Tony wrote:
+> On Mon, Oct 14, 2019 at 11:36:18PM +0200, Borislav Petkov wrote:
+> > This description is already *begging* for this delay value to be
+> > automatically set by the kernel. Putting yet another knob in front of
+> > the user who doesn't have a clue most of the time shows one more time
+> > that we haven't done our job properly by asking her to know what we
+> > already do.
+> > 
+> > IOW, a simple history feedback mechanism which sets the timeout based on
+> > the last couple of values is much smarter. The thing would have a max
+> > value, of course, which, when exceeded should mean an anomaly, etc, but
+> > almost anything else is better than merely asking the user to make an
+> > educated guess.
 > 
-> The ioctls should be documented in api.txt.
->
-Sure, will do it.
-
-> > +4.Set Sub-Page Permission
-> > +
-> > +  * To enable SPP protection, system admin sets sub-page permission via
-> Why system admin? Can't any kvm user do this?
-Oops, will change it.
-
-> > +    KVM_SUBPAGES_SET_ACCESS ioctl:
-> > +    (1) It first stores the access permissions in bitmap array.
-> > +
-> > +    (2) Then, if the target 4KB page is mapped as PT_PAGE_TABLE_LEVEL entry in EPT,
-> /page is/pages are/
-> > +       it sets SPP bit of the corresponding entry to mark sub-page protection.
-> > +       If the 4KB page is mapped as PT_DIRECTORY_LEVEL or PT_PDPE_LEVEL, it
-> /page is/pages are/
-> > +       zapps the hugepage entry and let following memroy access to trigger EPT
-> /zapps/zaps/, /entry/enttries/, /memroy/memory/
-> > +       page fault, there the gfn is check against SPP permission bitmap and
-> /page fault/violation/
-> > +       proper level is selected to set up EPT entry.
-> > +
-> > +
-> > +   The SPPT paging structure format is as below:
-> > +
-> > +   Format of the SPPT L4E, L3E, L2E:
-> > +   | Bit    | Contents                                                                 |
-> > +   | :----- | :------------------------------------------------------------------------|
-> > +   | 0      | Valid entry when set; indicates whether the entry is present             |
-> > +   | 11:1   | Reserved (0)                                                             |
-> > +   | N-1:12 | Physical address of 4KB aligned SPPT LX-1 Table referenced by this entry |
-> > +   | 51:N   | Reserved (0)                                                             |
-> > +   | 63:52  | Reserved (0)                                                             |
-> > +   Note: N is the physical address width supported by the processor. X is the page level
-> > +
-> > +   Format of the SPPT L1E:
-> > +   | Bit   | Contents                                                          |
-> > +   | :---- | :---------------------------------------------------------------- |
-> > +   | 0+2i  | Write permission for i-th 128 byte sub-page region.               |
-> > +   | 1+2i  | Reserved (0).                                                     |
-> > +   Note: 0<=i<=31
-> > +
-> > +5.SPPT-induced VM exit
-> > +
-> > +  * SPPT miss and misconfiguration induced VM exit
-> > +
-> > +    A SPPT missing VM exit occurs when walk the SPPT, there is no SPPT
-> > +    misconfiguration but a paging-structure entry is not
-> > +    present in any of L4E/L3E/L2E entries.
-> > +
-> > +    A SPPT misconfiguration VM exit occurs when reserved bits or unsupported values
-> > +    are set in SPPT entry.
-> > +
-> > +    *NOTE* SPPT miss and SPPT misconfigurations can occur only due to an
-> > +    attempt to write memory with a guest physical address.
+> You need a plausible start point for the "when to worry the user"
+> message.  Maybe that is your "max value"?
 > 
-> Can you clarify what this means? For instance, setting an A or D bit
-> in a PTE is an attempt to "write memory with a guest physical
-> address," but per the SDM, it is not an operation that is eligible for
-> sub-page write permissions.
+> So if the system has a couple of excursions above temperature lasting
+> 1 second and then 2 seconds ... would you like to see those ignored
+> (because they are below the initial max)? But now we have a couple
+> of data points pick some new value to be the threshold for reporting?
+> 
+> What value should we pick (based on 1 sec, then 2 sec)?
+> 
+> I would be worried that it would self tune to the point where it
+> does report something that it really didn't need to (e.g. as a result
+> of a few consecutive very short excursions).
 
-Yep, should be "memory write mapped by EPT leaf entry and guarded by SPP". thanks!
-> 
-> > +  * SPP permission induced VM exit
-> > +    SPP sub-page permission induced violation is reported as EPT violation
-> > +    thesefore causes VM exit.
-> /thesefore/therefore/
-> 
-> > +
-> > +6.SPPT-induced VM exit handling
-> > +
-> > +  #define EXIT_REASON_SPP                 66
-> > +
-> > +  static int (*const kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
-> > +    ...
-> > +    [EXIT_REASON_SPP]                     = handle_spp,
-> > +    ...
-> > +  };
-> > +
-> > +  New exit qualification for SPPT-induced vmexits.
-> > +
-> > +  | Bit   | Contents                                                          |
-> > +  | :---- | :---------------------------------------------------------------- |
-> > +  | 10:0  | Reserved (0).                                                     |
-> > +  | 11    | SPPT VM exit type. Set for SPPT Miss, cleared for SPPT Misconfig. |
-> > +  | 12    | NMI unblocking due to IRET                                        |
-> > +  | 63:13 | Reserved (0)                                                      |
-> > +
-> > +  In addition to the exit qualification, guest linear address and guest
-> > +  physical address fields will be reported.
-> > +
-> > +  * SPPT miss and misconfiguration induced VM exit
-> > +    Set up SPPT entries correctly.
-> > +
-> > +  * SPP permission induced VM exit
-> > +    This kind of VM exit is left to VMI tool to handle.
-> > --
-> > 2.17.2
-> >
+I'm guessing Boris is thinking of a simple IIR like avg filter.
+
+	avg = avg + (sample-avg) / 4
+
+And then only print when sample > 2*avg. If you initialize that with
+some appropriately large value, it should settle down into what it
+'normal' for that particular piece of hardware.
+
+Still, I'm boggled by the whole idea that hitting critical hard throttle
+is considered 'normal' at all.
+
+> We also need to take into account the "typical sampling interval"
+> for user space thermal control software.
+
+Why is control of critical thermal crud in userspace? That seems like a
+massive design fail.
