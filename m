@@ -2,64 +2,108 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E6ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65BBECE59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7552084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADC9222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:04:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571177082;
+	bh=bEz6VCO4JTI+Xylf3IoX+njYEaKlxKQAsOEkVTvjUNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z+p5hFEPyWiG8+NB9RXgpK+S/sCZbQw5cRmixzzUliAbuLFzGMOYVuz0pAZgasI74
+	 SPnVWdVM3UidCq3Ryth/xrhT7XhpMPt7NaTAe0PfAdQSGR701rdfxFRlRPq2R7KU/3
+	 kZyh8wHsqGvaug9CKRBMm1BIy+qxChZgQCUcxpjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbfJOWBH (ORCPT
+        id S2388948AbfJOWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:01:07 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40794 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfJOWBH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:01:07 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A9A60150F0C6A;
-        Tue, 15 Oct 2019 15:01:06 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 15:01:06 -0700 (PDT)
-Message-Id: <20191015.150106.1543485057165422635.davem@davemloft.net>
-To:     nishadkamdar@gmail.com
-Cc:     gregkh@linuxfoundation.org, joe@perches.com,
-        u.kleine-koenig@pengutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: cavium: Use the correct style for SPDX License
- Identifier
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191012131224.GA8087@nishad>
-References: <20191012131224.GA8087@nishad>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 15:01:06 -0700 (PDT)
+        Tue, 15 Oct 2019 18:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387411AbfJOWEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:04:41 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B3F21A49;
+        Tue, 15 Oct 2019 22:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571177080;
+        bh=bEz6VCO4JTI+Xylf3IoX+njYEaKlxKQAsOEkVTvjUNE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e1xOJVfWV9ix0vZr4g+UcrmKP4/FNC6MKcH8FDdA/I5R3HIFxIYH2YeuXEgpaxUkC
+         uaRVTzg8A/NYCb+zGNG1CgFiD6dzRlLj9y7QwNE++a3RWzzsXIZZq7hDJEXkQ1wJ1O
+         mHHnBfUhy9zlgXC0SbhsSnKToKFyJAWmOPnAit4c=
+Date:   Tue, 15 Oct 2019 18:04:39 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     stable@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        rjw@rjwysocki.net, lenb@kernel.org, sudeep.holla@arm.com,
+        rrichter@marvell.com, jeremy.linton@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linuxarm@huawei.com,
+        gregkh@linuxfoundation.org, guohanjun@huawei.com,
+        wanghuiqiang@huawei.com
+Subject: Re: [PATCH for-stable-5.3 1/2] ACPI/PPTT: Add support for ACPI 6.3
+ thread flag
+Message-ID: <20191015220439.GQ31224@sasha-vm>
+References: <1571054162-71090-1-git-send-email-john.garry@huawei.com>
+ <1571054162-71090-2-git-send-email-john.garry@huawei.com>
+ <20191014232958.GC31224@sasha-vm>
+ <635a839b-bc1e-37ab-bd47-a554acc9b282@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <635a839b-bc1e-37ab-bd47-a554acc9b282@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishad Kamdar <nishadkamdar@gmail.com>
-Date: Sat, 12 Oct 2019 18:42:28 +0530
+On Tue, Oct 15, 2019 at 09:16:13AM +0100, John Garry wrote:
+>On 15/10/2019 00:29, Sasha Levin wrote:
+>>On Mon, Oct 14, 2019 at 07:56:01PM +0800, John Garry wrote:
+>>>From: Jeremy Linton <jeremy.linton@arm.com>
+>>>
+>>>Commit bbd1b70639f785a970d998f35155c713f975e3ac upstream.
+>>>
+>>>ACPI 6.3 adds a flag to the CPU node to indicate whether
+>>>the given PE is a thread. Add a function to return that
+>>>information for a given linux logical CPU.
+>>>
+>>>Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>>>Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+>>>Reviewed-by: Robert Richter <rrichter@marvell.com>
+>>>Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>Signed-off-by: Will Deacon <will@kernel.org>
+>>>Signed-off-by: John Garry <john.garry@huawei.com>
+>>
+>>How far back should these patches be backported?
+>>
+>
+>Hi Sasha,
+>
+>This patchset is for 5.3, and I sent a separate patchset for 4.19, 
+>since the backport is a little different and required some hand 
+>modification -
+>
+>https://lore.kernel.org/linux-arm-kernel/1571046986-231263-1-git-send-email-john.garry@huawei.com/. 
+>4.19 is as far back as we want.
+>
+>Please note that the patches in this 5.3 series are relevant for 5.2 
+>also, but since 5.2 is EOL, I didn't mention it. We did test 5.2, so 
+>you can add there also.
+>
+>Please let me know if any more questions.
 
-> This patch corrects the SPDX License Identifier style
-> in header files related to Cavium Ethernet drivers.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+I've queued this and the 4.19 patches, thanks!
 
-Applied.
+-- 
+Thanks,
+Sasha
