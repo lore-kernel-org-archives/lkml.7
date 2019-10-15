@@ -2,189 +2,210 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A68ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A55ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26B720659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:04:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBy7Tojz"
+	by mail.kernel.org (Postfix) with ESMTP id D3D6520659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387633AbfJOXEg (ORCPT
+        id S2390180AbfJOXEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 19:04:36 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39610 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfJOXEg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 19:04:36 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so50588081ioc.6;
-        Tue, 15 Oct 2019 16:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OMEog+wPJDcpfHAz1VlWbAAsJEgb+2P3a4y6+6INojk=;
-        b=GBy7Tojzyuh3LBnx3XMAb8N6tVMOpYI3ENvomU1LDqz4tw5pB4anuTXNH95ihqU9tO
-         8EbpEbxrj1/zP989X6Xmw+0rjv+B1Smrw+u1B+mm1MTe3espVYjx3pDz7kQ9/BFRlA7K
-         IBNGnKVqhHwj2NTytrFxF/xCUyPgmfJ8yI1KU1O0iuowbOc/v12drXde6Fy4TQ4O1pKB
-         zm9fqzXYetxvtaGrNbGceSq6ghpGZWt6U7r/aKjDEHDmAyx8ZNhyWfLb5cal+mU5+8cm
-         vPZlJcN17b3FQAWkmlizaW+injhx64njtwFbW7IjLPofaQoIon3jtlzE3n1PQniMuJ65
-         GKDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OMEog+wPJDcpfHAz1VlWbAAsJEgb+2P3a4y6+6INojk=;
-        b=gB1c8aY4YGROge38CM2QwQUx4+EYHN4gT+Q9wlJ1bHqOnu3KvYZOyx3wv6G7cwR68C
-         c0IFZwcTk6Pm9RRTlfah+ZWmzbP9MY9asr3utyes/bYcC6VfXi1AZ4haXiNE9tIyt4sc
-         S1gNwKZ7AJU+IteaK/ekKztqrJhpz87Sa0REFdXO7ovFvtSjpgzDp9duslXNn3Wc7DBf
-         LeCNnFRpr/chPfV2mM5OHRwN5s1rhQNFPIarT22lUtQqNZv5jXwe+sbgd/cDGz3cnGw6
-         uf5QbhfdOoPfAN0ncwlEWJLhhViWRrD6SG7wAMnSBomSm1T7SqfEo5CyO6TKJ+awCMXd
-         pyTQ==
-X-Gm-Message-State: APjAAAVvbij0x/6PgPcYpNHxcr0OJBliaztF7QqOaqdK3shTPf6Dc83Q
-        dm4mMvcCblFUtTbYhTwAQ6Xtr+FA3r1GI5K9x1k=
-X-Google-Smtp-Source: APXvYqyAkKfWw91fNt9acZ0ggGpKVfsdElaKZqDrMgeJhsX3kIbaPP6Oz/3n0UI7fRmVIdKLKMyr1yzMfCv4UK97Hrg=
-X-Received: by 2002:a02:7741:: with SMTP id g62mr5970832jac.3.1571180673056;
- Tue, 15 Oct 2019 16:04:33 -0700 (PDT)
+        Tue, 15 Oct 2019 19:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387708AbfJOXEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 19:04:40 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D643A20659;
+        Tue, 15 Oct 2019 23:04:38 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 19:04:36 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Subject: Re: [PATCH 4/5] tracing: Handle the trace array ref counter in new
+ functions
+Message-ID: <20191015190436.65c8c7a3@gandalf.local.home>
+In-Reply-To: <1565805327-579-5-git-send-email-divya.indi@oracle.com>
+References: <1565805327-579-1-git-send-email-divya.indi@oracle.com>
+        <1565805327-579-5-git-send-email-divya.indi@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191001233923.16514-1-aford173@gmail.com> <20191001233923.16514-5-aford173@gmail.com>
- <20191009233130.GA1002@bogus>
-In-Reply-To: <20191009233130.GA1002@bogus>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 15 Oct 2019 18:04:21 -0500
-Message-ID: <CAHCN7xLCvN1v00H10KUX625awz+nea6rhA_LYnftspjaZ+od-g@mail.gmail.com>
-Subject: Re: [PATCH V4 2/3] dt-bindings: Add Logic PD Type 28 display panel
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 9, 2019 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Oct 01, 2019 at 06:39:22PM -0500, Adam Ford wrote:
-> > This patch adds documentation of device tree bindings for the WVGA panel
-> > Logic PD Type 28 display.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
-> > V3:  Correct build errors from 'make dt_binding_check'
->
-> The example still fails to build here.
+Sorry for taking so long to getting to these patches.
 
-I cannot replicate the build error on 5.4-RC3 at least for this
-binding on V4 of the patch.  I get build error on other bindings.
+On Wed, 14 Aug 2019 10:55:26 -0700
+Divya Indi <divya.indi@oracle.com> wrote:
 
-$ make dt_binding_check ARCH=arm
-scripts/kconfig/conf  --syncconfig Kconfig
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-/home/aford/src/linux/Documentation/devicetree/bindings/net/adi,adin.yaml:
-ignoring, error in schema 'adi,rx-internal-delay-ps'
-warning: no schema found in file:
-Documentation/devicetree/bindings/net/adi,adin.yaml
-/home/aford/src/linux/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml:
-ignoring, error in schema '0'
-warning: no schema found in file:
-Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-  ....
-  CHKDT   Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-  CHKDT   Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
- ...
- CHKDT   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
-  CHKDT   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml:
-$id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match
-actual filename
-Documentation/devicetree/bindings/Makefile:12: recipe for target
-'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts'
-failed
-make[1]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts]
-Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> For functions returning a trace array Eg: trace_array_create(), we need to
+> increment the reference counter associated with the trace array to ensure it
+> does not get freed when in use.
+> 
+> Once we are done using the trace array, we need to call
+> trace_array_put() to make sure we are not holding a reference to it
+> anymore and the instance/trace array can be removed when required.
 
+I think it would be more in line with other parts of the kernel if we
+don't need to do the trace_array_put() before calling
+trace_array_destroy().
 
-I took out some of the logs to make it less chatty.  I don't know
-anything about yaml or what the expectations are, so if there is a
-test beyond 'make dt_binding_check' please let me know.
+That is, if we make the following change:
 
-Thank you,
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5ff206ce259e..ae12aac21c6c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8527,9 +8527,11 @@ static int __remove_instance(struct trace_array *tr)
+ {
+ 	int i;
+ 
+-	if (tr->ref || (tr->current_trace && tr->current_trace->ref))
++	if (tr->ref > 1 || (tr->current_trace && tr->current_trace->ref))
+ 		return -EBUSY;
+ 
++	WARN_ON_ONCE(tr->ref != 1);
++
+ 	list_del(&tr->list);
+ 
+ 	/* Disable all the flags that were enabled coming in */
 
-adam
+> 
+> Hence, additionally exporting trace_array_put().
+> 
+> Example use:
+> 
+> tr = trace_array_create("foo-bar");
+> // Use this trace array
+> // Log to this trace array or enable/disable events to this trace array.
+> ....
+> ....
+> // tr no longer required
+> trace_array_put();
+> 
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> ---
+>  include/linux/trace.h |  1 +
+>  kernel/trace/trace.c  | 41 ++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/trace.h b/include/linux/trace.h
+> index 24fcf07..2c782d5 100644
+> --- a/include/linux/trace.h
+> +++ b/include/linux/trace.h
+> @@ -31,6 +31,7 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
+>  		const char *fmt, ...);
+>  struct trace_array *trace_array_create(const char *name);
+>  int trace_array_destroy(struct trace_array *tr);
+> +void trace_array_put(struct trace_array *tr);
+>  #endif	/* CONFIG_TRACING */
+>  
+>  #endif	/* _LINUX_TRACE_H */
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 22bf166..7b6a37a 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -297,12 +297,22 @@ static void __trace_array_put(struct trace_array *this_tr)
+>  	this_tr->ref--;
+>  }
+>  
+> +/**
+> + * trace_array_put - Decrement reference counter for the given trace array.
+> + * @tr: Trace array for which reference counter needs to decrement.
+> + *
+> + * NOTE: Functions like trace_array_create increment the reference counter for
+> + * the trace array to ensure they do not get freed while in use. Make sure to
+> + * call trace_array_put() when the use is done. This will ensure that the
+> + * instance can be later removed.
+> + */
+>  void trace_array_put(struct trace_array *this_tr)
+>  {
+>  	mutex_lock(&trace_types_lock);
+>  	__trace_array_put(this_tr);
+>  	mutex_unlock(&trace_types_lock);
+>  }
+> +EXPORT_SYMBOL_GPL(trace_array_put);
+>  
+>  int call_filter_check_discard(struct trace_event_call *call, void *rec,
+>  			      struct ring_buffer *buffer,
+> @@ -8302,6 +8312,16 @@ static void update_tracer_options(struct trace_array *tr)
+>  	mutex_unlock(&trace_types_lock);
+>  }
+>  
+> +/**
+> + * trace_array_create - Create a new trace array with the given name.
+> + * @name: The name of the trace array to be created.
+> + *
+> + * Create and return a trace array with given name if it does not exist.
+> + *
+> + * NOTE: The reference counter associated with the returned trace array is
+> + * incremented to ensure it is not freed when in use. Make sure to call
+> + * "trace_array_put" for this trace array when its use is done.
+> + */
+>  struct trace_array *trace_array_create(const char *name)
+>  {
+>  	struct trace_array *tr;
+> @@ -8364,6 +8384,8 @@ struct trace_array *trace_array_create(const char *name)
+>  
+>  	list_add(&tr->list, &ftrace_trace_arrays);
+>  
+> +	tr->ref++;
+> +
+>  	mutex_unlock(&trace_types_lock);
+>  	mutex_unlock(&event_mutex);
+>  
+> @@ -8385,7 +8407,19 @@ struct trace_array *trace_array_create(const char *name)
+>  
+>  static int instance_mkdir(const char *name)
+>  {
+> -	return PTR_ERR_OR_ZERO(trace_array_create(name));
+> +	struct trace_array *tr;
+> +
+> +	tr = trace_array_create(name);
+> +	if (IS_ERR(tr))
+> +		return PTR_ERR(tr);
+> +
+> +	/* This function does not return a reference to the created trace array,
+> +	 * so the reference counter is to be 0 when it returns.
+> +	 * trace_array_create increments the ref counter, decrement it here
+> +	 * by calling trace_array_put() */
+> +	trace_array_put(tr);
+> +
 
->
-> > V2:  Use YAML instead of TXT for binding
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > new file mode 100644
-> > index 000000000000..e2c62e8f1db4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > @@ -0,0 +1,42 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
-> > +
-> > +maintainers:
-> > +  - Adam Ford <aford173@gmail.com>
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: logicpd,type28
-> > +
-> > +  power-supply: true
-> > +  enable-gpios: true
-> > +  backlight: true
-> > +  port: true
-> > +
-> > +required:
-> > +  - compatible
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    lcd0: display {
-> > +      compatible = "logicpd,type28";
-> > +      enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
-> > +      backlight = <&backlight>;
-> > +      port {
-> > +        lcd_in: endpoint {
-> > +          remote-endpoint = <&dpi_out>;
-> > +        };
-> > +      };
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.17.1
-> >
+If we make it that the destroy needs tr->ref == 1, we can remove the
+above.
+
+> +	return 0;
+>  }
+>  
+>  static int __remove_instance(struct trace_array *tr)
+> @@ -8424,6 +8458,11 @@ static int __remove_instance(struct trace_array *tr)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * NOTE: An instance cannot be removed if there is still a reference to it.
+> + * Make sure to call "trace_array_put" for a trace array returned by functions
+> + * like trace_array_create(), otherwise trace_array_destroy will not succeed.
+> + */
+
+And remove the above comment too.
+
+-- Steve
+
+>  int trace_array_destroy(struct trace_array *this_tr)
+>  {
+>  	struct trace_array *tr;
+
