@@ -2,89 +2,184 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEE1ECE59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF432ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548732168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571175399;
-	bh=aMw709beM1rE8T7vybZcuJLSLiqFPzJHotrEtAZ9suw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=YAuRzMypeoSvDpIQOIDRguN2tcnVdOKjRz3mBF+18HXrIbGxcC61qAW8vr5Yjr1Tl
-	 E6/+9/sL4ISBrKm4mrMx3C7msWY7KZAwiI8ov8WnLuuL3iVwxAquFji4R7tgmR0cQj
-	 XL5qicrRpSqTGw3lWQuq48PZhUKDZLDfcz+9WvOw=
+	by mail.kernel.org (Postfix) with ESMTP id BA96B20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfJOVgi (ORCPT
+        id S1730156AbfJOVjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfJOVgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:36:38 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB0D20854;
-        Tue, 15 Oct 2019 21:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571175397;
-        bh=aMw709beM1rE8T7vybZcuJLSLiqFPzJHotrEtAZ9suw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1u4ZjfYyt3WgWzgBm8iqJwwNFm27RBd6GtDbCEvm1NexWbrPYkkyyIlQ/Kgj4LF8V
-         kTRc6IUZyGmxMdyN332GwEFVn2nBCD1+SwnRwIAgf08rOuNMkDAzWpQSfdNXLO4aub
-         cnMbsgaHG9rmVnqghp9hGuZAP72kWnarIRjXJc9g=
-Date:   Tue, 15 Oct 2019 16:36:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Krzysztof Wilczynski <kw@linux.com>
-Subject: Re: [PATCH 0/3] PCI/ATS: Clean up unnecessary stubs and exports
-Message-ID: <20191015213635.GA177798@google.com>
+        Tue, 15 Oct 2019 17:39:04 -0400
+Received: from www381.your-server.de ([78.46.137.84]:49436 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbfJOVjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 17:39:03 -0400
+X-Greylist: delayed 1923 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 17:39:02 EDT
+Received: from sslproxy01.your-server.de ([88.198.220.130])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1iKU1s-00079J-3q; Tue, 15 Oct 2019 23:06:52 +0200
+Received: from [93.104.114.34] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <lars@metafoo.de>)
+        id 1iKU1r-0001zM-Ky; Tue, 15 Oct 2019 23:06:51 +0200
+Subject: Re: [PATCH] dmaengine: axi-dmac: simple device_config operation
+ implemented
+To:     Vinod Koul <vkoul@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "alencar.fmce@imbel.gov.br" <alencar.fmce@imbel.gov.br>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190913145404.28715-1-alexandru.ardelean@analog.com>
+ <20191014070142.GB2654@vkoul-mobl>
+ <4384347cc94a54e3fa22790aaa91375afda54e1b.camel@analog.com>
+ <20191015104342.GW2654@vkoul-mobl>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <4428e1fa-1a2a-5a5f-ada8-806078c8da94@metafoo.de>
+Date:   Tue, 15 Oct 2019 23:06:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009225354.181018-1-helgaas@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015104342.GW2654@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25603/Tue Oct 15 10:57:00 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:53:51PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On 10/15/19 12:43 PM, Vinod Koul wrote:
+> On 15-10-19, 07:05, Ardelean, Alexandru wrote:
+>> On Mon, 2019-10-14 at 12:31 +0530, Vinod Koul wrote:
+>>> [External]
+>>>
+>>
+>> Hey,
+>>
+>>> On 13-09-19, 17:54, Alexandru Ardelean wrote:
+>>>> From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+>>>>
+>>>> dmaengine_slave_config is called by dmaengine_pcm_hw_params when using
+>>>> axi-i2s with axi-dmac. If device_config is NULL, -ENOSYS  is returned,
+>>>> which breaks the snd_pcm_hw_params function.
+>>>> This is a fix for the error:
+>>>
+>>> and what is that?
+>>>
+>>>> $ aplay -D plughw:ADAU1761 /usr/share/sounds/alsa/Front_Center.wav
+>>>> Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit
+>>>> Little Endian, Rate 48000 Hz, Mono
+>>>> axi-i2s 43c20000.axi-i2s: ASoC: 43c20000.axi-i2s hw params failed: -38
+>>
+>> Error is above this line [code -38].
 > 
-> Most of the ATS/PRI/PASID interfaces are only used by IOMMU drivers that
-> can only be built statically, not as modules.  A couple are only used by
-> the PCI core and don't need to be visible outside at all.
+> Right and it would help explaining a bit more on the error!
 > 
-> These are intended to be cleanup only, but let me know if they would break
-> something.
-> 
-> Bjorn Helgaas (3):
->   PCI/ATS: Remove unused PRI and PASID stubs
->   PCI/ATS: Remove unnecessary EXPORT_SYMBOL_GPL()
->   PCI/ATS: Make pci_restore_pri_state(), pci_restore_pasid_state()
->     private
-> 
->  drivers/pci/ats.c       | 14 --------------
->  drivers/pci/pci.h       |  4 ++++
->  include/linux/pci-ats.h | 15 ---------------
->  3 files changed, 4 insertions(+), 29 deletions(-)
+>>
+>>>> aplay: set_params:1403: Unable to install hw params:
+>>>> ACCESS:  RW_INTERLEAVED
+>>>> FORMAT:  S16_LE
+>>>> SUBFORMAT:  STD
+>>>> SAMPLE_BITS: 16
+>>>> FRAME_BITS: 16
+>>>> CHANNELS: 1
+>>>> RATE: 48000
+>>>> PERIOD_TIME: 125000
+>>>> PERIOD_SIZE: 6000
+>>>> PERIOD_BYTES: 12000
+>>>> PERIODS: 4
+>>>> BUFFER_TIME: 500000
+>>>> BUFFER_SIZE: 24000
+>>>> BUFFER_BYTES: 48000
+>>>> TICK_TIME: 0
+>>>>
+>>>> Signed-off-by: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+>>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>>>> ---
+>>>>
+>>>> Note: Fixes tag not added intentionally.
+>>>>
+>>>>  drivers/dma/dma-axi-dmac.c | 16 ++++++++++++++++
+>>>>  1 file changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+>>>> index a0ee404b736e..ab2677343202 100644
+>>>> --- a/drivers/dma/dma-axi-dmac.c
+>>>> +++ b/drivers/dma/dma-axi-dmac.c
+>>>> @@ -564,6 +564,21 @@ static struct dma_async_tx_descriptor
+>>>> *axi_dmac_prep_slave_sg(
+>>>>  	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+>>>>  }
+>>>>  
+>>>> +static int axi_dmac_device_config(struct dma_chan *c,
+>>>> +			struct dma_slave_config *slave_config)
+>>>> +{
+>>>> +	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
+>>>> +	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
+>>>> +
+>>>> +	/* no configuration required, a sanity check is done instead */
+>>>> +	if (slave_config->direction != chan->direction) {
+>>>
+>>>  slave_config->direction is a deprecated field, pls dont use that
+>>
+>> ack
+>> any alternative recommendations of what to do in this case?
 
-I applied these to pci/virtualization for v5.5, with Kuppuswamy's
-Reviewed-by on the first and Joerg's on all three.  Thank you both for
-taking a look!
+iirc direction is checked when the channel is requested, there should be
+no need to check it again.
 
-Bjorn
+>> i can take a look, but if you have something on-the-top-of-your-head, i'm
+>> open to suggestions
+>> we can also just drop this completely and let userspace fail
+> 
+> Yeah it is tricky, this should be ideally implemented properly.
+> 
+>>>> +		dev_err(dmac->dma_dev.dev, "Direction not supported by this
+>>>> DMA Channel");
+>>>> +		return -EINVAL;
+>>>
+>>> So you intent to support slave dma but do not use dma_slave_config.. how
+>>> are you getting the slave address and other details?
+>>
+>> This DMA controller is a bit special.
+>> It gets synthesized in FPGA, so the configuration is fixed and cannot be
+>> changed at runtime. Maybe later we would allow/implement this
+>> functionality, but this is a question for my HDL colleagues.
+>>
+>> Two things are done (in this order):
+>> 1. For some paramters, axi_dmac_parse_chan_dt() is used to determine things
+>> from device-tree; as it's an FPGA core, things are synthesized once and
+>> cannot change (yet)
+>> 2. For other parameters, the axi_dmac_detect_caps() is used to guess some
+>> of them at probe time, by doing some reg reads/writes
+> 
+> So the question for you hw folks is how would a controller work with
+> multiple slave devices, do they need to synthesize it everytime?
+> 
+> Rather than that why cant they make the peripheral addresses
+> programmable so that you dont need updating fpga everytime!
+
+The DMA has a direct connection to the peripheral and the peripheral
+data port is not connected to the general purpose memory interconnect.
+So you can't write to it by an MMIO address and	 there is no address
+that needs to be configured. For an FPGA based design this is quite a
+good solution in terms of resource usage, performance and simplicity. A
+direct connection requires less resources than connection it to the
+central memory interconnect, while at the same time having lower latency
+and not eating up any additional bandwidth on the central memory connect.
+
+So slave config in this case is a noop and all it can do is verify that
+the requested configuration matches the available configuration.
+
