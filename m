@@ -2,155 +2,79 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A671C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B068FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712052064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnNiPZHW"
+	by mail.kernel.org (Postfix) with ESMTP id 8E3E72064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732152AbfJONpw (ORCPT
+        id S1732157AbfJONqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:45:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43916 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbfJONpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:45:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n14so20296002ljj.10;
-        Tue, 15 Oct 2019 06:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XhBJozkHE/xedpBrZ0VCd5Q5zH6PXHTbsKH5oegYHnQ=;
-        b=bnNiPZHWndkW6jXXwA3cbLqWpwLIc5FZqIHyNeFd1K8SfL0US0DoBSGO8+LByTR/8a
-         uuUPtym+3M0sirpu0GPLRbmG4olfMmVVhgsdCa/jSPC2AQya1FHmp2bFaF2BVfI60QSp
-         IwigxDJhtvFyV6E5pJW6qu0covk8D5NwhkOhWXyq9gSufBBOibPvY9TCfIOBczQmqBkF
-         bEd88lQfgPGs6f4akbTkXlMgPP6M/ZUYI/M1bqiia2X6YLCfNMtjKMypDgWExF4tkZd7
-         73M7NRIFgLREwM2WCOx7usgaCh7eGt49tuxnbAMoY1D1a0tqrYF5d5dSNPUH+ILJHaE2
-         jlLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XhBJozkHE/xedpBrZ0VCd5Q5zH6PXHTbsKH5oegYHnQ=;
-        b=dBjjt1kXxJcCRIqau5BW38sxtS0jWkNIJ3tuThf5TY1GDtOOxkcHTF//XvNSdt00t4
-         6IAZBiFhVCqa334kV1sPJzALlA+E0FV2h3ZnsMIx0ZILqyh7bngJguuzuiNUM+T4tQBA
-         cNH4/KYmWO+OlEUIIHDK0ugB1vrV92nrKmmtbdZLRiPT/fKUhhxq2a/e3OuAV/LcZFmJ
-         3V8oCzFBJzj2Mx19fPVMpLMcWwmc5e6WzTt3fSgWyFob6bT5NcgXtfZVaJOUD+f38zey
-         detO3TQP4vIHMUV9l6jHFRauEp0hSYkTLBS55IoHi8zDlC1xya4zkwpjvwL6VpZAwL0n
-         lJMQ==
-X-Gm-Message-State: APjAAAWoleCAlUumUuKYjN+mUh2dNyRBieeOmJXp42oaucUVBdb3p6Y4
-        LvyoyfYXl5w9pkiCbCGNkO1YGTrR
-X-Google-Smtp-Source: APXvYqxDA51lkLWNTaf8bBq//P4W4VfYR0u+eBP4O+satZqN4rgC0XPhHwULT0gp3lRytqRDKtnXSw==
-X-Received: by 2002:a2e:8593:: with SMTP id b19mr22488107lji.34.1571147148483;
-        Tue, 15 Oct 2019 06:45:48 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id c3sm4909990lfi.32.2019.10.15.06.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 06:45:47 -0700 (PDT)
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
- framework
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
-        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
- <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0d0b050a-4d79-2e65-5d71-dfd662310e1f@gmail.com>
-Date:   Tue, 15 Oct 2019 16:45:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 15 Oct 2019 09:46:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63354 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732013AbfJONqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:46:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 06:46:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
+   d="scan'208";a="185816087"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.55]) ([10.237.72.55])
+  by orsmga007.jf.intel.com with ESMTP; 15 Oct 2019 06:46:43 -0700
+Subject: Re: [RFC] mmc: cqhci: commit descriptors before setting the doorbell
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        riteshh@codeaurora.org, venkatg@codeaurora.org
+References: <20191014183849.14864-1-faiz_abbas@ti.com>
+ <fac9ad28-dbc3-3948-d99c-742420f3e651@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <ca62cbaa-111c-4546-afd5-aad70eb98993@intel.com>
+Date:   Tue, 15 Oct 2019 16:45:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+In-Reply-To: <fac9ad28-dbc3-3948-d99c-742420f3e651@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.10.2019 14:46, Viresh Kumar пишет:
-> On 22-09-19, 23:12, Dmitry Osipenko wrote:
->> Hello Viresh,
+On 15/10/19 10:55 AM, Faiz Abbas wrote:
+> Hi,
+> 
+> On 15/10/19 12:08 AM, Faiz Abbas wrote:
+>> Add a write memory barrier to make sure that descriptors are actually
+>> written to memory before ringing the doorbell.
 >>
->> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
 >>
+>> This patch fixes a very infrequent ADMA error (1 out of 100 times) that
+>> I have been seeing after enabling command queuing for J721e.
+>> Also looking at memory-barriers.txt and this commit[1],
+>> it looks like we should be doing this before any descriptor write
+>> followed by a doorbell ring operation. It'll be nice if someone with more
+>> expertise in memory barriers can comment.
 >>
->> [   87.952369] ==================================================================
->> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
->> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
->>
->> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
->> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
->> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
->> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
->> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
->> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
->> (print_address_description.constprop.0+0x3d/0x340)
->> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
->> (__kasan_report+0xe3/0x12c)
->> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
->> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
->> (blocking_notifier_chain_register+0x29/0x3c)
->> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
->> (dev_pm_qos_add_notifier+0x79/0xf8)
->> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
->> [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
->> [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
->> [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
->> (cpufreq_register_driver+0x13b/0x1ec)
->> [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
->> (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
+>> [1] ad1a1b9cd67a ("scsi: ufs: commit descriptors before setting the
+>>     doorbell")
 > 
-> Hi Dmitry,
-> 
-> Thanks for the bug report and I was finally able to reproduce it at my end and
-> this was quite an interesting debugging exercise :)
-> 
-> When a cpufreq driver gets registered, we register with the subsys interface and
-> it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
-> notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
-> 
-> When the cpufreq driver gets unregistered, we unregister with the subsys
-> interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
-> (should have been in reverse order I feel). We remove the QoS notifier only when
-> cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
-> CPUx. Now this has a different notifier list as compared to CPU0.
-> 
-> In short, we are adding the cpufreq notifiers to CPU0 and removing them from
-> CPUx. When we try to add it again by inserting the module for second time, we
-> find a node in the notifier list which is already freed but still in the list as
-> we removed it from CPUx's list (which doesn't do anything as the node wasn't
-> there in the first place).
-> 
-> @Rafael: How do you see we solve this problem ? Here are the options I could
-> think of:
-> 
-> - Update subsys layer to reverse the order of devices while unregistering (this
->   will fix the current problem, but we will still have corner cases hanging
->   around, like if the CPU0 is hotplugged out, etc).
-> 
-> - Update QoS framework with the knowledge of related CPUs, this has been pending
->   until now from my side. And this is the thing we really need to do. Eventually
->   we shall have only a single notifier list for all CPUs of a policy, at least
->   for MIN/MAX frequencies.
-> 
-> - ??
-> 
+> So I see that cqhci_readl/writel() use readl/writel_relaxed() which
+> seems to be causing this issue. Should I just fix this by converting
+> those to readl/writel with memory barriers instead?
 
-Viresh, thank you very much! Looking forward to a fix :)
+Perhaps we could do both changes i.e. add wmb() and convert to non-relaxed
+readl/writel
