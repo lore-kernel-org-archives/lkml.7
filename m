@@ -4,37 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DDDECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA023C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DD22083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F96020854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389737AbfJOTV3 (ORCPT
+        id S2389332AbfJOTSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:21:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45621 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731917AbfJOTSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 15:18:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45612 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfJOTSg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 15:18:36 -0400
 Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1iKSL2-00067i-Qs; Tue, 15 Oct 2019 21:18:32 +0200
+        id 1iKSL2-00067i-HU; Tue, 15 Oct 2019 21:18:32 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
+Cc:     tglx@linutronix.de, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 03/34] powerpc: Use CONFIG_PREEMPTION
-Date:   Tue, 15 Oct 2019 21:17:50 +0200
-Message-Id: <20191015191821.11479-4-bigeasy@linutronix.de>
+Subject: [PATCH 02/34] arm64: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:17:49 +0200
+Message-Id: <20191015191821.11479-3-bigeasy@linutronix.de>
 In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
 References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -50,105 +48,182 @@ CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
 Both PREEMPT and PREEMPT_RT require the same functionality which today
 depends on CONFIG_PREEMPT.
 
-Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
-output in __die().
+Switch the Kconfig dependency, entry code and preemption handling over
+to use CONFIG_PREEMPTION. Add PREEMPT_RT output in show_stack().
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 [bigeasy: +traps.c, Kconfig]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/powerpc/Kconfig           | 2 +-
- arch/powerpc/kernel/entry_32.S | 4 ++--
- arch/powerpc/kernel/entry_64.S | 4 ++--
- arch/powerpc/kernel/traps.c    | 7 ++++++-
- 4 files changed, 11 insertions(+), 6 deletions(-)
+ arch/arm64/Kconfig                 | 52 +++++++++++++++---------------
+ arch/arm64/crypto/sha256-glue.c    |  2 +-
+ arch/arm64/include/asm/assembler.h |  6 ++--
+ arch/arm64/include/asm/preempt.h   |  4 +--
+ arch/arm64/kernel/entry.S          |  2 +-
+ arch/arm64/kernel/traps.c          |  3 ++
+ 6 files changed, 36 insertions(+), 33 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 3e56c9c2f16ee..8ead8d6e1cbc8 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -106,7 +106,7 @@ config LOCKDEP_SUPPORT
- config GENERIC_LOCKBREAK
- 	bool
- 	default y
--	depends on SMP && PREEMPT
-+	depends on SMP && PREEMPTION
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 950a56b71ff0d..4a621d6c6e676 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -35,32 +35,32 @@ config ARM64
+ 	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+-	select ARCH_INLINE_READ_LOCK if !PREEMPT
+-	select ARCH_INLINE_READ_LOCK_BH if !PREEMPT
+-	select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPT
+-	select ARCH_INLINE_READ_LOCK_IRQSAVE if !PREEMPT
+-	select ARCH_INLINE_READ_UNLOCK if !PREEMPT
+-	select ARCH_INLINE_READ_UNLOCK_BH if !PREEMPT
+-	select ARCH_INLINE_READ_UNLOCK_IRQ if !PREEMPT
+-	select ARCH_INLINE_READ_UNLOCK_IRQRESTORE if !PREEMPT
+-	select ARCH_INLINE_WRITE_LOCK if !PREEMPT
+-	select ARCH_INLINE_WRITE_LOCK_BH if !PREEMPT
+-	select ARCH_INLINE_WRITE_LOCK_IRQ if !PREEMPT
+-	select ARCH_INLINE_WRITE_LOCK_IRQSAVE if !PREEMPT
+-	select ARCH_INLINE_WRITE_UNLOCK if !PREEMPT
+-	select ARCH_INLINE_WRITE_UNLOCK_BH if !PREEMPT
+-	select ARCH_INLINE_WRITE_UNLOCK_IRQ if !PREEMPT
+-	select ARCH_INLINE_WRITE_UNLOCK_IRQRESTORE if !PREEMPT
+-	select ARCH_INLINE_SPIN_TRYLOCK if !PREEMPT
+-	select ARCH_INLINE_SPIN_TRYLOCK_BH if !PREEMPT
+-	select ARCH_INLINE_SPIN_LOCK if !PREEMPT
+-	select ARCH_INLINE_SPIN_LOCK_BH if !PREEMPT
+-	select ARCH_INLINE_SPIN_LOCK_IRQ if !PREEMPT
+-	select ARCH_INLINE_SPIN_LOCK_IRQSAVE if !PREEMPT
+-	select ARCH_INLINE_SPIN_UNLOCK if !PREEMPT
+-	select ARCH_INLINE_SPIN_UNLOCK_BH if !PREEMPT
+-	select ARCH_INLINE_SPIN_UNLOCK_IRQ if !PREEMPT
+-	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPT
++	select ARCH_INLINE_READ_LOCK if !PREEMPTION
++	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
++	select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
++	select ARCH_INLINE_READ_LOCK_IRQSAVE if !PREEMPTION
++	select ARCH_INLINE_READ_UNLOCK if !PREEMPTION
++	select ARCH_INLINE_READ_UNLOCK_BH if !PREEMPTION
++	select ARCH_INLINE_READ_UNLOCK_IRQ if !PREEMPTION
++	select ARCH_INLINE_READ_UNLOCK_IRQRESTORE if !PREEMPTION
++	select ARCH_INLINE_WRITE_LOCK if !PREEMPTION
++	select ARCH_INLINE_WRITE_LOCK_BH if !PREEMPTION
++	select ARCH_INLINE_WRITE_LOCK_IRQ if !PREEMPTION
++	select ARCH_INLINE_WRITE_LOCK_IRQSAVE if !PREEMPTION
++	select ARCH_INLINE_WRITE_UNLOCK if !PREEMPTION
++	select ARCH_INLINE_WRITE_UNLOCK_BH if !PREEMPTION
++	select ARCH_INLINE_WRITE_UNLOCK_IRQ if !PREEMPTION
++	select ARCH_INLINE_WRITE_UNLOCK_IRQRESTORE if !PREEMPTION
++	select ARCH_INLINE_SPIN_TRYLOCK if !PREEMPTION
++	select ARCH_INLINE_SPIN_TRYLOCK_BH if !PREEMPTION
++	select ARCH_INLINE_SPIN_LOCK if !PREEMPTION
++	select ARCH_INLINE_SPIN_LOCK_BH if !PREEMPTION
++	select ARCH_INLINE_SPIN_LOCK_IRQ if !PREEMPTION
++	select ARCH_INLINE_SPIN_LOCK_IRQSAVE if !PREEMPTION
++	select ARCH_INLINE_SPIN_UNLOCK if !PREEMPTION
++	select ARCH_INLINE_SPIN_UNLOCK_BH if !PREEMPTION
++	select ARCH_INLINE_SPIN_UNLOCK_IRQ if !PREEMPTION
++	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
+ 	select ARCH_KEEP_MEMBLOCK
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_USE_QUEUED_RWLOCKS
+diff --git a/arch/arm64/crypto/sha256-glue.c b/arch/arm64/crypto/sha256-glu=
+e.c
+index e273faca924f9..999da59f03a9d 100644
+--- a/arch/arm64/crypto/sha256-glue.c
++++ b/arch/arm64/crypto/sha256-glue.c
+@@ -97,7 +97,7 @@ static int sha256_update_neon(struct shash_desc *desc, co=
+nst u8 *data,
+ 		 * input when running on a preemptible kernel, but process the
+ 		 * data block by block instead.
+ 		 */
+-		if (IS_ENABLED(CONFIG_PREEMPT) &&
++		if (IS_ENABLED(CONFIG_PREEMPTION) &&
+ 		    chunk + sctx->count % SHA256_BLOCK_SIZE > SHA256_BLOCK_SIZE)
+ 			chunk =3D SHA256_BLOCK_SIZE -
+ 				sctx->count % SHA256_BLOCK_SIZE;
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/as=
+sembler.h
+index b8cf7c85ffa2a..2cc0dd8bd9f78 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -699,8 +699,8 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+  * where <label> is optional, and marks the point where execution will res=
+ume
+  * after a yield has been performed. If omitted, execution resumes right a=
+fter
+  * the endif_yield_neon invocation. Note that the entire sequence, includi=
+ng
+- * the provided patchup code, will be omitted from the image if CONFIG_PRE=
+EMPT
+- * is not defined.
++ * the provided patchup code, will be omitted from the image if
++ * CONFIG_PREEMPTION is not defined.
+  *
+  * As a convenience, in the case where no patchup code is required, the ab=
+ove
+  * sequence may be abbreviated to
+@@ -728,7 +728,7 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+ 	.endm
 =20
- config GENERIC_HWEIGHT
- 	bool
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index d60908ea37fb9..e1a4c39b83b86 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -897,7 +897,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
- 	bne-	0b
- 1:
+ 	.macro		if_will_cond_yield_neon
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	get_current_task	x0
+ 	ldr		x0, [x0, #TSK_TI_PREEMPT]
+ 	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
+diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/pree=
+mpt.h
+index d499516470149..80e946b2abee2 100644
+--- a/arch/arm64/include/asm/preempt.h
++++ b/arch/arm64/include/asm/preempt.h
+@@ -79,11 +79,11 @@ static inline bool should_resched(int preempt_offset)
+ 	return pc =3D=3D preempt_offset;
+ }
 =20
 -#ifdef CONFIG_PREEMPT
 +#ifdef CONFIG_PREEMPTION
- 	/* check current_thread_info->preempt_count */
- 	lwz	r0,TI_PREEMPT(r2)
- 	cmpwi	0,r0,0		/* if non-zero, just restore regs and return */
-@@ -921,7 +921,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
- 	 */
- 	bl	trace_hardirqs_on
+ void preempt_schedule(void);
+ #define __preempt_schedule() preempt_schedule()
+ void preempt_schedule_notrace(void);
+ #define __preempt_schedule_notrace() preempt_schedule_notrace()
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+=20
+ #endif /* __ASM_PREEMPT_H */
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index e304fe04b098d..a3f5e757983ff 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -669,7 +669,7 @@ ENDPROC(el1_sync)
+=20
+ 	irq_handler
+=20
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+ alternative_if ARM64_HAS_IRQ_PRIO_MASKING
+ 	/*
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index 34739e80211bc..0bf934257744d 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -143,9 +143,12 @@ void show_stack(struct task_struct *tsk, unsigned long=
+ *sp)
+=20
+ #ifdef CONFIG_PREEMPT
+ #define S_PREEMPT " PREEMPT"
++#elif defined(CONFIG_PREEMPT_RT)
++#define S_PREEMPT " PREEMPT_RT"
+ #else
+ #define S_PREEMPT ""
  #endif
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
- restore_kuap:
- 	kuap_restore r1, r2, r9, r10, r0
-=20
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index 6467bdab8d405..83733376533e8 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -840,7 +840,7 @@ _GLOBAL(ret_from_except_lite)
- 	bne-	0b
- 1:
-=20
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	/* Check if we need to preempt */
- 	andi.	r0,r4,_TIF_NEED_RESCHED
- 	beq+	restore
-@@ -871,7 +871,7 @@ _GLOBAL(ret_from_except_lite)
- 	li	r10,MSR_RI
- 	mtmsrd	r10,1		  /* Update machine state */
- #endif /* CONFIG_PPC_BOOK3E */
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
-=20
- 	.globl	fast_exc_return_irq
- fast_exc_return_irq:
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 82f43535e6867..23d2f20be4f2e 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -252,14 +252,19 @@ NOKPROBE_SYMBOL(oops_end);
-=20
- static int __die(const char *str, struct pt_regs *regs, long err)
- {
-+	const char *pr =3D "";
 +
- 	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+ #define S_SMP " SMP"
 =20
-+	if (IS_ENABLED(CONFIG_PREEMPTION))
-+		pr =3D IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
-+
- 	printk("%s PAGE_SIZE=3D%luK%s%s%s%s%s%s%s %s\n",
- 	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
- 	       PAGE_SIZE / 1024,
- 	       early_radix_enabled() ? " MMU=3DRadix" : "",
- 	       early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ? " MMU=3DHash" : "",
--	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
-+	       pr,
- 	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=3D" __stringify(NR_CPUS)) : "",
- 	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+ static int __die(const char *str, int err, struct pt_regs *regs)
 --=20
 2.23.0
 
