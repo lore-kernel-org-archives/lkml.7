@@ -2,128 +2,125 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B565AECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFD52064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875412064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wOJ7FvhB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPC6BuNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfJOImS (ORCPT
+        id S1729369AbfJOImY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:42:18 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:64416 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726275AbfJOImR (ORCPT
+        Tue, 15 Oct 2019 04:42:24 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36774 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728808AbfJOImX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:42:17 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9F8fLfY022078;
-        Tue, 15 Oct 2019 10:41:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=VcswSaQgjwVPJKQoYkqU+reFn99J6VbQH4Gn2WoEbg4=;
- b=wOJ7FvhBt0tKm13YE/KziypjLfgScNJumVeh9zev23ZAbAQjnszYIi6qKLuZypqCx+14
- Y+8eY8/UY1WbhXEpfgOGbmDdMu0LvhkGlp/LGYCKg0wrgYsihDxx1+vxMhyrWOGGRAvI
- KcLEs6XaogPQCe4XZDFeYo7Vrr0yCOdKGAPhp1c8zi2xz5lu6EyuHEWuKcfNYFqQIJoQ
- xHPrKi1v5FrWdEE03xZpxiiaUmshtMvbHS2XOL2OYNxXGTTe2vxUXde7JFwIu4HeyaZ9
- 3F8Hjo6ZenpA2iSOAnja6zpvbq5Iemdu0OtsNEPUd+9PWkRT0Kjbj93i8DDz9wwkiPHx NQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4a1728e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Oct 2019 10:41:48 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6D4D100039;
-        Tue, 15 Oct 2019 10:41:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9118D2B758D;
-        Tue, 15 Oct 2019 10:41:42 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 15 Oct
- 2019 10:41:42 +0200
-Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 15 Oct 2019 10:41:41
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linux@armlinux.org.uk>, <tglx@linutronix.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] arm: kernel: initialize broadcast hrtimer based clock event device
-Date:   Tue, 15 Oct 2019 10:41:39 +0200
-Message-ID: <20191015084139.8510-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 15 Oct 2019 04:42:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so22768314wrd.3;
+        Tue, 15 Oct 2019 01:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Alk2iYvP1zhS1Vsxyz1ENDltR7DNnK/DdAFNKV0PUVw=;
+        b=HPC6BuNV8j9u4GZjxKCxoY5RREbeSrCviqnJSe7bX9+Mz4/Ou/Y9YJfCz9D6x5YDJN
+         FPfze7R3WjjunFuZ7BTxjlj9zeZRJzIv5QwElj6bGpHm80r1uAkybYsje5HSVM+2NFwg
+         okWGBK3N+IHtYpPvyQqh8PWgleHiWLfaTVIU08wX80EZFskkvb87rkGeRvnDWfk89KCu
+         IgJWRobMxvlThOjJFQ8cTYimw/cyOOpegxEHHwfkSkuivf2kzEL9dFf5lp0/093hBmrI
+         I+I7fkoLrJo0gxg6wqlRIw4tvg+AF768tPLChUkL43L+S3EzP1I5VV2vB2RtSVkqAj5v
+         MBHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Alk2iYvP1zhS1Vsxyz1ENDltR7DNnK/DdAFNKV0PUVw=;
+        b=ps/EiD5Oidh1J1DYTls4Dg/ok70CqpyMgwosf4Ev8vje3zAAcWFGSFUQKcDMMCuOZ2
+         E4gOzmaMS57165hpzIyMDLXg0JHYK/XlnAKxew8Y1/Z+LB02iJkowftxzRjs+3jrYQkj
+         my57eYoD3x/cU/UvP33m1i60NCxyJnfano/A9PvQ9kJIgFRZDOzy+a6RdSkhC6po6WEW
+         YP0Y46s4MU2HOTim2r0flgrYTSvQdr+T9D77v9EoWY5Gsg01OPfFb5CdMP4WYnP9SMPU
+         ANPXSa14Sc3P/46O98BqxI+iXvVsFLRbiuQ+vKLlmq75k5xGwsQQC86TGgIKfJnswkJj
+         ipaA==
+X-Gm-Message-State: APjAAAUf9stWBnSgpXNiEHurro8O/Zvfhrtu0flPLWO6R+Eg1PbitrvP
+        MkEXm6TkLqXDIxODwoOseu6jojrj
+X-Google-Smtp-Source: APXvYqx2bycIPnDtHKFh/xJsJXsS+Tg6XyXhmAOeu2Ar9KLDQ3WxO6d6EJTK67tMcZ2zx3XYKeedhw==
+X-Received: by 2002:adf:e40c:: with SMTP id g12mr30931259wrm.216.1571128939235;
+        Tue, 15 Oct 2019 01:42:19 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id u10sm19454220wmm.0.2019.10.15.01.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 01:42:17 -0700 (PDT)
+References: <20191014020847.9203-1-hslester96@gmail.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: imx7-mipi-csis: Add a check for devm_regulator_get
+In-reply-to: <20191014020847.9203-1-hslester96@gmail.com>
+Date:   Tue, 15 Oct 2019 09:42:16 +0100
+Message-ID: <m3sgnuv1qv.fsf@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-15_04:2019-10-15,2019-10-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On platforms implementing CPU power management, the CPUidle subsystem
-can allow CPUs to enter idle states where local timers logic is lost on power
-down. To keep the software timers functional the kernel relies on an
-always-on broadcast timer to be present in the platform to relay the
-interrupt signalling the timer expiries.
+Hi Chuhong,
+Thanks for the patch.
 
-For platforms implementing CPU core gating that do not implement an always-on
-HW timer or implement it in a broken way, this patch adds code to initialize
-the kernel hrtimer based clock event device upon boot (which can be chosen as
-tick broadcast device by the kernel).
-It relies on a dynamically chosen CPU to be always powered-up. This CPU then
-relays the timer interrupt to CPUs in deep-idle states through its HW local
-timer device.
+On Mon 14 Oct 2019 at 03:08, Chuhong Yuan wrote:
+> devm_regulator_get may return an error but mipi_csis_phy_init misses
+> a check for it.
+> This may lead to problems when regulator_set_voltage uses the unchecked
+> pointer.
+> This patch adds a check for devm_regulator_get to avoid potential risk.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 73d8354e618c..9a07b54c4ab1 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
+>  static int mipi_csis_phy_init(struct csi_state *state)
+>  {
+>  	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
+> +	if (IS_ERR(state->mipi_phy_regulator))
+> +		return PTR_ERR(state->mipi_phy_regulator);
 
-Having a CPU always-on has implications on power management platform
-capabilities and makes CPUidle suboptimal, since at least a CPU is kept
-always in a shallow idle state by the kernel to relay timer interrupts,
-but at least leaves the kernel with a functional system with some working
-power management capabilities.
+This regulator is marked as mandatory in the device tree entry,
+however it looks good to me to have this check, even because it
+can return -EPROBE_DEFER and we need to retry.
 
-The hrtimer based clock event device is unconditionally registered, but
-has the lowest possible rating such that any broadcast-capable HW clock
-event device present will be chosen in preference as the tick broadcast
-device.
+But for that we may need to extend this patch to make the caller
+of this (mipi_csis_probe), to also really care about the returned
+code.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-Note:
-- The same reasons lead to same patch than for arm64 so I have copy the
-  commit message from: 9358d755bd5c ("arm64: kernel: initialize broadcast
-  hrtimer based clock event device")
- arch/arm/kernel/time.c | 2 ++
- 1 file changed, 2 insertions(+)
+Cheers,
+   Rui
 
-diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
-index b996b2cf0703..dddc7ebf4db4 100644
---- a/arch/arm/kernel/time.c
-+++ b/arch/arm/kernel/time.c
-@@ -9,6 +9,7 @@
-  *  reading the RTC at bootup, etc...
-  */
- #include <linux/clk-provider.h>
-+#include <linux/clockchips.h>
- #include <linux/clocksource.h>
- #include <linux/errno.h>
- #include <linux/export.h>
-@@ -107,5 +108,6 @@ void __init time_init(void)
- 		of_clk_init(NULL);
- #endif
- 		timer_probe();
-+		tick_setup_hrtimer_broadcast();
- 	}
- }
--- 
-2.15.0
+>
+>  	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
+>  				     1000000);
 
