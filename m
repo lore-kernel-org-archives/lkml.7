@@ -2,304 +2,105 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DABCECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F90ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1573F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD3621925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732007AbfJONgP (ORCPT
+        id S1732027AbfJONgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:36:15 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:48193 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbfJONgO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:36:14 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6A49420001D;
-        Tue, 15 Oct 2019 13:36:04 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 15:37:52 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/8] drm: rcar-du: crtc: Control CMM operations
-Message-ID: <20191015133752.oyb3p6iyr3ekjxic@uno.localdomain>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20191015104621.62514-6-jacopo+renesas@jmondi.org>
- <42ae76b8-c65f-8c5e-e83a-fc6a422d2624@ideasonboard.com>
+        Tue, 15 Oct 2019 09:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728880AbfJONgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:36:46 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 855752064A;
+        Tue, 15 Oct 2019 13:36:44 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 09:36:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
+        joe.lawrence@redhat.com, jpoimboe@redhat.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
+Message-ID: <20191015093642.72e872d0@gandalf.local.home>
+In-Reply-To: <alpine.LSU.2.21.1910151244550.30206@pobox.suse.cz>
+References: <20191014105923.29607-1-mbenes@suse.cz>
+        <20191014111719.141bd4fa@gandalf.local.home>
+        <20191015074540.bxehllisibls3kk7@pathway.suse.cz>
+        <alpine.LSU.2.21.1910151244550.30206@pobox.suse.cz>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="v5ggakj7spcktmjw"
-Content-Disposition: inline
-In-Reply-To: <42ae76b8-c65f-8c5e-e83a-fc6a422d2624@ideasonboard.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 15 Oct 2019 12:50:59 +0200 (CEST)
+Miroslav Benes <mbenes@suse.cz> wrote:
 
---v5ggakj7spcktmjw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+> > > > @@ -6752,12 +6764,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+> > > >  		ftrace_startup_sysctl();
+> > > >  
+> > > >  	} else {
+> > > > +		if (is_permanent_ops_registered()) {
+> > > > +			ftrace_enabled = last_ftrace_enabled;  
+> > > 
+> > > Although this is not incorrect, but may be somewhat confusing.
+> > > 
+> > > At this location, last_ftrace_enabled is always true.
+> > > 
+> > > I'm thinking this would be better to simply set it to false here.  
+> > 
+> > IMHO, we want to set ftrace_enabled = true here.
 
-Hi Kieran,
+Yes, I meant true (don't know why I said false :-/ )
 
-On Tue, Oct 15, 2019 at 02:15:35PM +0100, Kieran Bingham wrote:
-> Hi Jacopo,
->
-> On 15/10/2019 11:46, Jacopo Mondi wrote:
-> > Implement CMM handling in the crtc begin and enable atomic callbacks,
-> > and enable CMM unit through the Display Extensional Functions
->
-> Extensional ?
->
-> Perhaps this should just be Display Extension Functions?
-> Wow - that's actually what they call it in the data-sheet.
->
-> > register at group setup time.
-> >
->
-> Only a trivial extra blank line below that I can find... so
->
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 79 +++++++++++++++++++++++++
-> >  drivers/gpu/drm/rcar-du/rcar_du_group.c |  5 ++
-> >  drivers/gpu/drm/rcar-du/rcar_du_regs.h  |  5 ++
-> >  3 files changed, 89 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > index 23f1d6cc1719..4bc50a3f4a00 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > @@ -21,6 +21,7 @@
-> >  #include <drm/drm_plane_helper.h>
-> >  #include <drm/drm_vblank.h>
-> >
-> > +#include "rcar_cmm.h"
-> >  #include "rcar_du_crtc.h"
-> >  #include "rcar_du_drv.h"
-> >  #include "rcar_du_encoder.h"
-> > @@ -474,6 +475,70 @@ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
-> >  	rcar_du_crtc_finish_page_flip(rcrtc);
-> >  }
-> >
-> > +/* -----------------------------------------------------------------------------
-> > + * Color Management Module (CMM)
-> > + */
-> > +static int rcar_du_cmm_enable(struct drm_crtc *crtc)
-> > +{
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +
-> > +	if (!rcrtc->cmm)
-> > +		return 0;
-> > +
-> > +	return rcar_cmm_enable(rcrtc->cmm);
-> > +}
-> > +
-> > +static void rcar_du_cmm_disable(struct drm_crtc *crtc)
-> > +{
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +
-> > +	if (!rcrtc->cmm)
-> > +		return;
-> > +
-> > +	rcar_cmm_disable(rcrtc->cmm);
-> > +}
-> > +
-> > +static int rcar_du_cmm_check(struct drm_crtc *crtc,
-> > +			     struct drm_crtc_state *state)
-> > +{
-> > +	struct drm_property_blob *drm_lut = state->gamma_lut;
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +	struct device *dev = rcrtc->dev->dev;
-> > +
-> > +	if (!rcrtc->cmm || !drm_lut)
-> > +		return 0;
-> > +
-> > +	/* We only accept fully populated LUT tables. */
-> > +	if (CM2_LUT_SIZE * sizeof(struct drm_color_lut) !=
-> > +	    drm_lut->length) {
-> > +		dev_err(dev, "invalid gamma lut size: %lu bytes\n",
-> > +			drm_lut->length);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rcar_du_cmm_setup(struct drm_crtc *crtc)
-> > +{
-> > +	struct drm_property_blob *drm_lut = crtc->state->gamma_lut;
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +	struct rcar_cmm_config cmm_config = {};
-> > +
-> > +	if (!rcrtc->cmm)
-> > +		return;
-> > +
-> > +	if (drm_lut) {
-> > +		cmm_config.lut.enable = true;
-> > +		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
-> > +
-> > +	} else {
-> > +		cmm_config.lut.enable = false;
-> > +	}
-> > +
-> > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +}
-> > +
-> >  /* -----------------------------------------------------------------------------
-> >   * Start/Stop and Suspend/Resume
-> >   */
-> > @@ -619,6 +684,8 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
-> >  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
-> >  		rcar_du_vsp_disable(rcrtc);
-> >
-> > +	rcar_du_cmm_disable(crtc);
-> > +
-> >  	/*
-> >  	 * Select switch sync mode. This stops display operation and configures
-> >  	 * the HSYNC and VSYNC signals as inputs.
-> > @@ -631,6 +698,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
-> >  					   DSYSR_TVM_SWITCH);
-> >
-> >  	rcar_du_group_start_stop(rcrtc->group, false);
-> > +
->
-> Extra blank line...
->
+> > 
+> > It was set to "false" by writing to the sysfs file. But the change
+> > gets rejected. ftrace will stay enabled. So, we should set
+> > the value back to "true".  
+> 
+> That's correct.
+> 
+> I can make it explicit as proposed. I just thought that 'ftrace_enabled = 
+> last_ftrace_enabled' was clear enough given Petr's explanation.
+> 
+> > > > +			ret = -EBUSY;
+> > > > +			goto out;
+> > > > +		}
+> > > > +
+> > > >  		/* stopping ftrace calls (just send to ftrace_stub) */
+> > > >  		ftrace_trace_function = ftrace_stub;
+> > > >  
+> > > >  		ftrace_shutdown_sysctl();
+> > > >  	}
+> > > >  
+> > > > +	last_ftrace_enabled = !!ftrace_enabled;
+> > > >   out:  
+> > > 
+> > > And move the assignment of last_ftrace_enabled to after the "out:"
+> > > label.  
+> > 
+> > This change might make sense anyway. But it is not strictly necessary
+> > from my POV.  
+> 
+> If it stays before "out:" label, last_ftrace_enabled is set if and only if 
+> it has to be set. I think it is better, but I can, of course, move it in 
+> v3 if Steven prefers it.
 
-Thanks for spotting this. I'm quite sure I run checkpatch (I just
-re-did) and not warnings for the extra white space in the previous
-patch, or this extra blank line o_0
+I don't have any strong feelings here. If you want to keep it like
+this, I wont argue.
 
->
-> >  }
-> >
-> >  /* -----------------------------------------------------------------------------
-> > @@ -642,6 +710,11 @@ static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
-> >  {
-> >  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(state);
-> >  	struct drm_encoder *encoder;
-> > +	int ret;
-> > +
-> > +	ret = rcar_du_cmm_check(crtc, state);
-> > +	if (ret)
-> > +		return ret;
-> >
-> >  	/* Store the routes from the CRTC output to the DU outputs. */
-> >  	rstate->outputs = 0;
-> > @@ -667,6 +740,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
-> >  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
-> >  	struct rcar_du_device *rcdu = rcrtc->dev;
-> >
-> > +	rcar_du_cmm_enable(crtc);
-> >  	rcar_du_crtc_get(rcrtc);
-> >
-> >  	/*
-> > @@ -686,6 +760,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
-> >  	}
-> >
-> >  	rcar_du_crtc_start(rcrtc);
-> > +	rcar_du_cmm_setup(crtc);
-> >  }
-> >
-> >  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
-> > @@ -739,6 +814,10 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
-> >  	 */
-> >  	rcar_du_crtc_get(rcrtc);
-> >
-> > +	/* If the active state changed, we let .atomic_enable handle CMM. */
-> > +	if (crtc->state->color_mgmt_changed && !crtc->state->active_changed)
-> > +		rcar_du_cmm_setup(crtc);
->
-> Aha, this is quite neat for handling the timings.
->
+-- Steve
 
-Yes, much more streamlined than what we had. Thanks Sean and Ezequiel :)
-
-
-> > +
-> >  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
-> >  		rcar_du_vsp_atomic_begin(rcrtc);
-> >  }
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> > index 9eee47969e77..583de800a66d 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> > @@ -135,6 +135,7 @@ static void rcar_du_group_setup_didsr(struct rcar_du_group *rgrp)
-> >  static void rcar_du_group_setup(struct rcar_du_group *rgrp)
-> >  {
-> >  	struct rcar_du_device *rcdu = rgrp->dev;
-> > +	u32 defr7 = DEFR7_CODE;
-> >
-> >  	/* Enable extended features */
-> >  	rcar_du_group_write(rgrp, DEFR, DEFR_CODE | DEFR_DEFE);
-> > @@ -147,6 +148,10 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
-> >
-> >  	rcar_du_group_setup_pins(rgrp);
-> >
-> > +	defr7 |= (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
-> > +		 (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-> > +	rcar_du_group_write(rgrp, DEFR7, defr7);
-> > +
-> >  	if (rcdu->info->gen >= 2) {
-> >  		rcar_du_group_setup_defr8(rgrp);
-> >  		rcar_du_group_setup_didsr(rgrp);
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> > index bc87f080b170..fb9964949368 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> > @@ -197,6 +197,11 @@
-> >  #define DEFR6_MLOS1		(1 << 2)
-> >  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
-> >
-> > +#define DEFR7			0x000ec
-> > +#define DEFR7_CODE		(0x7779 << 16)
-> > +#define DEFR7_CMME1		BIT(6)
-> > +#define DEFR7_CMME0		BIT(4)
-> > +
-> >  /* -----------------------------------------------------------------------------
-> >   * R8A7790-only Control Registers
-> >   */
-> >
->
-
---v5ggakj7spcktmjw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2ly7AACgkQcjQGjxah
-Vjw8ow//d6tiU5Dt4TuX4+n05Bzj/DCA2QLAoWOMYLO1GxgQj6Hc53NM+zKwRHVi
-fIHbO8qafVfgjyRzbNubhPpn+jZsX+v7uS7EGvR4KqguzaZUlWg+7N6UA1pZEsKj
-1xFAyi8TEP4grNDNwZJ8yOiNXuXKswR0dww8pUGwfNnS+O400YKoNwBtiyuCkSdp
-Q9Sk+tiEEBVyVw1/JuqA0E8T3ATG28bSHqPoEBOBDW22jh2T0lPH9YdY330apaVA
-17MtoXS9RWgkhyJVbR0Do98OMnTEV5sgab1Fy9fV9811IV8N3ZdwlWP2URyxWl9X
-LKh+snGLJkMIo5BFKDU/EJ67+bm161jY2p980VJRes1P5PKkKKif98I09HAl+s9c
-x0EoXN9VhqwGLHlSVpyT0/YfG+mQPApEVm8apE2obUfhIDk/uf82dLvlfpRCZtfU
-4m/SWD0xit/vq9MKS4Du3NwUAukN5prERJnKLrsiGVJb3GHjTFz//twFrpgMPOVH
-Rr13q8UlDpVu5MOrzFIFQTUFHtTYpg+iA2BakhkNYD28WzcOo39wk01dbN3YY1YE
-DIJ7BCErIRq6MTS01qfirUvyzfudFIOaIC3GicigWdYhxjnMuxJAoy7jMwJ6eI2t
-paxFkBzMxk5heqXQUD7cWeRePt8e+9L3jcG7HTTBGMu42TilTQw=
-=/A/1
------END PGP SIGNATURE-----
-
---v5ggakj7spcktmjw--
