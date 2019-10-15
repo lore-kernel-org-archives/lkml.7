@@ -2,154 +2,97 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D5CECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDC1ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE0F2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571179560;
-	bh=8b4HLUZh6quLwZGk+IhsDPegY8/KoMLOAua/JsXlaFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LBH66eb7dA3d/cTu/v/4q1iC5H2UGXothjsxgwmQaOhEFGnj028EGKVRS3mZWWtu/
-	 RCEe5Q4TNg/k9v6V6UQTtKUqFCkQBet/vK+uoXsIW9J+Clz+pwXbiVWuz0Ur3RbI3X
-	 eFg4Uaa2V8rHeZGgOm7+EQrSSdsQeqM/Gl6/k9lk=
+	by mail.kernel.org (Postfix) with ESMTP id 69E9B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ebfL4NmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390032AbfJOWp6 (ORCPT
+        id S2390044AbfJOWqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:45:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46978 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732531AbfJOWp5 (ORCPT
+        Tue, 15 Oct 2019 18:46:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33034 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732531AbfJOWqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:45:57 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 89so18418678oth.13;
-        Tue, 15 Oct 2019 15:45:55 -0700 (PDT)
+        Tue, 15 Oct 2019 18:46:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so10293064pls.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yhQWkXWNjNV9NCfLVkim7P+oXzCiBgFKHaj7Vfld3h0=;
+        b=ebfL4NmRapRbv0ZmBKsvHFy1Qxvx9pIptJa62c02p3z9zOp4ABftnfHv4cWWRncyo8
+         NmYzoq3cLdSf8tyZYsq9OQyIzOt3TZ0YPYsHlo2qVJSQ8P8M0yxMzG8Y4Og4kk4EahHp
+         NQZKCiWSERfeFfNTH+PnCGfLuPbbNuYkAXG0o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MaWp6Jn60uj0bT6sKCogPI4dguf5DlDQ3ZrBSjZQ+hQ=;
-        b=BnGN+2Y/7C4yic9FHhR6n/xkvlokZdM5f+PCeegSm/85ytr0Y3z2e5GpzBm9zWvG0m
-         n/RmFIHNbFK7byMaua9U+1C3eQdeBueXJ0yhoYSZ8vzQAO5wvXL+MIhHZ/T2OigtF0l7
-         +Y3SlVXTPAueryS1hBCFqYQvaY+vMTyLTabqv+kaPv71agkipgXfb4p+NY1QafBR+MlD
-         r2haiwHrMNsK8S1a9zsJcSTcdtaQsue32MI4RZSPedrW/PXfzLRLHq/RyB3fHtZjfIuy
-         JjGzR3prpUA2u+IOPosWjBMbwlqRBtni/G2ywXtDbdK+DB5LLUCsl746OoDPLK7YfPce
-         a8sQ==
-X-Gm-Message-State: APjAAAVTLv4sEZ8J5orX8zKMLKhh9jDoDt/UqegNvyTfxlwtNu2tuKwh
-        lpT+KPE4GR4bnS6pPFo6WFURgtE=
-X-Google-Smtp-Source: APXvYqx++w9zqh0aKrrTNQxwptQw2IBBKd30UczgzL9fYL5LBBi4ThJTdAd91a3CRCBWp8KOLN+6ww==
-X-Received: by 2002:a9d:6b82:: with SMTP id b2mr7915218otq.56.1571179555334;
-        Tue, 15 Oct 2019 15:45:55 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c19sm6786305oib.21.2019.10.15.15.45.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yhQWkXWNjNV9NCfLVkim7P+oXzCiBgFKHaj7Vfld3h0=;
+        b=lEX4dfSRRWy3gIJlg3TsOz7zSGBJz+i0aOdA/xIN9kjYs1zwR2imT4taQz0T4bIlY7
+         +KI8n0NJynddLwqbcGRvo1ONfb8YS7KfpDKeNhoYl+H1SjkYNPYB32Hz7UScx/avBdK8
+         BC5dYrerkZJgI9/r41yHjGNeafKgR/rz7AtUIMqy7H4VwyDSUu2mFRREVi1e6vfrq2d2
+         wW8OaNCauCzFLxpCGpH+f3Jct9iF+GR46RylyAsC3SXyX0PgVLTmbLXaqxCXENLwZCdZ
+         49TflsAaPuleEM8iY2nXqa7GOSuKq0CtsSy6gwlmCyWpXJzd5BAeoS8zCJgWn+eCUMNC
+         b3Fg==
+X-Gm-Message-State: APjAAAXBaHStemUW/pUg3iFSDDQuUoZGtLnvPrvZ13Vo7b8Zjwx/HvTh
+        QWLBl125vll7Vi13DXM+p3wAyfjYhekh2Q==
+X-Google-Smtp-Source: APXvYqw7geQepjqZ2rTQCvplr5kCOtyuTtSaqnfAbFOW5tJtaaxxEaA3a/JQfnhfUpkFGETbQ2F2VQ==
+X-Received: by 2002:a17:902:8bc4:: with SMTP id r4mr36236446plo.341.1571179564523;
+        Tue, 15 Oct 2019 15:46:04 -0700 (PDT)
+Received: from lbrmn-mmayer.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id e127sm23019837pfe.37.2019.10.15.15.46.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 15:45:54 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:45:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com
-Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191015224554.GA5634@bogus>
-References: <20191011035613.13598-1-manivannan.sadhasivam@linaro.org>
- <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 15 Oct 2019 15:46:04 -0700 (PDT)
+From:   Markus Mayer <mmayer@broadcom.com>
+To:     Brian Norris <computersforpeace@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/8] memory: brcmstb: dpfe: initialize priv->dev
+Date:   Tue, 15 Oct 2019 15:45:07 -0700
+Message-Id: <20191015224513.16969-3-mmayer@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191015224513.16969-1-mmayer@broadcom.com>
+References: <20191015224513.16969-1-mmayer@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 09:26:12AM +0530, Manivannan Sadhasivam wrote:
-> Add devicetree binding for IMX296 CMOS image sensor.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/media/i2c/imx296.txt  | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.txt
+Add missing initialization of priv->dev. It is only used in an
+emergency error message that is very unlikely to ever occur, which is
+how this has remained unnoticed.
 
-You should know by now, use DT schema format please.
+Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+---
+ drivers/memory/brcmstb_dpfe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.txt b/Documentation/devicetree/bindings/media/i2c/imx296.txt
-> new file mode 100644
-> index 000000000000..25d3b15162c1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.txt
-> @@ -0,0 +1,55 @@
-> +* Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> +
-> +The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> +sensor with square pixel array and 1.58 M effective pixels. This chip features
-> +a global shutter with variable charge-integration time. It is programmable
-> +through I2C and 4-wire interfaces. The sensor output is available via CSI-2
-> +serial data output (1 Lane).
-> +
-> +Required Properties:
-> +- compatible: Should be "sony,imx296"
-> +- reg: I2C bus address of the device
-> +- clocks: Reference to the mclk clock.
-> +- clock-names: Should be "mclk".
-> +- clock-frequency: Frequency of the mclk clock in Hz.
-> +- vddo-supply: Interface power supply.
-> +- vdda-supply: Analog power supply.
-> +- vddd-supply: Digital power supply.
-> +
-> +Optional Properties:
-> +- reset-gpios: Sensor reset GPIO
-> +
-> +The imx296 device node should contain one 'port' child node with
-> +an 'endpoint' subnode. For further reading on port node refer to
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Required Properties on endpoint:
-> +- data-lanes: check ../video-interfaces.txt
+diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
+index 0c4c01d2bf48..2ef3e365c1b5 100644
+--- a/drivers/memory/brcmstb_dpfe.c
++++ b/drivers/memory/brcmstb_dpfe.c
+@@ -817,6 +817,8 @@ static int brcmstb_dpfe_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	priv->dev = dev;
++
+ 	mutex_init(&priv->lock);
+ 	platform_set_drvdata(pdev, priv);
+ 
+-- 
+2.17.1
 
-This should only be required when not using all the lanes on the device.
-
-> +- remote-endpoint: check ../video-interfaces.txt
-
-Don't really need to document this.
-
-> +
-> +Example:
-> +	&i2c1 {
-> +		...
-> +		imx296: camera-sensor@1a {
-> +			compatible = "sony,imx296";
-> +			reg = <0x1a>;
-> +
-> +			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&camera_rear_default>;
-> +
-> +			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> +			clock-names = "mclk";
-> +			clock-frequency = <37125000>;
-> +
-> +			vddo-supply = <&camera_vddo_1v8>;
-> +			vdda-supply = <&camera_vdda_3v3>;
-> +			vddd-supply = <&camera_vddd_1v2>;
-> +
-> +			port {
-> +				imx296_ep: endpoint {
-> +					data-lanes = <1>;
-> +					remote-endpoint = <&csiphy0_ep>;
-> +				};
-> +			};
-> +		};
-> -- 
-> 2.17.1
-> 
