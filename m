@@ -2,106 +2,84 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058D2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D0CECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC1F20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="c12IzmZm"
+	by mail.kernel.org (Postfix) with ESMTP id CCFC720854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571170082;
+	bh=uc2GHtvslcSS/T/XLupbQ1Q94+ILqCSst1CSsKISRlE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q3nqjHYFk1sa3VqL2tHp9BJh5S4Rt/ZY+UT6uBNUTJnMwQOftWWBXxWfisaxGMP0b
+	 XTXGh66wICqABJo4KSyH9yFyfgqY6aQDxnylKFEHd3+g1hZWgF0bvpAZgVlsSgAXaf
+	 TaKl/Ml3xdPxtIPYtz7vMI6ppgBibGNvu5YnILIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbfJOUD1 (ORCPT
+        id S1732759AbfJOUIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 16:03:27 -0400
-Received: from valentin-vidic.from.hr ([94.229.67.141]:55081 "EHLO
-        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfJOUD1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 16:03:27 -0400
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id E1BD43BE3; Tue, 15 Oct 2019 22:03:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-        d=valentin-vidic.from.hr; s=2017; t=1571169799;
-        bh=GNW9Czf7yHedMIXjsdbi4/E3nPQNjtWoitMkwGeBl9o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=c12IzmZmgL7MloSQbPKwaAOioP7OdqFUXrG5GDqBdtCwrldWW16CM/pwvc5c6c+gg
-         PLr1D50uYht8OOtNyvEqwgQmUxP+4b/+/BgXknXLwhDuTiEABD56QegzysCZLaQr5A
-         b8GfT5MmW1/7Jl84JQr2sHtcQPIO9RFuR+OZNv0oo7PJ7WV6wpBBZtdlOgaPfJvcW1
-         YM6zf9nJAsNahA2mq1A99Y7XiDq0W53/xYG3q3l/Ci3n9DKBO7B/kRa4IHT+R6hW5y
-         G98M8fb6qVw1pb+CfEbCBPZNLQsO5dYB8uHL4K1qsf5W4R5p2t6HUr2YUlNanmPJyb
-         Bp6ekw0Xnc7aw==
-From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
-To:     Michael Krufky <mkrufky@linuxtv.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        syzbot+98730b985cad4931a552@syzkaller.appspotmail.com
-Subject: [PATCH] media: cxusb: fix uninitialized local variable
-Date:   Tue, 15 Oct 2019 22:03:15 +0200
-Message-Id: <20191015200315.28830-1-vvidic@valentin-vidic.from.hr>
-X-Mailer: git-send-email 2.20.1
+        Tue, 15 Oct 2019 16:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbfJOUIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 16:08:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A10F2083B;
+        Tue, 15 Oct 2019 20:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571170081;
+        bh=uc2GHtvslcSS/T/XLupbQ1Q94+ILqCSst1CSsKISRlE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mnqJpeIhIh78vXOjgm2TBqTqBGBA4pdda0fJslVV6xmMOppJmdQ88FqFYmn/BGCrz
+         gi62rThwZuwuweL/DT4Xq48ByuV7Ojc8GyWmV5Ke2wysC3GbTc+oZxhrzSzIGiHpAA
+         S1C18iP3nJ9CJWkaATgvnQcGzOrNi8LTf9X4kfck=
+Date:   Tue, 15 Oct 2019 21:07:55 +0100
+From:   Will Deacon <will@kernel.org>
+To:     James Morse <james.morse@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Julien Thierry <julien.thierry@arm.com>
+Subject: Re: [PATCH v2] arm64: entry.S: Do not preempt from IRQ before all
+ cpufeatures are enabled
+Message-ID: <20191015200755.aavtyhq56lewazah@willie-the-truck>
+References: <20191015172544.186627-1-james.morse@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015172544.186627-1-james.morse@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure ircode does not contain random values if the call to
-cxusb_ctrl_msg fails for some reason.
+Hi James,
 
-Reported-by: syzbot+98730b985cad4931a552@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
----
- drivers/media/usb/dvb-usb/cxusb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Patch looks good apart from one thing...
 
-diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-index f02fa0a67aa4..afcd88dd96c0 100644
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -519,7 +519,7 @@ static int cxusb_d680_dmb_streaming_ctrl(struct dvb_usb_adapter *adap,
- 
- static int cxusb_rc_query(struct dvb_usb_device *d)
- {
--	u8 ircode[4];
-+	u8 ircode[4] = { 0 };
- 
- 	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
- 
-@@ -531,7 +531,7 @@ static int cxusb_rc_query(struct dvb_usb_device *d)
- 
- static int cxusb_bluebird2_rc_query(struct dvb_usb_device *d)
- {
--	u8 ircode[4];
-+	u8 ircode[4] = { 0 };
- 	struct i2c_msg msg = {
- 		.addr = 0x6b,
- 		.flags = I2C_M_RD,
-@@ -550,7 +550,7 @@ static int cxusb_bluebird2_rc_query(struct dvb_usb_device *d)
- 
- static int cxusb_d680_dmb_rc_query(struct dvb_usb_device *d)
- {
--	u8 ircode[2];
-+	u8 ircode[2] = { 0 };
- 
- 	if (cxusb_ctrl_msg(d, 0x10, NULL, 0, ircode, 2) < 0)
- 		return 0;
-@@ -989,7 +989,7 @@ static int cxusb_dee1601_frontend_attach(struct dvb_usb_adapter *adap)
- 
- static int cxusb_dualdig4_frontend_attach(struct dvb_usb_adapter *adap)
- {
--	u8 ircode[4];
-+	u8 ircode[4] = { 0 };
- 	int i;
- 	struct i2c_msg msg = {
- 		.addr = 0x6b,
--- 
-2.20.1
+On Tue, Oct 15, 2019 at 06:25:44PM +0100, James Morse wrote:
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 2c2e56bd8913..67a1d86981a9 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -223,6 +223,7 @@ extern long schedule_timeout_uninterruptible(long timeout);
+>  extern long schedule_timeout_idle(long timeout);
+>  asmlinkage void schedule(void);
+>  extern void schedule_preempt_disabled(void);
+> +asmlinkage void preempt_schedule_irq(void);
 
+I don't understand the need for this hunk, since we're only calling the
+function from C now. Please could you explain?
+
+Will
