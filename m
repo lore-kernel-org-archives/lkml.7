@@ -2,228 +2,356 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0809ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57458ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3F020872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOJzxsY/"
+	by mail.kernel.org (Postfix) with ESMTP id 1989720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571168411;
+	bh=tM0AjEWhyx9R5ZiZRV/jBIEBRXP9ZXt7z9KPZ31rQdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NJa+llob2yL2kWSUqz/lWy820aVOAoWL+grvYpcWNODUpdBvzfDLrSXbDFQWQ8tr3
+	 DP9qchMb7CG+PZiXBVr6MmOr1pGptYGxslE86UyveGM/NxEOiDkOhXmCuddmuZh5U9
+	 HsM/vqCYwxwahC11vvP53LIgGOpIJGjFWQ007i6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732318AbfJOTjh (ORCPT
+        id S1732360AbfJOTkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:39:37 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36156 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727856AbfJOTjh (ORCPT
+        Tue, 15 Oct 2019 15:40:09 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40593 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbfJOTkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:39:37 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h2so19194545edn.3;
-        Tue, 15 Oct 2019 12:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z0yelwMl/Srg64GuPisqo6ubCgC5IIfRfeZRrsJf3WM=;
-        b=nOJzxsY/bwtImTmefBCyn2uUU+yDrBcEEyTTJB1uFkDfyBaE4O0BjkSJjLwV4LGdwJ
-         DzZGv3V8fbzFYqEzXXK2fTJ4rchscXglG4X99qzY7X0QsFbGc5lAad47eGeauBkYcjTK
-         FMMkFivlaKmwCuyUzt2BjmqdzaOSNjv/YWFOTrd2oYo0yREcOm0mlzlbw8+jkqK5XW9x
-         eTVHse6KOApYjCHv3WIteuCuUS5DQ3OvrwZZtVwPvH3DkUwI/iecUBn8fux5RbkNN08C
-         fmZ6LkMz5y+L9GheOqqj4bEj1ZbUdchoSPo2sDkiGT/mIlg4yiLhBH78CF90nNDF+i0c
-         twrg==
+        Tue, 15 Oct 2019 15:40:09 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so17909546oib.7;
+        Tue, 15 Oct 2019 12:40:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=z0yelwMl/Srg64GuPisqo6ubCgC5IIfRfeZRrsJf3WM=;
-        b=As2GHwkPYmcG0UrN/93xIoaaRj0bBnoVM2I54HbaeGjL2ykSRia9YChCtCbxz1eaXt
-         t9cs5kiFdlp2vI4XLbbralvpW3F/vBcq4KwSOAc1c/8DXW79E1KpvuR5A71t1AhJj9Ei
-         8MDQXuMdKNNT6Btp4TS0HW3ZuHseOaCaHvAq2qQV4cfz7GUiEMRGWJ7k2sW2N/RYjyLh
-         zSZYzIcinzi6s6aLCv0MP9P8l+qeJXD3JYoddKI0uDH8rBUieyt9LURBEp3Hpr2UDwsE
-         2DuqrK+e9JxQjuPNaCSek58iH/psQUbz44+K4+7nzqufPlYEb+ekzha7LCR2Aba5QLlN
-         5AOQ==
-X-Gm-Message-State: APjAAAVTu4MQ50SEITf2rzxAYZ6bPj48BoFk277TSOVDSIFlU01cp1qp
-        g4ZK5EnosYAgCYoDmf2tQj4=
-X-Google-Smtp-Source: APXvYqx6h4JnPH/G3Lmz7p10m3F4dKG/DlIhaM0Vi1JxdCBgA3No8vsb38HuXHV0GTrh1gLxf0b7Jg==
-X-Received: by 2002:a05:6402:120c:: with SMTP id c12mr14394059edw.119.1571168373080;
-        Tue, 15 Oct 2019 12:39:33 -0700 (PDT)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id w16sm4035330edd.93.2019.10.15.12.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 12:39:32 -0700 (PDT)
-Subject: Re: [PATCH v1 3/3] ARM: dts: bcm2711: Enable GENET support for the
- RPi4
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        matthias.bgg@kernel.org, "David S . Miller" <davem@davemloft.net>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191011184822.866-1-matthias.bgg@kernel.org>
- <20191011184822.866-4-matthias.bgg@kernel.org>
- <a514751e-e82a-b5ea-34d3-46468c851a80@gmail.com>
- <7ac16f46-8f75-a91a-c096-7645da8f044a@gmx.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <50b687c7-fc7b-cd17-7427-ea66be8edb55@gmail.com>
-Date:   Tue, 15 Oct 2019 12:39:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f5z1afL3zYQYcRyoERZzjsi7/SiRTHqNbFhLxSAuGLs=;
+        b=nuIXrwVaKyb3aseG4ulaPJ5ugUB7/9Cg5YOcvHDimEcXKQlclj4XLD0VlPf8dMGpbl
+         xoZOcdPdrcsKLrSoIgh9S2EAo5YKL+wm+Q+/D+6vflKJx/J2ml1VZotknGuYp6/L8eqG
+         ZcAniBvTymC4x4vkNUUB+7t5epWzgYAM7NAmRe9b+79pCrYY9DXcRfsqs1IumEYQ9SWw
+         6eFm+BGGcfRHDJFag+/0Y5hmiUgM7mN42wKfLO7Dl0Csaq4FatXk2oTbG4p0Ur+OO3Ym
+         0pvl1TYvG/rdal+0V8kv3Nu3UrSdAvVKPf+OKtbrBNowdA/2oDri7NvMDRk/wpZiNnBQ
+         dE7A==
+X-Gm-Message-State: APjAAAVDc0L6qTMyq4cym8jLrjd8hD9Dh5Xd/XgtZQGCICRa79rO21aF
+        engBSy1bxf+NJttjmXz3ww==
+X-Google-Smtp-Source: APXvYqxhtUbYR837DFUipAtkBDduyyeI6vaqqhzSUmhgED4fPdNsTQT8GLSgnjNjdjHJLBDi7GG+5w==
+X-Received: by 2002:a54:418c:: with SMTP id 12mr203382oiy.154.1571168407330;
+        Tue, 15 Oct 2019 12:40:07 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b10sm1556470oic.55.2019.10.15.12.40.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 12:40:06 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 14:40:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: serial: Convert Samsung UART bindings
+ to json-schema
+Message-ID: <20191015194006.GA3540@bogus>
+References: <20191004151414.8458-1-krzk@kernel.org>
+ <20191004151414.8458-3-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7ac16f46-8f75-a91a-c096-7645da8f044a@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004151414.8458-3-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 12:35 PM, Stefan Wahren wrote:
-> Hi Florian,
+On Fri, Oct 04, 2019 at 05:14:14PM +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung S3C/S5P/Exynos Serial/UART bindings to DT schema format
+> using json-schema.
 > 
-> Am 11.10.19 um 21:31 schrieb Florian Fainelli:
->> On 10/11/19 11:48 AM, matthias.bgg@kernel.org wrote:
->>> From: Matthias Brugger <mbrugger@suse.com>
->>>
->>> Enable Gigabit Ethernet support on the Raspberry Pi 4
->>> Model B.
->>>
->>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->>>
->>> ---
->>>
->>>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 22 ++++++++++++++++++++++
->>>  arch/arm/boot/dts/bcm2711.dtsi        | 18 ++++++++++++++++++
->>>  2 files changed, 40 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->>> index cccc1ccd19be..958553d62670 100644
->>> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->>> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->>> @@ -97,6 +97,28 @@
->>>  	status = "okay";
->>>  };
->>>
->>> +&genet {
->>> +	phy-handle = <&phy1>;
->>> +	phy-mode = "rgmii";
->> Can you check that things still work against David Miller's net-next?
->> Tree, in particular the BCM54213PE PHY might be matched by the BCM54210E
->> entry in drivers/net/phy/broadcom.c and I just fixed an issue in how
->> RGMII delays were configured:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=fea7fda7f50a6059220f83251e70709e45cc8040
->>
->> This might require you to change the 'phy-mode' property to what is
->> appropriate.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../bindings/mfd/samsung,exynos5433-lpass.txt |   2 +-
+>  .../bindings/serial/samsung_uart.txt          |  58 -------
+>  .../bindings/serial/samsung_uart.yaml         | 148 ++++++++++++++++++
+>  3 files changed, 149 insertions(+), 59 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.yaml
 > 
-> since i didn't get a reply from the Pi folks yet, i tried all the other
-> rgmii variants on top of this branch [1].
-> 
-> But none of them worked.
-> 
-> In case of "rgmii-id" i'm getting:
-> 
-> unknown phy mode: 9
-> 
-> and for "rgmii-rxid":
-> 
-> unknown phy mode: 10
-> 
-> In those cases the PHY didn't even probe. Did i missed something?
+> diff --git a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+> index d759da606f75..30ea27c3936d 100644
+> --- a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+> +++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+> @@ -18,7 +18,7 @@ an optional sub-node. For "samsung,exynos5433-lpass" compatible this includes:
+>  UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, VIC, WDT 0...1 devices.
+>  
+>  Bindings of the sub-nodes are described in:
+> -  ../serial/samsung_uart.txt
+> +  ../serial/samsung_uart.yaml
+>    ../sound/samsung-i2s.txt
+>    ../dma/arm-pl330.txt
+>  
+> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.txt b/Documentation/devicetree/bindings/serial/samsung_uart.txt
+> deleted file mode 100644
+> index e85f37ec33f0..000000000000
+> --- a/Documentation/devicetree/bindings/serial/samsung_uart.txt
+> +++ /dev/null
+> @@ -1,58 +0,0 @@
+> -* Samsung's UART Controller
+> -
+> -The Samsung's UART controller is used for interfacing SoC with serial
+> -communicaion devices.
+> -
+> -Required properties:
+> -- compatible: should be one of following:
+> -  - "samsung,exynos4210-uart" -  Exynos4210 SoC,
+> -  - "samsung,s3c2410-uart" - compatible with ports present on S3C2410 SoC,
+> -  - "samsung,s3c2412-uart" - compatible with ports present on S3C2412 SoC,
+> -  - "samsung,s3c2440-uart" - compatible with ports present on S3C2440 SoC,
+> -  - "samsung,s3c6400-uart" - compatible with ports present on S3C6400 SoC,
+> -  - "samsung,s5pv210-uart" - compatible with ports present on S5PV210 SoC.
+> -
+> -- reg: base physical address of the controller and length of memory mapped
+> -  region.
+> -
+> -- interrupts: a single interrupt signal to SoC interrupt controller,
+> -  according to interrupt bindings documentation [1].
+> -
+> -- clock-names: input names of clocks used by the controller:
+> -  - "uart" - controller bus clock,
+> -  - "clk_uart_baudN" - Nth baud base clock input (N = 0, 1, ...),
+> -    according to SoC User's Manual (only N = 0 is allowedfor SoCs without
+> -    internal baud clock mux).
+> -- clocks: phandles and specifiers for all clocks specified in "clock-names"
+> -  property, in the same order, according to clock bindings documentation [2].
+> -
+> -[1] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> -[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -
+> -Optional properties:
+> -- samsung,uart-fifosize: The fifo size supported by the UART channel
+> -
+> -Note: Each Samsung UART should have an alias correctly numbered in the
+> -"aliases" node, according to serialN format, where N is the port number
+> -(non-negative decimal integer) as specified by User's Manual of respective
+> -SoC.
+> -
+> -Example:
+> -	aliases {
+> -		serial0 = &uart0;
+> -		serial1 = &uart1;
+> -		serial2 = &uart2;
+> -	};
+> -
+> -Example:
+> -	uart1: serial@7f005400 {
+> -		compatible = "samsung,s3c6400-uart";
+> -		reg = <0x7f005400 0x100>;
+> -		interrupt-parent = <&vic1>;
+> -		interrupts = <6>;
+> -		clock-names = "uart", "clk_uart_baud2",
+> -				"clk_uart_baud3";
+> -		clocks = <&clocks PCLK_UART1>, <&clocks PCLK_UART1>,
+> -				<&clocks SCLK_UART>;
+> -		samsung,uart-fifosize = <16>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> new file mode 100644
+> index 000000000000..276bea1c231a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> @@ -0,0 +1,148 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/samsung_uart.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C, S5P and Exynos SoC UART Controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +
+> +description: |+
+> +  Each Samsung UART should have an alias correctly numbered in the "aliases"
+> +  node, according to serialN format, where N is the port number (non-negative
+> +  decimal integer) as specified by User's Manual of respective SoC.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - samsung,s3c2410-uart
+> +          - samsung,s3c2412-uart
+> +          - samsung,s3c2440-uart
+> +          - samsung,s3c6400-uart
+> +          - samsung,s5pv210-uart
+> +          - samsung,exynos4210-uart
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 2
+> +    maxItems: 5
+> +
+> +  clock-names:
+> +    description: |
+> +      List of clock names:
+> +        - "uart" - controller bus clock,
+> +        - "clk_uart_baudN" - Nth baud base clock input (N = 0, 1, ...).
 
-Well the GENET driver can only deal with two specific RGMII modes, so
-you would need something like this:
+Kind of redundant to list this here.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 970e478a9017..a12656cccf89 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -241,6 +241,8 @@ int bcmgenet_mii_config(struct net_device *dev, bool
-init)
-                id_mode_dis = BIT(16);
-                /* fall through */
-        case PHY_INTERFACE_MODE_RGMII_TXID:
-+       case PHY_INTERFACE_MODE_RGMII_RXID:
-+       case PHY_INTERFACE_MODE_RGMII_ID:
-                if (id_mode_dis)
-                        phy_name = "external RGMII (no delay)";
-                else
+> +      N = 0 is allowed for SoCs without internal baud clock mux.
 
+You can add a description with the item:
 
+items:
+  - pattern: '^clk_uart_baud[0-3]$'
+    description: N = 0 is allowed for SoCs without internal baud clock mux.
+
+Or leave it here is fine too.
+
+> +    minItems: 2
+> +    maxItems: 5
+> +    allOf:
+> +      - uniqueItems: true
+
+You can drop this.
+
+> +      - oneOf:
+> +          - items:
+> +              - const: uart
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +          - items:
+> +              - const: uart
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +          - items:
+> +              - const: uart
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +          - items:
+> +              - const: uart
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +              - pattern: '^clk_uart_baud[0-3]$'
+> +              - pattern: '^clk_uart_baud[0-3]$'
+
+You only need the last case. With 'minItems: 2', the additional items 
+here will just be ignored.
+
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+
+What is each item?
+
+> +
+> +  samsung,uart-fifosize:
+> +    description: The fifo size supported by the UART channel
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [16, 64, 256]
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - reg
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - samsung,s3c2410-uart
+> +              - samsung,s5pv210-uart
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 2
+> +          maxItems: 3
+> +        clock-names:
+> +          minItems: 2
+> +          maxItems: 3
+> +          allOf:
+> +            - uniqueItems: true
+> +            - oneOf:
+> +                - items:
+> +                    - const: uart
+> +                    - pattern: '^clk_uart_baud[0-1]$'
+> +                - items:
+> +                    - const: uart
+> +                    - pattern: '^clk_uart_baud[0-1]$'
+> +                    - pattern: '^clk_uart_baud[0-1]$'
+
+Similar simplification can be done here.
+
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - samsung,exynos4210-uart
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 2
+> +          maxItems: 2
+> +        clock-names:
+> +          minItems: 2
+> +          maxItems: 2
+> +          allOf:
+> +            - uniqueItems: true
+> +            - items:
+> +                - const: uart
+> +                - const: clk_uart_baud0
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/samsung,s3c64xx-clock.h>
+> +
+> +    aliases {
+> +        serial0 = &uart0;
+> +    };
+
+Drop this. It will cause a warning if we enforce 'aliases' to be at the 
+root node.
+
+> +
+> +    uart0: serial@7f005000 {
+> +        compatible = "samsung,s3c6400-uart";
+> +        reg = <0x7f005000 0x100>;
+> +        interrupt-parent = <&vic1>;
+> +        interrupts = <5>;
+> +        clock-names = "uart", "clk_uart_baud2",
+> +                      "clk_uart_baud3";
+> +        clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
+> +                 <&clocks SCLK_UART>;
+> +        samsung,uart-fifosize = <16>;
+> +    };
+> -- 
+> 2.17.1
 > 
-> [1] - https://github.com/lategoodbye/rpi-zero/commits/bcm2711-genet
-> 
-
-
--- 
-Florian
