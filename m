@@ -2,109 +2,62 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45106C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D67ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E362086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693E22086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PlHEVmt3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mjb/k80Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388112AbfJOQbq (ORCPT
+        id S2388138AbfJOQcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:31:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35873 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729863AbfJOQbp (ORCPT
+        Tue, 15 Oct 2019 12:32:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56736 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388122AbfJOQcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:31:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so12823919pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 09:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R/3o/XlsOOzp8o/GwTjOQU5ZV/+2+cmOJM3GXTaUs38=;
-        b=PlHEVmt3faXIse9r8F2InoYn9wNFsTyZmDEweesHLL79X0bLN9KDw4yqKSfZ8K0Wso
-         OhCC4gHqpBFWCx4XXsfzL/SzSZxseW3lOYSJENyjLMt2QAm70v2yjFTnJS6VgCVqhFQS
-         6xDruCJaLis82RTf9USZ+SArCgufRG3LPniSpTZVINSvTIv5OZUQSGvT1mBKDw7A15Ck
-         c7ANFyfG0LuSXN96v0bzdv05cfWSYI0S7FPdaUB+r3vMZ3JxtH5dUSz2NLyMxFsTgnnr
-         X21LOs69aWCuKs7iSr3GmrROg9CdoBi4QVfI8BFmYxF3vFLm6j8wRrk8oVUwugRyRTEM
-         dgKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=R/3o/XlsOOzp8o/GwTjOQU5ZV/+2+cmOJM3GXTaUs38=;
-        b=Q8JNgr2RK+DXZqs7RO82QCxiDQxu4M36xbvSh1xnX1phwgbMh8InouutC96MsWOZWg
-         i8cqBdGVQOpmzKcrQ+liN3JZaD4coDreM5IYjBN9gNKBuUsIyQwohjcsvZsTqPVSNrX1
-         SXrM7x/6Sa/M8v8Lox/+goCvauUGwuRasWzxEiiuUlO8kMwspS32XDIV7SZQCRUIW/ql
-         4DOnAE8R8rtjsk1xIBwPE5Q4xlf1gTndJe+SYtIKbZKIRmYWgPuV4+P4hryF2oZ/zqha
-         7y4Ajt95NRh1WJTRn8bm3bl3CYK95Vkvtwejg+lDLNlCPXQZYccniz1FLhIwJGqueGRY
-         veLg==
-X-Gm-Message-State: APjAAAXc1OCePQ9YXxoqzydvh0dgz6ngIYb6Fx8zQGUcISHsvbXJp+Im
-        FI6b6+CrDNA+Gc/6FT3d1l36IfnMxYD1og==
-X-Google-Smtp-Source: APXvYqzd0YxjnbtrTaTbz2PWcm/PlKHSLmgN6HPVbZgpX62QjBYrHs6tcjOEivuJEXa0UVGTH3IqDw==
-X-Received: by 2002:a63:778f:: with SMTP id s137mr20201937pgc.147.1571157104362;
-        Tue, 15 Oct 2019 09:31:44 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id c26sm19933849pfo.173.2019.10.15.09.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 09:31:43 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 09:31:43 -0700 (PDT)
-X-Google-Original-Date: Tue, 15 Oct 2019 09:31:40 PDT (-0700)
-Subject:     Re: [PATCH] irqchip: Place CONFIG_SIFIVE_PLIC into the menu
-In-Reply-To: <20191002144452.10178-1-j.neuschaefer@gmx.net>
-CC:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        j.neuschaefer@gmx.net, tglx@linutronix.de, jason@lakedaemon.net,
-        maz@kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     j.neuschaefer@gmx.net
-Message-ID: <mhng-f196bb74-ed87-41c9-98b9-a8161e663313@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 15 Oct 2019 12:32:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EgxUC7G5lBnZRGpuVrL6vYjqlO6WUnlkRfN5P1gFaxQ=; b=Mjb/k80QVWIMjpYPhp0ebVGi/
+        VW/DVH9Oq62BEno6kzzdtzLv5QE3Tt/DIS2eLlE1FwEnoITjbXwlIB7gIj2TeaHskXZQCHpKuehah
+        t1NuaXnAf3oa4FRHdj0QdQcrMWSGGwcwd7qtELSCNKm0NmDzq49GbpAlr/Wvrqxdwn43+qLqE4axv
+        FLS+DSjOHO2GX5T4Yy5DlV/LL0iWZmx+PQsfw5t92CkSvetaVrCdLqtMJBW9hKPz9HwkDRek/8iLc
+        ODu9M06mXiXTb0VZg567BIMQBkyyunVoDuuUe6IicCd8Py3uVb/lLoOMeiiOXwO7CYOx3fpX+Vj4N
+        49PsGrnZw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKPjx-0000T2-FV; Tue, 15 Oct 2019 16:32:05 +0000
+Date:   Tue, 15 Oct 2019 09:32:05 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Marek Behun <marek.behun@nic.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: moxtet: declare moxtet_bus_type
+Message-ID: <20191015163205.GB11160@infradead.org>
+References: <20191015122535.5439-1-ben.dooks@codethink.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015122535.5439-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 02 Oct 2019 07:44:52 PDT (-0700), j.neuschaefer@gmx.net wrote:
-> Somehow CONFIG_SIFIVE_PLIC ended up outside of the "IRQ chip support"
-> menu.
->
-> Fixes: 8237f8bc4f6e ("irqchip: add a SiFive PLIC driver")
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
->  drivers/irqchip/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index ccbb8973a324..97f9c001d8ff 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -483,8 +483,6 @@ config TI_SCI_INTA_IRQCHIP
->  	  If you wish to use interrupt aggregator irq resources managed by the
->  	  TI System Controller, say Y here. Otherwise, say N.
->
-> -endmenu
-> -
->  config SIFIVE_PLIC
->  	bool "SiFive Platform-Level Interrupt Controller"
->  	depends on RISCV
-> @@ -496,3 +494,5 @@ config SIFIVE_PLIC
->  	   interrupt sources are subordinate to the PLIC.
->
->  	   If you don't know what to do here, say Y.
-> +
-> +endmenu
+On Tue, Oct 15, 2019 at 01:25:35PM +0100, Ben Dooks wrote:
+> The moxtet_bus_type object is exported from the bus
+> driver, but not declared. Add a declaration for use
+> and to silence the following warning:
 
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Acked-by: Palmer Dabbelt <palmer@sifive.com>
-
-I'm assuming this is going through the irqchip tree.
+The symbol can be marked static instead.
