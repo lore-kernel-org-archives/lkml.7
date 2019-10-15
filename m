@@ -2,165 +2,230 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BBCECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27B6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27B3217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5CF20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rHXUMkGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfJOJIN (ORCPT
+        id S1728934AbfJOJIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:08:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3717 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726373AbfJOJIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:08:13 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E49F951A1DF59C7F64F8;
-        Tue, 15 Oct 2019 17:08:10 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 17:08:01 +0800
-Subject: Re: [RFC PATCH 1/6] ACPI/IORT: Set PMCG device parent
-To:     Hanjun Guo <guohanjun@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <sudeep.holla@arm.com>, <robin.murphy@arm.com>,
-        <mark.rutland@arm.com>, <will@kernel.org>
-References: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
- <1569854031-237636-2-git-send-email-john.garry@huawei.com>
- <ae9a1c8a-d84b-95ab-9a6b-87a7c89c68d9@huawei.com>
-CC:     <shameerali.kolothum.thodi@huawei.com>,
+        Tue, 15 Oct 2019 05:08:19 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37150 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfJOJIS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:08:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PE8+nIoxzD1zQdezsHIaVtBqecbIPWzv31qj99+GMFI=; b=rHXUMkGeY1/C+REceyjWg+4Rm
+        01qjEdQ6LSV1hNiGadSYIGoQaUN97i2TAxt77SO9nWKaaBDGqACYgzfg6kiZjoOfvDWHvfW5yh1aY
+        KyV9+zesdK06b1T11yiw+ZF81rVkFrdjOfPZvHvwd0E4nEU2l9/M9Paq2TFNVojY4Q5osIbiipDKg
+        C3reJlQ+75m6pOM9628sIktXXyQ0osAu8zYoVXCqAMPh8wkWAeNjueaE0aZLD6rBfiWQeCIBm9EFW
+        OoTv9Gvz2PNSeTmiyuvOIpKzXV3yiPEFR1Hr4a6hsnvTB5AJ5c4w1JjHh6QDxGQYDHfmJwnmvDQMd
+        E4DF8O0lA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43732)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iKIoB-0003R7-Is; Tue, 15 Oct 2019 10:07:59 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iKIo8-0005B3-As; Tue, 15 Oct 2019 10:07:56 +0100
+Date:   Tue, 15 Oct 2019 10:07:56 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <nleeder@codeaurora.org>,
-        <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c7bfc6ac-71a1-50d2-e18f-4d352837b93b@huawei.com>
-Date:   Tue, 15 Oct 2019 10:07:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+ Layerscape SoCs
+Message-ID: <20191015090756.GS25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+ <20190916021742.22844-4-xiaowei.bao@nxp.com>
+ <20190924163850.GY25745@shell.armlinux.org.uk>
+ <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <ae9a1c8a-d84b-95ab-9a6b-87a7c89c68d9@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hanjun,
+On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Sent: 2019年9月25日 0:39
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
+> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
+> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+> > Layerscape SoCs
+> > 
+> > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
+> > > This PCIe controller is based on the Mobiveil GPEX IP, it work in EP
+> > > mode if select this config opteration.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > >  MAINTAINERS                                        |   2 +
+> > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
+> > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
+> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
+> > > +++++++++++++++++++++
+> > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
+> > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -12363,11 +12363,13 @@ F:
+> > 	drivers/pci/controller/dwc/*layerscape*
+> > >
+> > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
+> > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
+> > >  L:	linux-pci@vger.kernel.org
+> > >  L:	linux-arm-kernel@lists.infradead.org
+> > >  S:	Maintained
+> > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+> > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > >
+> > >  PCI DRIVER FOR GENERIC OF HOSTS
+> > >  M:	Will Deacon <will@kernel.org>
+> > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
+> > > b/drivers/pci/controller/mobiveil/Kconfig
+> > > index 2054950..0696b6e 100644
+> > > --- a/drivers/pci/controller/mobiveil/Kconfig
+> > > +++ b/drivers/pci/controller/mobiveil/Kconfig
+> > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
+> > >  	  for address translation and it is a PCIe Gen4 IP.
+> > >
+> > >  config PCIE_LAYERSCAPE_GEN4
+> > > -	bool "Freescale Layerscape PCIe Gen4 controller"
+> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
+> > >  	depends on PCI
+> > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> > >  	depends on PCI_MSI_IRQ_DOMAIN
+> > >  	select PCIE_MOBIVEIL_HOST
+> > >  	help
+> > >  	  Say Y here if you want PCIe Gen4 controller support on
+> > > -	  Layerscape SoCs. The PCIe controller can work in RC or
+> > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
+> > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
+> > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
+> > > +
+> > > +config PCIE_LAYERSCAPE_GEN4_EP
+> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
+> > > +	depends on PCI
+> > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> > > +	depends on PCI_ENDPOINT
+> > > +	select PCIE_MOBIVEIL_EP
+> > > +	help
+> > > +	  Say Y here if you want PCIe Gen4 controller support on
+> > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
+> > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
+> > >  endmenu
+> > > diff --git a/drivers/pci/controller/mobiveil/Makefile
+> > > b/drivers/pci/controller/mobiveil/Makefile
+> > > index 686d41f..6f54856 100644
+> > > --- a/drivers/pci/controller/mobiveil/Makefile
+> > > +++ b/drivers/pci/controller/mobiveil/Makefile
+> > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
+> > > pcie-mobiveil-host.o
+> > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
+> > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
+> > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
+> > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
+> > pcie-layerscape-gen4-ep.o
+> > > diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > new file mode 100644
+> > > index 0000000..7bfec51
+> > > --- /dev/null
+> > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> > > @@ -0,0 +1,156 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * PCIe controller EP driver for Freescale Layerscape SoCs
+> > > + *
+> > > + * Copyright (C) 2019 NXP Semiconductor.
+> > > + *
+> > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
+> > > +
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/of_pci.h>
+> > > +#include <linux/of_platform.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/pci.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/resource.h>
+> > > +
+> > > +#include "pcie-mobiveil.h"
+> > > +
+> > > +#define PCIE_LX2_BAR_NUM	4
+> > > +
+> > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
+> > > +
+> > > +struct ls_pcie_g4_ep {
+> > > +	struct mobiveil_pcie		*mv_pci;
+> > > +};
+> > > +
+> > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
+> > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
+> > > +	{ },
+> > > +};
+> > > +
+> > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
+> > > +	.linkup_notifier = false,
+> > > +	.msi_capable = true,
+> > > +	.msix_capable = true,
+> > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
+> > 
+> > 			BIT(BAR_4) | BIT(BAR_5) ?
+> 
+> I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better, because BAR_4 
+> is not a bit of register.
 
-Thanks for checking this.
+Why is whether it's a register or not relevent?
 
->>   */
->>  static int __init iort_add_platform_device(struct acpi_iort_node *node,
->> -					   const struct iort_dev_config *ops)
->> +					   const struct iort_dev_config *ops, struct device *parent)
->
-> Since you added a input for this function, could you please update
-> the comments of this function as well?
-
-Right, that can be updated. Indeed, the current comment omit the @ops 
-argument also.
-
->
->>  {
->>  	struct fwnode_handle *fwnode;
->>  	struct platform_device *pdev;
->> @@ -1466,6 +1466,8 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
->>  	if (!pdev)
->>  		return -ENOMEM;
->>
->> +	pdev->dev.parent = parent;
->> +
->>  	if (ops->dev_set_proximity) {
->>  		ret = ops->dev_set_proximity(&pdev->dev, node);
->>  		if (ret)
->> @@ -1573,6 +1575,11 @@ static void __init iort_enable_acs(struct acpi_iort_node *iort_node)
->>  static inline void iort_enable_acs(struct acpi_iort_node *iort_node) { }
->>  #endif
->>
->> +static int iort_fwnode_match(struct device *dev, const void *fwnode)
->> +{
->> +	return dev->fwnode == fwnode;
->> +}
->> +
->>  static void __init iort_init_platform_devices(void)
->>  {
->>  	struct acpi_iort_node *iort_node, *iort_end;
->> @@ -1594,11 +1601,34 @@ static void __init iort_init_platform_devices(void)
->>  				iort_table->length);
->>
->>  	for (i = 0; i < iort->node_count; i++) {
->> +		struct device *parent = NULL;
->> +
->>  		if (iort_node >= iort_end) {
->>  			pr_err("iort node pointer overflows, bad table\n");
->>  			return;
->>  		}
->>
->> +		/* Fixme: handle parent declared in IORT after PMCG */
->> +		if (iort_node->type == ACPI_IORT_NODE_PMCG) {
->> +			struct acpi_iort_node *iort_assoc_node;
->> +			struct acpi_iort_pmcg *pmcg;
->> +			u32 node_reference;
->> +
->> +			pmcg = (struct acpi_iort_pmcg *)iort_node->node_data;
->> +
->> +			node_reference = pmcg->node_reference;
->> +			iort_assoc_node = ACPI_ADD_PTR(struct acpi_iort_node, iort,
->> +				 node_reference);
->> +
->> +			if (iort_assoc_node->type == ACPI_IORT_NODE_SMMU_V3) {
->> +				struct fwnode_handle *assoc_fwnode;
->> +
->> +				assoc_fwnode = iort_get_fwnode(iort_assoc_node);
->> +
->> +				parent = bus_find_device(&platform_bus_type, NULL,
->> +				      assoc_fwnode, iort_fwnode_match);
->> +			}
->> +		}
->
-> How about using a function to include those new added code to make this
-> function (iort_init_platform_devices()) a bit cleaner?
->
-
-Can do. But I still need to add code to deal with the scenario of the 
-parent PMCG not being an SMMU, which is supported in the spec as I recall.
-
-Note that I would not have FW to test that, so maybe can omit support 
-for now as long as there's no regression.
-
->>  		iort_enable_acs(iort_node);
->>
->>  		ops = iort_get_dev_cfg(iort_node);
->> @@ -1609,7 +1639,7 @@ static void __init iort_init_platform_devices(void)
->>
->>  			iort_set_fwnode(iort_node, fwnode);
->>
->> -			ret = iort_add_platform_device(iort_node, ops);
->> +			ret = iort_add_platform_device(iort_node, ops, parent);
->
-> This function is called if ops is valid, so retrieve the parent
-> can be done before this function I think.
-
-Ah, yes
-
-Thanks,
-John
-
->
-
-> Thanks
-> Hanjun
->
->
-> .
->
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
