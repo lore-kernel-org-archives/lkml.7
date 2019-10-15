@@ -2,109 +2,115 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DECC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD02AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3646620873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8E020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:09:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gpiccoli-net.20150623.gappssmtp.com header.i=@gpiccoli-net.20150623.gappssmtp.com header.b="tcLpDCeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbfJOOJS (ORCPT
+        id S1732491AbfJOOJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:09:18 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:49386 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730697AbfJOOJR (ORCPT
+        Tue, 15 Oct 2019 10:09:58 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41355 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbfJOOJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:09:17 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKNVe-0004HK-Un; Tue, 15 Oct 2019 15:09:11 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKNVe-0000DJ-8u; Tue, 15 Oct 2019 15:09:10 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: imx: gpc: fix initialiser format
-Date:   Tue, 15 Oct 2019 15:09:09 +0100
-Message-Id: <20191015140909.778-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 15 Oct 2019 10:09:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p10so19263487qkg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gpiccoli-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t5eOxqRId8vK3PKebojEYhfcJ3xlCooyWYfL6dKYbRs=;
+        b=tcLpDCeXfphikZShTtEOoz73rLOrSAJVb6Q7vKmkhhqZQGFStAsCfUIuQ1LPuxHpkM
+         7MunCNYTCEHKbp78o5dkJI9XjFgNGRUhrJq8wS1eBGlCsxeBuIHY9L+qVnWNSFsCyD66
+         T3M2/8c+GY5wrTwk+D0f9w0kkdT7WB4p+VAiI56A5izZKaF7B5ZnMiMMRW8MfKuAjePu
+         3goVYCxOWsyG1evrQkPNZbB2XdPbwWJpl2Soc+8CEQtvU7CRzVOPiuZybG+yHkAz0F63
+         DTSWWt3Zmn1OBWBIdcxwfUmrcmZohEv1OYYgp3+rbBvlkk5Bo53H54j7risx0FviFOWZ
+         sJ/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t5eOxqRId8vK3PKebojEYhfcJ3xlCooyWYfL6dKYbRs=;
+        b=qrp8EpeDhXR9djkGozG6zzg0N7aWu1fJLjJQWkyJCbjWyWnYsnrXDcSVlQRPpiRd5M
+         job7/ExYAns7knDbffaVDxo1L+WmDow/AZ1ifdmkVAO6XoDIGfnY0riVSaGJB9No5TE0
+         WfAK2jzmzHJ4xtpE1S7jkzWGsEcL2fq4HqS+CW0/qVljv3Y+WDYqo5+oCTDLb3rhCsJ5
+         7WLZo02A1iN9zHqbPOKMTAHzD9p4xRnkmeYmj04dVysWtgd7TWhxnwAp8wwdpfOXAOj7
+         mobOcC3idnPigt5nrv9PjZ3ksG9NSFrO/63UEsU8/dpfmu7yQkDVapBFdfChKkysP18b
+         ykKw==
+X-Gm-Message-State: APjAAAVCDSRU+oRE4ypKM2aBjiKV+OXau42Vh04lt8rnGfSMe4tcKn4P
+        FmZdHd7VhezWO0LRSRUPu4fiemWaIiQ=
+X-Google-Smtp-Source: APXvYqwNQCrdCFHTukIHH1DK6nRM7MJZzWyMFUL9UiO15cy292nTnKgFD12L+5CE972wcyK17lAy5w==
+X-Received: by 2002:a37:67d6:: with SMTP id b205mr35982090qkc.183.1571148597145;
+        Tue, 15 Oct 2019 07:09:57 -0700 (PDT)
+Received: from [192.168.1.10] (201-92-249-168.dsl.telesp.net.br. [201.92.249.168])
+        by smtp.gmail.com with ESMTPSA id q5sm13241324qte.38.2019.10.15.07.09.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 07:09:56 -0700 (PDT)
+Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages
+ creation
+To:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>
+Cc:     Guilherme Piccoli <gpiccoli@canonical.com>, linux-mm@kvack.org,
+        mike.kravetz@oracle.com, linux-kernel@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
+References: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
+ <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
+ <CAHD1Q_x+m0ZT_xfLV3j6ma3Cc88fk9KnoS4yytS=PHBvJN7nnQ@mail.gmail.com>
+ <20191015121803.GB24932@dhcp22.suse.cz>
+ <b6617b4b-bcab-3b40-7d46-46a5d9682856@gpiccoli.net>
+ <20191015140508.GJ317@dhcp22.suse.cz>
+From:   "Guilherme G. Piccoli" <guilherme@gpiccoli.net>
+Message-ID: <2d593c95-3c69-8f50-17ff-223bd607caf1@gpiccoli.net>
+Date:   Tue, 15 Oct 2019 11:09:53 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191015140508.GJ317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the initialiers in imx_gpc_domains C99 format to fix the
-following sparse warnings:
 
-drivers/soc/imx/gpc.c:252:30: warning: obsolete array initializer, use C99 syntax
-drivers/soc/imx/gpc.c:258:29: warning: obsolete array initializer, use C99 syntax
-drivers/soc/imx/gpc.c:269:34: warning: obsolete array initializer, use C99 syntax
-drivers/soc/imx/gpc.c:278:30: warning: obsolete array initializer, use C99 syntax
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/soc/imx/gpc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 10/15/19 11:05 AM, Michal Hocko wrote:
+> On Tue 15-10-19 10:58:36, Guilherme G. Piccoli wrote:
+>> On 10/15/19 9:18 AM, Michal Hocko wrote:
+>>> I do agree with Qian Cai here. Kdump kernel requires a very tailored
+>>> environment considering it is running in a very restricted
+>>> configuration. The hugetlb pre-allocation sounds like a tooling problem
+>>> and should be fixed at that layer.
+>>>
+>>
+>> Hi Michal, thanks for your response. Can you suggest me a current way of
+>> preventing hugepages for being created, using userspace? The goal for this
+>> patch is exactly this, introduce such a way.
+> 
+> Simply restrict the environment to not allocate any hugepages? Kdump
+> already controls the kernel command line and it also starts only a very
+> minimal subset of services. So who is allocating those hugepages?
+> sysctls should be already excluded by default as Qian mentioned.
+> 
 
-diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-index d9231bd3c691..98b9d9a902ae 100644
---- a/drivers/soc/imx/gpc.c
-+++ b/drivers/soc/imx/gpc.c
-@@ -249,13 +249,13 @@ static struct genpd_power_state imx6_pm_domain_pu_state = {
- };
- 
- static struct imx_pm_domain imx_gpc_domains[] = {
--	[GPC_PGC_DOMAIN_ARM] {
-+	[GPC_PGC_DOMAIN_ARM] = {
- 		.base = {
- 			.name = "ARM",
- 			.flags = GENPD_FLAG_ALWAYS_ON,
- 		},
- 	},
--	[GPC_PGC_DOMAIN_PU] {
-+	[GPC_PGC_DOMAIN_PU] = {
- 		.base = {
- 			.name = "PU",
- 			.power_off = imx6_pm_domain_power_off,
-@@ -266,7 +266,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
- 		.reg_offs = 0x260,
- 		.cntr_pdn_bit = 0,
- 	},
--	[GPC_PGC_DOMAIN_DISPLAY] {
-+	[GPC_PGC_DOMAIN_DISPLAY] = {
- 		.base = {
- 			.name = "DISPLAY",
- 			.power_off = imx6_pm_domain_power_off,
-@@ -275,7 +275,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
- 		.reg_offs = 0x240,
- 		.cntr_pdn_bit = 4,
- 	},
--	[GPC_PGC_DOMAIN_PCI] {
-+	[GPC_PGC_DOMAIN_PCI] = {
- 		.base = {
- 			.name = "PCI",
- 			.power_off = imx6_pm_domain_power_off,
--- 
-2.23.0
 
+OK, thanks Michal and Qian, I'll try to make things work from kdump 
+perspective. The trick part is exactly preventing the sysctl to get 
+applied heh
+
+Cheers,
+
+
+Guilherme
