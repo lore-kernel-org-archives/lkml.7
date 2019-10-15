@@ -2,363 +2,168 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0413FECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03B4ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66412064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7F62064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571176242;
+	bh=+ALO3hhBGQHIfdAOlkFJxuDEovKVZrBEBLmVf2WB1H0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WZAtnlE1/SqhdP5q13CwgL08hsVAJfkjzmqHdKS5a+kxCs6bLaH4HVNuAhAmLZnZl
+	 ERvogrWQn/2QGc117PqifYS5n4OlnZEOqwMRZf3jkiNFx1ARbyHeNQtnP9ve1qzYhK
+	 0Nudnn1Bt8LqVkUIPmjr0fTTKP5CoDy6G8xKzInQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388899AbfJOVug (ORCPT
+        id S2388923AbfJOVul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:50:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52184 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfJOVug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:50:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B0493086218;
-        Tue, 15 Oct 2019 21:50:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F20610027AB;
-        Tue, 15 Oct 2019 21:50:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 18/21] block: Add block layer notifications
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 15 Oct 2019 22:50:31 +0100
-Message-ID: <157117623165.15019.7188193153962358526.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
-References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 15 Oct 2019 17:50:41 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39445 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfJOVuk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 17:50:40 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w144so18223540oia.6;
+        Tue, 15 Oct 2019 14:50:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Rbg3GlsCZMY2PYzwlKYN6U3Hys/GlUE/N1CGmM1+mk=;
+        b=umRVsOqGggFxreCANJTaxO9NJm0LhK+1fTpp6xV7MRdjr9plnVt8m2pyzAVU2miLeM
+         MsjOJ65fKkLLKXIKoC0KBVc0DpB7Zn5tbEKKY93I7xzxc2tweH41kohYFNCdQ0ONfwIk
+         p+WQWkvgMyYbVXVl+5N/Jef9IyBirAdVKCNPW3tsM/sowMKu2aqM4aNQjZCG1gS2mTLG
+         jGhrT31h94uqvb2VaDj/ldThsciGboA0H74tDhwG0Eb5XLV3Wxy+EbJfDu/GVSzE7RkZ
+         vfWQd2b2/qogVQNPUILIjiQMs1GDCZjNnBFvZmwC21NDWQhFVoSlRMrEsrDzA1T0B6UJ
+         Gm2w==
+X-Gm-Message-State: APjAAAWoLUwkdIcu10lUGxX7nUitNshDCTawhOdiV2OdnafYEC8ko+qa
+        JHHdHdiIF1g5raWRybQxZrQn2EbyBu8vvLae9fAggDcm
+X-Google-Smtp-Source: APXvYqwSdEONq2xTT80HSQuU+UMOReflhaKoGASTVXaLwjVs7H5aEpsz5B6O64BQDIT2HvPpOWEtr8ZZKM6ngr86wl8=
+X-Received: by 2002:aca:d405:: with SMTP id l5mr582341oig.115.1571176238841;
+ Tue, 15 Oct 2019 14:50:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 15 Oct 2019 21:50:35 +0000 (UTC)
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com> <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+ <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 15 Oct 2019 23:50:27 +0200
+Message-ID: <CAJZ5v0hxsy3ZKFvtWULHAVog4=3rYQfd3-61A9dNaKeUbiDtrg@mail.gmail.com>
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS framework
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a block layer notification mechanism whereby notifications about
-block-layer events such as I/O errors, can be reported to a monitoring
-process asynchronously.
+On Tue, Oct 15, 2019 at 5:53 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Oct 15, 2019 at 1:46 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 22-09-19, 23:12, Dmitry Osipenko wrote:
+> > > Hello Viresh,
+> > >
+> > > This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
+> > >
+> > >
+> > > [   87.952369] ==================================================================
+> > > [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
+> > > [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
+> > >
+> > > [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
+> > > 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
+> > > [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> > > [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
+> > > [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
+> > > [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
+> > > (print_address_description.constprop.0+0x3d/0x340)
+> > > [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
+> > > (__kasan_report+0xe3/0x12c)
+> > > [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
+> > > [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
+> > > (blocking_notifier_chain_register+0x29/0x3c)
+> > > [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
+> > > (dev_pm_qos_add_notifier+0x79/0xf8)
+> > > [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+> > > [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
+> > > [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
+> > > [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
+> > > (cpufreq_register_driver+0x13b/0x1ec)
+> > > [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
+> > > (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
+> >
+> > Hi Dmitry,
+> >
+> > Thanks for the bug report and I was finally able to reproduce it at my end and
+> > this was quite an interesting debugging exercise :)
+> >
+> > When a cpufreq driver gets registered, we register with the subsys interface and
+> > it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
+> > notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
+> >
+> > When the cpufreq driver gets unregistered, we unregister with the subsys
+> > interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
+> > (should have been in reverse order I feel). We remove the QoS notifier only when
+> > cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
+> > CPUx. Now this has a different notifier list as compared to CPU0.
+>
+> The same problem will appear if the original policy CPU goes offline, won't it?
+>
+> > In short, we are adding the cpufreq notifiers to CPU0 and removing them from
+> > CPUx. When we try to add it again by inserting the module for second time, we
+> > find a node in the notifier list which is already freed but still in the list as
+> > we removed it from CPUx's list (which doesn't do anything as the node wasn't
+> > there in the first place).
+> >
+> > @Rafael: How do you see we solve this problem ? Here are the options I could
+> > think of:
+> >
+> > - Update subsys layer to reverse the order of devices while unregistering (this
+> >   will fix the current problem, but we will still have corner cases hanging
+> >   around, like if the CPU0 is hotplugged out, etc).
+>
+> This isn't sufficient for the offline case.
+>
+> > - Update QoS framework with the knowledge of related CPUs, this has been pending
+> >   until now from my side. And this is the thing we really need to do. Eventually
+> >   we shall have only a single notifier list for all CPUs of a policy, at least
+> >   for MIN/MAX frequencies.
+>
+> - Move the PM QoS requests and notifiers to the new policy CPU on all
+> changes of that.  That is, when cpufreq_offline() nominates the new
+> "leader", all of the QoS stuff for the policy needs to go to this one.
 
-Firstly, an event queue needs to be created:
+Alas, that still will not work, because things like
+acpi_processor_ppc_init() only work accidentally for one-CPU policies.
+Generally, adding such a PM QoS request to a non-policy CPU simply has
+no effect until it becomes a policy CPU which may be never.
 
-	pipe2(fds, O_TMPFILE);
-	ioctl(fds[1], IOC_WATCH_QUEUE_SET_SIZE, 256);
+It looks like using device PM QoS for cpufreq is a mistake in general
+and what is needed is a struct pm_qos_constraints member in struct
+cpufreq_policy and something like
 
-then a notification can be set up to report block notifications via that
-queue:
+struct freq_pm_qos_request {
+        enum freq_pm_qos_req_type type; /* min or max */
+        struct plist_node pnode;
+        struct cpufreq_policy *policy;
+};
 
-	struct watch_notification_filter filter = {
-		.nr_filters = 1,
-		.filters = {
-			[0] = {
-				.type = WATCH_TYPE_BLOCK_NOTIFY,
-				.subtype_filter[0] = UINT_MAX;
-			},
-		},
-	};
-	ioctl(fds[1], IOC_WATCH_QUEUE_SET_FILTER, &filter);
-	watch_devices(fds[1], 12);
-
-After that, records will be placed into the queue when, for example, errors
-occur on a block device.  Records are of the following format:
-
-	struct block_notification {
-		struct watch_notification watch;
-		__u64	dev;
-		__u64	sector;
-	} *n;
-
-Where:
-
-	n->watch.type will be WATCH_TYPE_BLOCK_NOTIFY
-
-	n->watch.subtype will be the type of notification, such as
-	NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM.
-
-	n->watch.info & WATCH_INFO_LENGTH will indicate the length of the
-	record.
-
-	n->watch.info & WATCH_INFO_ID will be the second argument to
-	watch_devices(), shifted.
-
-	n->dev will be the device numbers munged together.
-
-	n->sector will indicate the affected sector (if appropriate for the
-	event).
-
-Note that it is permissible for event records to be of variable length -
-or, at least, the length may be dependent on the subtype.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- Documentation/watch_queue.rst    |    4 +++-
- block/Kconfig                    |    9 +++++++++
- block/blk-core.c                 |   29 ++++++++++++++++++++++++++++
- include/linux/blkdev.h           |   15 ++++++++++++++
- include/uapi/linux/watch_queue.h |   30 ++++++++++++++++++++++++++++-
- samples/watch_queue/watch_test.c |   40 +++++++++++++++++++++++++++++++++++++-
- 6 files changed, 124 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/watch_queue.rst b/Documentation/watch_queue.rst
-index ed592700be0e..f2299f631ae8 100644
---- a/Documentation/watch_queue.rst
-+++ b/Documentation/watch_queue.rst
-@@ -8,7 +8,9 @@ opened by userspace.  This can be used in conjunction with::
- 
-   * Key/keyring notifications
- 
--  * General device event notifications
-+  * General device event notifications, including::
-+
-+    * Block layer event notifications
- 
- 
- The notifications buffers can be enabled by:
-diff --git a/block/Kconfig b/block/Kconfig
-index 41c0917ce622..0906227a9431 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -177,6 +177,15 @@ config BLK_SED_OPAL
- 	Enabling this option enables users to setup/unlock/lock
- 	Locking ranges for SED devices using the Opal protocol.
- 
-+config BLK_NOTIFICATIONS
-+	bool "Block layer event notifications"
-+	depends on DEVICE_NOTIFICATIONS
-+	help
-+	  This option provides support for getting block layer event
-+	  notifications.  This makes use of the /dev/watch_queue misc device to
-+	  handle the notification buffer and provides the device_notify() system
-+	  call to enable/disable watches.
-+
- menu "Partition Types"
- 
- source "block/partitions/Kconfig"
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d5e668ec751b..08e9b12ff5a5 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -184,6 +184,22 @@ static const struct {
- 	[BLK_STS_IOERR]		= { -EIO,	"I/O" },
- };
- 
-+#ifdef CONFIG_BLK_NOTIFICATIONS
-+static const
-+enum block_notification_type blk_notifications[ARRAY_SIZE(blk_errors)] = {
-+	[BLK_STS_TIMEOUT]	= NOTIFY_BLOCK_ERROR_TIMEOUT,
-+	[BLK_STS_NOSPC]		= NOTIFY_BLOCK_ERROR_NO_SPACE,
-+	[BLK_STS_TRANSPORT]	= NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT,
-+	[BLK_STS_TARGET]	= NOTIFY_BLOCK_ERROR_CRITICAL_TARGET,
-+	[BLK_STS_NEXUS]		= NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS,
-+	[BLK_STS_MEDIUM]	= NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM,
-+	[BLK_STS_PROTECTION]	= NOTIFY_BLOCK_ERROR_PROTECTION,
-+	[BLK_STS_RESOURCE]	= NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE,
-+	[BLK_STS_DEV_RESOURCE]	= NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE,
-+	[BLK_STS_IOERR]		= NOTIFY_BLOCK_ERROR_IO,
-+};
-+#endif
-+
- blk_status_t errno_to_blk_status(int errno)
- {
- 	int i;
-@@ -224,6 +240,19 @@ static void print_req_error(struct request *req, blk_status_t status,
- 		req->cmd_flags & ~REQ_OP_MASK,
- 		req->nr_phys_segments,
- 		IOPRIO_PRIO_CLASS(req->ioprio));
-+
-+#ifdef CONFIG_BLK_NOTIFICATIONS
-+	if (blk_notifications[idx]) {
-+		struct block_notification n = {
-+			.watch.type	= WATCH_TYPE_BLOCK_NOTIFY,
-+			.watch.subtype	= blk_notifications[idx],
-+			.watch.info	= watch_sizeof(n),
-+			.dev		= req->rq_disk ? disk_devt(req->rq_disk) : 0,
-+			.sector		= blk_rq_pos(req),
-+		};
-+		post_block_notification(&n);
-+	}
-+#endif
- }
- 
- static void req_bio_endio(struct request *rq, struct bio *bio,
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index f3ea78b0c91c..477472c11815 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -27,6 +27,7 @@
- #include <linux/percpu-refcount.h>
- #include <linux/scatterlist.h>
- #include <linux/blkzoned.h>
-+#include <linux/watch_queue.h>
- 
- struct module;
- struct scsi_ioctl_command;
-@@ -1773,6 +1774,20 @@ static inline bool blk_req_can_dispatch_to_zone(struct request *rq)
- }
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
-+#ifdef CONFIG_BLK_NOTIFICATIONS
-+static inline void post_block_notification(struct block_notification *n)
-+{
-+	u64 id = 0; /* Might want to allow dev# here. */
-+
-+	post_device_notification(&n->watch, id);
-+}
-+#else
-+static inline void post_block_notification(struct block_notification *n)
-+{
-+}
-+#endif
-+
-+
- #else /* CONFIG_BLOCK */
- 
- struct block_device;
-diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
-index 14fee36ec000..65b127ca272b 100644
---- a/include/uapi/linux/watch_queue.h
-+++ b/include/uapi/linux/watch_queue.h
-@@ -11,7 +11,8 @@
- enum watch_notification_type {
- 	WATCH_TYPE_META		= 0,	/* Special record */
- 	WATCH_TYPE_KEY_NOTIFY	= 1,	/* Key change event notification */
--	WATCH_TYPE___NR		= 2
-+	WATCH_TYPE_BLOCK_NOTIFY	= 2,	/* Block layer event notification */
-+	WATCH_TYPE___NR		= 3
- };
- 
- enum watch_meta_notification_subtype {
-@@ -98,4 +99,31 @@ struct key_notification {
- 	__u32	aux;		/* Per-type auxiliary data */
- };
- 
-+/*
-+ * Type of block layer notification.
-+ */
-+enum block_notification_type {
-+	NOTIFY_BLOCK_ERROR_TIMEOUT		= 1, /* Timeout error */
-+	NOTIFY_BLOCK_ERROR_NO_SPACE		= 2, /* Critical space allocation error */
-+	NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT = 3, /* Recoverable transport error */
-+	NOTIFY_BLOCK_ERROR_CRITICAL_TARGET	= 4, /* Critical target error */
-+	NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS	= 5, /* Critical nexus error */
-+	NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM	= 6, /* Critical medium error */
-+	NOTIFY_BLOCK_ERROR_PROTECTION		= 7, /* Protection error */
-+	NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE	= 8, /* Kernel resource error */
-+	NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE	= 9, /* Device resource error */
-+	NOTIFY_BLOCK_ERROR_IO			= 10, /* Other I/O error */
-+};
-+
-+/*
-+ * Block layer notification record.
-+ * - watch.type = WATCH_TYPE_BLOCK_NOTIFY
-+ * - watch.subtype = enum block_notification_type
-+ */
-+struct block_notification {
-+	struct watch_notification watch; /* WATCH_TYPE_BLOCK_NOTIFY */
-+	__u64	dev;			/* Device number */
-+	__u64	sector;			/* Affected sector */
-+};
-+
- #endif /* _UAPI_LINUX_WATCH_QUEUE_H */
-diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-index 1ffed42bfece..263dbba59651 100644
---- a/samples/watch_queue/watch_test.c
-+++ b/samples/watch_queue/watch_test.c
-@@ -59,6 +59,32 @@ static void saw_key_change(struct watch_notification *n, size_t len)
- 	       k->key_id, n->subtype, key_subtypes[n->subtype], k->aux);
- }
- 
-+static const char *block_subtypes[256] = {
-+	[NOTIFY_BLOCK_ERROR_TIMEOUT]			= "timeout",
-+	[NOTIFY_BLOCK_ERROR_NO_SPACE]			= "critical space allocation",
-+	[NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT]	= "recoverable transport",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_TARGET]		= "critical target",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS]		= "critical nexus",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM]		= "critical medium",
-+	[NOTIFY_BLOCK_ERROR_PROTECTION]			= "protection",
-+	[NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE]		= "kernel resource",
-+	[NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE]		= "device resource",
-+	[NOTIFY_BLOCK_ERROR_IO]				= "I/O",
-+};
-+
-+static void saw_block_change(struct watch_notification *n, size_t len)
-+{
-+	struct block_notification *b = (struct block_notification *)n;
-+
-+	if (len < sizeof(struct block_notification))
-+		return;
-+
-+	printf("BLOCK %08llx e=%u[%s] s=%llx\n",
-+	       (unsigned long long)b->dev,
-+	       n->subtype, block_subtypes[n->subtype],
-+	       (unsigned long long)b->sector);
-+}
-+
- /*
-  * Consume and display events.
-  */
-@@ -132,6 +158,9 @@ static void consumer(int fd)
- 			case WATCH_TYPE_KEY_NOTIFY:
- 				saw_key_change(&n.n, len);
- 				break;
-+			case WATCH_TYPE_BLOCK_NOTIFY:
-+				saw_block_change(&n.n, len);
-+				break;
- 			default:
- 				printf("other type\n");
- 				break;
-@@ -143,12 +172,16 @@ static void consumer(int fd)
- }
- 
- static struct watch_notification_filter filter = {
--	.nr_filters	= 1,
-+	.nr_filters	= 2,
- 	.filters = {
- 		[0]	= {
- 			.type			= WATCH_TYPE_KEY_NOTIFY,
- 			.subtype_filter[0]	= UINT_MAX,
- 		},
-+		[1]	= {
-+			.type			= WATCH_TYPE_BLOCK_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
- 	},
- };
- 
-@@ -182,6 +215,11 @@ int main(int argc, char **argv)
- 		exit(1);
- 	}
- 
-+	if (syscall(__NR_watch_devices, fd, 0x04, 0) == -1) {
-+		perror("watch_devices");
-+		exit(1);
-+	}
-+
- 	consumer(fd);
- 	exit(0);
- }
-
+Then, pm_qos_update_target() can be used for adding, updating and
+removing requests.
