@@ -2,96 +2,111 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545FFECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEA9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 286DF205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uspgVD+P"
+	by mail.kernel.org (Postfix) with ESMTP id 6A968205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbfJOMNR (ORCPT
+        id S1731686AbfJOMNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:13:17 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14668 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfJOMNP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:13:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1571141594; x=1602677594;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=xGLkeCy55JZslCZd5P+Gri+DOIbpI9xCoQlPZNd+zRA=;
-  b=uspgVD+PWGXTmKbng5j0/wanVhwLetMZhdlY1VsIK3WRMIx5+Jr+5A2Z
-   GuvnZVqQmjWSdNhtXQBIlgGHYQwgsoEJtLGoAiPRAoGI26Jj8on7olE+S
-   j7ZNRHyOB2MYpI082n5b3ZEfpHwRXu1C02O+I4Ucdgg6wPsBJIIfwypnm
-   I=;
-X-IronPort-AV: E=Sophos;i="5.67,299,1566864000"; 
-   d="scan'208";a="429217749"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 15 Oct 2019 12:10:14 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 0C4BCA1FA9;
-        Tue, 15 Oct 2019 12:10:12 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 15 Oct 2019 12:10:12 +0000
-Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.200) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 15 Oct 2019 12:10:02 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <mark.rutland@arm.com>,
-        <james.morse@arm.com>, <robh+dt@kernel.org>,
-        <frowand.list@gmail.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <daniel@iogearbox.net>, <paulmck@linux.ibm.com>,
-        <Sudeep.Holla@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>
-Subject: [PATCH v7 2/3] of: EXPORT_SYMBOL_GPL of_find_next_cache_node
-Date:   Tue, 15 Oct 2019 13:09:26 +0100
-Message-ID: <20191015120927.10470-3-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015120927.10470-1-hhhawa@amazon.com>
-References: <20191015120927.10470-1-hhhawa@amazon.com>
+        Tue, 15 Oct 2019 08:13:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53128 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfJOMNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:13:53 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6C5E2306F4AE;
+        Tue, 15 Oct 2019 12:13:53 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B70B608C0;
+        Tue, 15 Oct 2019 12:13:31 +0000 (UTC)
+Subject: Re: [PATCH V3 2/7] mdev: bus uevent support
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-3-jasowang@redhat.com>
+ <20191015122707.1fd52240.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <515d31c5-a7d9-5a22-b570-2035ecf03c09@redhat.com>
+Date:   Tue, 15 Oct 2019 20:13:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.200]
-X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+In-Reply-To: <20191015122707.1fd52240.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 15 Oct 2019 12:13:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make of_find_next_cache_node() available for modules.
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/of/base.c | 1 +
- 1 file changed, 1 insertion(+)
+On 2019/10/15 下午6:27, Cornelia Huck wrote:
+> On Fri, 11 Oct 2019 16:15:52 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> This patch adds bus uevent support for mdev bus in order to allow
+>> cooperation with userspace.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   drivers/vfio/mdev/mdev_driver.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_driver.c
+>> index b7c40ce86ee3..319d886ffaf7 100644
+>> --- a/drivers/vfio/mdev/mdev_driver.c
+>> +++ b/drivers/vfio/mdev/mdev_driver.c
+>> @@ -82,9 +82,17 @@ static int mdev_match(struct device *dev, struct device_driver *drv)
+>>   	return 0;
+>>   }
+>>   
+>> +static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
+>> +{
+>> +	struct mdev_device *mdev = to_mdev_device(dev);
+>> +
+>> +	return add_uevent_var(env, "MODALIAS=mdev:c%02X", mdev->class_id);
+>> +}
+>> +
+>>   struct bus_type mdev_bus_type = {
+>>   	.name		= "mdev",
+>>   	.match		= mdev_match,
+>> +	.uevent		= mdev_uevent,
+>>   	.probe		= mdev_probe,
+>>   	.remove		= mdev_remove,
+>>   };
+> I'd merge that into the previous patch.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 20e0e7ee4edf..fe22c7428958 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2172,6 +2172,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
- 
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(of_find_next_cache_node);
- 
- /**
-  * of_find_last_cache_level - Find the level at which the last cache is
--- 
-2.17.1
+
+Will do.
+
+Thanks
+
 
