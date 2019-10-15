@@ -2,104 +2,156 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FAEECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EC3ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD52C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C0F2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrR9Hxcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbfJOObM (ORCPT
+        id S1732815AbfJOObf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:31:12 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49136 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732087AbfJOObM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:31:12 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 92D10AC8FF81A9E06E9B;
-        Tue, 15 Oct 2019 22:31:10 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 22:31:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <wsa+renesas@sang-engineering.com>, <horms+renesas@verge.net.au>,
-        <swboyd@chromium.org>, <fabrizio.castro@bp.renesas.com>,
-        <geert+renesas@glider.be>, <yuehaibing@huawei.com>,
-        <nikita.yoush@cogentembedded.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] can: rcar: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 15 Oct 2019 22:30:47 +0800
-Message-ID: <20191015143047.19440-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 15 Oct 2019 10:31:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33234 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732599AbfJOObf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:31:35 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b9so24188154wrs.0;
+        Tue, 15 Oct 2019 07:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9UK0oVrOW9D5IBSM1Dzz1X4iB4H2rdT5rdPNgZz/QRI=;
+        b=BrR9Hxcw6qGVb3g9Q9/obyWtOAKteAGCgYeNta/bIWNvRs1h/gSf3rtMqp3YWY6fG2
+         B4Bel2vc2H6pSYyU0UvydIvGsOIM/Mhyr+/bpEVRwIzE4JOyDJujuFk3WcDgL85yBt7L
+         0CFpr8XSIZKH1ou0IxGQQp38Dtj9ndq8li55g8sVOJUmT0m3ms0QoBf8G2+iaHHYDj6v
+         /+uHdnVqsZYRO7c1ICNAuKcNSrxRS1keuYj6DXMn/rxjyJAWlv8XFDzhurID1RC3zC98
+         B/h1V1ai81O8Ag9397s6Bx5KpG7CxEaT6kMVl7Jf3N7hjSCuk8MrHjrBorytVXl/4sMl
+         +fIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9UK0oVrOW9D5IBSM1Dzz1X4iB4H2rdT5rdPNgZz/QRI=;
+        b=C2f+pQ72dOajcceIoCpqpq1HaB+hg9iSxdZLGWCLEM7vKFBs2sgziwSNtCApiDxANX
+         4QYvUDPj8lIAMda+TTc0LAfu8LLnHtbq0ToO5+JhosynJ4wyPi0fKp2xIE0WPjiSsPqb
+         W3AD0oQAz3psiCUI9iZVWtSvUlOrQPcS+UvG9RpwIt+kHI7iLNCezIjlTp0zsBigKbNE
+         Jcal2pucbtGKJVwta4uND5nLxyUZEb/LrIavj1xMTAylpyAVPzDHqcrX3kE7pLzMLAfy
+         xri5xQdg9MSn4F8gMf+hllNOz/20DO4r30PsyjMl5UYAG4p+Ah3OK3XB92wlYwqJuNUu
+         XsHg==
+X-Gm-Message-State: APjAAAW9TLjYADNnBYfhZRyHAjFI34sDqbq4kM7hg4UIhBgIECmICK6Q
+        doWD7AIEDHaPW8HRljvhHlA=
+X-Google-Smtp-Source: APXvYqyCVC54sqGweqKHXCeLjthXHvwPS6MbVoX+RH5ac8O7X7fMgmTPXEBQUBWzupEwoWvJ4LvaJg==
+X-Received: by 2002:adf:bad3:: with SMTP id w19mr8664785wrg.17.1571149892720;
+        Tue, 15 Oct 2019 07:31:32 -0700 (PDT)
+Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
+        by smtp.gmail.com with ESMTPSA id o4sm52833357wre.91.2019.10.15.07.31.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 15 Oct 2019 07:31:32 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 16:31:30 +0200
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191015143129.GA32565@AlexGordeev-DPT-VI0092>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
+ <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+ <20191010113034.GN13286@kadam>
+ <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+ <20191015131955.GH4774@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015131955.GH4774@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Tue, Oct 15, 2019 at 04:19:55PM +0300, Dan Carpenter wrote:
+> On Tue, Oct 15, 2019 at 01:24:50PM +0200, Alexander Gordeev wrote:
+> > On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
+> > > On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
+> > > > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
+> > > > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > > > > > > +	struct avalon_dma_desc *desc;
+> > > > > > > > +	struct virt_dma_desc *vdesc;
+> > > > > > > > +	bool rd_done;
+> > > > > > > > +	bool wr_done;
+> > > > > > > > +
+> > > > > > > > +	spin_lock(lock);
+> > 
+> > [*]
+> > 
+> > > > > > > > +
+> > > > > > > > +	rd_done = (hw->h2d_last_id < 0);
+> > > > > > > > +	wr_done = (hw->d2h_last_id < 0);
+> > > > > > > > +
+> > > > > > > > +	if (rd_done && wr_done) {
+> > > > > > > > +		spin_unlock(lock);
+> > > > > > > > +		return IRQ_NONE;
+> > > > > > > > +	}
+> > > > > > > > +
+> > > > > > > > +	do {
+> > > > > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > > > > > > > +			rd_done = true;
+> > > > > > > > +
+> > > > > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > > > > > > > +			wr_done = true;
+> > > > > > > > +	} while (!rd_done || !wr_done);
+> 
+> 
+> Thinking about this some more, my initial instinct was still correct
+> actually.  If we're holding the lock to prevent the CPU from writing
+> to it then how is hw->d2h_last_id updated in the other thread?  Either
+> it must deadlock or it must be a race condition.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/can/rcar/rcar_can.c   | 4 +---
- drivers/net/can/rcar/rcar_canfd.c | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
+hw->d2h_last_id and hw->h2d_last_id indexes are not expected to get
+updated while within the handler.
 
-diff --git a/drivers/net/can/rcar/rcar_can.c b/drivers/net/can/rcar/rcar_can.c
-index bf5adea..4857590 100644
---- a/drivers/net/can/rcar/rcar_can.c
-+++ b/drivers/net/can/rcar/rcar_can.c
-@@ -744,7 +744,6 @@ static int rcar_can_probe(struct platform_device *pdev)
- {
- 	struct rcar_can_priv *priv;
- 	struct net_device *ndev;
--	struct resource *mem;
- 	void __iomem *addr;
- 	u32 clock_select = CLKR_CLKP1;
- 	int err = -ENODEV;
-@@ -759,8 +758,7 @@ static int rcar_can_probe(struct platform_device *pdev)
- 		goto fail;
- 	}
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	addr = devm_ioremap_resource(&pdev->dev, mem);
-+	addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(addr)) {
- 		err = PTR_ERR(addr);
- 		goto fail;
-diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
-index edaa1ca..de59dd6 100644
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -1630,7 +1630,6 @@ static void rcar_canfd_channel_remove(struct rcar_canfd_global *gpriv, u32 ch)
- 
- static int rcar_canfd_probe(struct platform_device *pdev)
- {
--	struct resource *mem;
- 	void __iomem *addr;
- 	u32 sts, ch, fcan_freq;
- 	struct rcar_canfd_global *gpriv;
-@@ -1704,8 +1703,7 @@ static int rcar_canfd_probe(struct platform_device *pdev)
- 		/* CANFD clock is further divided by (1/2) within the IP */
- 		fcan_freq /= 2;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	addr = devm_ioremap_resource(&pdev->dev, mem);
-+	addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(addr)) {
- 		err = PTR_ERR(addr);
- 		goto fail_dev;
--- 
-2.7.4
+It is wr_flags[hw->d2h_last_id] and/or rd_flags[hw->h2d_last_id] that
+should be set from zero to one by the DMA controller once/before it
+sends the MSI interrupt. Therefore, once we're in the handler, either
+wr_flags[hw->d2h_last_id] or rd_flags[hw->h2d_last_id] should be non-
+zero.
 
+However, the Intel documentation uses a suspicious wording for description
+of the above: "The Descriptor Controller writes a 1 to the done bit of
+the status DWORD to indicate successful completion. The Descriptor
+Controller also sends an MSI interrupt for the final descriptor.
+After receiving this MSI, host software can poll the done bit to
+determine status."
 
+(The "the status DWORD" in the excerpt above are located in coherent DMA
+memory-mapped arrays wr_flags[hw->d2h_last_id] and rd_flags[hw->h2d_last_id])
+
+The confusing statement is "After receiving this MSI, host software can
+poll the done bit to determine status." Why would one poll a bit *after*
+the MSI received? In good design it should be set by the time the MSI
+arrived. May be they meant "checked" rather than "polled" or implied the
+CPU still could see zero in the status DWORD due to DMA memory incoherency..
+
+Anyways, that has never been observed and I added the loop out of the
+paranoia, it never loops for me.
+
+HTH
+
+> regards,
+> dan carpenter
+> 
