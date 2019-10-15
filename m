@@ -2,167 +2,148 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E19C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F96CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC6B21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E572089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:49:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="rQw+KLl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfJOKtS (ORCPT
+        id S1731468AbfJOKtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:49:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:35180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731402AbfJOKtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:49:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43A6C28;
-        Tue, 15 Oct 2019 03:49:14 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7ADA43F68E;
-        Tue, 15 Oct 2019 03:49:09 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
-        suzuki.poulose@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        jianyong.wu@arm.com, nd@arm.com
-Subject: [PATCH v5 4/6] psci: Add hvc call service for ptp_kvm.
-Date:   Tue, 15 Oct 2019 18:48:20 +0800
-Message-Id: <20191015104822.13890-5-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015104822.13890-1-jianyong.wu@arm.com>
-References: <20191015104822.13890-1-jianyong.wu@arm.com>
+        Tue, 15 Oct 2019 06:49:23 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:39022 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731434AbfJOKtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:49:19 -0400
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 7E4802E0AD4;
+        Tue, 15 Oct 2019 13:49:16 +0300 (MSK)
+Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
+        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 7rrsh8uytn-nFq8PcE2;
+        Tue, 15 Oct 2019 13:49:16 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1571136556; bh=kAMGDxkAbOPo3YYQfmMwLm3qVE+lcF5C9p9mjMh3EfA=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=rQw+KLl4HkAqtmwhezss/Z53Dxs7y2+bj/AoPhBWVauUKB4M0XyZWTOlyM1sV6kfO
+         u2G0uWq5uOz9iVde1iKyTrtI3zgvE3QzuUkrwlYkIi0uL+/HQGVeuAZkBmr2A7BX9j
+         GHxfA+S3RCAXieYfCJFzif4whnfoVGqMxtZBg86o=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
+        by vla5-2bf13a090f43.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id tdH7LpAdpl-nFJCDZSi;
+        Tue, 15 Oct 2019 13:49:15 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
+ mem_cgroup_move_account
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <157112699975.7360.1062614888388489788.stgit@buzz>
+ <20191015082048.GU317@dhcp22.suse.cz>
+ <3b73e301-ea4a-5edb-9360-2ae9b4ad9f69@yandex-team.ru>
+ <20191015103623.GX317@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <31cab57d-6e79-33cb-1a58-99065c6e7b82@yandex-team.ru>
+Date:   Tue, 15 Oct 2019 13:49:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191015103623.GX317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is the base of ptp_kvm for arm64.
-ptp_kvm modules will call hvc to get this service.
-The service offers real time and counter cycle of host for guest.
+On 15/10/2019 13.36, Michal Hocko wrote:
+> On Tue 15-10-19 11:44:22, Konstantin Khlebnikov wrote:
+>> On 15/10/2019 11.20, Michal Hocko wrote:
+>>> On Tue 15-10-19 11:09:59, Konstantin Khlebnikov wrote:
+>>>> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
+>>>> These counters needs update when page is moved between cgroups.
+>>>
+>>> Please describe the user visible effect.
+>>
+>> Surprisingly I don't see any users at this moment.
+>> So, there is no effect in mainline kernel.
+> 
+> Those counters are exported right? Or do we exclude them for v1?
 
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- drivers/clocksource/arm_arch_timer.c |  5 +++++
- include/clocksource/arm_arch_timer.h |  5 +++++
- include/linux/arm-smccc.h            | 12 ++++++++++++
- virt/kvm/arm/psci.c                  | 21 +++++++++++++++++++++
- 4 files changed, 43 insertions(+)
+It seems per-lruvec statistics is not exposed anywhere.
+And per-lruvec NR_FILE_MAPPED, NR_FILE_DIRTY, NR_WRITEBACK never had users.
 
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 07e57a49d1e8..3597f1f27b10 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -1634,3 +1634,8 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
- }
- TIMER_ACPI_DECLARE(arch_timer, ACPI_SIG_GTDT, arch_timer_acpi_init);
- #endif
-+
-+bool is_arm_arch_counter(void *cs)
-+{
-+	return (struct clocksource *)cs == &clocksource_counter;
-+}
-diff --git a/include/clocksource/arm_arch_timer.h b/include/clocksource/arm_arch_timer.h
-index 1d68d5613dae..5895d10a6148 100644
---- a/include/clocksource/arm_arch_timer.h
-+++ b/include/clocksource/arm_arch_timer.h
-@@ -86,6 +86,7 @@ extern u32 arch_timer_get_rate(void);
- extern u64 (*arch_timer_read_counter)(void);
- extern struct arch_timer_kvm_info *arch_timer_get_kvm_info(void);
- extern bool arch_timer_evtstrm_available(void);
-+extern bool is_arm_arch_counter(void *);
- 
- #else
- 
-@@ -104,6 +105,10 @@ static inline bool arch_timer_evtstrm_available(void)
- 	return false;
- }
- 
-+bool is_arm_arch_counter(void *unuse)
-+{
-+	return false;
-+}
- #endif
- 
- #endif
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index a6e4d3e3d10a..bc0cdad10f35 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -94,6 +94,7 @@
- 
- /* KVM "vendor specific" services */
- #define ARM_SMCCC_KVM_FUNC_FEATURES		0
-+#define ARM_SMCCC_KVM_PTP			1
- #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
- #define ARM_SMCCC_KVM_NUM_FUNCS			128
- 
-@@ -103,6 +104,17 @@
- 			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
- 			   ARM_SMCCC_KVM_FUNC_FEATURES)
- 
-+/*
-+ * This ID used for virtual ptp kvm clock and it will pass second value
-+ * and nanosecond value of host real time and system counter by vcpu
-+ * register to guest.
-+ */
-+#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID				\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
-+			   ARM_SMCCC_SMC_32,				\
-+			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
-+			   ARM_SMCCC_KVM_PTP)
-+
- #ifndef __ASSEMBLY__
- 
- #include <linux/linkage.h>
-diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c
-index 0debf49bf259..f0ef388ebbfa 100644
---- a/virt/kvm/arm/psci.c
-+++ b/virt/kvm/arm/psci.c
-@@ -392,6 +392,8 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 	u32 func_id = smccc_get_function(vcpu);
- 	u32 val[4] = {};
- 	u32 option;
-+	u64 cycles;
-+	struct system_time_snapshot systime_snapshot;
- 
- 	val[0] = SMCCC_RET_NOT_SUPPORTED;
- 
-@@ -431,6 +433,25 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
- 		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
- 		break;
-+	/*
-+	 * This will used for virtual ptp kvm clock. three
-+	 * values will be passed back.
-+	 * reg0 stores high 32-bit host ktime;
-+	 * reg1 stores low 32-bit host ktime;
-+	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
-+	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
-+	 */
-+	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
-+		ktime_get_snapshot(&systime_snapshot);
-+		if (!is_arm_arch_counter(systime_snapshot.sc.cs))
-+			return kvm_psci_call(vcpu);
-+		val[0] = systime_snapshot.real >> 32;
-+		val[1] = systime_snapshot.real << 32 >> 32;
-+		cycles = systime_snapshot.sc.cycles -
-+			 vcpu_vtimer(vcpu)->cntvoff;
-+		val[2] = cycles >> 32;
-+		val[3] = cycles << 32 >> 32;
-+		break;
- 	default:
- 		return kvm_psci_call(vcpu);
- 	}
--- 
-2.17.1
+I've found this because I'm using mem_cgroup_move_account for recharging
+pages at mlock and playing right now with debug for memory cgroup which
+validates statistics and counters when cgroup dies.
 
+> 
+>>>> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
+>>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>>
+>>> We want Cc: stable I suspect because broken stats might be really
+>>> misleading.
+>>>
+>>> The patch looks ok to me otherwise
+>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>>
+>>>> ---
+>>>>    mm/memcontrol.c |   18 ++++++++++++------
+>>>>    1 file changed, 12 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>>>> index bdac56009a38..363106578876 100644
+>>>> --- a/mm/memcontrol.c
+>>>> +++ b/mm/memcontrol.c
+>>>> @@ -5420,6 +5420,8 @@ static int mem_cgroup_move_account(struct page *page,
+>>>>    				   struct mem_cgroup *from,
+>>>>    				   struct mem_cgroup *to)
+>>>>    {
+>>>> +	struct lruvec *from_vec, *to_vec;
+>>>> +	struct pglist_data *pgdat;
+>>>>    	unsigned long flags;
+>>>>    	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+>>>>    	int ret;
+>>>> @@ -5443,11 +5445,15 @@ static int mem_cgroup_move_account(struct page *page,
+>>>>    	anon = PageAnon(page);
+>>>> +	pgdat = page_pgdat(page);
+>>>> +	from_vec = mem_cgroup_lruvec(pgdat, from);
+>>>> +	to_vec = mem_cgroup_lruvec(pgdat, to);
+>>>> +
+>>>>    	spin_lock_irqsave(&from->move_lock, flags);
+>>>>    	if (!anon && page_mapped(page)) {
+>>>> -		__mod_memcg_state(from, NR_FILE_MAPPED, -nr_pages);
+>>>> -		__mod_memcg_state(to, NR_FILE_MAPPED, nr_pages);
+>>>> +		__mod_lruvec_state(from_vec, NR_FILE_MAPPED, -nr_pages);
+>>>> +		__mod_lruvec_state(to_vec, NR_FILE_MAPPED, nr_pages);
+>>>>    	}
+>>>>    	/*
+>>>> @@ -5459,14 +5465,14 @@ static int mem_cgroup_move_account(struct page *page,
+>>>>    		struct address_space *mapping = page_mapping(page);
+>>>>    		if (mapping_cap_account_dirty(mapping)) {
+>>>> -			__mod_memcg_state(from, NR_FILE_DIRTY, -nr_pages);
+>>>> -			__mod_memcg_state(to, NR_FILE_DIRTY, nr_pages);
+>>>> +			__mod_lruvec_state(from_vec, NR_FILE_DIRTY, -nr_pages);
+>>>> +			__mod_lruvec_state(to_vec, NR_FILE_DIRTY, nr_pages);
+>>>>    		}
+>>>>    	}
+>>>>    	if (PageWriteback(page)) {
+>>>> -		__mod_memcg_state(from, NR_WRITEBACK, -nr_pages);
+>>>> -		__mod_memcg_state(to, NR_WRITEBACK, nr_pages);
+>>>> +		__mod_lruvec_state(from_vec, NR_WRITEBACK, -nr_pages);
+>>>> +		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+>>>>    	}
+>>>>    #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>
+> 
