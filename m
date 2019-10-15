@@ -2,156 +2,156 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF753C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A26ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0589205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9758A21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ew6L6KvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfJOMM7 (ORCPT
+        id S1731854AbfJOMND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:12:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60778 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfJOMM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:12:58 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9828669089;
-        Tue, 15 Oct 2019 12:12:57 +0000 (UTC)
-Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E39A4608C0;
-        Tue, 15 Oct 2019 12:12:35 +0000 (UTC)
-Subject: Re: [PATCH V3 1/7] mdev: class id support
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-2-jasowang@redhat.com>
- <20191015122607.126e3960.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <084c7e28-8578-51f3-7b31-2231de8c636d@redhat.com>
-Date:   Tue, 15 Oct 2019 20:12:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 15 Oct 2019 08:13:03 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:14606 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfJOMNC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:13:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1571141581; x=1602677581;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=uj9PyGdLbvAR+uiK3mBCeVmp5BQ2NT6FBK9AsCyNcyk=;
+  b=Ew6L6KvEY7YOuaQR45dMCh3di4FDLGbz/UEFmiem3db0aVEXTqNmePY/
+   MoMOxHdlgOQVnnmLLrpPl2JtN5htxqOllJiz7LXa6FuvsfZ+7uI6u0rR5
+   AYpJ0uPYUHFyVhlqJJ+wcL4SjfinH17vYf/XFsLGusDLcbdaZj3TUGuP3
+   g=;
+X-IronPort-AV: E=Sophos;i="5.67,299,1566864000"; 
+   d="scan'208";a="429217439"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 15 Oct 2019 12:09:58 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 4B676A1D0F;
+        Tue, 15 Oct 2019 12:09:53 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 15 Oct 2019 12:09:53 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.200) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 15 Oct 2019 12:09:43 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <mark.rutland@arm.com>,
+        <james.morse@arm.com>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <daniel@iogearbox.net>, <paulmck@linux.ibm.com>,
+        <Sudeep.Holla@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>
+Subject: [PATCH v7 0/3] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date:   Tue, 15 Oct 2019 13:09:24 +0100
+Message-ID: <20191015120927.10470-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191015122607.126e3960.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 15 Oct 2019 12:12:58 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.200]
+X-ClientProxiedBy: EX13D25UWB003.ant.amazon.com (10.43.161.33) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series adds L1 cache and L2 cache error detection and correction support
+for Amazon's Annapurna Labs SoCs.
 
-On 2019/10/15 下午6:26, Cornelia Huck wrote:
-> On Fri, 11 Oct 2019 16:15:51 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Mdev bus only supports vfio driver right now, so it doesn't implement
->> match method. But in the future, we may add drivers other than vfio,
->> the first driver could be virtio-mdev. This means we need to add
->> device class id support in bus match method to pair the mdev device
->> and mdev driver correctly.
->>
->> So this patch adds id_table to mdev_driver and class_id for mdev
->> device with the match method for mdev bus.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   Documentation/driver-api/vfio-mediated-device.rst |  7 ++++++-
->>   drivers/gpu/drm/i915/gvt/kvmgt.c                  |  1 +
->>   drivers/s390/cio/vfio_ccw_ops.c                   |  1 +
->>   drivers/s390/crypto/vfio_ap_ops.c                 |  1 +
->>   drivers/vfio/mdev/mdev_core.c                     | 11 +++++++++++
->>   drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
->>   drivers/vfio/mdev/mdev_private.h                  |  1 +
->>   drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
->>   include/linux/mdev.h                              |  8 ++++++++
->>   include/linux/mod_devicetable.h                   |  8 ++++++++
->>   samples/vfio-mdev/mbochs.c                        |  1 +
->>   samples/vfio-mdev/mdpy.c                          |  1 +
->>   samples/vfio-mdev/mtty.c                          |  1 +
->>   13 files changed, 60 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
->> index 25eb7d5b834b..2035e48da7b2 100644
->> --- a/Documentation/driver-api/vfio-mediated-device.rst
->> +++ b/Documentation/driver-api/vfio-mediated-device.rst
->> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
->>         * @probe: called when new device created
->>         * @remove: called when device removed
->>         * @driver: device driver structure
->> +      * @id_table: the ids serviced by this driver
->>         */
->>        struct mdev_driver {
->>   	     const char *name;
->>   	     int  (*probe)  (struct device *dev);
->>   	     void (*remove) (struct device *dev);
->>   	     struct device_driver    driver;
->> +	     const struct mdev_class_id *id_table;
->>        };
->>   
->>   A mediated bus driver for mdev should use this structure in the function calls
->> @@ -165,12 +167,15 @@ register itself with the mdev core driver::
->>   	extern int  mdev_register_device(struct device *dev,
->>   	                                 const struct mdev_parent_ops *ops);
->>   
->> +It is also required to specify the class_id through::
->> +
->> +	extern int mdev_set_class(struct device *dev, u16 id);
-> Should the document state explicitly that this should be done in the
-> ->create() callback?
+Alpine SoCs supports L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
+The CPU cores in the SoC are the same and all of them support ECC.
 
-Yes, it's better.
+Changes since v6:
+-----------------
+- Add ARM64 dependency
+- Add COMPILE_TEST
 
+Changes since v5:
+-----------------
+- Use top-level machine compatible to bind the EDAC device
+- Remove DT bindings
+- Add initcall to create platform device and register the edac driver
+- follow 'next-level-cache' phandle to create CPU topology for L2 driver
+- Change the driver to be tristate
+- Move register read to function flow
+- EXPORT_SYMBOL_GPL of_find_next_cache_node
 
-> Also, I think that the class_id might be different
-> for different mdevs (even if the parent is the same) -- should that be
-> mentioned explicitly?
+Changes since v4:
+-----------------
+- Added include for cpumask.h in al_l2_edac.c
+- Fix RAMID error print according to ARM TRM
+- Use for_each_possible_cpu() to parse information for DT.
+- Add missing of_node_put() call.
 
+Changes since v3:
+-----------------
+- Added include for smp.h sysreg.h
+- Use scnprintf instead of snprintf
+- Move write_sysreg_s after valid check to minimize the window between
+read/write.
+- Use IS_ERR_OR_NULL instead of IS_ERR, because
+edac_device_alloc_ctl_info may return NULL.
 
-Yes, depends on the mdev_supported_type.
+Changes since v2:
+-----------------
+- Use BIT for single bit instead of GENMASK
+- Use BIT_ULL and GENMASK_ULL for 64bit vector
+- Fix the mod_name/ctrl_name.
 
-Thanks
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
 
+Hanna Hawa (3):
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  of: EXPORT_SYMBOL_GPL of_find_next_cache_node
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
 
->
->> +
->>   However, the mdev_parent_ops structure is not required in the function call
->>   that a driver should use to unregister itself with the mdev core driver::
->>   
->>   	extern void mdev_unregister_device(struct device *dev);
->>   
->> -
->>   Mediated Device Management Interface Through sysfs
->>   ==================================================
->>   
-> (...)
->
-> Looks reasonable to me.
+ MAINTAINERS               |  10 ++
+ drivers/edac/Kconfig      |  16 +++
+ drivers/edac/Makefile     |   2 +
+ drivers/edac/al_l1_edac.c | 190 +++++++++++++++++++++++++++++
+ drivers/edac/al_l2_edac.c | 251 ++++++++++++++++++++++++++++++++++++++
+ drivers/of/base.c         |   1 +
+ 6 files changed, 470 insertions(+)
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
+
+-- 
+2.17.1
+
