@@ -2,82 +2,118 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12624ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4756FECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CA82067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B622067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bhF8okyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfJOLzX (ORCPT
+        id S1729758AbfJOL4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:55:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3764 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729411AbfJOLzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:55:23 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8496D818DE099A0C078F;
-        Tue, 15 Oct 2019 19:55:21 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 19:55:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <jarias.linux@gmail.com>,
-        <julia.lawall@lip6.fr>, <colin.king@canonical.com>,
-        <hdegoede@redhat.com>, <hariprasad.kelam@gmail.com>,
-        <nachukannan@gmail.com>, <pakki001@umn.edu>,
-        <hardiksingh.k@gmail.com>, <nishkadg.linux@gmail.com>,
-        <dan.carpenter@oracle.com>
-CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] staging: rtl8723bs: remove unnecessary null check
-Date:   Tue, 15 Oct 2019 19:55:11 +0800
-Message-ID: <20191015115511.26560-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20191015114053.23496-1-yuehaibing@huawei.com>
-References: <20191015114053.23496-1-yuehaibing@huawei.com>
+        Tue, 15 Oct 2019 07:56:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39526 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729411AbfJOL4i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:56:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r3so23516410wrj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 04:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yAwedaQmhP6SnPIEV8Cz99ZuZIEK2enEAC2WtodOdw8=;
+        b=bhF8okyTKEtKzcimYTnw/ute32N+lw/PA1aVErlt0+7GqFytvWWW/UuV9QZ+b7u9/d
+         KdmBJouzs/udg4X3MLdcpSfC12BH0baq40PbjzQqIu41aIGSVFiHWTR3ZIEnBXuLmKPo
+         lstQs9dPKuX1619CdQyOMPawyuMw8qAUiObWYSawPtbRjFjutB9Afy4RG7yELu16XEkT
+         5GPN/0bJf5l0hV8py8jMQFFR7VWohk7uW0Bgwuyfe5Zaktc45lFlWXqCqnNY3Rr2YEHv
+         l/Dr1/eHiI5m4DOOluHL+dnLMWd5F4GrLGIBN9YWxmXnYkHni7S41YjWj+o3KOdziFK1
+         QQVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yAwedaQmhP6SnPIEV8Cz99ZuZIEK2enEAC2WtodOdw8=;
+        b=lUUMgBD+AcKDUdJODw3qhgHZjmavy7K/g3TFoWBaQZl9kkHJ5KJqKFqQfVPah9NY11
+         1ywo8UIrd1wPv8eiIt88XmGzIHljMeHhqTSCfHgp+NKbWyOg858uqfp/VvVOYI1hDzaq
+         CiolmUPJUdyc72M4cOw0rE2rwMUH1Rg4PNAIEuNbVA1uPIerGodlZpNyEl3kwUJsKiJG
+         CajrtRYXqpMtGhk69cXiCDEqabuN9wD3sbzM+jnUr5bS9+/87mz6ErGWhAnOmojr92rN
+         2YyvJu2ONH2ZFf3NJcL95OYWn0SaiQf9VQAvf9c+X0Eb018SOEGikx90mUTTUCBlHIcx
+         Rc9w==
+X-Gm-Message-State: APjAAAVyKZPQ67/5zkqvcv8FZUhXUhV49pgDKR4iEBBvL7xm+TZc63+4
+        k+Dz8zMWBe/D+2ySUgwJEhuCACoDP3o=
+X-Google-Smtp-Source: APXvYqyD0JiP5Vjzz/Ob2cl78I3RHYa2pXAFgS65YCSh3NzGL4FLqEi7nL0+DAaVfiBX1+EWTZpHfQ==
+X-Received: by 2002:adf:ff8e:: with SMTP id j14mr3020909wrr.178.1571140596214;
+        Tue, 15 Oct 2019 04:56:36 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:7687:11a4:4657:121d])
+        by smtp.gmail.com with ESMTPSA id z9sm21434838wrl.35.2019.10.15.04.56.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 04:56:35 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 12:56:32 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] sched/topology: Allow sched_asym_cpucapacity to be
+ disabled
+Message-ID: <20191015115632.GC242992@google.com>
+References: <20191015102956.20133-1-valentin.schneider@arm.com>
+ <20191015104010.GA242992@google.com>
+ <a3a1a3d9-5d3a-3ab3-0eaf-e63e0c401c99@arm.com>
+ <d1dac9d1-3ac6-1a1b-f1c9-48b136833686@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1dac9d1-3ac6-1a1b-f1c9-48b136833686@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Null check before kfree is redundant, so remove it.
-This is detected by coccinelle.
+On Tuesday 15 Oct 2019 at 12:49:22 (+0100), Valentin Schneider wrote:
+> 
+> 
+> On 15/10/2019 11:58, Valentin Schneider wrote:
+> > On 15/10/2019 11:40, Quentin Perret wrote:
+> >>> @@ -2124,8 +2124,17 @@ static void detach_destroy_domains(const struct cpumask *cpu_map)
+> >>>  	int i;
+> >>>  
+> >>>  	rcu_read_lock();
+> >>> +
+> >>> +	if (static_key_enabled(&sched_asym_cpucapacity)) {
+> >>> +		unsigned int cpu = cpumask_any(cpu_map);
+> >>> +
+> >>> +		if (rcu_dereference(per_cpu(sd_asym_cpucapacity, cpu)))
+> >>> +			static_branch_dec_cpuslocked(&sched_asym_cpucapacity);
+> >>
+> >> Lockdep should scream for this :)
+> > 
+> > Bleh, yes indeed...
+> > 
+> 
+> Urgh, I forgot about the funny hotplug lock scenario at boot time.
+> rebuild_sched_domains() takes the lock but sched_init_domains() doesn't, so
+> we don't get the might_sleep warn at boot time.
+> 
+> So if we want to flip the key post boot time we probably need to separately
+> count our asymmetric root domains and flip the key after all the rebuilds,
+> outside of the hotplug lock.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: remove unnecessary 'hwxmits'
----
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Hmm, a problem here is that static_branch*() can block (it uses a
+mutex) while you're in the rcu section, I think.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 7011c2a..6d193f1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -2206,12 +2206,9 @@ s32 rtw_alloc_hwxmits(struct adapter *padapter)
- 
- void rtw_free_hwxmits(struct adapter *padapter)
- {
--	struct hw_xmit *hwxmits;
- 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
- 
--	hwxmits = pxmitpriv->hwxmits;
--	if (hwxmits)
--		kfree(hwxmits);
-+	kfree(pxmitpriv->hwxmits);
- }
- 
- void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
--- 
-2.7.4
+I suppose you could just move this above rcu_read_lock() and use
+rcu_access_pointer() instead ?
 
-
+Thanks,
+Quentin
