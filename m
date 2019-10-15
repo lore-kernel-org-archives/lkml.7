@@ -2,132 +2,128 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF1ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03462064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFD52064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wOJ7FvhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfJOIlF (ORCPT
+        id S1729350AbfJOImS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:41:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59925 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfJOIlF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:41:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4990230860CB;
-        Tue, 15 Oct 2019 08:41:05 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 56F3A5D9CD;
-        Tue, 15 Oct 2019 08:41:03 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 10:41:02 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
- block for stdio
-Message-ID: <20191015084102.GA10951@krava>
-References: <20191015053350.13909-1-yao.jin@linux.intel.com>
- <20191015053350.13909-4-yao.jin@linux.intel.com>
+        Tue, 15 Oct 2019 04:42:18 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:64416 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbfJOImR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:42:17 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9F8fLfY022078;
+        Tue, 15 Oct 2019 10:41:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=VcswSaQgjwVPJKQoYkqU+reFn99J6VbQH4Gn2WoEbg4=;
+ b=wOJ7FvhBt0tKm13YE/KziypjLfgScNJumVeh9zev23ZAbAQjnszYIi6qKLuZypqCx+14
+ Y+8eY8/UY1WbhXEpfgOGbmDdMu0LvhkGlp/LGYCKg0wrgYsihDxx1+vxMhyrWOGGRAvI
+ KcLEs6XaogPQCe4XZDFeYo7Vrr0yCOdKGAPhp1c8zi2xz5lu6EyuHEWuKcfNYFqQIJoQ
+ xHPrKi1v5FrWdEE03xZpxiiaUmshtMvbHS2XOL2OYNxXGTTe2vxUXde7JFwIu4HeyaZ9
+ 3F8Hjo6ZenpA2iSOAnja6zpvbq5Iemdu0OtsNEPUd+9PWkRT0Kjbj93i8DDz9wwkiPHx NQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vk4a1728e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 10:41:48 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6D4D100039;
+        Tue, 15 Oct 2019 10:41:42 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9118D2B758D;
+        Tue, 15 Oct 2019 10:41:42 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 15 Oct
+ 2019 10:41:42 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 15 Oct 2019 10:41:41
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <linux@armlinux.org.uk>, <tglx@linutronix.de>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] arm: kernel: initialize broadcast hrtimer based clock event device
+Date:   Tue, 15 Oct 2019 10:41:39 +0200
+Message-ID: <20191015084139.8510-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015053350.13909-4-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 15 Oct 2019 08:41:05 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-15_04:2019-10-15,2019-10-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:33:48PM +0800, Jin Yao wrote:
+On platforms implementing CPU power management, the CPUidle subsystem
+can allow CPUs to enter idle states where local timers logic is lost on power
+down. To keep the software timers functional the kernel relies on an
+always-on broadcast timer to be present in the platform to relay the
+interrupt signalling the timer expiries.
 
-SNIP
+For platforms implementing CPU core gating that do not implement an always-on
+HW timer or implement it in a broken way, this patch adds code to initialize
+the kernel hrtimer based clock event device upon boot (which can be chosen as
+tick broadcast device by the kernel).
+It relies on a dynamically chosen CPU to be always powered-up. This CPU then
+relays the timer interrupt to CPUs in deep-idle states through its HW local
+timer device.
 
-> +enum {
-> +	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV,
-> +	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
-> +	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
-> +	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
-> +	PERF_HPP_REPORT__BLOCK_RANGE,
-> +	PERF_HPP_REPORT__BLOCK_DSO,
-> +	PERF_HPP_REPORT__BLOCK_MAX_INDEX
-> +};
-> +
-> +static struct block_fmt block_fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
-> +
-> +static struct block_header_column{
-> +	const char *name;
-> +	int width;
-> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
-> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
-> +		.name = "Sampled Cycles%",
-> +		.width = 15,
-> +	},
-> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
-> +		.name = "Sampled Cycles",
-> +		.width = 14,
-> +	},
-> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
-> +		.name = "Avg Cycles%",
-> +		.width = 11,
-> +	},
-> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
-> +		.name = "Avg Cycles",
-> +		.width = 10,
-> +	},
-> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
-> +		.name = "[Program Block Range]",
-> +		.width = 70,
-> +	},
-> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
-> +		.name = "Shared Object",
-> +		.width = 20,
-> +	}
->  };
+Having a CPU always-on has implications on power management platform
+capabilities and makes CPUidle suboptimal, since at least a CPU is kept
+always in a shallow idle state by the kernel to relay timer interrupts,
+but at least leaves the kernel with a functional system with some working
+power management capabilities.
 
-so we already have support for multiple columns,
-why don't you add those as 'struct sort_entry' objects?
+The hrtimer based clock event device is unconditionally registered, but
+has the lowest possible rating such that any broadcast-capable HW clock
+event device present will be chosen in preference as the tick broadcast
+device.
 
-SNIP
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+Note:
+- The same reasons lead to same patch than for arm64 so I have copy the
+  commit message from: 9358d755bd5c ("arm64: kernel: initialize broadcast
+  hrtimer based clock event device")
+ arch/arm/kernel/time.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> +{
-> +	struct block_hist *bh = &rep->block_hist;
-> +
-> +	get_block_hists(hists, bh, rep);
-> +	symbol_conf.report_individual_block = true;
-> +	hists__fprintf(&bh->block_hists, true, 0, 0, 0,
-> +		       stdout, true);
-> +	hists__delete_entries(&bh->block_hists);
-> +	return 0;
-> +}
-> +
->  static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->  					 struct report *rep,
->  					 const char *help)
-> @@ -500,6 +900,12 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->  			continue;
->  
->  		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
-> +
-> +		if (rep->total_cycles) {
-> +			hists__fprintf_all_blocks(hists, rep);
+diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
+index b996b2cf0703..dddc7ebf4db4 100644
+--- a/arch/arm/kernel/time.c
++++ b/arch/arm/kernel/time.c
+@@ -9,6 +9,7 @@
+  *  reading the RTC at bootup, etc...
+  */
+ #include <linux/clk-provider.h>
++#include <linux/clockchips.h>
+ #include <linux/clocksource.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
+@@ -107,5 +108,6 @@ void __init time_init(void)
+ 		of_clk_init(NULL);
+ #endif
+ 		timer_probe();
++		tick_setup_hrtimer_broadcast();
+ 	}
+ }
+-- 
+2.15.0
 
-so this call kicks all the block info setup/count/print, right?
-
-I thingk it shouldn't be in the output code, but in the code before..
-from what I see you could count block_info counts during the sample
-processing, no?
-
-jirka
