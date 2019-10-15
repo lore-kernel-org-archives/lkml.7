@@ -2,112 +2,97 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223C7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A0ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32742086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571162936;
-	bh=72Jhf2gCfLKMsgroJ+dspsUWbLqIIaKdSi3E4kfQTHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H2w1c7LApZApGPBYKt5mZ9gQCw4M9dGWaIfOx2VS336eWzHbgpmsR1T5tuPJeWoRN
-	 4Er2/8+Ifi+H5j4tzOYeT1VZtYTq5AVRGbybpcX39ZELE/O6nnOXyx3qzHPbj+yQ3N
-	 eXslkI216zMKwaVz/Rt0pv0tciwJUnth+Kg//uHU=
+	by mail.kernel.org (Postfix) with ESMTP id 3310D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7kKCDTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389090AbfJOSIz (ORCPT
+        id S2389099AbfJOSJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfJOSIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:08:54 -0400
-Received: from localhost (unknown [38.98.37.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2210920659;
-        Tue, 15 Oct 2019 18:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571162933;
-        bh=72Jhf2gCfLKMsgroJ+dspsUWbLqIIaKdSi3E4kfQTHg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NxpiRKvyPENu5nqLqiiuFfvP8HewQgS0FRdSFH07T5l3FMQbOQO44QHVHBgUFam0F
-         eXDUI/uT1ldmjFXmLTQEiewhqryQ4Ac5n4vAV3hlsaHuBZOZnyuDDJRKQN+Wqkhlgx
-         swd+tFNGfcfgwhilnMLjyfPZwq0ztzgXzUO+HuSs=
-Date:   Tue, 15 Oct 2019 19:58:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V10 0/8] Tegra XUSB gadget driver support
-Message-ID: <20191015175820.GC1072965@kroah.com>
-References: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
- <20191014100257.GB419598@ulmo>
+        Tue, 15 Oct 2019 14:09:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38896 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfJOSJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 14:09:33 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h195so12980880pfe.5;
+        Tue, 15 Oct 2019 11:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=62+UvjhVj4PZqlBOSItwZ7z6d9zXJ9mRJozCye0lC6A=;
+        b=Q7kKCDTRa2hDiCA8hPhj6+ACbtfgnHCOU1AtP6ne6UyD08NeAV5Xy7ms/ls0aVsQlI
+         +HSZ+STfRMtY6Pqpy9zoR4EW+bR9Im2xyU/m7LQ+9Y0BHADomGF7chpOLNWpQ9/z8hTw
+         HwrdZHlvJ8gRvoWjj6AV0MqKEqGAcLAmT2W+v5Rp2ymq336v8TFKUt4Iw37aZRvxA88b
+         OVauuGWQXtzmDiK2sXkRqpSMKCMWXcZjPtKxpVfhxAA9YhrCCiGwPMBEI0qjA82LMlc/
+         iAPr/rdTrs+BgW+y4mdL10Kr8I2SSHmslCJwGysecYP5Ic6RR7AVXqIi1nCPC3UE+ddW
+         Pl8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=62+UvjhVj4PZqlBOSItwZ7z6d9zXJ9mRJozCye0lC6A=;
+        b=Lyh9imdVaiSIC9RdrWANUbs+blxbNsGjhL1SYzbefKXIJBkxY/gs5in9tYernB5qUo
+         nFjqUacOT7nwvXWMctEJwD13g15hYlGTwXZG9IpYEg7/ZyzpR6jh7LJ4EAySeB4QV2aS
+         4/6VV0zEcNKIknzUS0ezVeGA4rdswjBnx2jKHXll8FVsUAMfeKCPoEE3lUwkBnQHCJhY
+         NZKgELgHZBS02O8uvvfnR8YuQ7ngPCpMKZR8RS7DW+tuhyi/BlvDeP83lb4EguIdHkR0
+         /ZZUMhz8ZecxiOrtrAkH0ImDGuSr1+5CDiY8M673g52Ec13KlI/92TZZBdoHepwwPCMs
+         OR/g==
+X-Gm-Message-State: APjAAAVNyiZoXGtOaCJwzXNC2LaeGT4Hk+61lbMe86BDy7uJqqXV1PdK
+        topt/9GwfnE786GO4IO3nOA=
+X-Google-Smtp-Source: APXvYqwt0Gh6CCpQ/dWNjZyyYxiMGcFeaVhnTfrL5j3a7lrELEUCNWH0touy4gxSaQ4Hl4bx9NhGMQ==
+X-Received: by 2002:a17:90a:cc12:: with SMTP id b18mr42015957pju.141.1571162972322;
+        Tue, 15 Oct 2019 11:09:32 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id i10sm27447578pgb.79.2019.10.15.11.09.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 11:09:31 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 11:09:29 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 04/14] software node: mark internal macros with double
+ underscores
+Message-ID: <20191015180929.GC105649@dtor-ws>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-5-dmitry.torokhov@gmail.com>
+ <20191015120350.GF32742@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014100257.GB419598@ulmo>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191015120350.GF32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:02:57PM +0200, Thierry Reding wrote:
-> On Mon, Sep 23, 2019 at 01:55:44PM +0530, Nagarjuna Kristam wrote:
-> > Patches 1-3 are phy driver changes to add support for device
-> > mode.
-> > Patches 4-7 are changes related to XUSB device mode
-> > controller driver.
-> > Patch 8 is to enable drivers for XUDC support in defconfig
-> > 
-> > Test Steps(USB 2.0):
-> > - Enable "USB Gadget precomposed configurations" in defconfig
-> > - Build, flash and boot Jetson TX1
-> > - Connect Jetson TX1 and Ubuntu device using USB A to Micro B
-> >   cable
-> > - After boot on Jetson TX1 terminal usb0 network device should be
-> >   enumerated
-> > - Assign static ip to usb0 on Jetson TX1 and corresponding net
-> >   device on ubuntu
-> > - Run ping test and transfer test(used scp) to check data transfer
-> >   communication
+On Tue, Oct 15, 2019 at 03:03:50PM +0300, Andy Shevchenko wrote:
+> On Fri, Oct 11, 2019 at 04:07:11PM -0700, Dmitry Torokhov wrote:
+> > Let's mark PROPERTY_ENTRY_* macros that are internal with double leading
+> > underscores so users are not tempted to use them.
 > 
-> Hi Felipe, Kishon, Greg,
-> 
-> Patches 1-3 provide new API that is required by patch 7, so I think
-> patches 1, 2, 3, 4 and 7 should probably all go through a single tree to
-> avoid having to model the dependencies using stable branches.
-> 
-> Kishon, patches 1-3 have gone through several rounds of review already,
-> but do you have any remaining concerns on them? If not, it'd be great if
-> you could ack them. Felipe and Greg could then pick them up along with
-> patches 4 and 7 into the USB tree.
-> 
-> Felipe, Greg, does that sound like a reasonable plan?
+> We may undef them at the end of file, right?
 
-Fine with me.
+No... the macro substitution happens at the point of final use, so
+somewhere in .c file.
 
-> I should also mention that while waiting for review, Nagarjuna has been
-> able to extend support for the XUDC driver to Tegra186 but has so far
-> been holding back on sending them out so as to not needlessly hold up
-> progress on this series. However, given the interdependencies, I've come
-> to think that it may be preferable to merge everything in one go instead
-> of revisiting this in a couple of weeks.
-> 
-> If you guys prefer, Nagarjuna could send out v11 of the series and
-> integrate Tegra186 support.
+Thanks.
 
-That's also fine.
-
-thanks,
-
-greg k-h
+-- 
+Dmitry
