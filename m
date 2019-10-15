@@ -2,151 +2,299 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D88ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D34ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218DF20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571162915;
-	bh=2vnG9zvitjyN5YRzL5mKaObhzjkQF1sodt7gWZ0dIcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jv6Pi69RojslmdUQNyyMSTaDnohVPxic/OYQn9V12z8vM5goA3nKUzbecYknaDUj1
-	 C/5izwZcL6FUD40RiEluXheWFgWa7eprZFMXtlx0e43ibgcGhoh34p+/CaNmtA7WF/
-	 X1h7lCzq5Mmnw6S82Imigoc0bz2gc26dTWr7RZFs=
+	by mail.kernel.org (Postfix) with ESMTP id E5AB320659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iJuUfJFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389048AbfJOSIe (ORCPT
+        id S2389062AbfJOSIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:08:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfJOSId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:08:33 -0400
-Received: from localhost (unknown [38.98.37.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81CBB2086A;
-        Tue, 15 Oct 2019 18:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571162912;
-        bh=2vnG9zvitjyN5YRzL5mKaObhzjkQF1sodt7gWZ0dIcY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yAT3GUSAolCquTvf0Pp53cAn87OGSGsmXvt3fY4x0HaTP066nxrMrhNi7XLAlokKE
-         NWsDhq+FLeSto9SRMOpINc6fpIPqogRq0L018DXZmvmzfgy4z30ezv6OJoGgL3JTax
-         /P2UHzW5dXogVigVJRFOU5dlh8rj9MaA1vY2KC/Q=
-Date:   Tue, 15 Oct 2019 19:55:55 +0200
-From:   reg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     zhangfei <zhangfei.gao@linaro.org>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-Subject: Re: [PATCH v5 2/3] uacce: add uacce driver
-Message-ID: <20191015175555.GB1072965@kroah.com>
-References: <1571035735-31882-1-git-send-email-zhangfei.gao@linaro.org>
- <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
- <20191014113231.00002967@huawei.com>
- <e71edf57-8449-e8d1-01ba-aed3ecf379e1@linaro.org>
+        Tue, 15 Oct 2019 14:08:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38544 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfJOSIh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 14:08:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FHmZVC085408;
+        Tue, 15 Oct 2019 18:08:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=tffcv5R344QUSZsjEYxRMACURvQ25ud8isc745HmEUk=;
+ b=iJuUfJFpOQECw4zViTjMbajpDf5ldW/jOzmcLO1jrmGIPHTWWbK+KGMhziBz4uKZ6gy+
+ yvZqLwmHZKuqpwi6ZbHjSJX/hE+rlmHptl466dumCsG1FTvbkPW6+0Tsu/iIYdGlZmNl
+ BOImKgTO7gBhHf9vnPRZ82zKGJ6zu3yqg69MvZEV6omibatSWf4BliU5bLZLxntjMl9Y
+ JpY0CuPvAoGGnqldnOttqdxEcnifGJHHKkjWh7QYfdGJKQqU2R3+yQRwBf8/y6nnOn5+
+ mL/cLSbCibRBIVNh/RdlKzkQToob79LHjTSwfVj7hLw3+tetKwn2fUOysIXImoeU56/D 0g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2vk7fr9qjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 18:08:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FHmLp8059866;
+        Tue, 15 Oct 2019 18:06:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2vnb0fm8uv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 18:06:17 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FI6Fbc024969;
+        Tue, 15 Oct 2019 18:06:15 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 11:06:15 -0700
+Date:   Tue, 15 Oct 2019 11:06:13 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/12] iomap: lift the xfs readpage / readpages tracing
+ to iomap
+Message-ID: <20191015180613.GT13108@magnolia>
+References: <20191015154345.13052-1-hch@lst.de>
+ <20191015154345.13052-9-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e71edf57-8449-e8d1-01ba-aed3ecf379e1@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191015154345.13052-9-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 03:39:00PM +0800, zhangfei wrote:
-> Hi, Jonathan
+On Tue, Oct 15, 2019 at 05:43:41PM +0200, Christoph Hellwig wrote:
+> Lift the xfs code for tracing address space operations to the iomap
+> layer.
 > 
-> On 2019/10/14 下午6:32, Jonathan Cameron wrote:
-> > On Mon, 14 Oct 2019 14:48:54 +0800
-> > Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> > 
-> > > From: Kenneth Lee <liguozhu@hisilicon.com>
-> > > 
-> > > Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
-> > > provide Shared Virtual Addressing (SVA) between accelerators and processes.
-> > > So accelerator can access any data structure of the main cpu.
-> > > This differs from the data sharing between cpu and io device, which share
-> > > data content rather than address.
-> > > Since unified address, hardware and user space of process can share the
-> > > same virtual address in the communication.
-> > > 
-> > > Uacce create a chrdev for every registration, the queue is allocated to
-> > > the process when the chrdev is opened. Then the process can access the
-> > > hardware resource by interact with the queue file. By mmap the queue
-> > > file space to user space, the process can directly put requests to the
-> > > hardware without syscall to the kernel space.
-> > > 
-> > > Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
-> > > Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-> > > Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> > > Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> > Hi,
-> > 
-> > Some superficial comments from me.
-> Thanks for the suggestion.
-> > > +/*
-> > > + * While user space releases a queue, all the relatives on the queue
-> > > + * should be released immediately by this putting.
-> > This one needs rewording but I'm not quite sure what
-> > relatives are in this case.
-> > > + */
-> > > +static long uacce_put_queue(struct uacce_queue *q)
-> > > +{
-> > > +	struct uacce_device *uacce = q->uacce;
-> > > +
-> > > +	mutex_lock(&uacce_mutex);
-> > > +
-> > > +	if ((q->state == UACCE_Q_STARTED) && uacce->ops->stop_queue)
-> > > +		uacce->ops->stop_queue(q);
-> > > +
-> > > +	if ((q->state == UACCE_Q_INIT || q->state == UACCE_Q_STARTED) &&
-> > > +	     uacce->ops->put_queue)
-> > > +		uacce->ops->put_queue(q);
-> > > +
-> > > +	q->state = UACCE_Q_ZOMBIE;
-> > > +	mutex_unlock(&uacce_mutex);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > ..
-> > 
-> > > +
-> > > +static ssize_t qfrs_size_show(struct device *dev,
-> > > +				struct device_attribute *attr, char *buf)
-> > > +{
-> > > +	struct uacce_device *uacce = to_uacce_device(dev);
-> > > +	unsigned long size;
-> > > +	int i, ret;
-> > > +
-> > > +	for (i = 0, ret = 0; i < UACCE_QFRT_MAX; i++) {
-> > > +		size = uacce->qf_pg_size[i] << PAGE_SHIFT;
-> > > +		if (i == UACCE_QFRT_SS)
-> > > +			break;
-> > > +		ret += sprintf(buf + ret, "%lu\t", size);
-> > > +	}
-> > > +	ret += sprintf(buf + ret, "%lu\n", size);
-> > > +
-> > > +	return ret;
-> > > +}
-> > This may break the sysfs rule of one thing per file.  If you have
-> > multiple regions, they should probably each have their own file
-> > to give their size.
-> Is the rule must be applied?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yes, it always must be followed.  Please fix.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
+--D
+
+> ---
+>  fs/iomap/Makefile      | 16 ++++++++------
+>  fs/iomap/buffered-io.c |  5 +++++
+>  fs/iomap/trace.c       | 12 +++++++++++
+>  fs/iomap/trace.h       | 49 ++++++++++++++++++++++++++++++++++++++++++
+>  fs/xfs/xfs_aops.c      |  2 --
+>  fs/xfs/xfs_trace.h     | 26 ----------------------
+>  6 files changed, 75 insertions(+), 35 deletions(-)
+>  create mode 100644 fs/iomap/trace.c
+>  create mode 100644 fs/iomap/trace.h
+> 
+> diff --git a/fs/iomap/Makefile b/fs/iomap/Makefile
+> index 93cd11938bf5..eef2722d93a1 100644
+> --- a/fs/iomap/Makefile
+> +++ b/fs/iomap/Makefile
+> @@ -3,13 +3,15 @@
+>  # Copyright (c) 2019 Oracle.
+>  # All Rights Reserved.
+>  #
+> -obj-$(CONFIG_FS_IOMAP)		+= iomap.o
+>  
+> -iomap-y				+= \
+> -					apply.o \
+> -					buffered-io.o \
+> -					direct-io.o \
+> -					fiemap.o \
+> -					seek.o
+> +ccflags-y += -I $(srctree)/$(src)		# needed for trace events
+> +
+> +obj-$(CONFIG_FS_IOMAP)		+= iomap.o
+>  
+> +iomap-y				+= trace.o \
+> +				   apply.o \
+> +				   buffered-io.o \
+> +				   direct-io.o \
+> +				   fiemap.o \
+> +				   seek.o
+>  iomap-$(CONFIG_SWAP)		+= swapfile.o
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 181ee8477aad..d1620c3f2a4c 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/bio.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/migrate.h>
+> +#include "trace.h"
+>  
+>  #include "../internal.h"
+>  
+> @@ -301,6 +302,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+>  	unsigned poff;
+>  	loff_t ret;
+>  
+> +	trace_iomap_readpage(page->mapping->host, 1);
+> +
+>  	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
+>  		ret = iomap_apply(inode, page_offset(page) + poff,
+>  				PAGE_SIZE - poff, 0, ops, &ctx,
+> @@ -397,6 +400,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+>  	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+>  	loff_t length = last - pos + PAGE_SIZE, ret = 0;
+>  
+> +	trace_iomap_readpages(mapping->host, nr_pages);
+> +
+>  	while (length > 0) {
+>  		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+>  				&ctx, iomap_readpages_actor);
+> diff --git a/fs/iomap/trace.c b/fs/iomap/trace.c
+> new file mode 100644
+> index 000000000000..63ce9f0ce4dc
+> --- /dev/null
+> +++ b/fs/iomap/trace.c
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, Christoph Hellwig
+> + */
+> +#include <linux/iomap.h>
+> +
+> +/*
+> + * We include this last to have the helpers above available for the trace
+> + * event implementations.
+> + */
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+> new file mode 100644
+> index 000000000000..3900de1d871d
+> --- /dev/null
+> +++ b/fs/iomap/trace.h
+> @@ -0,0 +1,49 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2009-2019, Christoph Hellwig
+> + *
+> + * NOTE: none of these tracepoints shall be consider a stable kernel ABI
+> + * as they can change at any time.
+> + */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM iomap
+> +
+> +#if !defined(_IOMAP_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _IOMAP_TRACE_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +struct inode;
+> +
+> +DECLARE_EVENT_CLASS(iomap_readpage_class,
+> +	TP_PROTO(struct inode *inode, int nr_pages),
+> +	TP_ARGS(inode, nr_pages),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(u64, ino)
+> +		__field(int, nr_pages)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = inode->i_sb->s_dev;
+> +		__entry->ino = inode->i_ino;
+> +		__entry->nr_pages = nr_pages;
+> +	),
+> +	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->ino,
+> +		  __entry->nr_pages)
+> +)
+> +
+> +#define DEFINE_READPAGE_EVENT(name)		\
+> +DEFINE_EVENT(iomap_readpage_class, name,	\
+> +	TP_PROTO(struct inode *inode, int nr_pages), \
+> +	TP_ARGS(inode, nr_pages))
+> +DEFINE_READPAGE_EVENT(iomap_readpage);
+> +DEFINE_READPAGE_EVENT(iomap_readpages);
+> +
+> +#endif /* _IOMAP_TRACE_H */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +#define TRACE_INCLUDE_FILE trace
+> +#include <trace/define_trace.h>
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 00fe40b35f72..e2033b070f4a 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -1184,7 +1184,6 @@ xfs_vm_readpage(
+>  	struct file		*unused,
+>  	struct page		*page)
+>  {
+> -	trace_xfs_vm_readpage(page->mapping->host, 1);
+>  	return iomap_readpage(page, &xfs_iomap_ops);
+>  }
+>  
+> @@ -1195,7 +1194,6 @@ xfs_vm_readpages(
+>  	struct list_head	*pages,
+>  	unsigned		nr_pages)
+>  {
+> -	trace_xfs_vm_readpages(mapping->host, nr_pages);
+>  	return iomap_readpages(mapping, pages, nr_pages, &xfs_iomap_ops);
+>  }
+>  
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index eaae275ed430..eae4b29c174e 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -1197,32 +1197,6 @@ DEFINE_PAGE_EVENT(xfs_writepage);
+>  DEFINE_PAGE_EVENT(xfs_releasepage);
+>  DEFINE_PAGE_EVENT(xfs_invalidatepage);
+>  
+> -DECLARE_EVENT_CLASS(xfs_readpage_class,
+> -	TP_PROTO(struct inode *inode, int nr_pages),
+> -	TP_ARGS(inode, nr_pages),
+> -	TP_STRUCT__entry(
+> -		__field(dev_t, dev)
+> -		__field(xfs_ino_t, ino)
+> -		__field(int, nr_pages)
+> -	),
+> -	TP_fast_assign(
+> -		__entry->dev = inode->i_sb->s_dev;
+> -		__entry->ino = inode->i_ino;
+> -		__entry->nr_pages = nr_pages;
+> -	),
+> -	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
+> -		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> -		  __entry->ino,
+> -		  __entry->nr_pages)
+> -)
+> -
+> -#define DEFINE_READPAGE_EVENT(name)		\
+> -DEFINE_EVENT(xfs_readpage_class, name,	\
+> -	TP_PROTO(struct inode *inode, int nr_pages), \
+> -	TP_ARGS(inode, nr_pages))
+> -DEFINE_READPAGE_EVENT(xfs_vm_readpage);
+> -DEFINE_READPAGE_EVENT(xfs_vm_readpages);
+> -
+>  DECLARE_EVENT_CLASS(xfs_imap_class,
+>  	TP_PROTO(struct xfs_inode *ip, xfs_off_t offset, ssize_t count,
+>  		 int whichfork, struct xfs_bmbt_irec *irec),
+> -- 
+> 2.20.1
+> 
