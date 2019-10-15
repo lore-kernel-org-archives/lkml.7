@@ -2,295 +2,129 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F46ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C8BECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D739D217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQsyyf02"
+	by mail.kernel.org (Postfix) with ESMTP id 3DF4A217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfJOBue (ORCPT
+        id S1727545AbfJOBvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 21:50:34 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36683 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfJOBue (ORCPT
+        Mon, 14 Oct 2019 21:51:54 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:30209 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726450AbfJOBvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 21:50:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id b136so42277952iof.3;
-        Mon, 14 Oct 2019 18:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o1GMB0sQwNmGsfNZM7UqWz45dZIDAUIhPA3ZbjBqGtI=;
-        b=vQsyyf02EO0FnNh9d538Q/mRuJM9Ue1WndwV1PhNO2wlZ4q2hotCjL1vORz09zQcaW
-         pF8djKcU7HbkbajvqQGGohVvsqzDRM6EDr9iCG1JHAacvG3UQj16ytEBe45QQZTfw7o/
-         QLlAzQvGOw+cnoRRsM9lWTmqOoUYXwNM4z/iQwIkukBjxeF30iFYLejXF/yDdXZT4ECf
-         3vF4EzA05Dfld4BVrfOAvxGTQGqGaVBSi1f5D713xcYGqgdIyC/RvHLx6I+NS104tKpv
-         nXapfBFfhemYLbYMr7Rge7nVeN/EmJaqLlzdRdEppOQ+w3ctnbTB2BD4zBbUsy+19Veb
-         Qw3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o1GMB0sQwNmGsfNZM7UqWz45dZIDAUIhPA3ZbjBqGtI=;
-        b=J7vhy/mvAt/X40OlcFkE5tbZKJ3ZiYmhtub04NOb9VQd3VJztATOUumefCnBAsOpWE
-         jwCa7lwT5tkrfZ/eR+08uLYF4pUbWaGOAbTdBBTr1Kp2RZ23O0ieFd5IKRi9jlU3x2HH
-         OUlX1za3mFc0JctSq7eYuLTkrkkevskVAi46Z9LC+g+IvSa/VXqsDxXXHOo12ApMb5NO
-         SuYIgTMjVH++e/eXw5m63cBMrc6BUUZlxCAtp3dw3rlwHIWnSc8cMm3lpcgKRmUR0Qqe
-         P2Az0B6KcR6+WhK7Uc1+PnUlRD/8nYZCSpJ/qBhI1nBk40QK47MqTTJA/EvXl5f7fMFj
-         oE5Q==
-X-Gm-Message-State: APjAAAVZHkZIs27ioIUwCAgS8MhHDmpZCdz9T30SeKYpZZy/3GEEopBg
-        JhFN9kfHazcdQ4ZrgZyLnboUup1MNJSj4AI++V0=
-X-Google-Smtp-Source: APXvYqz+TNcAfzLZNF4xDs6wk0izz0ptDLkUZyRWF+PMFGtXVpQyjOZRlymY96h3gYcaMS8V4sYIVLzSQXdEB20qPBI=
-X-Received: by 2002:a92:1d5c:: with SMTP id d89mr3461053ild.94.1571104233184;
- Mon, 14 Oct 2019 18:50:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191013125959.3280-1-laijs@linux.alibaba.com>
- <20191014184832.GA125935@google.com> <20191015014650.GL2689@paulmck-ThinkPad-P72>
-In-Reply-To: <20191015014650.GL2689@paulmck-ThinkPad-P72>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Tue, 15 Oct 2019 09:50:21 +0800
-Message-ID: <CAJhGHyCMa7mU_K+-22MHGwJ+BfFun=2ndzehZCMoNrgYfBowaQ@mail.gmail.com>
-Subject: Re: [PATCH] rcu: make PREEMPT_RCU to be a decoration of TREE_RCU
-To:     paulmck@kernel.org
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Sterba <dsterba@suse.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+        Mon, 14 Oct 2019 21:51:53 -0400
+X-UUID: f6970995dbc8493bb4365a0938f2f170-20191015
+X-UUID: f6970995dbc8493bb4365a0938f2f170-20191015
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 468638640; Tue, 15 Oct 2019 09:51:38 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N2.mediatek.inc
+ (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 15 Oct
+ 2019 09:51:36 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 15 Oct 2019 09:51:35 +0800
+Message-ID: <1571104296.19130.67.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 3/4] iommu/mediatek: Use writel for TLB range
+ invalidation
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Will Deacon <will@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
+        <chao.hao@mediatek.com>
+Date:   Tue, 15 Oct 2019 09:51:36 +0800
+In-Reply-To: <20191014211113.jq5qwe5pfonyocr3@willie-the-truck>
+References: <1570627143-29441-1-git-send-email-yong.wu@mediatek.com>
+         <1570627143-29441-3-git-send-email-yong.wu@mediatek.com>
+         <20191011162950.yg4o77mlaicacne5@willie-the-truck>
+         <1570861427.19130.65.camel@mhfsdcap03>
+         <20191014211113.jq5qwe5pfonyocr3@willie-the-truck>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 2A0569C4EE061B0093306730CED8C43106D58A6D2203E5BAA9BAE2B73DFF6B432000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 9:46 AM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Mon, Oct 14, 2019 at 02:48:32PM -0400, Joel Fernandes wrote:
-> > On Sun, Oct 13, 2019 at 12:59:57PM +0000, Lai Jiangshan wrote:
-> > > Currently PREEMPT_RCU and TREE_RCU are "contrary" configs
-> > > when they can't be both on. But PREEMPT_RCU is actually a kind
-> > > of TREE_RCU in the implementation. It seams to be appropriate
-> > > to make PREEMPT_RCU to be a decorative option of TREE_RCU.
-> > >
-> >
-> > Looks like a nice simplification and so far I could not poke any holes in the
-> > code...
-> >
-> > I am in support of this patch for further review and testing. Thanks!
-> >
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->
-> Thank you both!
->
-> Lai, what is this patch against?  It does not want to apply to the current
-> -rcu "dev" branch.
+On Mon, 2019-10-14 at 22:11 +0100, Will Deacon wrote:
+> On Sat, Oct 12, 2019 at 02:23:47PM +0800, Yong Wu wrote:
+> > On Fri, 2019-10-11 at 17:29 +0100, Will Deacon wrote:
+> > > On Wed, Oct 09, 2019 at 09:19:02PM +0800, Yong Wu wrote:
+> > > > Use writel for the register F_MMU_INV_RANGE which is for triggering the
+> > > > HW work. We expect all the setting(iova_start/iova_end...) have already
+> > > > been finished before F_MMU_INV_RANGE.
+> > > > 
+> > > > Signed-off-by: Anan.Sun <anan.sun@mediatek.com>
+> > > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > > > ---
+> > > > This is a improvement rather than fixing a issue.
+> > > > ---
+> > > >  drivers/iommu/mtk_iommu.c | 3 +--
+> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > > > index 24a13a6..607f92c 100644
+> > > > --- a/drivers/iommu/mtk_iommu.c
+> > > > +++ b/drivers/iommu/mtk_iommu.c
+> > > > @@ -187,8 +187,7 @@ static void mtk_iommu_tlb_add_flush(unsigned long iova, size_t size,
+> > > >  		writel_relaxed(iova, data->base + REG_MMU_INVLD_START_A);
+> > > >  		writel_relaxed(iova + size - 1,
+> > > >  			       data->base + REG_MMU_INVLD_END_A);
+> > > > -		writel_relaxed(F_MMU_INV_RANGE,
+> > > > -			       data->base + REG_MMU_INVALIDATE);
+> > > > +		writel(F_MMU_INV_RANGE, data->base + REG_MMU_INVALIDATE);
+> > > 
+> > > I don't understand this change.
+> > > 
+> > > Why is it an "improvement" and which accesses are you ordering with the
+> > > writel?
+> > 
+> > The register(F_MMU_INV_RANGE) will trigger HW to begin flush range. HW
+> > expect the other register iova_start/end/flush_type always is ready
+> > before trigger. thus I'd like use writel to guarantee the previous
+> > register has been finished.
+> 
+> Given that these are all MMIO writes to the same device, then
+> writel_relaxed() should give you the ordering you need. If you look at
+> memory_barriers.txt, it says:
+> 
+>   | they [readX_relaxed() and writeX_relaxed()] are still guaranteed to
+>   | be ordered with respect to other accesses from the same CPU thread
+>   | to the same peripheral when operating on __iomem pointers mapped
+>   | with the default I/O attributes.
 
-Oh, sorry
+Thanks for this info. See it now. then I will delete this patch in next
+version.
 
-I wrongly made the change base on upstream.
-I will rebase later.
+> 
+> > I didn't see the writel_relaxed cause some error in practice, we only
+> > think writel is necessary here in theory. so call it "improvement".
+> 
+> Ok, but I don't think it's needed in this case.
+> 
+> Will
 
-thanks
-Lai
 
->
->                                                         Thanx, Paul
->
-> > thanks,
-> >
-> >  - Joel
-> >
-> >
-> > > Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
-> > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> > > ---
-> > >  include/linux/rcupdate.h   |  4 ++--
-> > >  include/trace/events/rcu.h |  4 ++--
-> > >  kernel/rcu/Kconfig         | 13 +++++++------
-> > >  kernel/rcu/Makefile        |  1 -
-> > >  kernel/rcu/rcu.h           |  2 +-
-> > >  kernel/rcu/update.c        |  2 +-
-> > >  kernel/sysctl.c            |  2 +-
-> > >  7 files changed, 14 insertions(+), 14 deletions(-)
-> > >
-> > > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> > > index 75a2eded7aa2..1eee9f6c27f9 100644
-> > > --- a/include/linux/rcupdate.h
-> > > +++ b/include/linux/rcupdate.h
-> > > @@ -167,7 +167,7 @@ do { \
-> > >   * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
-> > >   */
-> > >
-> > > -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> > > +#if defined(CONFIG_TREE_RCU)
-> > >  #include <linux/rcutree.h>
-> > >  #elif defined(CONFIG_TINY_RCU)
-> > >  #include <linux/rcutiny.h>
-> > > @@ -583,7 +583,7 @@ do {                                                                          \
-> > >   * read-side critical section that would block in a !PREEMPT kernel.
-> > >   * But if you want the full story, read on!
-> > >   *
-> > > - * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
-> > > + * In non-preemptible RCU implementations (pure TREE_RCU and TINY_RCU),
-> > >   * it is illegal to block while in an RCU read-side critical section.
-> > >   * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
-> > >   * kernel builds, RCU read-side critical sections may be preempted,
-> > > diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-> > > index 694bd040cf51..1ce15c5be4c8 100644
-> > > --- a/include/trace/events/rcu.h
-> > > +++ b/include/trace/events/rcu.h
-> > > @@ -41,7 +41,7 @@ TRACE_EVENT(rcu_utilization,
-> > >     TP_printk("%s", __entry->s)
-> > >  );
-> > >
-> > > -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> > > +#if defined(CONFIG_TREE_RCU)
-> > >
-> > >  /*
-> > >   * Tracepoint for grace-period events.  Takes a string identifying the
-> > > @@ -425,7 +425,7 @@ TRACE_EVENT_RCU(rcu_fqs,
-> > >               __entry->cpu, __entry->qsevent)
-> > >  );
-> > >
-> > > -#endif /* #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) */
-> > > +#endif /* #if defined(CONFIG_TREE_RCU) */
-> > >
-> > >  /*
-> > >   * Tracepoint for dyntick-idle entry/exit events.  These take a string
-> > > diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-> > > index 7644eda17d62..0303934e6ef0 100644
-> > > --- a/kernel/rcu/Kconfig
-> > > +++ b/kernel/rcu/Kconfig
-> > > @@ -7,7 +7,7 @@ menu "RCU Subsystem"
-> > >
-> > >  config TREE_RCU
-> > >     bool
-> > > -   default y if !PREEMPTION && SMP
-> > > +   default y if SMP
-> > >     help
-> > >       This option selects the RCU implementation that is
-> > >       designed for very large SMP system with hundreds or
-> > > @@ -17,6 +17,7 @@ config TREE_RCU
-> > >  config PREEMPT_RCU
-> > >     bool
-> > >     default y if PREEMPTION
-> > > +   select TREE_RCU
-> > >     help
-> > >       This option selects the RCU implementation that is
-> > >       designed for very large SMP systems with hundreds or
-> > > @@ -78,7 +79,7 @@ config TASKS_RCU
-> > >       user-mode execution as quiescent states.
-> > >
-> > >  config RCU_STALL_COMMON
-> > > -   def_bool ( TREE_RCU || PREEMPT_RCU )
-> > > +   def_bool TREE_RCU
-> > >     help
-> > >       This option enables RCU CPU stall code that is common between
-> > >       the TINY and TREE variants of RCU.  The purpose is to allow
-> > > @@ -86,13 +87,13 @@ config RCU_STALL_COMMON
-> > >       making these warnings mandatory for the tree variants.
-> > >
-> > >  config RCU_NEED_SEGCBLIST
-> > > -   def_bool ( TREE_RCU || PREEMPT_RCU || TREE_SRCU )
-> > > +   def_bool ( TREE_RCU || TREE_SRCU )
-> > >
-> > >  config RCU_FANOUT
-> > >     int "Tree-based hierarchical RCU fanout value"
-> > >     range 2 64 if 64BIT
-> > >     range 2 32 if !64BIT
-> > > -   depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
-> > > +   depends on TREE_RCU && RCU_EXPERT
-> > >     default 64 if 64BIT
-> > >     default 32 if !64BIT
-> > >     help
-> > > @@ -112,7 +113,7 @@ config RCU_FANOUT_LEAF
-> > >     int "Tree-based hierarchical RCU leaf-level fanout value"
-> > >     range 2 64 if 64BIT
-> > >     range 2 32 if !64BIT
-> > > -   depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
-> > > +   depends on TREE_RCU && RCU_EXPERT
-> > >     default 16
-> > >     help
-> > >       This option controls the leaf-level fanout of hierarchical
-> > > @@ -187,7 +188,7 @@ config RCU_BOOST_DELAY
-> > >
-> > >  config RCU_NOCB_CPU
-> > >     bool "Offload RCU callback processing from boot-selected CPUs"
-> > > -   depends on TREE_RCU || PREEMPT_RCU
-> > > +   depends on TREE_RCU
-> > >     depends on RCU_EXPERT || NO_HZ_FULL
-> > >     default n
-> > >     help
-> > > diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
-> > > index 020e8b6a644b..82d5fba48b2f 100644
-> > > --- a/kernel/rcu/Makefile
-> > > +++ b/kernel/rcu/Makefile
-> > > @@ -9,6 +9,5 @@ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
-> > >  obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
-> > >  obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
-> > >  obj-$(CONFIG_TREE_RCU) += tree.o
-> > > -obj-$(CONFIG_PREEMPT_RCU) += tree.o
-> > >  obj-$(CONFIG_TINY_RCU) += tiny.o
-> > >  obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
-> > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> > > index 8fd4f82c9b3d..4149ba76824f 100644
-> > > --- a/kernel/rcu/rcu.h
-> > > +++ b/kernel/rcu/rcu.h
-> > > @@ -452,7 +452,7 @@ enum rcutorture_type {
-> > >     INVALID_RCU_FLAVOR
-> > >  };
-> > >
-> > > -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> > > +#if defined(CONFIG_TREE_RCU)
-> > >  void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
-> > >                         unsigned long *gp_seq);
-> > >  void rcutorture_record_progress(unsigned long vernum);
-> > > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> > > index 1861103662db..34a7452b25fd 100644
-> > > --- a/kernel/rcu/update.c
-> > > +++ b/kernel/rcu/update.c
-> > > @@ -435,7 +435,7 @@ struct debug_obj_descr rcuhead_debug_descr = {
-> > >  EXPORT_SYMBOL_GPL(rcuhead_debug_descr);
-> > >  #endif /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
-> > >
-> > > -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) || defined(CONFIG_RCU_TRACE)
-> > > +#if defined(CONFIG_TREE_RCU) || defined(CONFIG_RCU_TRACE)
-> > >  void do_trace_rcu_torture_read(const char *rcutorturename, struct rcu_head *rhp,
-> > >                            unsigned long secs,
-> > >                            unsigned long c_old, unsigned long c)
-> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > index 00fcea236eba..2ace158a4d72 100644
-> > > --- a/kernel/sysctl.c
-> > > +++ b/kernel/sysctl.c
-> > > @@ -1268,7 +1268,7 @@ static struct ctl_table kern_table[] = {
-> > >             .proc_handler   = proc_do_static_key,
-> > >     },
-> > >  #endif
-> > > -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> > > +#if defined(CONFIG_TREE_RCU)
-> > >     {
-> > >             .procname       = "panic_on_rcu_stall",
-> > >             .data           = &sysctl_panic_on_rcu_stall,
-> > > --
-> > > 2.20.1
-> > >
