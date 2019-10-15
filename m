@@ -2,226 +2,95 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47289C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E84ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131AD2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571155434;
-	bh=M9kXklKQtDuIvjGPM+103N6ZWmJrDyymrDVn0xJ8W+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mExjz8XsxH56Syq0Y3GjiPsq6xITnxRaBYJHdMPF/smGpJ2lqPA7Xp2cN6rlYCC77
-	 M3V+i56rX49TaWSXwjTDi/OYXWFtp00j7iGmEBw6bftddoNh0OX44eCcZBNXwuA0B0
-	 AykrcTWWOUphrfGl2Dco6yFCYZbXE1anb0Fq8hV4=
+	by mail.kernel.org (Postfix) with ESMTP id 0A66F20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbfJOQDw (ORCPT
+        id S1727674AbfJOQHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:03:52 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43963 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387695AbfJOQDv (ORCPT
+        Tue, 15 Oct 2019 12:07:11 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:54011 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbfJOQHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:03:51 -0400
-Received: by mail-qk1-f194.google.com with SMTP id h126so19658046qke.10;
-        Tue, 15 Oct 2019 09:03:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eMyf6ZXYS8qjB9onybnxryGH4tAciA0KjRR6DT1/pjY=;
-        b=BNQrpDQFWulDLr2mX3ppadrcwlzELRfgirbxAAC+JB7I1Yyf3jL7eRuGETyXp4YTTm
-         4adEtoakHhDftsOCU4xa+bbbd8YGAMoXPIwfqLPDB9HTACL+gxB+82CIGZv+3Y2fbLT8
-         xYB7VMR3vmL3UrN7FHXCg06roe2KZYyQS40y7NEFhVHF1E8oFLZdEEyxypQt7XRtdj4V
-         0d03XKkgKwuEqrHqssUDDmvs6Y2muLFGxCEzhYA8b58dPH6PGtT3METm9rOGvT6u5xxR
-         2dktkIUhBhsT7btT0vMC74xlArltkS9oA8VXmpQlMQBh4CH4yjiy7MCNO97TbA5E7gpW
-         ooQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eMyf6ZXYS8qjB9onybnxryGH4tAciA0KjRR6DT1/pjY=;
-        b=Rv/Hlanpj8PX9bQVzDRSUDQPKvufsRRG/Sjjv4VHpMLyprOECjc2I8RgYKgPnYE76V
-         j3i3ChQbSFXzkmyPKhAQR+EVSYmwHakWHoTUOnM+Nu03E+Kw+lah0MFXEK1Se62Tcvci
-         koy/xWBZ/A4+y5cHvWnP85EgbfPALSJf7Z5VcImZIPr8Fo0DfwASjDPjDmEyI1yfP9ys
-         EQOotnkhIou+GlcvQzO/oxdBtPHIPyVW04PguyVACAdUdQC/OqHds2zwGRdexI5Q5wg1
-         +zF6SzbjNOC71TgehPlqNYcGtuUGU03XNEzxVZzcMxtqcvNakIDZG4qkgtG5CpfQq2PR
-         FOSA==
-X-Gm-Message-State: APjAAAWTshMTiPyWjgRUZIzBrPphILa1yFdPqYT8MOPat+xNE/opHBj2
-        KTP00vOXPriUV4LEt9eoZjbaZcbs
-X-Google-Smtp-Source: APXvYqxV/kTCSy/+mAr7w00KVvG6wQC5YatNY/DStqjTAArZLZ1d4wdaVOXnBdiPmH0K8LwKb13xPA==
-X-Received: by 2002:a05:620a:21dc:: with SMTP id h28mr13419840qka.48.1571155429679;
-        Tue, 15 Oct 2019 09:03:49 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:2a53])
-        by smtp.gmail.com with ESMTPSA id n17sm10576897qke.103.2019.10.15.09.03.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 09:03:49 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 09:03:47 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        linux-block@vger.kernel.org
-Subject: [PATCH block/for-linus] blkcg: Fix multiple bugs in
- blkcg_activate_policy()
-Message-ID: <20191015160347.GM18794@devbig004.ftw2.facebook.com>
-References: <alpine.DEB.2.21.1910151232480.2818@hadrien>
- <20191015154827.GK18794@devbig004.ftw2.facebook.com>
- <07cbc404-65db-b236-9ae2-558197b8cdb6@kernel.dk>
+        Tue, 15 Oct 2019 12:07:11 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKPLj-0007jR-I9; Tue, 15 Oct 2019 17:07:03 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKPLi-0002TI-TD; Tue, 15 Oct 2019 17:07:02 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pci: iproc-msi: fix __iomem annotation in decode_msi_hwirq()
+Date:   Tue, 15 Oct 2019 17:07:02 +0100
+Message-Id: <20191015160702.9457-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07cbc404-65db-b236-9ae2-558197b8cdb6@kernel.dk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blkcg_activate_policy() has the following bugs.
+Fix __iomem attribute on msg variable passed to readl() in
+the decode_msi_hwirq() function. Fixes the following sparse
+warning:
 
-* cf09a8ee19ad ("blkcg: pass @q and @blkcg into
-  blkcg_pol_alloc_pd_fn()") added @blkcg to ->pd_alloc_fn(); however,
-  blkcg_activate_policy() ends up using pd's allocated for the root
-  blkcg for all preallocations, so ->pd_init_fn() for non-root blkcgs
-  can be passed in pd's which are allocated for the root blkcg.
+drivers/pci/controller/pcie-iproc-msi.c:301:17: warning: incorrect type in argument 1 (different address spaces)
+drivers/pci/controller/pcie-iproc-msi.c:301:17:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pci/controller/pcie-iproc-msi.c:301:17:    got unsigned int [usertype] *[assigned] msg
 
-  For blk-iocost, this means that ->pd_init_fn() can write beyond the
-  end of the allocated object as it determines the length of the flex
-  array at the end based on the blkcg's nesting level.
-
-* Each pd is initialized as they get allocated.  If alloc fails, the
-  policy will get freed with pd's initialized on it.
-
-* After the above partial failure, the partial pds are not freed.
-
-This patch fixes all the above issues by
-
-* Restructuring blkcg_activate_policy() so that alloc and init passes
-  are separate.  Init takes place only after all allocs succeeded and
-  on failure all allocated pds are freed.
-
-* Unifying and fixing the cleanup of the remaining pd_prealloc.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: cf09a8ee19ad ("blkcg: pass @q and @blkcg into blkcg_pol_alloc_pd_fn()")
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- block/blk-cgroup.c |   69 +++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 51 insertions(+), 18 deletions(-)
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <andrew.murray@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: linux-pci@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+.. (open list)
+---
+ drivers/pci/controller/pcie-iproc-msi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1362,7 +1362,7 @@ int blkcg_activate_policy(struct request
- 			  const struct blkcg_policy *pol)
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+index 0a3f61be5625..3176ad3ab0e5 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -293,11 +293,12 @@ static const struct irq_domain_ops msi_domain_ops = {
+ 
+ static inline u32 decode_msi_hwirq(struct iproc_msi *msi, u32 eq, u32 head)
  {
- 	struct blkg_policy_data *pd_prealloc = NULL;
--	struct blkcg_gq *blkg;
-+	struct blkcg_gq *blkg, *pinned_blkg = NULL;
- 	int ret;
+-	u32 *msg, hwirq;
++	u32 __iomem *msg;
++	u32 hwirq;
+ 	unsigned int offs;
  
- 	if (blkcg_policy_enabled(q, pol))
-@@ -1370,49 +1370,82 @@ int blkcg_activate_policy(struct request
+ 	offs = iproc_msi_eq_offset(msi, eq) + head * sizeof(u32);
+-	msg = (u32 *)(msi->eq_cpu + offs);
++	msg = (u32 __iomem *)(msi->eq_cpu + offs);
+ 	hwirq = readl(msg);
+ 	hwirq = (hwirq >> 5) + (hwirq & 0x1f);
  
- 	if (queue_is_mq(q))
- 		blk_mq_freeze_queue(q);
--pd_prealloc:
--	if (!pd_prealloc) {
--		pd_prealloc = pol->pd_alloc_fn(GFP_KERNEL, q, &blkcg_root);
--		if (!pd_prealloc) {
--			ret = -ENOMEM;
--			goto out_bypass_end;
--		}
--	}
--
-+retry:
- 	spin_lock_irq(&q->queue_lock);
- 
--	/* blkg_list is pushed at the head, reverse walk to init parents first */
-+	/* blkg_list is pushed at the head, reverse walk to allocate parents first */
- 	list_for_each_entry_reverse(blkg, &q->blkg_list, q_node) {
- 		struct blkg_policy_data *pd;
- 
- 		if (blkg->pd[pol->plid])
- 			continue;
- 
--		pd = pol->pd_alloc_fn(GFP_NOWAIT | __GFP_NOWARN, q, &blkcg_root);
--		if (!pd)
--			swap(pd, pd_prealloc);
-+		/* If prealloc matches, use it; otherwise try GFP_NOWAIT */
-+		if (blkg == pinned_blkg) {
-+			pd = pd_prealloc;
-+			pd_prealloc = NULL;
-+		} else {
-+			pd = pol->pd_alloc_fn(GFP_NOWAIT | __GFP_NOWARN, q,
-+					      blkg->blkcg);
-+		}
-+
- 		if (!pd) {
-+			/*
-+			 * GFP_NOWAIT failed.  Free the existing one and
-+			 * prealloc for @blkg w/ GFP_KERNEL.
-+			 */
-+			if (pinned_blkg)
-+				blkg_put(pinned_blkg);
-+			blkg_get(blkg);
-+			pinned_blkg = blkg;
-+
- 			spin_unlock_irq(&q->queue_lock);
--			goto pd_prealloc;
-+
-+			if (pd_prealloc)
-+				pol->pd_free_fn(pd_prealloc);
-+			pd_prealloc = pol->pd_alloc_fn(GFP_KERNEL, q,
-+						       blkg->blkcg);
-+			if (pd_prealloc)
-+				goto retry;
-+			else
-+				goto enomem;
- 		}
- 
- 		blkg->pd[pol->plid] = pd;
- 		pd->blkg = blkg;
- 		pd->plid = pol->plid;
--		if (pol->pd_init_fn)
--			pol->pd_init_fn(pd);
- 	}
- 
-+	/* all allocated, init in the same order */
-+	if (pol->pd_init_fn)
-+		list_for_each_entry_reverse(blkg, &q->blkg_list, q_node)
-+			pol->pd_init_fn(blkg->pd[pol->plid]);
-+
- 	__set_bit(pol->plid, q->blkcg_pols);
- 	ret = 0;
- 
- 	spin_unlock_irq(&q->queue_lock);
--out_bypass_end:
-+out:
- 	if (queue_is_mq(q))
- 		blk_mq_unfreeze_queue(q);
-+	if (pinned_blkg)
-+		blkg_put(pinned_blkg);
- 	if (pd_prealloc)
- 		pol->pd_free_fn(pd_prealloc);
- 	return ret;
-+
-+enomem:
-+	/* alloc failed, nothing's initialized yet, free everything */
-+	spin_lock_irq(&q->queue_lock);
-+	list_for_each_entry(blkg, &q->blkg_list, q_node) {
-+		if (blkg->pd[pol->plid]) {
-+			pol->pd_free_fn(blkg->pd[pol->plid]);
-+			blkg->pd[pol->plid] = NULL;
-+		}
-+	}
-+	spin_unlock_irq(&q->queue_lock);
-+	ret = -ENOMEM;
-+	goto out;
- }
- EXPORT_SYMBOL_GPL(blkcg_activate_policy);
- 
+-- 
+2.23.0
+
