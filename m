@@ -2,122 +2,76 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B87C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BDFECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1893E21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75ABF218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfJOMrU (ORCPT
+        id S1727200AbfJOMsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:47:20 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26311 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbfJOMrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:47:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 05:47:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
-   d="scan'208";a="207538674"
-Received: from shacharl-mobl.ger.corp.intel.com (HELO localhost) ([10.252.9.88])
-  by orsmga002.jf.intel.com with ESMTP; 15 Oct 2019 05:47:14 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Safford <david.safford@ge.com>,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] tpm: Salt tpm_get_random() result with get_random_bytes()
-Date:   Tue, 15 Oct 2019 15:47:02 +0300
-Message-Id: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 15 Oct 2019 08:48:09 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44615 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfJOMsI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:48:08 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u22so18969762qkk.11;
+        Tue, 15 Oct 2019 05:48:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dMgTdeD/9gJwcRCsNb/xPelcbI93Bt7zIb0T0pXCtjE=;
+        b=MDabImphqlmlbigRIjdrOlznIibYBgWcw0Fr5h1GKAv4sEElFgE0wQdnG/dZjYPvcb
+         6+tVBA97Qcs5dKl/6lzzbk9/96ZLJSuqZvN7NZQwtinRg4/DS8j+KaHxT1E7Acbvkg+C
+         oCV0az4ysGubiTQp3FCshWsT4AP0kXHAvE0d62AMUg42khbjk+OXT9KxAQBiI1MqsVEd
+         EZe2xFHVbJ8KU6P0qlgsusJAA2xcVmAViEUeMlI0HUqJkHuVT9mhezVAj0D2prLeU0iY
+         +wrMex0DtJ+p0sWR/vNgjzqxLa3qRstgDbpHUOvNu2zPnEs1mCJ36ZsIzqSA+vG9RI+O
+         ELCA==
+X-Gm-Message-State: APjAAAWOZqE91UjUZet2541dOKQ07wpdtHVv3xK9jrIVZlynGWccaJly
+        RLEwT/H/H8jp3dxU9twU2GcK8OSTXIyrEwldbx0TofOG
+X-Google-Smtp-Source: APXvYqwKGZMwLi+3WikxwPF2m42/TzGbp99hfFBOSdx2vfVYuxSkTzY4UADajrdqJWr/6LZQCGCtTGWQGIMNpMGub7A=
+X-Received: by 2002:a37:9442:: with SMTP id w63mr34467927qkd.138.1571143687521;
+ Tue, 15 Oct 2019 05:48:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191015123604.28749-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191015123604.28749-1-ben.dooks@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 15 Oct 2019 14:47:51 +0200
+Message-ID: <CAK8P3a0CuRSCycTz_2a6RM+0yGW_g6Jdgby7grGy-0135-BhUw@mail.gmail.com>
+Subject: Re: [PATCH] hwrng: ka-sa - fix __iomem on registers
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Salt the result that comes from the TPM RNG with random bytes from the
-kernel RNG. This will allow to use tpm_get_random() as a substitute for
-get_random_bytes().  TPM could have a bug (making results predicatable),
-backdoor or even an inteposer in the bus. Salting gives protections
-against these concerns.
+On Tue, Oct 15, 2019 at 2:36 PM Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>
+> Add __ioemm attribute to reg_rng to fix the following
+> sparse warnings:
+>
+> drivers/char/hw_random/ks-sa-rng.c:102:9: warning: incorrect type in argument 2 (different address spaces)
+> drivers/char/hw_random/ks-sa-rng.c:102:9:    expected void volatile [noderef] <asn:2> *addr
+> drivers/char/hw_random/ks-sa-rng.c:102:9:    got unsigned int *
+> drivers/char/hw_random/ks-sa-rng.c:104:9: warning: incorrect type in argument 2 (different address spaces)
+> drivers/char/hw_random/ks-sa-rng.c:104:9:    expected void volatile [noderef] <asn:2> *addr
+> drivers/char/hw_random/ks-sa-rng.c:104:9:    got unsigned int *
 
-Cc: David Safford <david.safford@ge.com>
-Cc: Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- drivers/char/tpm/tpm-interface.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Arnd Bergmann <arnd@arndb.de>
 
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index 7f105490604c..a135b1cd5a17 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -22,6 +22,7 @@
- #include <linux/poll.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
-+#include <linux/random.h>
- #include <linux/spinlock.h>
- #include <linux/suspend.h>
- #include <linux/freezer.h>
-@@ -431,16 +432,24 @@ int tpm_pm_resume(struct device *dev)
- EXPORT_SYMBOL_GPL(tpm_pm_resume);
- 
- /**
-- * tpm_get_random() - get random bytes from the TPM's RNG
-+ * tpm_get_random() - Get random bytes from the TPM's RNG
-  * @chip:	a &struct tpm_chip instance, %NULL for the default chip
-  * @out:	destination buffer for the random bytes
-  * @max:	the max number of bytes to write to @out
-  *
-- * Return: number of random bytes read or a negative error value.
-+ * Get random bytes from the TPM's RNG and salt the result with the same amount
-+ * of bytes from the kernel RNG. Salting allows to call this function as a
-+ * substitute for get_random_bytes() where appropriate.
-+ *
-+ * Return:
-+ *   number of random bytes on success,
-+ *   -errno on error
-  */
- int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
- {
-+	u8 salt[TPM_MAX_RNG_DATA];
- 	int rc;
-+	int i;
- 
- 	if (!out || max > TPM_MAX_RNG_DATA)
- 		return -EINVAL;
-@@ -455,6 +464,14 @@ int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
- 		rc = tpm1_get_random(chip, out, max);
- 
- 	tpm_put_ops(chip);
-+
-+	if (rc > 0) {
-+		get_random_bytes(salt, rc);
-+
-+		for (i = 0; i < rc; i++)
-+			out[i] ^= salt[i];
-+	}
-+
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(tpm_get_random);
--- 
-2.20.1
-
+Acked-by:  Arnd Bergmann <arnd@arndb.de>
