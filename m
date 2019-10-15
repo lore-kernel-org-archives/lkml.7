@@ -2,122 +2,159 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5DAECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8EBECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B062054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJZ9w+VR"
+	by mail.kernel.org (Postfix) with ESMTP id 0957D2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733156AbfJOOwv (ORCPT
+        id S1733167AbfJOOxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:52:51 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43367 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732738AbfJOOwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:52:51 -0400
-Received: by mail-io1-f66.google.com with SMTP id v2so46493344iob.10;
-        Tue, 15 Oct 2019 07:52:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lR+fhPNWor2rYZMGYZDZtF6Wt6PhWh078oo5smcPWbw=;
-        b=MJZ9w+VR4SFMaPZYIna1r3mj3e36YkhvZ1IdOtv8qjqDmJhTXTlqITpoqccq7AwgWW
-         NsTWW8ftDTCbwVR5fHTrtYCrjmjd2CtLBp8y1+RicahyIuZGeoONq8nwLSpJ66hZYGNj
-         ZbpMNivy5IHSzWONETf1DHvVJO4ZCDG0M10fVpGdt3lyIw7FTGFrn7qxXZ8BgkbFdnOO
-         NaAaxE2AOvqlMagIN/pFYvcYwdv7JpKn9t/GwWin5j0yTUtMtx/KY0bUuSfF4Hy6aNnO
-         tZVdFU+m2NgFXiQK287gPdv3t4OF4Z9QLOb3BXRVnvHdS1O7mmJsWH0WL4yjRHtaK9sY
-         r5wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lR+fhPNWor2rYZMGYZDZtF6Wt6PhWh078oo5smcPWbw=;
-        b=euTFRlWMsfAd3ilpLFm2yYX9L+MCRXVKL+Xao/4huEa/cjkDPaXX2rS2Nyrry/xPbI
-         26Bx82PaVex5MoMjEaKzLrX0f8N48R5E7qDSQ29Ocp5YHBztXTzaITd4U3qdIYf6OZeA
-         cJ7hSzIWlV8TQHUW8+zYkN3jPoICkrMdyOtcdmsxffR1i4xU74JY74AjkRhg47K7nIM+
-         uByHkiOq6LbWnYq6qLa0fIkW9wDtNKYEsefUPGtqpMNe8lGorKKQPeeKWebWAiiFw9aK
-         airHL5WT22BXbndjLLEJ58u32b4pMSeiTbEXyTeaSLQd4fv5sI/m1GQmbNrvnJPJMP6x
-         UbRA==
-X-Gm-Message-State: APjAAAWUq0KyPUT+ZZy5g4GVPS3AqI//3alMLdEXm6leq619ImxjAwWP
-        l4SgjAtuTCnYmxohEqzueVD6cGws74sI29UQMpOdDQ==
-X-Google-Smtp-Source: APXvYqy1Ajm+FY69Bd8FosgGeFPehh7/h8rWF2Bp7Qa2VvtQg18WBXbmBLNJGBSkFZNXJ6QtB6gMbldg00EplaHfJ/A=
-X-Received: by 2002:a92:6701:: with SMTP id b1mr912513ilc.181.1571151170241;
- Tue, 15 Oct 2019 07:52:50 -0700 (PDT)
+        Tue, 15 Oct 2019 10:53:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2652 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732567AbfJOOxW (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:53:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 07:53:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
+   d="scan'208";a="225443107"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.211.195]) ([10.254.211.195])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Oct 2019 07:53:19 -0700
+Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
+ block for stdio
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191015053350.13909-1-yao.jin@linux.intel.com>
+ <20191015053350.13909-4-yao.jin@linux.intel.com>
+ <20191015084102.GA10951@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <6882f3ae-0f8d-5a01-7fd5-5b9f9c93f9ac@linux.intel.com>
+Date:   Tue, 15 Oct 2019 22:53:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
-In-Reply-To: <20191010203043.1241612-1-arnd@arndb.de>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Tue, 15 Oct 2019 23:52:39 +0900
-Message-ID: <CA+Ln22HJmVwC1r+SuWG6RgFLCtsG6TPzQK_t8rUtB=SsZ0LyhA@mail.gmail.com>
-Subject: Re: [PATCH 01/36] ARM: samsung: make S3C24XX_MISCCR access indirect
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191015084102.GA10951@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-2019=E5=B9=B410=E6=9C=8811=E6=97=A5(=E9=87=91) 5:30 Arnd Bergmann <arnd@arn=
-db.de>:
->
-> The clk driver uses both a function call into an exported
-> platform file and a direct register access to a hardcoded
-> virtual address for accessing the MISCCR register, both
-> become are a problem for a multiplatform kernel because
-> of the header file dependency.
->
-> Make this an indirect function call through platform data
-> instead.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-s3c24xx/common.c         |  3 +++
->  drivers/clk/samsung/clk-s3c2410-dclk.c | 10 ++++------
->  2 files changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/mach-s3c24xx/common.c b/arch/arm/mach-s3c24xx/commo=
-n.c
-> index 3dc029c2d2cb..ebf6bde67816 100644
-> --- a/arch/arm/mach-s3c24xx/common.c
-> +++ b/arch/arm/mach-s3c24xx/common.c
-> @@ -667,5 +667,8 @@ struct platform_device s3c2410_device_dclk =3D {
->         .id             =3D 0,
->         .num_resources  =3D ARRAY_SIZE(s3c2410_dclk_resource),
->         .resource       =3D s3c2410_dclk_resource,
-> +       .dev            =3D {
-> +               .platform_data =3D s3c2410_modify_misccr,
 
-Thanks for the patch!
+On 10/15/2019 4:41 PM, Jiri Olsa wrote:
+> On Tue, Oct 15, 2019 at 01:33:48PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> +enum {
+>> +	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV,
+>> +	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+>> +	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+>> +	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+>> +	PERF_HPP_REPORT__BLOCK_RANGE,
+>> +	PERF_HPP_REPORT__BLOCK_DSO,
+>> +	PERF_HPP_REPORT__BLOCK_MAX_INDEX
+>> +};
+>> +
+>> +static struct block_fmt block_fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
+>> +
+>> +static struct block_header_column{
+>> +	const char *name;
+>> +	int width;
+>> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
+>> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
+>> +		.name = "Sampled Cycles%",
+>> +		.width = 15,
+>> +	},
+>> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
+>> +		.name = "Sampled Cycles",
+>> +		.width = 14,
+>> +	},
+>> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
+>> +		.name = "Avg Cycles%",
+>> +		.width = 11,
+>> +	},
+>> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
+>> +		.name = "Avg Cycles",
+>> +		.width = 10,
+>> +	},
+>> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
+>> +		.name = "[Program Block Range]",
+>> +		.width = 70,
+>> +	},
+>> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
+>> +		.name = "Shared Object",
+>> +		.width = 20,
+>> +	}
+>>   };
+> 
+> so we already have support for multiple columns,
+> why don't you add those as 'struct sort_entry' objects?
+> 
 
-Just one minor nit: It doesn't look very nice to pass a function
-pointer directly as platform data. Could we have a struct defined
-instead - with a kerneldoc comment describing the function pointer
-field?
+For 'struct sort_entry' objects, do you mean I should reuse the 
+"sort_dso" which has been implemented yet in util/sort.c?
 
-Best regards,
-Tomasz
+For other columns, it looks we can't reuse the existing sort_entry objects.
+
+> SNIP
+> 
+>> +{
+>> +	struct block_hist *bh = &rep->block_hist;
+>> +
+>> +	get_block_hists(hists, bh, rep);
+>> +	symbol_conf.report_individual_block = true;
+>> +	hists__fprintf(&bh->block_hists, true, 0, 0, 0,
+>> +		       stdout, true);
+>> +	hists__delete_entries(&bh->block_hists);
+>> +	return 0;
+>> +}
+>> +
+>>   static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>>   					 struct report *rep,
+>>   					 const char *help)
+>> @@ -500,6 +900,12 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>>   			continue;
+>>   
+>>   		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
+>> +
+>> +		if (rep->total_cycles) {
+>> +			hists__fprintf_all_blocks(hists, rep);
+> 
+> so this call kicks all the block info setup/count/print, right?
+> 
+
+Yes, all in this call.
+
+> I thingk it shouldn't be in the output code, but in the code before..
+> from what I see you could count block_info counts during the sample
+> processing, no?
+>
+
+In sample processing, we just get all symbols and account the cycles per 
+symbol. We need to create/count the block_info at some points after the 
+sample processing.
+
+Maybe it's not very good to put block info setup/count/print in a call, 
+but it's really not easy to process the block_info during the sample 
+processing.
+
+Thanks
+Jin Yao
+
+> jirka
+> 
