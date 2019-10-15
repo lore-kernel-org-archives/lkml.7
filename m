@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DC7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEF1ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88F12086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDFA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbfJOFcd convert rfc822-to-8bit (ORCPT
+        id S1728807AbfJOFcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:32:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42192 "EHLO
+        Tue, 15 Oct 2019 01:32:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42198 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbfJOFcP (ORCPT
+        with ESMTP id S1728615AbfJOFcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:32:15 -0400
+        Tue, 15 Oct 2019 01:32:16 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFRJ-0000PP-3E; Tue, 15 Oct 2019 07:32:09 +0200
+        id 1iKFRJ-0000Sk-J6; Tue, 15 Oct 2019 07:32:09 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 890BB1C04CB;
-        Tue, 15 Oct 2019 07:31:48 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 05:31:48 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 22CFE1C06D6;
+        Tue, 15 Oct 2019 07:31:50 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 05:31:50 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf trace: Factor out the initialization of
- syscal_arg_fmt->scnprintf
+Subject: [tip: perf/core] perf scripts python: exported-sql-viewer.py: Tidy up
+ Call tree call_time
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-xs3x0zzyes06c7scdsjn01ty@git.kernel.org>
-References: <tip-xs3x0zzyes06c7scdsjn01ty@git.kernel.org>
+In-Reply-To: <20190821083216.1340-5-adrian.hunter@intel.com>
+References: <20190821083216.1340-5-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157111750842.12254.9042699783487450531.tip-bot2@tip-bot2>
+Message-ID: <157111751002.12254.2811140358205091894.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -61,91 +59,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     8d1d4ff5e239d9ef385444bc0d855127d7b32754
-Gitweb:        https://git.kernel.org/tip/8d1d4ff5e239d9ef385444bc0d855127d7b32754
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Thu, 03 Oct 2019 15:57:42 -03:00
+Commit-ID:     da4264f5cf8a6b798bf5494e08a5dae85a61c4c3
+Gitweb:        https://git.kernel.org/tip/da4264f5cf8a6b798bf5494e08a5dae85a61c4c3
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Wed, 21 Aug 2019 11:32:14 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 07 Oct 2019 12:22:18 -03:00
+CommitterDate: Mon, 07 Oct 2019 12:22:17 -03:00
 
-perf trace: Factor out the initialization of syscal_arg_fmt->scnprintf
+perf scripts python: exported-sql-viewer.py: Tidy up Call tree call_time
 
-We set the default scnprint routines for the syscall args based on its
-type or on heuristics based on its names, now we'll use this for
-tracepoints as well, so move it out of syscall__set_arg_fmts() and into
-a routine that receive just an array of syscall_arg_fmt entries + the
-tracepoint format fields list.
+Record call_time on tree nodes and re-name the misnamed "count" parameter.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-xs3x0zzyes06c7scdsjn01ty@git.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20190821083216.1340-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 6c70253..d52dd2b 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1467,15 +1467,16 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
- 	return 0;
- }
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index 0dcc9a0..06b8d55 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -794,15 +794,16 @@ class CallGraphModel(CallGraphModelBase):
  
--static int syscall__set_arg_fmts(struct syscall *sc)
-+static struct tep_format_field *
-+syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field)
- {
--	struct tep_format_field *field, *last_field = NULL;
--	int idx = 0, len;
-+	struct tep_format_field *last_field = NULL;
-+	int len;
+ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
--	for (field = sc->args; field; field = field->next, ++idx) {
-+	for (; field; field = field->next, ++arg) {
- 		last_field = field;
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+ 		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+ 		self.comm_id = comm_id
+ 		self.thread_id = thread_id
+ 		self.calls_id = calls_id
++		self.call_time = call_time
++		self.time = time
+ 		self.insn_cnt = insn_cnt
+ 		self.cyc_cnt = cyc_cnt
+ 		self.branch_count = branch_count
+-		self.time = time
  
--		if (sc->fmt && sc->fmt->arg[idx].scnprintf)
-+		if (arg->scnprintf)
- 			continue;
+ 	def Select(self):
+ 		self.query_done = True
+@@ -839,17 +840,17 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
- 		len = strlen(field->name);
-@@ -1483,13 +1484,13 @@ static int syscall__set_arg_fmts(struct syscall *sc)
- 		if (strcmp(field->type, "const char *") == 0 &&
- 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
- 		     strstr(field->name, "path") != NULL))
--			sc->arg_fmt[idx].scnprintf = SCA_FILENAME;
-+			arg->scnprintf = SCA_FILENAME;
- 		else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr"))
--			sc->arg_fmt[idx].scnprintf = SCA_PTR;
-+			arg->scnprintf = SCA_PTR;
- 		else if (strcmp(field->type, "pid_t") == 0)
--			sc->arg_fmt[idx].scnprintf = SCA_PID;
-+			arg->scnprintf = SCA_PID;
- 		else if (strcmp(field->type, "umode_t") == 0)
--			sc->arg_fmt[idx].scnprintf = SCA_MODE_T;
-+			arg->scnprintf = SCA_MODE_T;
- 		else if ((strcmp(field->type, "int") == 0 ||
- 			  strcmp(field->type, "unsigned int") == 0 ||
- 			  strcmp(field->type, "long") == 0) &&
-@@ -1501,10 +1502,17 @@ static int syscall__set_arg_fmts(struct syscall *sc)
- 			 * 23 unsigned int
- 			 * 7 unsigned long
- 			 */
--			sc->arg_fmt[idx].scnprintf = SCA_FD;
-+			arg->scnprintf = SCA_FD;
- 		}
- 	}
+ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
  
-+	return last_field;
-+}
-+
-+static int syscall__set_arg_fmts(struct syscall *sc)
-+{
-+	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args);
-+
- 	if (last_field)
- 		sc->args_size = last_field->offset + last_field->size;
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, count, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+-		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item)
+ 		dso = dsoname(dso)
+ 		if self.params.have_ipc:
+ 			insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
+ 			cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
+ 			br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
+ 			ipc = CalcIPC(cyc_cnt, insn_cnt)
+-			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
++			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
+ 		else:
+-			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
++			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+ 		self.dbid = calls_id
  
+ # Call tree data model level two item
+@@ -857,7 +858,7 @@ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
+ 
+ 	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, parent_item)
++		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, 0, parent_item)
+ 		if self.params.have_ipc:
+ 			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
+ 		else:
