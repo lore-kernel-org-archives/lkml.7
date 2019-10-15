@@ -2,109 +2,112 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58B2ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223C7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C143F217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32742086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571162936;
+	bh=72Jhf2gCfLKMsgroJ+dspsUWbLqIIaKdSi3E4kfQTHg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H2w1c7LApZApGPBYKt5mZ9gQCw4M9dGWaIfOx2VS336eWzHbgpmsR1T5tuPJeWoRN
+	 4Er2/8+Ifi+H5j4tzOYeT1VZtYTq5AVRGbybpcX39ZELE/O6nnOXyx3qzHPbj+yQ3N
+	 eXslkI216zMKwaVz/Rt0pv0tciwJUnth+Kg//uHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389075AbfJOSIw (ORCPT
+        id S2389090AbfJOSIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:08:52 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:37876 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfJOSIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:08:52 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iKRFW-0000B2-Nm; Tue, 15 Oct 2019 18:08:46 +0000
-Date:   Tue, 15 Oct 2019 19:08:46 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>, linux-arch@vger.kernel.org
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191015180846.GA31707@ZenIV.linux.org.uk>
-References: <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
- <20191010195504.GI26530@ZenIV.linux.org.uk>
- <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
- <20191013195949.GM26530@ZenIV.linux.org.uk>
+        Tue, 15 Oct 2019 14:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbfJOSIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 14:08:54 -0400
+Received: from localhost (unknown [38.98.37.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2210920659;
+        Tue, 15 Oct 2019 18:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571162933;
+        bh=72Jhf2gCfLKMsgroJ+dspsUWbLqIIaKdSi3E4kfQTHg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NxpiRKvyPENu5nqLqiiuFfvP8HewQgS0FRdSFH07T5l3FMQbOQO44QHVHBgUFam0F
+         eXDUI/uT1ldmjFXmLTQEiewhqryQ4Ac5n4vAV3hlsaHuBZOZnyuDDJRKQN+Wqkhlgx
+         swd+tFNGfcfgwhilnMLjyfPZwq0ztzgXzUO+HuSs=
+Date:   Tue, 15 Oct 2019 19:58:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Nagarjuna Kristam <nkristam@nvidia.com>, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V10 0/8] Tegra XUSB gadget driver support
+Message-ID: <20191015175820.GC1072965@kroah.com>
+References: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
+ <20191014100257.GB419598@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191013195949.GM26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191014100257.GB419598@ulmo>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[futex folks and linux-arch Cc'd]
-
-On Sun, Oct 13, 2019 at 08:59:49PM +0100, Al Viro wrote:
-
-> Re plotting: how strongly would you object against passing the range to
-> user_access_end()?  Powerpc folks have a very close analogue of stac/clac,
-> currently buried inside their __get_user()/__put_user()/etc. - the same
-> places where x86 does, including futex.h and friends.
+On Mon, Oct 14, 2019 at 12:02:57PM +0200, Thierry Reding wrote:
+> On Mon, Sep 23, 2019 at 01:55:44PM +0530, Nagarjuna Kristam wrote:
+> > Patches 1-3 are phy driver changes to add support for device
+> > mode.
+> > Patches 4-7 are changes related to XUSB device mode
+> > controller driver.
+> > Patch 8 is to enable drivers for XUDC support in defconfig
+> > 
+> > Test Steps(USB 2.0):
+> > - Enable "USB Gadget precomposed configurations" in defconfig
+> > - Build, flash and boot Jetson TX1
+> > - Connect Jetson TX1 and Ubuntu device using USB A to Micro B
+> >   cable
+> > - After boot on Jetson TX1 terminal usb0 network device should be
+> >   enumerated
+> > - Assign static ip to usb0 on Jetson TX1 and corresponding net
+> >   device on ubuntu
+> > - Run ping test and transfer test(used scp) to check data transfer
+> >   communication
 > 
-> And there it's even costlier than on x86.  It would obviously be nice
-> to lift it at least out of unsafe_get_user()/unsafe_put_user() and
-> move into user_access_begin()/user_access_end(); unfortunately, in
-> one subarchitecture they really want it the range on the user_access_end()
-> side as well.  That's obviously not fatal (they can bloody well save those
-> into thread_info at user_access_begin()), but right now we have relatively
-> few user_access_end() callers, so the interface changes are still possible.
+> Hi Felipe, Kishon, Greg,
 > 
-> Other architectures with similar stuff are riscv (no arguments, same
-> as for stac/clac), arm (uaccess_save_and_enable() on the way in,
-> return value passed to uaccess_restore() on the way out) and s390
-> (similar to arm, but there it's needed only to deal with nesting,
-> and I'm not sure it actually can happen).
+> Patches 1-3 provide new API that is required by patch 7, so I think
+> patches 1, 2, 3, 4 and 7 should probably all go through a single tree to
+> avoid having to model the dependencies using stable branches.
 > 
-> It would be nice to settle the API while there are not too many users
-> outside of arch/x86; changing it later will be a PITA and we definitely
-> have architectures that do potentially costly things around the userland
-> memory access; user_access_begin()/user_access_end() is in the right
-> place to try and see if they fit there...
+> Kishon, patches 1-3 have gone through several rounds of review already,
+> but do you have any remaining concerns on them? If not, it'd be great if
+> you could ack them. Felipe and Greg could then pick them up along with
+> patches 4 and 7 into the USB tree.
+> 
+> Felipe, Greg, does that sound like a reasonable plan?
 
-Another question: right now we have
-        if (!access_ok(uaddr, sizeof(u32)))
-                return -EFAULT;
+Fine with me.
 
-        ret = arch_futex_atomic_op_inuser(op, oparg, &oldval, uaddr);
-        if (ret)
-                return ret;
-in kernel/futex.c.  Would there be any objections to moving access_ok()
-inside the instances and moving pagefault_disable()/pagefault_enable() outside?
+> I should also mention that while waiting for review, Nagarjuna has been
+> able to extend support for the XUDC driver to Tegra186 but has so far
+> been holding back on sending them out so as to not needlessly hold up
+> progress on this series. However, given the interdependencies, I've come
+> to think that it may be preferable to merge everything in one go instead
+> of revisiting this in a couple of weeks.
+> 
+> If you guys prefer, Nagarjuna could send out v11 of the series and
+> integrate Tegra186 support.
 
-Reasons:
-	* on x86 that would allow folding access_ok() with STAC into
-user_access_begin().  The same would be doable on other usual suspects
-(arm, arm64, ppc, riscv, s390), bringing access_ok() next to their
-STAC counterparts.
-	* pagefault_disable()/pagefault_enable() pair is universal on
-all architectures, really meant to by the nature of the beast and
-lifting it into kernel/futex.c would get the same situation as with
-futex_atomic_cmpxchg_inatomic().  Which also does access_ok() inside
-the primitive (also foldable into user_access_begin(), at that).
-	* access_ok() would be closer to actual memory access (and
-out of the generic code).
+That's also fine.
 
-Comments?
+thanks,
+
+greg k-h
