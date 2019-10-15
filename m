@@ -2,73 +2,128 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADF1ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53196ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCC920659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:05:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DeXj4qBD"
+	by mail.kernel.org (Postfix) with ESMTP id 2F9DD20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbfJOJFs (ORCPT
+        id S1728784AbfJOJIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:05:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35650 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfJOJFs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:05:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sPDsJgYn2fHJq7hV1mzBz8upI2uH4JqPspr1DdlpSq0=; b=DeXj4qBDY4EvUiALUiS6E4Ilg
-        hHbLc5dvUAeFYf2dcVY5Pf9sZqPwxG9f7DudCgAjx+CDWYdOwMcyO5YxO0Ut77sujzLrANQOEukJY
-        bXAkPDCNVeGhyryk9qwJQ0Eq6XzKJBPlIPUVAi6RAq28JHxRiVKCmbnw9e1qVMWDzB4vlW1lEvn3W
-        9Fue0CWMygNgQSzTC8japrmDMwzooizIXixq9c+fivBEqXGaJ3EH4a2YMS7sU8cAlh5vUi06nMZsK
-        BRymXjTyI8HlrnKqB/KJ/NbFTeh2fN9hC61J9VbFzdEXT83gwR0Emg4UvPhQJWP6y99T2oNX1PoZM
-        gKREe7R1g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKIm3-0003Bd-6O; Tue, 15 Oct 2019 09:05:47 +0000
-Date:   Tue, 15 Oct 2019 02:05:47 -0700
-From:   'Christoph Hellwig' <hch@infradead.org>
-To:     Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc:     'Christoph Hellwig' <hch@infradead.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        andrew.murray@arm.com, lorenzo.pieralisi@arm.com,
-        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
-        vidyas@nvidia.com, 'Anvesh Salveru' <anvesh.s@samsung.com>
-Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related
- equalization quirks
-Message-ID: <20191015090547.GA7199@infradead.org>
-References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
- <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
- <20191015081620.GA28204@infradead.org>
- <068001d58336$a76ed970$f64c8c50$@samsung.com>
+        Tue, 15 Oct 2019 05:08:04 -0400
+Received: from mx-out.tlen.pl ([193.222.135.142]:45673 "EHLO mx-out.tlen.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfJOJIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:08:04 -0400
+Received: (wp-smtpd smtp.tlen.pl 11047 invoked from network); 15 Oct 2019 11:01:22 +0200
+Received: from unknown (HELO localhost.localdomain) (p.sarna@tlen.pl@[31.179.144.84])
+          (envelope-sender <p.sarna@tlen.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-kernel@vger.kernel.org>; 15 Oct 2019 11:01:22 +0200
+From:   Piotr Sarna <p.sarna@tlen.pl>
+To:     linux-kernel@vger.kernel.org, mike.kravetz@oracle.com
+Cc:     Piotr Sarna <p.sarna@tlen.pl>, linux-mm@kvack.org,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] hugetlbfs: add O_TMPFILE support
+Date:   Tue, 15 Oct 2019 11:01:12 +0200
+Message-Id: <22c29acf9c51dae17802e1b05c9e5e4051448c5c.1571129593.git.p.sarna@tlen.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <068001d58336$a76ed970$f64c8c50$@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: e93136fb553552c8e020d3da8703060d
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [sUP0]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 02:28:00PM +0530, Pankaj Dubey wrote:
-> Is this something mandatory?
-> 
-> As we discussed during first patch-set here [1] with Andrew, we have need of
-> this patch (along with some other stuffs, which will be sent soon), to clean
-> up our internal driver and make it ready for upstream. As of today we have
-> some internal restrictions where we can't make it to upstream along with
-> this patch. 
+With hugetlbfs, a common pattern for mapping anonymous huge pages
+is to create a temporary file first. Currently libraries like
+libhugetlbfs and seastar create these with a standard mkstemp+unlink
+trick, but it would be more robust to be able to simply pass
+the O_TMPFILE flag to open(). O_TMPFILE is already supported by several
+file systems like ext4 and xfs. The implementation simply uses the existing
+d_tmpfile utility function to instantiate the dcache entry for the file.
 
-We don't add code to the kernel without actual users.
+Tested manually by successfully creating a temporary file by opening
+it with (O_TMPFILE|O_RDWR) on mounted hugetlbfs and successfully
+mapping 2M huge pages with it. Without the patch, trying to open
+a file with O_TMPFILE results in -ENOSUP.
+
+Signed-off-by: Piotr Sarna <p.sarna@tlen.pl>
+---
+ fs/hugetlbfs/inode.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 1dcc57189382..277b7d231db8 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -815,8 +815,11 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ /*
+  * File creation. Allocate an inode, and we're done..
+  */
+-static int hugetlbfs_mknod(struct inode *dir,
+-			struct dentry *dentry, umode_t mode, dev_t dev)
++static int do_hugetlbfs_mknod(struct inode *dir,
++			struct dentry *dentry,
++			umode_t mode,
++			dev_t dev,
++			bool tmpfile)
+ {
+ 	struct inode *inode;
+ 	int error = -ENOSPC;
+@@ -824,13 +827,22 @@ static int hugetlbfs_mknod(struct inode *dir,
+ 	inode = hugetlbfs_get_inode(dir->i_sb, dir, mode, dev);
+ 	if (inode) {
+ 		dir->i_ctime = dir->i_mtime = current_time(dir);
+-		d_instantiate(dentry, inode);
++		if (tmpfile)
++			d_tmpfile(dentry, inode);
++		else
++			d_instantiate(dentry, inode);
+ 		dget(dentry);	/* Extra count - pin the dentry in core */
+ 		error = 0;
+ 	}
+ 	return error;
+ }
+ 
++static int hugetlbfs_mknod(struct inode *dir,
++			struct dentry *dentry, umode_t mode, dev_t dev)
++{
++	return do_hugetlbfs_mknod(dir, dentry, mode, dev, false);
++}
++
+ static int hugetlbfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+ {
+ 	int retval = hugetlbfs_mknod(dir, dentry, mode | S_IFDIR, 0);
+@@ -844,6 +856,12 @@ static int hugetlbfs_create(struct inode *dir, struct dentry *dentry, umode_t mo
+ 	return hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0);
+ }
+ 
++static int hugetlbfs_tmpfile(struct inode *dir,
++			struct dentry *dentry, umode_t mode)
++{
++	return do_hugetlbfs_mknod(dir, dentry, mode | S_IFREG, 0, true);
++}
++
+ static int hugetlbfs_symlink(struct inode *dir,
+ 			struct dentry *dentry, const char *symname)
+ {
+@@ -1102,6 +1120,7 @@ static const struct inode_operations hugetlbfs_dir_inode_operations = {
+ 	.mknod		= hugetlbfs_mknod,
+ 	.rename		= simple_rename,
+ 	.setattr	= hugetlbfs_setattr,
++	.tmpfile	= hugetlbfs_tmpfile,
+ };
+ 
+ static const struct inode_operations hugetlbfs_inode_operations = {
+-- 
+2.21.0
+
