@@ -2,32 +2,32 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B672FECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39310ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D63C2089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1839F2089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfJOIsH (ORCPT
+        id S1729421AbfJOIsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:48:07 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59346 "EHLO inva020.nxp.com"
+        Tue, 15 Oct 2019 04:48:11 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:38068 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfJOIsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:48:07 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D22B51A07CA;
-        Tue, 15 Oct 2019 10:48:04 +0200 (CEST)
+        id S1726430AbfJOIsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:48:10 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E280C200056;
+        Tue, 15 Oct 2019 10:48:07 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 03A8E1A0460;
-        Tue, 15 Oct 2019 10:47:58 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 14D55200913;
+        Tue, 15 Oct 2019 10:48:01 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 613E5402B3;
-        Tue, 15 Oct 2019 16:47:49 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7354A402CA;
+        Tue, 15 Oct 2019 16:47:52 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
         mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
@@ -36,45 +36,78 @@ To:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver support
-Date:   Tue, 15 Oct 2019 16:36:56 +0800
-Message-Id: <20191015083702.21792-1-xiaowei.bao@nxp.com>
+Subject: [PATCH v2 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
+Date:   Tue, 15 Oct 2019 16:36:58 +0800
+Message-Id: <20191015083702.21792-3-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20191015083702.21792-1-xiaowei.bao@nxp.com>
+References: <20191015083702.21792-1-xiaowei.bao@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
-EP driver of NXP Layerscape platform.
+Add the documentation for the Device Tree binding of the layerscape
+PCIe GEN4 controller with EP mode.
 
-This patch set depends on:
-https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+v2: 
+ - remove the status entry in EP Example.
 
-Xiaowei Bao (6):
-  PCI: mobiveil: Add the EP driver support
-  dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
-  PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
-  PCI: mobiveil: Add workaround for unsupported request error
-  arm64: dts: lx2160a: Add PCIe EP node
-  misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
-    support
+ .../bindings/pci/layerscape-pcie-gen4.txt          | 27 +++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
- .../bindings/pci/layerscape-pcie-gen4.txt          |  27 +-
- MAINTAINERS                                        |   3 +
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
- drivers/misc/pci_endpoint_test.c                   |   2 +
- drivers/pci/controller/mobiveil/Kconfig            |  22 +-
- drivers/pci/controller/mobiveil/Makefile           |   2 +
- .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
- drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 569 +++++++++++++++++++++
- drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
- drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
- 10 files changed, 1009 insertions(+), 12 deletions(-)
- create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
- create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
-
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+index b40fb5d..06f9309 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+@@ -3,6 +3,8 @@ NXP Layerscape PCIe Gen4 controller
+ This PCIe controller is based on the Mobiveil PCIe IP and thus inherits all
+ the common properties defined in mobiveil-pcie.txt.
+ 
++HOST MODE
++=========
+ Required properties:
+ - compatible: should contain the platform identifier such as:
+   "fsl,lx2160a-pcie"
+@@ -23,7 +25,20 @@ Required properties:
+ - msi-parent : See the generic MSI binding described in
+   Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+ 
+-Example:
++DEVICE MODE
++=========
++Required properties:
++- compatible: should contain the platform identifier such as:
++  "fsl,lx2160a-pcie-ep"
++- reg: base addresses and lengths of the PCIe controller register blocks.
++  "regs": PCIe controller registers.
++  "addr_space" EP device CPU address.
++- apio-wins: number of requested apio outbound windows.
++
++Optional Property:
++- max-functions: Maximum number of functions that can be configured (default 1).
++
++RC Example:
+ 
+ 	pcie@3400000 {
+ 		compatible = "fsl,lx2160a-pcie";
+@@ -50,3 +65,13 @@ Example:
+ 				<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+ 				<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
++
++EP Example:
++
++	pcie_ep@3400000 {
++		compatible = "fsl,lx2160a-pcie-ep";
++		reg = <0x00 0x03400000 0x0 0x00100000
++		       0x80 0x00000000 0x8 0x00000000>;
++		reg-names = "regs", "addr_space";
++		apio-wins = <8>;
++	};
 -- 
 2.9.5
 
