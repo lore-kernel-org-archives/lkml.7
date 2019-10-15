@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7B8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDD9ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BBD20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FBC20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389531AbfJOTTC (ORCPT
+        id S2389542AbfJOTTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:19:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45728 "EHLO
+        Tue, 15 Oct 2019 15:19:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45738 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389490AbfJOTS7 (ORCPT
+        with ESMTP id S2389526AbfJOTTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:18:59 -0400
+        Tue, 15 Oct 2019 15:19:02 -0400
 Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1iKSLB-00067i-W6; Tue, 15 Oct 2019 21:18:42 +0200
+        id 1iKSLC-00067i-OW; Tue, 15 Oct 2019 21:18:42 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de,
@@ -34,10 +34,10 @@ Cc:     tglx@linutronix.de,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Joel Fernandes <joel@joelfernandes.org>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 26/34] Documentation/RCU: Use CONFIG_PREEMPTION where appropriate
-Date:   Tue, 15 Oct 2019 21:18:13 +0200
-Message-Id: <20191015191821.11479-27-bigeasy@linutronix.de>
+        Davidlohr Bueso <dave@stgolabs.net>, rcu@vger.kernel.org
+Subject: [PATCH 27/34] rcu: Use CONFIG_PREEMPTION where appropriate
+Date:   Tue, 15 Oct 2019 21:18:14 +0200
+Message-Id: <20191015191821.11479-28-bigeasy@linutronix.de>
 In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
 References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -49,8 +49,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The config option `CONFIG_PREEMPT' is used for the preemption model
 "Low-Latency Desktop". The config option `CONFIG_PREEMPTION' is enabled
-when kernel preemption is enabled which is true for the `CONFIG_PREEMPT'
-and `CONFIG_PREEMPT_RT' preemption models.
+when kernel preemption is enabled which is true for the preemption model
+`CONFIG_PREEMPT' and `CONFIG_PREEMPT_RT'.
 
 Use `CONFIG_PREEMPTION' if it applies to both preemption models and not
 just to `CONFIG_PREEMPT'.
@@ -61,247 +61,141 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: linux-doc@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: rcu@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- .../Expedited-Grace-Periods.html              |  8 +++----
- .../RCU/Design/Requirements/Requirements.html | 24 +++++++++----------
- Documentation/RCU/checklist.txt               |  4 ++--
- Documentation/RCU/rcubarrier.txt              |  8 +++----
- Documentation/RCU/stallwarn.txt               |  4 ++--
- Documentation/RCU/whatisRCU.txt               |  7 +++---
- 6 files changed, 28 insertions(+), 27 deletions(-)
+ include/linux/rcupdate.h | 4 ++--
+ kernel/rcu/Kconfig       | 4 ++--
+ kernel/rcu/rcutorture.c  | 2 +-
+ kernel/rcu/srcutiny.c    | 2 +-
+ kernel/rcu/tree.c        | 4 ++--
+ kernel/rcu/tree_exp.h    | 2 +-
+ kernel/rcu/tree_plugin.h | 4 ++--
+ 7 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Gra=
-ce-Periods.html b/Documentation/RCU/Design/Expedited-Grace-Periods/Expedite=
-d-Grace-Periods.html
-index 57300db4b5ff6..31c99382994e0 100644
---- a/Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Peri=
-ods.html
-+++ b/Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Peri=
-ods.html
-@@ -56,8 +56,8 @@ sections.
- RCU-preempt Expedited Grace Periods</a></h2>
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 75a2eded7aa2c..1e3dad252d61f 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -154,7 +154,7 @@ static inline void exit_tasks_rcu_finish(void) { }
+  *
+  * This macro resembles cond_resched(), except that it is defined to
+  * report potential quiescent states to RCU-tasks even if the cond_resched=
+()
+- * machinery were to be shut off, as some advocate for PREEMPT kernels.
++ * machinery were to be shut off, as some advocate for PREEMPTION kernels.
+  */
+ #define cond_resched_tasks_rcu_qs() \
+ do { \
+@@ -580,7 +580,7 @@ do {									      \
+  *
+  * You can avoid reading and understanding the next paragraph by
+  * following this rule: don't put anything in an rcu_read_lock() RCU
+- * read-side critical section that would block in a !PREEMPT kernel.
++ * read-side critical section that would block in a !PREEMPTION kernel.
+  * But if you want the full story, read on!
+  *
+  * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
+diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+index 7644eda17d624..01b56177464d8 100644
+--- a/kernel/rcu/Kconfig
++++ b/kernel/rcu/Kconfig
+@@ -200,8 +200,8 @@ config RCU_NOCB_CPU
+ 	  specified at boot time by the rcu_nocbs parameter.  For each
+ 	  such CPU, a kthread ("rcuox/N") will be created to invoke
+ 	  callbacks, where the "N" is the CPU being offloaded, and where
+-	  the "p" for RCU-preempt (PREEMPT kernels) and "s" for RCU-sched
+-	  (!PREEMPT kernels).  Nothing prevents this kthread from running
++	  the "p" for RCU-preempt (PREEMPTION kernels) and "s" for RCU-sched
++	  (!PREEMPTION kernels).  Nothing prevents this kthread from running
+ 	  on the specified CPUs, but (1) the kthreads may be preempted
+ 	  between each callback, and (2) affinity or cgroups can be used
+ 	  to force the kthreads to run on whatever set of CPUs is desired.
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 3c9feca1eab17..c070d103f34d6 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -1725,7 +1725,7 @@ static void rcu_torture_fwd_cb_cr(struct rcu_head *rh=
+p)
+ // Give the scheduler a chance, even on nohz_full CPUs.
+ static void rcu_torture_fwd_prog_cond_resched(unsigned long iter)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT) && IS_ENABLED(CONFIG_NO_HZ_FULL)) {
++	if (IS_ENABLED(CONFIG_PREEMPTION) && IS_ENABLED(CONFIG_NO_HZ_FULL)) {
+ 		// Real call_rcu() floods hit userspace, so emulate that.
+ 		if (need_resched() || (iter & 0xfff))
+ 			schedule();
+diff --git a/kernel/rcu/srcutiny.c b/kernel/rcu/srcutiny.c
+index 44d6606b83257..6208c1dae5c95 100644
+--- a/kernel/rcu/srcutiny.c
++++ b/kernel/rcu/srcutiny.c
+@@ -103,7 +103,7 @@ EXPORT_SYMBOL_GPL(__srcu_read_unlock);
 =20
- <p>
--<tt>CONFIG_PREEMPT=3Dy</tt> kernels implement RCU-preempt.
--The overall flow of the handling of a given CPU by an RCU-preempt
-+<tt>CONFIG_PREEMPT=3Dy</tt> and <tt>CONFIG_PREEMPT_RT=3Dy</tt> kernels imp=
-lement
-+RCU-preempt. The overall flow of the handling of a given CPU by an RCU-pre=
-empt
- expedited grace period is shown in the following diagram:
+ /*
+  * Workqueue handler to drive one grace period and invoke any callbacks
+- * that become ready as a result.  Single-CPU and !PREEMPT operation
++ * that become ready as a result.  Single-CPU and !PREEMPTION operation
+  * means that we get away with murder on synchronization.  ;-)
+  */
+ void srcu_drive_gp(struct work_struct *wp)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 81105141b6a82..1c5de816ae9e5 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2667,9 +2667,9 @@ EXPORT_SYMBOL_GPL(kfree_call_rcu);
 =20
- <p><img src=3D"ExpRCUFlow.svg" alt=3D"ExpRCUFlow.svg" width=3D"55%">
-@@ -140,8 +140,8 @@ or offline, among other things.
- RCU-sched Expedited Grace Periods</a></h2>
+ /*
+  * During early boot, any blocking grace-period wait automatically
+- * implies a grace period.  Later on, this is never the case for PREEMPT.
++ * implies a grace period.  Later on, this is never the case for PREEMPTIO=
+N.
+  *
+- * Howevr, because a context switch is a grace period for !PREEMPT, any
++ * Howevr, because a context switch is a grace period for !PREEMPTION, any
+  * blocking grace-period wait automatically implies a grace period if
+  * there is only one CPU online at any point time during execution of
+  * either synchronize_rcu() or synchronize_rcu_expedited().  It is OK to
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index d632cd0195975..98d078cafa5a6 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -670,7 +670,7 @@ static void rcu_exp_handler(void *unused)
+ 	}
+ }
 =20
- <p>
--<tt>CONFIG_PREEMPT=3Dn</tt> kernels implement RCU-sched.
--The overall flow of the handling of a given CPU by an RCU-sched
-+<tt>CONFIG_PREEMPT=3Dn</tt> and <tt>CONFIG_PREEMPT_RT=3Dn</tt> kernels imp=
-lement
-+RCU-sched. The overall flow of the handling of a given CPU by an RCU-sched
- expedited grace period is shown in the following diagram:
+-/* PREEMPT=3Dy, so no PREEMPT=3Dn expedited grace period to clean up after=
+. */
++/* PREEMPTION=3Dy, so no PREEMPTION=3Dn expedited grace period to clean up=
+ after. */
+ static void sync_sched_exp_online_cleanup(int cpu)
+ {
+ }
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 2defc7fe74c39..e6c987d171cbe 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -788,7 +788,7 @@ static void __init rcu_bootup_announce(void)
+ }
 =20
- <p><img src=3D"ExpSchedFlow.svg" alt=3D"ExpSchedFlow.svg" width=3D"55%">
-diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Docu=
-mentation/RCU/Design/Requirements/Requirements.html
-index 467251f7fef69..348c5db1ff2bb 100644
---- a/Documentation/RCU/Design/Requirements/Requirements.html
-+++ b/Documentation/RCU/Design/Requirements/Requirements.html
-@@ -106,7 +106,7 @@ big RCU read-side critical section.
- Production-quality implementations of <tt>rcu_read_lock()</tt> and
- <tt>rcu_read_unlock()</tt> are extremely lightweight, and in
- fact have exactly zero overhead in Linux kernels built for production
--use with <tt>CONFIG_PREEMPT=3Dn</tt>.
-+use with <tt>CONFIG_PREEMPTION=3Dn</tt>.
+ /*
+- * Note a quiescent state for PREEMPT=3Dn.  Because we do not need to know
++ * Note a quiescent state for PREEMPTION=3Dn.  Because we do not need to k=
+now
+  * how many quiescent states passed, just if there was at least one since
+  * the start of the grace period, this just sets a flag.  The caller must
+  * have disabled preemption.
+@@ -838,7 +838,7 @@ void rcu_all_qs(void)
+ EXPORT_SYMBOL_GPL(rcu_all_qs);
 =20
- <p>
- This guarantee allows ordering to be enforced with extremely low
-@@ -1499,7 +1499,7 @@ costs have plummeted.
- However, as I learned from Matt Mackall's
- <a href=3D"http://elinux.org/Linux_Tiny-FAQ">bloatwatch</a>
- efforts, memory footprint is critically important on single-CPU systems wi=
-th
--non-preemptible (<tt>CONFIG_PREEMPT=3Dn</tt>) kernels, and thus
-+non-preemptible (<tt>CONFIG_PREEMPTION=3Dn</tt>) kernels, and thus
- <a href=3D"https://lkml.kernel.org/g/20090113221724.GA15307@linux.vnet.ibm=
-.com">tiny RCU</a>
- was born.
- Josh Triplett has since taken over the small-memory banner with his
-@@ -1887,7 +1887,7 @@ constructs, there are limitations.
- <p>
- Implementations of RCU for which <tt>rcu_read_lock()</tt>
- and <tt>rcu_read_unlock()</tt> generate no code, such as
--Linux-kernel RCU when <tt>CONFIG_PREEMPT=3Dn</tt>, can be
-+Linux-kernel RCU when <tt>CONFIG_PREEMPTION=3Dn</tt>, can be
- nested arbitrarily deeply.
- After all, there is no overhead.
- Except that if all these instances of <tt>rcu_read_lock()</tt>
-@@ -2229,7 +2229,7 @@ be a no-op.
- <p>
- However, once the scheduler has spawned its first kthread, this early
- boot trick fails for <tt>synchronize_rcu()</tt> (as well as for
--<tt>synchronize_rcu_expedited()</tt>) in <tt>CONFIG_PREEMPT=3Dy</tt>
-+<tt>synchronize_rcu_expedited()</tt>) in <tt>CONFIG_PREEMPTION=3Dy</tt>
- kernels.
- The reason is that an RCU read-side critical section might be preempted,
- which means that a subsequent <tt>synchronize_rcu()</tt> really does have
-@@ -2568,7 +2568,7 @@ The compiler must not be permitted to transform this =
-source code into
-=20
- <p>
- If the compiler did make this transformation in a
--<tt>CONFIG_PREEMPT=3Dn</tt> kernel build, and if <tt>get_user()</tt> did
-+<tt>CONFIG_PREEMPTION=3Dn</tt> kernel build, and if <tt>get_user()</tt> did
- page fault, the result would be a quiescent state in the middle
- of an RCU read-side critical section.
- This misplaced quiescent state could result in line&nbsp;4 being
-@@ -2906,7 +2906,7 @@ in conjunction with the
- The real-time-latency response requirements are such that the
- traditional approach of disabling preemption across RCU
- read-side critical sections is inappropriate.
--Kernels built with <tt>CONFIG_PREEMPT=3Dy</tt> therefore
-+Kernels built with <tt>CONFIG_PREEMPTION=3Dy</tt> therefore
- use an RCU implementation that allows RCU read-side critical
- sections to be preempted.
- This requirement made its presence known after users made it
-@@ -3064,7 +3064,7 @@ includes
- <tt>rcu_barrier_bh()</tt>, and
- <tt>rcu_read_lock_bh_held()</tt>.
- However, the update-side APIs are now simple wrappers for other RCU
--flavors, namely RCU-sched in CONFIG_PREEMPT=3Dn kernels and RCU-preempt
-+flavors, namely RCU-sched in CONFIG_PREEMPTION=3Dn kernels and RCU-preempt
- otherwise.
-=20
- <h3><a name=3D"Sched Flavor">Sched Flavor (Historical)</a></h3>
-@@ -3088,12 +3088,12 @@ of an RCU read-side critical section can be a quies=
-cent state.
- Therefore, <i>RCU-sched</i> was created, which follows &ldquo;classic&rdqu=
-o;
- RCU in that an RCU-sched grace period waits for for pre-existing
- interrupt and NMI handlers.
--In kernels built with <tt>CONFIG_PREEMPT=3Dn</tt>, the RCU and RCU-sched
-+In kernels built with <tt>CONFIG_PREEMPTION=3Dn</tt>, the RCU and RCU-sched
- APIs have identical implementations, while kernels built with
--<tt>CONFIG_PREEMPT=3Dy</tt> provide a separate implementation for each.
-+<tt>CONFIG_PREEMPTION=3Dy</tt> provide a separate implementation for each.
-=20
- <p>
--Note well that in <tt>CONFIG_PREEMPT=3Dy</tt> kernels,
-+Note well that in <tt>CONFIG_PREEMPTION=3Dy</tt> kernels,
- <tt>rcu_read_lock_sched()</tt> and <tt>rcu_read_unlock_sched()</tt>
- disable and re-enable preemption, respectively.
- This means that if there was a preemption attempt during the
-@@ -3302,12 +3302,12 @@ The tasks-RCU API is quite compact, consisting only=
- of
- <tt>call_rcu_tasks()</tt>,
- <tt>synchronize_rcu_tasks()</tt>, and
- <tt>rcu_barrier_tasks()</tt>.
--In <tt>CONFIG_PREEMPT=3Dn</tt> kernels, trampolines cannot be preempted,
-+In <tt>CONFIG_PREEMPTION=3Dn</tt> kernels, trampolines cannot be preempted,
- so these APIs map to
- <tt>call_rcu()</tt>,
- <tt>synchronize_rcu()</tt>, and
- <tt>rcu_barrier()</tt>, respectively.
--In <tt>CONFIG_PREEMPT=3Dy</tt> kernels, trampolines can be preempted,
-+In <tt>CONFIG_PREEMPTION=3Dy</tt> kernels, trampolines can be preempted,
- and these three APIs are therefore implemented by separate functions
- that check for voluntary context switches.
-=20
-diff --git a/Documentation/RCU/checklist.txt b/Documentation/RCU/checklist.=
-txt
-index e98ff261a438b..087dc6c22c37c 100644
---- a/Documentation/RCU/checklist.txt
-+++ b/Documentation/RCU/checklist.txt
-@@ -210,8 +210,8 @@ over a rather long period of time, but improvements are=
- always welcome!
- 	the rest of the system.
-=20
- 7.	As of v4.20, a given kernel implements only one RCU flavor,
--	which is RCU-sched for PREEMPT=3Dn and RCU-preempt for PREEMPT=3Dy.
--	If the updater uses call_rcu() or synchronize_rcu(),
-+	which is RCU-sched for PREEMPTION=3Dn and RCU-preempt for
-+	PREEMPTION=3Dy. If the updater uses call_rcu() or synchronize_rcu(),
- 	then the corresponding readers my use rcu_read_lock() and
- 	rcu_read_unlock(), rcu_read_lock_bh() and rcu_read_unlock_bh(),
- 	or any pair of primitives that disables and re-enables preemption,
-diff --git a/Documentation/RCU/rcubarrier.txt b/Documentation/RCU/rcubarrie=
-r.txt
-index a2782df697328..5aa93c215af46 100644
---- a/Documentation/RCU/rcubarrier.txt
-+++ b/Documentation/RCU/rcubarrier.txt
-@@ -6,8 +6,8 @@ RCU (read-copy update) is a synchronization mechanism that =
-can be thought
- of as a replacement for read-writer locking (among other things), but with
- very low-overhead readers that are immune to deadlock, priority inversion,
- and unbounded latency. RCU read-side critical sections are delimited
--by rcu_read_lock() and rcu_read_unlock(), which, in non-CONFIG_PREEMPT
--kernels, generate no code whatsoever.
-+by rcu_read_lock() and rcu_read_unlock(), which, in
-+non-CONFIG_PREEMPTION kernels, generate no code whatsoever.
-=20
- This means that RCU writers are unaware of the presence of concurrent
- readers, so that RCU updates to shared data must be undertaken quite
-@@ -303,10 +303,10 @@ Answer: This cannot happen. The reason is that on_eac=
-h_cpu() has its last
- 	to smp_call_function() and further to smp_call_function_on_cpu(),
- 	causing this latter to spin until the cross-CPU invocation of
- 	rcu_barrier_func() has completed. This by itself would prevent
--	a grace period from completing on non-CONFIG_PREEMPT kernels,
-+	a grace period from completing on non-CONFIG_PREEMPTION kernels,
- 	since each CPU must undergo a context switch (or other quiescent
- 	state) before the grace period can complete. However, this is
--	of no use in CONFIG_PREEMPT kernels.
-+	of no use in CONFIG_PREEMPTION kernels.
-=20
- 	Therefore, on_each_cpu() disables preemption across its call
- 	to smp_call_function() and also across the local call to
-diff --git a/Documentation/RCU/stallwarn.txt b/Documentation/RCU/stallwarn.=
-txt
-index f48f4621ccbc2..bd510771b75ec 100644
---- a/Documentation/RCU/stallwarn.txt
-+++ b/Documentation/RCU/stallwarn.txt
-@@ -20,7 +20,7 @@ o	A CPU looping with preemption disabled.
-=20
- o	A CPU looping with bottom halves disabled.
-=20
--o	For !CONFIG_PREEMPT kernels, a CPU looping anywhere in the kernel
-+o	For !CONFIG_PREEMPTION kernels, a CPU looping anywhere in the kernel
- 	without invoking schedule().  If the looping in the kernel is
- 	really expected and desirable behavior, you might need to add
- 	some calls to cond_resched().
-@@ -39,7 +39,7 @@ o	Anything that prevents RCU's grace-period kthreads from=
- running.
- 	result in the "rcu_.*kthread starved for" console-log message,
- 	which will include additional debugging information.
-=20
--o	A CPU-bound real-time task in a CONFIG_PREEMPT kernel, which might
-+o	A CPU-bound real-time task in a CONFIG_PREEMPTION kernel, which might
- 	happen to preempt a low-priority task in the middle of an RCU
- 	read-side critical section.   This is especially damaging if
- 	that low-priority task is not permitted to run on any other CPU,
-diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.=
-txt
-index 7e1a8721637ab..7e03e8f80b293 100644
---- a/Documentation/RCU/whatisRCU.txt
-+++ b/Documentation/RCU/whatisRCU.txt
-@@ -648,9 +648,10 @@ Quick Quiz #1:	Why is this argument naive?  How could =
-a deadlock
-=20
- This section presents a "toy" RCU implementation that is based on
- "classic RCU".  It is also short on performance (but only for updates) and
--on features such as hotplug CPU and the ability to run in CONFIG_PREEMPT
--kernels.  The definitions of rcu_dereference() and rcu_assign_pointer()
--are the same as those shown in the preceding section, so they are omitted.
-+on features such as hotplug CPU and the ability to run in
-+CONFIG_PREEMPTION kernels. The definitions of rcu_dereference() and
-+rcu_assign_pointer() are the same as those shown in the preceding
-+section, so they are omitted.
-=20
- 	void rcu_read_lock(void) { }
-=20
+ /*
+- * Note a PREEMPT=3Dn context switch.  The caller must have disabled inter=
+rupts.
++ * Note a PREEMPTION=3Dn context switch. The caller must have disabled int=
+errupts.
+  */
+ void rcu_note_context_switch(bool preempt)
+ {
 --=20
 2.23.0
 
