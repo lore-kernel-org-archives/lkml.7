@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEF1ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647E7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDFA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4338021927
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfJOFcg (ORCPT
+        id S1728822AbfJOFci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:32:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42198 "EHLO
+        Tue, 15 Oct 2019 01:32:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42217 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfJOFcQ (ORCPT
+        with ESMTP id S1728637AbfJOFcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:32:16 -0400
+        Tue, 15 Oct 2019 01:32:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFRJ-0000Sk-J6; Tue, 15 Oct 2019 07:32:09 +0200
+        id 1iKFRL-0000Tp-FY; Tue, 15 Oct 2019 07:32:11 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 22CFE1C06D6;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9F1F21C06D8;
         Tue, 15 Oct 2019 07:31:50 +0200 (CEST)
 Date:   Tue, 15 Oct 2019 05:31:50 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf scripts python: exported-sql-viewer.py: Tidy up
- Call tree call_time
+Subject: [tip: perf/core] perf scripts python: exported-sql-viewer.py: Add
+ HBoxLayout and VBoxLayout
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190821083216.1340-5-adrian.hunter@intel.com>
-References: <20190821083216.1340-5-adrian.hunter@intel.com>
+In-Reply-To: <20190821083216.1340-3-adrian.hunter@intel.com>
+References: <20190821083216.1340-3-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <157111751002.12254.2811140358205091894.tip-bot2@tip-bot2>
+Message-ID: <157111751054.12254.15315606820634417569.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,76 +59,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     da4264f5cf8a6b798bf5494e08a5dae85a61c4c3
-Gitweb:        https://git.kernel.org/tip/da4264f5cf8a6b798bf5494e08a5dae85a61c4c3
+Commit-ID:     42c303ff9a25c4b95a75f8f10d08661183497d41
+Gitweb:        https://git.kernel.org/tip/42c303ff9a25c4b95a75f8f10d08661183497d41
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 21 Aug 2019 11:32:14 +03:00
+AuthorDate:    Wed, 21 Aug 2019 11:32:12 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 07 Oct 2019 12:22:17 -03:00
 
-perf scripts python: exported-sql-viewer.py: Tidy up Call tree call_time
+perf scripts python: exported-sql-viewer.py: Add HBoxLayout and VBoxLayout
 
-Record call_time on tree nodes and re-name the misnamed "count" parameter.
+Add layout classes HBoxLayout and VBoxLayout.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20190821083216.1340-5-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20190821083216.1340-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 41 +++++++++++----
+ 1 file changed, 31 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 0dcc9a0..06b8d55 100755
+index 18ad046..9767a5f 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -794,15 +794,16 @@ class CallGraphModel(CallGraphModelBase):
+@@ -980,20 +980,41 @@ class CallTreeModel(CallGraphModelBase):
+ 		ids.insert(0, query.value(1))
+ 		return ids
  
- class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+-# Vertical widget layout
++# Vertical layout
  
--	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item):
-+	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
- 		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
- 		self.comm_id = comm_id
- 		self.thread_id = thread_id
- 		self.calls_id = calls_id
-+		self.call_time = call_time
-+		self.time = time
- 		self.insn_cnt = insn_cnt
- 		self.cyc_cnt = cyc_cnt
- 		self.branch_count = branch_count
--		self.time = time
+-class VBox():
++class HBoxLayout(QHBoxLayout):
  
- 	def Select(self):
- 		self.query_done = True
-@@ -839,17 +840,17 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+-	def __init__(self, w1, w2, w3=None):
+-		self.vbox = QWidget()
+-		self.vbox.setLayout(QVBoxLayout())
++	def __init__(self, *children):
++		super(HBoxLayout, self).__init__()
++
++		self.layout().setContentsMargins(0, 0, 0, 0)
++		for child in children:
++			if child.isWidgetType():
++				self.layout().addWidget(child)
++			else:
++				self.layout().addLayout(child)
++
++# Horizontal layout
++
++class VBoxLayout(QVBoxLayout):
  
- class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+-		self.vbox.layout().setContentsMargins(0, 0, 0, 0)
++	def __init__(self, *children):
++		super(VBoxLayout, self).__init__()
  
--	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, count, time, insn_cnt, cyc_cnt, branch_count, parent_item):
--		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item)
-+	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
-+		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item)
- 		dso = dsoname(dso)
- 		if self.params.have_ipc:
- 			insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
- 			cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
- 			br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
- 			ipc = CalcIPC(cyc_cnt, insn_cnt)
--			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
-+			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
- 		else:
--			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
-+			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
- 		self.dbid = calls_id
+-		self.vbox.layout().addWidget(w1)
+-		self.vbox.layout().addWidget(w2)
+-		if w3:
+-			self.vbox.layout().addWidget(w3)
++		self.layout().setContentsMargins(0, 0, 0, 0)
++		for child in children:
++			if child.isWidgetType():
++				self.layout().addWidget(child)
++			else:
++				self.layout().addLayout(child)
++
++# Vertical layout widget
++
++class VBox():
++
++	def __init__(self, *children):
++		self.vbox = QWidget()
++		self.vbox.setLayout(VBoxLayout(*children))
  
- # Call tree data model level two item
-@@ -857,7 +858,7 @@ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
- class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
- 
- 	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
--		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, parent_item)
-+		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, 0, parent_item)
- 		if self.params.have_ipc:
- 			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
- 		else:
+ 	def Widget(self):
+ 		return self.vbox
