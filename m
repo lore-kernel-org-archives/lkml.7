@@ -2,174 +2,101 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3BEECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182D2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92AF20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89A620650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388256AbfJOQtL (ORCPT
+        id S2388276AbfJOQtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:49:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:43176 "EHLO foss.arm.com"
+        Tue, 15 Oct 2019 12:49:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40666 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfJOQtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:49:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ED34337;
-        Tue, 15 Oct 2019 09:49:10 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38C063F68E;
-        Tue, 15 Oct 2019 09:49:07 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:49:05 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Weimer <fweimer@redhat.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
-Subject: Re: [PATCH v2 09/12] arm64: traps: Fix inconsistent faulting
- instruction skipping
-Message-ID: <20191015164904.GY27757@arm.com>
-References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
- <1570733080-21015-10-git-send-email-Dave.Martin@arm.com>
- <20191011152453.GF33537@lakrids.cambridge.arm.com>
- <20191015152108.GX27757@arm.com>
- <20191015164204.GC24604@lakrids.cambridge.arm.com>
+        id S1726362AbfJOQtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:49:55 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D7ED7882FB;
+        Tue, 15 Oct 2019 16:49:54 +0000 (UTC)
+Received: from mail (ovpn-124-232.rdu2.redhat.com [10.10.124.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5E4616031D;
+        Tue, 15 Oct 2019 16:49:53 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 12:49:52 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
+ vmx.c exit handlers
+Message-ID: <20191015164952.GE331@redhat.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-13-aarcange@redhat.com>
+ <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015164204.GC24604@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 15 Oct 2019 16:49:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 05:42:04PM +0100, Mark Rutland wrote:
-> On Tue, Oct 15, 2019 at 04:21:09PM +0100, Dave Martin wrote:
-> > On Fri, Oct 11, 2019 at 04:24:53PM +0100, Mark Rutland wrote:
-> > > On Thu, Oct 10, 2019 at 07:44:37PM +0100, Dave Martin wrote:
-> > > > Correct skipping of an instruction on AArch32 works a bit
-> > > > differently from AArch64, mainly due to the different CPSR/PSTATE
-> > > > semantics.
-> > > > 
-> > > > There have been various attempts to get this right.  Currenty
-> > > > arm64_skip_faulting_instruction() mostly does the right thing, but
-> > > > does not advance the IT state machine for the AArch32 case.
-> > > > 
-> > > > arm64_compat_skip_faulting_instruction() handles the IT state
-> > > > machine but is local to traps.c, and porting other code to use it
-> > > > will make a mess since there are some call sites that apply for
-> > > > both the compat and native cases.
-> > > > 
-> > > > Since manual instruction skipping implies a trap, it's a relatively
-> > > > slow path.
-> > > > 
-> > > > So, make arm64_skip_faulting_instruction() handle both compat and
-> > > > native, and get rid of the arm64_compat_skip_faulting_instruction()
-> > > > special case.
-> > > > 
-> > > > Fixes: 32a3e635fb0e ("arm64: compat: Add CNTFRQ trap handler")
-> > > > Fixes: 1f1c014035a8 ("arm64: compat: Add condition code checks and IT advance")
-> > > > Fixes: 6436beeee572 ("arm64: Fix single stepping in kernel traps")
-> > > > Fixes: bd35a4adc413 ("arm64: Port SWP/SWPB emulation support from arm")
-> > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > > > ---
-> > > >  arch/arm64/kernel/traps.c | 18 ++++++++----------
-> > > >  1 file changed, 8 insertions(+), 10 deletions(-)
-> > > 
-> > > This looks good to me; it's certainly easier to reason about.
-> > > 
-> > > I couldn't spot a place where we do the wrong thing today, given AFAICT
-> > > all the instances in arch/arm64/kernel/armv8_deprecated.c would be
-> > > UNPREDICTABLE within an IT block.
-> > > 
-> > > It might be worth calling out an example in the commit message to
-> > > justify the fixes tags.
-> > 
-> > IIRC I found no bug here; rather we have pointlessly fragmented code,
-> > so I followed the "if fixing the same bug in multiple places, merge
-> > those places so you need only fix it in one place next time" rule.
+On Tue, Oct 15, 2019 at 10:28:39AM +0200, Paolo Bonzini wrote:
+> If you're including EXIT_REASON_EPT_MISCONFIG (MMIO access) then you
+> should include EXIT_REASON_IO_INSTRUCTION too.  Depending on the devices
+> that are in the guest, the doorbell register might be MMIO or PIO.
+
+The fact outb/inb devices exists isn't the question here. The question
+you should clarify is: which of the PIO devices is performance
+critical as much as MMIO with virtio/vhost? I mean even on real
+hardware those devices aren't performance critical. I didn't run into
+PIO drivers with properly configured guests.
+
+> So, the difference between my suggested list (which I admit is just
+> based on conjecture, not benchmarking) is that you add
+> EXIT_REASON_PAUSE_INSTRUCTION, EXIT_REASON_PENDING_INTERRUPT,
+> EXIT_REASON_EXTERNAL_INTERRUPT, EXIT_REASON_HLT, EXIT_REASON_MSR_READ,
+> EXIT_REASON_CPUID.
 > 
-> Sure thing, that makes sense to me.
-> 
-> > Since arm64_skip_faulting_instruction() is most of the way to being
-> > generically usable anyway, this series merges all the special-case
-> > handling into it.
-> > 
-> > I could add something like
-> > 
-> > --8<--
-> > 
-> > This allows this fiddly operation to be maintained in a single
-> > place rather than trying to maintain fragmented versions spread
-> > around arch/arm64.
-> > 
-> > -->8--
-> > 
-> > Any good?
-> 
-> My big concern is that the commit message reads as a fix, implying that
-> there's an existing correctness bug. I think that simplifying it to make
-> it clearer that it's a cleanup/improvement would be preferable.
-> 
-> How about:
-> 
-> | arm64: unify native/compat instruction skipping
-> |
-> | Skipping of an instruction on AArch32 works a bit differently from
-> | AArch64, mainly due to the different CPSR/PSTATE semantics.
-> |
-> | Currently arm64_skip_faulting_instruction() is only suitable for
-> | AArch64, and arm64_compat_skip_faulting_instruction() handles the IT
-> | state machine but is local to traps.c.
-> | 
-> | Since manual instruction skipping implies a trap, it's a relatively
-> | slow path.
-> | 
-> | So, make arm64_skip_faulting_instruction() handle both compat and
-> | native, and get rid of the arm64_compat_skip_faulting_instruction()
-> | special case.
-> |
-> | Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Which of these make a difference for the hrtimer testcase?  It's of
+> course totally fine to use benchmarks to prove that my intuition was
+> bad---but you must also use them to show why your intuition is right. :)
 
-And drop the Fixes tags.  Yes, I think that's reasonable.
+The hrtimer flood hits on this:
 
-I think I was probably glossing over the fact that we don't need to get
-the ITSTATE machine advance correct for the compat insn emulation; as
-you say, I can't see what else this patch "fixes".
+           MSR_WRITE     338793    56.54%     5.51%      0.33us     34.44us      0.44us ( +-   0.20% )
+   PENDING_INTERRUPT     168431    28.11%     2.52%      0.36us     32.06us      0.40us ( +-   0.28% )
+    PREEMPTION_TIMER      91723    15.31%     1.32%      0.34us     30.51us      0.39us ( +-   0.41% )
+  EXTERNAL_INTERRUPT        234     0.04%     0.00%      0.25us      5.53us      0.43us ( +-   5.67% )
+                 HLT         65     0.01%    90.64%      0.49us 319933.79us  37562.71us ( +-  21.68% )
+            MSR_READ          6     0.00%     0.00%      0.67us      1.96us      1.06us ( +-  17.97% )
+       EPT_MISCONFIG          6     0.00%     0.01%      3.09us    105.50us     26.76us ( +-  62.10% )
 
-> With that, feel free to add:
->
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+PENDING_INTERRUPT is the big missing thing in your list. It probably
+accounts for the bulk of slowdown from your list.  However I could
+imagine other loads with higher external interrupt/hlt/rdmsr than the
+hrtimer one so I didn't drop those. Other loads are hitting on a flood
+of HLT and from host standpoint it's no a slow path. Not all OS have
+the cpuidle haltpoll governor to mitigate the HLT frequency.
 
-Thanks!
+I'm pretty sure HLT/EXTERNAL_INTERRUPT/PENDING_INTERRUPT should be
+included.
 
-> We could even point out that the armv8_deprecated cases are
-> UNPREDICTABLE in an IT block, and correctly emulated either way.
+The least useful are PAUSE, CPUID and MSR_READ, we could considering
+dropping some of those (in the short term cpuid helps for benchmarking
+to more accurately measure the performance improvement of not hitting
+the retpoline there). I simply could imagine some load hitting
+frequently on those too so I didn't drop them.
 
-Yes, I'll add something along those lines.
-
-Cheers
----Dave
+I also wonder if VMCALL should be added, certain loads hit on fairly
+frequent VMCALL, but none of the one I benchmarked.
