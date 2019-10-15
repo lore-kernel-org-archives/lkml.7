@@ -2,78 +2,135 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F970C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0ADC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F112083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571134765;
-	bh=LVAubQ5a4tx6kJZJZxy2deaudXFrQruZncCOv4L38Mc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iLnobKL/D3LHiUfOtW8Vf6yYy4yez84FtAz2CbNerOL1FRhwyj9j+oKmsESALI8rQ
-	 XBEhsPsEAgIsrgPxzf0Svt8a1MK3qSuns2lfOEzkQnXIbgJ5oJN9h7nh3Ll2wtiaCK
-	 Lz6lwJ+l6l1f+ZqInomby8KdYlGL23pHlcacD7AU=
+	by mail.kernel.org (Postfix) with ESMTP id 8A05D20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="tOogVHkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfJOKTY (ORCPT
+        id S1730138AbfJOKVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729923AbfJOKTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:19:20 -0400
-Received: from localhost (unknown [171.76.96.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4D0E217F9;
-        Tue, 15 Oct 2019 10:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571134759;
-        bh=LVAubQ5a4tx6kJZJZxy2deaudXFrQruZncCOv4L38Mc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eq+Kcnom8n08MOw6Tu5+4FF+hrx6aSgIUwLuwIGc1H3goH3rgQNwA5srrcWaXrnPc
-         Ujnb5hUX9a6V6glWMH2ljcibvyplBruPDS/vTjpfJy4XuDWtFC2+SRITOesr27mCcV
-         OjO7Kwd/z/mA8ifT6WbtvRkVqtAQjjOCdCbaWTfQ=
-Date:   Tue, 15 Oct 2019 15:49:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: Re: [PATCH 02/10] dt-bindings: dmaengine: usb-dmac: Add binding for
- r8a774b1
-Message-ID: <20191015101914.GT2654@vkoul-mobl>
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1570531132-21856-3-git-send-email-fabrizio.castro@bp.renesas.com>
+        Tue, 15 Oct 2019 06:21:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40479 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbfJOKVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:21:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so12170968pfb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:21:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZjSUyyFcE4OzpFsuD5QbPfEEJTeG0kXm3yEnzXaAd7g=;
+        b=tOogVHkfeRdcF8NN8t2A3kIiU62I+r1F4VR1UkcTkugAUka3Cs04268T/43pgZ7D7S
+         PQepFz1DsCHvu4q+AqW+6APMO13npmM5QAaMHIFdmpb4tZlNFWSJjHywwIQe7dtep+g9
+         jZGzS6u3jpp8IxG4C2RQioL/fxKA7UqCQPrwiO87oXtZJe3r3N/3YiHjB7/ULauaBqI+
+         s6oGLzElmnWljNA3WE67kbKWb+lyEtxOSN3YQCq/iLbT74sNcY5lMOajRVOEJ/wbngAc
+         nFRLY8uq/99/8D9VZN2e4jgsJfro17aeGSaPTIJAgqLLLzhJgPNqZTsMasBz5hNiYlMI
+         /IJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZjSUyyFcE4OzpFsuD5QbPfEEJTeG0kXm3yEnzXaAd7g=;
+        b=tn6VJ/aMAslL6g7zUnR+Oka1y/M85hW57XRH43Kc64gNX1/13AU3D1Efqh02yBpg2v
+         do1iuQpKTJGYd+PILBZ7G0DHxa3d6fRpoFiXPXFO6QqwVu+yesf+F+6TZrUSyd6ziYEC
+         OPdc5+gIgXAeUWvJh0ZME4IVIsk7K4mAEWR3X+NDrpgvQsUsvBmY7dBLw1hCZq2RVQkj
+         XO+5rkYdQdqP9POu8qQrChZ5qB1GaJu4SD2lb0wbscBBat3UqtJNQ1QG+54vTzUOjbKy
+         8aYfXoDZQItMn015f42fOrYpRGC3qQfVV1CQ9BN+0A/R8LAabVnGnpUoqHpGPdverAuF
+         0q0g==
+X-Gm-Message-State: APjAAAUEjttaTzC+q//7B0wBpDnBvuK9xmhIrDUQS1wH4tnzineRMDwM
+        Tjwlgl48TgCln/3IMT5fQaw50g==
+X-Google-Smtp-Source: APXvYqwSAxzEMOHC8QTx9yFJObxsJCQpENWGTP5uv8UvWH5ruPNpBvxi4RQ7TOGrHCws2VAlWYHJNA==
+X-Received: by 2002:a63:1511:: with SMTP id v17mr37218393pgl.34.1571134874188;
+        Tue, 15 Oct 2019 03:21:14 -0700 (PDT)
+Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
+        by smtp.gmail.com with ESMTPSA id z21sm19704595pfa.119.2019.10.15.03.21.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 15 Oct 2019 03:21:13 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: [PATCH] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
+Date:   Tue, 15 Oct 2019 18:21:09 +0800
+Message-Id: <20191015102109.4701-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570531132-21856-3-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-10-19, 11:38, Fabrizio Castro wrote:
-> This patch adds the binding for r8a774b1 SoC (RZ/G2N).
+The RTL8723BU has problems connecting to AP after each warm reboot.
+Sometimes it returns no scan result, and in most cases, it fails
+the authentication for unknown reason. However, it works totally
+fine after cold reboot.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+for cold reboot and warm reboot, the registers imply that the MAC
+is already powered and thus some procedures are skipped during
+driver initialization. Double checked the vendor driver, it reads
+the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+during initialization based on them. This commit only tells the
+RTL8723BU to do full initialization without checking MAC status.
 
+https://phabricator.endlessm.com/T28000
+
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
+ 3 files changed, 5 insertions(+)
+
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index 22e95b11bfbb..6598c8d786ea 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1425,6 +1425,7 @@ struct rtl8xxxu_fileops {
+ 	u8 has_s0s1:1;
+ 	u8 has_tx_report:1;
+ 	u8 gen2_thermal_meter:1;
++	u8 needs_full_init:1;
+ 	u32 adda_1t_init;
+ 	u32 adda_1t_path_on;
+ 	u32 adda_2t_path_on_a;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index 9ba661b3d767..a1c3787abe2e 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -1668,6 +1668,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
+ 	.has_s0s1 = 1,
+ 	.has_tx_report = 1,
+ 	.gen2_thermal_meter = 1,
++	.needs_full_init = 1,
+ 	.adda_1t_init = 0x01c00014,
+ 	.adda_1t_path_on = 0x01c00014,
+ 	.adda_2t_path_on_a = 0x01c00014,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index e4c1b08c8070..8420cb269b8d 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3900,6 +3900,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 	else
+ 		macpower = true;
+ 
++	if (fops->needs_full_init)
++		macpower = false;
++
+ 	ret = fops->power_on(priv);
+ 	if (ret < 0) {
+ 		dev_warn(dev, "%s: Failed power on\n", __func__);
 -- 
-~Vinod
+2.23.0
+
