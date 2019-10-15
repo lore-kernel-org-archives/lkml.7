@@ -2,84 +2,75 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B434ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A111ECE59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720912064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571178766;
-	bh=7eXB/dNAVMYxPCrYEos/y+jg/F0+DxDtws1LkRjru4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gk1exGqIPPMDrtd2fzRAHz1o0RSYw6L1SjRvJ2cVr9sM5gEtscgGCVW/PCVcvFh/L
-	 5zP79bVowclFsRMfHFCDyhf+LlcVE7xlmxOdPOe3IBbUpE3MXLnW/L5PZpcDEPtciV
-	 owIsN0sX1zrZrPRSkMStYdJFdE/tF2Gw81tXw+nc=
+	by mail.kernel.org (Postfix) with ESMTP id 7A5C52064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389945AbfJOWcp (ORCPT
+        id S1732516AbfJOWdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:32:45 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46789 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732040AbfJOWco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:32:44 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k25so18280723oiw.13;
-        Tue, 15 Oct 2019 15:32:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IRK8p+/Jv4mzFx5gbKYTyODe8sVL2jVcXUHNGZ2eez4=;
-        b=mzvHWO+X2v5nNwesco3JiEWy8mGfggdRk0lcbXOee726VZRs1Ddqfoxpo7xej3efYh
-         uLwTl96TPkSViv1C1guz+7T0+yKvQMFcGrr8+Q+318aD/Qgmp0Xb/pzJqQ4kzCES+UmL
-         eyiCb5v+6kYHrXzKVfZMHya2P303t1p2ljjHQu4kTdKSkufjfQMhKpywju7m5ZHkfh1h
-         icyGiS+xfJg3hhhmxn9EKuOzHR/6J1gU5bJMtV6ZrRXm00wWeJaNxiIkWkesjAaPL4/b
-         IPv9H4XVMweDdiH7W6g0HQLR+kCS6scvXGwNgPPhP5P9Mbl2MzB/lf1i8YPm2R50Hp42
-         F+5g==
-X-Gm-Message-State: APjAAAWWJmWNveMHPsRgFI19lZN8y0+Pt3+ZTP3Kqmi1jGNYUBxERtjk
-        4300/F/hlVFkG5TfKQv17w==
-X-Google-Smtp-Source: APXvYqx0bbD/z3IfjtGfBzgKf+wSpqz5wPIvG5I1mGV8/7CdInnKLOxIiXAjQbsrE1O+Shq7ySljNw==
-X-Received: by 2002:a54:4788:: with SMTP id o8mr730887oic.118.1571178763090;
-        Tue, 15 Oct 2019 15:32:43 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 5sm7041946otp.20.2019.10.15.15.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 15:32:42 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:32:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jdelvare@suse.com, linux@roeck-us.net,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Eddie James <eajames@linux.ibm.com>
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: Document ibm,cffps compatible
- string
-Message-ID: <20191015223241.GA23828@bogus>
-References: <1570648262-25383-1-git-send-email-eajames@linux.ibm.com>
- <1570648262-25383-2-git-send-email-eajames@linux.ibm.com>
+        Tue, 15 Oct 2019 18:33:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58930 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732040AbfJOWdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:33:21 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 196FD10F2E82;
+        Tue, 15 Oct 2019 22:33:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB0FA1001938;
+        Tue, 15 Oct 2019 22:33:17 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=whiz1sHXu8SVZKEC2dup=r5JMrftPtEt6ff9Ea8dyH8yQ@mail.gmail.com>
+References: <CAHk-=whiz1sHXu8SVZKEC2dup=r5JMrftPtEt6ff9Ea8dyH8yQ@mail.gmail.com> <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk> <157117608708.15019.1998141309054662114.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 02/21] Add a prelocked wake-up
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1570648262-25383-2-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20273.1571178796.1@warthog.procyon.org.uk>
+Date:   Tue, 15 Oct 2019 23:33:16 +0100
+Message-ID: <20274.1571178796@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 15 Oct 2019 22:33:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  9 Oct 2019 14:11:01 -0500, Eddie James wrote:
-> Document this string that indicates that any version of the power supply
-> may be connected. In this case, the driver must detect the version
-> automatically.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> > Add a wakeup call for a case whereby the caller already has the waitqueue
+> > spinlock held.
+> 
+> That naming is crazy.
+
+Sorry, yeah.  This is a bit hacked together at the moment and needs some more
+tidying up.  I've had a lot of problems with performance regressions of up to
+40% from seemingly simple changes involving moving locks around - it turns out
+that the problem was that I was running with kasan enabled.
+
+David
