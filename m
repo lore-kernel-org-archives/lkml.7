@@ -2,182 +2,88 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320CDECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411EC20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E7420650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571160357;
+	bh=CIbnCZnNgKr88mYqm7OpZ1dCq2/2XsNzbZYpnUoxnDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jZc5Pc37A8QjO1Rk3gXF9l8Lg1jrmdD++BE1ywm2ztSIoa3wn6uf7HWqWSSTNqbFf
+	 FXZwrEzY6aSSSSCvkdxt19xmAkn0Tq4UPZcM89vRR5reGa/ONUrV0KVlhaZn4uMnTx
+	 FNjnJCp+SVzM1ughw4pzXqH4ov5oy2RuZw1s2Q2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388734AbfJORZx (ORCPT
+        id S2388749AbfJORZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:25:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:44122 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfJORZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:25:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 393C2337;
+        Tue, 15 Oct 2019 13:25:55 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43894 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388722AbfJORZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 13:25:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t84so17518073oih.10;
+        Tue, 15 Oct 2019 10:25:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TuLY0T5XCanlGHWiiteaVAS0AqJDC0pQFFmFd4/UATA=;
+        b=LtEsW1HuAp629IJBd5FW9dHUPIb4l5EnwWl+sfRYkdmdM2grT341mwT8OajDN4PY7x
+         74/Y8NSxupWgMgoKv5fuKst7tC9zlyDAxGmwqHDmq0RNB3itHcPC+bJI7M3prVQqmUp+
+         DPrWHvW9aQ88NRAUzKiMelc7MmQ9Q1KeD3W4v18cNguVYi0+//FG/u08TkOrlemhNLaW
+         hahReiOYAm7+dzF774Gm6p8ERkZMhkjoGKXqlk+Ji9H4Rri9xzVlPkWuW4xC2Om610bv
+         2XF74BCNDnOP6z998nmTTWyOKNRDlsmFRtlZdfpTPJnH1EoTzC2feGv6qEpIkrqiKxDU
+         pfew==
+X-Gm-Message-State: APjAAAU2VHyVKywH5zahLcvcgxJ6UykF6j3cnGIfDeu2tV06JLQPbn/X
+        i7v8gWGRhdcgokH0zcgnRg==
+X-Google-Smtp-Source: APXvYqyh/AJuW5SKmbZ5+aKVbLFBePskQhmFvgqaWcF+4jvMRtRbccQskyol9LKjgN6XrE7Ol69g6A==
+X-Received: by 2002:aca:2807:: with SMTP id 7mr30578217oix.99.1571160351713;
         Tue, 15 Oct 2019 10:25:51 -0700 (PDT)
-Received: from eglon.cambridge.arm.com (unknown [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A39673F68E;
-        Tue, 15 Oct 2019 10:25:49 -0700 (PDT)
-From:   James Morse <james.morse@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH v2] arm64: entry.S: Do not preempt from IRQ before all  cpufeatures are enabled
-Date:   Tue, 15 Oct 2019 18:25:44 +0100
-Message-Id: <20191015172544.186627-1-james.morse@arm.com>
-X-Mailer: git-send-email 2.20.1
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y18sm6549012oto.2.2019.10.15.10.25.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 10:25:51 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 12:25:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
+        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: Convert sharp,ld-d5116z01b panel
+ to DT schema
+Message-ID: <20191015172550.GA4197@bogus>
+References: <20191010210654.37426-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010210654.37426-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+On Thu, 10 Oct 2019 14:06:54 -0700, Jeffrey Hugo wrote:
+> Convert the sharp,ld-d5116z01b panel binding to DT schema.
+> 
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  .../display/panel/sharp,ld-d5116z01b.txt      | 26 ----------------
+>  .../display/panel/sharp,ld-d5116z01b.yaml     | 30 +++++++++++++++++++
+>  2 files changed, 30 insertions(+), 26 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.yaml
+> 
 
-Preempting from IRQ-return means that the task has its PSTATE saved
-on the stack, which will get restored when the task is resumed and does
-the actual IRQ return.
+Applied, thanks.
 
-However, enabling some CPU features requires modifying the PSTATE. This
-means that, if a task was scheduled out during an IRQ-return before all
-CPU features are enabled, the task might restore a PSTATE that does not
-include the feature enablement changes once scheduled back in.
-
-* Task 1:
-
-PAN == 0 ---|                          |---------------
-            |                          |<- return from IRQ, PSTATE.PAN = 0
-            | <- IRQ                   |
-            +--------+ <- preempt()  +--
-                                     ^
-                                     |
-                                     reschedule Task 1, PSTATE.PAN == 1
-* Init:
-        --------------------+------------------------
-                            ^
-                            |
-                            enable_cpu_features
-                            set PSTATE.PAN on all CPUs
-
-Worse than this, since PSTATE is untouched when task switching is done,
-a task missing the new bits in PSTATE might affect another task, if both
-do direct calls to schedule() (outside of IRQ/exception contexts).
-
-Fix this by preventing preemption on IRQ-return until features are
-enabled on all CPUs.
-
-This way the only PSTATE values that are saved on the stack are from
-synchronous exceptions. These are expected to be fatal this early, the
-exception is BRK for WARN_ON(), but as this uses do_debug_exception()
-which keeps IRQs masked, it shouldn't call schedule().
-
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-[Replaced a really cool hack, with an even simpler static key in C.
- expanded commit message with Julien's cover-letter ascii art]
-Signed-off-by: James Morse <james.morse@arm.com>
----
-The suspicious __sched annotation here is to stop this symbol from
-appearing in wchan. I haven't managed to make this happen, but I
-can't see what stops it.
-
-Previous version:
-https://lore.kernel.org/linux-arm-kernel/20191010163447.136049-1-james.morse@arm.com/
-
-
-I think the reason we don't see this happen because cpufeature enable calls
-happen early, when there is not a lot going on. I couldn't hit it when
-trying. I believe Julien did, by adding sleep statements(?) to kthread().
-
-If we want to send this to stable, the first feature that depended on this
-was PAN:
-Fixes: 7209c868600b ("arm64: mm: Set PSTATE.PAN from the cpu_enable_pan() call")
-
- arch/arm64/kernel/entry.S   |  2 +-
- arch/arm64/kernel/process.c | 18 ++++++++++++++++++
- include/linux/sched.h       |  1 +
- 3 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 84a822748c84..07b621bcaf1f 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -680,7 +680,7 @@ alternative_if ARM64_HAS_IRQ_PRIO_MASKING
- 	orr	x24, x24, x0
- alternative_else_nop_endif
- 	cbnz	x24, 1f				// preempt count != 0 || NMI return path
--	bl	preempt_schedule_irq		// irq en/disable is done inside
-+	bl	arm64_preempt_schedule_irq	// irq en/disable is done inside
- 1:
- #endif
- 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index a47462def04b..f088ecf5d4c9 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -17,6 +17,7 @@
- #include <linux/sched/task.h>
- #include <linux/sched/task_stack.h>
- #include <linux/kernel.h>
-+#include <linux/lockdep.h>
- #include <linux/mm.h>
- #include <linux/stddef.h>
- #include <linux/sysctl.h>
-@@ -44,6 +45,7 @@
- #include <asm/alternative.h>
- #include <asm/arch_gicv3.h>
- #include <asm/compat.h>
-+#include <asm/cpufeature.h>
- #include <asm/cacheflush.h>
- #include <asm/exec.h>
- #include <asm/fpsimd.h>
-@@ -633,3 +635,19 @@ static int __init tagged_addr_init(void)
- 
- core_initcall(tagged_addr_init);
- #endif	/* CONFIG_ARM64_TAGGED_ADDR_ABI */
-+
-+asmlinkage void __sched arm64_preempt_schedule_irq(void)
-+{
-+	lockdep_assert_irqs_disabled();
-+
-+	/*
-+	 * Preempting a task from an IRQ means we leave copies of PSTATE
-+	 * on the stack. cpufeature's enable calls may modify PSTATE, but
-+	 * resuming one of these preempted tasks would undo those changes.
-+	 *
-+	 * Only allow a task to be preempted once cpufeatures have been
-+	 * enabled.
-+	 */
-+	if (static_branch_likely(&arm64_const_caps_ready))
-+		preempt_schedule_irq();
-+}
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 2c2e56bd8913..67a1d86981a9 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -223,6 +223,7 @@ extern long schedule_timeout_uninterruptible(long timeout);
- extern long schedule_timeout_idle(long timeout);
- asmlinkage void schedule(void);
- extern void schedule_preempt_disabled(void);
-+asmlinkage void preempt_schedule_irq(void);
- 
- extern int __must_check io_schedule_prepare(void);
- extern void io_schedule_finish(int token);
--- 
-2.20.1
-
+Rob
