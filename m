@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD8ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E24BECE596
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156112084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255A2217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F52AQVkz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mo4SxdTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388578AbfJORCB (ORCPT
+        id S2388558AbfJORB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:02:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35583 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfJORBz (ORCPT
+        Tue, 15 Oct 2019 13:01:59 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42139 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388503AbfJORBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:01:55 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m7so21041543lji.2;
+        Tue, 15 Oct 2019 13:01:52 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c195so15062344lfg.9;
         Tue, 15 Oct 2019 10:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0El1r5sR/3XS90TExiIvdI2lmehipmygt0wHnvPAxUQ=;
-        b=F52AQVkzmm6cIIRIypc9mBwhZ7fvyTDY7hcqPeur1+oEE3ovBfJU1MvsVBIWxL22Ee
-         Qh2JXMr5LuNmYxVkcYFi7OpDcve1+wOQwswv1hY+akPnalpDaUUmm6Ym7qlHQXN7Teot
-         SA2fem0EyOAFSHJ9991h6xHNubcbb+KUT55JgqsoeP9+hTSnU8dI9KsiC6Z3G0akg5Fi
-         dNXRqA23sbJ4K79BX68XQlCJPSbcTKqQ/lmfULmG5J7Eqnhs0hWveC+vTp6nN9IwKsbb
-         ugMhT3KBW9jnvPBNGWlat46n2YDnQcDC6kYNBKc1r1RPREWw6KOm9BMSGmmKGzMdzngK
-         HVtg==
+        bh=Omi0XtqN8Kc5VZbYU+UoqGDpANl8X11C5I6N+y6qX+s=;
+        b=Mo4SxdTQu5aZ5xPEC6HrNLXPT2lhQgbDswpxq6q51db6RbKUyCiGOY0GfU0NKCskMy
+         CF5aDRuUqQ+LKizZv0yLHdtvUZ4+edLb6+WBN76r2oecSd1rxRnuDD7GVhjwhEZeu2Gn
+         PHVMpbsM5ntAEAoy7ZNa9c67PV9g2vsS+u7jIBlUqlSUdO5cVJENE3HOX1MfUly8SQiG
+         tG8Ksz4GNX5Wm4dKgIRj2I0d/beDsUAuEea2qSDQrmFKvd4RwsQFhPzSkYCM+ZDMpu7n
+         vBfgc1jqVwRkPJPpZMq9AXU1FXzCennoYtltVP25jDcu9Mv8flDPy493sz2QQ1kEWK/Z
+         5s3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0El1r5sR/3XS90TExiIvdI2lmehipmygt0wHnvPAxUQ=;
-        b=Q+j2cleNcHjPlMzqnjyDfXLQGRl3ReEKJxleNDvef5GD2WkjMGPEh5vlLvJ/IyOjV4
-         S8XeMesX/689zhZ5ty3NJzrLRzvcGyVjuaf12REIka8rUnoUDW7ViVBC97kDaOmBlPf1
-         17ubFZ/h3BN6M8cELYg+FCngbp4Bv7ZejWCxOdPymp77FA3/fdFcLXzivme+OdbaIHNE
-         Tcq/FEw3KP1NE+LQwNZqpsoTmLRp+6QG4Ob+BvB21WaHPp2iAB4pa+N5cgh7WMMIJFcp
-         vCombeJADKhsm+NBVXLe6JXdqkBn4nHHT0XS0OyCw53W0govl+ClJggfKHHMqXg3wUTl
-         RHlA==
-X-Gm-Message-State: APjAAAU1v5Bve6WP8zo3N17UcsMEXf8Lf7cu/empy3w8CerDFa4s3WGU
-        fiu6IvlxquwPKPd9EP/BdiU=
-X-Google-Smtp-Source: APXvYqz53Re3jOt2H62WWYr1iivI8KBu3qJtHSQkcLZcdLSKLbTaDCkqbRpPCXJSPKcloiZf5brhfQ==
-X-Received: by 2002:a05:651c:113b:: with SMTP id e27mr22344296ljo.125.1571158911288;
-        Tue, 15 Oct 2019 10:01:51 -0700 (PDT)
-Received: from localhost.localdomain ([94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=Omi0XtqN8Kc5VZbYU+UoqGDpANl8X11C5I6N+y6qX+s=;
+        b=jOG6i5AynHRToSS3FJcdzfjAwJY4HkQIQAqbNmk4IvlSTvaGZNqpuXFJnvzZuVhV7i
+         qFMBuDe11fIuaYwXVZ2F6H0hFpEWZ/Wkoc5AmG5ixv1tKwtZZSeC0D/4NLJSbmCDrmM4
+         i3B9LMd5VMCPwW4PSTHAA2ie2gvDvRp0VMNb2kQ0lhay0zCqgWS1vxi2I3c1i/O47Iq/
+         Z/TdDOSRby+2bTAgBc+Pb/ySAtuIUhHS6PXtSCM0KSnDJ0p6dNs9Fu/e5rgOPsN4oBjV
+         RHoKJVLmgCFEz3nkEtulbcnZ0DI2wjSucALhtSNY12vYLQCkz8YLXfiFpqEqlT+Q6SvJ
+         KuiQ==
+X-Gm-Message-State: APjAAAV/BH33gX15EF70L4U9O1cgJ14wviP0SJ+FN5jZ5pVy+bcwW2n+
+        KlP8bBu+U4aAND643MT4Mpk=
+X-Google-Smtp-Source: APXvYqzwopfSYJZIWLREJUlXfvyJhS8zttW57hQ82Sj+eXZJE2pnYU5hBddOMCd7TKM/lOIvK2JGTg==
+X-Received: by 2002:a05:6512:482:: with SMTP id v2mr19924709lfq.72.1571158910329;
         Tue, 15 Oct 2019 10:01:50 -0700 (PDT)
+Received: from localhost.localdomain ([94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 10:01:49 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 12/18] arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
-Date:   Tue, 15 Oct 2019 20:00:09 +0300
-Message-Id: <20191015170015.1135-13-digetx@gmail.com>
+Subject: [PATCH v6 11/18] arm: tegra20: cpuidle: Make abort_flag atomic
+Date:   Tue, 15 Oct 2019 20:00:08 +0300
+Message-Id: <20191015170015.1135-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191015170015.1135-1-digetx@gmail.com>
 References: <20191015170015.1135-1-digetx@gmail.com>
@@ -78,42 +78,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no good justification for smp_rmb() after returning from LP2
-because there are no memory operations that require SMP synchronization.
-Thus remove the confusing barrier.
+Replace memory accessors with atomic API just to make code consistent
+with the abort_barrier. The new variant may be even more correct now since
+atomic_read() will prevent compiler from generating wrong things like
+carrying abort_flag value in a register instead of re-fetching it from
+memory.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/cpuidle-tegra20.c | 2 --
- arch/arm/mach-tegra/cpuidle-tegra30.c | 2 --
- 2 files changed, 4 deletions(-)
+ arch/arm/mach-tegra/cpuidle-tegra20.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
-index fe80f1988120..af2cd339db43 100644
+index bc5873e92af5..fe80f1988120 100644
 --- a/arch/arm/mach-tegra/cpuidle-tegra20.c
 +++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
-@@ -193,8 +193,6 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+@@ -32,7 +32,7 @@
+ #include "sleep.h"
  
- 	local_fiq_enable();
+ #ifdef CONFIG_PM_SLEEP
+-static bool abort_flag;
++static atomic_t abort_flag;
+ static atomic_t abort_barrier;
+ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+ 				    struct cpuidle_driver *drv,
+@@ -167,13 +167,14 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+ 	bool entered_lp2 = false;
  
--	smp_rmb();
--
- 	return entered_lp2 ? index : 0;
- }
- #endif
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index a4f0add46a27..80ae64bcdf50 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -113,8 +113,6 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
+ 	if (tegra_pending_sgi())
+-		WRITE_ONCE(abort_flag, true);
++		atomic_set(&abort_flag, 1);
  
- 	local_fiq_enable();
+ 	cpuidle_coupled_parallel_barrier(dev, &abort_barrier);
  
--	smp_rmb();
--
- 	return (entered_lp2) ? index : 0;
- }
- #endif
+-	if (abort_flag) {
++	if (atomic_read(&abort_flag)) {
+ 		cpuidle_coupled_parallel_barrier(dev, &abort_barrier);
+-		abort_flag = false;	/* clean flag for next coming */
++		/* clean flag for next coming */
++		atomic_set(&abort_flag, 0);
+ 		return -EINTR;
+ 	}
+ 
 -- 
 2.23.0
 
