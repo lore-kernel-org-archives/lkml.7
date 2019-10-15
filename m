@@ -2,130 +2,333 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E07ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6BAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B394521835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877E0217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfJOFey convert rfc822-to-8bit (ORCPT
+        id S1727282AbfJOFf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 15 Oct 2019 01:35:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50347 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbfJOFey (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 01:34:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42068 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfJOFcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:32:03 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFR6-0000H6-TD; Tue, 15 Oct 2019 07:31:57 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D8A741C04E4;
-        Tue, 15 Oct 2019 07:31:44 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 05:31:44 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf trace: Associate the "msr" tracepoint arg name
- with x86_MSR__scnprintf()
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <tip-q1q4unmqja5ex7dy0kb5cjaa@git.kernel.org>
-References: <tip-q1q4unmqja5ex7dy0kb5cjaa@git.kernel.org>
-MIME-Version: 1.0
-Message-ID: <157111750472.12254.9325323007855298666.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 22:34:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,298,1566889200"; 
+   d="scan'208";a="198507553"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 22:34:51 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v2 1/5] perf util: Create new block.h/block.c for block related functions
+Date:   Tue, 15 Oct 2019 13:33:46 +0800
+Message-Id: <20191015053350.13909-2-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191015053350.13909-1-yao.jin@linux.intel.com>
+References: <20191015053350.13909-1-yao.jin@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+We have already implemented some block related functions. Now it's
+time to do some cleanup, and move the functions and structures to
+the new block.h/block.c.
 
-Commit-ID:     c330ef2847eeedfa9d06f03836dfd4fc6727e855
-Gitweb:        https://git.kernel.org/tip/c330ef2847eeedfa9d06f03836dfd4fc6727e855
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 07 Oct 2019 15:54:51 -03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 09 Oct 2019 11:23:52 -03:00
-
-perf trace: Associate the "msr" tracepoint arg name with x86_MSR__scnprintf()
-
-So that we can go from:
-
-  # perf trace -e msr:write_msr --max-stack=16 sleep 1
-       0.000 sleep/6740 msr:write_msr(msr: 3221225728, val: 139636317451648)
-                                         do_trace_write_msr ([kernel.kallsyms])
-                                         do_trace_write_msr ([kernel.kallsyms])
-                                         do_arch_prctl_64 ([kernel.kallsyms])
-                                         __x64_sys_arch_prctl ([kernel.kallsyms])
-                                         do_syscall_64 ([kernel.kallsyms])
-                                         entry_SYSCALL_64 ([kernel.kallsyms])
-                                         init_tls (/usr/lib64/ld-2.29.so)
-                                         dl_main (/usr/lib64/ld-2.29.so)
-                                         _dl_sysdep_start (/usr/lib64/ld-2.29.so)
-                                         _dl_start (/usr/lib64/ld-2.29.so)
-  #
-
-To:
-
-  # perf trace -e msr:write_msr --max-stack=16 sleep 1
-     0.000 sleep/8519 msr:write_msr(msr: FS_BASE, val: 139878031705472)
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       do_arch_prctl_64 ([kernel.kallsyms])
-                                       __x64_sys_arch_prctl ([kernel.kallsyms])
-                                       do_syscall_64 ([kernel.kallsyms])
-                                       entry_SYSCALL_64 ([kernel.kallsyms])
-                                       init_tls (/usr/lib64/ld-2.29.so)
-                                       dl_main (/usr/lib64/ld-2.29.so)
-                                       _dl_sysdep_start (/usr/lib64/ld-2.29.so)
-                                       _dl_start (/usr/lib64/ld-2.29.so)
-  #
-
-This, in reverse, will allow for symbolic system call/tracepoint
-filtering.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-q1q4unmqja5ex7dy0kb5cjaa@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-diff.c | 38 ++---------------------
+ tools/perf/util/Build     |  1 +
+ tools/perf/util/block.c   | 63 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/block.h   | 37 +++++++++++++++++++++++
+ tools/perf/util/hist.c    |  1 +
+ tools/perf/util/symbol.c  | 22 --------------
+ tools/perf/util/symbol.h  | 24 ---------------
+ 7 files changed, 104 insertions(+), 82 deletions(-)
+ create mode 100644 tools/perf/util/block.c
+ create mode 100644 tools/perf/util/block.h
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d52972c..e9f132a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1480,6 +1480,7 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 5281629c27b1..05925b39718a 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -24,6 +24,7 @@
+ #include "util/annotate.h"
+ #include "util/map.h"
+ #include "util/spark.h"
++#include "util/block.h"
+ #include <linux/err.h>
+ #include <linux/zalloc.h>
+ #include <subcmd/pager.h>
+@@ -537,41 +538,6 @@ static void hists__baseline_only(struct hists *hists)
+ 	}
  }
  
- static struct syscall_arg_fmt syscall_arg_fmts__by_name[] = {
-+	{ .name = "msr", .scnprintf = SCA_X86_MSR, }
+-static int64_t block_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+-			 struct hist_entry *left, struct hist_entry *right)
+-{
+-	struct block_info *bi_l = left->block_info;
+-	struct block_info *bi_r = right->block_info;
+-	int cmp;
+-
+-	if (!bi_l->sym || !bi_r->sym) {
+-		if (!bi_l->sym && !bi_r->sym)
+-			return 0;
+-		else if (!bi_l->sym)
+-			return -1;
+-		else
+-			return 1;
+-	}
+-
+-	if (bi_l->sym == bi_r->sym) {
+-		if (bi_l->start == bi_r->start) {
+-			if (bi_l->end == bi_r->end)
+-				return 0;
+-			else
+-				return (int64_t)(bi_r->end - bi_l->end);
+-		} else
+-			return (int64_t)(bi_r->start - bi_l->start);
+-	} else {
+-		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
+-		return cmp;
+-	}
+-
+-	if (bi_l->sym->start != bi_r->sym->start)
+-		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
+-
+-	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
+-}
+-
+ static int64_t block_cycles_diff_cmp(struct hist_entry *left,
+ 				     struct hist_entry *right)
+ {
+@@ -600,7 +566,7 @@ static void init_block_hist(struct block_hist *bh)
+ 
+ 	INIT_LIST_HEAD(&bh->block_fmt.list);
+ 	INIT_LIST_HEAD(&bh->block_fmt.sort_list);
+-	bh->block_fmt.cmp = block_cmp;
++	bh->block_fmt.cmp = block_info__cmp;
+ 	bh->block_fmt.sort = block_sort;
+ 	perf_hpp_list__register_sort_field(&bh->block_list,
+ 					   &bh->block_fmt);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 39814b1806a6..3121c0055950 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -1,4 +1,5 @@
+ perf-y += annotate.o
++perf-y += block.o
+ perf-y += block-range.o
+ perf-y += build-id.o
+ perf-y += cacheline.o
+diff --git a/tools/perf/util/block.c b/tools/perf/util/block.c
+new file mode 100644
+index 000000000000..e5e6f941f040
+--- /dev/null
++++ b/tools/perf/util/block.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdlib.h>
++#include <string.h>
++#include <linux/zalloc.h>
++#include "block.h"
++#include "sort.h"
++
++struct block_info *block_info__get(struct block_info *bi)
++{
++	if (bi)
++		refcount_inc(&bi->refcnt);
++	return bi;
++}
++
++void block_info__put(struct block_info *bi)
++{
++	if (bi && refcount_dec_and_test(&bi->refcnt))
++		free(bi);
++}
++
++struct block_info *block_info__new(void)
++{
++	struct block_info *bi = zalloc(sizeof(*bi));
++
++	if (bi)
++		refcount_set(&bi->refcnt, 1);
++	return bi;
++}
++
++int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++			struct hist_entry *left, struct hist_entry *right)
++{
++	struct block_info *bi_l = left->block_info;
++	struct block_info *bi_r = right->block_info;
++	int cmp;
++
++	if (!bi_l->sym || !bi_r->sym) {
++		if (!bi_l->sym && !bi_r->sym)
++			return 0;
++		else if (!bi_l->sym)
++			return -1;
++		else
++			return 1;
++	}
++
++	if (bi_l->sym == bi_r->sym) {
++		if (bi_l->start == bi_r->start) {
++			if (bi_l->end == bi_r->end)
++				return 0;
++			else
++				return (int64_t)(bi_r->end - bi_l->end);
++		} else
++			return (int64_t)(bi_r->start - bi_l->start);
++	} else {
++		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
++		return cmp;
++	}
++
++	if (bi_l->sym->start != bi_r->sym->start)
++		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
++
++	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
++}
+diff --git a/tools/perf/util/block.h b/tools/perf/util/block.h
+new file mode 100644
+index 000000000000..b6730204d0b9
+--- /dev/null
++++ b/tools/perf/util/block.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_BLOCK_H
++#define __PERF_BLOCK_H
++
++#include <linux/types.h>
++#include <linux/refcount.h>
++#include "util/hist.h"
++#include "util/symbol.h"
++
++struct block_info {
++	struct symbol		*sym;
++	u64			start;
++	u64			end;
++	u64			cycles;
++	u64			cycles_aggr;
++	s64			cycles_spark[NUM_SPARKS];
++	int			num;
++	int			num_aggr;
++	refcount_t		refcnt;
++};
++
++struct block_info *block_info__new(void);
++struct block_info *block_info__get(struct block_info *bi);
++void   block_info__put(struct block_info *bi);
++
++static inline void __block_info__zput(struct block_info **bi)
++{
++	block_info__put(*bi);
++	*bi = NULL;
++}
++
++#define block_info__zput(bi) __block_info__zput(&bi)
++
++int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++			struct hist_entry *left, struct hist_entry *right);
++
++#endif /* __PERF_BLOCK_H */
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 679a1d75090c..26ee45a3e5d0 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -18,6 +18,7 @@
+ #include "srcline.h"
+ #include "symbol.h"
+ #include "thread.h"
++#include "block.h"
+ #include "ui/progress.h"
+ #include <errno.h>
+ #include <math.h>
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index a8f80e427674..fac8887a6759 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2371,25 +2371,3 @@ struct mem_info *mem_info__new(void)
+ 		refcount_set(&mi->refcnt, 1);
+ 	return mi;
+ }
+-
+-struct block_info *block_info__get(struct block_info *bi)
+-{
+-	if (bi)
+-		refcount_inc(&bi->refcnt);
+-	return bi;
+-}
+-
+-void block_info__put(struct block_info *bi)
+-{
+-	if (bi && refcount_dec_and_test(&bi->refcnt))
+-		free(bi);
+-}
+-
+-struct block_info *block_info__new(void)
+-{
+-	struct block_info *bi = zalloc(sizeof(*bi));
+-
+-	if (bi)
+-		refcount_set(&bi->refcnt, 1);
+-	return bi;
+-}
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index cc2a89b99d3d..c3bd16d75d5d 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -106,18 +106,6 @@ struct ref_reloc_sym {
+ 	u64		unrelocated_addr;
  };
  
- static int syscall_arg_fmt__cmp(const void *name, const void *fmtp)
+-struct block_info {
+-	struct symbol		*sym;
+-	u64			start;
+-	u64			end;
+-	u64			cycles;
+-	u64			cycles_aggr;
+-	s64			cycles_spark[NUM_SPARKS];
+-	int			num;
+-	int			num_aggr;
+-	refcount_t		refcnt;
+-};
+-
+ struct addr_location {
+ 	struct machine *machine;
+ 	struct thread *thread;
+@@ -291,16 +279,4 @@ static inline void __mem_info__zput(struct mem_info **mi)
+ 
+ #define mem_info__zput(mi) __mem_info__zput(&mi)
+ 
+-struct block_info *block_info__new(void);
+-struct block_info *block_info__get(struct block_info *bi);
+-void   block_info__put(struct block_info *bi);
+-
+-static inline void __block_info__zput(struct block_info **bi)
+-{
+-	block_info__put(*bi);
+-	*bi = NULL;
+-}
+-
+-#define block_info__zput(bi) __block_info__zput(&bi)
+-
+ #endif /* __PERF_SYMBOL */
+-- 
+2.17.1
+
