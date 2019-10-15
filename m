@@ -2,195 +2,321 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEBBECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BE6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D64217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:59:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pM3zMsvV"
+	by mail.kernel.org (Postfix) with ESMTP id C078D20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfJOC7h (ORCPT
+        id S1727630AbfJODBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 22:59:37 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:54110 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfJOC7h (ORCPT
+        Mon, 14 Oct 2019 23:01:07 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51626 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726833AbfJODBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 22:59:37 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191015025934epoutp02b93dbb2aa4be915d2f16b71b6f73e183~Nsr4d-Ep_2726127261epoutp02Q
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 02:59:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191015025934epoutp02b93dbb2aa4be915d2f16b71b6f73e183~Nsr4d-Ep_2726127261epoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571108374;
-        bh=RPQoptcAngOhAlQVefa7LM3NKKfYj4RRZaFH1zdTe2M=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=pM3zMsvV3O77njPhz87UnboTBV3hyaYGHAcsuDHejfuEe3WKEjeWoZkpPTyYoUYSm
-         OteJAcuwoK3Hno7ZpMYaMsf07nqeP2LVHyqkZDl/Lmqz1DG5kGIbq1Z+u9n96vhLmN
-         JoMGYIMWA7eQc3jY1IAAVsiKsUvAaxb9MllGIoDw=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20191015025933epcas5p355fcfbe7ceb88a4387638bd787e6633c~Nsr33bnqe0363703637epcas5p3g;
-        Tue, 15 Oct 2019 02:59:33 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D3.C3.04660.51635AD5; Tue, 15 Oct 2019 11:59:33 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1~Nsr3M8bvn2838728387epcas5p1T;
-        Tue, 15 Oct 2019 02:59:33 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191015025933epsmtrp20fd09ea9973168d41c7b407bf6ab5099~Nsr3MMi0P1028310283epsmtrp29;
-        Tue, 15 Oct 2019 02:59:33 +0000 (GMT)
-X-AuditID: b6c32a4a-60fff70000001234-a5-5da536157502
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        21.51.03889.51635AD5; Tue, 15 Oct 2019 11:59:33 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191015025931epsmtip1f01ff0445547b0078ab7361d1e5bc2d4~Nsr1xvVAt1755217552epsmtip1u;
-        Tue, 15 Oct 2019 02:59:31 +0000 (GMT)
-From:   Pankaj Dubey <pankaj.dubey@samsung.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bhelgaas@google.com, andrew.murray@arm.com,
-        lorenzo.pieralisi@arm.com, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, vidyas@nvidia.com,
-        Anvesh Salveru <anvesh.s@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH v3] PCI: dwc: Add support to add GEN3 related equalization
- quirks
-Date:   Tue, 15 Oct 2019 08:29:22 +0530
-Message-Id: <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIIsWRmVeSWpSXmKPExsWy7bCmpq6o2dJYg193zSya/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mclucXnXHDaLs/OOs1m8+f2C3WLR1i/sFte28zpweayZt4bRY+esu+we
-        CzaVevQ2v2Pz6NuyitFjy/7PjB6fN8kFsEdx2aSk5mSWpRbp2yVwZXx8vZ+94IRkxcEFi9ka
-        GB+LdjFyckgImEh87Wpi7WLk4hAS2M0ocWDFaiYI5xOjxJ/J+9ghnG+MErcvzGOCaZm77R4z
-        RGIvo8SsKduhqlqYJN5fe8YKUsUmoCvx5P1cZhBbRMBaouHVKrAlzALPGSWu7r/KCJIQFgiW
-        eHq2G6yIRUBV4smbXWDNvAIeEvdmz4VaJydx81wn2DoJgRVsEj8m/2GBSLhITNt5hBXCFpZ4
-        dXwLO4QtJfH53V42CDtf4sfiSVDNLYwSk4/PhWqwlzhwZQ7QIA6gkzQl1u/SBwkzC/BJ9P5+
-        wgQSlhDglehoE4KoVpP4/vwMM4QtI/GweSnUbR4Su6/OBDtHSCBW4t/S/WwTGGVmIQxdwMi4
-        ilEytaA4Nz212LTAKC+1XK84Mbe4NC9dLzk/dxMjOCFoee1gXHbO5xCjAAejEg+vQMuSWCHW
-        xLLiytxDjBIczEoivPNBQrwpiZVVqUX58UWlOanFhxilOViUxHknsV6NERJITyxJzU5NLUgt
-        gskycXBKNTDmbW3nbxR4uvtG192j6RGLtkqq9GyOqqx+w7Zf7rtYj3zCdSUVsU36U6f8/+c1
-        h0vx0q05qU83X2nzmqz7a87kZNknrptXqh3fvWs90wE/nhe515avLVr/c+fjTZncxfuy15o/
-        Of3zFNe+HBfWrgle12eVMTM4iz3+ei3WqlnM91LA16cfZz6oVmIpzkg01GIuKk4EAMeYvyUE
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMLMWRmVeSWpSXmKPExsWy7bCSnK6o2dJYg9/HeSya/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mclucXnXHDaLs/OOs1m8+f2C3WLR1i/sFte28zpweayZt4bRY+esu+we
-        CzaVevQ2v2Pz6NuyitFjy/7PjB6fN8kFsEdx2aSk5mSWpRbp2yVwZXx8vZ+94IRkxcEFi9ka
-        GB+LdjFyckgImEjM3XaPuYuRi0NIYDejxK0zS1ggEjISk1evYIWwhSVW/nvODlHUxCQxbcd+
-        dpAEm4CuxJP3c5lBbBEBW4mGvx1gk5gF3jNKzN9whREkISwQKHH56g+wqSwCqhJP3uwCm8or
-        4CFxb/ZcJogNchI3z3UyT2DkWcDIsIpRMrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIzjo
-        tLR2MJ44EX+IUYCDUYmHN6NtSawQa2JZcWXuIUYJDmYlEd75LUAh3pTEyqrUovz4otKc1OJD
-        jNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFINjF1yqyrO+62Wad6x+aLPRLe/F5P2LumN
-        rDrndmWW8qGfa7ZVxS19IfrXRMvCTtL+a1i3WRv/nQ2H5b/wZJlK3jp73PhTdfG31CM7ptkz
-        v7SbcPap7p5lhZ6vpTR/sws9NagPdyq1SQi3Xn14xambCWYnmSbvSJkZs1fxJYd95Kovj3cd
-        8RDjz1JiKc5INNRiLipOBAD8dnLQNgIAAA==
-X-CMS-MailID: 20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1
-References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
+        Mon, 14 Oct 2019 23:01:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Tf5nhS._1571108460;
+Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tf5nhS._1571108460)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 15 Oct 2019 11:01:01 +0800
+Subject: Re: [PATCH] rcu: make PREEMPT_RCU to be a decoration of TREE_RCU
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+To:     paulmck@kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Sterba <dsterba@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20191013125959.3280-1-laijs@linux.alibaba.com>
+ <20191014184832.GA125935@google.com>
+ <20191015014650.GL2689@paulmck-ThinkPad-P72>
+ <CAJhGHyCMa7mU_K+-22MHGwJ+BfFun=2ndzehZCMoNrgYfBowaQ@mail.gmail.com>
+ <20191015020023.GO2689@paulmck-ThinkPad-P72>
+ <6bc1c7ef-5389-3a88-9ffe-c8c56e22a11a@linux.alibaba.com>
+Message-ID: <ad88e699-5eba-e425-77ae-a73bcf4492e0@linux.alibaba.com>
+Date:   Tue, 15 Oct 2019 11:01:00 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <6bc1c7ef-5389-3a88-9ffe-c8c56e22a11a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anvesh Salveru <anvesh.s@samsung.com>
 
-In some platforms, PCIe PHY may have issues which will prevent linkup
-to happen in GEN3 or higher speed. In case equalization fails, link will
-fallback to GEN1.
 
-DesignWare controller gives flexibility to disable GEN3 equalization
-completely or only phase 2 and 3 of equalization.
+On 2019/10/15 10:45 上午, Lai Jiangshan wrote:
+> 
+> 
+> On 2019/10/15 10:00 上午, Paul E. McKenney wrote:
+>> On Tue, Oct 15, 2019 at 09:50:21AM +0800, Lai Jiangshan wrote:
+>>> On Tue, Oct 15, 2019 at 9:46 AM Paul E. McKenney <paulmck@kernel.org> 
+>>> wrote:
+>>>>
+>>>> On Mon, Oct 14, 2019 at 02:48:32PM -0400, Joel Fernandes wrote:
+>>>>> On Sun, Oct 13, 2019 at 12:59:57PM +0000, Lai Jiangshan wrote:
+>>>>>> Currently PREEMPT_RCU and TREE_RCU are "contrary" configs
+>>>>>> when they can't be both on. But PREEMPT_RCU is actually a kind
+>>>>>> of TREE_RCU in the implementation. It seams to be appropriate
+>>>>>> to make PREEMPT_RCU to be a decorative option of TREE_RCU.
+>>>>>>
+>>>>>
+>>>>> Looks like a nice simplification and so far I could not poke any 
+>>>>> holes in the
+>>>>> code...
+>>>>>
+>>>>> I am in support of this patch for further review and testing. Thanks!
+>>>>>
+>>>>> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>>>
+>>>> Thank you both!
+>>>>
+>>>> Lai, what is this patch against?  It does not want to apply to the 
+>>>> current
+>>>> -rcu "dev" branch.
+>>>
+>>> Oh, sorry
+>>>
+>>> I wrongly made the change base on upstream.
+>>> I will rebase later.
+>>
+>> Very good, looking forward to this updated version.
+>>
+>>                             Thanx, Paul
+> 
+> 
+> In my box, the patch can be applied to the -rcu "dev" well.
 
-This patch enables the DesignWare driver to disable the PCIe GEN3
-equalization by enabling one of the following quirks:
- - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all phases
- - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization phase 2 & 3
+Oh, I first applied it by "git cherry-pick" not "git am".
+It did have conflicts when using "git am". Updated patch
+was sent, sorry for the nosing.
 
-Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
-struct.
+thanks
+Lai
 
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes w.r.t v2:
- - Rebased on latest linus/master
- - Added Reviewed-by and Acked-by
 
- drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h |  9 +++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 820488d..e247d6d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -556,4 +556,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		       PCIE_PL_CHK_REG_CHK_REG_START;
- 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
- 	}
-+
-+	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-+		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
-+		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-+	}
-+
-+	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-+		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
-+		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-+	}
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 5a18e94..7d3fe6f 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -29,6 +29,10 @@
- #define LINK_WAIT_MAX_IATU_RETRIES	5
- #define LINK_WAIT_IATU			9
- 
-+/* Parameters for GEN3 related quirks */
-+#define DWC_EQUALIZATION_DISABLE	BIT(1)
-+#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
-+
- /* Synopsys-specific PCIe configuration registers */
- #define PCIE_PORT_LINK_CONTROL		0x710
- #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
-@@ -60,6 +64,10 @@
- #define PCIE_MSI_INTR0_MASK		0x82C
- #define PCIE_MSI_INTR0_STATUS		0x830
- 
-+#define PCIE_PORT_GEN3_RELATED		0x890
-+#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
-+#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
-+
- #define PCIE_ATU_VIEWPORT		0x900
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
- #define PCIE_ATU_REGION_OUTBOUND	0
-@@ -253,6 +261,7 @@ struct dw_pcie {
- 	struct dw_pcie_ep	ep;
- 	const struct dw_pcie_ops *ops;
- 	unsigned int		version;
-+	unsigned int		quirk;
- };
- 
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
--- 
-2.7.4
-
+> And there is nothing strange after boot.
+> 
+> Have I just made a mistake a again? In my box, the HEAD
+> of -rcu "dev" is 9725023b ("torture: Handle jitter for CPUs that cannot 
+> be offlined")
+> 
+> Thanks
+> Lai
+> 
+>>
+>>> thanks
+>>> Lai
+>>>
+>>>>
+>>>>                                                          Thanx, Paul
+>>>>
+>>>>> thanks,
+>>>>>
+>>>>>   - Joel
+>>>>>
+>>>>>
+>>>>>> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
+>>>>>> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+>>>>>> ---
+>>>>>>   include/linux/rcupdate.h   |  4 ++--
+>>>>>>   include/trace/events/rcu.h |  4 ++--
+>>>>>>   kernel/rcu/Kconfig         | 13 +++++++------
+>>>>>>   kernel/rcu/Makefile        |  1 -
+>>>>>>   kernel/rcu/rcu.h           |  2 +-
+>>>>>>   kernel/rcu/update.c        |  2 +-
+>>>>>>   kernel/sysctl.c            |  2 +-
+>>>>>>   7 files changed, 14 insertions(+), 14 deletions(-)
+>>>>>>
+>>>>>> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+>>>>>> index 75a2eded7aa2..1eee9f6c27f9 100644
+>>>>>> --- a/include/linux/rcupdate.h
+>>>>>> +++ b/include/linux/rcupdate.h
+>>>>>> @@ -167,7 +167,7 @@ do { \
+>>>>>>    * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
+>>>>>>    */
+>>>>>>
+>>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>>   #include <linux/rcutree.h>
+>>>>>>   #elif defined(CONFIG_TINY_RCU)
+>>>>>>   #include <linux/rcutiny.h>
+>>>>>> @@ -583,7 +583,7 @@ do 
+>>>>>> {                                                                          
+>>>>>> \
+>>>>>>    * read-side critical section that would block in a !PREEMPT 
+>>>>>> kernel.
+>>>>>>    * But if you want the full story, read on!
+>>>>>>    *
+>>>>>> - * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
+>>>>>> + * In non-preemptible RCU implementations (pure TREE_RCU and 
+>>>>>> TINY_RCU),
+>>>>>>    * it is illegal to block while in an RCU read-side critical 
+>>>>>> section.
+>>>>>>    * In preemptible RCU implementations (PREEMPT_RCU) in 
+>>>>>> CONFIG_PREEMPTION
+>>>>>>    * kernel builds, RCU read-side critical sections may be preempted,
+>>>>>> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+>>>>>> index 694bd040cf51..1ce15c5be4c8 100644
+>>>>>> --- a/include/trace/events/rcu.h
+>>>>>> +++ b/include/trace/events/rcu.h
+>>>>>> @@ -41,7 +41,7 @@ TRACE_EVENT(rcu_utilization,
+>>>>>>      TP_printk("%s", __entry->s)
+>>>>>>   );
+>>>>>>
+>>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>>
+>>>>>>   /*
+>>>>>>    * Tracepoint for grace-period events.  Takes a string 
+>>>>>> identifying the
+>>>>>> @@ -425,7 +425,7 @@ TRACE_EVENT_RCU(rcu_fqs,
+>>>>>>                __entry->cpu, __entry->qsevent)
+>>>>>>   );
+>>>>>>
+>>>>>> -#endif /* #if defined(CONFIG_TREE_RCU) || 
+>>>>>> defined(CONFIG_PREEMPT_RCU) */
+>>>>>> +#endif /* #if defined(CONFIG_TREE_RCU) */
+>>>>>>
+>>>>>>   /*
+>>>>>>    * Tracepoint for dyntick-idle entry/exit events.  These take a 
+>>>>>> string
+>>>>>> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+>>>>>> index 7644eda17d62..0303934e6ef0 100644
+>>>>>> --- a/kernel/rcu/Kconfig
+>>>>>> +++ b/kernel/rcu/Kconfig
+>>>>>> @@ -7,7 +7,7 @@ menu "RCU Subsystem"
+>>>>>>
+>>>>>>   config TREE_RCU
+>>>>>>      bool
+>>>>>> -   default y if !PREEMPTION && SMP
+>>>>>> +   default y if SMP
+>>>>>>      help
+>>>>>>        This option selects the RCU implementation that is
+>>>>>>        designed for very large SMP system with hundreds or
+>>>>>> @@ -17,6 +17,7 @@ config TREE_RCU
+>>>>>>   config PREEMPT_RCU
+>>>>>>      bool
+>>>>>>      default y if PREEMPTION
+>>>>>> +   select TREE_RCU
+>>>>>>      help
+>>>>>>        This option selects the RCU implementation that is
+>>>>>>        designed for very large SMP systems with hundreds or
+>>>>>> @@ -78,7 +79,7 @@ config TASKS_RCU
+>>>>>>        user-mode execution as quiescent states.
+>>>>>>
+>>>>>>   config RCU_STALL_COMMON
+>>>>>> -   def_bool ( TREE_RCU || PREEMPT_RCU )
+>>>>>> +   def_bool TREE_RCU
+>>>>>>      help
+>>>>>>        This option enables RCU CPU stall code that is common between
+>>>>>>        the TINY and TREE variants of RCU.  The purpose is to allow
+>>>>>> @@ -86,13 +87,13 @@ config RCU_STALL_COMMON
+>>>>>>        making these warnings mandatory for the tree variants.
+>>>>>>
+>>>>>>   config RCU_NEED_SEGCBLIST
+>>>>>> -   def_bool ( TREE_RCU || PREEMPT_RCU || TREE_SRCU )
+>>>>>> +   def_bool ( TREE_RCU || TREE_SRCU )
+>>>>>>
+>>>>>>   config RCU_FANOUT
+>>>>>>      int "Tree-based hierarchical RCU fanout value"
+>>>>>>      range 2 64 if 64BIT
+>>>>>>      range 2 32 if !64BIT
+>>>>>> -   depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
+>>>>>> +   depends on TREE_RCU && RCU_EXPERT
+>>>>>>      default 64 if 64BIT
+>>>>>>      default 32 if !64BIT
+>>>>>>      help
+>>>>>> @@ -112,7 +113,7 @@ config RCU_FANOUT_LEAF
+>>>>>>      int "Tree-based hierarchical RCU leaf-level fanout value"
+>>>>>>      range 2 64 if 64BIT
+>>>>>>      range 2 32 if !64BIT
+>>>>>> -   depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
+>>>>>> +   depends on TREE_RCU && RCU_EXPERT
+>>>>>>      default 16
+>>>>>>      help
+>>>>>>        This option controls the leaf-level fanout of hierarchical
+>>>>>> @@ -187,7 +188,7 @@ config RCU_BOOST_DELAY
+>>>>>>
+>>>>>>   config RCU_NOCB_CPU
+>>>>>>      bool "Offload RCU callback processing from boot-selected CPUs"
+>>>>>> -   depends on TREE_RCU || PREEMPT_RCU
+>>>>>> +   depends on TREE_RCU
+>>>>>>      depends on RCU_EXPERT || NO_HZ_FULL
+>>>>>>      default n
+>>>>>>      help
+>>>>>> diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
+>>>>>> index 020e8b6a644b..82d5fba48b2f 100644
+>>>>>> --- a/kernel/rcu/Makefile
+>>>>>> +++ b/kernel/rcu/Makefile
+>>>>>> @@ -9,6 +9,5 @@ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
+>>>>>>   obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
+>>>>>>   obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
+>>>>>>   obj-$(CONFIG_TREE_RCU) += tree.o
+>>>>>> -obj-$(CONFIG_PREEMPT_RCU) += tree.o
+>>>>>>   obj-$(CONFIG_TINY_RCU) += tiny.o
+>>>>>>   obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
+>>>>>> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+>>>>>> index 8fd4f82c9b3d..4149ba76824f 100644
+>>>>>> --- a/kernel/rcu/rcu.h
+>>>>>> +++ b/kernel/rcu/rcu.h
+>>>>>> @@ -452,7 +452,7 @@ enum rcutorture_type {
+>>>>>>      INVALID_RCU_FLAVOR
+>>>>>>   };
+>>>>>>
+>>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>>   void rcutorture_get_gp_data(enum rcutorture_type test_type, int 
+>>>>>> *flags,
+>>>>>>                          unsigned long *gp_seq);
+>>>>>>   void rcutorture_record_progress(unsigned long vernum);
+>>>>>> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+>>>>>> index 1861103662db..34a7452b25fd 100644
+>>>>>> --- a/kernel/rcu/update.c
+>>>>>> +++ b/kernel/rcu/update.c
+>>>>>> @@ -435,7 +435,7 @@ struct debug_obj_descr rcuhead_debug_descr = {
+>>>>>>   EXPORT_SYMBOL_GPL(rcuhead_debug_descr);
+>>>>>>   #endif /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
+>>>>>>
+>>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) || 
+>>>>>> defined(CONFIG_RCU_TRACE)
+>>>>>> +#if defined(CONFIG_TREE_RCU) || defined(CONFIG_RCU_TRACE)
+>>>>>>   void do_trace_rcu_torture_read(const char *rcutorturename, 
+>>>>>> struct rcu_head *rhp,
+>>>>>>                             unsigned long secs,
+>>>>>>                             unsigned long c_old, unsigned long c)
+>>>>>> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+>>>>>> index 00fcea236eba..2ace158a4d72 100644
+>>>>>> --- a/kernel/sysctl.c
+>>>>>> +++ b/kernel/sysctl.c
+>>>>>> @@ -1268,7 +1268,7 @@ static struct ctl_table kern_table[] = {
+>>>>>>              .proc_handler   = proc_do_static_key,
+>>>>>>      },
+>>>>>>   #endif
+>>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>>      {
+>>>>>>              .procname       = "panic_on_rcu_stall",
+>>>>>>              .data           = &sysctl_panic_on_rcu_stall,
+>>>>>> -- 
+>>>>>> 2.20.1
+>>>>>>
