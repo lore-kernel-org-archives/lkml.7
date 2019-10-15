@@ -2,62 +2,108 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54308C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4BAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3512121835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA8020659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbfJOJwq (ORCPT
+        id S1727005AbfJOJyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:52:46 -0400
-Received: from 8bytes.org ([81.169.241.247]:47374 "EHLO theia.8bytes.org"
+        Tue, 15 Oct 2019 05:54:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:34004 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfJOJwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:52:45 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 48096398; Tue, 15 Oct 2019 11:52:44 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 11:52:42 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH 1/1] iommu/vt-d: Refactor find_domain() helper
-Message-ID: <20191015095242.GB14518@8bytes.org>
-References: <20190921070644.10630-1-baolu.lu@linux.intel.com>
+        id S1725890AbfJOJyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:54:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8074C28;
+        Tue, 15 Oct 2019 02:54:04 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2BD3F68E;
+        Tue, 15 Oct 2019 02:54:03 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 10:53:58 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before
+ training link
+Message-ID: <20191015095358.GA32431@e121166-lin.cambridge.arm.com>
+References: <20190522213351.21366-2-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190921070644.10630-1-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190522213351.21366-2-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 21, 2019 at 03:06:44PM +0800, Lu Baolu wrote:
-> Current find_domain() helper checks and does the deferred domain
-> attachment and return the domain in use. This isn't always the
-> use case for the callers. Some callers only want to retrieve the
-> current domain in use.
+On Wed, May 22, 2019 at 11:33:50PM +0200, Remi Pommarel wrote:
+> When configuring pcie reset pin from gpio (e.g. initially set by
+> u-boot) to pcie function this pin goes low for a brief moment
+> asserting the PERST# signal. Thus connected device enters fundamental
+> reset process and link configuration can only begin after a minimal
+> 100ms delay (see [1]).
 > 
-> This refactors find_domain() into two helpers: 1) find_domain()
-> only returns the domain in use; 2) deferred_attach_domain() does
-> the deferred domain attachment if required and return the domain
-> in use.
+> Because the pin configuration comes from the "default" pinctrl it is
+> implicitly configured before the probe callback is called:
 > 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> driver_probe_device()
+>   really_probe()
+>     ...
+>     pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
+>                            function and PERST# is asserted */
+>     ...
+>     drv->probe()
+> 
+> [1] "PCI Express Base Specification", REV. 4.0
+>     PCI Express, February 19 2014, 6.6.1 Conventional Reset
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > ---
->  drivers/iommu/intel-iommu.c | 31 ++++++++++++++++++-------------
->  1 file changed, 18 insertions(+), 13 deletions(-)
+> Changes since v1:
+>   - Add a comment about pinctrl implicit pin configuration
+>   - Use more legible msleep
+>   - Use PCI_PM_D3COLD_WAIT macro
+> 
+> Please note that I will unlikely be able to answer any comments from May
+> 24th to June 10th.
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Applied, thanks.
+Applied to pci/aardvark, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e0306ff00..d998c2b9cd04 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -324,6 +324,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
+>  	advk_writel(pcie, reg, PIO_CTRL);
+>  
+> +	/*
+> +	 * PERST# signal could have been asserted by pinctrl subsystem before
+> +	 * probe() callback has been called, making the endpoint going into
+> +	 * fundamental reset. As required by PCI Express spec a delay for at
+> +	 * least 100ms after such a reset before link training is needed.
+> +	 */
+> +	msleep(PCI_PM_D3COLD_WAIT);
+> +
+>  	/* Start link training */
+>  	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+>  	reg |= PCIE_CORE_LINK_TRAINING;
+> -- 
+> 2.20.1
+> 
