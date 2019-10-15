@@ -2,214 +2,175 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD994ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02D5ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1A920854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65DB20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="sDw34uGu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ha/JGsd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732872AbfJOOhN (ORCPT
+        id S1732892AbfJOOh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:37:13 -0400
-Received: from mail-eopbgr720059.outbound.protection.outlook.com ([40.107.72.59]:20653
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732599AbfJOOhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:37:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=etWl/WIFTpZZnNGO/da7tZ3LjVjcP20J9sclVAtJI25dtwdTFoHtTuAr79eK4dB5Fyr1epP222W2CElT7hk8nnv61psfPfI5/dRKnE8qNE81+ouUTQWr/3oOo8fzy1gBDHY1xBil2h2d1Nw7qVAt4FJuNyqvy02MUMle6IZplrLKgW2HuUWYxmMJ0jwuwX6h2AyAIC1fkj6/FM5q+9eYOC0DtANLaeGdOkIR7Nu6tp1gDBy36qzR1WRhjg3clduWUoouC0oVBEDtntoVT6Ef44IsHIUvogwcXRXH/shCzfOgutAVKuPxEUSu6iSF2i1HdXJBQHwsrWweDOtRa9d0uA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zuvBu2FEKPwRrPWYEZo1dAM/E6K1lFR5hb7zZT3YlCg=;
- b=dT7w9qU9oea3Pg32adt9r7JmF6rf3xdnFb8rfcP38orQKqD1AqGVGu6fvJMyKpuE327USTSmSqDeVRO8vL/dgs0/+DtcogEZT72PM8Z2cDJ6yr6vpq8TXHt7pAJZBc0uSPKMsCnSGPG0fxjyloj3BbtIo60p7OqYu3rl5PotPSsK5mkf5fHkPsAF5/pkTT1G7Fkbm5/EeaPcni8nTFd06dlJ45oJ7J9MklGp9n24D61YdYqe/M+WSZwvd4MRBzshWvboVtTB2JzFGPTlBa0eB2fM+gKNUMfUY3psoBPgs0BXYkhJDTFFmn25MUpwuN3QmAmOmVmScoVTtmt8JuOtxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linux-m68k.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Tue, 15 Oct 2019 10:37:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38863 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732825AbfJOOh0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:37:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y18so14735131wrn.5;
+        Tue, 15 Oct 2019 07:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zuvBu2FEKPwRrPWYEZo1dAM/E6K1lFR5hb7zZT3YlCg=;
- b=sDw34uGuhfgfbm87SaswzBuNMCjgpbFJznTVej5LmKp7B7jfQZqrNXJk1xZ9h6h2i5V3V/ht8abwtMiVFwXaQkR5J5EbjKKdRl4FFW/aFmBC8aE4UPc0inzr9ld9YMfT+mg2EuyP9jG4iOnjpjYX6hCGA1tQ1oEXCnrmnGkV90M=
-Received: from MWHPR02CA0036.namprd02.prod.outlook.com (2603:10b6:301:60::25)
- by MWHPR02MB2734.namprd02.prod.outlook.com (2603:10b6:300:10b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.18; Tue, 15 Oct
- 2019 14:37:09 +0000
-Received: from SN1NAM02FT007.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by MWHPR02CA0036.outlook.office365.com
- (2603:10b6:301:60::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16 via Frontend
- Transport; Tue, 15 Oct 2019 14:37:08 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT007.mail.protection.outlook.com (10.152.72.88) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2347.16
- via Frontend Transport; Tue, 15 Oct 2019 14:37:08 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iKNwi-0006BP-2q; Tue, 15 Oct 2019 07:37:08 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iKNwc-0008Mm-Vh; Tue, 15 Oct 2019 07:37:03 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9FEaxtH011496;
-        Tue, 15 Oct 2019 07:36:59 -0700
-Received: from [172.30.17.123]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iKNwZ-0008LE-EK; Tue, 15 Oct 2019 07:36:59 -0700
-Subject: Re: [PATCH] serial: core: Use cons->index for preferred console
- registration
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
- <CAMuHMdWY2VsY-CyAxSvpm1XYicAWqU7NORSQofQ+T195DwyLUg@mail.gmail.com>
- <7284590f-2b74-1b47-2d61-783ad8d5f46f@monstr.eu>
- <CAMuHMdWZYALZB1bP5Mtoq4Nj5iubzdWBf1vRY9Mh5QvjCDhBgA@mail.gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
-Date:   Tue, 15 Oct 2019 16:36:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=neBsjR3UuUvIqjWSRW2rTQl/yD7xf9xUmzZJeouSucY=;
+        b=Ha/JGsd50SAmjoukDYzVJ+uuPpyS6R2PO/eaw9gkiIRIoM/HGQIlw9cEAjxcehLXgX
+         xtPrKatNFAft1UWxIzn3Defz+Km3jvCRPXTsAq9Pq3ufY6HVgJoOWyGxGPfjPvEdYCas
+         nmFfVEj8/OM25w2meSCjx2zxPPI1LmHgXKvgVJTMlwuYyyzncaqGB6hSe47Jkm2BmDdE
+         7Q1oVk61trb1ophCLz3TyIvG+5B4wxLnGIWfh8XXAXF2YWMuNcBZpEq+5iu4OQD/KM2o
+         pmgr9RP7X7EJ6h82CRMMDcjBoylZdxySRDcK25cQYOVMInHl93hoNZ/0PIMDNaEQWzXg
+         37Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=neBsjR3UuUvIqjWSRW2rTQl/yD7xf9xUmzZJeouSucY=;
+        b=KTyxvWZc2Mpu0Uv1gdnpIq1i8j6ULRyvjuGLWFIfaYipbtVk1kc9etfxf0PzaRUG8E
+         khX4gXyu2Npt1szc/dRIZ6NPW06gbRnKuiFvh2KR+p7Xer2kPVYyBZMvTYIRtBAB42al
+         T+z3Snh/ke33A7H+CAAG1LejRCrbgdyXy/tytCzixC0omIrgrL9Rx9mnRV6sLErpBB1M
+         dTONR0OBUBVfHj2V+K6O8ECur6J/zHu4cWp8piPW9Tx+tPfl8S8ESXUO3iqYE2FTMkdn
+         U8r2H4OG5IoUvamiFjDAxyopPEffSj6WpAdC2SX408E1hNqQnx2MqzPANm3vsKDif5CY
+         j3rQ==
+X-Gm-Message-State: APjAAAWtI8qxpRHampWBjXmwzszy581F2s3bXxwonINwcW31GSpKkmyI
+        IkP/gqKsjgm0AzGVeVLY/fk=
+X-Google-Smtp-Source: APXvYqzV3/RVLumtjzKMF39X/kb+3GTjFjA6Zi36mjTbF3VD42lPRp342ZlZGPdL0S+AnrxMQCU2bw==
+X-Received: by 2002:a5d:674e:: with SMTP id l14mr29799012wrw.45.1571150243309;
+        Tue, 15 Oct 2019 07:37:23 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id r20sm29954681wrg.61.2019.10.15.07.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 07:37:22 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 15:37:20 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
+Message-ID: <20191015143720.GA13108@stefanha-x1.localdomain>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191014174946.GC5359@stefanha-x1.localdomain>
+ <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWZYALZB1bP5Mtoq4Nj5iubzdWBf1vRY9Mh5QvjCDhBgA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(396003)(346002)(189003)(199004)(9786002)(336012)(230700001)(31696002)(11346002)(446003)(8936002)(36386004)(5660300002)(50466002)(229853002)(478600001)(356004)(6666004)(186003)(23676004)(8676002)(106002)(70206006)(36756003)(2906002)(2486003)(26005)(65956001)(4326008)(70586007)(14444005)(31686004)(76176011)(81166006)(44832011)(126002)(47776003)(476003)(65806001)(6246003)(486006)(305945005)(426003)(2616005)(81156014)(53546011)(316002)(110136005)(54906003)(58126008)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2734;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f891033b-fea0-48ab-5966-08d7517d2860
-X-MS-TrafficTypeDiagnostic: MWHPR02MB2734:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <MWHPR02MB2734D4DFD08DE1A87DDDC699C6930@MWHPR02MB2734.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 01917B1794
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: e50BbnGs/24ha5olcnfhAncKaoT5LTBtBgBWH5WsAk+CBvEy4QGnoPlNAxyNxkUzfS5WfU7Oaqpj67wpvLQtmRSLvycYVwFjttMnEdbX5zmVQCn9RpW7CXbQ5oaJPYjDcADHKRw9W3XtG5l+7JZgt1edbYuXDBOzEj84DgXddMeKoGWo2RMJBgYfxZYLpfKP9BwJL7WKU+MhFC9laQzVD6yoZDr705bu25em6PT6lsZxee75eHHEvHmp0tkKZ8kAwQEgvCMxC+3z0x1cKxws+zQUHXbvYalWSePCTysQnMBIbq1Akj5prpJKUyjuQhtq5mvCGQrYamSvD9jRVfLNRuOzwIZOV16D51I3UDclmv8gDIufcQjg8v+D0hDoEnadE4uUMi81oGtsXqfihSFtOlw/JXEfsdRyDRS2gLPpK5o=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2019 14:37:08.4889
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f891033b-fea0-48ab-5966-08d7517d2860
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2734
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+In-Reply-To: <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15. 10. 19 11:51, Geert Uytterhoeven wrote:
-> Hi Michal,
-> 
-> On Tue, Oct 15, 2019 at 11:22 AM Michal Simek <monstr@monstr.eu> wrote:
->> On 15. 10. 19 11:19, Geert Uytterhoeven wrote:
->>> On Mon, Sep 2, 2019 at 4:29 PM Michal Simek <michal.simek@xilinx.com> wrote:
->>>> The reason for this patch is xilinx_uartps driver which create one dynamic
->>>> instance per IP with unique major and minor combinations. drv->nr is in
->>>> this case all the time setup to 1. That means that uport->line is all the
->>>> time setup to 0 and drv->tty_driver->name_base is doing shift in name to
->>>> for example ttyPS3.
->>>>
->>>> register_console() is looping over console_cmdline array and looking for
->>>> proper name/index combination which is in our case ttyPS/3.
->>>> That's why every instance of driver needs to be registered with proper
->>>> combination of name/number (ttyPS/3). Using uport->line is doing
->>>> registration with ttyPS/0 which is wrong that's why proper console index
->>>> should be used which is in cons->index field.
->>>>
->>>> Also it is visible that recording console should be done based on
->>>> information about console not about the port but in most cases numbers are
->>>> the same and xilinx_uartps is only one exception now.
->>>>
->>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>
->>> This is now commit 91daae03188e0dd1 ("serial: core: Use cons->index
->>> for preferred console registration") in tty-next.
->>>
->>> This has been bisected to break the serial console on (at least)
->>> r8a7791/koelsch and r8a7795/h3-salvator-xs.
->>>
->>> The line "printk: console [ttySC0] enabled" is no longer printed.
->>> The system continues booting without any serial console output, and the
->>> login prompt never appears on the serial console.
->>>
->>> Reverting this commit fixes the issue.
->>
->> Sorry for trouble with this patch. Can you please point me to dts files
->> for these boards and also what's the value you have in uport->line and
-> 
-> arch/arm/boot/dts/r8a7791-koelsch.dts
-> arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-> 
->> uport->cons->index?
-> 
-> On r8a7791/koelsch:
-> 
->     Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
->     platform serial8250: uport->line = 0, uport->cons->index = -1
->     platform serial8250: uport->line = 1, uport->cons->index = -1
->     platform serial8250: uport->line = 2, uport->cons->index = -1
->     platform serial8250: uport->line = 3, uport->cons->index = -1
->     SuperH (H)SCI(F) driver initialized
->   * sh-sci e6e60000.serial: uport->line = 0, uport->cons->index = -1
->   * e6e60000.serial: ttySC0 at MMIO 0xe6e60000 (irq = 79, base_baud =
-> 0) is a scif
->     printk: console [ttySC0] enabled
->     sh-sci e6e68000.serial: uport->line = 1, uport->cons->index = 0
->     e6e68000.serial: ttySC1 at MMIO 0xe6e68000 (irq = 80, base_baud =
-> 0) is a scif
-> 
-> On r8a7795/salvator-xs:
-> 
->     sh-sci e6550000.serial: uport->line = 1, uport->cons->index = -1
->     e6550000.serial: ttySC1 at MMIO 0xe6550000 (irq = 34, base_baud =
-> 0) is a hscif
->   * sh-sci e6e88000.serial: uport->line = 0, uport->cons->index = -1
->   * e6e88000.serial: ttySC0 at MMIO 0xe6e88000 (irq = 120, base_baud =
-> 0) is a scif
->     printk: console [ttySC0] enabled
-> 
-> Actual serial consoles marked with *.
-> 
-> There are no 8250 serial ports in the system, shmobile_defconfig just includes
-> driver support for it.
 
-ok. I will take a look at why it is not initialized in this case. Do you
-have any qemu available for these boards?
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Greg: Please revert this patch I will investigate why it is failing.
+On Tue, Oct 15, 2019 at 11:37:17AM +0800, Jason Wang wrote:
+>=20
+> On 2019/10/15 =E4=B8=8A=E5=8D=881:49, Stefan Hajnoczi wrote:
+> > On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
+> > > There are hardware that can do virtio datapath offloading while having
+> > > its own control path. This path tries to implement a mdev based
+> > > unified API to support using kernel virtio driver to drive those
+> > > devices. This is done by introducing a new mdev transport for virtio
+> > > (virtio_mdev) and register itself as a new kind of mdev driver. Then
+> > > it provides a unified way for kernel virtio driver to talk with mdev
+> > > device implementation.
+> > >=20
+> > > Though the series only contains kernel driver support, the goal is to
+> > > make the transport generic enough to support userspace drivers. This
+> > > means vhost-mdev[1] could be built on top as well by resuing the
+> > > transport.
+> > >=20
+> > > A sample driver is also implemented which simulate a virito-net
+> > > loopback ethernet device on top of vringh + workqueue. This could be
+> > > used as a reference implementation for real hardware driver.
+> > >=20
+> > > Consider mdev framework only support VFIO device and driver right now,
+> > > this series also extend it to support other types. This is done
+> > > through introducing class id to the device and pairing it with
+> > > id_talbe claimed by the driver. On top, this seris also decouple
+> > > device specific parents ops out of the common ones.
+> > I was curious so I took a quick look and posted comments.
+> >=20
+> > I guess this driver runs inside the guest since it registers virtio
+> > devices?
+>=20
+>=20
+> It could run in either guest or host. But the main focus is to run in the
+> host then we can use virtio drivers in containers.
+>=20
+>=20
+> >=20
+> > If this is used with physical PCI devices that support datapath
+> > offloading then how are physical devices presented to the guest without
+> > SR-IOV?
+>=20
+>=20
+> We will do control path meditation through vhost-mdev[1] and vhost-vfio[2=
+].
+> Then we will present a full virtio compatible ethernet device for guest.
+>=20
+> SR-IOV is not a must, any mdev device that implements the API defined in
+> patch 5 can be used by this framework.
 
-Thanks,
-Michal
+What I'm trying to understand is: if you want to present a virtio-pci
+device to the guest (e.g. using vhost-mdev or vhost-vfio), then how is
+that related to this patch series?
 
+Does this mean this patch series is useful mostly for presenting virtio
+devices to containers or the host?
+
+Stefan
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2l2aAACgkQnKSrs4Gr
+c8ji7wf9FHyYry8VO4FqVBdQWMz/h/mmNTgeyBCpCasw+joJ3LRHOyyGPsu2BiOX
+IhAuZvK3azvtP7vh1etYaoBrCPmyFBTh2UXsIYoGK1qpUzPNkB7nuGYTBPJgZbxd
+jmJNDjc9wrrn9sWBJjkJaFYSjEDfob63FtUG2VM6f109LXI4bTyt03KqS1tZ75Hi
+SSjVt95GYQ1xENjKUcVqV9ULwfsv0Wz/WQ2XIvn8Oij7NK9bKHWl3HLirrUE62FP
+y6/3Y2fKKhes58jmY09L37Ym625X95M//6g2WYv+uR5rTTfo7jQBlLZ1tklwNY/k
+X8Sw0iHJKxZjvZqItbu49kJtRJwm9g==
+=nOrh
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
