@@ -2,166 +2,141 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19217ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADD8ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9322064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571178591;
-	bh=UB/4jJKABH22Sky8ezj5JPIBvG6gBSOCm6Ly33RNNGE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EZM2fZNIAFWcWC4NssV/XBnPuU88YCnNoWniiP1++9UfhiHNOdLwNMSTLyebYIyfg
-	 NxgNOfh6sJJG17oK2Y7RyecD4SAP6nIT3RUangfcBi7rQOxAj4D75jflqLZ+c/WxDq
-	 XoYTmC4jzIUuWZnrcv5sx+lEZOgkv8+KepwFnsjM=
+	by mail.kernel.org (Postfix) with ESMTP id BC9972064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HJg0uZss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389916AbfJOW3u (ORCPT
+        id S2389926AbfJOWci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:29:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44469 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389902AbfJOW3u (ORCPT
+        Tue, 15 Oct 2019 18:32:38 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45312 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732040AbfJOWci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:29:50 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 21so18396560otj.11;
-        Tue, 15 Oct 2019 15:29:49 -0700 (PDT)
+        Tue, 15 Oct 2019 18:32:38 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u12so10246470pls.12
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ZPGOSSx5giEEfL2NPx2gvww++Bfy7bq2OL0BsYfuuHg=;
+        b=HJg0uZssgcrUSgxu4Yt6cBbovBjr3Wy8sfTsLZaJ5il4NS8LlLl+YXlQufsmAOhrUe
+         EjPI+S9rdd9S0a0yFhE80R21vVioW+hNay9WseUk7tEudntZ+ZVUQW/eEvwAdWlj7R0J
+         eL6TvUgJ4Wbp8ruzE7ttH23JwlHVYaonygjyk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vrE5B9TKEy0Ahf3PltGkrbQZJCBK9Th8CtGSMcMqVcE=;
-        b=ZI1rJc8R2QV8iJi9ysmoEWo4n+d+ejAXqWCeBMQ99V5kHMH3bIBoHZTibTbRFFm0oZ
-         5rpzxf+7xYfMDta56gaIblQ0KFMzch4NUqFO4tr96FGRnOLCAhPktrxdzAUOLrdjXahV
-         m8rjBFHKo/4tX2LLdDJ+mMAkk1aIG5OvXICopudM2fiMktnfH5eNKcvCVmhC9WcyJpuC
-         9O6Are37YlhndpFYxiCc5OE6zBzQdw3RkSWlfan8vzLiwnfK5WlLdepVMrfL8fmW4nKY
-         PBXNmS0QnM+fnzepS/gAol5HnYAJJtrKitGVLYW4Q6cwCHFzJtrOxRZdzT3Bfqrl1Zc8
-         yB8A==
-X-Gm-Message-State: APjAAAUNdifjQtEwNaZpNFnK2/nLS3UGLuyoTvSO+Bmw3mYz6rC6GhCW
-        vIwHB5kbXCLlAEAlQ+SmvGpYjL4=
-X-Google-Smtp-Source: APXvYqwrJv+FLlYQeraNR8fsDqy1zId6Y5dKvTXqDqkfTJWxeP0UhxcGwuqnMSXi1bDmu4jRLcXUsg==
-X-Received: by 2002:a05:6830:22d9:: with SMTP id q25mr29736448otc.87.1571178589083;
-        Tue, 15 Oct 2019 15:29:49 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l19sm6459488oie.22.2019.10.15.15.29.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 15:29:48 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:29:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch 1/3] dt-bindings: media: ti-vpe: Document VPE driver
-Message-ID: <20191015222947.GA13388@bogus>
-References: <20191009175628.20570-1-bparrot@ti.com>
- <20191009175628.20570-2-bparrot@ti.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ZPGOSSx5giEEfL2NPx2gvww++Bfy7bq2OL0BsYfuuHg=;
+        b=gcktiuFr8a9ttyNqfNiPdsIP2pK7acVkgB3G43SdIlHpAImifIt7z8Xiw6/BJoRu3+
+         xNWlwKVyCvVSXSU7GT2TgZEbGGlQuQ1G3NJ1xmspCaFeqeIb8ThdunCrRTFpmCeRtNqS
+         mCjSunOlUxtz9m7Kn5WtnRz8Iih1mK8INCx5FCrQUCc568mLtjN52wIv+UnLtaVMd5nZ
+         hTwwL2FGZ1WTz4njl9/MtHhgy938h0hp5Tk68DZrystdLDJcvB1tqnSZZooQxi3WUBo5
+         /QJszgXi7R3LbJivlMjmRSWPvnR0t+s1mJUU/coBJ7gxbqK2HSx9XLRC7kt5vDgj+IHN
+         wG5Q==
+X-Gm-Message-State: APjAAAU9axc5CMF0upOcPOXVthwsY2D3oKzRUmBKTh/uYvCeA2aoEG1i
+        1OecxpyyY6wRgAPLrwn5fUzLfWcBBpWfVT6+ljxHXgOnZHePrFAexLm1eOw+iw5c3uBixFngzEI
+        YjyzvVjWZtJxTjmDR9FOYIGK7TRvjz7GyoPeVhRQjJoRqhNk4N9zegd6jdPfFbAbMHYaQFQrtRM
+        DcFx437p+QQaQ=
+X-Google-Smtp-Source: APXvYqynowQLJijtXfqi2elhpB72G1vEHERM1q9vmxBCIR/fDTcnRQIGAZzcOq4IwAR76Jx3qQgNgQ==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr26662481plf.239.1571178756804;
+        Tue, 15 Oct 2019 15:32:36 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id l62sm24419257pfl.167.2019.10.15.15.32.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 15:32:35 -0700 (PDT)
+Subject: Re: [PATCH net-next v2] net: bcmgenet: Generate a random MAC if none
+ is valid
+To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc:     phil@raspberrypi.org, jonathan@raspberrypi.org,
+        matthias.bgg@kernel.org, linux-rpi-kernel@lists.infradead.org,
+        wahrenst@gmx.net, nsaenzjulienne@suse.de,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:BROADCOM GENET ETHERNET DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191014212000.27712-1-f.fainelli@gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <dda8587a-0734-d294-5b50-0f5f35c27918@broadcom.com>
+Date:   Tue, 15 Oct 2019 15:32:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009175628.20570-2-bparrot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191014212000.27712-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:56:26PM -0500, Benoit Parrot wrote:
-> Device Tree bindings for the Video Processing Engine (VPE) driver.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Hi Florian,
+
+On 2019-10-14 2:20 p.m., Florian Fainelli wrote:
+> Instead of having a hard failure and stopping the driver's probe
+> routine, generate a random Ethernet MAC address to keep going.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
+> Changes in v2:
+>
+> - provide a message that a random MAC is used, the same message that
+>    bcmsysport.c uses
+>
+>   drivers/net/ethernet/broadcom/genet/bcmgenet.c | 17 ++++++++---------
+>   1 file changed, 8 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> index 12cb77ef1081..dd4e4f1dd384 100644
+> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+> @@ -3461,16 +3461,10 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>   		goto err;
+>   	}
+>   
+> -	if (dn) {
+> +	if (dn)
+>   		macaddr = of_get_mac_address(dn);
+> -		if (IS_ERR(macaddr)) {
+> -			dev_err(&pdev->dev, "can't find MAC address\n");
+> -			err = -EINVAL;
+> -			goto err;
+> -		}
+> -	} else {
+> +	else
+>   		macaddr = pd->mac_address;
+> -	}
+>   
+>   	priv->base = devm_platform_ioremap_resource(pdev, 0);
+>   	if (IS_ERR(priv->base)) {
+> @@ -3482,7 +3476,12 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>   
+>   	SET_NETDEV_DEV(dev, &pdev->dev);
+>   	dev_set_drvdata(&pdev->dev, dev);
+> -	ether_addr_copy(dev->dev_addr, macaddr);
+> +	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
+> +		dev_warn(&pdev->dev, "using random Ethernet MAC\n");
+I would still consider this warrants a dev_err as you should not be 
+using the device with a random MAC address assigned to it.  But I'll 
+leave it to the "experts" to decide on the print level here.
+> +		eth_hw_addr_random(dev);
+> +	} else {
+> +		ether_addr_copy(dev->dev_addr, macaddr);
+> +	}
+>   	dev->watchdog_timeo = 2 * HZ;
+>   	dev->ethtool_ops = &bcmgenet_ethtool_ops;
+>   	dev->netdev_ops = &bcmgenet_netdev_ops;
 
-Please convert to DT schema format.
-
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti-vpe.txt b/Documentation/devicetree/bindings/media/ti-vpe.txt
-> new file mode 100644
-> index 000000000000..b2942fa8c3ea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti-vpe.txt
-> @@ -0,0 +1,48 @@
-> +Texas Instruments DRA7x VIDEO PROCESSING ENGINE (VPE)
-> +------------------------------------------------------
-> +
-> +The Video Processing Engine (VPE) is a key component for image post
-> +processing applications. VPE consist of a single memory to memory
-> +path which can perform chroma up/down sampling, deinterlacing,
-> +scaling and color space conversion.
-> +
-> +Required properties:
-> +- compatible: must be "ti,vpe"
-
-Needs to have SoC specific compatibles.
-
-> +- reg:	physical base address and length of the registers set for the 4
-> +	memory regions required;
-> +- reg-names: name associated with the memory regions described is <reg>;
-
-The names need to be documented.
-
-> +- interrupts: should contain IRQ line for VPE;
-> +
-> +Example:
-> +
-> +	target-module@1d0010 {                  /* 0x489d0000, ap 27 30.0 */
-> +		compatible = "ti,sysc-omap4", "ti,sysc";
-> +		reg = <0x1d0010 0x4>;
-> +		reg-names = "sysc";
-> +		ti,sysc-midle = <SYSC_IDLE_FORCE>,
-> +				<SYSC_IDLE_NO>,
-> +				<SYSC_IDLE_SMART>;
-> +		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +				<SYSC_IDLE_NO>,
-> +				<SYSC_IDLE_SMART>;
-> +		clocks = <&vpe_clkctrl DRA7_VPE_VPE_CLKCTRL 0>;
-> +		clock-names = "fck";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x1d0000 0x10000>;
-
-All this is outside the scope of this binding.
-
-> +
-> +		vpe: vpe@0 {
-> +			compatible = "ti,vpe";
-> +			reg = <0x0000 0x120>,
-> +			      <0x0700 0x80>,
-> +			      <0x5700 0x18>,
-> +			      <0xd000 0x400>;
-> +			reg-names = "vpe_top",
-> +				    "sc",
-> +				    "csc",
-> +				    "vpdma";
-> +			interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-
-Not documented, nor needed as there are no child nodes.
-
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8598f49fa2c8..63dcda51f8ae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16299,6 +16299,7 @@ W:	http://linuxtv.org/
->  Q:	http://patchwork.linuxtv.org/project/linux-media/list/
->  S:	Maintained
->  F:	drivers/media/platform/ti-vpe/
-> +F:	Documentation/devicetree/bindings/media/ti-vpe.txt
->  
->  TI WILINK WIRELESS DRIVERS
->  L:	linux-wireless@vger.kernel.org
-> -- 
-> 2.17.1
-> 
