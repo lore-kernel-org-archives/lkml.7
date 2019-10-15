@@ -2,100 +2,58 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB6AECE588
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54B4ECE58F
 	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC0D20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8617D2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbfJORUE (ORCPT
+        id S1731287AbfJORUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:20:04 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63884 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfJORUD (ORCPT
+        Tue, 15 Oct 2019 13:20:15 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37228 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfJORUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:20:03 -0400
-Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id dda85748e3f31afb; Tue, 15 Oct 2019 19:20:02 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
-        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com, jackm@mellanox.com,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        driverdev-devel@linuxdriverproject.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 3/7] PCI/PM: Clear PCIe PME Status even for legacy power management
-Date:   Tue, 15 Oct 2019 19:20:01 +0200
-Message-ID: <4241660.MG63sYxJne@kreacher>
-In-Reply-To: <20191014230016.240912-4-helgaas@kernel.org>
-References: <20191014230016.240912-1-helgaas@kernel.org> <20191014230016.240912-4-helgaas@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 15 Oct 2019 13:20:15 -0400
+Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2146115043D43;
+        Tue, 15 Oct 2019 10:20:14 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 13:20:13 -0400 (EDT)
+Message-Id: <20191015.132013.246221433893437093.davem@davemloft.net>
+To:     taoren@fb.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        olteanv@gmail.com, arun.parameswaran@broadcom.com,
+        justinpopo6@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH net-next v8 2/3] net: phy: add support for clause 37
+ auto-negotiation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <61e33434-c315-b80a-68bc-f0fe8f5029e7@fb.com>
+References: <20190909204906.2191290-1-taoren@fb.com>
+        <20190914141752.GC27922@lunn.ch>
+        <61e33434-c315-b80a-68bc-f0fe8f5029e7@fb.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 10:20:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 15, 2019 1:00:12 AM CEST Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Previously, pci_pm_resume_noirq() cleared the PME Status bit in the Root
-> Status register only if the device had no driver or the driver did not
-> implement legacy power management.  It should clear PME Status regardless
-> of what sort of power management the driver supports, so do this before
-> checking for legacy power management.
-> 
-> This affects Root Ports and Root Complex Event Collectors, for which the
-> usual driver is the PCIe portdrv, which implements new power management, so
-> this change is just on principle, not to fix any actual defects.
-> 
-> Fixes: a39bd851dccf ("PCI/PM: Clear PCIe PME Status bit in core, not PCIe port driver")
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+From: Tao Ren <taoren@fb.com>
+Date: Tue, 15 Oct 2019 17:16:26 +0000
 
-This is a reasonable change in my view, so
+> Can you please apply the patch series to net-next tree when you have
+> bandwidth? All the 3 patches are reviewed.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
->  drivers/pci/pci-driver.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index d4ac8ce8c1f9..0c3086793e4e 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -941,12 +941,11 @@ static int pci_pm_resume_noirq(struct device *dev)
->  		pci_pm_default_resume_early(pci_dev);
->  
->  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
-> +	pcie_pme_root_status_cleanup(pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
->  
-> -	pcie_pme_root_status_cleanup(pci_dev);
-> -
->  	if (drv && drv->pm && drv->pm->resume_noirq)
->  		error = drv->pm->resume_noirq(dev);
->  
-> 
-
-
-
-
+If it is not active in patchwork you need to repost.
