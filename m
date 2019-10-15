@@ -2,68 +2,120 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D562CECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC54CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80DB20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1A220650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388591AbfJORYg (ORCPT
+        id S2388689AbfJORY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:24:36 -0400
-Received: from smtprelay0040.hostedemail.com ([216.40.44.40]:54325 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727242AbfJORYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:24:36 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id D243918070EDC;
-        Tue, 15 Oct 2019 17:24:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: touch42_27b1af360ab2d
-X-Filterd-Recvd-Size: 1865
-Received: from XPS-9350 (unknown [172.58.27.13])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 15 Oct 2019 17:24:32 +0000 (UTC)
-Message-ID: <70c9eaac3510bf8857338d82e14c7e3eded9faa9.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
-From:   Joe Perches <joe@perches.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 15 Oct 2019 10:24:02 -0700
-In-Reply-To: <CAMuHMdUvoQz7a7NmLHdpNjRnAUMdbqxFRvB2vdLhHj8pw4Z9Rw@mail.gmail.com>
-References: <20191008094006.8251-1-geert+renesas@glider.be>
-         <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
-         <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com>
-         <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
-         <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
-         <CAMuHMdWZYOsJv1uQkOFRK2tZO+E8sSHEneUM-p+q5FyAmYZ9Fw@mail.gmail.com>
-         <fa4ce46605a81d660be73361a4fdd30240a6348e.camel@perches.com>
-         <CAMuHMdWSGzs7BHqeHC0W5qUEpYqJ8B3Os4wdY11JNzt5+xEaiQ@mail.gmail.com>
-         <e09057e0eefb221549ef9686826e2d190ef36a9c.camel@perches.com>
-         <CAMuHMdUvoQz7a7NmLHdpNjRnAUMdbqxFRvB2vdLhHj8pw4Z9Rw@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 15 Oct 2019 13:24:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:44076 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727242AbfJORY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 13:24:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53CC0337;
+        Tue, 15 Oct 2019 10:24:58 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 000F23F68E;
+        Tue, 15 Oct 2019 10:24:55 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 18:24:53 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Jianyong Wu <jianyong.wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, will@kernel.org, suzuki.poulose@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        nd@arm.com
+Subject: Re: [PATCH v5 1/6] psci: Export psci_ops.conduit symbol as modules
+ will use it.
+Message-ID: <20191015172453.GE24604@lakrids.cambridge.arm.com>
+References: <20191015104822.13890-1-jianyong.wu@arm.com>
+ <20191015104822.13890-2-jianyong.wu@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015104822.13890-2-jianyong.wu@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-15 at 18:40 +0200, Geert Uytterhoeven wrote:
-> The advantage of formail over git-mailsplit is that the former doesn't
-> create a bunch of files that need to be stored in a temporary place,
-> and cleant up afterwards.
-> But hey, that can be handled in yet-another-script...
+On Tue, Oct 15, 2019 at 06:48:17PM +0800, Jianyong Wu wrote:
+> If arm_smccc_1_1_invoke used in modules, psci_ops.conduit should
+> be export.
+> 
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
 
-Or yet-another-git-hook.
+I have a patch queued [1] in the arm64 tree which adds
+arm_smccc_1_1_get_conduit() for this purpose.
 
+Please use that, adding an EXPORT_SYMBOL() if necessary.
+
+Thanks,
+Mark.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/smccc-conduit-cleanup&id=6b7fe77c334ae59fed9500140e08f4f896b36871
+
+> ---
+>  drivers/firmware/psci/psci.c | 6 ++++++
+>  include/linux/arm-smccc.h    | 2 +-
+>  include/linux/psci.h         | 1 +
+>  3 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index f82ccd39a913..35c4eaab1451 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -212,6 +212,12 @@ static unsigned long psci_migrate_info_up_cpu(void)
+>  			      0, 0, 0);
+>  }
+>  
+> +enum psci_conduit psci_get_conduit(void)
+> +{
+> +	return psci_ops.conduit;
+> +}
+> +EXPORT_SYMBOL(psci_get_conduit);
+> +
+>  static void set_conduit(enum psci_conduit conduit)
+>  {
+>  	switch (conduit) {
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index 552cbd49abe8..a6e4d3e3d10a 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -357,7 +357,7 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+>   * The return value also provides the conduit that was used.
+>   */
+>  #define arm_smccc_1_1_invoke(...) ({					\
+> -		int method = psci_ops.conduit;				\
+> +		int method = psci_get_conduit();			\
+>  		switch (method) {					\
+>  		case PSCI_CONDUIT_HVC:					\
+>  			arm_smccc_1_1_hvc(__VA_ARGS__);			\
+> diff --git a/include/linux/psci.h b/include/linux/psci.h
+> index a8a15613c157..e5cedc986049 100644
+> --- a/include/linux/psci.h
+> +++ b/include/linux/psci.h
+> @@ -42,6 +42,7 @@ struct psci_operations {
+>  	enum smccc_version smccc_version;
+>  };
+>  
+> +extern enum psci_conduit psci_get_conduit(void);
+>  extern struct psci_operations psci_ops;
+>  
+>  #if defined(CONFIG_ARM_PSCI_FW)
+> -- 
+> 2.17.1
+> 
