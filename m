@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9BCC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E02C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D0B2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C4C20640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je+bnMh2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJcLAGgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbfJOOv6 (ORCPT
+        id S1733109AbfJOOwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:51:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45447 "EHLO
+        Tue, 15 Oct 2019 10:52:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36817 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733002AbfJOOv6 (ORCPT
+        with ESMTP id S1733002AbfJOOwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:51:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r5so24196227wrm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:51:56 -0700 (PDT)
+        Tue, 15 Oct 2019 10:52:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so24268002wrd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:52:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HVU/godtoQv4DaTv3SteCyrdF1xeYmNG3gGjlOL2mBY=;
-        b=je+bnMh2iMgS8RPyMgkQZFclubihcMqnvxo7F9+r8I5QkRFOV4XODNkmLpjkmgBW86
-         qbfMe8B4hwFU3dD7OtnrJchUzMPBRoUug5/nt+ulQAgqZHkPeI8AS2toLFd6uR63EKwY
-         wJzr/UxIQGuH/Y62uIk2LtXSgcYNqtc/kQlCiTZQKrcIEaRv7ov5O7tFCaxGXjLBFxGf
-         2r4a3rpNdGCSb0j+FwnIlToL5XZQ0qcRKnEV0LiMJi3rbWevOQvGFSkFuFlSzvh/S4tn
-         /gFhFHOUsjym8CGJGmoWUFhn1WJRJt1CXnq9L0h9ZpD3J1BTL+jEBT7pJr1P0d1YWhop
-         vDLg==
+        bh=zLfyJeA9wa/YShlK3MTXpdAT71OVQlJTB0HHADMFohY=;
+        b=jJcLAGgH3KuOU3eX27h1xp0fXk+FeZtURkHP/vua0EHtKL9+eYSnWolQZeqH7OkkHO
+         d3bdzGyReUjNjy8cA66+kS5qLgIK1m4Wj374o0S6jdVR8ToTUbKv2oukynUtiUcmRvpc
+         yjsLOGm1sciv3p2FzABejkzNm8JhpEfhm8JmqGGE7CjDtvXwfnpb8rHJhU/OJJKd6Q9g
+         n/MCGzKLmRCZQ7nDEVMBJIlWjxmJoko2/SD8wQSD0KWuRKeFHsiktCMlEI5W0o8jAwgs
+         EfqvcN1tGtFxsaGX3XRsf7LhOEstrVD3IKcEq9R+IrtUQW2ZgvPX0XPiuk8G/gvD6sem
+         We6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HVU/godtoQv4DaTv3SteCyrdF1xeYmNG3gGjlOL2mBY=;
-        b=BKSVPSBuu0MGTsUgEbEl6AuaJIYHkjWybmFQbGbj7PAzli5ZrnrS1CGP4ebUT8h08p
-         vhs4lQxMRpX+he2JOuC+u0kf4stoEOztYDJcouIzubNRQZ01S9m18DjB8whKRK4q9gS6
-         vUptufoYMrd/1iupgq+kmoU/SLhvm5JzlQqk8ZcSmY1YJSRXy5CFpfP3SR68M2QtlZeE
-         +7iqmtiBBRS/jAtZbgiIAQtNs4eFG+D3EPeoeiKrKPpJjrtBUEhMf1W7ZUlMi+JECdLs
-         I6EWdowyPH+77H760gtKZ1s6MVGQ/6UtqMmr36w5g8reVJNfjhneDtUGeGipkjPvMSOs
-         rSoQ==
-X-Gm-Message-State: APjAAAWcvWzC25kOFsXNSCFV0rQfEpoyzvqHiKml3VMFFguIkpJFfitI
-        D3yk6bLvoxfM/1ULEjBdzvg=
-X-Google-Smtp-Source: APXvYqzxyrmF8m6jp6CA2DOs+xMZnw2mPPE30sPyfOc1/Lkdhzai01UBp+PivWAtSTN8LV4o8dciYA==
-X-Received: by 2002:adf:eb0f:: with SMTP id s15mr29275926wrn.97.1571151115705;
-        Tue, 15 Oct 2019 07:51:55 -0700 (PDT)
+        bh=zLfyJeA9wa/YShlK3MTXpdAT71OVQlJTB0HHADMFohY=;
+        b=VDaU0qpuyyMTOSocSEukf4U1Ninluap3TOJkqGhY9VYy8UybfZWY93hCymyDgRK/o1
+         /f0tdbDv4JEjzo+UZu7ibA3WMn2SwHj/NqCWBzguUzVZyIT9E6t9k3CTAknjCNjoq2tI
+         T+H1Hw2Quw3msMDqEovv1C0SCdvbKiATI2xxB5NjXNWNI6NgF+hgGqfWkBy0sWKcrQh8
+         vI0m2sZCN3O54XHsxnAeGtqa/C/CcuoCyJ1jWR2ed6/o8CwnXIDNeZaadMdPtur2z8bv
+         pIVy4eBsUFoaUvJoYhe6BPRI94nHbJPgbOZ7I809YDXcZ/k7akGD1dxqgG/VgpgD+5a3
+         c8wQ==
+X-Gm-Message-State: APjAAAWtmZm1duOVpJcQBPRF+ry6KZEzrpSFnqbTV1TmaGQPbj4R0Rvk
+        i1kAJ147yviEplL3AacPT/M=
+X-Google-Smtp-Source: APXvYqyK0W3enqiUQRAcQi/YcLuvRxhG58xq5BuRJanN1ASn+Veb4bXPmLK+LGenLNx+s652oa4pHw==
+X-Received: by 2002:a5d:46cb:: with SMTP id g11mr17438319wrs.346.1571151118976;
+        Tue, 15 Oct 2019 07:51:58 -0700 (PDT)
 Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id c21sm15940495wmb.46.2019.10.15.07.51.53
+        by smtp.gmail.com with ESMTPSA id o4sm52925154wre.91.2019.10.15.07.51.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 07:51:53 -0700 (PDT)
+        Tue, 15 Oct 2019 07:51:57 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Russell King <linux@armlinux.org.uk>, arm@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
@@ -67,9 +67,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Stefano Stabellini <stefano.stabellini@eu.citrix.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] ARM: xen: Register with kernel restart handler
-Date:   Tue, 15 Oct 2019 16:51:43 +0200
-Message-Id: <20191015145147.1106247-3-thierry.reding@gmail.com>
+Subject: [PATCH 3/6] drivers: firmware: psci: Register with kernel restart handler
+Date:   Tue, 15 Oct 2019 16:51:44 +0200
+Message-Id: <20191015145147.1106247-4-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191015145147.1106247-1-thierry.reding@gmail.com>
 References: <20191015145147.1106247-1-thierry.reding@gmail.com>
@@ -83,61 +83,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Guenter Roeck <linux@roeck-us.net>
 
 Register with kernel restart handler instead of setting arm_pm_restart
-directly.
+directly. This enables support for replacing the PSCI restart handler
+with a different handler if necessary for a specific board.
 
-Select a high priority of 192 to ensure that default restart handlers
-are replaced if Xen is running.
+Select a priority of 129 to indicate a higher than default priority, but
+keep it as low as possible since PSCI reset is known to fail on some
+boards.
 
 Acked-by: Arnd Bergmann <arnd@arndb.de>
 Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm/xen/enlighten.c | 12 ++++++++++--
+ drivers/firmware/psci/psci.c | 12 ++++++++++--
  1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 1e57692552d9..eb0a0edb9909 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -30,6 +30,7 @@
- #include <linux/cpu.h>
- #include <linux/console.h>
- #include <linux/pvclock_gtod.h>
-+#include <linux/reboot.h>
- #include <linux/time64.h>
- #include <linux/timekeeping.h>
- #include <linux/timekeeper_internal.h>
-@@ -181,11 +182,18 @@ void xen_reboot(int reason)
- 	BUG_ON(rc);
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index 84f4ff351c62..a41c6ba043a2 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -250,7 +250,8 @@ static int get_set_conduit_method(struct device_node *np)
+ 	return 0;
  }
  
--static void xen_restart(enum reboot_mode reboot_mode, const char *cmd)
-+static int xen_restart(struct notifier_block *nb, unsigned long action,
-+		       void *data)
+-static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
++static int psci_sys_reset(struct notifier_block *nb, unsigned long action,
++			  void *data)
  {
- 	xen_reboot(SHUTDOWN_reboot);
+ 	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+ 	    psci_system_reset2_supported) {
+@@ -263,8 +264,15 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+ 	} else {
+ 		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+ 	}
 +
 +	return NOTIFY_DONE;
  }
  
-+static struct notifier_block xen_restart_nb = {
-+	.notifier_call = xen_restart,
-+	.priority = 192,
++static struct notifier_block psci_sys_reset_nb = {
++	.notifier_call = psci_sys_reset,
++	.priority = 129,
 +};
- 
- static void xen_power_off(void)
++
+ static void psci_sys_poweroff(void)
  {
-@@ -406,7 +414,7 @@ static int __init xen_pm_init(void)
- 		return -ENODEV;
+ 	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
+@@ -431,7 +439,7 @@ static void __init psci_0_2_set_functions(void)
  
- 	pm_power_off = xen_power_off;
--	arm_pm_restart = xen_restart;
-+	register_restart_handler(&xen_restart_nb);
- 	if (!xen_initial_domain()) {
- 		struct timespec64 ts;
- 		xen_read_wallclock(&ts);
+ 	psci_ops.migrate_info_type = psci_migrate_info_type;
+ 
+-	arm_pm_restart = psci_sys_reset;
++	register_restart_handler(&psci_sys_reset_nb);
+ 
+ 	pm_power_off = psci_sys_poweroff;
+ }
 -- 
 2.23.0
 
