@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E122C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D0CECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F88B2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E31D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfJOFe0 convert rfc822-to-8bit (ORCPT
+        id S1728557AbfJOFcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:34:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42114 "EHLO
+        Tue, 15 Oct 2019 01:32:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42026 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728537AbfJOFcK (ORCPT
+        with ESMTP id S1728459AbfJOFcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:32:10 -0400
+        Tue, 15 Oct 2019 01:32:02 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFR9-0000FZ-RI; Tue, 15 Oct 2019 07:32:00 +0200
+        id 1iKFQy-0000Ab-KY; Tue, 15 Oct 2019 07:31:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9D0FE1C04DD;
-        Tue, 15 Oct 2019 07:31:43 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 05:31:43 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6C3CA1C04D4;
+        Tue, 15 Oct 2019 07:31:41 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 05:31:41 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf trace: Introduce --filter for tracepoint events
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+Subject: [tip: perf/core] libperf: Adopt perf_mmap__mmap_len() function from
+ tools/perf
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-95bfe5d4tzy5f66bx49d05rj@git.kernel.org>
-References: <tip-95bfe5d4tzy5f66bx49d05rj@git.kernel.org>
+In-Reply-To: <20191007125344.14268-4-jolsa@kernel.org>
+References: <20191007125344.14268-4-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157111750352.12254.17113253973879925388.tip-bot2@tip-bot2>
+Message-ID: <157111750137.12254.17060612108241104664.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -62,212 +62,183 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     d4097f1937f2242d0aa0a7c654d2159a6895e5c8
-Gitweb:        https://git.kernel.org/tip/d4097f1937f2242d0aa0a7c654d2159a6895e5c8
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 08 Oct 2019 07:33:08 -03:00
+Commit-ID:     bf59b3053e63783520c2810fc3f676553bc7eedd
+Gitweb:        https://git.kernel.org/tip/bf59b3053e63783520c2810fc3f676553bc7eedd
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Mon, 07 Oct 2019 14:53:11 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 09 Oct 2019 11:23:52 -03:00
+CommitterDate: Thu, 10 Oct 2019 09:41:38 -03:00
 
-perf trace: Introduce --filter for tracepoint events
+libperf: Adopt perf_mmap__mmap_len() function from tools/perf
 
-Similar to what is in 'perf record', works just like there:
+Move perf_mmap__mmap_len() from tools/perf wto libperf, it will be used
+in the following patches. And rename the existing perf's function to
+mmap__mmap_len().
 
-  # perf trace -e msr:*
-   328.297 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.302 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.306 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.317 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.322 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.327 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.331 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.336 :0/0 msr:write_msr(msr: FS_BASE, val: 140240388381888)
-   328.340 :0/0 ^Cmsr:write_msr(msr: FS_BASE, val: 140240388381888)
-  #
-
-So, for a system wide trace session looking at the write_msr tracepoint
-we see a flood of MSR_FS_BASE, we need to get the number for that:
-
-  # grep FS_BASE /tmp/build/perf/trace/beauty/generated/x86_arch_MSRs_array.c
-	[0xc0000100 - x86_64_specific_MSRs_offset] = "FS_BASE",
-  #
-
-And then use it in a filter:
-
-  # perf trace -e msr:* --filter="msr!=0xc0000100"
-  <SNIP>
-   942.177 :0/0 msr:write_msr(msr: IA32_TSC_DEADLINE, val: 3056931068232)
-   942.199 :0/0 msr:write_msr(msr: IA32_TSC_DEADLINE, val: 3057135655252)
-   942.203 :0/0 msr:write_msr(msr: IA32_TSC_DEADLINE, val: 3056931068222)
-   942.231 :0/0 msr:write_msr(msr: IA32_TSC_DEADLINE, val: 3056998373022)
-   942.241 :0/0 msr:write_msr(msr: IA32_TSC_DEADLINE, val: 3056931068236)
-  <SNIP>
-  #
-
-Ok, lets filter that too, too noisy:
-
-  # grep TSC_DEADLINE /tmp/build/perf/trace/beauty/generated/x86_arch_MSRs_array.c
-	[0x000006E0] = "IA32_TSC_DEADLINE",
-  #
-
-  # perf trace -e msr:* --filter="msr!=0xc0000100 && msr!=0x6e0" -a sleep 0.1
-     0.000 :0/0 msr:read_msr(msr: IA32_TSC_ADJUST)
-     0.066 CPU 0/KVM/4895 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
-     0.070 CPU 0/KVM/4895 msr:write_msr(msr: 0x830, val: 34359740667)
-     0.099 CPU 0/KVM/4895 msr:read_msr(msr: IA32_SYSENTER_ESP, val: -2199021993472)
-     0.100 CPU 0/KVM/4895 msr:read_msr(msr: IA32_APICBASE, val: 4276096000)
-     0.101 CPU 0/KVM/4895 msr:read_msr(msr: IA32_DEBUGCTLMSR)
-     0.109 :0/0 msr:write_msr(msr: IA32_SPEC_CTRL)
-     1.000 :0/0 msr:write_msr(msr: 0x830, val: 17179871485)
-    18.893 :0/0 msr:write_msr(msr: 0x83f, val: 246)
-    28.810 :0/0 msr:write_msr(msr: 0x830, val: 68719479037)
-    40.117 CPU 0/KVM/4895 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
-    40.127 CPU 0/KVM/4895 msr:read_msr(msr: IA32_DEBUGCTLMSR)
-    40.139 CPU 0/KVM/4895 msr:write_msr(msr: LSTAR, val: -2130661312)
-    40.141 CPU 0/KVM/4895 msr:write_msr(msr: SYSCALL_MASK, val: 14080)
-    40.142 CPU 0/KVM/4895 msr:write_msr(msr: TSC_AUX)
-    40.144 CPU 0/KVM/4895 msr:write_msr(msr: KERNEL_GS_BASE)
-    40.147 CPU 0/KVM/4895 msr:write_msr(msr: IA32_SPEC_CTRL)
-    40.148 CPU 0/KVM/4895 msr:write_msr(msr: IA32_FLUSH_CMD, val: 1)
-    40.151 CPU 0/KVM/4895 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
-  ^C
-  #
-
-One can combine that with filtering pids as well:
-
-  # perf trace -e msr:* --filter="msr!=0xc0000100 && msr!=0x6e0" --filter-pids 4895 -a sleep 0.09
-     0.000 :0/0 msr:write_msr(msr: 0x830, val: 4294969597)
-     0.291 gnome-terminal/2790 msr:write_msr(msr: SYSCALL_MASK, val: 292608)
-     0.294 gnome-terminal/2790 msr:write_msr(msr: LSTAR, val: -1935671280)
-     0.295 gnome-terminal/2790 msr:write_msr(msr: TSC_AUX, val: 6)
-    10.940 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 4294969597)
-    15.943 gnome-shell/2096 msr:write_msr(msr: 0x830, val: 4294969597)
-    16.975 :0/0 msr:write_msr(msr: 0x830, val: 4294969597)
-    19.560 :0/0 msr:write_msr(msr: 0x83f, val: 246)
-    25.162 :0/0 msr:read_msr(msr: IA32_TSC_ADJUST)
-    25.807 JS Watchdog/3635 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
-    25.820 :0/0 msr:write_msr(msr: IA32_SPEC_CTRL)
-    25.941 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 4294969597)
-    26.941 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 4294969597)
-    29.942 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 4294969597)
-    45.313 :0/0 msr:write_msr(msr: 0x83f, val: 246)
-    56.945 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 4294969597)
-    60.946 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 4294969597)
-    74.096 JS Watchdog/8971 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
-    74.130 :0/0 msr:write_msr(msr: IA32_SPEC_CTRL)
-    79.673 :0/0 msr:write_msr(msr: 0x83f, val: 246)
-    79.947 gnome-terminal/2790 msr:write_msr(msr: 0x830, val: 17179871485)
-  #
-
-Or for just a pid, with callchains:
-
-  # grep SYSCALL_MAS /tmp/build/perf/trace/beauty/generated/x86_arch_MSRs_array.c
-	[0xc0000084 - x86_64_specific_MSRs_offset] = "SYSCALL_MASK",
-  # perf trace -e msr:* --filter="msr==0xc0000084" --pid 2790 --call-graph=dwarf
-
-     0.000 gnome-terminal/2790 msr:write_msr(msr: SYSCALL_MASK, val: 292608)
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       kvm_on_user_return ([kvm])
-                                       fire_user_return_notifiers ([kernel.kallsyms])
-                                       exit_to_usermode_loop ([kernel.kallsyms])
-                                       do_syscall_64 ([kernel.kallsyms])
-                                       entry_SYSCALL_64 ([kernel.kallsyms])
-                                       __GI___poll (inlined)
-  9299.073 gnome-terminal/2790 msr:write_msr(msr: SYSCALL_MASK, val: 292608)
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       kvm_on_user_return ([kvm])
-                                       fire_user_return_notifiers ([kernel.kallsyms])
-                                       exit_to_usermode_loop ([kernel.kallsyms])
-                                       do_syscall_64 ([kernel.kallsyms])
-                                       entry_SYSCALL_64 ([kernel.kallsyms])
-                                       __GI___poll (inlined)
-  9348.374 gnome-terminal/2790 msr:write_msr(msr: SYSCALL_MASK, val: 292608)
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       do_trace_write_msr ([kernel.kallsyms])
-                                       kvm_on_user_return ([kvm])
-                                       fire_user_return_notifiers ([kernel.kallsyms])
-                                       exit_to_usermode_loop ([kernel.kallsyms])
-                                       do_syscall_64 ([kernel.kallsyms])
-                                       entry_SYSCALL_64 ([kernel.kallsyms])
-                                       __GI___poll (inlined)
-  <SNIP>
-  #
-
-Ok, just another form of KVM to emit MSRs :-)
-
-Next step: elliminate those greps by getting the filter expression,
-looking for arg names, then for the arrays associated with it to do a
-reverse lookup.
-
-Also allow those filters to be associated with strace-like syscall
-names.
-
-After that: augment the 'val' arg for 'msr:write_msr' based on the first
-arg, 'msr'.
-
-Then, do that with eBPF too, not just with tracepoint filters.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-95bfe5d4tzy5f66bx49d05rj@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191007125344.14268-4-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-trace.txt | 5 +++++
- tools/perf/builtin-trace.c              | 8 +++++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/builtin-record.c            |  4 ++--
+ tools/perf/lib/include/internal/mmap.h |  2 ++
+ tools/perf/lib/mmap.c                  |  6 ++++++
+ tools/perf/util/mmap.c                 | 20 ++++++++++----------
+ tools/perf/util/mmap.h                 |  2 +-
+ 5 files changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
-index ba16cd5..3bb89c2 100644
---- a/tools/perf/Documentation/perf-trace.txt
-+++ b/tools/perf/Documentation/perf-trace.txt
-@@ -42,6 +42,11 @@ OPTIONS
- 	Prefixing with ! shows all syscalls but the ones specified.  You may
- 	need to escape it.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 2333286..f05e8b7 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -276,7 +276,7 @@ static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size
  
-+--filter=<filter>::
-+        Event filter. This option should follow an event selector (-e) which
-+	selects tracepoint event(s).
-+
-+
- -D msecs::
- --delay msecs::
- After starting the program, wait msecs before measuring. This is useful to
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e9f132a..2c19680 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3362,7 +3362,7 @@ static int trace__set_filter_loop_pids(struct trace *trace)
- 		thread = parent;
+ 	if (record__comp_enabled(aio->rec)) {
+ 		size = zstd_compress(aio->rec->session, aio->data + aio->size,
+-				     perf_mmap__mmap_len(map) - aio->size,
++				     mmap__mmap_len(map) - aio->size,
+ 				     buf, size);
+ 	} else {
+ 		memcpy(aio->data + aio->size, buf, size);
+@@ -488,7 +488,7 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ 	struct record *rec = to;
+ 
+ 	if (record__comp_enabled(rec)) {
+-		size = zstd_compress(rec->session, map->data, perf_mmap__mmap_len(map), bf, size);
++		size = zstd_compress(rec->session, map->data, mmap__mmap_len(map), bf, size);
+ 		bf   = map->data;
  	}
  
--	err = perf_evlist__set_tp_filter_pids(trace->evlist, nr, pids);
-+	err = perf_evlist__append_tp_filter_pids(trace->evlist, nr, pids);
- 	if (!err && trace->filter_pids.map)
- 		err = bpf_map__set_filter_pids(trace->filter_pids.map, nr, pids);
+diff --git a/tools/perf/lib/include/internal/mmap.h b/tools/perf/lib/include/internal/mmap.h
+index b26806b..e7a6726 100644
+--- a/tools/perf/lib/include/internal/mmap.h
++++ b/tools/perf/lib/include/internal/mmap.h
+@@ -34,6 +34,8 @@ struct perf_mmap_param {
+ 	int	mask;
+ };
  
-@@ -3379,8 +3379,8 @@ static int trace__set_filter_pids(struct trace *trace)
- 	 * we fork the workload in perf_evlist__prepare_workload.
- 	 */
- 	if (trace->filter_pids.nr > 0) {
--		err = perf_evlist__set_tp_filter_pids(trace->evlist, trace->filter_pids.nr,
--						      trace->filter_pids.entries);
-+		err = perf_evlist__append_tp_filter_pids(trace->evlist, trace->filter_pids.nr,
-+							 trace->filter_pids.entries);
- 		if (!err && trace->filter_pids.map) {
- 			err = bpf_map__set_filter_pids(trace->filter_pids.map, trace->filter_pids.nr,
- 						       trace->filter_pids.entries);
-@@ -4294,6 +4294,8 @@ int cmd_trace(int argc, const char **argv)
- 	OPT_CALLBACK('e', "event", &trace, "event",
- 		     "event/syscall selector. use 'perf list' to list available events",
- 		     trace__parse_events_option),
-+	OPT_CALLBACK(0, "filter", &trace.evlist, "filter",
-+		     "event filter", parse_filter),
- 	OPT_BOOLEAN(0, "comm", &trace.show_comm,
- 		    "show the thread COMM next to its id"),
- 	OPT_BOOLEAN(0, "tool_stats", &trace.show_tool_stats, "show tool stats"),
++size_t perf_mmap__mmap_len(struct perf_mmap *map);
++
+ void perf_mmap__init(struct perf_mmap *map, bool overwrite);
+ 
+ #endif /* __LIBPERF_INTERNAL_MMAP_H */
+diff --git a/tools/perf/lib/mmap.c b/tools/perf/lib/mmap.c
+index 3da6177..cc4284d 100644
+--- a/tools/perf/lib/mmap.c
++++ b/tools/perf/lib/mmap.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <internal/mmap.h>
++#include <internal/lib.h>
+ 
+ void perf_mmap__init(struct perf_mmap *map, bool overwrite)
+ {
+@@ -7,3 +8,8 @@ void perf_mmap__init(struct perf_mmap *map, bool overwrite)
+ 	map->overwrite = overwrite;
+ 	refcount_set(&map->refcnt, 0);
+ }
++
++size_t perf_mmap__mmap_len(struct perf_mmap *map)
++{
++	return map->mask + 1 + page_size;
++}
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index a496ced..a8e81c4 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -23,9 +23,9 @@
+ #include "../perf.h"
+ #include <internal/lib.h> /* page_size */
+ 
+-size_t perf_mmap__mmap_len(struct mmap *map)
++size_t mmap__mmap_len(struct mmap *map)
+ {
+-	return map->core.mask + 1 + page_size;
++	return perf_mmap__mmap_len(&map->core);
+ }
+ 
+ /* When check_messup is true, 'end' must points to a good entry */
+@@ -170,7 +170,7 @@ static int perf_mmap__aio_enabled(struct mmap *map)
+ #ifdef HAVE_LIBNUMA_SUPPORT
+ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
+ {
+-	map->aio.data[idx] = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ|PROT_WRITE,
++	map->aio.data[idx] = mmap(NULL, mmap__mmap_len(map), PROT_READ|PROT_WRITE,
+ 				  MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+ 	if (map->aio.data[idx] == MAP_FAILED) {
+ 		map->aio.data[idx] = NULL;
+@@ -183,7 +183,7 @@ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
+ static void perf_mmap__aio_free(struct mmap *map, int idx)
+ {
+ 	if (map->aio.data[idx]) {
+-		munmap(map->aio.data[idx], perf_mmap__mmap_len(map));
++		munmap(map->aio.data[idx], mmap__mmap_len(map));
+ 		map->aio.data[idx] = NULL;
+ 	}
+ }
+@@ -196,7 +196,7 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
+ 
+ 	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
+ 		data = map->aio.data[idx];
+-		mmap_len = perf_mmap__mmap_len(map);
++		mmap_len = mmap__mmap_len(map);
+ 		node_mask = 1UL << cpu__get_node(cpu);
+ 		if (mbind(data, mmap_len, MPOL_BIND, &node_mask, 1, 0)) {
+ 			pr_err("Failed to bind [%p-%p] AIO buffer to node %d: error %m\n",
+@@ -210,7 +210,7 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
+ #else /* !HAVE_LIBNUMA_SUPPORT */
+ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
+ {
+-	map->aio.data[idx] = malloc(perf_mmap__mmap_len(map));
++	map->aio.data[idx] = malloc(mmap__mmap_len(map));
+ 	if (map->aio.data[idx] == NULL)
+ 		return -1;
+ 
+@@ -315,11 +315,11 @@ void perf_mmap__munmap(struct mmap *map)
+ {
+ 	perf_mmap__aio_munmap(map);
+ 	if (map->data != NULL) {
+-		munmap(map->data, perf_mmap__mmap_len(map));
++		munmap(map->data, mmap__mmap_len(map));
+ 		map->data = NULL;
+ 	}
+ 	if (map->core.base != NULL) {
+-		munmap(map->core.base, perf_mmap__mmap_len(map));
++		munmap(map->core.base, mmap__mmap_len(map));
+ 		map->core.base = NULL;
+ 		map->core.fd = -1;
+ 		refcount_set(&map->core.refcnt, 0);
+@@ -371,7 +371,7 @@ int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+ 	refcount_set(&map->core.refcnt, 2);
+ 	map->core.prev = 0;
+ 	map->core.mask = mp->core.mask;
+-	map->core.base = mmap(NULL, perf_mmap__mmap_len(map), mp->core.prot,
++	map->core.base = mmap(NULL, mmap__mmap_len(map), mp->core.prot,
+ 			 MAP_SHARED, fd, 0);
+ 	if (map->core.base == MAP_FAILED) {
+ 		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
+@@ -389,7 +389,7 @@ int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+ 	map->comp_level = mp->comp_level;
+ 
+ 	if (map->comp_level && !perf_mmap__aio_enabled(map)) {
+-		map->data = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ|PROT_WRITE,
++		map->data = mmap(NULL, mmap__mmap_len(map), PROT_READ|PROT_WRITE,
+ 				 MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+ 		if (map->data == MAP_FAILED) {
+ 			pr_debug2("failed to mmap data buffer, error %d\n",
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index 4ff75d8..2b97dc6 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -67,7 +67,7 @@ union perf_event *perf_mmap__read_event(struct mmap *map);
+ int perf_mmap__push(struct mmap *md, void *to,
+ 		    int push(struct mmap *map, void *to, void *buf, size_t size));
+ 
+-size_t perf_mmap__mmap_len(struct mmap *map);
++size_t mmap__mmap_len(struct mmap *map);
+ 
+ int perf_mmap__read_init(struct mmap *md);
+ void perf_mmap__read_done(struct mmap *map);
