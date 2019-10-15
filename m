@@ -2,88 +2,178 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59338ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1233C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B57F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB4420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:07:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NPijPlHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfJOOFq (ORCPT
+        id S1732481AbfJOOHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:05:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:39408 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732292AbfJOOFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:05:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25D30337;
-        Tue, 15 Oct 2019 07:05:45 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 237813F718;
-        Tue, 15 Oct 2019 07:05:44 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 15:05:42 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
- capability
-Message-ID: <20191015140541.GW27757@arm.com>
-References: <20191011113620.GG27757@arm.com>
- <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
- <20191011142137.GH27757@arm.com>
- <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
- <20191014145204.GS27757@arm.com>
- <12e002e7-42e8-c205-e42c-3348359d2f98@arm.com>
- <20191014155009.GM24047@e103592.cambridge.arm.com>
- <CAKv+Gu83oa3+DKNFowVkE=mZfLorAvGQ3GVPiZtsXzQBcsMCWg@mail.gmail.com>
- <20191015102459.GV27757@arm.com>
- <CAKv+Gu_=jw94Hj5Vo=5w+hb5RcPR4SQvxOM02WQr9hDhyzE67g@mail.gmail.com>
+        Tue, 15 Oct 2019 10:07:33 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39649 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732292AbfJOOHc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:07:32 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a15so18149083edt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:07:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
+        b=NPijPlHE9mOZETSF+T0qFTrnynppESRm1hPk8m15z6BtFKp/f35nb6fP0AtxA+vICD
+         JOWnOXgGumAnnyCgoxgqcArGuemzJeDfqPdA4LYis0/rmWoNPx8t+Aa38BhPM8yc5J1y
+         jTOJ95BLBFELDrUekBUcpVOI1TGYpw9L5o3bg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
+        b=ipWIOzCw/uRmubq1B4oZWmXwIlwEeDtehxHJwQoLd8ew6OLciyHyAbZC2/fJ5jIaxT
+         KraQOY5K09gKeeqGG+4OqB5TTAH4t4xN5YM5xVMlH/0OwkmSxRLqeDwwKvs3bNO/qWfO
+         AKsFr4CkM2MuI3xE0uYjMRXQ7pqK0RqpquZZX0AzEBCkq9WUaAXFt2YRxJT52NlDTr5v
+         nb+n0RrzXOl5XEDMnAtxFvIZXArx4ayX31DEOUztMXmJUV3HqD1VAv3Ns4CNwYjdpoUY
+         uCAuZlnNIhkMLgDQlh/0XfM+l89/sot7wKFAChgDnnQqLLMi3OAoY/p0m+d9z7IimZGp
+         Px1g==
+X-Gm-Message-State: APjAAAWYCWAXQQqBRa3j/sBKy7qBb8cX6Emlj2ZNprPbABNExHQ9IcKY
+        nC9lgo6bUy4qr5iAPKAHXInGDw==
+X-Google-Smtp-Source: APXvYqxwy4bxug6xoJIsFM59wzr8Eu7OLed7aQTfUGOfiWObU9eeM/ertrRHn6MHc5kJuwT0SZQfrw==
+X-Received: by 2002:a17:906:6a8e:: with SMTP id p14mr34255737ejr.137.1571148449724;
+        Tue, 15 Oct 2019 07:07:29 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id d2sm3745355eda.20.2019.10.15.07.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 07:07:28 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 16:07:26 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 0/4] treewide: fix interrupted release
+Message-ID: <20191015140726.GN11828@phenom.ffwll.local>
+Mail-Followup-To: Johan Hovold <johan@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010135043.GA16989@phenom.ffwll.local>
+ <20191011093633.GD27819@localhost>
+ <20191014084847.GD11828@phenom.ffwll.local>
+ <20191014161326.GO13531@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_=jw94Hj5Vo=5w+hb5RcPR4SQvxOM02WQr9hDhyzE67g@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191014161326.GO13531@localhost>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 12:30:15PM +0200, Ard Biesheuvel wrote:
-> On Tue, 15 Oct 2019 at 12:25, Dave Martin <Dave.Martin@arm.com> wrote:
-> >
-> > On Mon, Oct 14, 2019 at 06:57:30PM +0200, Ard Biesheuvel wrote:
-
-[...]
-
-> > > All in-kernel NEON code checks whether the NEON is usable, so I'd
-> > > expect that check to return 'false' if it is too early in the boot for
-> > > the NEON to be used at all.
-> >
-> > My concern is that the check may be done once, at probe time, for crypto
-> > drivers.  If probing happens before system_supports_fpsimd() has
-> > stabilised, we may be stuck with the wrong probe decision.
-> >
-> > So: are crypto drivers and kernel_mode_neon() users definitely only
-> > probed _after_ all early CPUs are up?
-> >
+On Mon, Oct 14, 2019 at 06:13:26PM +0200, Johan Hovold wrote:
+> On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
+> > On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
+> > > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
+> > > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
+> > > > > Two old USB drivers had a bug in them which could lead to memory leaks
+> > > > > if an interrupted process raced with a disconnect event.
+> > > > > 
+> > > > > Turns out we had a few more driver in other subsystems with the same
+> > > > > kind of bug in them.
+> > > 
+> > > > Random funny idea: Could we do some debug annotations (akin to
+> > > > might_sleep) that splats when you might_sleep_interruptible somewhere
+> > > > where interruptible sleeps are generally a bad idea? Like in
+> > > > fops->release?
+> > > 
+> > > There's nothing wrong with interruptible sleep in fops->release per se,
+> > > it's just that drivers cannot return -ERESTARTSYS and friends and expect
+> > > to be called again later.
+> > 
+> > Do you have a legit usecase for interruptible sleeps in fops->release?
 > 
-> Isn't SMP already up when initcalls are processed?
+> The tty layer depends on this for example when waiting for buffered
+> writes to complete (something which may never happen when using flow
+> control).
+> 
+> > I'm not even sure killable is legit in there, since it's an fd, not a
+> > process context ...
+> 
+> It will be run in process context in many cases, and for ttys we're good
+> AFAICT.
 
-That was my original assumption when developing SVE.  I think I
-convinced myself that it was valid, but it sounds worth reinvestigating.
+Huh, read it a bit, all the ->shutdown callbacks have void return type.
+But there's indeed interruptible sleeps in there. Doesn't this break
+userspace that expects that a close() actually flushes the tty?
 
-Assuming the assumption _is_ valid, then dropping a suitable WARN() into
-system_supports_fpsimd() or cpu_has_neon() or similar may be a good idea.
+Imo if you're ->release callbacks feels like it should do a wait to
+guaranteed something userspace expects, then doing a
+wait_interruptible/killable feels like a bug. Or alternatively, the wait
+isn't really needed in the first place.
 
-Cheers
----Dave
+> > > The return value from release() is ignored by vfs, and adding a splat in
+> > > __fput() to catch these buggy drivers might be overkill.
+> > 
+> > Ime once you have a handful of instances of a broken pattern, creating a
+> > check for it (under a debug option only ofc) is very much justified.
+> > Otherwise they just come back to life like the undead, all the time. And
+> > there's a _lot_ of fops->release callbacks in the kernel.
+> 
+> Yeah, you have a point.
+> 
+> But take tty again as an example, the close tty operation called from
+> release() is declared void so there's no propagated return value for vfs
+> to check.
+> 
+> It may even be better to fix up the 100 or so callbacks potentially
+> returning non-zero and make fops->release void so that the compiler
+> would help us catch any future bugs and also serve as a hint for
+> developers that returning errnos from fops->release is probably not
+> what you want to do.
+> 
+> But that's a lot of churn of course.
+
+Hm indeed ->release has int as return type. I guess that's needed for
+file I/O errno and similar stuff ...
+
+Still void return value doesn't catch funny stuff like doing interruptible
+waits and occasionally failing if you have a process that likes to use
+signals and also uses some library somewhere to do something. In graphics
+we have that, with Xorg loving signals for various things.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
