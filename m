@@ -2,90 +2,99 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF823ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DD7ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82CD2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8E82064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571176150;
+	bh=xHnNpqc3N61JqT/+Rx2uGWGhU95oyzbi5PShcD2/BKg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O3P01GRWNagfgXqOkrHnoKdQdQrMmHoPr7kAM3GFCoW+TwM8maZ1fGOfag43kDBEo
+	 72s+5idiSGlZPWduh4g7vlPWvmjep6lZUxiHM6GMWlSrCnV1xpi4LSC/uiuhCjrqHw
+	 4qYXi1R3CtrU3RKiknDZHiTne8dddAooLWhjXFzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfJOVtH (ORCPT
+        id S2388276AbfJOVtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:49:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46642 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbfJOVtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:49:04 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 725222CE90A;
-        Tue, 15 Oct 2019 21:49:04 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3A535D9E2;
-        Tue, 15 Oct 2019 21:49:01 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 08/21] pipe: Check for ring full inside of the spinlock
- in pipe_write()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 15 Oct 2019 22:49:01 +0100
-Message-ID: <157117614109.15019.15677943675625422728.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
-References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 15 Oct 2019 17:49:06 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38726 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfJOVtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 17:49:03 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b20so21841403ljj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wItDXbX3LEWoTo1/kp4dk8aeAZ/2xJzKQP/tyONQ97k=;
+        b=hzBYiXjPBdQglMHyHwZdH7Hfwgp8qRgeHE6/0plo981vFS0npABggAoHWs92Y0M4j4
+         6yInWWbjRDRm/aBcc9LUQovQyVPjXs9u2abaLNMMyRfQw3SRznL+/RbI8WTdojuOz1np
+         +b80D6JSR28AZDW+EGzyd7AudQJVj7qyOksd4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wItDXbX3LEWoTo1/kp4dk8aeAZ/2xJzKQP/tyONQ97k=;
+        b=Zb2DSQb84rMTjOHpXwIXEwsMhJ0+1Ay4I+EjIdGfvG/TkhW/cRaURHVOoSI15qbuyA
+         dJitIq6dLAOzl2Eqef66pYqEqGMaZH8coKByQN0+rs3kVFM81TG48xE8XSwDo/835a3O
+         blzEGzwDoAivoF9XiLDOrMR5S/d4uReXPNkuoHGbkxplR4zZsf5HHZuc28KiKswous9t
+         6fzMZcS1TL6mTzPKAzTNs6zcsW+g57kcJnNwZ9soSc114O3Y0fT2mN2LXznvytldUoJh
+         Q27Tsae75qQEsqf2i24W5T3MwqlyFPiDhAdRKlvpNXlMR8WyUpxKxYUa+NAlUpqeLXiU
+         eOQQ==
+X-Gm-Message-State: APjAAAVv93JQZ5G9LqP1gOmrgVPUr29+SBAzcGDemDZP2ZmJTww+3R3y
+        3BWhotpi518xnR24vlgcfRFuJTHPcj0=
+X-Google-Smtp-Source: APXvYqyiVPGFSwmJcMom5H1/F7MbLgdSm4aydtjMMA476umVmuC8Qieu1vxqBqAUvQW8hwsGcorGbw==
+X-Received: by 2002:a2e:55d7:: with SMTP id g84mr24223235lje.255.1571176140244;
+        Tue, 15 Oct 2019 14:49:00 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id q24sm5258562ljj.6.2019.10.15.14.48.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 14:48:59 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 195so2723350lfj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:48:59 -0700 (PDT)
+X-Received: by 2002:a19:5504:: with SMTP id n4mr4137650lfe.106.1571176138790;
+ Tue, 15 Oct 2019 14:48:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 15 Oct 2019 21:49:04 +0000 (UTC)
+References: <20191015191926.9281-1-vgupta@synopsys.com> <20191015191926.9281-2-vgupta@synopsys.com>
+In-Reply-To: <20191015191926.9281-2-vgupta@synopsys.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 15 Oct 2019 14:48:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
+Message-ID: <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-snps-arc@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make pipe_write() check to see if the ring has become full between it
-taking the pipe mutex, checking the ring status and then taking the
-spinlock.
+On Tue, Oct 15, 2019 at 12:19 PM Vineet Gupta
+<Vineet.Gupta1@synopsys.com> wrote:
+>
+> This is a non-functional change anyways since ARC has software page walker
+> with 2 lookup levels (pgd -> pte)
 
-This can happen if a notification is written into the pipe as that happens
-without the pipe mutex.
+Could we encourage other architectures to do the same, and get rid of
+all uses of __ARCH_USE_5LEVEL_HACK?
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/pipe.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 289a887f6b5b..0255a5ca5097 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -462,6 +462,11 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 			spin_lock_irq(&pipe->wait.lock);
- 
- 			head = pipe->head;
-+			if (head - pipe->tail == buffers) {
-+				spin_unlock_irq(&pipe->wait.lock);
-+				continue;
-+			}
-+
- 			pipe_commit_write(pipe, head + 1);
- 
- 			/* Always wake up, even if the copy fails. Otherwise
-
+            Linus
