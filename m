@@ -2,149 +2,70 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C9FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C71ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C8421925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvSGZhiO"
+	by mail.kernel.org (Postfix) with ESMTP id 619CC21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfJOLqo (ORCPT
+        id S1729352AbfJOLqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:46:44 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46547 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfJOLqn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:46:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so12299662pfg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 04:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7nxz6zGMrO8KEWQH3HeYGqaLsVZGUP/TEpFv7v6lvxs=;
-        b=zvSGZhiOtHdGvy14s6GyHZuv88yUqPbQwJpWSzfbMYO5X9dWo5YYuHa6rNSQRvD+So
-         gQqpIGP5TbYKTxYrAaCidrqfnNq0975PPFG+AhBp5OL22ab8iRsCR4gYyxixRlxbL69N
-         ssAf4NW0g2tZmUBkUmujAHGpHMb6+WfP4J8z5bmZT8fe4Pit9+XMbFzXSqnf/4KpgFpT
-         7gZ4fLKI89TDHttIkcS/qIKANqSXF4n+rTDvJkWKO34sz/OO5A1m86i8ZpfWJXfnANN0
-         8TsSdz2p4rGez9OJseuDXbHApFTnFax32bcky64+HFr7AX4kTvxfPfzmDLYEuWed5e55
-         BXQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7nxz6zGMrO8KEWQH3HeYGqaLsVZGUP/TEpFv7v6lvxs=;
-        b=J/R12/yaB5r19v6EsdlvzDYYShpcQgJHGRA7Bxew80BxBSNh/aUpcJqyMcnuvFiVGl
-         wXdQzjGvxnurzCIPHI9lZFZgH/wa1UfFwFgqn2g9ZrmOnga5WVW58DcSmepexU5W2J/X
-         hCMz/97fE4Be0ExB13cOHeHMjuukS8G+aSk8Q08YKfqC5BBMTcutEbf95R7zuZlDnBuc
-         pvrTBZsHCEThNcEZajK6Lzoggwgm7ykxlm/f2KgS6G8kKdI9Egr+Nf2Zm2nDtpDCxUGy
-         VJcLP4cULd2rQ5VO25oh5DduVtI8yLoef8OGKQ/Wxdec1U9TlHu9GoK2nZd+S8o0aBe2
-         x4Hw==
-X-Gm-Message-State: APjAAAWgt1CGPlZLTlxYw3iusotJgRSjwzgIYZTbC1Iz8CyQOW5rcF36
-        2rU2y7GVhddedFKuPDzZU9SEOg==
-X-Google-Smtp-Source: APXvYqx57AELHzxiNgpMzoxeCvv9cjy2XscqdyIxlwGe5Q3KNTjsdl/RhoTDUKUsXGBSzws2Bo9sCw==
-X-Received: by 2002:a63:9255:: with SMTP id s21mr39408310pgn.325.1571140002251;
-        Tue, 15 Oct 2019 04:46:42 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id q2sm24373495pfg.144.2019.10.15.04.46.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 04:46:40 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:16:37 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
-        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
- framework
-Message-ID: <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
+        Tue, 15 Oct 2019 07:46:48 -0400
+Received: from 8bytes.org ([81.169.241.247]:47502 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbfJOLqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:46:45 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id AC4752D9; Tue, 15 Oct 2019 13:46:43 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 13:46:42 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+Message-ID: <20191015114642.GL14518@8bytes.org>
+References: <20191009224551.179497-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191009224551.179497-1-helgaas@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-09-19, 23:12, Dmitry Osipenko wrote:
-> Hello Viresh,
+Hey Bjorn,
+
+On Wed, Oct 09, 2019 at 05:45:49PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
+> I think intel-iommu.c depends on CONFIG_AMD_IOMMU in an undesirable way:
 > 
+> When CONFIG_INTEL_IOMMU_SVM=y, iommu_enable_dev_iotlb() calls PRI
+> interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
+> implemented when CONFIG_PCI_PRI is enabled.  If CONFIG_PCI_PRI is not
+> enabled, there are stubs that just return failure.
 > 
-> [   87.952369] ==================================================================
-> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
-> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
+> The INTEL_IOMMU_SVM Kconfig does nothing with PCI_PRI, but AMD_IOMMU
+> selects PCI_PRI.  So if AMD_IOMMU is enabled, intel-iommu.c gets the full
+> PRI interfaces.  If AMD_IOMMU is not enabled, it gets the PRI stubs.
 > 
-> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
-> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
-> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
-> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
-> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
-> (print_address_description.constprop.0+0x3d/0x340)
-> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
-> (__kasan_report+0xe3/0x12c)
-> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
-> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
-> (blocking_notifier_chain_register+0x29/0x3c)
-> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
-> (dev_pm_qos_add_notifier+0x79/0xf8)
-> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
-> [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
-> [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
-> [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
-> (cpufreq_register_driver+0x13b/0x1ec)
-> [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
-> (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
+> This seems wrong.  The first patch here makes INTEL_IOMMU_SVM select
+> PCI_PRI so intel-iommu.c always gets the full PRI interfaces.
 
-Hi Dmitry,
+Indeed, this is very wrong, thanks for fixing it. Feel free to apply
+this series to your tree with my:
 
-Thanks for the bug report and I was finally able to reproduce it at my end and
-this was quite an interesting debugging exercise :)
+Reviewed-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Joerg Roedel <jroedel@suse.de>
 
-When a cpufreq driver gets registered, we register with the subsys interface and
-it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
-notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
-
-When the cpufreq driver gets unregistered, we unregister with the subsys
-interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
-(should have been in reverse order I feel). We remove the QoS notifier only when
-cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
-CPUx. Now this has a different notifier list as compared to CPU0.
-
-In short, we are adding the cpufreq notifiers to CPU0 and removing them from
-CPUx. When we try to add it again by inserting the module for second time, we
-find a node in the notifier list which is already freed but still in the list as
-we removed it from CPUx's list (which doesn't do anything as the node wasn't
-there in the first place).
-
-@Rafael: How do you see we solve this problem ? Here are the options I could
-think of:
-
-- Update subsys layer to reverse the order of devices while unregistering (this
-  will fix the current problem, but we will still have corner cases hanging
-  around, like if the CPU0 is hotplugged out, etc).
-
-- Update QoS framework with the knowledge of related CPUs, this has been pending
-  until now from my side. And this is the thing we really need to do. Eventually
-  we shall have only a single notifier list for all CPUs of a policy, at least
-  for MIN/MAX frequencies.
-
-- ??
-
--- 
-viresh
