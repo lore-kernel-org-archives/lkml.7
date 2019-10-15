@@ -2,93 +2,101 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD62ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEABAECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC65214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9086D2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571178071;
+	bh=rkQXlFDsFSyesOcjvZcFxgz+cNH1rBDwoJ21bgZxyKA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x5+cKaRsDsrzpqyE7bFfol3Ah0g18QczZHxJq1ShumOzXr/MLaPw8yfz3XXrqEAI4
+	 ZQiycP5jb+WF9KVUtGFA8iyavid3okTO0w63ohFQByJiDtaJoVM9woR5sWMl+lNQaI
+	 2LUB9zN45Rth/fORJkK1U7EUfC3D72cRqVK+/W8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbfJOWRu (ORCPT
+        id S2389304AbfJOWVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:17:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51926 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbfJOWRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:17:50 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 513AA51EE6;
-        Tue, 15 Oct 2019 22:17:49 +0000 (UTC)
-Received: from [10.10.120.184] (ovpn-120-184.rdu2.redhat.com [10.10.120.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3C096064B;
-        Tue, 15 Oct 2019 22:17:44 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org
-References: <20191010092054.GR2311@hirez.programming.kicks-ass.net>
- <20191010091956.48fbcf42@gandalf.local.home>
- <20191010140513.GT2311@hirez.programming.kicks-ass.net>
- <20191010115449.22044b53@gandalf.local.home>
- <20191010172819.GS2328@hirez.programming.kicks-ass.net>
- <20191011125903.GN2359@hirez.programming.kicks-ass.net>
- <20191015130739.GA23565@linux-8ccs>
- <20191015135634.GK2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
- <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
- <20191015153120.GA21580@linux-8ccs>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
-Date:   Tue, 15 Oct 2019 18:17:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 15 Oct 2019 18:21:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41427 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731275AbfJOWVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:21:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f5so21891503ljg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=igJfeABa6M5mmcDSZ9XAWyfxDlpeT34TBKS5Vu4WYQ8=;
+        b=LIYdbK/WEFGMNdD+uIGw2BasCdPDikOSk/1C31c/6KJAoWeweWvBbkEnJF4PHN8TkH
+         BgZdUCf/ZYXj115hlOqd/koyMkdZG6Il9yGalmukOiV4kTIOYCVZSlLQpLqR2NWtyVYg
+         nGZ/n1OZmV0DBw+aQ4pzCSwYlzFEdDM+SUZEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=igJfeABa6M5mmcDSZ9XAWyfxDlpeT34TBKS5Vu4WYQ8=;
+        b=CeT2bHSszxNJED9uxFPE1JjgKycdhcAdzH0qncRq/a0tTAc/O05rrKTJzf7etZujUn
+         AC/JAt58LtjEm+CrnN2qgUVZAUizBF+6M4ijJVbfhV2dDKx4JLAPj+5YLZfzvAOtGKNK
+         12cKqVyXGB3hA3+Zk46H8Y6pOtA5i7fp6msckQFvHxhsA5ez5GRoAtX8rhFz+bUClmiD
+         3goe1y2Ys1a8bClS9BBd26dv1iDczK20H31I1m4hQYEXasVCvTu8nEHIflEicZhp6TXy
+         cpIFaH52iDDc2kUBV2vk+LXxmtulvx4mpjZfdsfobv08ERIsqu+IVVJXJpsTeAi5e8Rs
+         HIWA==
+X-Gm-Message-State: APjAAAWTDccluyVd3dgvzR6+leSCN2KmB0MFyD/WCTUQH0rJp6JXupeS
+        EaYHNGKM+BdUJGocvYqwiNXct+O9EpE=
+X-Google-Smtp-Source: APXvYqwaHNTwmIXUKA+wbNC3wUW7YCm+2D3kcO6UmRa/CilgoMaw1js8Ilde79K/9Q9Z2j3V9pcawg==
+X-Received: by 2002:a2e:91c3:: with SMTP id u3mr23005194ljg.177.1571178065100;
+        Tue, 15 Oct 2019 15:21:05 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id v7sm5381896lfd.55.2019.10.15.15.21.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 15:21:03 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id q12so15700882lfc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:21:03 -0700 (PDT)
+X-Received: by 2002:ac2:43a8:: with SMTP id t8mr22573654lfl.134.1571178063150;
+ Tue, 15 Oct 2019 15:21:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191015153120.GA21580@linux-8ccs>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 15 Oct 2019 22:17:49 +0000 (UTC)
+References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
+ <157117614109.15019.15677943675625422728.stgit@warthog.procyon.org.uk>
+In-Reply-To: <157117614109.15019.15677943675625422728.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 15 Oct 2019 15:20:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wivjB8Va7K_eK_fx+Z1vpbJ82DW=eVfyP33ZDusaK44EA@mail.gmail.com>
+Message-ID: <CAHk-=wivjB8Va7K_eK_fx+Z1vpbJ82DW=eVfyP33ZDusaK44EA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] pipe: Check for ring full inside of the
+ spinlock in pipe_write()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 11:31 AM, Jessica Yu wrote:
-> +++ Joe Lawrence [15/10/19 11:06 -0400]:
->> On 10/15/19 10:13 AM, Miroslav Benes wrote:
->>> Yes, it does. klp_module_coming() calls module_disable_ro() on all
->>> patching modules which patch the coming module in order to call
->>> apply_relocate_add(). New (patching) code for a module can be relocated
->>> only when the relevant module is loaded.
->>
->> FWIW, would the LPC blue-sky2 model (ie, Steve's suggestion @
->> plumber's where livepatches only patch a single object and updates are
->> kept on disk to handle coming module updates as they are loaded)
->> eliminate those outstanding relocations and the need to perform this
->> late permission flipping?
-> 
-> I wasn't at Plumbers sadly, was this idea documented/talked about in
-> detail somewhere? (recording, slides, etherpad, etc?). What do you
-> mean by updates are kept on disk? Maybe someone can explain it more
-> in detail? :)
-> 
+On Tue, Oct 15, 2019 at 2:49 PM David Howells <dhowells@redhat.com> wrote:
+>
+> +                       if (head - pipe->tail == buffers) {
 
-Livepatching folks -- I don't have the LPC summary link (etherpad?) that 
-Jiri put together.  Does someone have that handy for Jessica?
+Can we just have helper inline functions for these things?
 
-Thanks,
+You describe them in the commit message of 03/21 (good), but it would
+be even better if the code was just self-describing..
 
--- Joe
+           Linus
