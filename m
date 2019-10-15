@@ -2,162 +2,163 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E77CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C0BECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E18B217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C0520673
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfJOCdh (ORCPT
+        id S1727195AbfJOCft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 22:33:37 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:12580 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfJOCdg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 22:33:36 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x9F2XTk0000198;
-        Tue, 15 Oct 2019 10:33:29 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 55A4E269D4706F862BA5;
-        Tue, 15 Oct 2019 10:33:29 +0800 (CST)
-In-Reply-To: <20191008092832.54492696@dhcp-172-31-174-146.wireless.concordia.ca>
-References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw> <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
-        <20191007104501.1b4ed8ed@xps13> <OF147D635A.8968CD6B-ON4825848D.00088AD5-4825848D.000B9D06@mxic.com.tw> <20191008092832.54492696@dhcp-172-31-174-146.wireless.concordia.ca>
-To:     "Boris Brezillon" <boris.brezillon@collabora.com>
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, frieder.schrempf@kontron.de,
-        gregkh@linuxfoundation.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>, richard@nod.at,
-        tglx@linutronix.de, vigneshr@ti.com
-Subject: Re: [PATCH RFC 3/3] mtd: rawnand: Add support Macronix power down mode
+        Mon, 14 Oct 2019 22:35:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726430AbfJOCft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 22:35:49 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 12163C3C80012EDBF0CF;
+        Tue, 15 Oct 2019 10:35:48 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 10:35:40 +0800
+Subject: Re: [RFC PATCH 1/6] ACPI/IORT: Set PMCG device parent
+To:     John Garry <john.garry@huawei.com>, <lorenzo.pieralisi@arm.com>,
+        <sudeep.holla@arm.com>, <robin.murphy@arm.com>,
+        <mark.rutland@arm.com>, <will@kernel.org>
+CC:     <shameerali.kolothum.thodi@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <nleeder@codeaurora.org>,
+        <linuxarm@huawei.com>
+References: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
+ <1569854031-237636-2-git-send-email-john.garry@huawei.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <ae9a1c8a-d84b-95ab-9a6b-87a7c89c68d9@huawei.com>
+Date:   Tue, 15 Oct 2019 10:35:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-X-KeepSent: 6D5429CF:876DE422-48258494:000D641F;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF6D5429CF.876DE422-ON48258494.000D641F-48258494.000E0D4C@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Tue, 15 Oct 2019 10:33:29 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/10/15 AM 10:33:29,
-        Serialize complete at 2019/10/15 AM 10:33:29
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x9F2XTk0000198
+In-Reply-To: <1569854031-237636-2-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John,
 
-Hi Boris,
-
- 
-> > > > +   nand_select_target(chip, 0); 
-> > > 
-> > > On several NAND controllers there is no way to act on the CS line
-> > > without actually writing bytes to the NAND chip. So basically this
-> > > is very likely to not work. 
-> > 
-> > any other way to make it work ? GPIO ?
-> > or just have some comments description here.
-> > i.e,.
-> > 
-> > /* The NAND chip will exit the deep power down mode with #CS toggling, 
-
-> >  * please refer to datasheet for the timing requirement of tCRDP and 
-tRDP.
-> >  */
-> > 
+On 2019/9/30 22:33, John Garry wrote:
+> In the IORT, a PMCG node includes a node reference to its associated
+> device.
 > 
-> Good luck with that. As Miquel said, on most NAND controllers
-> select_target() is a dummy operation that just assigns nand_chip->target
-> to the specified value but doesn't assert the CS line. You could send a
-> dummy command here, like a READ_ID, but I guess you need CS to be
-> asserted for at least 20ns before asserting any other signals (CLE/ALE)
-> which might be an issue.
-
-okay, got it.
-But if possible, I think adding CS line control in nand_select_target()
-is a simple and generic way for MTD and all raw NAND controllers.
-
+> Set the PMCG platform device parent device for future referencing.
 > 
-> > > 
-> > > > +   ndelay(20); 
-> > > 
-> > > Is this delay known somewhere? Is this purely experimental? 
-> > 
-> > it's timing requirement tCRDP 20 ns(min) to release device
-> > from deep power-down mode. 
-> > You may download datasheet at
-> > 
-https://www.macronix.com/zh-tw/products/NAND-Flash/SLC-NAND-Flash/Pages/
-> spec.aspx?p=MX30LF4G28AD&m=SLC%20NAND&n=PM2579 
+> For now, we only consider setting for when the associated component is an
+> SMMUv3.
 > 
-> Just looked at the datasheet, and there's actually more than tCRDP:
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  drivers/acpi/arm64/iort.c | 34 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 32 insertions(+), 2 deletions(-)
 > 
-> - you have to make sure you entered power-down state for at least tDPDD
->   before you try to wake up the device
-> - the device goes back to stand-by state tRDP after the CS pin has been
->   deasserted.
-> 
-> I guess we can use ndelay() for those, since they happen before/after
-> the CS pin is asserted/de-asserted. Be careful with ndelay() though,
-> it's not guaranteed to wait the the time you pass, it can return
-> before (maybe we should add a helper to deal with that).
-> Another solution would be to describe CS assertion/de-assertion in
-> the instruction flow, but that requires patching all exec_op() drivers.
-> 
-> For the tCRDP timing, I think we should use a nand_operation, this way
-> we can check if the controller is able to deal with dummy CS-assertion
-> before entering deep-power mode.
-> In order to do that you'll have to add a NAND_OP_DUMMY_INSTR (or
-> NAND_OP_DELAY_INSTR), and then have something like:
-> 
-> struct nand_op_instr instrs[] = {
->    NAND_OP_DUMMY(tCRDP),
-> };
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 8569b79e8b58..0b687520c3e7 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -1455,7 +1455,7 @@ static __init const struct iort_dev_config *iort_get_dev_cfg(
+>   * Returns: 0 on success, <0 failure
 
-got it.
+...
 
-thanks for your time and comments.
+>   */
+>  static int __init iort_add_platform_device(struct acpi_iort_node *node,
+> -					   const struct iort_dev_config *ops)
+> +					   const struct iort_dev_config *ops, struct device *parent)
 
-best regards,
-Mason
+Since you added a input for this function, could you please update
+the comments of this function as well?
 
+>  {
+>  	struct fwnode_handle *fwnode;
+>  	struct platform_device *pdev;
+> @@ -1466,6 +1466,8 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
+>  	if (!pdev)
+>  		return -ENOMEM;
+>  
+> +	pdev->dev.parent = parent;
+> +
+>  	if (ops->dev_set_proximity) {
+>  		ret = ops->dev_set_proximity(&pdev->dev, node);
+>  		if (ret)
+> @@ -1573,6 +1575,11 @@ static void __init iort_enable_acs(struct acpi_iort_node *iort_node)
+>  static inline void iort_enable_acs(struct acpi_iort_node *iort_node) { }
+>  #endif
+>  
+> +static int iort_fwnode_match(struct device *dev, const void *fwnode)
+> +{
+> +	return dev->fwnode == fwnode;
+> +}
+> +
+>  static void __init iort_init_platform_devices(void)
+>  {
+>  	struct acpi_iort_node *iort_node, *iort_end;
+> @@ -1594,11 +1601,34 @@ static void __init iort_init_platform_devices(void)
+>  				iort_table->length);
+>  
+>  	for (i = 0; i < iort->node_count; i++) {
+> +		struct device *parent = NULL;
+> +
+>  		if (iort_node >= iort_end) {
+>  			pr_err("iort node pointer overflows, bad table\n");
+>  			return;
+>  		}
+>  
+> +		/* Fixme: handle parent declared in IORT after PMCG */
+> +		if (iort_node->type == ACPI_IORT_NODE_PMCG) {
+> +			struct acpi_iort_node *iort_assoc_node;
+> +			struct acpi_iort_pmcg *pmcg;
+> +			u32 node_reference;
+> +
+> +			pmcg = (struct acpi_iort_pmcg *)iort_node->node_data;
+> +
+> +			node_reference = pmcg->node_reference;
+> +			iort_assoc_node = ACPI_ADD_PTR(struct acpi_iort_node, iort,
+> +				 node_reference);
+> +
+> +			if (iort_assoc_node->type == ACPI_IORT_NODE_SMMU_V3) {
+> +				struct fwnode_handle *assoc_fwnode;
+> +
+> +				assoc_fwnode = iort_get_fwnode(iort_assoc_node);
+> +
+> +				parent = bus_find_device(&platform_bus_type, NULL,
+> +				      assoc_fwnode, iort_fwnode_match);
+> +			}
+> +		}
 
-CONFIDENTIALITY NOTE:
+How about using a function to include those new added code to make this
+function (iort_init_platform_devices()) a bit cleaner?
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
+>  		iort_enable_acs(iort_node);
+>  
+>  		ops = iort_get_dev_cfg(iort_node);
+> @@ -1609,7 +1639,7 @@ static void __init iort_init_platform_devices(void)
+>  
+>  			iort_set_fwnode(iort_node, fwnode);
+>  
+> -			ret = iort_add_platform_device(iort_node, ops);
+> +			ret = iort_add_platform_device(iort_node, ops, parent);
 
-Macronix International Co., Ltd.
+This function is called if ops is valid, so retrieve the parent
+can be done before this function I think.
 
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+Thanks
+Hanjun
 
