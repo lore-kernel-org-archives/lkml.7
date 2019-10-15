@@ -2,261 +2,116 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B985BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F68AECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DB12064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OMkoqyY0"
+	by mail.kernel.org (Postfix) with ESMTP id 3FAB42064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfJOJTI (ORCPT
+        id S1729694AbfJOJTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:19:08 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37304 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfJOJTI (ORCPT
+        Tue, 15 Oct 2019 05:19:37 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37794 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfJOJTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:19:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YIaOBNWN2tpG+RpI2kNEP0VXguIxNOWwrYW3F7DeUP8=; b=OMkoqyY0vapTbGrlufm/6ayOY
-        XSkrMEjXZT8h0b4GmtbZLBbtUTelQxluoeVreLNcdFjQ3+ceI/7EH9H4HSWoODT26X1rOm6DdWmFp
-        oRnlqVuSs8zXTw94Yq1mm+GHmz1UGUrzmVH7IYyRo+jgQT3B8i/m8iH0trQB3tn7gCI+TPdIEYzZK
-        elCvZorMO4eEfAhIZyeqFJDIvtEYWDvAKk4HK89yLFp02wurTrDCuj49xyFohoimuHy8BN0cGeEjN
-        q95FWUIV9VfODFWWmp6L1Jy/QOmc+As8DcvxIfzkA17ySv7MKXHXiP+2hKUSt9WrkKF68LPUP2e+X
-        4tzF+1+5w==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43734)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iKIyh-0003VI-5O; Tue, 15 Oct 2019 10:18:51 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iKIyf-0005C9-SU; Tue, 15 Oct 2019 10:18:49 +0100
-Date:   Tue, 15 Oct 2019 10:18:49 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
- Layerscape SoCs
-Message-ID: <20191015091849.GT25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-4-xiaowei.bao@nxp.com>
- <20190924163850.GY25745@shell.armlinux.org.uk>
- <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20191015090756.GS25745@shell.armlinux.org.uk>
- <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        Tue, 15 Oct 2019 05:19:37 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i16so16202796oie.4;
+        Tue, 15 Oct 2019 02:19:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+KkHVe7XiI2w+s1khaLxgYiblcensoZmhTtGUMIWDQM=;
+        b=W1ZoreIT6WtTJN7kxNy0LtYAMmcbPH4gl8w412z0N3EhcfX5YG1XrV3k2KYwmQLpni
+         druUT3XjMAU20KbKEE9UXVcysmgtnDmBl6zPoFEmoyTjadQsyZpR17HNE8Q1yHct3jZ+
+         hZpXCifpKgcEpsb66YNEUKFPhnzErF3OLNdWpMbEcQ+DPNQUPxwB696p6fVCyUEz20XP
+         BGcTpGr2qD2FN1sLae6L3oRFyYolg9tHEv5azPD4BqhijaXctv/gcxXUQqrYgl7V5hLL
+         LLp2JuPFH5orBUT0ZXNvbYyc8j24ReSx6JE/eaC5MorjXZB+d0zhvh08Mr+5uFISE8DB
+         Ohog==
+X-Gm-Message-State: APjAAAV7iPfxEMU2Ze8p7WYJvaEqhDGfNV0PIN0ylU4k3obZfR3BvHHp
+        jQqwUyAarpondTz5yVzl+Gy0sZMktZxe5Nr380M=
+X-Google-Smtp-Source: APXvYqzhaz8x3mX03fBf3KLgIqmj4TfpV+VGFzay1G84HHBSpuT7CjrIyNsXkaGyN3iLkkHNfGsNfQfD7tja+Ypx5Ow=
+X-Received: by 2002:aca:882:: with SMTP id 124mr28234946oii.54.1571131176133;
+ Tue, 15 Oct 2019 02:19:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB3299919E5C4C8A764DB3A656F5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
+In-Reply-To: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Oct 2019 11:19:25 +0200
+Message-ID: <CAMuHMdWY2VsY-CyAxSvpm1XYicAWqU7NORSQofQ+T195DwyLUg@mail.gmail.com>
+Subject: Re: [PATCH] serial: core: Use cons->index for preferred console registration
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:14:00AM +0000, Xiaowei Bao wrote:
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: 2019年10月15日 17:08
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
-> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
-> > Layerscape SoCs
-> > 
-> > On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > > > Sent: 2019年9月25日 0:39
-> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > > > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
-> > > > robh+Li
-> > > > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
-> > > > Lian <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > > > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > > > linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for
-> > > > NXP Layerscape SoCs
-> > > >
-> > > > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
-> > > > > This PCIe controller is based on the Mobiveil GPEX IP, it work in
-> > > > > EP mode if select this config opteration.
-> > > > >
-> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > > ---
-> > > > >  MAINTAINERS                                        |   2
-> > +
-> > > > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
-> > > > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
-> > > > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
-> > > > > +++++++++++++++++++++
-> > > > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
-> > > > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > >
-> > > > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54
-> > > > > 100644
-> > > > > --- a/MAINTAINERS
-> > > > > +++ b/MAINTAINERS
-> > > > > @@ -12363,11 +12363,13 @@ F:
-> > > > 	drivers/pci/controller/dwc/*layerscape*
-> > > > >
-> > > > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-> > > > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > >  L:	linux-pci@vger.kernel.org
-> > > > >  L:	linux-arm-kernel@lists.infradead.org
-> > > > >  S:	Maintained
-> > > > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> > > > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> > > > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > >
-> > > > >  PCI DRIVER FOR GENERIC OF HOSTS
-> > > > >  M:	Will Deacon <will@kernel.org>
-> > > > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
-> > > > > b/drivers/pci/controller/mobiveil/Kconfig
-> > > > > index 2054950..0696b6e 100644
-> > > > > --- a/drivers/pci/controller/mobiveil/Kconfig
-> > > > > +++ b/drivers/pci/controller/mobiveil/Kconfig
-> > > > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
-> > > > >  	  for address translation and it is a PCIe Gen4 IP.
-> > > > >
-> > > > >  config PCIE_LAYERSCAPE_GEN4
-> > > > > -	bool "Freescale Layerscape PCIe Gen4 controller"
-> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
-> > > > >  	depends on PCI
-> > > > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > > >  	depends on PCI_MSI_IRQ_DOMAIN
-> > > > >  	select PCIE_MOBIVEIL_HOST
-> > > > >  	help
-> > > > >  	  Say Y here if you want PCIe Gen4 controller support on
-> > > > > -	  Layerscape SoCs. The PCIe controller can work in RC or
-> > > > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
-> > > > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
-> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
-> > > > > +
-> > > > > +config PCIE_LAYERSCAPE_GEN4_EP
-> > > > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
-> > > > > +	depends on PCI
-> > > > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > > > +	depends on PCI_ENDPOINT
-> > > > > +	select PCIE_MOBIVEIL_EP
-> > > > > +	help
-> > > > > +	  Say Y here if you want PCIe Gen4 controller support on
-> > > > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
-> > > > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
-> > > > >  endmenu
-> > > > > diff --git a/drivers/pci/controller/mobiveil/Makefile
-> > > > > b/drivers/pci/controller/mobiveil/Makefile
-> > > > > index 686d41f..6f54856 100644
-> > > > > --- a/drivers/pci/controller/mobiveil/Makefile
-> > > > > +++ b/drivers/pci/controller/mobiveil/Makefile
-> > > > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
-> > > > > pcie-mobiveil-host.o
-> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
-> > > > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
-> > > > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
-> > > > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
-> > > > pcie-layerscape-gen4-ep.o
-> > > > > diff --git
-> > > > > a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > new file mode 100644
-> > > > > index 0000000..7bfec51
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > > > @@ -0,0 +1,156 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/*
-> > > > > + * PCIe controller EP driver for Freescale Layerscape SoCs
-> > > > > + *
-> > > > > + * Copyright (C) 2019 NXP Semiconductor.
-> > > > > + *
-> > > > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
-> > > > > +
-> > > > > +#include <linux/kernel.h>
-> > > > > +#include <linux/init.h>
-> > > > > +#include <linux/of_pci.h>
-> > > > > +#include <linux/of_platform.h>
-> > > > > +#include <linux/of_address.h>
-> > > > > +#include <linux/pci.h>
-> > > > > +#include <linux/platform_device.h> #include <linux/resource.h>
-> > > > > +
-> > > > > +#include "pcie-mobiveil.h"
-> > > > > +
-> > > > > +#define PCIE_LX2_BAR_NUM	4
-> > > > > +
-> > > > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +
-> > > > > +struct ls_pcie_g4_ep {
-> > > > > +	struct mobiveil_pcie		*mv_pci;
-> > > > > +};
-> > > > > +
-> > > > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
-> > > > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
-> > > > > +	{ },
-> > > > > +};
-> > > > > +
-> > > > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
-> > > > > +	.linkup_notifier = false,
-> > > > > +	.msi_capable = true,
-> > > > > +	.msix_capable = true,
-> > > > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
-> > > >
-> > > > 			BIT(BAR_4) | BIT(BAR_5) ?
-> > >
-> > > I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better,
-> > > because BAR_4 is not a bit of register.
-> > 
-> > Why is whether it's a register or not relevent?
-> 
-> My understand is that the BIT is used to register, refer to other EP driver files,
-> it also use 1 << BAR_4 method.
-> 
-> [baoxw@titan controller]$ grep -r "reserved_bar" *
-> dwc/pci-keystone.c:     .reserved_bar = 1 << BAR_0 | 1 << BAR_1,
-> mobiveil/pcie-layerscape-gen4-ep.c:     .reserved_bar = (1 << BAR_4) | (1 << BAR_5),
+Hi Michal,
 
-$ grep '\<BIT(' fs kernel lib mm net -r
+On Mon, Sep 2, 2019 at 4:29 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> The reason for this patch is xilinx_uartps driver which create one dynamic
+> instance per IP with unique major and minor combinations. drv->nr is in
+> this case all the time setup to 1. That means that uport->line is all the
+> time setup to 0 and drv->tty_driver->name_base is doing shift in name to
+> for example ttyPS3.
+>
+> register_console() is looping over console_cmdline array and looking for
+> proper name/index combination which is in our case ttyPS/3.
+> That's why every instance of driver needs to be registered with proper
+> combination of name/number (ttyPS/3). Using uport->line is doing
+> registration with ttyPS/0 which is wrong that's why proper console index
+> should be used which is in cons->index field.
+>
+> Also it is visible that recording console should be done based on
+> information about console not about the port but in most cases numbers are
+> the same and xilinx_uartps is only one exception now.
+>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-About 695 non-device driver instances at the very least seem to disagree.
+This is now commit 91daae03188e0dd1 ("serial: core: Use cons->index
+for preferred console registration") in tty-next.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+This has been bisected to break the serial console on (at least)
+r8a7791/koelsch and r8a7795/h3-salvator-xs.
+
+The line "printk: console [ttySC0] enabled" is no longer printed.
+The system continues booting without any serial console output, and the
+login prompt never appears on the serial console.
+
+Reverting this commit fixes the issue.
+
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -2825,7 +2825,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+>                 lockdep_set_class(&uport->lock, &port_lock_key);
+>         }
+>         if (uport->cons && uport->dev)
+> -               of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+> +               of_console_check(uport->dev->of_node, uport->cons->name,
+> +                                uport->cons->index);
+>
+>         uart_configure_port(drv, state, uport);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
