@@ -2,128 +2,89 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EABBECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF25C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5227E20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A706C20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571160244;
+	bh=+7lu7SwpkDSu7gCXDXfUFrC2mJO93AUBBNIc/Uluqvo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EBnGcIay0+AaDcABnevk5fEipGaJRBxuePsTU0ImGp4os/8T+CXAJbJL27dA1nYr5
+	 DXghcYmRBnsUAtnmaZq5JGlQBIIaHJPxzHw8aao/EeK+A+XTy6ybxvPyBAGAxbSVFV
+	 1U1t0U7BdtXCrsUgdoEVG+hT1eoYuvxXpSsO9DAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388391AbfJORXc (ORCPT
+        id S2388505AbfJORYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:23:32 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64981 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfJORXb (ORCPT
+        Tue, 15 Oct 2019 13:24:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41346 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbfJORYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:23:31 -0400
-Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id dfec6fccedf7956f; Tue, 15 Oct 2019 19:23:29 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
-        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com, jackm@mellanox.com,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Tue, 15 Oct 2019 13:24:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g13so17625721otp.8;
+        Tue, 15 Oct 2019 10:24:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AMnuJgHGU6R0IzytORO8cFlW8ykU5YUSocCPPL5eBC4=;
+        b=UEiJXYbXmrIOZRPiKZBaVt+kyPYDy/vH44IePvqy+WVoUHfMvdBLwewfDrU+AXGbHE
+         HZMSpz5R6JKF+dm7tDI+Ndb1dfJXp/pvyua/GsbHHvCIcW6lBm69Dx7xDI0JMzK3is/c
+         Ssza4d3tM6KkMgDHcsEMMquLa9Ohi1qDbvFeC0cLPqD0P4t0rlYAx9moGLkpO2IrK2yL
+         Xsnw36SjMUdcfZ0mbjJr7OdUQ+fQIQbbZ6Xz7uk2k+dpMhwHjB/th0vLgC0Sby8wvWCe
+         83dqm79YKPYEJY1k3EBM3tUG3wQjhd1Atow79jcDilPXXI9Il9mXlfVIe4oWFZIS0wrY
+         GSrQ==
+X-Gm-Message-State: APjAAAWK+pLUUAUEF8UGmGyhLy08rzhj5kn8AXMlWWsWzE97lpoQgw9N
+        XS48O1KcJ9uqhV6RUgpARA==
+X-Google-Smtp-Source: APXvYqxeAQyn2woHyJsNz/1A9Qqotnbqgu/lYixgaEz9AtYG4uiKdx1AbMY3H/CJDkTrB7+S/N/KHQ==
+X-Received: by 2002:a05:6830:22ce:: with SMTP id q14mr3987927otc.115.1571160242078;
+        Tue, 15 Oct 2019 10:24:02 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d194sm6658461oib.47.2019.10.15.10.24.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 10:24:01 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 12:24:00 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        driverdev-devel@linuxdriverproject.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 6/7] PCI/PM: Wrap long lines in documentation
-Date:   Tue, 15 Oct 2019 19:23:28 +0200
-Message-ID: <2150193.0kpVmk06vr@kreacher>
-In-Reply-To: <20191014230016.240912-7-helgaas@kernel.org>
-References: <20191014230016.240912-1-helgaas@kernel.org> <20191014230016.240912-7-helgaas@kernel.org>
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: usb: generic-ehci: Add "companion" entry
+Message-ID: <20191015172400.GA724@bogus>
+References: <20191007134410.10337-1-alexandre.torgue@st.com>
+ <20191007134410.10337-4-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191007134410.10337-4-alexandre.torgue@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 15, 2019 1:00:15 AM CEST Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, 7 Oct 2019 15:44:10 +0200, Alexandre Torgue wrote:
+> "companion" entry is present in "generic.txt" usb binding file. This commit
+> adds it also in generic-ehci yaml binding.
 > 
-> Documentation/power/pci.rst is wrapped to fit in 80 columns, but directory
-> structure changes made a few lines longer.  Wrap them so they all fit in 80
-> columns again.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Well, looks better this way. :-)
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
->  Documentation/power/pci.rst | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-> index 1525c594d631..db41a770a2f5 100644
-> --- a/Documentation/power/pci.rst
-> +++ b/Documentation/power/pci.rst
-> @@ -426,12 +426,12 @@ pm->runtime_idle() callback.
->  2.4. System-Wide Power Transitions
->  ----------------------------------
->  There are a few different types of system-wide power transitions, described in
-> -Documentation/driver-api/pm/devices.rst.  Each of them requires devices to be handled
-> -in a specific way and the PM core executes subsystem-level power management
-> -callbacks for this purpose.  They are executed in phases such that each phase
-> -involves executing the same subsystem-level callback for every device belonging
-> -to the given subsystem before the next phase begins.  These phases always run
-> -after tasks have been frozen.
-> +Documentation/driver-api/pm/devices.rst.  Each of them requires devices to be
-> +handled in a specific way and the PM core executes subsystem-level power
-> +management callbacks for this purpose.  They are executed in phases such that
-> +each phase involves executing the same subsystem-level callback for every device
-> +belonging to the given subsystem before the next phase begins.  These phases
-> +always run after tasks have been frozen.
->  
->  2.4.1. System Suspend
->  ^^^^^^^^^^^^^^^^^^^^^
-> @@ -636,12 +636,12 @@ System restore requires a hibernation image to be loaded into memory and the
->  pre-hibernation memory contents to be restored before the pre-hibernation system
->  activity can be resumed.
->  
-> -As described in Documentation/driver-api/pm/devices.rst, the hibernation image is loaded
-> -into memory by a fresh instance of the kernel, called the boot kernel, which in
-> -turn is loaded and run by a boot loader in the usual way.  After the boot kernel
-> -has loaded the image, it needs to replace its own code and data with the code
-> -and data of the "hibernated" kernel stored within the image, called the image
-> -kernel.  For this purpose all devices are frozen just like before creating
-> +As described in Documentation/driver-api/pm/devices.rst, the hibernation image
-> +is loaded into memory by a fresh instance of the kernel, called the boot kernel,
-> +which in turn is loaded and run by a boot loader in the usual way.  After the
-> +boot kernel has loaded the image, it needs to replace its own code and data with
-> +the code and data of the "hibernated" kernel stored within the image, called the
-> +image kernel.  For this purpose all devices are frozen just like before creating
->  the image during hibernation, in the
->  
->  	prepare, freeze, freeze_noirq
-> @@ -691,8 +691,8 @@ controlling the runtime power management of their devices.
->  
->  At the time of this writing there are two ways to define power management
->  callbacks for a PCI device driver, the recommended one, based on using a
-> -dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and the
-> -"legacy" one, in which the .suspend(), .suspend_late(), .resume_early(), and
-> +dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and
-> +the "legacy" one, in which the .suspend(), .suspend_late(), .resume_early(), and
->  .resume() callbacks from struct pci_driver are used.  The legacy approach,
->  however, doesn't allow one to define runtime power management callbacks and is
->  not really suitable for any new drivers.  Therefore it is not covered by this
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 > 
 
+Applied, thanks.
 
-
-
+Rob
