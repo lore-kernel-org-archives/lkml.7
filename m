@@ -2,85 +2,59 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CB2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93078C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960E921848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7135121848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfJOLgv (ORCPT
+        id S1728856AbfJOLhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:36:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35198 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728061AbfJOLgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:36:50 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0CEA856F593A920B9B6C;
-        Tue, 15 Oct 2019 19:36:47 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 19:36:36 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <matthias.bgg@gmail.com>, <kstewart@linuxfoundation.org>,
-        <allison@lohutok.net>, <yuehaibing@huawei.com>,
-        <tglx@linutronix.de>, <weiyi.lu@mediatek.com>
-CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH -next] clk: mediatek: mt2712: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 15 Oct 2019 19:26:44 +0800
-Message-ID: <20191015112644.19816-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 15 Oct 2019 07:37:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:36598 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726927AbfJOLhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:37:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97968337;
+        Tue, 15 Oct 2019 04:37:13 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76BB93F68E;
+        Tue, 15 Oct 2019 04:37:12 -0700 (PDT)
+Subject: Re: [PATCH] sched/topology: Don't set SD_BALANCE_WAKE on cpuset
+ domain relax
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        seto.hidetoshi@jp.fujitsu.com, qperret@google.com
+References: <20191014164408.32596-1-valentin.schneider@arm.com>
+ <20191015113410.GG2311@hirez.programming.kicks-ass.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <86fd060d-fc2f-b9e8-ec14-b4f4627f7c0c@arm.com>
+Date:   Tue, 15 Oct 2019 12:37:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191015113410.GG2311@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On 15/10/2019 12:34, Peter Zijlstra wrote:
+> This 'relax' thing is on my list of regrets. It is a terrible thing that
+> should never have existed.
+> 
+> Are you actually using it or did you just stumble upon it while looking
+> around there?
+> 
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clk/mediatek/clk-mt2712.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/clk/mediatek/clk-mt2712.c b/drivers/clk/mediatek/clk-mt2712.c
-index 354c26f..a3bd9a1 100644
---- a/drivers/clk/mediatek/clk-mt2712.c
-+++ b/drivers/clk/mediatek/clk-mt2712.c
-@@ -1306,9 +1306,8 @@ static int clk_mt2712_top_probe(struct platform_device *pdev)
- 	int r, i;
- 	struct device_node *node = pdev->dev.of_node;
- 	void __iomem *base;
--	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base)) {
- 		pr_err("%s(): ioremap failed\n", __func__);
- 		return PTR_ERR(base);
-@@ -1394,9 +1393,8 @@ static int clk_mt2712_mcu_probe(struct platform_device *pdev)
- 	int r;
- 	struct device_node *node = pdev->dev.of_node;
- 	void __iomem *base;
--	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base)) {
- 		pr_err("%s(): ioremap failed\n", __func__);
- 		return PTR_ERR(base);
--- 
-2.7.4
-
-
+Just staring around, I don't use cpuset stuff unless I really need to...
