@@ -2,77 +2,92 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B714C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E1ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79F720640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3E42086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571153494;
+	bh=/yZECSqFbWBM+e6pr6Kd5FtztUG0bQpf7Ebo3eMkr4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PVO6U7gaz6kdPf3/SM7ji9Dqy6QZNQoTnCMDVVQfsp1YQX44hNWGKwwnyBIirOonO
+	 zczkXhr89XPM+DeS26BKZFGJZwV4l+1J5iIrdpgOBWGz2WwyrbXA6Wn5SVzZKZ8tYp
+	 mCSrgEE7C4CMm4lDIPXXiiEVsHHHf2nBN4n2n0JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387517AbfJOPa1 (ORCPT
+        id S2387547AbfJOPbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:30:27 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:52249 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732659AbfJOPa1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:30:27 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKOmD-0006Qh-OJ; Tue, 15 Oct 2019 16:30:21 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKOmD-0002pt-2N; Tue, 15 Oct 2019 16:30:21 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: renesas_usbhs: fix type of buf
-Date:   Tue, 15 Oct 2019 16:30:17 +0100
-Message-Id: <20191015153017.10858-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 15 Oct 2019 11:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733265AbfJOPbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:31:33 -0400
+Received: from linux-8ccs (ip5f5adbbb.dynamic.kabel-deutschland.de [95.90.219.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2A7E20640;
+        Tue, 15 Oct 2019 15:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571153492;
+        bh=/yZECSqFbWBM+e6pr6Kd5FtztUG0bQpf7Ebo3eMkr4Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qpniGNXnqcLyiiO/RRW9XTnDa4FejS5RQpnNbcvdVBprpweRnstkoVNPSM186i3u/
+         QvNSUgmnGm0gkq1WLc4rTyy0xdwNki9GMlO2aJoeh7T3IcdReTIB9KQyAvAAIte9xL
+         Jo47KrGF4zgd9S3rbMzlmswUUXphuGOtdQQQ5I8c=
+Date:   Tue, 15 Oct 2019 17:31:20 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191015153120.GA21580@linux-8ccs>
+References: <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the type of buf in __usbhsg_recip_send_status to
-be __le16 to avoid the following sparse warning:
++++ Joe Lawrence [15/10/19 11:06 -0400]:
+>On 10/15/19 10:13 AM, Miroslav Benes wrote:
+>>Yes, it does. klp_module_coming() calls module_disable_ro() on all
+>>patching modules which patch the coming module in order to call
+>>apply_relocate_add(). New (patching) code for a module can be relocated
+>>only when the relevant module is loaded.
+>
+>FWIW, would the LPC blue-sky2 model (ie, Steve's suggestion @ 
+>plumber's where livepatches only patch a single object and updates are 
+>kept on disk to handle coming module updates as they are loaded) 
+>eliminate those outstanding relocations and the need to perform this 
+>late permission flipping?
 
-drivers/usb/renesas_usbhs/mod_gadget.c:335:14: warning: incorrect type in assignment (different base types)
-drivers/usb/renesas_usbhs/mod_gadget.c:335:14:    expected unsigned short
-drivers/usb/renesas_usbhs/mod_gadget.c:335:14:    got restricted __le16 [usertype]
-
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/usb/renesas_usbhs/mod_gadget.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-index e5ef56991dba..0b8a2920de10 100644
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -315,7 +315,7 @@ static void __usbhsg_recip_send_status(struct usbhsg_gpriv *gpriv,
- 	struct usbhs_pipe *pipe = usbhsg_uep_to_pipe(dcp);
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
- 	struct usb_request *req;
--	unsigned short *buf;
-+	__le16 *buf;
- 
- 	/* alloc new usb_request for recip */
- 	req = usb_ep_alloc_request(&dcp->ep, GFP_ATOMIC);
--- 
-2.23.0
+I wasn't at Plumbers sadly, was this idea documented/talked about in
+detail somewhere? (recording, slides, etherpad, etc?). What do you
+mean by updates are kept on disk? Maybe someone can explain it more
+in detail? :)
 
