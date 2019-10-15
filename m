@@ -2,151 +2,95 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D9AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3B7ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D729120873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634CD20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXdC8S3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfJOIEI (ORCPT
+        id S1728377AbfJOIEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:04:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60385 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfJOIEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:04:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 01:04:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,298,1566889200"; 
-   d="scan'208";a="201691351"
-Received: from fyin-dev.sh.intel.com ([10.239.143.122])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Oct 2019 01:04:06 -0700
-From:   Yin Fengwei <fengwei.yin@intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ACPI / processor_idle: use ndelay instead of io port access for wait
-Date:   Tue, 15 Oct 2019 16:04:04 +0800
-Message-Id: <20191015080404.6013-1-fengwei.yin@intel.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 15 Oct 2019 04:04:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45608 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfJOIEl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:04:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y72so11927045pfb.12;
+        Tue, 15 Oct 2019 01:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DnhzaSlkHgUlv9y36Jmkw3rGD1aw6OTZtA+BqJpe57s=;
+        b=MXdC8S3VHlc4hL+vsYbtQ9R+19+oUKz5pmQAIdh8jRNqzqeng0L0K3pVDV5rb9TIbN
+         LB9w+rsJEsncudR165UF1hMthivxbEO8i/kOEeSzvTuHUUjy5jZ6lx6gEvj+cRsQqaS7
+         tijfUuYpLREMO68IcmZ4rpWhnPRiStxYxlFzrzzGfxLcacX8VCSHkIjIR7J7DTic5RGN
+         iNM7pBYFOEoLa4J1pDKUqOHJriAqNkBtzYcXNIo+oxo3S2v3iVqBAdTCZcu0Jp+JOCaX
+         9yWxKNA/YB8GWWdC5s54L3iK2I9OpDqiUWzqgQLxGXUYynhrcRpA9QFPLsvMonFC5pZl
+         wpZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DnhzaSlkHgUlv9y36Jmkw3rGD1aw6OTZtA+BqJpe57s=;
+        b=GMsnEW/P3PU8o0/8iEKZ6Uwg00AF4wTmw5GkUfw/uU985nvpYCWMONurzD+Q5lFqZB
+         hYcYJuuKmhYJJ9PeKyUYcoodSldQxuh+a+TFEE3v7s8f3E9xUYubUdu1VRnbgtFQtMwd
+         gB9SMgreTDRjWOFUHypl/Q0RUgqGWh+Fir5j//jhqHtdSNnXwGg97/SNOgEQdw5JngEu
+         FeAdbmi0hB7QEuihKjO72Jv+2JXAxzwmo2Btp1XIuJTigHKtRYRCrzCynwQT3zQWzLMi
+         zuH/CIGRrkfxjr48U9+xiYl37Bwuv/rxs7uI+edoXJUQrfkaPDocYa/h3sczFJTWR9XI
+         xfyg==
+X-Gm-Message-State: APjAAAXzJKtZQOUSnbD+/2wEOByYu6jM8ya8r8oHMHRxA52pwieyxsBp
+        GSX02vnuSZLTpSKxegZYTg7WX3Uec+IRV27WKdi/j9TYZRs=
+X-Google-Smtp-Source: APXvYqxnWwgMhWk0YKCsehOQtmWn+QFvIyf7VwT/tw3uDk7TAxYFWdT2pKbS7kwZuBIAxcA8fJbzEzFxhMivXQ059KM=
+X-Received: by 2002:a63:1e04:: with SMTP id e4mr16669575pge.4.1571126680179;
+ Tue, 15 Oct 2019 01:04:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191015130006.39f58992@canb.auug.org.au>
+In-Reply-To: <20191015130006.39f58992@canb.auug.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 15 Oct 2019 11:04:29 +0300
+Message-ID: <CAHp75Vfv7hzqO=U3AwDs8OuKL_rs9+Sx0DknnAi6WN342iSpHQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function acpi_idle_do_entry(), an ioport access is used for dummy
-wait to guarantee hardware behavior. But it could trigger unnecessary
-vmexit in virtualization environment.
+On Tue, Oct 15, 2019 at 5:00 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-If we run linux as guest and export all available native C state to
-guest, we did see many PM timer access triggered VMexit when guest
-enter deeper C state in our environment (We used ACRN hypervisor
-instead of kvm or xen which has PM timer emulated and exports all
-native C state to guest).
+> After merging the drivers-x86 tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> drivers/platform/x86/huawei-wmi.c: In function 'huawei_wmi_exit':
+> drivers/platform/x86/huawei-wmi.c:890:41: error: 'struct huawei_wmi' has no member named 'pdev'; did you mean 'idev'?
+>   890 |  platform_device_unregister(huawei_wmi->pdev);
+>       |                                         ^~~~
+>       |                                         idev
+>
+> Caused by commit
+>
+>   eda34f06b2e0 ("platform/x86: huawei-wmi: No need to keep pointer to platform device")
+>
+> interacting with commit
+>
+>   7532afb35012 ("platform/x86: huawei-wmi: Move to platform driver")
 
-According to the original comments of this part of code, io port
-access is only for dummy wait. We could use busy wait instead of io
-port access to guarantee hardware behavior and avoid unnecessary
-VMexit.
+Oops, thank you for pointing out, should be fixed.
 
-Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
----
-ChangeLog:
-v1 -> v2:
-   - Use ndelay instead of dead loop for dummy delay.
-
- drivers/acpi/processor_idle.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index ed56c6d20b08..38968d31af28 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -14,6 +14,7 @@
- 
- #include <linux/module.h>
- #include <linux/acpi.h>
-+#include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/sched.h>       /* need_resched() */
- #include <linux/tick.h>
-@@ -55,6 +56,8 @@ struct cpuidle_driver acpi_idle_driver = {
- };
- 
- #ifdef CONFIG_ACPI_PROCESSOR_CSTATE
-+static s64 cx_dummy_wait_ns = 0L;
-+
- static
- DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
- 
-@@ -64,6 +67,11 @@ static int disabled_by_idle_boot_param(void)
- 		boot_option_idle_override == IDLE_HALT;
- }
- 
-+static void cx_dummy_wait(void)
-+{
-+	ndelay(cx_dummy_wait_ns);
-+}
-+
- /*
-  * IBM ThinkPad R40e crashes mysteriously when going into C2 or C3.
-  * For now disable this. Probably a bug somewhere else.
-@@ -660,8 +668,13 @@ static void __cpuidle acpi_idle_do_entry(struct acpi_processor_cx *cx)
- 		inb(cx->address);
- 		/* Dummy wait op - must do something useless after P_LVL2 read
- 		   because chipsets cannot guarantee that STPCLK# signal
--		   gets asserted in time to freeze execution properly. */
--		inl(acpi_gbl_FADT.xpm_timer_block.address);
-+		   gets asserted in time to freeze execution properly.
-+
-+		   Previously, we do io port access here for delay here. Which
-+		   could trigger unnecessary trap to HV. Now, we use dead loop
-+		   here to avoid the impact to virtualization env */
-+
-+		cx_dummy_wait();
- 	}
- }
- 
-@@ -683,7 +696,7 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
- 		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
- 			inb(cx->address);
- 			/* See comment in acpi_idle_do_entry() */
--			inl(acpi_gbl_FADT.xpm_timer_block.address);
-+			cx_dummy_wait();
- 		} else
- 			return -ENODEV;
- 	}
-@@ -902,6 +915,7 @@ static inline void acpi_processor_cstate_first_run_checks(void)
- {
- 	acpi_status status;
- 	static int first_run;
-+	struct timespec64 ts0, ts1;
- 
- 	if (first_run)
- 		return;
-@@ -912,6 +926,14 @@ static inline void acpi_processor_cstate_first_run_checks(void)
- 			  max_cstate);
- 	first_run++;
- 
-+	/* profiling the time used for dummy wait op */
-+	ktime_get_real_ts64(&ts0);
-+	inl(acpi_gbl_FADT.xpm_timer_block.address);
-+	ktime_get_real_ts64(&ts1);
-+
-+	ts1 = timespec64_sub(ts1, ts0);
-+	cx_dummy_wait_ns = timespec64_to_ns(&ts1);
-+
- 	if (acpi_gbl_FADT.cst_control && !nocst) {
- 		status = acpi_os_write_port(acpi_gbl_FADT.smi_command,
- 					    acpi_gbl_FADT.cst_control, 8);
 -- 
-2.19.1
-
+With Best Regards,
+Andy Shevchenko
