@@ -2,87 +2,107 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75599ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398B7ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4149420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YhiIDr4g"
+	by mail.kernel.org (Postfix) with ESMTP id 1570020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfJOJ7k (ORCPT
+        id S1730047AbfJOKAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:59:40 -0400
-Received: from ozlabs.org ([203.11.71.1]:39937 "EHLO ozlabs.org"
+        Tue, 15 Oct 2019 06:00:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:34200 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfJOJ7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:59:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46srWC5sZyz9sPF;
-        Tue, 15 Oct 2019 20:59:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1571133576;
-        bh=g7FNvEmUMKUBTSEs/cnh7zM1HyCNiU5+T2IblHoqAb0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=YhiIDr4gz6XDbMGr15Sc7t/zYDWa3ckmLK2XTtTmSgqqrNXBz3WCh1sI7ugcw7No9
-         9z/qYOLr8MUPtAKaVi6QmsvCB+7syHLOtLjJMiLHvuVXrmdhQ4kfc4R/hxhAzoqcWc
-         DXrJZVow2QCc1+8qU0s/wthBbQykITP7zxw6ctjJwt4d++rY+SWJGL4nH5dUvX9Ymv
-         IlRkxldrLGRye660X7Ik8GGe+BCEWbA2Gw87Q+Xg1ydHXlKtoT1RN/BHCo0LAQcUO9
-         0pu9XfAzqas4SdhbSR34cVXh+P3Yl/xhSjCSnzZYeqor9s72u1idfYI6KnZza8CMRy
-         b2RE/asCPE4Nw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>,
-        linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-Subject: Re: [PATCH v7 2/8] powerpc: add support to initialize ima policy rules
-In-Reply-To: <1570799579.5250.72.camel@linux.ibm.com>
-References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com> <1570497267-13672-3-git-send-email-nayna@linux.ibm.com> <1570799579.5250.72.camel@linux.ibm.com>
-Date:   Tue, 15 Oct 2019 20:59:34 +1100
-Message-ID: <87bluiuy61.fsf@mpe.ellerman.id.au>
+        id S1727682AbfJOKAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:00:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C203928;
+        Tue, 15 Oct 2019 03:00:30 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE93D3F68E;
+        Tue, 15 Oct 2019 03:00:29 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 11:00:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
+ configuration
+Message-ID: <20191015100027.GB32431@e121166-lin.cambridge.arm.com>
+References: <20190614101059.1664-1-repk@triplefau.lt>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mimi Zohar <zohar@linux.ibm.com> writes:
-> On Mon, 2019-10-07 at 21:14 -0400, Nayna Jain wrote:
-...
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index b4a221886fcf..deb19ec6ba3d 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -938,6 +938,8 @@ config PPC_SECURE_BOOT
->>  	prompt "Enable secure boot support"
->>  	bool
->>  	depends on PPC_POWERNV
->> +	depends on IMA
->> +	depends on IMA_ARCH_POLICY
->
-> As IMA_ARCH_POLICY is dependent on IMA, I don't see a need for
-> depending on both IMA and IMA_ARCH_POLICY.
+On Fri, Jun 14, 2019 at 12:10:59PM +0200, Remi Pommarel wrote:
+> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+> should not modify other interrupts' mask. The ISR mask polarity was also
+> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+> should actually be cleared.
+> 
+> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+> Changes since v1:
+>  * Improve code readability
+>  * Fix mask polarity
+>  * PME_MASK shift was off by one
+> Changes since v2:
+>  * Modify patch title
+>  * Change Fixes tag to commit that actually introduces the bug
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
-I agree. And what we actually depend on is the arch part, so it should
-depend on just IMA_ARCH_POLICY.
+Applied to pci/aardvark, thanks.
 
-cheers
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e0306ff00..f6e55c4597b1 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  
+>  	case PCI_EXP_RTCTL: {
+>  		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+> -		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
+> +		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	}
+>  
+> @@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+>  		break;
+>  
+> -	case PCI_EXP_RTCTL:
+> -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+> -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
+> +	case PCI_EXP_RTCTL: {
+> +		/* Only mask/unmask PME interrupt */
+> +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
+> +			~PCIE_MSG_PM_PME_MASK;
+> +		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
+> +			val |= PCIE_MSG_PM_PME_MASK;
+> +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+>  		break;
+> +	}
+>  
+>  	case PCI_EXP_RTSTA:
+>  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+> -- 
+> 2.20.1
+> 
