@@ -2,152 +2,101 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5596ECE59F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5E1ECE59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9280A214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63E5217D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571175608;
+	bh=rzxeYVHxaGJYYBmftcCSuQhrVoYG1vLxx7KotPMBfGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=axTnYa8gmYBKkaawcWS83INMooHN3p8e9YHNarMglpj1rElnDimPHaX4G4kBaYLV3
+	 AKHciuIAJnlOlXx2ZhLRi4vkInkoignpoPjNiVe0V1mdEJUHIl9WzvZ/HLlUWZp3lD
+	 CDE0MyyzZS2GMgph9n1KE3ElkjtqkSNOlaCmp+vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfJOVjQ (ORCPT
+        id S1730393AbfJOVkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:39:16 -0400
-Received: from www381.your-server.de ([78.46.137.84]:49540 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbfJOVjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:39:15 -0400
-X-Greylist: delayed 1643 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 17:39:13 EDT
-Received: from sslproxy01.your-server.de ([88.198.220.130])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1iKU6b-0007VH-CM; Tue, 15 Oct 2019 23:11:45 +0200
-Received: from [93.104.114.34] (helo=[192.168.178.20])
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <lars@metafoo.de>)
-        id 1iKU6a-0002ns-Tt; Tue, 15 Oct 2019 23:11:45 +0200
-Subject: Re: [PATCH][RFC] iio: core: add a class hierarchy on iio device lock
-To:     Olivier MOYSAN <olivier.moysan@st.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-References: <20191011151314.5365-1-olivier.moysan@st.com>
- <20191012095747.3acd95e6@archlinux>
- <db362ddf-390e-0847-1269-f3cd0c757d2a@st.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <9ddc41c4-3d84-cc94-5494-a5ef06697ce8@metafoo.de>
-Date:   Tue, 15 Oct 2019 23:11:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 17:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728174AbfJOVkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 17:40:06 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F82C20873;
+        Tue, 15 Oct 2019 21:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571175605;
+        bh=rzxeYVHxaGJYYBmftcCSuQhrVoYG1vLxx7KotPMBfGk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=R+dzhpIm9d+5tXXHT7JSZskm8mpDniLP13W+EJICbgVv7VIAKXKJ8NARbs2xsjqWn
+         +vILcC/jnRTHPyJjow+FmYMqlEU/RdjVqVsPHOrqAnZDxLZLSm7SFKcM8YQ4J3VmFW
+         AgeRdUxa9ythv6td9cPbSppRdCKhl6aAxjdZzNn0=
+Date:   Tue, 15 Oct 2019 16:40:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+Subject: Re: [PATCH 0/2] iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+Message-ID: <20191015214003.GA178213@google.com>
 MIME-Version: 1.0
-In-Reply-To: <db362ddf-390e-0847-1269-f3cd0c757d2a@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25603/Tue Oct 15 10:57:00 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009224551.179497-1-helgaas@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 5:59 PM, Olivier MOYSAN wrote:
-> Hello Jonathan,
-> 
-> Thanks for your comment.
-> 
-> On 10/12/19 10:57 AM, Jonathan Cameron wrote:
->> On Fri, 11 Oct 2019 17:13:14 +0200
->> Olivier Moysan <olivier.moysan@st.com> wrote:
->>
->>> The aim of this patch is to correct a recursive locking warning,
->>> detected when setting CONFIG_PROVE_LOCKING flag (as shown in message below).
->>> This message was initially triggered by the following call sequence
->>> in stm32-dfsdm-adc.c driver, when using IIO hardware consumer interface.
->>>
->>> in stm32_dfsdm_read_raw()
->>> 	iio_device_claim_direct_mode
->>> 		mutex_lock(&indio_dev->mlock);			-> lock on dfsdm device
->>> 	iio_hw_consumer_enable
->>> 		iio_update_buffers
->>> 			mutex_lock(&indio_dev->mlock);		-> lock on hw consumer device
->> Hmm.  I'm not sure I follow the logic.  That lock is
->> for one thing and one thing only, preventing access
->> to the iio device that are unsafe when it is running
->> in a buffered mode.  We shouldn't be in a position where
->> we both say don't do this if we are in buffered mode, + enter
->> buffered mode whilst doing this, or we need special functions
->> for entering buffering mode if in this state.  We are in
->> some sense combining internal driver logic with overall
->> IIO states.  IIO shouldn't care that the device is using
->> the same methods under the hood for buffered and non
->> buffered operations.
->>
->> I can't really recall how this driver works.   Is it actually
->> possible to have multiple hw_consumers at the same time?
->>
->> So do we end up with multiple buffers registered and have
->> to demux out to the read_raw + the actual buffered path?
->> Given we have a bit of code saying grab one sample, I'm
->> going to guess we don't...
->>
->> If so, the vast majority of the buffer setup code in IIO
->> is irrelevant here and we just need to call a few of
->> the callbacks from this driver directly... (I think
->> though I haven't chased through every corner.
->>
->> I'd rather avoid introducing this nesting for a corner
->> case that makes no 'semantic' sense in IIO as it leaves us
->> in two separate states at the same time that the driver
->> is trying to make mutually exclusive.  We can't both
->> not be in buffered mode, and in buffered mode.
->>
->> Thanks and good luck with this nasty corner!
->>
->> Jonathan
->>
-> Here I consider the following use case:
-> A single conversion is performed. The dfsdm (filter) is chained with a 
-> front-end, which can be an ADC or a sensor. So we have two IIO devices, 
-> the dfsdm and its front-end handled through the hw consumer interface.
-> 
-> You are right. There is something wrong here, in buffered/non-buffered 
-> mode mixing.
-> iio_hw_consumer_enable() call is used to enable the front-end device. 
-> But this interface is intended for buffered mode.
-> So this is not coherent with the expected single conversion mode, 
-> indeed. Another interface is required to manage the front-end device. I 
-> have a poor knowledge of iio framework, but it seems to me that there is 
-> no interface to manage this.
-> 
-> My understanding regarding mlock, is that it is used to protect the 
-> state of the iio device.
-> I we want to do a conversion from the chained devices, I think we need 
-> to activate the first device
-> and keep it performing conversion, as long as the second device has done 
-> its conversion.
-> We need to protect both devices, and we should have to do it in a nested 
-> way.
-> So, I guess that anyway, nested mutexes would be required in this case.
->
+[+cc Jerry]
 
-Others like regmap have solved this by having a lockclass per instance.
-Although that is not ideal either since it will slow down lockdep.
+On Wed, Oct 09, 2019 at 05:45:49PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> I think intel-iommu.c depends on CONFIG_AMD_IOMMU in an undesirable way:
+> 
+> When CONFIG_INTEL_IOMMU_SVM=y, iommu_enable_dev_iotlb() calls PRI
+> interfaces (pci_reset_pri() and pci_enable_pri()), but those are only
+> implemented when CONFIG_PCI_PRI is enabled.  If CONFIG_PCI_PRI is not
+> enabled, there are stubs that just return failure.
+> 
+> The INTEL_IOMMU_SVM Kconfig does nothing with PCI_PRI, but AMD_IOMMU
+> selects PCI_PRI.  So if AMD_IOMMU is enabled, intel-iommu.c gets the full
+> PRI interfaces.  If AMD_IOMMU is not enabled, it gets the PRI stubs.
+> 
+> This seems wrong.  The first patch here makes INTEL_IOMMU_SVM select
+> PCI_PRI so intel-iommu.c always gets the full PRI interfaces.
+> 
+> The second patch moves pci_prg_resp_pasid_required(), which simply returns
+> a bit from the PCI capability, from #ifdef CONFIG_PCI_PASID to #ifdef
+> CONFIG_PCI_PRI.  This is related because INTEL_IOMMU_SVM already *does*
+> select PCI_PASID, so it previously always got pci_prg_resp_pasid_required()
+> even though it got stubs for other PRI things.
+> 
+> Since these are related and I have several follow-on ATS-related patches in
+> the queue, I'd like to take these both via the PCI tree.
+> 
+> Bjorn Helgaas (2):
+>   iommu/vt-d: Select PCI_PRI for INTEL_IOMMU_SVM
+>   PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI
+> 
+>  drivers/iommu/Kconfig   |  1 +
+>  drivers/pci/ats.c       | 55 +++++++++++++++++++----------------------
+>  include/linux/pci-ats.h | 11 ++++-----
+>  3 files changed, 31 insertions(+), 36 deletions(-)
 
-See
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/regmap.h#n629
+I applied these to pci/virtualization for v5.5 with Kuppuswamy's
+and Joerg's Reviewed-by on both and Jerry's on the first.  Thank you
+all for checking this over!
