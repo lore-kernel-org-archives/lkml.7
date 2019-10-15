@@ -2,77 +2,131 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B1ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ABEECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A0421848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D317021848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:20:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z5GmOLq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731835AbfJONSq (ORCPT
+        id S1731845AbfJONUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:18:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16623 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbfJONSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:18:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 06:18:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
-   d="scan'208";a="208181089"
-Received: from mcretu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.56.150])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Oct 2019 06:18:38 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     Tim.Bird@sony.com, changbin.du@gmail.com, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH] kernel-doc: rename the kernel-doc directive 'functions' to 'specific'
-In-Reply-To: <20191015115439.GE32665@bombadil.infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191013055359.23312-1-changbin.du@gmail.com> <875zkrd7nq.fsf@intel.com> <ECADFF3FD767C149AD96A924E7EA6EAF977CAF09@USCULXMSG01.am.sony.com> <7e7557b5-469f-3e63-6254-53dab2d7234a@suse.de> <20191015115439.GE32665@bombadil.infradead.org>
-Date:   Tue, 15 Oct 2019 16:19:36 +0300
-Message-ID: <8736fub0yf.fsf@intel.com>
+        Tue, 15 Oct 2019 09:20:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34448 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729551AbfJONUM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:20:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FDDloE033460;
+        Tue, 15 Oct 2019 13:20:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=XydGK+DnXk+HJwtjcNs2n1Ce29OSzKN9TF1Ft61aa2s=;
+ b=Z5GmOLq/mRJgLZh6Hg95jHqOKzywJChEbilo19CWRjZJEb1zN1F8qHK/RDSK/UxJoNAJ
+ uuzPtP5T6H+QjbQK+BAmw1b+4boHC9g9VVQgzxRxJF18MJ8ijaBx0yBKnXOyu6ctj5Zg
+ yyilFbWT704s4AaBXg7dMVpWKY3+vsv8heJ2m58Ci9rpePN/g1WUQPYmSAsX21AvSTiS
+ IUs02776R9zU4YuqR8FQMG5o0+/e0xThxcd98k06rhpox5Cbz4//Mo+CDjN1pAIMTGU2
+ zvI8OyE3OpKceDeqiEP9DQRTFI64JdGufloVhcwoOl6l149evvIZEmfcEsGEFr5KHHJI 6A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vk68ufxmt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 13:20:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FDDHOt018164;
+        Tue, 15 Oct 2019 13:20:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vks08ukt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 13:20:06 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FDK3Re005456;
+        Tue, 15 Oct 2019 13:20:03 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 13:20:03 +0000
+Date:   Tue, 15 Oct 2019 16:19:55 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191015131955.GH4774@kadam>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
+ <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+ <20191010113034.GN13286@kadam>
+ <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019, Matthew Wilcox <willy@infradead.org> wrote:
-> On Tue, Oct 15, 2019 at 11:25:53AM +0200, Thomas Zimmermann wrote:
->> > My preference would be to use 'symbols'.  I tried to come up with something
->> > but 'symbols' is better than anything I came up with.
->> 
->> Maybe 'interfaces' or 'artifacts'. The term 'symbols' is just as
->> imprecise as 'functions'.
->
-> I suggested 'identifier' because that's the term used in the C spec (6.2.1):
->
-> : An identifier can denote an object; a function; a tag or a member
-> : of a structure, union, or enumeration; a typedef name; a label name;
-> : a macro name; or a macro parameter.
->
-> We don't allow documenting all those things separately, but it does cover
-> all the things we do allow to be individually documented.
+On Tue, Oct 15, 2019 at 01:24:50PM +0200, Alexander Gordeev wrote:
+> On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
+> > On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
+> > > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
+> > > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > > > > > +	struct avalon_dma_desc *desc;
+> > > > > > > +	struct virt_dma_desc *vdesc;
+> > > > > > > +	bool rd_done;
+> > > > > > > +	bool wr_done;
+> > > > > > > +
+> > > > > > > +	spin_lock(lock);
+> 
+> [*]
+> 
+> > > > > > > +
+> > > > > > > +	rd_done = (hw->h2d_last_id < 0);
+> > > > > > > +	wr_done = (hw->d2h_last_id < 0);
+> > > > > > > +
+> > > > > > > +	if (rd_done && wr_done) {
+> > > > > > > +		spin_unlock(lock);
+> > > > > > > +		return IRQ_NONE;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	do {
+> > > > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > > > > > > +			rd_done = true;
+> > > > > > > +
+> > > > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > > > > > > +			wr_done = true;
+> > > > > > > +	} while (!rd_done || !wr_done);
 
-Agreed.
 
-BR,
-Jani.
+Thinking about this some more, my initial instinct was still correct
+actually.  If we're holding the lock to prevent the CPU from writing
+to it then how is hw->d2h_last_id updated in the other thread?  Either
+it must deadlock or it must be a race condition.
 
+regards,
+dan carpenter
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
