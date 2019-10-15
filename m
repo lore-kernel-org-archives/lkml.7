@@ -4,235 +4,410 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3126C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77960217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973DC217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfJOC4l (ORCPT
+        id S1727546AbfJOC5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 22:56:41 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:30024 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726248AbfJOC4k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 22:56:40 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Tf5XrNR_1571108166;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tf5XrNR_1571108166)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 15 Oct 2019 10:56:36 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Sterba <dsterba@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Marco Elver <elver@google.com>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2] rcu: make PREEMPT_RCU to be a decoration of TREE_RCU
-Date:   Tue, 15 Oct 2019 02:55:57 +0000
-Message-Id: <20191015025559.829-1-laijs@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191015020023.GO2689@paulmck-ThinkPad-P72>
-References: <20191015020023.GO2689@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 14 Oct 2019 22:57:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:21491 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfJOC5w (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 22:57:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 19:54:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,297,1566889200"; 
+   d="scan'208";a="370316963"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by orsmga005.jf.intel.com with ESMTP; 14 Oct 2019 19:54:48 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH] perf list: Hide deprecated events by default
+Date:   Tue, 15 Oct 2019 10:53:57 +0800
+Message-Id: <20191015025357.8708-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently PREEMPT_RCU and TREE_RCU are "contrary" configs
-when they can't be both on. But PREEMPT_RCU is actually a kind
-of TREE_RCU in the implementation. It seams to be appropriate
-to make PREEMPT_RCU to be a decorative option of TREE_RCU.
+There are some deprecated events listed by perf list. But we can't remove
+them from perf list with ease because some old scripts may use them.
 
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org> 
+Deprecated events are old names of renamed events.  When an event gets
+renamed the old name is kept around for some time and marked with
+Deprecated. The newer Intel event lists in the tree already have these
+headers.
+
+So we need to keep them in the event list, but provide a new option to
+show them. The new option is "--deprecated".
+
+With this patch, the deprecated events are hidden by default but they can
+be displayed when option "--deprecated" is enabled.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
-Changed from v1:
-	Rebased on -rcu "dev" branch
- include/linux/rcupdate.h   |  4 ++--
- include/trace/events/rcu.h |  4 ++--
- kernel/rcu/Kconfig         | 13 +++++++------
- kernel/rcu/Makefile        |  1 -
- kernel/rcu/rcu.h           |  2 +-
- kernel/rcu/update.c        |  2 +-
- kernel/sysctl.c            |  2 +-
- 7 files changed, 14 insertions(+), 14 deletions(-)
+ tools/perf/Documentation/perf-list.txt |  3 +++
+ tools/perf/builtin-list.c              | 14 ++++++++++----
+ tools/perf/pmu-events/jevents.c        | 26 ++++++++++++++++++++------
+ tools/perf/pmu-events/jevents.h        |  3 ++-
+ tools/perf/pmu-events/pmu-events.h     |  1 +
+ tools/perf/util/parse-events.c         |  4 ++--
+ tools/perf/util/parse-events.h         |  2 +-
+ tools/perf/util/pmu.c                  | 17 +++++++++++++----
+ tools/perf/util/pmu.h                  |  4 +++-
+ 9 files changed, 55 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index c6351314cbe6..4dcf46985922 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -167,7 +167,7 @@ do { \
-  * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
-  */
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 18ed1b0fceb3..6345db33c533 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -36,6 +36,9 @@ Enable debugging output.
+ Print how named events are resolved internally into perf events, and also
+ any extra expressions computed by perf stat.
  
--#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-+#if defined(CONFIG_TREE_RCU)
- #include <linux/rcutree.h>
- #elif defined(CONFIG_TINY_RCU)
- #include <linux/rcutiny.h>
-@@ -585,7 +585,7 @@ do {									      \
-  * read-side critical section that would block in a !PREEMPT kernel.
-  * But if you want the full story, read on!
-  *
-- * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
-+ * In non-preemptible RCU implementations (pure TREE_RCU and TINY_RCU),
-  * it is illegal to block while in an RCU read-side critical section.
-  * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
-  * kernel builds, RCU read-side critical sections may be preempted,
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index 35a384ec78b5..5e49b06e8104 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -41,7 +41,7 @@ TRACE_EVENT(rcu_utilization,
- 	TP_printk("%s", __entry->s)
- );
++--deprecated::
++Print deprecated events. By default the deprecated events are hidden.
++
+ [[EVENT_MODIFIERS]]
+ EVENT MODIFIERS
+ ---------------
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 08e62ae9d37e..965ef017496f 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -26,6 +26,7 @@ int cmd_list(int argc, const char **argv)
+ 	int i;
+ 	bool raw_dump = false;
+ 	bool long_desc_flag = false;
++	bool deprecated = false;
+ 	struct option list_options[] = {
+ 		OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
+ 		OPT_BOOLEAN('d', "desc", &desc_flag,
+@@ -34,6 +35,8 @@ int cmd_list(int argc, const char **argv)
+ 			    "Print longer event descriptions."),
+ 		OPT_BOOLEAN(0, "details", &details_flag,
+ 			    "Print information on the perf event names and expressions used internally by events."),
++		OPT_BOOLEAN(0, "deprecated", &deprecated,
++			    "Print deprecated events."),
+ 		OPT_INCR(0, "debug", &verbose,
+ 			     "Enable debugging output"),
+ 		OPT_END()
+@@ -55,7 +58,7 @@ int cmd_list(int argc, const char **argv)
  
--#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-+#if defined(CONFIG_TREE_RCU)
+ 	if (argc == 0) {
+ 		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
+-				details_flag);
++				details_flag, deprecated);
+ 		return 0;
+ 	}
  
- /*
-  * Tracepoint for grace-period events.  Takes a string identifying the
-@@ -432,7 +432,7 @@ TRACE_EVENT_RCU(rcu_fqs,
- 		  __entry->cpu, __entry->qsevent)
- );
+@@ -78,7 +81,8 @@ int cmd_list(int argc, const char **argv)
+ 			print_hwcache_events(NULL, raw_dump);
+ 		else if (strcmp(argv[i], "pmu") == 0)
+ 			print_pmu_events(NULL, raw_dump, !desc_flag,
+-						long_desc_flag, details_flag);
++						long_desc_flag, details_flag,
++						deprecated);
+ 		else if (strcmp(argv[i], "sdt") == 0)
+ 			print_sdt_events(NULL, NULL, raw_dump);
+ 		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0)
+@@ -91,7 +95,8 @@ int cmd_list(int argc, const char **argv)
+ 			if (sep == NULL) {
+ 				print_events(argv[i], raw_dump, !desc_flag,
+ 							long_desc_flag,
+-							details_flag);
++							details_flag,
++							deprecated);
+ 				continue;
+ 			}
+ 			sep_idx = sep - argv[i];
+@@ -117,7 +122,8 @@ int cmd_list(int argc, const char **argv)
+ 			print_hwcache_events(s, raw_dump);
+ 			print_pmu_events(s, raw_dump, !desc_flag,
+ 						long_desc_flag,
+-						details_flag);
++						details_flag,
++						deprecated);
+ 			print_tracepoint_events(NULL, s, raw_dump);
+ 			print_sdt_events(NULL, s, raw_dump);
+ 			metricgroup__print(true, true, s, raw_dump, details_flag);
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index e2837260ca4d..7d69727f44bd 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -322,7 +322,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
+ 				    char *desc, char *long_desc,
+ 				    char *pmu, char *unit, char *perpkg,
+ 				    char *metric_expr,
+-				    char *metric_name, char *metric_group)
++				    char *metric_name, char *metric_group,
++				    char *deprecated)
+ {
+ 	struct perf_entry_data *pd = data;
+ 	FILE *outfp = pd->outfp;
+@@ -354,6 +355,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
+ 		fprintf(outfp, "\t.metric_name = \"%s\",\n", metric_name);
+ 	if (metric_group)
+ 		fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
++	if (deprecated)
++		fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
+ 	fprintf(outfp, "},\n");
  
--#endif /* #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) */
-+#endif /* #if defined(CONFIG_TREE_RCU) */
- 
- /*
-  * Tracepoint for dyntick-idle entry/exit events.  These take a string
-diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-index 7644eda17d62..0303934e6ef0 100644
---- a/kernel/rcu/Kconfig
-+++ b/kernel/rcu/Kconfig
-@@ -7,7 +7,7 @@ menu "RCU Subsystem"
- 
- config TREE_RCU
- 	bool
--	default y if !PREEMPTION && SMP
-+	default y if SMP
- 	help
- 	  This option selects the RCU implementation that is
- 	  designed for very large SMP system with hundreds or
-@@ -17,6 +17,7 @@ config TREE_RCU
- config PREEMPT_RCU
- 	bool
- 	default y if PREEMPTION
-+	select TREE_RCU
- 	help
- 	  This option selects the RCU implementation that is
- 	  designed for very large SMP systems with hundreds or
-@@ -78,7 +79,7 @@ config TASKS_RCU
- 	  user-mode execution as quiescent states.
- 
- config RCU_STALL_COMMON
--	def_bool ( TREE_RCU || PREEMPT_RCU )
-+	def_bool TREE_RCU
- 	help
- 	  This option enables RCU CPU stall code that is common between
- 	  the TINY and TREE variants of RCU.  The purpose is to allow
-@@ -86,13 +87,13 @@ config RCU_STALL_COMMON
- 	  making these warnings mandatory for the tree variants.
- 
- config RCU_NEED_SEGCBLIST
--	def_bool ( TREE_RCU || PREEMPT_RCU || TREE_SRCU )
-+	def_bool ( TREE_RCU || TREE_SRCU )
- 
- config RCU_FANOUT
- 	int "Tree-based hierarchical RCU fanout value"
- 	range 2 64 if 64BIT
- 	range 2 32 if !64BIT
--	depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
-+	depends on TREE_RCU && RCU_EXPERT
- 	default 64 if 64BIT
- 	default 32 if !64BIT
- 	help
-@@ -112,7 +113,7 @@ config RCU_FANOUT_LEAF
- 	int "Tree-based hierarchical RCU leaf-level fanout value"
- 	range 2 64 if 64BIT
- 	range 2 32 if !64BIT
--	depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
-+	depends on TREE_RCU && RCU_EXPERT
- 	default 16
- 	help
- 	  This option controls the leaf-level fanout of hierarchical
-@@ -187,7 +188,7 @@ config RCU_BOOST_DELAY
- 
- config RCU_NOCB_CPU
- 	bool "Offload RCU callback processing from boot-selected CPUs"
--	depends on TREE_RCU || PREEMPT_RCU
-+	depends on TREE_RCU
- 	depends on RCU_EXPERT || NO_HZ_FULL
- 	default n
- 	help
-diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
-index 020e8b6a644b..82d5fba48b2f 100644
---- a/kernel/rcu/Makefile
-+++ b/kernel/rcu/Makefile
-@@ -9,6 +9,5 @@ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
- obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
- obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
- obj-$(CONFIG_TREE_RCU) += tree.o
--obj-$(CONFIG_PREEMPT_RCU) += tree.o
- obj-$(CONFIG_TINY_RCU) += tiny.o
- obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index c30a1f7dbd15..a7ab2a023dd3 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -427,7 +427,7 @@ enum rcutorture_type {
- 	INVALID_RCU_FLAVOR
+ 	return 0;
+@@ -371,6 +374,7 @@ struct event_struct {
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
++	char *deprecated;
  };
  
--#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-+#if defined(CONFIG_TREE_RCU)
- void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
- 			    unsigned long *gp_seq);
- void do_trace_rcu_torture_read(const char *rcutorturename,
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 196487762b96..2f529470cafa 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -437,7 +437,7 @@ struct debug_obj_descr rcuhead_debug_descr = {
- EXPORT_SYMBOL_GPL(rcuhead_debug_descr);
- #endif /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
+ #define ADD_EVENT_FIELD(field) do { if (field) {		\
+@@ -398,6 +402,7 @@ struct event_struct {
+ 	op(metric_expr);					\
+ 	op(metric_name);					\
+ 	op(metric_group);					\
++	op(deprecated);						\
+ } while (0)
  
--#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) || defined(CONFIG_RCU_TRACE)
-+#if defined(CONFIG_TREE_RCU) || defined(CONFIG_RCU_TRACE)
- void do_trace_rcu_torture_read(const char *rcutorturename, struct rcu_head *rhp,
- 			       unsigned long secs,
- 			       unsigned long c_old, unsigned long c)
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 00fcea236eba..2ace158a4d72 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1268,7 +1268,7 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_do_static_key,
- 	},
- #endif
--#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-+#if defined(CONFIG_TREE_RCU)
- 	{
- 		.procname	= "panic_on_rcu_stall",
- 		.data		= &sysctl_panic_on_rcu_stall,
+ static LIST_HEAD(arch_std_events);
+@@ -416,7 +421,8 @@ static void free_arch_std_events(void)
+ static int save_arch_std_events(void *data, char *name, char *event,
+ 				char *desc, char *long_desc, char *pmu,
+ 				char *unit, char *perpkg, char *metric_expr,
+-				char *metric_name, char *metric_group)
++				char *metric_name, char *metric_group,
++				char *deprecated)
+ {
+ 	struct event_struct *es;
+ 
+@@ -479,7 +485,8 @@ static int
+ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+ 	  char **name, char **long_desc, char **pmu, char **filter,
+ 	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
+-	  char **metric_group, unsigned long long eventcode)
++	  char **metric_group, unsigned long long eventcode,
++	  char **deprecated)
+ {
+ 	/* try to find matching event from arch standard values */
+ 	struct event_struct *es;
+@@ -507,7 +514,8 @@ int json_events(const char *fn,
+ 		      char *long_desc,
+ 		      char *pmu, char *unit, char *perpkg,
+ 		      char *metric_expr,
+-		      char *metric_name, char *metric_group),
++		      char *metric_name, char *metric_group,
++		      char *deprecated),
+ 	  void *data)
+ {
+ 	int err;
+@@ -536,6 +544,7 @@ int json_events(const char *fn,
+ 		char *metric_expr = NULL;
+ 		char *metric_name = NULL;
+ 		char *metric_group = NULL;
++		char *deprecated = NULL;
+ 		char *arch_std = NULL;
+ 		unsigned long long eventcode = 0;
+ 		struct msrmap *msr = NULL;
+@@ -614,6 +623,8 @@ int json_events(const char *fn,
+ 				addfield(map, &unit, "", "", val);
+ 			} else if (json_streq(map, field, "PerPkg")) {
+ 				addfield(map, &perpkg, "", "", val);
++			} else if (json_streq(map, field, "Deprecated")) {
++				addfield(map, &deprecated, "", "", val);
+ 			} else if (json_streq(map, field, "MetricName")) {
+ 				addfield(map, &metric_name, "", "", val);
+ 			} else if (json_streq(map, field, "MetricGroup")) {
+@@ -658,12 +669,14 @@ int json_events(const char *fn,
+ 			err = try_fixup(fn, arch_std, &event, &desc, &name,
+ 					&long_desc, &pmu, &filter, &perpkg,
+ 					&unit, &metric_expr, &metric_name,
+-					&metric_group, eventcode);
++					&metric_group, eventcode,
++					&deprecated);
+ 			if (err)
+ 				goto free_strings;
+ 		}
+ 		err = func(data, name, real_event(name, event), desc, long_desc,
+-			   pmu, unit, perpkg, metric_expr, metric_name, metric_group);
++			   pmu, unit, perpkg, metric_expr, metric_name,
++			   metric_group, deprecated);
+ free_strings:
+ 		free(event);
+ 		free(desc);
+@@ -673,6 +686,7 @@ int json_events(const char *fn,
+ 		free(pmu);
+ 		free(filter);
+ 		free(perpkg);
++		free(deprecated);
+ 		free(unit);
+ 		free(metric_expr);
+ 		free(metric_name);
+diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+index 4684c673c445..5cda49a42143 100644
+--- a/tools/perf/pmu-events/jevents.h
++++ b/tools/perf/pmu-events/jevents.h
+@@ -7,7 +7,8 @@ int json_events(const char *fn,
+ 				char *long_desc,
+ 				char *pmu,
+ 				char *unit, char *perpkg, char *metric_expr,
+-				char *metric_name, char *metric_group),
++				char *metric_name, char *metric_group,
++				char *deprecated),
+ 		void *data);
+ char *get_cpu_str(void);
+ 
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 92a4d15ee0b9..caeb577d36c9 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -17,6 +17,7 @@ struct pmu_event {
+ 	const char *metric_expr;
+ 	const char *metric_name;
+ 	const char *metric_group;
++	const char *deprecated;
+ };
+ 
+ /*
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index b5e2adef49de..db882f630f7e 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2600,7 +2600,7 @@ void print_symbol_events(const char *event_glob, unsigned type,
+  * Print the help text for the event symbols:
+  */
+ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+-			bool long_desc, bool details_flag)
++			bool long_desc, bool details_flag, bool deprecated)
+ {
+ 	print_symbol_events(event_glob, PERF_TYPE_HARDWARE,
+ 			    event_symbols_hw, PERF_COUNT_HW_MAX, name_only);
+@@ -2612,7 +2612,7 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 	print_hwcache_events(event_glob, name_only);
+ 
+ 	print_pmu_events(event_glob, name_only, quiet_flag, long_desc,
+-			details_flag);
++			details_flag, deprecated);
+ 
+ 	if (event_glob != NULL)
+ 		return;
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 616ca1eda0eb..769e07cddaa2 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -195,7 +195,7 @@ void parse_events_evlist_error(struct parse_events_state *parse_state,
+ 			       int idx, const char *str);
+ 
+ void print_events(const char *event_glob, bool name_only, bool quiet,
+-		  bool long_desc, bool details_flag);
++		  bool long_desc, bool details_flag, bool deprecated);
+ 
+ struct event_symbol {
+ 	const char	*symbol;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 5608da82ad23..adbe97e941dd 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -308,7 +308,8 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+ 				 char *long_desc, char *topic,
+ 				 char *unit, char *perpkg,
+ 				 char *metric_expr,
+-				 char *metric_name)
++				 char *metric_name,
++				 char *deprecated)
+ {
+ 	struct parse_events_term *term;
+ 	struct perf_pmu_alias *alias;
+@@ -325,6 +326,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+ 	alias->unit[0] = '\0';
+ 	alias->per_pkg = false;
+ 	alias->snapshot = false;
++	alias->deprecated = false;
+ 
+ 	ret = parse_events_terms(&alias->terms, val);
+ 	if (ret) {
+@@ -379,6 +381,9 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
+ 	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
+ 	alias->str = strdup(newval);
+ 
++	if (deprecated)
++		alias->deprecated = true;
++
+ 	if (!perf_pmu_merge_alias(alias, list))
+ 		list_add_tail(&alias->list, list);
+ 
+@@ -400,7 +405,7 @@ static int perf_pmu__new_alias(struct list_head *list, char *dir, char *name, FI
+ 	strim(buf);
+ 
+ 	return __perf_pmu__new_alias(list, dir, name, NULL, buf, NULL, NULL, NULL,
+-				     NULL, NULL, NULL);
++				     NULL, NULL, NULL, NULL);
+ }
+ 
+ static inline bool pmu_alias_info_file(char *name)
+@@ -787,7 +792,8 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+ 				(char *)pe->long_desc, (char *)pe->topic,
+ 				(char *)pe->unit, (char *)pe->perpkg,
+ 				(char *)pe->metric_expr,
+-				(char *)pe->metric_name);
++				(char *)pe->metric_name,
++				(char *)pe->deprecated);
+ 	}
+ }
+ 
+@@ -1383,7 +1389,7 @@ static void wordwrap(char *s, int start, int max, int corr)
+ }
+ 
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+-			bool long_desc, bool details_flag)
++			bool long_desc, bool details_flag, bool deprecated)
+ {
+ 	struct perf_pmu *pmu;
+ 	struct perf_pmu_alias *alias;
+@@ -1414,6 +1420,9 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 				format_alias(buf, sizeof(buf), pmu, alias);
+ 			bool is_cpu = !strcmp(pmu->name, "cpu");
+ 
++			if (alias->deprecated && !deprecated)
++				continue;
++
+ 			if (event_glob != NULL &&
+ 			    !(strglobmatch_nocase(name, event_glob) ||
+ 			      (!is_cpu && strglobmatch_nocase(alias->name,
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index f36ade6df76d..3e8cd31a89cc 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -57,6 +57,7 @@ struct perf_pmu_alias {
+ 	double scale;
+ 	bool per_pkg;
+ 	bool snapshot;
++	bool deprecated;
+ 	char *metric_expr;
+ 	char *metric_name;
+ };
+@@ -85,7 +86,8 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
+ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
+ 
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
+-		      bool long_desc, bool details_flag);
++		      bool long_desc, bool details_flag,
++		      bool deprecated);
+ bool pmu_have_event(const char *pname, const char *name);
+ 
+ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...) __scanf(3, 4);
 -- 
-2.20.1
+2.17.1
 
