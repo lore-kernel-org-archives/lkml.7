@@ -2,129 +2,98 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D07AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2182EECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B06320873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:18:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nrWcdihh"
+	by mail.kernel.org (Postfix) with ESMTP id F3C5E20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfJODSX (ORCPT
+        id S1727559AbfJODSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 23:18:23 -0400
-Received: from mail-eopbgr00083.outbound.protection.outlook.com ([40.107.0.83]:52900
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727195AbfJODSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 23:18:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q6XxELxUPQl5fZKVJlbskiH7jmJHmRR0WuvW31OoKhYWKZHlHvJOX2EaL3uliDcqM5ag4BUABAOmtWzdh3ox49660FGgMtKty1NbavRtJdw+vXA2rdd0mw89yxdg4rE+QQnkwKFmErvSYXrOvsyoCzrTEUQijfErjMJOVPr8rlpMmE116MXXsxRRTG8h0xT8SCaiAjiw7wTZnPw5o/6c7xJKo8pj6oJWM5s5OvktCQg5U15g6Y8ZfHCkIC1NavzkOYgxL9ty+6iAmTBAxYHNOLKi4ZliTLEqQ4EzPkTvPnBsQXFrYw5rwjvGZS+m/xugiWQQRmRRDxZgzgn/fAhrYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YiXDP2sP5tzDY7+oGIt/UPL3h0M7DseVjkehRChBlbA=;
- b=fQ/0QIb2qwuP2FXfajYQ6Oq8uKtCgFMYT6vF6FyTWeu/LE76TKiXaFSi0HqatCP2uPpSSIzYTvo9S4zARf3FkF/1858B71Q+UTzZw2oU0hMatP4z+Y5GdvZcBcFdblCBNdnCRmGUerpFD0e7TYjAvxEkvGFYx2GI5KV5EjIvIqYlykKWOxWKwOPsd59kV4SQ3P73O2Svejv3AnP1Zkbqsz59o6gS366FLRqdG52PaO/zwmnEynZrYoTsbgpSd4RLQvF4dbRODtL4qa69LT/hwInrbhiie0LXxhWGI25bIczKtgxw1ltJSQHUYsj4mwQALAKz7GlPMrJTYL0yjO9ULA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YiXDP2sP5tzDY7+oGIt/UPL3h0M7DseVjkehRChBlbA=;
- b=nrWcdihhSd719qri9Y552bVBWubRp/xLqDOeS69u5QtKejpw1qjYqUA6HayzW+kOYKBi4VyZVFRn7/XmsJ1hTkYkfcNDEK+eyrhuIctMCWcIG44dPyQsfWi3tzKyE1kcQH2T4jYjC8KHXLeS9CXWtVlC2NkU6SvOtgm3rGj5Mbw=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4764.eurprd04.prod.outlook.com (20.176.233.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Tue, 15 Oct 2019 03:18:19 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11%7]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
- 03:18:19 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Peter Rosin <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH 1/2] dt-bindings: i2c: replace property
- i2c-mux-idle-disconnect
-Thread-Topic: [EXT] Re: [PATCH 1/2] dt-bindings: i2c: replace property
- i2c-mux-idle-disconnect
-Thread-Index: AQHVgoOwZ96O8ZHg3EmhfguQXwsY4adaR50AgADBn7A=
-Date:   Tue, 15 Oct 2019 03:18:19 +0000
-Message-ID: <DB7PR04MB4490B0E379E3048F043203088F930@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20191014112558.3881-1-biwen.li@nxp.com>
- <4124752f-19a2-e3c1-7887-07ba66a79c29@axentia.se>
-In-Reply-To: <4124752f-19a2-e3c1-7887-07ba66a79c29@axentia.se>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4c70cdde-bba1-4e50-04cc-08d7511e5418
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB4764:|DB7PR04MB4764:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB476420C6CB5F224B5E3823238F930@DB7PR04MB4764.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01917B1794
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(199004)(189003)(316002)(71200400001)(71190400001)(66946007)(6246003)(81166006)(81156014)(7696005)(256004)(33656002)(25786009)(4001150100001)(76116006)(5660300002)(74316002)(14454004)(66446008)(64756008)(66556008)(66476007)(305945005)(52536014)(44832011)(2906002)(7736002)(229853002)(11346002)(6436002)(3846002)(9686003)(55016002)(478600001)(446003)(86362001)(486006)(2501003)(6116002)(476003)(99286004)(26005)(102836004)(66066001)(8676002)(6506007)(4326008)(53546011)(186003)(8936002)(110136005)(76176011)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4764;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KRN+34kjuothHQvp96EoVs4g9Xt4vrw7ZJRQvTwdLYXiYHhxfFa4feiu7/RHWZiEqCHo/ib3ItX4GLEYcXGW/xWcnYLxWRwqtlYKILvW/oWCIrxT6m7XTWGyMbFxtNS2Q1F70mDlWpKkSHHgMwvoEtJjpo7J+b+mQRw09ijRbUfUpc6PEYPT59JNJkWt5FYH2qDEK8iruVIGirCsXEw0ROZT6fOcXlfvAF3595HxgXjR1zj7wPu5ATIGNKGvB6Vj7bBkA8e6AAPhh/ynDCimB43cGHLVQ12zx+c3M8K44NLjSlto14wN+SSKIR5hYhz+6TR2RK7MYXIIXO+tjsevIKHpuZDIyGJdXDoFt51oLji69/5uLvmtqxW0D6hhB9x+Hy1nxaLQ+FRA7kLXpBtVjXaxmEp6Qercx8KUap5gQmo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 14 Oct 2019 23:18:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38579 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727195AbfJODSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 23:18:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 20:18:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,297,1566889200"; 
+   d="scan'208";a="225283908"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Oct 2019 20:18:29 -0700
+Date:   Mon, 14 Oct 2019 20:18:28 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 01/14] KVM: monolithic: x86: remove kvm.ko
+Message-ID: <20191015031828.GE24895@linux.intel.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-2-aarcange@redhat.com>
+ <20191015013144.GC24895@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c70cdde-bba1-4e50-04cc-08d7511e5418
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 03:18:19.6824
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K2XG2XmNH4JYrTgYxrczd68M6WE1gx0k2h6tR26TIcqCYp24/eaVBjwM9lDa6Oi4lj3iwOIxa853P9l5B2tJKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4764
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015013144.GC24895@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIDIwMTktMTAtMTQgMTM6MjUsIEJpd2VuIExp
-IHdyb3RlOg0KPiA+IFRoaXMgcmVwbGFjZXMgcHJvcGVydHkgaTJjLW11eC1pZGxlLWRpc2Nvbm5l
-Y3Qgd2l0aCBpZGxlLXN0YXRlDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3
-ZW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2kyYy9pMmMtbXV4LXBjYTk1NHgudHh0IHwgNCArLS0tDQo+ID4gIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50
-eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLW11eC1w
-Y2E5NTR4LnR4dA0KPiA+IGluZGV4IDMwYWM2YTYwZjA0MS4uZjJkYjUxN2IxNjM1IDEwMDY0NA0K
-PiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLW11eC1w
-Y2E5NTR4LnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-MmMvaTJjLW11eC1wY2E5NTR4LnR4dA0KPiA+IEBAIC0yNSw5ICsyNSw3IEBAIFJlcXVpcmVkIFBy
-b3BlcnRpZXM6DQo+ID4gIE9wdGlvbmFsIFByb3BlcnRpZXM6DQo+ID4NCj4gPiAgICAtIHJlc2V0
-LWdwaW9zOiBSZWZlcmVuY2UgdG8gdGhlIEdQSU8gY29ubmVjdGVkIHRvIHRoZSByZXNldCBpbnB1
-dC4NCj4gPiAtICAtIGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0OiBCb29sZWFuOyBpZiBkZWZpbmVk
-LCBmb3JjZXMgbXV4IHRvIGRpc2Nvbm5lY3QNCj4gYWxsDQo+ID4gLSAgICBjaGlsZHJlbiBpbiBp
-ZGxlIHN0YXRlLiBUaGlzIGlzIG5lY2Vzc2FyeSBmb3IgZXhhbXBsZSwgaWYgdGhlcmUgYXJlIHNl
-dmVyYWwNCj4gPiAtICAgIG11bHRpcGxleGVycyBvbiB0aGUgYnVzIGFuZCB0aGUgZGV2aWNlcyBi
-ZWhpbmQgdGhlbSB1c2Ugc2FtZSBJMkMNCj4gYWRkcmVzc2VzLg0KPiA+ICsgIC0gaWRsZS1zdGF0
-ZTogUGxlYXNlIHJlZmVyIHRvDQo+ID4gKyBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXV4L211eC1jb250cm9sbGVyLnR4dA0KPiA+ICAgIC0gaW50ZXJydXB0czogSW50ZXJydXB0
-IG1hcHBpbmcgZm9yIElSUS4NCj4gPiAgICAtIGludGVycnVwdC1jb250cm9sbGVyOiBNYXJrcyB0
-aGUgZGV2aWNlIG5vZGUgYXMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIuDQo+ID4gICAgLSAjaW50
-ZXJydXB0LWNlbGxzIDogU2hvdWxkIGJlIHR3by4NCj4gPg0KPiANCj4gWW91IGNhbid0IGp1c3Qg
-cmVtb3ZlIGkyYy1tdXgtaWRsZS1kaXNjb25uZWN0LiBJdCBuZWVkcyB0byByZW1haW4sIGFuZCB0
-aGUNCj4gZHJpdmVyIG5lZWRzIHRvIG1haW50YWluIHN1cHBvcnQgZm9yIHRoaXMgaW4gY2FzZSBh
-IG5ldyBrZXJuZWwgaXMgcnVubmluZw0KPiB3aXRoIGFuIG9sZCBkZXZpY2V0cmVlLg0KWW91IGFy
-ZSByaWdodCwgSSB3aWxsIGFkZCBpdCBpbiB2Mi4NCj4gDQo+IENoZWVycywNCj4gUGV0ZXINCg==
+On Mon, Oct 14, 2019 at 06:31:44PM -0700, Sean Christopherson wrote:
+> On Sat, Sep 28, 2019 at 01:23:10PM -0400, Andrea Arcangeli wrote:
+> > This is the first commit of a patch series that aims to replace the
+> > modular kvm.ko kernel module with a monolithic kvm-intel/kvm-amd
+> > model. This change has the only possible cons of wasting some disk
+> > space in /lib/modules/. The pros are that it saves CPUS and some minor
+> > RAM which are more scarse resources than disk space.
+> > 
+> > The pointer to function virtual template model cannot provide any
+> > runtime benefit because kvm-intel and kvm-amd can't be loaded at the
+> > same time.
+> > 
+> > This removes kvm.ko and it links and duplicates all kvm.ko objects to
+> > both kvm-amd and kvm-intel.
+> 
+> The KVM config option should be changed to a bool and its help text
+> updated.  Maybe something similar to the help for VIRTUALIZATION to make
+> it clear that enabling KVM on its own does nothing.
+
+Making KVM a bool doesn't work well, keeping it a tristate and keying off
+KVM=y to force Intel or AMD (as done in the next patch) looks like the
+cleanest implementation.
+
+The help text should still be updated though.
+
+> > 
+> > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> > ---
+> >  arch/x86/kvm/Makefile | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+> > index 31ecf7a76d5a..68b81f381369 100644
+> > --- a/arch/x86/kvm/Makefile
+> > +++ b/arch/x86/kvm/Makefile
+> > @@ -12,9 +12,8 @@ kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
+> >  			   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
+> >  			   hyperv.o page_track.o debugfs.o
+> >  
+> > -kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
+> > -kvm-amd-y		+= svm.o pmu_amd.o
+> > +kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o $(kvm-y)
+> > +kvm-amd-y		+= svm.o pmu_amd.o $(kvm-y)
+> >  
+> > -obj-$(CONFIG_KVM)	+= kvm.o
+> >  obj-$(CONFIG_KVM_INTEL)	+= kvm-intel.o
+> >  obj-$(CONFIG_KVM_AMD)	+= kvm-amd.o
