@@ -2,61 +2,93 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC86ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD62ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD5D2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC65214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389296AbfJOWQV (ORCPT
+        id S1729080AbfJOWRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:16:21 -0400
-Received: from namei.org ([65.99.196.166]:54404 "EHLO namei.org"
+        Tue, 15 Oct 2019 18:17:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51926 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389268AbfJOWQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:16:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x9FMFdwG018373;
-        Tue, 15 Oct 2019 22:15:39 GMT
-Date:   Wed, 16 Oct 2019 09:15:39 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     James Morse <james.morse@arm.com>
-cc:     prsriva <prsriva@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de,
-        takahiro.akashi@linaro.org, sboyd@kernel.org,
-        catalin.marinas@arm.com, zohar@linux.ibm.com,
-        yamada.masahiro@socionext.com, duwe@lst.de, bauerman@linux.ibm.com,
-        tglx@linutronix.de, allison@lohutok.net, ard.biesheuvel@linaro.org
-Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
-In-Reply-To: <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
-Message-ID: <alpine.LRH.2.21.1910160914090.11167@namei.org>
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com> <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com> <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com> <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1726747AbfJOWRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:17:50 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 513AA51EE6;
+        Tue, 15 Oct 2019 22:17:49 +0000 (UTC)
+Received: from [10.10.120.184] (ovpn-120-184.rdu2.redhat.com [10.10.120.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3C096064B;
+        Tue, 15 Oct 2019 22:17:44 +0000 (UTC)
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        live-patching@vger.kernel.org
+References: <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+Date:   Tue, 15 Oct 2019 18:17:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191015153120.GA21580@linux-8ccs>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 15 Oct 2019 22:17:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019, James Morse wrote:
-
-> > The IMA logs are event logs for module load time signature validation(based on policies)
-> > which are backed by the TPM. No SecureBoot information is present in the log other than
-> > the boot aggregate.
+On 10/15/19 11:31 AM, Jessica Yu wrote:
+> +++ Joe Lawrence [15/10/19 11:06 -0400]:
+>> On 10/15/19 10:13 AM, Miroslav Benes wrote:
+>>> Yes, it does. klp_module_coming() calls module_disable_ro() on all
+>>> patching modules which patch the coming module in order to call
+>>> apply_relocate_add(). New (patching) code for a module can be relocated
+>>> only when the relevant module is loaded.
+>>
+>> FWIW, would the LPC blue-sky2 model (ie, Steve's suggestion @
+>> plumber's where livepatches only patch a single object and updates are
+>> kept on disk to handle coming module updates as they are loaded)
+>> eliminate those outstanding relocations and the need to perform this
+>> late permission flipping?
 > 
-> Okay, so SecureBoot is optional with this thing.
+> I wasn't at Plumbers sadly, was this idea documented/talked about in
+> detail somewhere? (recording, slides, etherpad, etc?). What do you
+> mean by updates are kept on disk? Maybe someone can explain it more
+> in detail? :)
+> 
 
-Correct. Verified boot is one alternative.
+Livepatching folks -- I don't have the LPC summary link (etherpad?) that 
+Jiri put together.  Does someone have that handy for Jessica?
 
+Thanks,
 
--- 
-James Morris
-<jmorris@namei.org>
-
+-- Joe
