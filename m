@@ -2,168 +2,167 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03B4ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29262ECE59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7F62064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571176242;
-	bh=+ALO3hhBGQHIfdAOlkFJxuDEovKVZrBEBLmVf2WB1H0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WZAtnlE1/SqhdP5q13CwgL08hsVAJfkjzmqHdKS5a+kxCs6bLaH4HVNuAhAmLZnZl
-	 ERvogrWQn/2QGc117PqifYS5n4OlnZEOqwMRZf3jkiNFx1ARbyHeNQtnP9ve1qzYhK
-	 0Nudnn1Bt8LqVkUIPmjr0fTTKP5CoDy6G8xKzInQ=
+	by mail.kernel.org (Postfix) with ESMTP id F3A262064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbfJOVul (ORCPT
+        id S2388941AbfJOVum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:50:41 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39445 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfJOVuk (ORCPT
+        Tue, 15 Oct 2019 17:50:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47128 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732448AbfJOVuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 17:50:40 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w144so18223540oia.6;
-        Tue, 15 Oct 2019 14:50:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Rbg3GlsCZMY2PYzwlKYN6U3Hys/GlUE/N1CGmM1+mk=;
-        b=umRVsOqGggFxreCANJTaxO9NJm0LhK+1fTpp6xV7MRdjr9plnVt8m2pyzAVU2miLeM
-         MsjOJ65fKkLLKXIKoC0KBVc0DpB7Zn5tbEKKY93I7xzxc2tweH41kohYFNCdQ0ONfwIk
-         p+WQWkvgMyYbVXVl+5N/Jef9IyBirAdVKCNPW3tsM/sowMKu2aqM4aNQjZCG1gS2mTLG
-         jGhrT31h94uqvb2VaDj/ldThsciGboA0H74tDhwG0Eb5XLV3Wxy+EbJfDu/GVSzE7RkZ
-         vfWQd2b2/qogVQNPUILIjiQMs1GDCZjNnBFvZmwC21NDWQhFVoSlRMrEsrDzA1T0B6UJ
-         Gm2w==
-X-Gm-Message-State: APjAAAWoLUwkdIcu10lUGxX7nUitNshDCTawhOdiV2OdnafYEC8ko+qa
-        JHHdHdiIF1g5raWRybQxZrQn2EbyBu8vvLae9fAggDcm
-X-Google-Smtp-Source: APXvYqwSdEONq2xTT80HSQuU+UMOReflhaKoGASTVXaLwjVs7H5aEpsz5B6O64BQDIT2HvPpOWEtr8ZZKM6ngr86wl8=
-X-Received: by 2002:aca:d405:: with SMTP id l5mr582341oig.115.1571176238841;
- Tue, 15 Oct 2019 14:50:38 -0700 (PDT)
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iKUiB-0000tN-Rr; Tue, 15 Oct 2019 23:50:36 +0200
+Date:   Tue, 15 Oct 2019 23:50:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     David Laight <David.Laight@ACULAB.COM>
+cc:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: RE: x86/random: Speculation to the rescue
+In-Reply-To: <41646d76683844e7baf068bed35891ad@AcuMS.aculab.com>
+Message-ID: <alpine.DEB.2.21.1910152230070.2518@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de> <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com> <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com> <20190930033706.GD4994@mit.edu>
+ <20190930131639.GF4994@mit.edu> <CAHk-=wg7YAx_+CDe6fUqApPD_ghP18H9sPnJWWUg32pQ4pU82g@mail.gmail.com> <41646d76683844e7baf068bed35891ad@AcuMS.aculab.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com> <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
- <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 15 Oct 2019 23:50:27 +0200
-Message-ID: <CAJZ5v0hxsy3ZKFvtWULHAVog4=3rYQfd3-61A9dNaKeUbiDtrg@mail.gmail.com>
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS framework
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 5:53 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Oct 15, 2019 at 1:46 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 22-09-19, 23:12, Dmitry Osipenko wrote:
-> > > Hello Viresh,
-> > >
-> > > This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
-> > >
-> > >
-> > > [   87.952369] ==================================================================
-> > > [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
-> > > [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
-> > >
-> > > [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
-> > > 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
-> > > [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-> > > [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
-> > > [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
-> > > [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
-> > > (print_address_description.constprop.0+0x3d/0x340)
-> > > [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
-> > > (__kasan_report+0xe3/0x12c)
-> > > [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
-> > > [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
-> > > (blocking_notifier_chain_register+0x29/0x3c)
-> > > [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
-> > > (dev_pm_qos_add_notifier+0x79/0xf8)
-> > > [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
-> > > [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
-> > > [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
-> > > [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
-> > > (cpufreq_register_driver+0x13b/0x1ec)
-> > > [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
-> > > (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
-> >
-> > Hi Dmitry,
-> >
-> > Thanks for the bug report and I was finally able to reproduce it at my end and
-> > this was quite an interesting debugging exercise :)
-> >
-> > When a cpufreq driver gets registered, we register with the subsys interface and
-> > it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
-> > notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
-> >
-> > When the cpufreq driver gets unregistered, we unregister with the subsys
-> > interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
-> > (should have been in reverse order I feel). We remove the QoS notifier only when
-> > cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
-> > CPUx. Now this has a different notifier list as compared to CPU0.
->
-> The same problem will appear if the original policy CPU goes offline, won't it?
->
-> > In short, we are adding the cpufreq notifiers to CPU0 and removing them from
-> > CPUx. When we try to add it again by inserting the module for second time, we
-> > find a node in the notifier list which is already freed but still in the list as
-> > we removed it from CPUx's list (which doesn't do anything as the node wasn't
-> > there in the first place).
-> >
-> > @Rafael: How do you see we solve this problem ? Here are the options I could
-> > think of:
-> >
-> > - Update subsys layer to reverse the order of devices while unregistering (this
-> >   will fix the current problem, but we will still have corner cases hanging
-> >   around, like if the CPU0 is hotplugged out, etc).
->
-> This isn't sufficient for the offline case.
->
-> > - Update QoS framework with the knowledge of related CPUs, this has been pending
-> >   until now from my side. And this is the thing we really need to do. Eventually
-> >   we shall have only a single notifier list for all CPUs of a policy, at least
-> >   for MIN/MAX frequencies.
->
-> - Move the PM QoS requests and notifiers to the new policy CPU on all
-> changes of that.  That is, when cpufreq_offline() nominates the new
-> "leader", all of the QoS stuff for the policy needs to go to this one.
+David,
 
-Alas, that still will not work, because things like
-acpi_processor_ppc_init() only work accidentally for one-CPU policies.
-Generally, adding such a PM QoS request to a non-policy CPU simply has
-no effect until it becomes a policy CPU which may be never.
+On Tue, 1 Oct 2019, David Laight wrote:
+> From: Linus Torvalds
+> > Sent: 30 September 2019 17:16
+> > 
+> > On Mon, Sep 30, 2019 at 6:16 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> > >
+> > > Which is to say, I'm still worried that people with deep access to the
+> > > implementation details of a CPU might be able to reverse engineer what
+> > > a jitter entropy scheme produces.  This is why I'd be curious to see
+> > > the results when someone tries to attack a jitter scheme on a fully
+> > > open, simple architecture such as RISC-V.
+> > 
+> > Oh, I agree.
+> > 
+> > One of the reasons I didn't like some of the other jitter entropy
+> > things was that they seemed to rely _entirely_ on just purely
+> > low-level CPU unpredictability. I think that exists, but I think it
+> > makes for problems for really simple cores.
+> > 
+> > Timing over a bigger thing and an actual interrupt (even if it's
+> > "just" a timer interrupt, which is arguably much closer to the CPU and
+> > has a much higher likelihood of having common frequency domains with
+> > the cycle counter etc) means that I'm pretty damn convinced that a big
+> > complex CPU will absolutely see issues, even if it has big caches.
+> 
+> Agreed, you need something that is actually non-deterministic.
+> While 'speculation' is difficult to predict, it is actually fully deterministic.
 
-It looks like using device PM QoS for cpufreq is a mistake in general
-and what is needed is a struct pm_qos_constraints member in struct
-cpufreq_policy and something like
+I surely agree with Linus that simple architectures could have a more or
+less predictable or at least searchable behaviour. If we talk about complex
+x86 CPUs, I tend to disagree.
 
-struct freq_pm_qos_request {
-        enum freq_pm_qos_req_type type; /* min or max */
-        struct plist_node pnode;
-        struct cpufreq_policy *policy;
-};
+Even the Intel architects cannot explain why the following scenario is not
+deterministic at all:
 
-Then, pm_qos_update_target() can be used for adding, updating and
-removing requests.
+	Single CPU
+	No NMIs
+	No MCEs
+	No DMAs in the background, nothing.
+	CPU frequency is identical to TSC frequency
+
+	volatile int foo;
+
+	local_irq_disable();
+	start = rdtscp();
+	for (i = 0; i < 100000; i++)
+		foo++;
+	end = rdtscp();
+	local_irq_enable();
+
+Repeat that loop as often as you wish and observe the end - start
+delta. You'll see
+
+       min <= delta <= N * min
+
+where N is something >= 2. The actual value of N depends on the micro
+architecture, but is not identical on two systems and not even identical on
+the same system after boot and 1e6 iterations of the above.
+
+Aside of the fact that N is insane big there is absolutely no pattern in
+the delta value even over a large number of runs.
+
+> Until you get some perturbation from an outside source the cpu state
+> (including caches and DRAM) is likely to be the same on every boot.
+
+See above and read Nicholas paper. It's simply not that likely on anything
+halfways modern.
+
+> For a desktop (etc) PC booting from a disk (even SSD) you'll get some variation.
+> Boot an embedded system from onboard flash and every boot could
+> well be the same (or one of a small number of results).
+>
+> Synchronising a signal between frequency domains might generate
+> some 'randomness', but maybe not if both come from the same PLL.
+> 
+> Even if there are variations, they may not be large enough to give
+> a lot of variations in the state.
+> The variations between systems could also be a lot larger than the
+> variations within a system.
+
+The variations between systems are going to be larger as any minimal
+tolerance in the components have an influence.
+
+But even between two boots on a 'noiseless' embedded system factors like
+temperature, PLL lock times, swing in times of voltage regulators and other
+tiny details create non-deterministic behaviour. In my former life as a
+hardware engineer I had to analyze such issues deeply as they create
+serious trouble for some application scenarios, but those systems where
+based on very trivial and truly deterministic silicon parts. No commodity
+hardware vendor will ever go the extra mile to address these things as the
+effort required to get them under control is exponential vs. the effect.
+
+Whether that's enough to create true entropy is a different question, but I
+do not agree with the upfront dismissal of a potentially useful entropy
+source. 
+
+I'm in no way saying that this should be used as the sole source of
+entropy, but I definitely want to explore the inherent non-determinism of
+modern OoO machines further.
+
+The results are way too interesting to ignore them and amazingly fast at
+least with the algorithm which I used in my initial post which started this
+whole discussion.
+
+I let that thing run on a testbox for the last two weeks while I was on
+vacation and gathered 32768 random bits via that debugfs hack every 100ms,
+i.e. a total of 1.2e7 samples amounting to ~4e11 bits. The analysis is
+still running, but so far it holds up.
+
+Thanks,
+
+	tglx
