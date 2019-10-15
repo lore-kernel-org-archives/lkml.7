@@ -2,106 +2,75 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D86DECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FE5ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3602064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6269C214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732612AbfJOOXR (ORCPT
+        id S1732621AbfJOOXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:23:17 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42118 "EHLO huawei.com"
+        Tue, 15 Oct 2019 10:23:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50528 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732050AbfJOOXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:23:17 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 86C819DAF3342081BB63;
-        Tue, 15 Oct 2019 22:23:13 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 22:23:04 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <Eugeniy.Paltsev@synopsys.com>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>
-CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] clk: axs10x: use devm_platform_ioremap_resource() to simplify code
-Date:   Tue, 15 Oct 2019 22:22:59 +0800
-Message-ID: <20191015142259.17216-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1732050AbfJOOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:23:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6D9BBB2EA;
+        Tue, 15 Oct 2019 14:23:47 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 16:23:44 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <OSalvador@suse.com>
+Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
+ memmaps in memory_failure()
+Message-ID: <20191015142340.GA5686@linux>
+References: <20191009142435.3975-1-david@redhat.com>
+ <20191009142435.3975-3-david@redhat.com>
+ <20191009144323.GH6681@dhcp22.suse.cz>
+ <5a626821-77e9-e26b-c2ee-219670283bf0@redhat.com>
+ <20191010073526.GC18412@dhcp22.suse.cz>
+ <18383432-c74a-9ce5-a3c6-1e57d54cb629@redhat.com>
+ <52e81b85-c460-5b99-a297-e065caab3a16@redhat.com>
+ <20191011060249.GA30500@hori.linux.bs1.fc.nec.co.jp>
+ <3706d642-6c29-41b8-a676-1b5541af3169@redhat.com>
+ <20191014133617.GJ317@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014133617.GJ317@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Mon, Oct 14, 2019 at 03:36:17PM +0200, Michal Hocko wrote:
+> I do agree. The two should be really using the same code. My
+> understanding was that MADV_HWPOISON was there to test the actual MCE
+> behavior (and the man page seems to agree with that).
+> 
+> Oscar is working on a rewrite. Not sure he has considered this as well.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clk/axs10x/i2s_pll_clock.c | 4 +---
- drivers/clk/axs10x/pll_clock.c     | 7 ++-----
- 2 files changed, 3 insertions(+), 8 deletions(-)
+Yeah, I came across hwpoison-inject module when doing my re-write,
+and I felt like this is begging for a clean up.
 
-diff --git a/drivers/clk/axs10x/i2s_pll_clock.c b/drivers/clk/axs10x/i2s_pll_clock.c
-index 71c2e95..e9da0e6 100644
---- a/drivers/clk/axs10x/i2s_pll_clock.c
-+++ b/drivers/clk/axs10x/i2s_pll_clock.c
-@@ -172,14 +172,12 @@ static int i2s_pll_clk_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 	struct i2s_pll_clk *pll_clk;
- 	struct clk_init_data init;
--	struct resource *mem;
- 
- 	pll_clk = devm_kzalloc(dev, sizeof(*pll_clk), GFP_KERNEL);
- 	if (!pll_clk)
- 		return -ENOMEM;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pll_clk->base = devm_ioremap_resource(dev, mem);
-+	pll_clk->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pll_clk->base))
- 		return PTR_ERR(pll_clk->base);
- 
-diff --git a/drivers/clk/axs10x/pll_clock.c b/drivers/clk/axs10x/pll_clock.c
-index aba787b..500345d 100644
---- a/drivers/clk/axs10x/pll_clock.c
-+++ b/drivers/clk/axs10x/pll_clock.c
-@@ -221,7 +221,6 @@ static int axs10x_pll_clk_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	const char *parent_name;
- 	struct axs10x_pll_clk *pll_clk;
--	struct resource *mem;
- 	struct clk_init_data init = { };
- 	int ret;
- 
-@@ -229,13 +228,11 @@ static int axs10x_pll_clk_probe(struct platform_device *pdev)
- 	if (!pll_clk)
- 		return -ENOMEM;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pll_clk->base = devm_ioremap_resource(dev, mem);
-+	pll_clk->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pll_clk->base))
- 		return PTR_ERR(pll_clk->base);
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	pll_clk->lock = devm_ioremap_resource(dev, mem);
-+	pll_clk->lock = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(pll_clk->lock))
- 		return PTR_ERR(pll_clk->lock);
- 
+Since unpoison_memory needs some adjustments after my re-write, I will go ahead
+and clean that up, otherwise it will be inconsistent.
+
+I expect to be ready fo send the v2 by the end of this week.
+
+Thanks
 -- 
-2.7.4
-
-
+Oscar Salvador
+SUSE L3
