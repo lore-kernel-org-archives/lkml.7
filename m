@@ -2,108 +2,165 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65BBECE59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12071ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADC9222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571177082;
-	bh=bEz6VCO4JTI+Xylf3IoX+njYEaKlxKQAsOEkVTvjUNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z+p5hFEPyWiG8+NB9RXgpK+S/sCZbQw5cRmixzzUliAbuLFzGMOYVuz0pAZgasI74
-	 SPnVWdVM3UidCq3Ryth/xrhT7XhpMPt7NaTAe0PfAdQSGR701rdfxFRlRPq2R7KU/3
-	 kZyh8wHsqGvaug9CKRBMm1BIy+qxChZgQCUcxpjQ=
+	by mail.kernel.org (Postfix) with ESMTP id D63C420854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nlZUuFWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388948AbfJOWEl (ORCPT
+        id S2389072AbfJOWF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387411AbfJOWEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:04:41 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B3F21A49;
-        Tue, 15 Oct 2019 22:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571177080;
-        bh=bEz6VCO4JTI+Xylf3IoX+njYEaKlxKQAsOEkVTvjUNE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e1xOJVfWV9ix0vZr4g+UcrmKP4/FNC6MKcH8FDdA/I5R3HIFxIYH2YeuXEgpaxUkC
-         uaRVTzg8A/NYCb+zGNG1CgFiD6dzRlLj9y7QwNE++a3RWzzsXIZZq7hDJEXkQ1wJ1O
-         mHHnBfUhy9zlgXC0SbhsSnKToKFyJAWmOPnAit4c=
-Date:   Tue, 15 Oct 2019 18:04:39 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     stable@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
-        rjw@rjwysocki.net, lenb@kernel.org, sudeep.holla@arm.com,
-        rrichter@marvell.com, jeremy.linton@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linuxarm@huawei.com,
-        gregkh@linuxfoundation.org, guohanjun@huawei.com,
-        wanghuiqiang@huawei.com
-Subject: Re: [PATCH for-stable-5.3 1/2] ACPI/PPTT: Add support for ACPI 6.3
- thread flag
-Message-ID: <20191015220439.GQ31224@sasha-vm>
-References: <1571054162-71090-1-git-send-email-john.garry@huawei.com>
- <1571054162-71090-2-git-send-email-john.garry@huawei.com>
- <20191014232958.GC31224@sasha-vm>
- <635a839b-bc1e-37ab-bd47-a554acc9b282@huawei.com>
+        Tue, 15 Oct 2019 18:05:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60716 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbfJOWF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:05:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FLxjVb100533;
+        Tue, 15 Oct 2019 22:05:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=KPP03hfrrXQ4Nsszrtqc/SzL79QsW11j9w/mUGBt86s=;
+ b=nlZUuFWkWk5gzDyq5PkBnONz9nPKO9+D+TgGNcvG57cq/bbMqFjC00IA90N3beSmu3VD
+ vqfy159fIujtSNqe9JflwD9f7QgHZ9Iakqr+L9J72aKad82ofCsUmJg/cWF+JTeQoOE9
+ MqNii6ia6cMozivw/VwmPV1VVCDedr64SwakwSmhf4MfFQGT5jOMJlML5yS5lSvli5Wz
+ m7tzH2JYxgxo0lrQQrfieiejG6yYej92IG7zgtp1FHG8G39P7r1O1CExX9J0N+lFYP9z
+ IecDZthsOOeNxEdWqe3cGfupUym4o565i3OGSQuLxdQklU3tO7VV5gLOGKYtKoDlKcAE 1w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2vk7frawmr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 22:05:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FM43P6119202;
+        Tue, 15 Oct 2019 22:05:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2vn71987su-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 22:05:06 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9FM539h014007;
+        Tue, 15 Oct 2019 22:05:03 GMT
+Received: from dhcp-10-132-91-76.usdhcp.oraclecorp.com (/10.132.91.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 22:05:03 +0000
+Subject: Re: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup
+ functions
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191015164033.87276-1-xiaoyao.li@intel.com>
+ <20191015164033.87276-2-xiaoyao.li@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <82a41967-98ca-1bc8-fce3-77aaf18b0c1a@oracle.com>
+Date:   Tue, 15 Oct 2019 15:05:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <635a839b-bc1e-37ab-bd47-a554acc9b282@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015164033.87276-2-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150189
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:16:13AM +0100, John Garry wrote:
->On 15/10/2019 00:29, Sasha Levin wrote:
->>On Mon, Oct 14, 2019 at 07:56:01PM +0800, John Garry wrote:
->>>From: Jeremy Linton <jeremy.linton@arm.com>
->>>
->>>Commit bbd1b70639f785a970d998f35155c713f975e3ac upstream.
->>>
->>>ACPI 6.3 adds a flag to the CPU node to indicate whether
->>>the given PE is a thread. Add a function to return that
->>>information for a given linux logical CPU.
->>>
->>>Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->>>Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
->>>Reviewed-by: Robert Richter <rrichter@marvell.com>
->>>Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>Signed-off-by: Will Deacon <will@kernel.org>
->>>Signed-off-by: John Garry <john.garry@huawei.com>
->>
->>How far back should these patches be backported?
->>
->
->Hi Sasha,
->
->This patchset is for 5.3, and I sent a separate patchset for 4.19, 
->since the backport is a little different and required some hand 
->modification -
->
->https://lore.kernel.org/linux-arm-kernel/1571046986-231263-1-git-send-email-john.garry@huawei.com/. 
->4.19 is as far back as we want.
->
->Please note that the patches in this 5.3 series are relevant for 5.2 
->also, but since 5.2 is EOL, I didn't mention it. We did test 5.2, so 
->you can add there also.
->
->Please let me know if any more questions.
 
-I've queued this and the 4.19 patches, thanks!
 
--- 
-Thanks,
-Sasha
+On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
+> Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
+> to match what they really do.
+>
+> No functional change.
+>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>   arch/x86/kvm/vmx/nested.c | 2 +-
+>   arch/x86/kvm/vmx/nested.h | 2 +-
+>   arch/x86/kvm/vmx/vmx.c    | 9 +++------
+>   3 files changed, 5 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 5e231da00310..7935422d311f 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>   	return ret;
+>   }
+>   
+> -void nested_vmx_vcpu_setup(void)
+> +void nested_vmx_vmcs_setup(void)
+>   {
+>   	if (enable_shadow_vmcs) {
+>   		vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
+> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+> index 187d39bf0bf1..2be1ba7482c9 100644
+> --- a/arch/x86/kvm/vmx/nested.h
+> +++ b/arch/x86/kvm/vmx/nested.h
+> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+>   				bool apicv);
+>   void nested_vmx_hardware_unsetup(void);
+>   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
+> -void nested_vmx_vcpu_setup(void);
+> +void nested_vmx_vmcs_setup(void);
+>   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
+>   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry);
+>   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index e660e28e9ae0..58b77a882426 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
+>   
+>   #define VMX_XSS_EXIT_BITMAP 0
+>   
+> -/*
+> - * Sets up the vmcs for emulated real mode.
+> - */
+> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+>   {
+>   	int i;
+>   
+>   	if (nested)
+> -		nested_vmx_vcpu_setup();
+> +		nested_vmx_vmcs_setup();
+>   
+>   	if (cpu_has_vmx_msr_bitmap())
+>   		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
+> @@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>   	cpu = get_cpu();
+>   	vmx_vcpu_load(&vmx->vcpu, cpu);
+>   	vmx->vcpu.cpu = cpu;
+> -	vmx_vcpu_setup(vmx);
+> +	vmx_vmcs_setup(vmx);
+>   	vmx_vcpu_put(&vmx->vcpu);
+>   	put_cpu();
+>   	if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
+
+May be we should rename vmx_vcpu_reset() to vmx_vmcs_reset()  as well  ?
