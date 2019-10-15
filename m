@@ -2,125 +2,83 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AAAECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD03ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1712C20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="tV6fx4WF"
+	by mail.kernel.org (Postfix) with ESMTP id D136620854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732865AbfJOObs (ORCPT
+        id S1732798AbfJOOhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:31:48 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38977 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732851AbfJOObr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:31:47 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 4so19344382qki.6
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rLVD7vPJBGWYE3BC+T54ofrBrkXdHmXQZojv0W6wPTA=;
-        b=tV6fx4WFPct3lTQ345Oq5xdMJixBxbdzJ7TXEOs2AxCPbU6ggBQHmQqmttRkGbTrth
-         fKUwwLGnsTfYmRceiI3Xgg90DWKq4uc8M2uCUC0gW7Kszq8+XiEcQm6DORDmpne3DNc3
-         sP3uuZEW9h1B9OlrpZxPAEvnvNcADrsXQlBARcp4sThPwcJuBQcxX7qj870CDr30s0wy
-         Y/Bru1q+VVfeGEiZXBd0NtokPdennXJiRa6MUbNmTAiBGLUzZbv2mtF4OVrL4AeU9/4O
-         7yXtd3u+UCcgUo7ynZF+2L510IN+ovY2Y/IJq7wZ2XYC/oEL5iAmc75a89W/b9z4mPS1
-         UZ6Q==
+        Tue, 15 Oct 2019 10:37:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17865 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732087AbfJOOhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:37:00 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BC6DA5D66B
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 14:36:59 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id w2so10304329wrn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:36:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rLVD7vPJBGWYE3BC+T54ofrBrkXdHmXQZojv0W6wPTA=;
-        b=ZBwzy7Ui4yPFIn1BepLaQDDlaDQwbxCVARIoLqjrhrTEaFfk/pJ7mn/3VOaMwGImTP
-         hshzE4psZjZ4buukfRFj3Ro71sqWaws65DAalIgWWlnr/tjdkJ5cuiUxTczPXG6ds/uK
-         tsReGndN/w3hUW4n5bmpoh0Rax5+ZCrv8t0VZYQFcuHc1IZBrsDIciPlwYzHJb5iMI5i
-         yBP/dARa99DcatnjCRCaQnJcUz4MLldgAnehpm5tUcpcKxBm9q7INpRXD/hBNHM70Btd
-         pkv90Gzr6piXQhfhipcYHMiL2gzQU5nB+WYiMA9Z5EYyAjDZm3C/OKoyF/ubr4DgbjQr
-         9wtA==
-X-Gm-Message-State: APjAAAWXdRloR66iWQ6V+EUP91CmUeQiOdj3+GvA/sQohkuPAt9Pwswv
-        dRHJUDkdvoQ+ZiWKsxeJRzj4Ng==
-X-Google-Smtp-Source: APXvYqzunM/QzD2RkF8PdGCuo6II98hv68LXdo5zbgABkad6Kr+uQdefq49as/+MZ8iDH7JqufNQwQ==
-X-Received: by 2002:ae9:ee06:: with SMTP id i6mr34408845qkg.362.1571149905707;
-        Tue, 15 Oct 2019 07:31:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:d056])
-        by smtp.gmail.com with ESMTPSA id o52sm14093380qtf.56.2019.10.15.07.31.44
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=7gWYtkII8mtOVls6zkJP3id5nOPibyKp3U8OMw+vtSs=;
+        b=tDRTUkKTeLMAfsOtCKfptCcpAXAB0BaZvhmQ10wmklf0hAJf0zcVTE+VYAPqf16++0
+         9N5x+XCbris2J/uLL8UasfLDyx2aPm/tUkSx0lnK8ubpx0NBUHIF5qbA0IiLPxRe1OgH
+         8KhNLWgBJPHHCMTUSeU1Etc35gj+GygnsVaNFusNEfgZz8J5IYlb0GeaIJsiX8MfYeay
+         5fbfUGHXmbDT2kSBLSJg1EI8wxX8IfquqRXyrGLjCQOmXcNZfOIK6JgBvGFqOO7/9kSR
+         gtnMZshByqBzPBQW04ThPpJPk5IBvMUyiWjn8GkHOiZkADVGEF1G+hJjBg6YmSf/j1VS
+         8IzA==
+X-Gm-Message-State: APjAAAWHDH/UnuP0PguzInxu4oo3+em94XEVjzlz51SWUx12vZlnDKz4
+        dNULX3I1c0GQir2v5RIfZIyxkWmN7nOU8a6vp8G/Q9DiSPCeGwk4iUFlVOFFH5KRFS3oKE/R2TJ
+        +UjGLy+YDFhFBZ3UjbzJoqv6I
+X-Received: by 2002:adf:a109:: with SMTP id o9mr6215045wro.96.1571150218499;
+        Tue, 15 Oct 2019 07:36:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy42FIpOdPfkX/N+JnSoKHv+iGGPsS7ya7sjKODSLyv9Nu8uwV8cmZ4JAP7DceOJtB+Y0l45Q==
+X-Received: by 2002:adf:a109:: with SMTP id o9mr6215021wro.96.1571150218266;
+        Tue, 15 Oct 2019 07:36:58 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id z1sm3637250wrn.57.2019.10.15.07.36.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 07:31:44 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 10:31:42 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
- mem_cgroup_move_account
-Message-ID: <20191015143142.GB139269@cmpxchg.org>
-References: <157112699975.7360.1062614888388489788.stgit@buzz>
- <20191015082048.GU317@dhcp22.suse.cz>
- <3b73e301-ea4a-5edb-9360-2ae9b4ad9f69@yandex-team.ru>
- <20191015103623.GX317@dhcp22.suse.cz>
- <31cab57d-6e79-33cb-1a58-99065c6e7b82@yandex-team.ru>
- <20191015110401.GZ317@dhcp22.suse.cz>
+        Tue, 15 Oct 2019 07:36:57 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
+In-Reply-To: <97255084-7b10-73a5-bfb4-fdc1d5cc0f6e@redhat.com>
+References: <20191014162247.61461-1-xiaoyao.li@intel.com> <87y2xn462e.fsf@vitty.brq.redhat.com> <20191014183723.GE22962@linux.intel.com> <87v9sq46vz.fsf@vitty.brq.redhat.com> <97255084-7b10-73a5-bfb4-fdc1d5cc0f6e@redhat.com>
+Date:   Tue, 15 Oct 2019 16:36:57 +0200
+Message-ID: <87lftm3wja.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015110401.GZ317@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:04:01PM +0200, Michal Hocko wrote:
-> On Tue 15-10-19 13:49:14, Konstantin Khlebnikov wrote:
-> > On 15/10/2019 13.36, Michal Hocko wrote:
-> > > On Tue 15-10-19 11:44:22, Konstantin Khlebnikov wrote:
-> > > > On 15/10/2019 11.20, Michal Hocko wrote:
-> > > > > On Tue 15-10-19 11:09:59, Konstantin Khlebnikov wrote:
-> > > > > > Mapped, dirty and writeback pages are also counted in per-lruvec stats.
-> > > > > > These counters needs update when page is moved between cgroups.
-> > > > > 
-> > > > > Please describe the user visible effect.
-> > > > 
-> > > > Surprisingly I don't see any users at this moment.
-> > > > So, there is no effect in mainline kernel.
-> > > 
-> > > Those counters are exported right? Or do we exclude them for v1?
-> > 
-> > It seems per-lruvec statistics is not exposed anywhere.
-> > And per-lruvec NR_FILE_MAPPED, NR_FILE_DIRTY, NR_WRITEBACK never had users.
-> 
-> So why do we have it in the first place? I have to say that counters
-> as we have them now are really clear as mud. This is really begging for
-> a clean up.
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-IMO This is going in the right direction. The goal is to have all
-vmstat items accounted per lruvec - the intersection of the node and
-the memcg - to further integrate memcg into the traditional VM code
-and eliminate differences between them. We use the lruvec counters
-quite extensively in reclaim already, since the lruvec is the primary
-context for page reclaim. More consumers will follow in pending
-patches. This patch cleans up some stragglers.
+> On 15/10/19 12:53, Vitaly Kuznetsov wrote:
+>> A very theoretical question: why do we have 'struct vcpu' embedded in
+>> vcpu_vmx/vcpu_svm and not the other way around (e.g. in a union)? That
+>> would've allowed us to allocate memory in common code and then fill in
+>> vendor-specific details in .create_vcpu().
+>
+> Probably "because it's always been like that" is the most accurate answer.
+>
 
-The only counters we can't have in the lruvec are the legacy memcg
-ones that are accounted to the memcg without a node context:
-MEMCG_RSS, MEMCG_CACHE etc. We should eventually replace them with
-per-lruvec accounted NR_ANON_PAGES, NR_FILE_PAGES etc - tracked by
-generic VM code, not inside memcg, further reducing the size of the
-memory controller. But it'll require some work in the page creation
-path, as that accounting happens before the memcg commit right now.
+OK, so let me make my question a bit less theoretical: would you be in
+favor of changing the status quo? :-)
 
-Then we can get rid of memcg_stat_item and the_memcg_page_state
-API. And we should be able to do for_each_node() summing of the lruvec
-counters to produce memory.stat output, and drop memcg->vmstats_local,
-memcg->vmstats_percpu, memcg->vmstats and memcg->vmevents altogether.
+-- 
+Vitaly
