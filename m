@@ -2,75 +2,79 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FE5ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB14AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6269C214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AB02064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfJOOXt (ORCPT
+        id S1732632AbfJOOYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:23:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50528 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732050AbfJOOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:23:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6D9BBB2EA;
-        Tue, 15 Oct 2019 14:23:47 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 16:23:44 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <OSalvador@suse.com>
-Subject: Re: [PATCH v2 2/2] mm/memory-failure.c: Don't access uninitialized
- memmaps in memory_failure()
-Message-ID: <20191015142340.GA5686@linux>
-References: <20191009142435.3975-1-david@redhat.com>
- <20191009142435.3975-3-david@redhat.com>
- <20191009144323.GH6681@dhcp22.suse.cz>
- <5a626821-77e9-e26b-c2ee-219670283bf0@redhat.com>
- <20191010073526.GC18412@dhcp22.suse.cz>
- <18383432-c74a-9ce5-a3c6-1e57d54cb629@redhat.com>
- <52e81b85-c460-5b99-a297-e065caab3a16@redhat.com>
- <20191011060249.GA30500@hori.linux.bs1.fc.nec.co.jp>
- <3706d642-6c29-41b8-a676-1b5541af3169@redhat.com>
- <20191014133617.GJ317@dhcp22.suse.cz>
+        Tue, 15 Oct 2019 10:24:01 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:50060 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732050AbfJOOYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:24:01 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKNjs-0004il-C4; Tue, 15 Oct 2019 15:23:52 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKNjs-0004M5-1J; Tue, 15 Oct 2019 15:23:52 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/syncobj: include <drm/drm_utils.h> for drm_timeout_abs_to_jiffies
+Date:   Tue, 15 Oct 2019 15:23:48 +0100
+Message-Id: <20191015142348.16698-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014133617.GJ317@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 03:36:17PM +0200, Michal Hocko wrote:
-> I do agree. The two should be really using the same code. My
-> understanding was that MADV_HWPOISON was there to test the actual MCE
-> behavior (and the man page seems to agree with that).
-> 
-> Oscar is working on a rewrite. Not sure he has considered this as well.
+Include <drm/drm_utils.h> for drm_timeout_abs_to_jiffies
+definiton to fix the following sparse warning:
 
-Yeah, I came across hwpoison-inject module when doing my re-write,
-and I felt like this is begging for a clean up.
+drivers/gpu/drm/drm_syncobj.c:1019:13: warning: symbol 'drm_timeout_abs_to_jiffies' was not declared. Should it be static?
 
-Since unpoison_memory needs some adjustments after my re-write, I will go ahead
-and clean that up, otherwise it will be inconsistent.
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/gpu/drm/drm_syncobj.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I expect to be ready fo send the v2 by the end of this week.
-
-Thanks
+diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
+index 4b5c7b0ed714..9ec334663c2d 100644
+--- a/drivers/gpu/drm/drm_syncobj.c
++++ b/drivers/gpu/drm/drm_syncobj.c
+@@ -135,6 +135,7 @@
+ #include <drm/drm_gem.h>
+ #include <drm/drm_print.h>
+ #include <drm/drm_syncobj.h>
++#include <drm/drm_utils.h>
+ 
+ #include "drm_internal.h"
+ 
 -- 
-Oscar Salvador
-SUSE L3
+2.23.0
+
