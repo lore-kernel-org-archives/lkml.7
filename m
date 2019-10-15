@@ -2,219 +2,166 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B423AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94503C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778C42064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3892064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="F0nqJCOF"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mYjzhxzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbfJONjA (ORCPT
+        id S1732092AbfJONkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:39:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38665 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732013AbfJONi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:38:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y18so14476509wrn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 06:38:55 -0700 (PDT)
+        Tue, 15 Oct 2019 09:40:55 -0400
+Received: from mail-eopbgr750077.outbound.protection.outlook.com ([40.107.75.77]:65166
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728880AbfJONky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:40:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PXtBFJPSjupmcZ9042/7x1oV4FuCctHg9tuCJChS6+jz4VJgSyyY60delEx6dVM1izaVBObAeVjQYI0+kOthC8YlLTJclrPe5K/3JIba6osXPKzxKinTLVpKfmxGACqP1GidLqiaZG/705bkfowVJzpMmJ3T/E/7ciq9LHeIkqiStllLPyO8QJSvISPMkdg8tTueUZXCzRqAr77dXeOHv6si0A7Fr8MLBa5hFzDfT2VYHpdRDngN2iZWWE/Y09G6aoXRHL1/mpSVqj4K+D/Ks8zDyMIioSVPtYd4RBY/NuMVhUBz7Yksl1qGTWdVfIqPHgEipzgtn1biDgD4FzyLnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vrxrustGCN75leJlc9bS6aBW7tddQEq8xRC+9wW2m/w=;
+ b=jYDxuLHePk/84aBtSz69+uuuWP6WqgHymX4PiPE4/QUMFdIGLBigV2wAd4NVNPJT/34IJRj3UiMABV8rsdOcB8RubeAZpNPgbvL5TdWDhI5pAz4WiKaRk7zsjT7BMTHyEB22SwnkgdShgxZPopTcoMwAWrOXWjrLBdxZCENAGf37WxFthNbYcR39suaaJAIqQodEAkYXbxbkVyuQY7e/7b9B/HAOdJFnWux7Qkoye0ClYeILUMb9zhSZWXjQ2JIt2i/PJkswLX0v74LHxfiQvwoFuG6tRiJKq55DK5Ug/7owhCxIkV1mG2DFvIuixQWUlGwbGQHY0inrp4UeFGqYmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Nu2z3Dgfr7/J7oYU8GOaoAiMptWMlXZ8SPSo2Cr62ZM=;
-        b=F0nqJCOFOeroNljjk6F4DUNswWFyWQE/Zp2OgTK0vdHJJl3MTjGvvhbLb2GzZoYF0y
-         DG84j4K4fsqKm8B9dmxN9++6+Kv2yDJZ0C3FFRJUzC7Te6LrAyiLpwCQbSRecB8kQ5Al
-         ZyQaeUGlkC58Pp4vlpQqwMvLOwPvEXzMq6g2dfEpdmgpdwivRZY71YfB+A9PQK0HewY9
-         lNbjyUbtIK4ED4xv3ttcNN4DQId/foyMHEOh3cvBStVu7KB/ZlY/7txH0yPm4YDDSrzf
-         vr7B95+dyF+n0a2mEQwDks78KWvih6cuLMLd7nsqNr3TZyXLSXUpACb5V2WBQRts67C9
-         ToOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Nu2z3Dgfr7/J7oYU8GOaoAiMptWMlXZ8SPSo2Cr62ZM=;
-        b=snVzuvTvFf6Wg8/T4U57pKKLPJDmmM7K+fkbBxYhhEarJSuRZtzmkSvSk/BtwvtSLb
-         /gaUEF4LGFm5qDtT9Ik9xLtV4VXj7FLcThT6kAynGryVUvB5FxvYJN/JlsDBbNy0T/2V
-         lpVUSufqWYJ9qBVVdR94HH6LhqKwbbAo5oztNihCtnhnbAvh+FeSGT88WiUwzgDqmH35
-         cilLnES8Bcq8q6POMtzeEZsr2cidt0k8h0v9ucAe5sXqsHt9KJAxsS39jiYI4eMbdxL9
-         n0Ssidb1UUSMmNb+Cx71LJuNluCusROwQGlznLwwTxlKOl/q45nEC4w7xvQ1aYz7UMgR
-         7qeg==
-X-Gm-Message-State: APjAAAURhV65f1eMJkpYCyvpQhdwPgdJKWMPsWDRK8G5H9y+WogVtIHM
-        BUXYokOHAVBaGcSt6VeABkO9uQ==
-X-Google-Smtp-Source: APXvYqzlAAzvHjtdfpECSH1vFyKSqr33tk+sqhAor9Wt5UyDyOIMMS72yfETfvKX3wjYooh4R/XE9w==
-X-Received: by 2002:adf:fe10:: with SMTP id n16mr21107992wrr.288.1571146734815;
-        Tue, 15 Oct 2019 06:38:54 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e18sm30379633wrv.63.2019.10.15.06.38.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 06:38:54 -0700 (PDT)
-Subject: Re: [PATCH v2 0/6] arm64: dts: meson-g12: add support for PCIe
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     khilman@baylibre.com, kishon@ti.com, bhelgaas@google.com,
-        andrew.murray@arm.com, linux-amlogic@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org,
-        repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com
-References: <20190916125022.10754-1-narmstrong@baylibre.com>
- <20191015131419.GA12343@e121166-lin.cambridge.arm.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <ca0d8068-fb44-7e91-fd52-d53f5759bcba@baylibre.com>
-Date:   Tue, 15 Oct 2019 15:38:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191015131419.GA12343@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vrxrustGCN75leJlc9bS6aBW7tddQEq8xRC+9wW2m/w=;
+ b=mYjzhxzzOz/c/RZ4M+ydleFqNbAL7jr6oaWhF8vT5Gw1gFcud8ZQLBklczzqcID5OLpvEWBZp8Mdbo7OwS/liZ8ORhd2T1BA1qjNf/Pukrow7K3GqADf2gg1ddzGQvyJb+x6FLLcadqF/w4lw+0+ud65i2XMG5a9SOr8eL/SrbA=
+Received: from DM6PR12MB3370.namprd12.prod.outlook.com (20.178.198.25) by
+ DM6PR12MB2908.namprd12.prod.outlook.com (20.179.71.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Tue, 15 Oct 2019 13:40:12 +0000
+Received: from DM6PR12MB3370.namprd12.prod.outlook.com
+ ([fe80::88a6:9681:d4cd:51d2]) by DM6PR12MB3370.namprd12.prod.outlook.com
+ ([fe80::88a6:9681:d4cd:51d2%6]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
+ 13:40:12 +0000
+From:   "Siqueira, Rodrigo" <Rodrigo.Siqueira@amd.com>
+To:     "Berthe, Abdoulaye" <Abdoulaye.Berthe@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        =?iso-8859-1?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm: Add LT-tunable PHY repeater mode operations
+Thread-Topic: [PATCH] drm: Add LT-tunable PHY repeater mode operations
+Thread-Index: AQHVg14R21/cmlYs3kCpQ3lK2eqOFA==
+Date:   Tue, 15 Oct 2019 13:40:12 +0000
+Message-ID: <20191015134010.26zwopwnrbsmz5az@outlook.office365.com>
+Accept-Language: en-CA, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTOPR0101CA0064.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::41) To DM6PR12MB3370.namprd12.prod.outlook.com
+ (2603:10b6:5:38::25)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rodrigo.Siqueira@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.55.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1ba34b68-5078-4597-bb72-08d7517533fa
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB2908:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB29087F0AB0D3AC56C961494998930@DM6PR12MB2908.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:741;
+x-forefront-prvs: 01917B1794
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(396003)(39860400002)(376002)(189003)(199004)(316002)(66066001)(54906003)(7736002)(25786009)(14454004)(110136005)(305945005)(99936001)(71190400001)(71200400001)(8936002)(81156014)(478600001)(81166006)(8676002)(99286004)(256004)(102836004)(386003)(6506007)(52116002)(5660300002)(6436002)(66946007)(1076003)(3846002)(6116002)(64756008)(486006)(86362001)(2906002)(26005)(476003)(186003)(66616009)(66476007)(66556008)(66446008)(6512007)(9686003)(4326008)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2908;H:DM6PR12MB3370.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rfZKcpjvUVN3TGzauCYv2neoAZreYK+vgTMMFMRR9ZWJREuX5s3wCjWPphhhQcOyRKizZQIKEZkCLN0iDh3No9FUhhBoyvVOoqn5kZt9gKWri1pOZ90mBRmVaDHHYzPr411RYfox4qAAnREXiN4LEOzsm2ParPI3+RUDbJYIW/bIYhIg5FBW5i9qSzJEWPtms7xcnHRNlmCT4+HSaGUL2uq33yx0nJ0aGaMEvpphB01IADus1c/JzBiKRnsMpcJGY8IJQ2vCRhJ3uoixRQwI+lc8rPMchxIPtpEbYQzAal2cV6L/jsHFA6YZB++VJnuzN4143HsLR9Lg+lZw5r7pCEQ44XL1a3W3WQqnqKsKJcoEH3MvzXfZptxaQZLgR4GBCwsnrCGto3YSlv9Q4yALkaQmxj3moZl2DnCiASQPaGU=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pojpfz544iiylxbh"
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ba34b68-5078-4597-bb72-08d7517533fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 13:40:12.2307
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZSXcEPz27nwz4yQGF6N/TUwhSZlHxamX4kGqxNb7g5IJ18GgXnLqFigy3Kn/ZtDRiKYgqZznQRUCM8NBkSIL+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2908
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+--pojpfz544iiylxbh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 15/10/2019 15:14, Lorenzo Pieralisi wrote:
-> On Mon, Sep 16, 2019 at 02:50:16PM +0200, Neil Armstrong wrote:
->> This patchset :
->> - updates the Amlogic PCI bindings for G12A
->> - reworks the Amlogic PCIe driver to make use of the
->> G12a USB3+PCIe Combo PHY instead of directly writing in
->> the PHY register
->> - adds the necessary operations to the G12a USB3+PCIe Combo PHY driver
->> - adds the PCIe Node for G12A, G12B and SM1 SoCs
->> - adds the commented support for the S922X, A311D and S905D3 based
->> VIM3 boards.
->>
->> The VIM3 schematic can be found at [1].
->>
->> This patchset is dependent on Remi's "Fix reset assertion via gpio descriptor"
->> patch at [2].
-> 
-> Merged in pci/meson; however, I am not sure what should be done on
-> Remi's patch, I would like to queue it up too otherwise it looks
-> to me that merging this series is not right.
+LT-tunable PHY Repeaters can operate in two different modes: transparent
+(default) and non-transparent. The value 0x55 specifies the transparent
+mode, and 0xaa represents the non-transparent; this commit adds these
+two values as definitions.
 
-This serie depends on the fixed polarity in Remi's patch to work.
+Cc: Abdoulaye Berthe <Abdoulaye.Berthe@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Leo Li <sunpeng.li@amd.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Manasi Navare <manasi.d.navare@intel.com>
+Cc: Ville Syrj=E4l=E4 <ville.syrjala@linux.intel.com>
+Signed-off-by: Abdoulaye Berthe <Abdoulaye.Berthe@amd.com>
+Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+---
+ include/drm/drm_dp_helper.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-As Martin noted, no need to update the bindings since the example
-is still valid. The GPIO polarity is dependent on the board layout,
-but the naming of the gpio needed an update in how we handle the polarity
-in the driver like other driver does (we must consider ACTIVE_HIGH in the
-driver, whatever is set in the DT since the gpio core will do the
-conversion automatically).
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index bf62b43aaf2b..cfadeeef8492 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1034,6 +1034,10 @@
+ #define DP_SYMBOL_ERROR_COUNT_LANE3_PHY_REPEATER1	    0xf003b /* 1.3 */
+ #define DP_FEC_STATUS_PHY_REPEATER1			    0xf0290 /* 1.4 */
+=20
++/* Repeater modes */
++#define DP_PHY_REPEATER_MODE_TRANSPARENT		    0x55    /* 1.3 */
++#define DP_PHY_REPEATER_MODE_NON_TRANSPARENT		    0xaa    /* 1.3 */
++
+ /* DP HDCP message start offsets in DPCD address space */
+ #define DP_HDCP_2_2_AKE_INIT_OFFSET		DP_HDCP_2_2_REG_RTX_OFFSET
+ #define DP_HDCP_2_2_AKE_SEND_CERT_OFFSET	DP_HDCP_2_2_REG_CERT_RX_OFFSET
+--=20
+2.23.0
 
-Neil
+--pojpfz544iiylxbh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Lorenzo
-> 
->> This patchset has been tested in a A311D VIM3 and S905D3 VIM3L using a
->> 128Go TS128GMTE110S NVMe PCIe module.
->>
->> For indication, here is a bonnie++ run as ext4 formatted on the VIM3:
->>      ------Sequential Output------ --Sequential Input- --Random-
->>      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
->> Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP /sec %CP
->>   4G 93865  99 312837  96 194487  23 102808  97 415501 21 +++++ +++
->>
->> and the S905D3 VIM3L version:
->>      ------Sequential Output------ --Sequential Input- --Random-
->>      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
->> Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
->>   4G 52144  95 71766  21 47302  10 57078  98 415469  44 +++++ +++
->>
->> Changes since v1 at [3]:
->>  - Collected Andrew's and Rob's Reviewed-by tags
->>  - Added missing calls to phy_init/phy_exit
->>  - Fixes has_shared_phy handling for MIPI clock
->>  - Add comment in the DT concerning firmware setting the right properties
->>  - Added SM1 Power Domain to PCIe node
->>
->> [1] https://docs.khadas.com/vim3/HardwareDocs.html
->> [2] https://patchwork.kernel.org/patch/11125261/
->> [3] https://patchwork.kernel.org/cover/11136927/
->>
->> Neil Armstrong (6):
->>   dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
->>   PCI: amlogic: Fix probed clock names
->>   PCI: amlogic: meson: Add support for G12A
->>   phy: meson-g12a-usb3-pcie: Add support for PCIe mode
->>   arm64: dts: meson-g12a: Add PCIe node
->>   arm64: dts: khadas-vim3: add commented support for PCIe
->>
->>  .../bindings/pci/amlogic,meson-pcie.txt       |  12 +-
->>  .../boot/dts/amlogic/meson-g12-common.dtsi    |  33 +++++
->>  .../amlogic/meson-g12b-a311d-khadas-vim3.dts  |  25 ++++
->>  .../amlogic/meson-g12b-s922x-khadas-vim3.dts  |  25 ++++
->>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |   4 +
->>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  25 ++++
->>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |   4 +
->>  drivers/pci/controller/dwc/pci-meson.c        | 132 ++++++++++++++----
->>  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    |  70 ++++++++--
->>  9 files changed, 292 insertions(+), 38 deletions(-)
->>
->> -- 
->> 2.22.0
->>
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl2lzDoACgkQWJzP/com
+vP+mVBAAxMB8LNzRHORcTyVgD+sjTzswbmJzxhyacbK1S72ePMOHLwrzIC12YF8m
+V8gvFgWC+aHNM5G0ffS5fUTOn7YfYNohG52cRnhAhGHctkBP105m273zDekijMCa
+j+qkGkJOoDhWWB7f9H5Kv+PxpCOl30u1Wo7yTKccsqDPj6Ic7kIV7MRl3zV2CsEs
+RY9qtN/6LqXOGCO9qDcfhPpFlrAvtGM+ukpDqqJpQn2zch9DkkKVyOm9luKpGW9e
+tu1sqye8gZA2fotrHWLLtm4IrlZbCBIeHKQMk7nzcB000ykqWNN8oHRkX/hDsKoz
+GQoQFXgANTKCHHDFWhQoK1f/0zH1lgmm2lzo+bZOCs5NmKxScfCPtC3GPXiTsWbn
+1l/peRgPu4dLzZi/b89t4DC4dedJ7suu8tTPwHR3njyFC1H5lmz04QPt8AEpztTm
+nQhqBaXTNTfCzcQGUkWJlTFrQRkvNqTPOa6VoIHU8jvkpLb6oJa1yFsniuwhr+we
+DXXDVemGo9NtWsCsFYOYwwy745NxIz1UOL0BmS+WHtwEo4qSjFdTo10Hr0eZKhVf
+4NLesv7GFvlFubRQDDGuzCPyv3HEYM+41cnG8qbx3Tsif0TL8vZr3zWYF96cgUoE
+o86WYz2ggxnA0elL4XSwjzw5wdQHQpxy9Fcokgjf+BdIZKtrOV8=
+=FFde
+-----END PGP SIGNATURE-----
+
+--pojpfz544iiylxbh--
