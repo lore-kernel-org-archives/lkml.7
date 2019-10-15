@@ -2,127 +2,121 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A6BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89D4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DE120640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AA12089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X8nT/XO1"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="XKoW+37/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfJOFu7 (ORCPT
+        id S1726996AbfJOF5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:50:59 -0400
-Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:19072
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbfJOFu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:50:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ELY57xr4yMUOlNEOd55lrSTnLP+CE1iPJ0oA1jpi56WYxPum2cShYZtdTGfOU4QbXQlLHy5SjNG/dbfyPzW65DPq1L57dut8Prz0UjABv5uzTEkg3Bk7CcKC324rG0nyyAu1WzZUqZ69lZnTf9yGM9DRL+elK6DnaxBkOZLiWuxmNgYxJoZlD5LyDjbnqNDFAvgj4HPhllb1jjK3PmqFCVJJNdnRrbUVPM8hocLRYfzmHSYlf5cceVyVFvNF1kpKTe+zetDVN1dp465Ir0b4vBe3/viI6JdK4aMDUQnmsnVr71cFWMDLtpvbt3H7Vi2p/zuHREy8jDqpVK1Z4E6q7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WjzFNTHCG23SlbeJl0H44Z+zJGpZV2SGgKGWxjZmLdk=;
- b=Hw/UBx5XZXMmmeG/uJro/25KUWCYXPzPOU+gzGUQbKxkYlLeIyAF1dm5AgszK0CZAA9xgPLrCFk4aG9jAD4Q+ffOC7rrVlmKLWzJeCb3f/IneJpGl86n0KyagxLM5aL7pdeaxRJf5AKad6yf8fQ/EVmz1BhqbDJExVIIk8rj5PfjNeZvA5Offoi5XdmF/ZfXMBy9aEj6KrAFcGY50UsJ7BpM+Un0CoGf3ibWODP9yTGw3MT2leRnFFjg/V9evZWATI07MARu56cnkd4E1qKtnVPf0zkgsNWk5vjAIEEbHrqGRGmYWY88LhzItSjJSx5cEBsAYpf3wdVOkzmCCHXZQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WjzFNTHCG23SlbeJl0H44Z+zJGpZV2SGgKGWxjZmLdk=;
- b=X8nT/XO1PfCFYPQ6JU+1J0Mdgk7FiwEZLgOcLEhFSQgr/S/2Ew+c1jZicgKRvORVz3nV8awqnRpZfBTIYdBP3VNFzWyZI//FEufs9KPsxdYDf/Ieo2uemyPIsJuk2iCmJuDFjS0wD4y8ejqe7aAxwHO6rTQixh+lbCbIOMviAWU=
-Received: from VI1PR04MB6237.eurprd04.prod.outlook.com (20.179.24.74) by
- VI1PR04MB3312.eurprd04.prod.outlook.com (10.170.228.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.17; Tue, 15 Oct 2019 05:50:54 +0000
-Received: from VI1PR04MB6237.eurprd04.prod.outlook.com
- ([fe80::79d2:e4fd:999e:51d2]) by VI1PR04MB6237.eurprd04.prod.outlook.com
- ([fe80::79d2:e4fd:999e:51d2%5]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
- 05:50:54 +0000
-From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Re: Re: [PATCH v2 4/5] dt-bindings: display: imx: add bindings
- for DCSS
-Thread-Topic: Re: Re: [PATCH v2 4/5] dt-bindings: display: imx: add bindings
- for DCSS
-Thread-Index: AQHVgxyBUXlZiNASZka8wKs20g3JQw==
-Date:   Tue, 15 Oct 2019 05:50:53 +0000
-Message-ID: <20191015055052.GC14065@fsr-ub1664-121>
-References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
- <1570025100-5634-5-git-send-email-laurentiu.palcu@nxp.com>
- <20191011145042.GA15680@bogus> <20191014080327.GB14065@fsr-ub1664-121>
- <CAL_JsqJZHq=jDoK66bTHK+oqSvdrFh9x5a_cNe1hkFdALfs8vw@mail.gmail.com>
-In-Reply-To: <CAL_JsqJZHq=jDoK66bTHK+oqSvdrFh9x5a_cNe1hkFdALfs8vw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.palcu@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d26cc2f-ee70-479e-d529-08d75133a46f
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: VI1PR04MB3312:|VI1PR04MB3312:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB33129D0523297C5207D2471CFF930@VI1PR04MB3312.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:655;
-x-forefront-prvs: 01917B1794
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(5660300002)(4744005)(102836004)(446003)(11346002)(305945005)(476003)(1076003)(6916009)(44832011)(26005)(186003)(486006)(6116002)(3846002)(7416002)(316002)(54906003)(6512007)(9686003)(33716001)(229853002)(6436002)(6486002)(86362001)(7736002)(2906002)(33656002)(66066001)(76176011)(99286004)(4326008)(25786009)(6246003)(14454004)(53546011)(6506007)(478600001)(8936002)(8676002)(81156014)(81166006)(71190400001)(71200400001)(66446008)(64756008)(256004)(66946007)(66556008)(66476007)(91956017)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3312;H:VI1PR04MB6237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AFihUvc/61t9AzaMQn9gWN6VkriSOoXvruI8M82kzB7ldwzy60zcqSKOWCrOOtYiAHyAQELrWWUS2CFmMjdPsK9GPmyBcQTEuuyzqCKQfmMJvlfQOoAkq48er7BZ6/zeTNRN1FXNu0xmsruZuiQkQIsUFG8TDPNV88QfMDUELLFEesKgVtatMQapdMBcWsKm+t/dNogpt9XpZvg0lA4YHW03J5qOfxGfrOhH1Jcqlyz8VRNGZ0sMu1L+JJYfft3sRwJPC5+3DJTHxQ0P72u7Vi4uHauAWsKYFs1QNDLrlzv95aZTqI5lXjTHZxNTVjIzHAZHeGCERVxK4kibmiOeoS5Rz2XgCrtTBq4IpNwJnfp0DDq0dYVgIzKyI/pPMRZSoQrsrDIbtUnuZyfzgCiYPytK4V3sbDxc2ToKbZDZeB8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6BC6007A97DA9349A753B4E9FAA529AB@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 15 Oct 2019 01:57:50 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40920 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfJOF5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:57:50 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v38so16800974edm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 22:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+dEWfTewt7R9RPkQAlrQgcj1STfoqf3Bg7CtuX6pXcc=;
+        b=XKoW+37/mB+Yqe8NNl4kODT5jbFVZMlxj0JzDJznPsAhffJWy3GpoXcr0hhJb5VVC3
+         hCa/wNHwk/W/RE+5rjPktivUUv3rwSY11L7hH60TziQ41mg7HrWBoU8NCebmu8rJFIVr
+         2atccDpovKo2liFFWRJRkexnOs/s2rRsf8MiAKMSMU+v86SO+1MvMyEQOd5ZFqVWbqn5
+         e9e2ZrQeL+fK8vu69FoUV9SFPGmepwzZGvCiHqfHCKY68Io8TDsfi4t94W00aYvur9pA
+         QvHiP4Whx0RfUW1ap5DrPGP/1WClPDAJpCb+OX2xHHjAISt0f6if3yBXdDsEBKM0qSgK
+         +vdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+dEWfTewt7R9RPkQAlrQgcj1STfoqf3Bg7CtuX6pXcc=;
+        b=Hxp//uFSRh83M6g0h2MHIPlzWOHG+k+6Ychn2oQGA7OX+wqbkMIKmeErLXMleOTbpi
+         UOMyBvVI6QnhhRcRxkrIqKjzDgMseCgT4fFEgDIo9V8dXVqsD1ZfvtJDYwy0XlE93hM2
+         Ge/QAeWKzNtsiBaaInaQiaCKRBHojUQQYmOtb3gfyidVd6No4/h/XS52LLKxq01aILyg
+         huEPUZZe1U+31cY/s7PPWdfbGc5QV3UXy2o5MS2lO7LVdN0g6AvrslG+2M4X424uLONM
+         +UQRRN84RcccJG9neREoZC4Sx1jI9D21MTIIOBNKMXkc0UkvLoKTdSlt6kuf0M3nvcjt
+         nnEQ==
+X-Gm-Message-State: APjAAAXeg3BvvxMww+t7+a3idAXgzuiR6Akj84tSiyrt9duXgbIdWfAA
+        Tkw4Kt2Oykpw6qQBjWmAydZe0A==
+X-Google-Smtp-Source: APXvYqwPP2OQtbMJgFsKI1Fn0SmCDt4h7hlgMbPCaER/eZIM88e8JB3Qs4CXw2bL9m3OA/v94kIbXA==
+X-Received: by 2002:a50:f315:: with SMTP id p21mr31564386edm.83.1571119068326;
+        Mon, 14 Oct 2019 22:57:48 -0700 (PDT)
+Received: from netronome.com (penelope-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:c685:8ff:fe7c:9971])
+        by smtp.gmail.com with ESMTPSA id c15sm3529833edl.16.2019.10.14.22.57.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 14 Oct 2019 22:57:47 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 07:57:22 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Pankaj Sharma <pankj.sharma@samsung.com>, kbuild-all@lists.01.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wg@grandegger.com,
+        mkl@pengutronix.de, davem@davemloft.net,
+        eugen.hristev@microchip.com, ludovic.desroches@microchip.com,
+        pankaj.dubey@samsung.com, rcsekar@samsung.com,
+        Sriram Dash <sriram.dash@samsung.com>
+Subject: Re: [PATCH] can: m_can: fix boolreturn.cocci warnings
+Message-ID: <20191015055718.mypn63s2ovgwipk3@netronome.com>
+References: <1571052844-22633-1-git-send-email-pankj.sharma@samsung.com>
+ <20191014150428.xhhc43ovkxm6oxf2@332d0cec05f4>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d26cc2f-ee70-479e-d529-08d75133a46f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 05:50:53.9469
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JAkTkge+ikPFISRJD77jeYUKqTVBMm7m6FFyGmoEqPL6Cvosc92iaqNaHNTxiRH7m3V3mAtRpSVuTFJVNPK3Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3312
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014150428.xhhc43ovkxm6oxf2@332d0cec05f4>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBNb24sIE9jdCAxNCwgMjAxOSBhdCAwODoyMzo1MUFNIC0wNTAwLCBSb2Ig
-SGVycmluZyB3cm90ZToNCj4gT24gTW9uLCBPY3QgMTQsIDIwMTkgYXQgMzowMyBBTSBMYXVyZW50
-aXUgUGFsY3UgPGxhdXJlbnRpdS5wYWxjdUBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEhpIFJv
-YiwNCj4gPg0KPiA+IE9uIEZyaSwgT2N0IDExLCAyMDE5IGF0IDA5OjUwOjQyQU0gLTA1MDAsIFJv
-YiBIZXJyaW5nIHdyb3RlOg0KPiA+ID4gOnU/d2M/P201P14/456+P300LT8/entiPz8/cj8rP9eA
-dT8/P9inPz8/PyMgPz8gPz9layA/Pz8/P1c/Sj8/Pz9ePyg/Pz9ofT8/LT8/entiPz8/cj9aPz8/
-Pys/alcuPyBcP2/bindiPyA/dispPz8/P2wgPyBiPyAmPz8sPyY/P86+Pz8/Pz8/Pz8/Pz8/Pz8/
-P1c/Pz8hanggd86iP8erPyonPz8reT9ePz9eP006Pz8/cumentatPz8/dT8/cT9reT/bindiPyA/
-dispPz8/P2wgPyBiPyAmPz8sPyY/PyA/Pz8gdT8/Pz/erj8/Pz8gP0c/Pz9oDQo+ID4NCj4gPiBP
-ayEgTm90IHN1cmUgaG93IHRvIGFkZHJlc3MgdGhpcyB0aG91Z2guLi4gOikNCj4gDQo+IFlvdXIg
-bWFpbCB3YXMgYmFzZTY0IHdoaWNoIGlkZWFsbHkgc2hvdWxkIGJlIGF2b2lkZWQgb24gbWFpbGxp
-c3RzLiBNeQ0KPiBzY3JpcHRpbmcgdHJpZXMgdG8gZGVhbCB3aXRoIGl0LCBidXQgZmFpbGVkIG9i
-dmlvdXNseS4NCg0KU29ycnkgYWJvdXQgdGhhdC4uLiA6LyBXZSd2ZSBoYWQgdGhpcyBpc3N1ZSBm
-b3IgYSB3aGlsZSBub3cgYW5kIEkNCnRob3VnaHQgaXQgZ290IGZpeGVkLiBPdXIgZW1haWwgc2Vy
-dmVyIGJlaW5nIHRvbyAic21hcnQiLi4uDQoNClRoYW5rcywNCkxhdXJlbnRpdQ0KDQo+IFdoYXQg
-SSBzYWlkDQo+IHdhczoNCj4gDQo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPg==
+On Mon, Oct 14, 2019 at 11:04:28PM +0800, kbuild test robot wrote:
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/net/can/m_can/m_can.c:783:9-10: WARNING: return of 0/1 in function 'is_protocol_err' with return type bool
+> 
+>  Return statements in functions returning bool should use
+>  true/false instead of 1/0.
+> Generated by: scripts/coccinelle/misc/boolreturn.cocci
+> 
+> Fixes: 46946163ac61 ("can: m_can: add support for handling arbitration error")
+> CC: Pankaj Sharma <pankj.sharma@samsung.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+> 
+> url:    https://github.com/0day-ci/linux/commits/Pankaj-Sharma/can-m_can-add-support-for-handling-arbitration-error/20191014-193532
+> 
+>  m_can.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/drivers/net/can/m_can/m_can.c
+> +++ b/drivers/net/can/m_can/m_can.c
+> @@ -780,9 +780,9 @@ static inline bool is_lec_err(u32 psr)
+>  static inline bool is_protocol_err(u32 irqstatus)
+>  {
+>  	if (irqstatus & IR_ERR_LEC_31X)
+> -		return 1;
+> +		return true;
+>  	else
+> -		return 0;
+> +		return false;
+>  }
+>  
+>  static int m_can_handle_protocol_error(struct net_device *dev, u32 irqstatus)
+> 
+
+<2c>
+Perhaps the following is a nicer way to express this (completely untested):
+
+	return !!(irqstatus & IR_ERR_LEC_31X);
+</2c>
