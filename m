@@ -2,107 +2,102 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398B7ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F53ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1570020873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720EE2089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbfJOKAc (ORCPT
+        id S1727625AbfJOKEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:00:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:34200 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727682AbfJOKAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:00:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C203928;
-        Tue, 15 Oct 2019 03:00:30 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE93D3F68E;
-        Tue, 15 Oct 2019 03:00:29 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 11:00:27 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
- configuration
-Message-ID: <20191015100027.GB32431@e121166-lin.cambridge.arm.com>
-References: <20190614101059.1664-1-repk@triplefau.lt>
+        Tue, 15 Oct 2019 06:04:11 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63131 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727139AbfJOKEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:04:11 -0400
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 2827a5d82acf5506; Tue, 15 Oct 2019 12:04:08 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the pm tree (Was: linux-next: build warning after merge of the pm tree)
+Date:   Tue, 15 Oct 2019 12:04:08 +0200
+Message-ID: <4823987.OjxUhv8yZC@kreacher>
+In-Reply-To: <20191015101650.2a1541af@canb.auug.org.au>
+References: <20191015100855.31b8a3d5@canb.auug.org.au> <20191015101650.2a1541af@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:10:59PM +0200, Remi Pommarel wrote:
-> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> should not modify other interrupts' mask. The ISR mask polarity was also
-> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-> should actually be cleared.
+On Tuesday, October 15, 2019 1:16:50 AM CEST Stephen Rothwell wrote:
 > 
-> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->  * Improve code readability
->  * Fix mask polarity
->  * PME_MASK shift was off by one
-> Changes since v2:
->  * Modify patch title
->  * Change Fixes tag to commit that actually introduces the bug
-> ---
->  drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-
-Applied to pci/aardvark, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..f6e55c4597b1 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
->  
->  	case PCI_EXP_RTCTL: {
->  		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-> -		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
-> +		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	}
->  
-> @@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
->  		break;
->  
-> -	case PCI_EXP_RTCTL:
-> -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
-> -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
-> +	case PCI_EXP_RTCTL: {
-> +		/* Only mask/unmask PME interrupt */
-> +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-> +			~PCIE_MSG_PM_PME_MASK;
-> +		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
-> +			val |= PCIE_MSG_PM_PME_MASK;
-> +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
->  		break;
-> +	}
->  
->  	case PCI_EXP_RTSTA:
->  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
-> -- 
-> 2.20.1
+> --Sig_/6GS1h5au_w04qPbsgg/ztsa
+> Content-Type: text/plain; charset=US-ASCII
+> Content-Transfer-Encoding: quoted-printable
 > 
+> Hi all,
+> 
+> On Tue, 15 Oct 2019 10:08:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+> wrote:
+> >
+> > After merging the pm tree, today's linux-next build (arm
+> > multi_v7_defconfig) produced this warning:
+> >=20
+> > In file included from include/linux/irqchip.h:14,
+> >                  from arch/arm/kernel/irq.c:26:
+> > include/linux/acpi.h:682:31: warning: 'struct acpi_device' declared insid=
+> e parameter list will not be visible outside of this definition or declarat=
+> ion
+> >   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2=
+> , const char *uid2)
+> >       |                               ^~~~~~~~~~~
+> >=20
+> > and many more.
+> >=20
+> > Introduced by commit
+> >=20
+> >   d1748b57dc88 ("ACPI / utils: Introduce acpi_dev_hid_uid_match() helper")
+> >=20
+> > CONFIG_ACPI is not set for this build.
+> 
+> This became a build failure for the powerpc ppc64_allmodconfig build:
+> 
+> In file included from include/linux/i2c.h:13,
+>                  from arch/powerpc/platforms/pasemi/misc.c:14:
+> include/linux/acpi.h:682:31: error: 'struct acpi_device' declared inside pa=
+> rameter list will not be visible outside of this definition or declaration =
+> [-Werror]
+>   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, =
+> const char *uid2)
+>       |                               ^~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> 
+> (and many more)
+> 
+> I have used the pm tree from next-20191014 for today.
+
+So this looks weird, because there is an acpi_dev_put() stub in
+include/linux/acpi.h too in the same #else block and it takes a
+(struct acpi_device *) pointer too and it has not been touched by
+the commit in question.  So why has it built successfully so far?
+
+Also I wonder why 0-day didn't warn about that commit.
+
+Anyway, I've added an extra declaration of struct acpi_device to the #else
+block in question to suppress the warning(s).
+
+
+
