@@ -2,123 +2,112 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBA1ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2C9ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E1920872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F0D20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RCa9rQrz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iWCnoGxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389333AbfJOTKi (ORCPT
+        id S2389344AbfJOTKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:10:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54766 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389296AbfJOTKi (ORCPT
+        Tue, 15 Oct 2019 15:10:39 -0400
+Received: from gateway30.websitewelcome.com ([192.185.196.18]:42479 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389323AbfJOTKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 15:10:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p7so231400wmp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 12:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/jU7rRfSR7KZ0wkNZhhrrk0hyXdThNXa68z+mg8n0M8=;
-        b=RCa9rQrzpy8SAsQE5duWX/nt8SV5/lYLyb4rmtngMuny+yGmQ677vb3xAtvnG2gzOJ
-         qTeueCYoh0SoMQSUKK1kJavs2zUek0inwGXAjDQlDwuxw1o0EyvK1tvJrAcxwhs3Kza5
-         DqY8lZHrLkPZT+PA/voin9xX84EfFzHAZVe9AOuyxT2rkCpneyDkrCI6ntV8rfXFbSHa
-         g3xLeu5hlPrweq80yZZwjmNqMUHJsRVmY+HHRHMeZd0/1Xg5pxJOgFjkvp8qO0jvZOAO
-         y6en+qnPuHWVuzGPnlYFqvMP/HsDCMfR2BagtwpV5pm5XTGg6oJB/swb4Z/MaS+f3q2X
-         tVTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/jU7rRfSR7KZ0wkNZhhrrk0hyXdThNXa68z+mg8n0M8=;
-        b=NMWUsBB8IwQOkQBuubU1RZMEJdbwazK75b+dhS7KwvXyvxsOvJ6gmSZrbotF1n8+vU
-         jXUwOdz0N6O/3kPvpEYKljFMFnuXZJFyTs3qkQ2n3VddAf7YPSuW3f+17Nfxp+V5Wx1h
-         moSERtlvFJk52mHhdk1HAjd4bMajkrLND+0FglQ+zhv0ZkF3DIbRYLE5irvzJq1vJpsM
-         Q5b5U1HedpLgyN4uvnrkwFT+i7cbKF+RjXRau9Z7Dsq9L/BDz1YcyK4lRX16BmtzukFW
-         yVUV9E/VDoJ16OJXmaTstaeUgpH8gq2oB8GI0Nqn4tWudO4FYUx7E9ASmIrDBGBEO/Y5
-         nbHA==
-X-Gm-Message-State: APjAAAW1r2x38O7xhEum/afV3HEhpbt0zkfhJESmy3pzEQ2uQY7TI7ql
-        8X49HZMctAqYVIoJeWZ7mVe2dJyUIlVGLVnvgX8ZRA==
-X-Google-Smtp-Source: APXvYqxSK3jyA7hIvHp5hYpw5AaY3TZQxvucfVqV+CwKk4CEjD7RgKLUxjtFuNQIonxMqyw0jKkMO1Z1gCVlpbMPx+I=
-X-Received: by 2002:a05:600c:2388:: with SMTP id m8mr46558wma.173.1571166635181;
- Tue, 15 Oct 2019 12:10:35 -0700 (PDT)
+X-Greylist: delayed 1397 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 15:10:37 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id EF3783B3E
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 13:47:18 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id KRqoi6mzjPUvSKRqoigmUU; Tue, 15 Oct 2019 13:47:18 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ylsOLtlHy0yELn95rm6leLOAaujCpaVYbsqRrnqooSg=; b=iWCnoGxsnxYjGPaXkBCyHWfTq2
+        HJG4FcIp5GHwd3eXjbCCqMNeevLjnHhCvBCd759outDoOte8McPV7BaRPRHiIUG6E6HD5yJUscPLG
+        9n7+RiZc+o7meo2iuVYmPnrRZ1zlFV5RputOPMet64VEzZIz3v2EW8fffL+zPAaHrjITKuNGK6T6X
+        3UpjCkVsWDox1owp7C0+Ikd0MsbL3kkWNdqeeP62mGo89NOaEMDUqm5ZQBCLQ7fjEB6GW3BWwyH4x
+        Y+WNu5fS+dcZiLxuSSas8xKmfpJ/S7xe9m2wTv2mnHc7cGrlzSY7zLY5K1BBzudKqKf7ZAvk37tqM
+        gbvRJWvQ==;
+Received: from [187.192.22.73] (port=41390 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1iKRqn-001fgo-4G; Tue, 15 Oct 2019 13:47:17 -0500
+Date:   Tue, 15 Oct 2019 13:46:57 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] linux/bitmap.h: fix potential sign-extension overflow
+Message-ID: <20191015184657.GA26541@embeddedor>
 MIME-Version: 1.0
-References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-4-john.stultz@linaro.org>
- <9e86bb7b-5dd2-760e-c324-fe1c1ee41868@ti.com>
-In-Reply-To: <9e86bb7b-5dd2-760e-c324-fe1c1ee41868@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 15 Oct 2019 12:10:22 -0700
-Message-ID: <CALAqxLUVd5Eo_9tuP9aQUpNT0gnewBv8Dpvsj8UT3MucmzCJVQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 3/3] usb: dwc3: Registering a role switch in the DRD code.
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.22.73
+X-Source-L: No
+X-Exim-ID: 1iKRqn-001fgo-4G
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.22.73]:41390
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 1:25 AM Roger Quadros <rogerq@ti.com> wrote:
-> On 03/10/2019 02:16, John Stultz wrote:
-> > @@ -487,7 +539,28 @@ int dwc3_drd_init(struct dwc3 *dwc)
-> >       if (IS_ERR(dwc->edev))
-> >               return PTR_ERR(dwc->edev);
-> >
-> > -     if (dwc->edev) {
-> > +     if (device_property_read_bool(dwc->dev, "usb-role-switch")) {
->
-> I think we should use role switch unconditionally and get rid of the
-> debugfs role status/change mechanism.
->
-> > +             struct usb_role_switch_desc dwc3_role_switch = {0};
-> > +             u32 mode;
-> > +
-> > +             if (device_property_read_bool(dwc->dev,
-> > +                                           "role-switch-default-host")) {
-> > +                     dwc->role_switch_default_mode = USB_DR_MODE_HOST;
-> > +                     mode = DWC3_GCTL_PRTCAP_HOST;
-> > +             } else {
-> > +                     dwc->role_switch_default_mode = USB_DR_MODE_PERIPHERAL;
-> > +                     mode = DWC3_GCTL_PRTCAP_DEVICE;
-> > +             }
-> > +             dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
-> > +             dwc3_role_switch.set = dwc3_usb_role_switch_set;
-> > +             dwc3_role_switch.get = dwc3_usb_role_switch_get;
-> > +             dwc->role_sw = usb_role_switch_register(dwc->dev,
-> > +                                                     &dwc3_role_switch);
-> > +             if (IS_ERR(dwc->role_sw))
-> > +                     return PTR_ERR(dwc->role_sw);
-> > +
-> > +             dwc3_set_mode(dwc, mode);
-> > +     } else if (dwc->edev) {
->
-> Role switch should exist regardless if dwc->edev is present or not.
+In expression 0xff << offset, left shifting by more than 31 bits has
+undefined behavior. Notice that the shift amount, *offset*, can be as
+much as 63.
 
-Does that risk duplicative mode sets when things change (via the
-dwc3_drd_notifier and dwc3_usb_role_switch_set calls?).
+Fix this by adding suffix ULL to integer 0xFF.
 
-thanks
--john
+Addresses-Coverity: 1487071 ("Bad bit shift operation")
+Fixes: d33f5cbaadd8 ("bitops: introduce the for_each_set_clump8 macro")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/linux/bitmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 942871bfe47e..96f91db25b06 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -520,7 +520,7 @@ static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+ 	const size_t index = BIT_WORD(start);
+ 	const unsigned long offset = start % BITS_PER_LONG;
+ 
+-	map[index] &= ~(0xFF << offset);
++	map[index] &= ~(0xFFULL << offset);
+ 	map[index] |= value << offset;
+ }
+ 
+-- 
+2.23.0
+
