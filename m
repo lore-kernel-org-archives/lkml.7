@@ -2,102 +2,89 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D72ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33C6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F88920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D0D20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfJOIF4 (ORCPT
+        id S1728445AbfJOIF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:05:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59616 "EHLO mx1.suse.de"
+        Tue, 15 Oct 2019 04:05:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59644 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728350AbfJOIFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:05:55 -0400
+        id S1728350AbfJOIF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:05:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BB241B562;
-        Tue, 15 Oct 2019 08:05:53 +0000 (UTC)
-Message-ID: <453a9a954f4967a68a7023c8c79a39fdcb69254a.camel@suse.de>
-Subject: Re: [PATCH] sh: use dma_to_phys() instead of dev->dma_pfn_offset
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Date:   Tue, 15 Oct 2019 10:05:52 +0200
-In-Reply-To: <20191015074354.GB3464@infradead.org>
-References: <20191011165129.29655-1-nsaenzjulienne@suse.de>
-         <20191015074354.GB3464@infradead.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-LqhdFNFQbXFXXko83wzg"
-User-Agent: Evolution 3.32.4 
+        by mx1.suse.de (Postfix) with ESMTP id D3465B564;
+        Tue, 15 Oct 2019 08:05:57 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4A3DF1E4A8A; Tue, 15 Oct 2019 10:05:57 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 10:05:57 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: include internal.h for missing declarations
+Message-ID: <20191015080557.GC21550@quack2.suse.cz>
+References: <20191011170039.16100-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011170039.16100-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 11-10-19 18:00:39, Ben Dooks wrote:
+> The declarations of __block_write_begin_int and guard_bio_eod
+> are needed from internal.h so include it to fix the following
+> sparse warnings:
+> 
+> fs/buffer.c:1930:5: warning: symbol '__block_write_begin_int' was not declared. Should it be static?
+> fs/buffer.c:2994:6: warning: symbol 'guard_bio_eod' was not declared. Should it be static?
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 
---=-LqhdFNFQbXFXXko83wzg
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+OK, makes sense to keep declarations in sync with real functions. Thanks
+for the patch a feel free to add:
 
-On Tue, 2019-10-15 at 00:43 -0700, Christoph Hellwig wrote:
-> On Fri, Oct 11, 2019 at 06:51:29PM +0200, Nicolas Saenz Julienne wrote:
-> > It's more explicit and lets dma-direct handle the specifics of how to
-> > translate addresses.
-> >=20
-> > On top of that get rid of warnings as, since the introduction of commit
-> > 6fa1d28e38c ("sh: use generic dma_noncoherent_ops"), it's impossible fo=
-r
-> > the dev to be NULL.
->=20
-> This looks ok, but the real answer is to switch sh to the generic
-> dma remapping code.  I've been trying to get this included for about
-> a year now, but never managed to get a reply from the sh maintainers.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-I see, well I guess this one will get ignored too :)
+								Honza
 
-> Here is the last one:
->=20
-> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sh-dma-re=
-map
-
-I'd be happy with your series too.
-
-In case you're wondering why I want this: I'm interested in supporting mult=
-iple
-dma-ranges in DT. So I was looking at the amount of work needed to centrali=
-ze
-usage of dev->dma_pfn_offset. This one patch seemed trivial enough to send
-right away.
-
-Regards,
-Nicolas
-
-
---=-LqhdFNFQbXFXXko83wzg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2lfeAACgkQlfZmHno8
-x/7FnQf/fWogNvidITqlQcsKCGc7oeRASPSjW/lRMdE4n3pH/nBJe8zF9LqxNsZj
-n0yCrXQfiJt9fVzHMLjWmi7vrC8/e7MQ94nqYnK9R1E9KPKnkriRFU0ux2ahlU8l
-xXHa0Q0momOpZimYl5rR0rYVVi1nrhkRl8TUJn2WAAfO2X+z9r1O2LwWTAVmR6yL
-wIG81FoN1wXzZShor97MX7RAivRQ5HwediXU6o1GOjsqRPl8K8YvCFDuTnXH6iGZ
-7TvnaGzKy0flfbvihDOCUNCLYTIy01aq/lqxBDl0/O9yOuRwNjfD8GekckaOx3p6
-GJk1+BKLk3RydGJXLzJn37JhXq2eqg==
-=h442
------END PGP SIGNATURE-----
-
---=-LqhdFNFQbXFXXko83wzg--
-
+> ---
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  fs/buffer.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index 86a38b979323..792f22a88e67 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -48,6 +48,8 @@
+>  #include <linux/sched/mm.h>
+>  #include <trace/events/block.h>
+>  
+> +#include "internal.h"
+> +
+>  static int fsync_buffers_list(spinlock_t *lock, struct list_head *list);
+>  static int submit_bh_wbc(int op, int op_flags, struct buffer_head *bh,
+>  			 enum rw_hint hint, struct writeback_control *wbc);
+> -- 
+> 2.23.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
