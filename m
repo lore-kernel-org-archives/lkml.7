@@ -2,211 +2,148 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A722DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B5ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999620659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCB220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbfJOJvf (ORCPT
+        id S1730053AbfJOJwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:51:35 -0400
-Received: from smtp1.goneo.de ([85.220.129.30]:45392 "EHLO smtp1.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbfJOJve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:51:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp1.goneo.de (Postfix) with ESMTP id 85B6D23F4B8;
-        Tue, 15 Oct 2019 11:51:30 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp1.goneo.de ([127.0.0.1])
-        by localhost (smtp1.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sBGS03dGLi35; Tue, 15 Oct 2019 11:51:29 +0200 (CEST)
-Received: from lem-wkst-02.lemonage (hq.lemonage.de [87.138.178.34])
-        by smtp1.goneo.de (Postfix) with ESMTPSA id 7CE9423F856;
-        Tue, 15 Oct 2019 11:51:28 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 11:51:24 +0200
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Jilayne Lovejoy <opensource@jilayne.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Winslow <swinslow@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Johan Hovold <johan@kernel.org>,
-        "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v9 4/7] nfc: pn533: Split pn533 init & nfc_register
-Message-ID: <20191015095124.GA17778@lem-wkst-02.lemonage>
-References: <20191008140544.17112-1-poeschel@lemonage.de>
- <20191008140544.17112-5-poeschel@lemonage.de>
- <20191009174023.528c278b@cakuba.netronome.com>
+        Tue, 15 Oct 2019 05:52:02 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40135 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfJOJwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:52:01 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so16258346oib.7;
+        Tue, 15 Oct 2019 02:52:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0CYH4j0srWEiMsF+OANP2Wo3C2QtrbO2vNC7ScJyUA8=;
+        b=CRJkdxvRsEdmSjXPukZYYgvX4DkkJeiIJSiT/ZyI25yexbp6OV0lTckYGSCMjkPmsv
+         rXRi9ljGAcbghXFDiCvG6UpuETrrp+Zl8HM25gqe6OxojQUvpnFP7WEfhZ8TQT7SHxDi
+         P7P+0EpnXadQoiTM426ur4kPi6lSGQVwjyKBAdqcr4i/ZFX2nn6x3bhglGHEkSm7twCo
+         caEETgE0L0PkIWzYDX1LXmgWrRUa9ky/mb87PaOiQfDsZsL+Cb0F2N0n8QuiZwovc9us
+         /UWLxRoeD2m7Fh3XU8XgeYYVQzBaJ+ruwYlGL2SZ6SbKn5ATiDeWEvJbRyCTnnPOCF1S
+         9CQA==
+X-Gm-Message-State: APjAAAWA8NXHePGYzi3XqlWnLwqasGNIk6zU/cBqYcyle+QeDyk1IwUg
+        rLKvrgRVeEzXCx/Uspy/UZlCJx2K9YDUZil7EMA=
+X-Google-Smtp-Source: APXvYqwlKwjCfbaD/Fu4Kccv/2hAco6cGIIYZtyu2Fqx7giwBiOA8FU9ug4GAzQwht8aPR23rojHPBuumOCb+IuEQ+k=
+X-Received: by 2002:aca:4bd2:: with SMTP id y201mr3095361oia.102.1571133119807;
+ Tue, 15 Oct 2019 02:51:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009174023.528c278b@cakuba.netronome.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
+ <CAMuHMdWY2VsY-CyAxSvpm1XYicAWqU7NORSQofQ+T195DwyLUg@mail.gmail.com> <7284590f-2b74-1b47-2d61-783ad8d5f46f@monstr.eu>
+In-Reply-To: <7284590f-2b74-1b47-2d61-783ad8d5f46f@monstr.eu>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Oct 2019 11:51:48 +0200
+Message-ID: <CAMuHMdWZYALZB1bP5Mtoq4Nj5iubzdWBf1vRY9Mh5QvjCDhBgA@mail.gmail.com>
+Subject: Re: [PATCH] serial: core: Use cons->index for preferred console registration
+To:     Michal Simek <monstr@monstr.eu>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 05:40:23PM -0700, Jakub Kicinski wrote:
-> On Tue,  8 Oct 2019 16:05:41 +0200, Lars Poeschel wrote:
-> > There is a problem in the initialisation and setup of the pn533: It
-> > registers with nfc too early. It could happen, that it finished
-> > registering with nfc and someone starts using it. But setup of the pn533
-> > is not yet finished. Bad or at least unintended things could happen.
-> > So I split out nfc registering (and unregistering) to seperate functions
-> > that have to be called late in probe then.
-> > 
-> > Cc: Johan Hovold <johan@kernel.org>
-> > Cc: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> 
-> > diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-> > index 1abd40398a5a..e9e5a1ec8857 100644
-> > --- a/drivers/nfc/pn533/i2c.c
-> > +++ b/drivers/nfc/pn533/i2c.c
-> > @@ -193,12 +193,10 @@ static int pn533_i2c_probe(struct i2c_client *client,
-> >  	phy->i2c_dev = client;
-> >  	i2c_set_clientdata(client, phy);
-> >  
-> > -	priv = pn533_register_device(PN533_DEVICE_PN532,
-> > -				     PN533_NO_TYPE_B_PROTOCOLS,
-> > +	priv = pn53x_common_init(PN533_DEVICE_PN532,
-> >  				     PN533_PROTO_REQ_ACK_RESP,
-> >  				     phy, &i2c_phy_ops, NULL,
-> > -				     &phy->i2c_dev->dev,
-> > -				     &client->dev);
-> > +				     &phy->i2c_dev->dev);
-> 
-> nit: start of continuation lines should match the opening parenthesis,
->      please run checkpatch and fix the style issue
+Hi Michal,
 
-Ok, I will change that.
+On Tue, Oct 15, 2019 at 11:22 AM Michal Simek <monstr@monstr.eu> wrote:
+> On 15. 10. 19 11:19, Geert Uytterhoeven wrote:
+> > On Mon, Sep 2, 2019 at 4:29 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> >> The reason for this patch is xilinx_uartps driver which create one dynamic
+> >> instance per IP with unique major and minor combinations. drv->nr is in
+> >> this case all the time setup to 1. That means that uport->line is all the
+> >> time setup to 0 and drv->tty_driver->name_base is doing shift in name to
+> >> for example ttyPS3.
+> >>
+> >> register_console() is looping over console_cmdline array and looking for
+> >> proper name/index combination which is in our case ttyPS/3.
+> >> That's why every instance of driver needs to be registered with proper
+> >> combination of name/number (ttyPS/3). Using uport->line is doing
+> >> registration with ttyPS/0 which is wrong that's why proper console index
+> >> should be used which is in cons->index field.
+> >>
+> >> Also it is visible that recording console should be done based on
+> >> information about console not about the port but in most cases numbers are
+> >> the same and xilinx_uartps is only one exception now.
+> >>
+> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >
+> > This is now commit 91daae03188e0dd1 ("serial: core: Use cons->index
+> > for preferred console registration") in tty-next.
+> >
+> > This has been bisected to break the serial console on (at least)
+> > r8a7791/koelsch and r8a7795/h3-salvator-xs.
+> >
+> > The line "printk: console [ttySC0] enabled" is no longer printed.
+> > The system continues booting without any serial console output, and the
+> > login prompt never appears on the serial console.
+> >
+> > Reverting this commit fixes the issue.
+>
+> Sorry for trouble with this patch. Can you please point me to dts files
+> for these boards and also what's the value you have in uport->line and
 
-> >  	if (IS_ERR(priv)) {
-> >  		r = PTR_ERR(priv);
-> > @@ -220,13 +218,17 @@ static int pn533_i2c_probe(struct i2c_client *client,
-> >  	if (r)
-> >  		goto fn_setup_err;
-> >  
-> > -	return 0;
-> > +	r = pn53x_register_nfc(priv, PN533_NO_TYPE_B_PROTOCOLS, &client->dev);
-> > +	if (r)
-> > +		goto fn_setup_err;
-> > +
-> > +	return r;
-> >  
-> >  fn_setup_err:
-> >  	free_irq(client->irq, phy);
-> >  
-> >  irq_rqst_err:
-> > -	pn533_unregister_device(phy->priv);
-> > +	pn53x_common_clean(phy->priv);
-> >  
-> >  	return r;
-> >  }
-> > @@ -239,7 +241,8 @@ static int pn533_i2c_remove(struct i2c_client *client)
-> >  
-> >  	free_irq(client->irq, phy);
-> >  
-> > -	pn533_unregister_device(phy->priv);
-> > +	pn53x_unregister_nfc(phy->priv);
-> > +	pn53x_common_clean(phy->priv);
-> >  
-> >  	return 0;
-> >  }
-> > diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
-> > index 64836c727aee..e5d5e4c83a04 100644
-> > --- a/drivers/nfc/pn533/pn533.c
-> > +++ b/drivers/nfc/pn533/pn533.c
-> > @@ -2590,14 +2590,12 @@ int pn533_finalize_setup(struct pn533 *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(pn533_finalize_setup);
-> >  
-> > -struct pn533 *pn533_register_device(u32 device_type,
-> > -				u32 protocols,
-> > +struct pn533 *pn53x_common_init(u32 device_type,
-> >  				enum pn533_protocol_type protocol_type,
-> >  				void *phy,
-> >  				struct pn533_phy_ops *phy_ops,
-> >  				struct pn533_frame_ops *fops,
-> > -				struct device *dev,
-> > -				struct device *parent)
-> > +				struct device *dev)
-> >  {
-> >  	struct pn533 *priv;
-> >  	int rc = -ENOMEM;
-> > @@ -2638,43 +2636,18 @@ struct pn533 *pn533_register_device(u32 device_type,
-> >  	skb_queue_head_init(&priv->fragment_skb);
-> >  
-> >  	INIT_LIST_HEAD(&priv->cmd_queue);
-> > -
-> > -	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
-> > -					   priv->ops->tx_header_len +
-> > -					   PN533_CMD_DATAEXCH_HEAD_LEN,
-> > -					   priv->ops->tx_tail_len);
-> > -	if (!priv->nfc_dev) {
-> > -		rc = -ENOMEM;
-> > -		goto destroy_wq;
-> > -	}
-> > -
-> > -	nfc_set_parent_dev(priv->nfc_dev, parent);
-> > -	nfc_set_drvdata(priv->nfc_dev, priv);
-> > -
-> > -	rc = nfc_register_device(priv->nfc_dev);
-> > -	if (rc)
-> > -		goto free_nfc_dev;
-> 
-> Aren't you moving too much out of here? Looking at commit 32ecc75ded72
-> ("NFC: pn533: change order operations in dev registation") it seems like
-> IRQ handler may want to access the data structures, do this change not
-> reintroduce the problem?
+arch/arm/boot/dts/r8a7791-koelsch.dts
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
 
-Yes, you are right, there could be a problem if an irq gets served
-before the driver is registered to the nfc subsystem.
-Well, but the purpose of this patch is exactly that: Prevent use of nfc
-subsystem before the chip is fully initialized.
-To address this, I would not change the part above, but move the
-request_threaded_irq to the very bottom in pn533_i2c_probe, after the
-call to pn53x_register_nfc. So it is not possible to use nfc before the
-chip is initialized and irqs don't get served before the driver is
-registered to nfc subsystem.
-Thank you for this!
-I will include this in v10 of the patchset.
+> uport->cons->index?
 
-> >  	return priv;
-> >  
-> > -free_nfc_dev:
-> > -	nfc_free_device(priv->nfc_dev);
-> > -
-> > -destroy_wq:
-> > -	destroy_workqueue(priv->wq);
-> >  error:
-> >  	kfree(priv);
-> >  	return ERR_PTR(rc);
-> >  }
-> > -EXPORT_SYMBOL_GPL(pn533_register_device);
-> > +EXPORT_SYMBOL_GPL(pn53x_common_init);
-> >  
-> > -void pn533_unregister_device(struct pn533 *priv)
-> > +void pn53x_common_clean(struct pn533 *priv)
-> >  {
-> >  	struct pn533_cmd *cmd, *n;
-> >  
-> > -	nfc_unregister_device(priv->nfc_dev);
-> > -	nfc_free_device(priv->nfc_dev);
-> > -
-> >  	flush_delayed_work(&priv->poll_work);
-> >  	destroy_workqueue(priv->wq);
-> >  
-> 
+On r8a7791/koelsch:
+
+    Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+    platform serial8250: uport->line = 0, uport->cons->index = -1
+    platform serial8250: uport->line = 1, uport->cons->index = -1
+    platform serial8250: uport->line = 2, uport->cons->index = -1
+    platform serial8250: uport->line = 3, uport->cons->index = -1
+    SuperH (H)SCI(F) driver initialized
+  * sh-sci e6e60000.serial: uport->line = 0, uport->cons->index = -1
+  * e6e60000.serial: ttySC0 at MMIO 0xe6e60000 (irq = 79, base_baud =
+0) is a scif
+    printk: console [ttySC0] enabled
+    sh-sci e6e68000.serial: uport->line = 1, uport->cons->index = 0
+    e6e68000.serial: ttySC1 at MMIO 0xe6e68000 (irq = 80, base_baud =
+0) is a scif
+
+On r8a7795/salvator-xs:
+
+    sh-sci e6550000.serial: uport->line = 1, uport->cons->index = -1
+    e6550000.serial: ttySC1 at MMIO 0xe6550000 (irq = 34, base_baud =
+0) is a hscif
+  * sh-sci e6e88000.serial: uport->line = 0, uport->cons->index = -1
+  * e6e88000.serial: ttySC0 at MMIO 0xe6e88000 (irq = 120, base_baud =
+0) is a scif
+    printk: console [ttySC0] enabled
+
+Actual serial consoles marked with *.
+
+There are no 8250 serial ports in the system, shmobile_defconfig just includes
+driver support for it.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
