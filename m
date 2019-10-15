@@ -2,80 +2,357 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7087ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E76EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AF120854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198F720650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733237AbfJOPHB (ORCPT
+        id S1733247AbfJOPHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:07:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60112 "EHLO mx1.redhat.com"
+        Tue, 15 Oct 2019 11:07:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:40554 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732939AbfJOPHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:07:01 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B38672100;
-        Tue, 15 Oct 2019 15:07:00 +0000 (UTC)
-Received: from [10.18.17.119] (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2F8619C58;
-        Tue, 15 Oct 2019 15:06:53 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-To:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Jessica Yu <jeyu@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org
-References: <20191007081945.10951536.8@infradead.org>
- <20191008104335.6fcd78c9@gandalf.local.home>
- <20191009224135.2dcf7767@oasis.local.home>
- <20191010092054.GR2311@hirez.programming.kicks-ass.net>
- <20191010091956.48fbcf42@gandalf.local.home>
- <20191010140513.GT2311@hirez.programming.kicks-ass.net>
- <20191010115449.22044b53@gandalf.local.home>
- <20191010172819.GS2328@hirez.programming.kicks-ass.net>
- <20191011125903.GN2359@hirez.programming.kicks-ass.net>
- <20191015130739.GA23565@linux-8ccs>
- <20191015135634.GK2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
-Date:   Tue, 15 Oct 2019 11:06:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1732531AbfJOPHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:07:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 666211000;
+        Tue, 15 Oct 2019 08:07:14 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 620E93F718;
+        Tue, 15 Oct 2019 08:07:13 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 16:07:11 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v3] PCI: mobiveil: Fix csr_read/write build issue
+Message-ID: <20191015150711.GC22698@e121166-lin.cambridge.arm.com>
+References: <20190930083116.GA38576@e119886-lin.cambridge.arm.com>
+ <20191004041925.8996-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 15 Oct 2019 15:07:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191004041925.8996-1-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 10:13 AM, Miroslav Benes wrote:
-> Yes, it does. klp_module_coming() calls module_disable_ro() on all
-> patching modules which patch the coming module in order to call
-> apply_relocate_add(). New (patching) code for a module can be relocated
-> only when the relevant module is loaded.
+On Fri, Oct 04, 2019 at 12:19:25PM +0800, Kefeng Wang wrote:
+> The riscv has csr_read/write macro, see arch/riscv/include/asm/csr.h,
+> the same function naming will cause build error, using such generic names
+> in a driver is bad, rename csr_[read,write][l,] to mobiveil_csr_read/write
+> to fix it.
+> 
+> drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
+>  static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+> 
+> drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
+>  static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+> 
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> Cc: Andrew Murray <andrew.murray@arm.com> 
+> Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> v3:
+> - reduce line lengths suggested by Andrew
+> 
+> v2:
+> - using mobiveil prefix suggested by Andrew and Christoph 
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 119 +++++++++++++------------
+>  1 file changed, 62 insertions(+), 57 deletions(-)
 
-FWIW, would the LPC blue-sky2 model (ie, Steve's suggestion @ plumber's 
-where livepatches only patch a single object and updates are kept on 
-disk to handle coming module updates as they are loaded) eliminate those 
-outstanding relocations and the need to perform this late permission 
-flipping?
+Applied to pci/mobiveil, thanks.
 
--- Joe
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index a45a6447b01d..32f37d08d5bc 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> -static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+> +static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+>  {
+>  	void *addr;
+>  	u32 val;
+> @@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+>  	return val;
+>  }
+>  
+> -static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+> +static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
+> +			       size_t size)
+>  {
+>  	void *addr;
+>  	int ret;
+> @@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+>  		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+>  }
+>  
+> -static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
+> +static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+>  {
+> -	return csr_read(pcie, off, 0x4);
+> +	return mobiveil_csr_read(pcie, off, 0x4);
+>  }
+>  
+> -static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> +static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+>  {
+> -	csr_write(pcie, val, off, 0x4);
+> +	mobiveil_csr_write(pcie, val, off, 0x4);
+>  }
+>  
+>  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+>  {
+> -	return (csr_readl(pcie, LTSSM_STATUS) &
+> +	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
+>  		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+>  }
+>  
+> @@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+>  		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
+>  		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
+>  
+> -	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+> +	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+>  
+>  	return pcie->config_axi_slave_base + where;
+>  }
+> @@ -353,13 +354,14 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	chained_irq_enter(chip, desc);
+>  
+>  	/* read INTx status */
+> -	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> -	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> +	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> +	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	intr_status = val & mask;
+>  
+>  	/* Handle INTx */
+>  	if (intr_status & PAB_INTP_INTX_MASK) {
+> -		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> +		shifted_status = mobiveil_csr_readl(pcie,
+> +						    PAB_INTP_AMBA_MISC_STAT);
+>  		shifted_status &= PAB_INTP_INTX_MASK;
+>  		shifted_status >>= PAB_INTX_START;
+>  		do {
+> @@ -373,12 +375,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  							    bit);
+>  
+>  				/* clear interrupt handled */
+> -				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+> -					   PAB_INTP_AMBA_MISC_STAT);
+> +				mobiveil_csr_writel(pcie,
+> +						    1 << (PAB_INTX_START + bit),
+> +						    PAB_INTP_AMBA_MISC_STAT);
+>  			}
+>  
+> -			shifted_status = csr_readl(pcie,
+> -						   PAB_INTP_AMBA_MISC_STAT);
+> +			shifted_status = mobiveil_csr_readl(pcie,
+> +							    PAB_INTP_AMBA_MISC_STAT);
+>  			shifted_status &= PAB_INTP_INTX_MASK;
+>  			shifted_status >>= PAB_INTX_START;
+>  		} while (shifted_status != 0);
+> @@ -413,7 +416,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	}
+>  
+>  	/* Clear the interrupt status */
+> -	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+> +	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+>  	chained_irq_exit(chip, desc);
+>  }
+>  
+> @@ -474,24 +477,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+>  		return;
+>  	}
+>  
+> -	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+> +	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+>  	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+>  	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+>  		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+> -	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+> +	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+>  
+> -	csr_writel(pcie, upper_32_bits(size64),
+> -		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(size64),
+> +			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
+>  
+> -	csr_writel(pcie, lower_32_bits(cpu_addr),
+> -		   PAB_PEX_AMAP_AXI_WIN(win_num));
+> -	csr_writel(pcie, upper_32_bits(cpu_addr),
+> -		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
+> +			    PAB_PEX_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
+> +			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+>  
+> -	csr_writel(pcie, lower_32_bits(pci_addr),
+> -		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> -	csr_writel(pcie, upper_32_bits(pci_addr),
+> -		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
+> +			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
+> +			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
+>  
+>  	pcie->ib_wins_configured++;
+>  }
+> @@ -515,27 +518,29 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+>  	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
+>  	 * to 4 KB in PAB_AXI_AMAP_CTRL register
+>  	 */
+> -	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+> +	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+>  	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
+>  	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+>  		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+> -	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+> +	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+>  
+> -	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(size64),
+> +			    PAB_EXT_AXI_AMAP_SIZE(win_num));
+>  
+>  	/*
+>  	 * program AXI window base with appropriate value in
+>  	 * PAB_AXI_AMAP_AXI_WIN0 register
+>  	 */
+> -	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+> -		   PAB_AXI_AMAP_AXI_WIN(win_num));
+> -	csr_writel(pcie, upper_32_bits(cpu_addr),
+> -		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie,
+> +			    lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+> +			    PAB_AXI_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
+> +			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+>  
+> -	csr_writel(pcie, lower_32_bits(pci_addr),
+> -		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
+> -	csr_writel(pcie, upper_32_bits(pci_addr),
+> -		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
+> +			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
+> +			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
+>  
+>  	pcie->ob_wins_configured++;
+>  }
+> @@ -579,42 +584,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	struct resource_entry *win;
+>  
+>  	/* setup bus numbers */
+> -	value = csr_readl(pcie, PCI_PRIMARY_BUS);
+> +	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
+>  	value &= 0xff000000;
+>  	value |= 0x00ff0100;
+> -	csr_writel(pcie, value, PCI_PRIMARY_BUS);
+> +	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
+>  
+>  	/*
+>  	 * program Bus Master Enable Bit in Command Register in PAB Config
+>  	 * Space
+>  	 */
+> -	value = csr_readl(pcie, PCI_COMMAND);
+> +	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
+>  	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
+> -	csr_writel(pcie, value, PCI_COMMAND);
+> +	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
+>  
+>  	/*
+>  	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
+>  	 * register
+>  	 */
+> -	pab_ctrl = csr_readl(pcie, PAB_CTRL);
+> +	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
+>  	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+> -	csr_writel(pcie, pab_ctrl, PAB_CTRL);
+> +	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
+>  
+> -	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> -		   PAB_INTP_AMBA_MISC_ENB);
+> +	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> +			    PAB_INTP_AMBA_MISC_ENB);
+>  
+>  	/*
+>  	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+>  	 * PAB_AXI_PIO_CTRL Register
+>  	 */
+> -	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
+> +	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
+>  	value |= APIO_EN_MASK;
+> -	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+> +	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+>  
+>  	/* Enable PCIe PIO master */
+> -	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
+> +	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
+>  	value |= 1 << PIO_ENABLE_SHIFT;
+> -	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+> +	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+>  
+>  	/*
+>  	 * we'll program one outbound window for config reads and
+> @@ -647,10 +652,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	}
+>  
+>  	/* fixup for PCIe class register */
+> -	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+> +	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+>  	value &= 0xff;
+>  	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+> -	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+> +	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+>  
+>  	/* setup MSI hardware registers */
+>  	mobiveil_pcie_enable_msi(pcie);
+> @@ -668,9 +673,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+>  	pcie = irq_desc_get_chip_data(desc);
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+>  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> -	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> +	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val &= ~mask;
+> -	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> +	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+>  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+>  }
+>  
+> @@ -684,9 +689,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
+>  	pcie = irq_desc_get_chip_data(desc);
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+>  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> -	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> +	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val |= mask;
+> -	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> +	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+>  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+>  }
+>  
+> -- 
+> 2.20.1
+> 
