@@ -2,153 +2,159 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88316ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86617ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD55218DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1DF21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KXldssEf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itmfcmkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfJOLYJ (ORCPT
+        id S1727710AbfJOLYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:24:09 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41082 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfJOLYG (ORCPT
+        Tue, 15 Oct 2019 07:24:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55955 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfJOLYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:24:06 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9FBNt9L109230;
-        Tue, 15 Oct 2019 06:23:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571138635;
-        bh=JtonZDXxyNuqLG8pQHZ0YDPt2+49Y+aRH6v4JFO9anw=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=KXldssEfQzIdpm/xL8bImgE+7Ze0Bn9jIXXOnN70YnNZKpAMKNdcwEo0QGf1J7Ho6
-         stYsk6C5V/k+6jw6wWWXVDJqsklMPsFPRUJcuvAo5qOvyNWz10sCxyTWkfpxedJvBp
-         hiJnDWmiw6Hq46Tx/xcwFpuTYDsy2XmeiSj8KrPk=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9FBNtMH052386
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Oct 2019 06:23:55 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
- Oct 2019 06:23:48 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 15 Oct 2019 06:23:55 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9FBNmk2109164;
-        Tue, 15 Oct 2019 06:23:50 -0500
-Subject: Re: [PATCH] PCI:cadence:Driver refactored to use as a core library.
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>
-References: <1569861768-10109-1-git-send-email-tjoseph@cadence.com>
- <03a8af4b-96bb-48b6-a79b-7db3a2ee59d0@ti.com>
-Message-ID: <ba7cf838-dc20-2007-cbf4-e8fbcd49e69f@ti.com>
-Date:   Tue, 15 Oct 2019 16:53:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 15 Oct 2019 07:24:54 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so20419213wma.5;
+        Tue, 15 Oct 2019 04:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8A7Og6YrsNa6Jz4NPh/sr2qSneIY/eo7oy9Kxx1XwyI=;
+        b=itmfcmkP98PF2cuksSleUiSre0o4GC8cxVqb/B0PXO5YN8dxgloXDcSxtIPzcdEyPC
+         3k6N7do6sEFPNYQ+sL4CUR54wqrfEvxnFBtBGDV/IZQpc9cEi3dInpn/2cHLrs4QZIAw
+         2dr91MVvoxnp6yAyazvqfez8Q92Y+EouYXfP78a5QjP/VILyXJG0pX1rjwjGn48A0g1c
+         v61fproDxAuc4EZw66LQpGZ5/aDHjZFqjN3cv7iPLj2QljTswdfTJHDqYQk/NRquovjI
+         mqEdRT1DA+NgtIDfo+D35Pm39yoXCdvHAu2JOKIggc6JgodnE+VOHk5LXlymQApGUr18
+         1R8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8A7Og6YrsNa6Jz4NPh/sr2qSneIY/eo7oy9Kxx1XwyI=;
+        b=dzXtGyJCmd16FAWF9NRyPnvJq7RKKf5RaYHMgvO9ED+YBjTmaES66kM61oJpEiYh98
+         W86hv1Nqa7l5jnJ5XLfuQ8+PkGeLHoF2YqvHj0LErUjfyZ/bKNchcKwj1dN3E2iVBVnE
+         0XyYnI/y3WLQmC2tF7XD8hRVAy9ydVQEPj/JtAsQqaU5Ly5RdxdsLW994bnrt0VYFRho
+         4/62dy1r4OzGzpxDASBdwpYxUyYIR8wbMo6m1NuzZ3P8qC+K0rGxKhgzlU7MfW4BM9LA
+         PAz7U3HEIqxixUQnWVavpLnhoKVfugTqD0mXHi7RLvLu0a9+rJNvynvkpWcGnDVZ8sTP
+         NZkg==
+X-Gm-Message-State: APjAAAXkpWugYzjoOb8NiuFmb3CsetT4pNcqPKQNOFVfkF/IjKVhRBHg
+        rZxR3Iy+hq7gDImnPPA0tIF10D3hHtM=
+X-Google-Smtp-Source: APXvYqwgKFVoBdR2vB6WfkTcUeVjwLe+r3you6uJEglg0KqmHpyWY6/964F9b3P1HHYuj+ZjHn71VA==
+X-Received: by 2002:a7b:c773:: with SMTP id x19mr18460344wmk.157.1571138692413;
+        Tue, 15 Oct 2019 04:24:52 -0700 (PDT)
+Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
+        by smtp.gmail.com with ESMTPSA id t6sm38301036wmf.8.2019.10.15.04.24.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 15 Oct 2019 04:24:51 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 13:24:50 +0200
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
+ <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+ <20191010113034.GN13286@kadam>
 MIME-Version: 1.0
-In-Reply-To: <03a8af4b-96bb-48b6-a79b-7db3a2ee59d0@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010113034.GN13286@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
+> On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
+> > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
+> > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > > > > +	struct avalon_dma_desc *desc;
+> > > > > > +	struct virt_dma_desc *vdesc;
+> > > > > > +	bool rd_done;
+> > > > > > +	bool wr_done;
+> > > > > > +
+> > > > > > +	spin_lock(lock);
 
-On 01/10/19 4:45 PM, Kishon Vijay Abraham I wrote:
-> Hi Tom,
+[*]
+
+> > > > > > +
+> > > > > > +	rd_done = (hw->h2d_last_id < 0);
+> > > > > > +	wr_done = (hw->d2h_last_id < 0);
+> > > > > > +
+> > > > > > +	if (rd_done && wr_done) {
+> > > > > > +		spin_unlock(lock);
+> > > > > > +		return IRQ_NONE;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	do {
+> > > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > > > > > +			rd_done = true;
+> > > > > > +
+> > > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > > > > > +			wr_done = true;
+> > > > > > +	} while (!rd_done || !wr_done);
+> > > > > 
+> > > > > This loop is very strange.  It feels like the last_id indexes needs
+> > > > > to atomic or protected from racing somehow so we don't do an out of
+> > > > > bounds read.
+> > 
+> > [...]
+> > 
+> > > You're missing my point.  When we set
+> > > hw->d2h_last_id = 1;
+> > [1]
+> > > ...
+> > > hw->d2h_last_id = 2;
+> > [2]
+> > 
+> > > There is a tiny moment where ->d2h_last_id is transitioning from 1 to 2
+> > > where its value is unknown.  We're in a busy loop here so we have a
+> > > decent chance of hitting that 1/1000,000th of a second.  If we happen to
+> > > hit it at exactly the right time then we're reading from a random
+> > > address and it will cause an oops.
+> > > 
+> > > We have to use atomic_t types or something to handle race conditions.
+> > 
+> > Err.. I am still missing the point :( In your example I do see a chance
+> > for a reader to read out 1 at point in time [2] - because of SMP race.
+> > But what could it be other than 1 or 2?
+> > 
 > 
-> On 30/09/19 10:12 PM, Tom Joseph wrote:
->> All the platform related APIs/Structures in the driver has been extracted
->>  out to a separate file (pcie-cadence-plat.c). This will enable the
->>  driver to be used as a core library, which could be used by other
->>  platform drivers.Testing was done using simulation environment.
->>
->> Signed-off-by: Tom Joseph <tjoseph@cadence.com>
->> ---
->>  drivers/pci/controller/Kconfig             |  35 +++++++
->>  drivers/pci/controller/Makefile            |   1 +
->>  drivers/pci/controller/pcie-cadence-ep.c   |  78 ++-------------
->>  drivers/pci/controller/pcie-cadence-host.c |  77 +++------------
->>  drivers/pci/controller/pcie-cadence-plat.c | 154 +++++++++++++++++++++++++++++
->>  drivers/pci/controller/pcie-cadence.h      |  69 +++++++++++++
->>  6 files changed, 278 insertions(+), 136 deletions(-)
->>  create mode 100644 drivers/pci/controller/pcie-cadence-plat.c
->>
+> The 1 to 2 transition was a poorly chosen example, but a -1 to 1
+> trasition is better.  The cpu could write a byte at a time.  So maybe
+> it only wrote the two highest bytes so now it's 0xffff.  It's not -1 and
+> it's not 1 and it's not a valid index.
+> 
+> > Anyways, all code paths dealing with h2d_last_id and d2h_last_id indexes
+> > are protected with a spinlock.
+> 
+> You have to protect both the writer and the reader.  (That's why this
+> bug is so easy to spot).  https://lwn.net/Articles/793253/
 
-<snip>
+I struggle to realize how the spinlock I use (see [*] above) does not
+protect the reader.
 
->> diff --git a/drivers/pci/controller/pcie-cadence-plat.c b/drivers/pci/controller/pcie-cadence-plat.c
->> new file mode 100644
->> index 0000000..274615d
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-cadence-plat.c
->> @@ -0,0 +1,154 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2019 Cadence
->> +// Cadence PCIe platform  driver.
->> +// Author: Tom Joseph <tjoseph@cadence.com>
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/of_device.h>
->> +#include "pcie-cadence.h"
->> +
->> +/**
->> + * struct cdns_plat_pcie - private data for this PCIe platform driver
->> + * @pcie: Cadence PCIe controller
->> + * @regmap: pointer to PCIe device
->> + * @is_rc: Set to 1 indicates the PCIe controller mode is Root Complex,
->> + *         if 0 it is in Endpoint mode.
->> + */
->> +struct cdns_plat_pcie {
->> +	struct cdns_pcie        *pcie;
->> +	bool is_rc;
->> +};
->> +
->> +struct cdns_plat_pcie_of_data {
->> +	bool is_rc;
->> +};
->> +
->> +static const struct of_device_id cdns_plat_pcie_of_match[];
->> +
->> +int cdns_plat_pcie_link_control(struct cdns_pcie *pcie, bool start)
->> +{
->> +	pr_debug(" %s called\n", __func__);
->> +	return 0;
->> +}
->> +
->> +bool cdns_plat_pcie_link_status(struct cdns_pcie *pcie)
+I am going to post updated version shortly, hopefully it will make more
+sense.
 
-How do you get cdns_plat_pcie from pcie? Cadence plat doesn't need it however
-the platform specific base address will be stored in the platform specific
-structure (struct cdns_plat_pcie here) which will be used for performing
-controller configuration.
-
-I think you can just move *dev to struct cdns_pcie from struct
-cdns_pcie_ep/struct cdns_pcie_rc and use dev_get_drvdata here to get platform
-specific structure.
-
-Thanks
-Kishon
+> regards,
+> dan carpenter
+> 
