@@ -2,96 +2,156 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A64ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05221ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B524C20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571150258;
-	bh=+PszFwIqrlyxVVAbm1B+dbB8MBd5bWJNQBIiWxZXCqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TtQNTOafOzID5UNhJi7I7GZHemuByDyintWhtBzFZ33vIrfVvqOloKBl1tstyOh3z
-	 1vMRJMnggdbVDdhSAzU43u/oY3fEJ0IQunYdD9+Agyo/ZKFPSudN6oKECqdAWgXkCo
-	 yQtdfdpVbMbOcBjtzseUFoeKQP2OCMprBp1z33uM=
+	by mail.kernel.org (Postfix) with ESMTP id D0C0120854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732913AbfJOOhh (ORCPT
+        id S1732786AbfJOOkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:37:37 -0400
-Received: from mail-qt1-f174.google.com ([209.85.160.174]:34992 "EHLO
-        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732895AbfJOOhh (ORCPT
+        Tue, 15 Oct 2019 10:40:47 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44549 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732448AbfJOOkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:37:37 -0400
-Received: by mail-qt1-f174.google.com with SMTP id m15so30921414qtq.2;
-        Tue, 15 Oct 2019 07:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4H4Rg3pemm2hU+dY5X0GYDMJ3NZ74bBGNLSG2pqHsAo=;
-        b=WQdx67izKGSUfSAPo9NF9EtD6TtVRgKmrTLP7Ii/UP/qFn8MOeSsLPeRB2VVvs6Au8
-         zbZCjqvbOmm8mSIYi2gxAXkpXZpVBJAkoZMkLk5dpTQycQUrS3hoytSY+5VeoW5ocohI
-         toqTug4fi9M48G3JmMcZ0II5LDHN4j2jfZKetM8Fq2C7otn/RIA9x6V5sSMSHZ7SwhAq
-         fplUsnkIDDlCSJXkpZ7lr/xlEnLHq77HtoTcm2YXFEPp/k7vtWz3jIORKHuw/wBtc8d/
-         R7gWmNNkxXfvKW2j9JbzwjZ4TqwHP0bACSq4cfuIICtM6cV3uz0TdlrXDJtk0vVmb956
-         2zcA==
+        Tue, 15 Oct 2019 10:40:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 21so17104269otj.11;
+        Tue, 15 Oct 2019 07:40:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4H4Rg3pemm2hU+dY5X0GYDMJ3NZ74bBGNLSG2pqHsAo=;
-        b=ER8D3Gy2hEJoqOBKvtLDE1Ou1rCj9uXtc4KzmUzH59QzJJh/cudQAwewuhZZHKVR8U
-         AAH78z7aIR4TERKfeTDvg4ulK5KYmNEoH8NLrILsbkrDOVqDxEs+WdrUud/p+nyufAlS
-         ceAKQoYB48XZDJ43f39zSZeyo9UYkNXbaDek4EWijb/wZRIv9MhWiwTxbGYvOD7RYeKp
-         mc7k9YKhb1b9tpoFaTdWv9WpGqYpJ2GbxNXhzfuv9dQxeg5Aq8L5+VMCQdU29hIdeq5o
-         86FlCwnExYcpZn+eh4gw4Et363ODMznOTyr6uqpdOvW/mktEGdd0xf6iuRJSl6CWTffS
-         +UPQ==
-X-Gm-Message-State: APjAAAUrA4q1p5327AIEIezK01wkh8zKGMkUl1cv1kL6WT6qcTt3EbkJ
-        8WYppDZD8I7b4c8dy9IKYXU=
-X-Google-Smtp-Source: APXvYqyUL/7XSwfJYR3ilAkd+OfYZXkjxiqwGkNg6FSy5TzKmMfLNWOPtybtiTeMJqLuCJ2cXClRDA==
-X-Received: by 2002:ad4:4673:: with SMTP id z19mr25933996qvv.236.1571150255607;
-        Tue, 15 Oct 2019 07:37:35 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:2a53])
-        by smtp.gmail.com with ESMTPSA id x55sm12586667qta.74.2019.10.15.07.37.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 07:37:34 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 07:37:31 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Jan Kara <jack@suse.cz>, mm <linux-mm@kvack.org>,
-        fsdev <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [RFC] writeback: add elastic bdi in cgwb bdp
-Message-ID: <20191015143731.GJ18794@devbig004.ftw2.facebook.com>
-References: <20191012132740.12968-1-hdanton@sina.com>
- <20191015140356.9256-1-hdanton@sina.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iSVmDwkzhMmxJvflSTSRbJh/RaZxJFQK4nfYknfaXn8=;
+        b=s6No45VSjGRujH3w9trnFa+E11TciHfw9bxA+jnoGL8mZ7WTcew1vFqKNHjFbmVC02
+         ZRpto3WyNVA6rVOdkOPT8wilg/iHzz0yf4Ad1eNXVMyqlWTyQ/S7P/vud0u+78YdWkro
+         +Dpn+LcLRTgrLYa6W2OEVo0D1LHoxjVoD3n14qHCMlyGxS27bHLTG9WnnRjjRL3xLuRC
+         3HFcD14KiOjKAG0S4gHCJzOvjJKsvgeEVGdImANrzs531XP2P9PUWz0uwpWk/7sblvf/
+         k6fqvwqo5av4SqKGjpQvs83NLMCoVKta3z/0MriMtJEL+k55XehesaWT8qx3VYyBgAot
+         pqnA==
+X-Gm-Message-State: APjAAAX2koly0gRPv6KTGMKIYEwjPY2n9Ntb10FAYHiAxQpfmf8P1UXK
+        +Mr1XDZoTBdcCPB1Q9y5bTWQeMVMiuuVkbainCM=
+X-Google-Smtp-Source: APXvYqzUYsrKQvnknIQF48f5xX0ZOC6hV5QY+ILJX2/wvHL6m5jiAI8K1yx8jv0LqGZTy0VKNoxTSHVCbeILg5a1DZs=
+X-Received: by 2002:a9d:7345:: with SMTP id l5mr19910943otk.39.1571150446346;
+ Tue, 15 Oct 2019 07:40:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015140356.9256-1-hdanton@sina.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
+ <CAMuHMdWY2VsY-CyAxSvpm1XYicAWqU7NORSQofQ+T195DwyLUg@mail.gmail.com>
+ <7284590f-2b74-1b47-2d61-783ad8d5f46f@monstr.eu> <CAMuHMdWZYALZB1bP5Mtoq4Nj5iubzdWBf1vRY9Mh5QvjCDhBgA@mail.gmail.com>
+ <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
+In-Reply-To: <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Oct 2019 16:40:35 +0200
+Message-ID: <CAMuHMdXq1XkQKTeA0XOhk6QzoyK0DUMiesVwXkBwWQbunWH+Fg@mail.gmail.com>
+Subject: Re: [PATCH] serial: core: Use cons->index for preferred console registration
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Michal Simek <monstr@monstr.eu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Hillf.
+Hi Michal,
 
-Do you have a test case which can demonstrate the problem you're
-seeing in the existing code?
+On Tue, Oct 15, 2019 at 4:37 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> On 15. 10. 19 11:51, Geert Uytterhoeven wrote:
+> > On Tue, Oct 15, 2019 at 11:22 AM Michal Simek <monstr@monstr.eu> wrote:
+> >> On 15. 10. 19 11:19, Geert Uytterhoeven wrote:
+> >>> On Mon, Sep 2, 2019 at 4:29 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> >>>> The reason for this patch is xilinx_uartps driver which create one dynamic
+> >>>> instance per IP with unique major and minor combinations. drv->nr is in
+> >>>> this case all the time setup to 1. That means that uport->line is all the
+> >>>> time setup to 0 and drv->tty_driver->name_base is doing shift in name to
+> >>>> for example ttyPS3.
+> >>>>
+> >>>> register_console() is looping over console_cmdline array and looking for
+> >>>> proper name/index combination which is in our case ttyPS/3.
+> >>>> That's why every instance of driver needs to be registered with proper
+> >>>> combination of name/number (ttyPS/3). Using uport->line is doing
+> >>>> registration with ttyPS/0 which is wrong that's why proper console index
+> >>>> should be used which is in cons->index field.
+> >>>>
+> >>>> Also it is visible that recording console should be done based on
+> >>>> information about console not about the port but in most cases numbers are
+> >>>> the same and xilinx_uartps is only one exception now.
+> >>>>
+> >>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >>>
+> >>> This is now commit 91daae03188e0dd1 ("serial: core: Use cons->index
+> >>> for preferred console registration") in tty-next.
+> >>>
+> >>> This has been bisected to break the serial console on (at least)
+> >>> r8a7791/koelsch and r8a7795/h3-salvator-xs.
+> >>>
+> >>> The line "printk: console [ttySC0] enabled" is no longer printed.
+> >>> The system continues booting without any serial console output, and the
+> >>> login prompt never appears on the serial console.
+> >>>
+> >>> Reverting this commit fixes the issue.
+> >>
+> >> Sorry for trouble with this patch. Can you please point me to dts files
+> >> for these boards and also what's the value you have in uport->line and
+> >
+> > arch/arm/boot/dts/r8a7791-koelsch.dts
+> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+> >
+> >> uport->cons->index?
+> >
+> > On r8a7791/koelsch:
+> >
+> >     Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+> >     platform serial8250: uport->line = 0, uport->cons->index = -1
+> >     platform serial8250: uport->line = 1, uport->cons->index = -1
+> >     platform serial8250: uport->line = 2, uport->cons->index = -1
+> >     platform serial8250: uport->line = 3, uport->cons->index = -1
+> >     SuperH (H)SCI(F) driver initialized
+> >   * sh-sci e6e60000.serial: uport->line = 0, uport->cons->index = -1
+> >   * e6e60000.serial: ttySC0 at MMIO 0xe6e60000 (irq = 79, base_baud =
+> > 0) is a scif
+> >     printk: console [ttySC0] enabled
+> >     sh-sci e6e68000.serial: uport->line = 1, uport->cons->index = 0
+> >     e6e68000.serial: ttySC1 at MMIO 0xe6e68000 (irq = 80, base_baud =
+> > 0) is a scif
+> >
+> > On r8a7795/salvator-xs:
+> >
+> >     sh-sci e6550000.serial: uport->line = 1, uport->cons->index = -1
+> >     e6550000.serial: ttySC1 at MMIO 0xe6550000 (irq = 34, base_baud =
+> > 0) is a hscif
+> >   * sh-sci e6e88000.serial: uport->line = 0, uport->cons->index = -1
+> >   * e6e88000.serial: ttySC0 at MMIO 0xe6e88000 (irq = 120, base_baud =
+> > 0) is a scif
+> >     printk: console [ttySC0] enabled
+> >
+> > Actual serial consoles marked with *.
+> >
+> > There are no 8250 serial ports in the system, shmobile_defconfig just includes
+> > driver support for it.
+>
+> ok. I will take a look at why it is not initialized in this case. Do you
+> have any qemu available for these boards?
 
-Thanks.
+Not me.  But Marek (CC) may have something.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-tejun
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
