@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEA2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DF2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE26F217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEF4217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfJOFfF (ORCPT
+        id S1729270AbfJOFfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:35:05 -0400
+        Tue, 15 Oct 2019 01:35:09 -0400
 Received: from mga17.intel.com ([192.55.52.151]:50347 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727270AbfJOFe4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:34:56 -0400
+        id S1727096AbfJOFfD (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:35:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 22:34:55 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 22:35:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,298,1566889200"; 
-   d="scan'208";a="198507561"
+   d="scan'208";a="198507594"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 22:34:53 -0700
+  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 22:35:00 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 2/5] perf util: Count the total cycles of all samples
-Date:   Tue, 15 Oct 2019 13:33:47 +0800
-Message-Id: <20191015053350.13909-3-yao.jin@linux.intel.com>
+Subject: [PATCH v2 5/5] perf report: Sort by sampled cycles percent per block for tui
+Date:   Tue, 15 Oct 2019 13:33:50 +0800
+Message-Id: <20191015053350.13909-6-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191015053350.13909-1-yao.jin@linux.intel.com>
 References: <20191015053350.13909-1-yao.jin@linux.intel.com>
@@ -45,117 +45,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can get the per sample cycles by hist__account_cycles(). It's also
-useful to know the total cycles of all samples in order to get the
-cycles coverage for a single program block in further. For example,
+Previous patch has implemented a new sort option "total_cycles".
+But there was only stdio mode supported.
 
-coverage = per block sampled cycles / total sampled cycles
+This patch supports the tui mode and support '--percent-limit'.
 
-This patch creates a new argument 'total_cycles' in hist__account_cycles(),
-which will be added with the cycles of each sample.
+For example,
+
+ perf record -b ./div
+ perf report -s total_cycles --percent-limit 1
+
+ # Samples: 2753248 of event 'cycles'
+ Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
+          26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
+          15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
+           5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
+           4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
+           4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
+           3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
+           3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
+           3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
+           2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
+           2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
+           2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
+           2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+           2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+           2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
+           1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
+           1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
+           1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-annotate.c | 2 +-
- tools/perf/builtin-diff.c     | 3 ++-
- tools/perf/builtin-report.c   | 2 +-
- tools/perf/builtin-top.c      | 3 ++-
- tools/perf/util/hist.c        | 6 +++++-
- tools/perf/util/hist.h        | 3 ++-
- 6 files changed, 13 insertions(+), 6 deletions(-)
+ tools/perf/builtin-report.c    | 30 +++++++++++++---
+ tools/perf/ui/browsers/hists.c | 62 +++++++++++++++++++++++++++++++++-
+ tools/perf/ui/browsers/hists.h |  2 ++
+ tools/perf/util/hist.h         | 12 +++++++
+ 4 files changed, 101 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 8db8fc9bddef..6ab0cc45b287 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -201,7 +201,7 @@ static int process_branch_callback(struct evsel *evsel,
- 	if (a.map != NULL)
- 		a.map->dso->hit = 1;
- 
--	hist__account_cycles(sample->branch_stack, al, sample, false);
-+	hist__account_cycles(sample->branch_stack, al, sample, false, NULL);
- 
- 	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
- 	return ret;
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 05925b39718a..7487e113454f 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -428,7 +428,8 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 			goto out_put;
- 		}
- 
--		hist__account_cycles(sample->branch_stack, &al, sample, false);
-+		hist__account_cycles(sample->branch_stack, &al, sample, false,
-+				     NULL);
- 	}
- 
- 	/*
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 7accaf8ef689..cdb436d6e11f 100644
+index 5dbde541b797..7dc74d794265 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -292,7 +292,7 @@ static int process_sample_event(struct perf_tool *tool,
- 
- 	if (ui__has_annotation() || rep->symbol_ipc) {
- 		hist__account_cycles(sample->branch_stack, &al, sample,
--				     rep->nonany_branch_mode);
-+				     rep->nonany_branch_mode, NULL);
- 	}
- 
- 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index d96f24c8770d..14c52e4d47f6 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -725,7 +725,8 @@ static int hist_iter__top_callback(struct hist_entry_iter *iter,
- 		perf_top__record_precise_ip(top, he, iter->sample, evsel, al->addr);
- 
- 	hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
--		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY));
-+		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
-+		     NULL);
+@@ -880,6 +880,27 @@ static int hists__fprintf_all_blocks(struct hists *hists, struct report *rep)
  	return 0;
  }
  
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 26ee45a3e5d0..af65ce950ba2 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2570,7 +2570,8 @@ int hists__unlink(struct hists *hists)
- }
- 
- void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
--			  struct perf_sample *sample, bool nonany_branch_mode)
-+			  struct perf_sample *sample, bool nonany_branch_mode,
-+			  u64 *total_cycles)
- {
- 	struct branch_info *bi;
- 
-@@ -2597,6 +2598,9 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 					nonany_branch_mode ? NULL : prev,
- 					bi[i].flags.cycles);
- 				prev = &bi[i].to;
++static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
++					       struct report *rep)
++{
++	struct block_hist *bh = &rep->block_hist;
++	struct evsel *pos;
++	int ret;
 +
-+				if (total_cycles)
-+					*total_cycles += bi[i].flags.cycles;
- 			}
- 			free(bi);
++	evlist__for_each_entry(evlist, pos) {
++		struct hists *hists = evsel__hists(pos);
++
++		get_block_hists(hists, bh, rep);
++		symbol_conf.report_individual_block = true;
++		ret = block_hists_tui_browse(bh, pos, rep->min_percent);
++		hists__delete_entries(&bh->block_hists);
++		if (ret != 0)
++			return ret;
++	}
++
++	return ret;
++}
++
+ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+ 					 struct report *rep,
+ 					 const char *help)
+@@ -988,6 +1009,11 @@ static int report__browse_hists(struct report *rep)
+ 
+ 	switch (use_browser) {
+ 	case 1:
++		if (rep->total_cycles) {
++			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
++			break;
++		}
++
+ 		ret = perf_evlist__tui_browse_hists(evlist, help, NULL,
+ 						    rep->min_percent,
+ 						    &session->header.env,
+@@ -1782,10 +1808,6 @@ int cmd_report(int argc, const char **argv)
+ 	if (sort_order && strstr(sort_order, "total_cycles") &&
+ 	    (sort__mode == SORT_MODE__BRANCH)) {
+ 		report.total_cycles = true;
+-		if (!report.use_stdio) {
+-			pr_err("Error: -s total_cycles can be only used together with --stdio\n");
+-			goto error;
+-		}
+ 	}
+ 
+ 	if (strcmp(input_name, "-") != 0)
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 7a7187e069b4..e0f3b1d4a43b 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -26,6 +26,7 @@
+ #include "../../util/sort.h"
+ #include "../../util/top.h"
+ #include "../../util/thread.h"
++#include "../../util/block.h"
+ #include "../../arch/common.h"
+ #include "../../perf.h"
+ 
+@@ -1783,7 +1784,11 @@ static unsigned int hist_browser__refresh(struct ui_browser *browser)
+ 			continue;
  		}
+ 
+-		percent = hist_entry__get_percent_limit(h);
++		if (symbol_conf.report_individual_block)
++			percent = block_total_cycles_percent(h);
++		else
++			percent = hist_entry__get_percent_limit(h);
++
+ 		if (percent < hb->min_pcnt)
+ 			continue;
+ 
+@@ -3443,3 +3448,58 @@ int perf_evlist__tui_browse_hists(struct evlist *evlist, const char *help,
+ 					       warn_lost_event,
+ 					       annotation_opts);
+ }
++
++static int block_hists_browser__title(struct hist_browser *browser, char *bf,
++				      size_t size)
++{
++	struct hists *hists = evsel__hists(browser->block_evsel);
++	const char *evname = perf_evsel__name(browser->block_evsel);
++	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
++	int ret;
++
++	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
++	if (evname)
++		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
++
++	return 0;
++}
++
++int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
++			   float min_percent)
++{
++	struct hists *hists = &bh->block_hists;
++	struct hist_browser *browser;
++	int key = -1;
++	static const char help[] =
++	" q             Quit \n";
++
++	browser = hist_browser__new(hists);
++	if (!browser)
++		return -1;
++
++	browser->block_evsel = evsel;
++	browser->title = block_hists_browser__title;
++	browser->min_pcnt = min_percent;
++
++	/* reset abort key so that it can get Ctrl-C as a key */
++	SLang_reset_tty();
++	SLang_init_tty(0, 0, 0);
++
++	while (1) {
++		key = hist_browser__run(browser, "? - help", true);
++
++		switch (key) {
++		case 'q':
++			goto out;
++		case '?':
++			ui_browser__help_window(&browser->b, help);
++			break;
++		default:
++			break;
++		}
++	}
++
++out:
++	hist_browser__delete(browser);
++	return 0;
++}
+diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
+index 91d3e18b50aa..078f2f2c7abd 100644
+--- a/tools/perf/ui/browsers/hists.h
++++ b/tools/perf/ui/browsers/hists.h
+@@ -5,6 +5,7 @@
+ #include "ui/browser.h"
+ 
+ struct annotation_options;
++struct evsel;
+ 
+ struct hist_browser {
+ 	struct ui_browser   b;
+@@ -15,6 +16,7 @@ struct hist_browser {
+ 	struct pstack	    *pstack;
+ 	struct perf_env	    *env;
+ 	struct annotation_options *annotation_opts;
++	struct evsel	    *block_evsel;
+ 	int		     print_seq;
+ 	bool		     show_dso;
+ 	bool		     show_headers;
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 6a186b668303..4d87c7b4c1b2 100644
+index 4d87c7b4c1b2..f254fa349ad6 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -527,7 +527,8 @@ unsigned int hists__sort_list_width(struct hists *hists);
- unsigned int hists__overhead_width(struct hists *hists);
+@@ -449,6 +449,8 @@ enum rstype {
+ 	A_SOURCE
+ };
  
- void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
--			  struct perf_sample *sample, bool nonany_branch_mode);
-+			  struct perf_sample *sample, bool nonany_branch_mode,
-+			  u64 *total_cycles);
++struct block_hist;
++
+ #ifdef HAVE_SLANG_SUPPORT
+ #include "../ui/keysyms.h"
+ void attr_to_script(char *buf, struct perf_event_attr *attr);
+@@ -474,6 +476,9 @@ void run_script(char *cmd);
+ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 		      struct evsel *evsel, enum rstype rstype);
+ void res_sample_init(void);
++
++int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
++			   float min_percent);
+ #else
+ static inline
+ int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
+@@ -516,6 +521,13 @@ static inline int res_sample_browse(struct res_sample *res_samples __maybe_unuse
+ 	return 0;
+ }
  
- struct option;
- int parse_filter_percentage(const struct option *opt, const char *arg, int unset);
++static inline int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
++					 struct evsel *evsel __maybe_unused,
++					 float min_percent __maybe_unused)
++{
++	return 0;
++}
++
+ static inline void res_sample_init(void) {}
+ 
+ #define K_LEFT  -1000
 -- 
 2.17.1
 
