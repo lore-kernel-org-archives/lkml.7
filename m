@@ -2,167 +2,124 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAADECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE44DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3DF2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD452086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfJOFgb (ORCPT
+        id S1726562AbfJOFhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:36:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41903 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbfJOFbv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:31:51 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFQs-00005L-6N; Tue, 15 Oct 2019 07:31:42 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DF2961C0494;
-        Tue, 15 Oct 2019 07:31:38 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 05:31:38 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] libperf: Introduce perf_evlist__mmap_ops()
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191007125344.14268-15-jolsa@kernel.org>
-References: <20191007125344.14268-15-jolsa@kernel.org>
+        Tue, 15 Oct 2019 01:37:35 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46142 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfJOFhf (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:37:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 22:37:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,298,1566889200"; 
+   d="scan'208";a="189246117"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.81]) ([10.239.196.81])
+  by orsmga008.jf.intel.com with ESMTP; 14 Oct 2019 22:37:32 -0700
+Subject: Re: [PATCH v1 0/5] perf report: Support sorting all blocks by cycles
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191008070502.22551-1-yao.jin@linux.intel.com>
+ <20191014153213.GE9700@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <33a5e21c-1885-0b02-0c62-a25dddd7b65c@linux.intel.com>
+Date:   Tue, 15 Oct 2019 13:37:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Message-ID: <157111749880.12254.1536799430986791776.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191014153213.GE9700@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0b5ea10d4c312f5b17af9d09187efb9418517bec
-Gitweb:        https://git.kernel.org/tip/0b5ea10d4c312f5b17af9d09187efb9418517bec
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Mon, 07 Oct 2019 14:53:22 +02:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 10 Oct 2019 12:18:00 -03:00
 
-libperf: Introduce perf_evlist__mmap_ops()
+On 10/14/2019 11:32 PM, Jiri Olsa wrote:
+> On Tue, Oct 08, 2019 at 03:04:57PM +0800, Jin Yao wrote:
+>> It would be useful to support sorting for all blocks by the
+>> sampled cycles percent per block. This is useful to concentrate
+>> on the globally busiest/slowest blocks.
+>>
+>> This patch series implements a new sort option "total_cycles" which
+>> sorts all blocks by 'Sampled Cycles%'. The 'Sampled Cycles%' is
+>> block sampled cycles aggregation / total sampled cycles
+>>
+>> For example,
+>>
+>> perf record -b ./div
+>> perf report -s total_cycles --stdio
+>>
+>>   # To display the perf.data header info, please use --header/--header-only options.
+>>   #
+>>   #
+>>   # Total Lost Samples: 0
+>>   #
+>>   # Samples: 2M of event 'cycles'
+>>   # Event count (approx.): 2753248
+>>   #
+>>   # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
+>>   # ...............  ..............  ...........  ..........  .................................................................  ....................
+>>   #
+>>              26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
+>>              15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
+>>               5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
+>>               4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
+>>               4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
+>>               3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
+>>               3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
+>>               3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
+>>               2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
+>>               2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
+>>               2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
+>>               2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+>>               2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+>>               2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
+>>               1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
+>>               1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
+>>               1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+>>   ......
+>>
+>> This patch series supports both stdio and tui. And also with the supporting
+>> of --percent-limit.
+>>
+>> Jin Yao (5):
+>>    perf util: Create new block.h/block.c for block related functions
+>>    perf util: Count the total cycles of all samples
+>>    perf report: Sort by sampled cycles percent per block for stdio
+>>    perf report: Support --percent-limit for total_cycles
+>>    perf report: Sort by sampled cycles percent per block for tui
+> 
+> sry for delay, but I can no longer apply this
+> could you please rebase?
+> 
+> thanks,
+> jirka
+> 
 
-To be able to pass specific callbacks to evlist's mmap.
+Hi Jiri,
 
-There will be a specific call to this function from perf's
-evlist__mmap() and libperf's perf_evlist__mmap() functions in following
-changes.
+Thanks a lot for reviewing the patch. I just sent out the v2 which had 
+been rebased to perf/core branch.
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-15-jolsa@kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/lib/evlist.c                  | 24 +++++++++++++++++------
- tools/perf/lib/include/internal/evlist.h |  8 ++++++++-
- 2 files changed, 26 insertions(+), 6 deletions(-)
+Thanks
+Jin Yao
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 250ad57..88d63f5 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -472,12 +472,16 @@ out_unmap:
- 	return -1;
- }
- 
--int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
-+int perf_evlist__mmap_ops(struct perf_evlist *evlist,
-+			  struct perf_evlist_mmap_ops *ops,
-+			  struct perf_mmap_param *mp)
- {
- 	struct perf_evsel *evsel;
- 	const struct perf_cpu_map *cpus = evlist->cpus;
- 	const struct perf_thread_map *threads = evlist->threads;
--	struct perf_mmap_param mp;
-+
-+	if (!ops)
-+		return -EINVAL;
- 
- 	if (!evlist->mmap)
- 		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
-@@ -491,13 +495,21 @@ int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
- 			return -ENOMEM;
- 	}
- 
-+	if (perf_cpu_map__empty(cpus))
-+		return mmap_per_thread(evlist, mp);
-+
-+	return mmap_per_cpu(evlist, mp);
-+}
-+
-+int perf_evlist__mmap(struct perf_evlist *evlist, int pages)
-+{
-+	struct perf_mmap_param mp;
-+	struct perf_evlist_mmap_ops ops;
-+
- 	evlist->mmap_len = (pages + 1) * page_size;
- 	mp.mask = evlist->mmap_len - page_size - 1;
- 
--	if (perf_cpu_map__empty(cpus))
--		return mmap_per_thread(evlist, &mp);
--
--	return mmap_per_cpu(evlist, &mp);
-+	return perf_evlist__mmap_ops(evlist, &ops, &mp);
- }
- 
- void perf_evlist__munmap(struct perf_evlist *evlist)
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 4438a19..e5f092f 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -11,6 +11,7 @@
- 
- struct perf_cpu_map;
- struct perf_thread_map;
-+struct perf_mmap_param;
- 
- struct perf_evlist {
- 	struct list_head	 entries;
-@@ -26,10 +27,17 @@ struct perf_evlist {
- 	struct perf_mmap	*mmap_ovw;
- };
- 
-+struct perf_evlist_mmap_ops {
-+};
-+
- int perf_evlist__alloc_pollfd(struct perf_evlist *evlist);
- int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
- 			    void *ptr, short revent);
- 
-+int perf_evlist__mmap_ops(struct perf_evlist *evlist,
-+			  struct perf_evlist_mmap_ops *ops,
-+			  struct perf_mmap_param *mp);
-+
- /**
-  * __perf_evlist__for_each_entry - iterate thru all the evsels
-  * @list: list_head instance to iterate
