@@ -2,111 +2,152 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CE7ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6B8ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1429520659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E222075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390295AbfJOXma (ORCPT
+        id S2387459AbfJOXzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 19:42:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40278 "EHLO mx1.redhat.com"
+        Tue, 15 Oct 2019 19:55:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62992 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387903AbfJOXma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 19:42:30 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D9CF8757C2;
-        Tue, 15 Oct 2019 23:42:29 +0000 (UTC)
-Received: from mail (ovpn-124-232.rdu2.redhat.com [10.10.124.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA8C019C4F;
-        Tue, 15 Oct 2019 23:42:29 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 19:42:29 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-Message-ID: <20191015234229.GC6487@redhat.com>
-References: <20190928172323.14663-1-aarcange@redhat.com>
- <20190928172323.14663-13-aarcange@redhat.com>
- <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
- <20191015164952.GE331@redhat.com>
- <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
- <20191015203516.GF331@redhat.com>
- <f375049a-6a45-c0df-a377-66418c8eb7e8@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f375049a-6a45-c0df-a377-66418c8eb7e8@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 15 Oct 2019 23:42:29 +0000 (UTC)
+        id S1727439AbfJOXzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 19:55:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 16:55:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,301,1566889200"; 
+   d="scan'208";a="370629838"
+Received: from oux.sc.intel.com ([10.3.52.57])
+  by orsmga005.jf.intel.com with ESMTP; 15 Oct 2019 16:55:04 -0700
+From:   Yian Chen <yian.chen@intel.com>
+To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     Yian Chen <yian.chen@intel.com>
+Subject: [PATCH] iommu/vt-d: Check VT-d RMRR region in BIOS is reported as reserved
+Date:   Tue, 15 Oct 2019 09:49:32 -0700
+Message-Id: <20191015164932.18185-1-yian.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 12:22:31AM +0200, Paolo Bonzini wrote:
-> Oh come on.  0.9 is not 12-years old.  virtio 1.0 is 3.5 years old
-> (March 2016).  Anything older than 2017 is going to use 0.9.
+VT-d RMRR (Reserved Memory Region Reporting) regions are reserved
+for device use only and should not be part of allocable memory pool of OS.
 
-Sorry if I got the date wrong, but still I don't see the point in
-optimizing for legacy virtio. I can't justify forcing everyone to
-execute that additional branch for inb/outb, in the attempt to make
-legacy virtio faster that nobody should use in combination with
-bleeding edge KVM in the host.
+BIOS e820_table reports complete memory map to OS, including OS usable
+memory ranges and BIOS reserved memory ranges etc.
 
-> Your tables give:
-> 
-> 	Samples	  Samples%  Time%     Min Time  Max time       Avg time
-> HLT     101128    75.33%    99.66%    0.43us    901000.66us    310.88us
-> HLT     118474    19.11%    95.88%    0.33us    707693.05us    43.56us
-> 
-> If "avg time" means the average time to serve an HLT vmexit, I don't
-> understand how you can have an average time of 0.3ms (1/3000th of a
-> second) and 100000 samples per second.  Can you explain that to me?
+x86 BIOS may not be trusted to include RMRR regions as reserved type
+of memory in its e820 memory map, hence validate every RMRR entry
+with the e820 memory map to make sure the RMRR regions will not be
+used by OS for any other purposes.
 
-I described it wrong, the bpftrace record was a sleep 5, not a sleep
-1. The pipe loop was sure a sleep 1.
+ia64 EFI is working fine so implement RMRR validation as a dummy function
 
-I just wanted to show how even on things where you wouldn't even
-expected to get HLT like the bpftrace that is pure guest CPU load, you
-still get 100k of them (over 5 sec).
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Yian Chen <yian.chen@intel.com>
+---
+ arch/ia64/include/asm/iommu.h |  5 +++++
+ arch/x86/include/asm/iommu.h  | 18 ++++++++++++++++++
+ drivers/iommu/intel-iommu.c   |  8 +++++++-
+ 3 files changed, 30 insertions(+), 1 deletion(-)
 
-The issue is that in production you get a flood more of those with
-hundred of CPUs, so the exact number doesn't move the needle.
+diff --git a/arch/ia64/include/asm/iommu.h b/arch/ia64/include/asm/iommu.h
+index 7904f591a79b..eb0db20c9d4c 100644
+--- a/arch/ia64/include/asm/iommu.h
++++ b/arch/ia64/include/asm/iommu.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_IA64_IOMMU_H
+ #define _ASM_IA64_IOMMU_H 1
+ 
++#include <linux/acpi.h>
++
+ /* 10 seconds */
+ #define DMAR_OPERATION_TIMEOUT (((cycles_t) local_cpu_data->itc_freq)*10)
+ 
+@@ -9,6 +11,9 @@ extern void no_iommu_init(void);
+ #ifdef	CONFIG_INTEL_IOMMU
+ extern int force_iommu, no_iommu;
+ extern int iommu_detected;
++
++static inline int __init
++arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr) { return 0; }
+ #else
+ #define no_iommu		(1)
+ #define iommu_detected		(0)
+diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
+index b91623d521d9..95fa65a5f0dc 100644
+--- a/arch/x86/include/asm/iommu.h
++++ b/arch/x86/include/asm/iommu.h
+@@ -2,10 +2,28 @@
+ #ifndef _ASM_X86_IOMMU_H
+ #define _ASM_X86_IOMMU_H
+ 
++#include <linux/acpi.h>
++
++#include <asm/e820/api.h>
++
+ extern int force_iommu, no_iommu;
+ extern int iommu_detected;
+ 
+ /* 10 seconds */
+ #define DMAR_OPERATION_TIMEOUT ((cycles_t) tsc_khz*10*1000)
+ 
++static inline int __init
++arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
++{
++	u64 start = rmrr->base_address;
++	u64 end = rmrr->end_address + 1;
++
++	if (e820__mapped_all(start, end, E820_TYPE_RESERVED))
++		return 0;
++
++	pr_err(FW_BUG "No firmware reserved region can cover this RMRR [%#018Lx-%#018Lx], contact BIOS vendor for fixes\n",
++	       start, end - 1);
++	return -EFAULT;
++}
++
+ #endif /* _ASM_X86_IOMMU_H */
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 3f974919d3bd..722290014143 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4306,13 +4306,19 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+ {
+ 	struct acpi_dmar_reserved_memory *rmrr;
+ 	struct dmar_rmrr_unit *rmrru;
++	int ret;
++
++	rmrr = (struct acpi_dmar_reserved_memory *)header;
++	ret = arch_rmrr_sanity_check(rmrr);
++	if (ret)
++		return ret;
+ 
+ 	rmrru = kzalloc(sizeof(*rmrru), GFP_KERNEL);
+ 	if (!rmrru)
+ 		goto out;
+ 
+ 	rmrru->hdr = header;
+-	rmrr = (struct acpi_dmar_reserved_memory *)header;
++
+ 	rmrru->base_address = rmrr->base_address;
+ 	rmrru->end_address = rmrr->end_address;
+ 
+-- 
+2.17.1
 
-> Anyway, if the average time is indeed 310us and 43us, it is orders of
-> magnitude more than the time spent executing a retpoline.  That time
-> will be spent in an indirect branch miss (retpoline) instead of doing
-> while(!kvm_vcpu_check_block()), but it doesn't change anything.
-
-Doesn't cpuidle haltpoll disable that loop? Ideally there should be
-HLT vmexits then but I don't know how much fewer. This just needs to
-be frequent enough that the branch cost pay itself off, but the sure
-thing is that HLT vmexit will not go away unless you execute mwait in
-guest mode by isolating the CPU in the host.
-
-> Again: what is the real workload that does thousands of CPUIDs per second?
-
-None, but there are always background CPUID vmexits while there are
-never inb/outb vmexits.
-
-So the cpuid retpoline removal has a slight chance to pay for the cost
-of the branch, the inb/outb retpoline removal cannot pay off the cost
-of the branch.
-
-This is why I prefer cpuid as benchmark gadget for the short term
-unless inb/outb offers other benchmark related benefits.
-
-Thanks,
-Andrea
