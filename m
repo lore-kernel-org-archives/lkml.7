@@ -2,215 +2,118 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D64ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE2ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE6420872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571167241;
-	bh=3VW3nI+C8AV/pn0tLd1hom0tfVBcQeY8vKH6rm2SlyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LZNh7Mk0DNYBsKUDtBmp1ZPSs6m35DcElJkhrUwIRI/a1UuN+gfkFqTXuM3/ewcSz
-	 9iAiG0678z/GKJ8YhzlU4ONHfKodhuJCmIIeYJvXCpf97YRgjng7DPzxyaprQ9/7Gm
-	 Y4pS6Ht1nWIp3wg4lBXPsZgQpY1fAjgwM2PF7cis=
+	by mail.kernel.org (Postfix) with ESMTP id 8317A214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfJOTUj (ORCPT
+        id S1730893AbfJOTUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389382AbfJOTSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 15:20:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45647 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389374AbfJOTSl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 15:18:41 -0400
-Received: from earth.universe (eth-west-pareq2-46-193-2-41.wb.wifirst.net [46.193.2.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2499920854;
-        Tue, 15 Oct 2019 19:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571167120;
-        bh=3VW3nI+C8AV/pn0tLd1hom0tfVBcQeY8vKH6rm2SlyI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cnX5nhBNBOkPiickEeDv73BH7AJSwxU5DzeCYKhyqo7HLp58cTBbHcyuedxGTRfFF
-         zjCBGym+BMmC5jH49x3l6nmZBIFC/CrGynmKu2dwMe3Y9i7a5z74TeTWFqjlCEtje9
-         f/NIODiCutdaXX7nobHbAj9HeMAsy3cllhSk7WYY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 9C91E3C0CA1; Tue, 15 Oct 2019 21:18:37 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 21:18:37 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 4/6] dt-bindings: power: max77650: convert the binding
- document to yaml
-Message-ID: <20191015191837.jd6lbk3qbsmzuwfu@earth.universe>
-References: <20191015162300.22024-1-brgl@bgdev.pl>
- <20191015162300.22024-5-brgl@bgdev.pl>
+Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iKSL7-00067i-HB; Tue, 15 Oct 2019 21:18:37 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 15/34] parisc: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:18:02 +0200
+Message-Id: <20191015191821.11479-16-bigeasy@linutronix.de>
+In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qh5r3wj6smdvdc4t"
-Content-Disposition: inline
-In-Reply-To: <20191015162300.22024-5-brgl@bgdev.pl>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thomas Gleixner <tglx@linutronix.de>
 
---qh5r3wj6smdvdc4t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-Hi,
+Switch the entry code over to use CONFIG_PREEMPTION.
 
-On Tue, Oct 15, 2019 at 06:22:58PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->=20
-> Convert the binding document for MAX77650 charger module to YAML.
->=20
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bigeasy: +Kconfig]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/parisc/Kconfig        |  2 +-
+ arch/parisc/kernel/entry.S | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Looks sensible to me. Assuming this goes through Rob:
+diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+index b16237c95ea33..593e4014cef84 100644
+--- a/arch/parisc/Kconfig
++++ b/arch/parisc/Kconfig
+@@ -81,7 +81,7 @@ config STACK_GROWSUP
+ config GENERIC_LOCKBREAK
+ 	bool
+ 	default y
+-	depends on SMP && PREEMPT
++	depends on SMP && PREEMPTION
+=20
+ config ARCH_HAS_ILOG2_U32
+ 	bool
+diff --git a/arch/parisc/kernel/entry.S b/arch/parisc/kernel/entry.S
+index 1d1d748c227f0..de212948de74e 100644
+--- a/arch/parisc/kernel/entry.S
++++ b/arch/parisc/kernel/entry.S
+@@ -940,14 +940,14 @@ ENTRY(intr_return)
+ 	rfi
+ 	nop
+=20
+-#ifndef CONFIG_PREEMPT
++#ifndef CONFIG_PREEMPTION
+ # define intr_do_preempt	intr_restore
+-#endif /* !CONFIG_PREEMPT */
++#endif /* !CONFIG_PREEMPTION */
+=20
+ 	.import schedule,code
+ intr_do_resched:
+ 	/* Only call schedule on return to userspace. If we're returning
+-	 * to kernel space, we may schedule if CONFIG_PREEMPT, otherwise
++	 * to kernel space, we may schedule if CONFIG_PREEMPTION, otherwise
+ 	 * we jump back to intr_restore.
+ 	 */
+ 	LDREG	PT_IASQ0(%r16), %r20
+@@ -979,7 +979,7 @@ ENTRY(intr_return)
+ 	 * and preempt_count is 0. otherwise, we continue on
+ 	 * our merry way back to the current running task.
+ 	 */
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	.import preempt_schedule_irq,code
+ intr_do_preempt:
+ 	rsm	PSW_SM_I, %r0		/* disable interrupts */
+@@ -999,7 +999,7 @@ ENTRY(intr_return)
+ 	nop
+=20
+ 	b,n	intr_restore		/* ssm PSW_SM_I done by intr_restore */
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+=20
+ 	/*
+ 	 * External interrupts.
+--=20
+2.23.0
 
-Acked-by: Sebastian Reichel <sre@kernel.org>
-
--- Sebastian
-
->  .../power/supply/max77650-charger.txt         | 29 +------------
->  .../power/supply/max77650-charger.yaml        | 42 +++++++++++++++++++
->  2 files changed, 43 insertions(+), 28 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max776=
-50-charger.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
-ger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
-xt
-> index e6d0fb6ff94e..fbab7d3ac8e3 100644
-> --- a/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.txt
-> @@ -1,28 +1 @@
-> -Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> -
-> -This module is part of the MAX77650 MFD device. For more details
-> -see Documentation/devicetree/bindings/mfd/max77650.txt.
-> -
-> -The charger is represented as a sub-node of the PMIC node on the device =
-tree.
-> -
-> -Required properties:
-> ---------------------
-> -- compatible:		Must be "maxim,max77650-charger"
-> -
-> -Optional properties:
-> ---------------------
-> -- input-voltage-min-microvolt:	Minimum CHGIN regulation voltage. Must be=
- one
-> -				of: 4000000, 4100000, 4200000, 4300000,
-> -				4400000, 4500000, 4600000, 4700000.
-> -- input-current-limit-microamp:	CHGIN input current limit (in microamps)=
-=2E Must
-> -				be one of: 95000, 190000, 285000, 380000,
-> -				475000.
-> -
-> -Example:
-> ---------
-> -
-> -	charger {
-> -		compatible =3D "maxim,max77650-charger";
-> -		input-voltage-min-microvolt =3D <4200000>;
-> -		input-current-limit-microamp =3D <285000>;
-> -	};
-> +This file was moved to max77650-charger.yaml.
-> diff --git a/Documentation/devicetree/bindings/power/supply/max77650-char=
-ger.yaml b/Documentation/devicetree/bindings/power/supply/max77650-charger.=
-yaml
-> new file mode 100644
-> index 000000000000..9dd0dad0f948
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/supply/max77650-charger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +description: |
-> +  This module is part of the MAX77650 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/max77650.txt.
-> +
-> +  The charger is represented as a sub-node of the PMIC node on the devic=
-e tree.
-> +
-> +properties:
-> +  compatible:
-> +    const: maxim,max77650-charger
-> +
-> +  input-voltage-min-microvolt:
-> +    description:
-> +      Minimum CHGIN regulation voltage.
-> +    enum: [ 4000000, 4100000, 4200000, 4300000,
-> +            4400000, 4500000, 4600000, 4700000 ]
-> +
-> +  input-current-limit-microamp:
-> +    description:
-> +      CHGIN input current limit (in microamps).
-> +    enum: [ 95000, 190000, 285000, 380000, 475000 ]
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    charger {
-> +        compatible =3D "maxim,max77650-charger";
-> +        input-voltage-min-microvolt =3D <4200000>;
-> +        input-current-limit-microamp =3D <285000>;
-> +    };
-> --=20
-> 2.23.0
->=20
-
---qh5r3wj6smdvdc4t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2mG4QACgkQ2O7X88g7
-+pr7Tg/+IMEVM9QSOBaEnCwYZYyzGFLriJJdzib9Cy6UMd80ujaTVa/BRf95ctlx
-SWLlkmQd8I6BsF9CxMulgyhatN0GA+/C0Q2Dr8eSvvWtDtQu5DY6W0LjKQzXr/W5
-UVM1OzqO9FDQsF7x0jaLfgTt+0AOdtiDBz+kKO2SnAytJkqjtlxj4vLAI9Gl9u6z
-dlaTeMxs7eO0qir3L47jLBbtsnoXuKq5QmWn2SI+j/D//tmlVPqodLbNPKqKpcV0
-hNgmRdBCMSYTXFGEV9d6jgkZ17QaXU8dGumr2w8DIeLDKj3blCU7gEIw1wiIdnkG
-c1SX+Kzw+Q8ejaD4tn0vxYrHl0G+H6x/vR948BZvlgH6eO/5iMaf8dRyp7BsqItV
-xE8Ii9ZepDr5Ny0a7UjKXXelujrAHdnaEWnV4AXGiPcatePsdYElz0PI4e99JLLa
-TWrtDsvmlFRDlMmcmGd+JJ5waj/RSaHg8fA+A4BDUBGkzQQFIrg6pFouvj81N/4v
-8mcFQ+S1X0kqQSXQnsvWlIl5XGO+0oThjlBOKoy2Sla+q5G37DvIqUE3FOJAOiUk
-Vk1RRM6PkM1dObjiYHaAzVK+qZBkWsIYLSa5FcS93efcTKHumN0HueGYTb/8zG0J
-2PiUCu20PdEbRYgrsRMaa/b2YusDP+ZPssYgqKJR7aN5fH0lpnU=
-=m1Mo
------END PGP SIGNATURE-----
-
---qh5r3wj6smdvdc4t--
