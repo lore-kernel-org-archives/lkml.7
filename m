@@ -2,115 +2,94 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CED9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C1AECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FDE2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571154572;
-	bh=qrkECs8EPOblTLNK5YQpv+7hHZe2oC7EUaC0B/evstE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kQ86S4ro8OzqayMWWaDFourqc/tdNY/f6vt/VEhrR32qQ68fORPSgsB4/Wg/vMtmj
-	 J2NsQmrg0ou0qiphCfL8ITS3e242jaZdGajlTy/Q4WTYEtOmUMcqOYyj7tgwNfkO27
-	 8lb65cRmN/1Q+Q5JRLni0xE+22Xed4fxsd1mhbgE=
+	by mail.kernel.org (Postfix) with ESMTP id 27A5F20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbfJOPtb (ORCPT
+        id S2387603AbfJOPth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:49:31 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44074 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfJOPtb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:49:31 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u40so31191323qth.11;
-        Tue, 15 Oct 2019 08:49:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QgGOoaivsP13ncdYe+e0HS3grjl2RNNvS3rS/NxMpw0=;
-        b=Ear/Z+JsGwsEIGGeff61RqmTg4O6EfLoNJ+bVEF/iQ5hM6jdTu0vOsWAGVRzT0NKAr
-         WPRhPN9SrLctcHatVTS/FODk2frtFD4T/CxzoKmoKKrcKz/gmWeXXCncOAE7OLDng3U2
-         mKZXI+Ni5WJe0C3X5mACM0pOT52RD2I5/OyQebO9eGmBMtlETJdUWaESOj53Ks/bDEeT
-         AamRL6LFz5CXTFZ9HiWUQ5sf9Fe8os5ALKa9Vaih78YYsYLKs5Ort/N1+hdwCjeHd+lV
-         8wfpQ9Xvv3dcMofDzzPW++6jH3V8+WXQpWHWGaCDfb7sM6iq0im2BMWj+7w9B8n23mQg
-         juNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=QgGOoaivsP13ncdYe+e0HS3grjl2RNNvS3rS/NxMpw0=;
-        b=aCMc7YncsEJ+RWMfSiXVf+D6BDLul9mgjxZVdTopNNDm3ZZgMHuhGYg5MPM+AATaeK
-         +z5hh/WEWwt9tuumsdwyfy2YDVYzcKdSB5T/BU93DWfUSxgpCtXfeXZSrr31cTvXV66t
-         nciT3N5LtW2n0+vTZH1yplxvj6SsBP/TA3tvjZb6lKFP21hEBDhXUFa8evCE5A96RkRZ
-         FXkjp0ti01ZuRwe7n0yhNM/5/aEJsDYWJ3qsQE+RDHQPl1zxaXTwbw+HI6FdDJ6dp2N6
-         HuKd4W0asxQA4e3LQF8EYq0FpdspLEXKz5XtwJ6brHPyucYjVfagUo9SdzJbmhF3+luj
-         mRWg==
-X-Gm-Message-State: APjAAAVZepGoVBqwuw7ONgwoV+r/H/3nO+le9JPyfyCAfDIvmJnWiZgw
-        /Cp3VVFagULrFd0KundmFkATiw17
-X-Google-Smtp-Source: APXvYqwWTeZP1bEs8h+XrAjzqFvI0NMU9xGpqXyfsO/EDcRL1UYT9y9GjWoMf2PvwgSaUtrpWjKj2Q==
-X-Received: by 2002:a0c:c58c:: with SMTP id a12mr37796402qvj.235.1571154569698;
-        Tue, 15 Oct 2019 08:49:29 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:2a53])
-        by smtp.gmail.com with ESMTPSA id v85sm8137484qkb.25.2019.10.15.08.49.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 08:49:29 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 08:49:27 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH block/for-linus] blk-rq-qos: fix first node deletion of
- rq_qos_del()
-Message-ID: <20191015154927.GL18794@devbig004.ftw2.facebook.com>
+        Tue, 15 Oct 2019 11:49:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57002 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733265AbfJOPtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:49:36 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0D81B10CC209;
+        Tue, 15 Oct 2019 15:49:36 +0000 (UTC)
+Received: from [10.36.116.245] (ovpn-116-245.ams2.redhat.com [10.36.116.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3A9B60127;
+        Tue, 15 Oct 2019 15:49:31 +0000 (UTC)
+Subject: Re: [PATCH] vfio/type1: Initialize resv_msi_base
+To:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+References: <20191015151650.30788-1-joro@8bytes.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7d4ae060-a6aa-074f-2184-d220fbbd4014@redhat.com>
+Date:   Tue, 15 Oct 2019 17:49:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191015151650.30788-1-joro@8bytes.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 15 Oct 2019 15:49:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rq_qos_del() incorrectly assigns the node being deleted to the head if
-it was the first on the list in the !prev path.  Fix it by iterating
-with ** instead.
+Hi Joerg,
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Cc: stable@vger.kernel.org # v4.19+
----
- block/blk-rq-qos.h |   13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+On 10/15/19 5:16 PM, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> After enabling CONFIG_IOMMU_DMA on X86 a new warning appears when
+> compiling vfio:
+> 
+> drivers/vfio/vfio_iommu_type1.c: In function ‘vfio_iommu_type1_attach_group’:
+> drivers/vfio/vfio_iommu_type1.c:1827:7: warning: ‘resv_msi_base’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>    ret = iommu_get_msi_cookie(domain->domain, resv_msi_base);
+>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> The warning is a false positive, because the call to iommu_get_msi_cookie()
+> only happens when vfio_iommu_has_sw_msi() returned true. And that only
+> happens when it also set resv_msi_base.
+> 
+> But initialize the variable anyway to get rid of the warning.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 96fddc1dafc3..d864277ea16f 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -1658,7 +1658,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	struct bus_type *bus = NULL;
+>  	int ret;
+>  	bool resv_msi, msi_remap;
+> -	phys_addr_t resv_msi_base;
+> +	phys_addr_t resv_msi_base = 0;
+>  	struct iommu_domain_geometry geo;
+>  	LIST_HEAD(iova_copy);
+>  	LIST_HEAD(group_resv_regions);
+> 
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -108,16 +108,13 @@ static inline void rq_qos_add(struct req
- 
- static inline void rq_qos_del(struct request_queue *q, struct rq_qos *rqos)
- {
--	struct rq_qos *cur, *prev = NULL;
--	for (cur = q->rq_qos; cur; cur = cur->next) {
--		if (cur == rqos) {
--			if (prev)
--				prev->next = rqos->next;
--			else
--				q->rq_qos = cur;
-+	struct rq_qos **cur;
-+
-+	for (cur = &q->rq_qos; *cur; cur = &(*cur)->next) {
-+		if (*cur == rqos) {
-+			*cur = rqos->next;
- 			break;
- 		}
--		prev = cur;
- 	}
- 
- 	blk_mq_debugfs_unregister_rqos(rqos);
+Thanks
+
+Eric
