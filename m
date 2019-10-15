@@ -2,160 +2,90 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B373CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 00:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6C2ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 00:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A38621835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 00:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqn2J+vs"
+	by mail.kernel.org (Postfix) with ESMTP id 7542C21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 00:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571100587;
+	bh=CgE11hawVJ9EsRwk+NsDx1KZAHE6/9MksHlbAGE28k8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yd48AwQWyCJfrE/DWo/ODDmOzyEzkNk1pBHMwI0Tww/keazgxSbaPEJqpIsnUIkwl
+	 tETXm9kDAWmk2BXC/oeH+2brAdJ85Sh5Bv5/tEtqnye48rgwRpEjcQv3SJzDjtKBS0
+	 on8tBkAJU3rBw6eBXZdJzotYmhnNf7c7NCeoLlL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfJOAtm (ORCPT
+        id S1727239AbfJOAtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 14 Oct 2019 20:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbfJOAtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 14 Oct 2019 20:49:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35104 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfJOAtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 20:49:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 205so11335967pfw.2;
-        Mon, 14 Oct 2019 17:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JXMngsyZurHd5XVLb+wxD7GSYr5w0E7EB4PGGw+FTU4=;
-        b=pqn2J+vsqlRUrE6M6v4sNot0wugbfaj42I9stgWuzkYKqtjVwhF5GwzkQepJhUober
-         lnivh3HBb4rky9B+SJ2C5m1kO8IL0jXDfpi103ZNXekUkrkyGPL4yrRpkWkacDEV0tLB
-         zSMIdVzuyKgzUJ1dkJexHTAfvMIkZUTIvxSk/bKfMIIIGh/v1vvO8SXSy+zABlUNj7dr
-         KkWGeV92ibqFQTWK4L1SSPzUMa2cQuIPVJWlLgVqWK1x1+/ZHA3+gysgurJp1lZJC7CU
-         lGTgL2NwWUsOK6leUl6/IoAaOfJPMMFgGkTJAnWi8T1nrtlp7bSueU8mc5c740m7z73d
-         9DuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JXMngsyZurHd5XVLb+wxD7GSYr5w0E7EB4PGGw+FTU4=;
-        b=U1Zz0yUUlTCPcDivy0qXHu3CXWyyZ6GcbYs95GeUqdfbkrb9XF2oIfECXbnGSvHmec
-         YZXiHf9a9Kzl4enIEwnpN8xBFVNhmjjN8rt1P5efiePxN8kcRBnAtzoXvcqSgiKf/BFN
-         SHOBGPEzwFvBkpEl9jPJgIgf+vUHliGqTKpYseq1kdhUD7fP4C6R9Rt9gFYXprmvXx/r
-         Swfe5rsZDIe92tfrKXTNkfho8qPm6jWkhntEYeEdRzxP+C7q8o+0XIUAox5qAF1hJ4Ek
-         gQRUybsFdbQyG5+pSvxoe8mIBMk2lMAYsebm3Z1OH5rJ8SdopZB4oHOGPh0NOnOTO6d4
-         klqg==
-X-Gm-Message-State: APjAAAVw2aUWC/UmPWYwHg1bQ9lBRm7805uGQKepDvv6WMIBfEBYA+pV
-        caLGRDPkzkSBGNzCB3qyqpBWSJdD
-X-Google-Smtp-Source: APXvYqx+oVyXcfjA5j+HRs2N1Js3UY8BFXlubnGaHmD0RnBXxNJJt8KcaVNZllT0FTjjby4g7r05Xw==
-X-Received: by 2002:a17:90a:eac4:: with SMTP id ev4mr39502736pjb.97.1571100580455;
-        Mon, 14 Oct 2019 17:49:40 -0700 (PDT)
-Received: from [10.67.51.137] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id v9sm17960956pfe.1.2019.10.14.17.49.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 17:49:39 -0700 (PDT)
-Subject: Re: [PATCH net] net: bcmgenet: Set phydev->dev_flags only for
- internal PHYs
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     phil@raspberrypi.org, jonathan@raspberrypi.org,
-        matthias.bgg@kernel.org, linux-rpi-kernel@lists.infradead.org,
-        wahrenst@gmx.net, nsaenzjulienne@suse.de,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:BROADCOM GENET ETHERNET DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191011195349.9661-1-f.fainelli@gmail.com>
- <c3e47479-1f13-f35c-5153-a9974723ac5a@gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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 YVs=
-Message-ID: <6c8757a1-4618-36ef-7967-5251e98da5ea@gmail.com>
-Date:   Mon, 14 Oct 2019 17:49:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD572089C;
+        Tue, 15 Oct 2019 00:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571100581;
+        bh=CgE11hawVJ9EsRwk+NsDx1KZAHE6/9MksHlbAGE28k8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tsYGr7MgAutV7j+jrOeyibptBcDd1dF/Y656vQVg0tVCcG0ebxJZn9flLkyt2T7zS
+         nT4VUAky3qihI4XTR/iN1Zauma1Bq85/KOQ4WSkwqD1FZJa5r5I6UwqV2E9dQjdbmV
+         XG9iml9waMLUfmDaQCUb/3g5j36LxT4pMaC15U5Y=
+Date:   Tue, 15 Oct 2019 01:49:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/mm: Poison initmem while freeing with
+ free_reserved_area()
+Message-ID: <20191015004937.3khj7obh3la5qwdu@willie-the-truck>
+References: <1570163038-32067-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <c3e47479-1f13-f35c-5153-a9974723ac5a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570163038-32067-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/11/19 12:57 PM, Florian Fainelli wrote:
-> On 10/11/19 12:53 PM, Florian Fainelli wrote:
->> phydev->dev_flags is entirely dependent on the PHY device driver which
->> is going to be used, setting the internal GENET PHY revision in those
->> bits only makes sense when drivers/net/phy/bcm7xxx.c is the PHY driver
->> being used.
->>
->> Fixes: 487320c54143 ("net: bcmgenet: communicate integrated PHY revision to PHY driver")
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Fri, Oct 04, 2019 at 09:53:58AM +0530, Anshuman Khandual wrote:
+> Platform implementation for free_initmem() should poison the memory while
+> freeing it up. Hence pass across POISON_FREE_INITMEM while calling into
+> free_reserved_area(). The same is being followed in the generic fallback
+> for free_initmem() and some other platforms overriding it.
 > 
-> FWIW, I am preparing net-next material which allows the phy_flags to be
-> scoped towards a specific PHY driver, and not broadly applied, but until
-> this happens, we should probably go with this change.
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/mm/init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->> ---
->>  drivers/net/ethernet/broadcom/genet/bcmmii.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
->> index 970e478a9017..94d1dd5d56bf 100644
->> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
->> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
->> @@ -273,11 +273,12 @@ int bcmgenet_mii_probe(struct net_device *dev)
->>  	struct bcmgenet_priv *priv = netdev_priv(dev);
->>  	struct device_node *dn = priv->pdev->dev.of_node;
->>  	struct phy_device *phydev;
->> -	u32 phy_flags;
->> +	u32 phy_flags = 0;
->>  	int ret;
->>  
->>  	/* Communicate the integrated PHY revision */
->> -	phy_flags = priv->gphy_rev;
->> +	if (priv->internal_phy)
->> +		phy_flags = priv->gphy_rev;
->>  
->>  	/* Initialize link state variables that bcmgenet_mii_setup() uses */
->>  	priv->old_link = -1;
->>
-> 
-> 
-Acked-by: Doug Berger <opendmb@gmail.com>
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 45c00a54909c..ea7d38011e83 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -571,7 +571,7 @@ void free_initmem(void)
+>  {
+>  	free_reserved_area(lm_alias(__init_begin),
+>  			   lm_alias(__init_end),
+> -			   0, "unused kernel");
+> +			   POISON_FREE_INITMEM, "unused kernel");
+
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
