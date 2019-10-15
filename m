@@ -2,125 +2,130 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A2DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CC5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B293D20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E2920854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKdKio74"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+tPP0GB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389283AbfJOTI7 (ORCPT
+        id S2389293AbfJOTJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:08:59 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:46596 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfJOTI7 (ORCPT
+        Tue, 15 Oct 2019 15:09:43 -0400
+Received: from mail-oi1-f181.google.com ([209.85.167.181]:37074 "EHLO
+        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfJOTJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:08:59 -0400
-Received: by mail-yw1-f67.google.com with SMTP id l64so7622826ywe.13;
-        Tue, 15 Oct 2019 12:08:58 -0700 (PDT)
+        Tue, 15 Oct 2019 15:09:42 -0400
+Received: by mail-oi1-f181.google.com with SMTP id i16so17838188oie.4
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 12:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=vwcalfo0nj8jqf6x0P9ha0tnIv3sLojEIn4D2EyQfQA=;
-        b=PKdKio749L09WSgW3MVYy+qidUxNVF63exMQyMYgFaPmXoymBwDF2QKwjg3mt5G1Eb
-         pLVHKbQ9L4+0rKrw9ootuTTr3bhwwWgG0vS2PnDA1cUYEUqtMY7gHLNyCT+XCyfwwjpB
-         zzi66QIz44iVXLqQAAuOKSWkZbXJWzLxyJD7FUrM62REFQJnDaWDaReE4OXP9KwZnp/7
-         kCJrCfkobRAv+gcJv48BTrcN6oRShMEu+aVDg1Zqhq99Ypb41twtmUpYJo2Ae82XIxEp
-         kCf5HdOgjy5MjRX1rr+NM9JQ4KbldMuPUE3ugZ1hq3Ai1KhpXBh1RaZW6GCkweQaikFr
-         2MAg==
+        h=sender:to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=Q5Zo1uyhPYG6G7rTKh8WceKdBKvJFHm7/Pwp+7AiANI=;
+        b=I+tPP0GB9zILSUMWX/jeokY6vwDDPJ+6es6VMtDRhI5pphLjsrv3wAwLXlTiksjTgs
+         HEMP6YSgWy4kuFlwWEleLbcOY8wk1xTMiOoRTiDLE7lOenpkccNJDfKEkluP+ExDLR8o
+         O9vFybaV9QyDoezyy9enb+l+72HpEMJZ9QOp34lwbHfq+8m0vifE1Um9U6TrcdIkz4tb
+         CLmw0W1S48OjRezqoiSbdid5zeJzOTk9ncc92Y6Hlx74NFm3j1A3FNmCabCm1PjGVxCr
+         7h5DsK531Jy40yqyf6oMP0/5uq0ikn3yO+UbhOY5SHm7VMFkAf5/pmrugY46h+AsxxmM
+         NcOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=vwcalfo0nj8jqf6x0P9ha0tnIv3sLojEIn4D2EyQfQA=;
-        b=SJSGuZeXCzP2QD/FPKFhft91xKHE8cB+wcLt3NL0BkH9HlW0WEdsisp7OO56LZF4WD
-         W5Oz9GcJ5jmmx77K6SnkQN2cCHuKSP2HKxs37pepHoqSxBNEaaS8QYD7tTdMrX9+pGLl
-         Ke07wgZNW/nhq9ZCWuxo/+HmcC9POvceacptcwaRFgrq0JMPFvqNF0+gHU9j7eJFJtCk
-         eLchlNS0Ou3A9/W6RVg18GdJZo401/TPzP7GFgO4gswDHWZB+/v9vO/1dYIyIGkQwppO
-         2SJ2LyyZGddLGrlXEtSfPe3UAxBeVMgh9eB7rWeTLmsM3e/VVJlPzRHKo5zGP+1E0sjK
-         YG6A==
-X-Gm-Message-State: APjAAAXRoyPgIlQxbEQNi+gj3LAu2S3i5a6k15ERHWh0bJtwIFIgqcBu
-        RlutBEDb7Sy66c95Y3AZvg==
-X-Google-Smtp-Source: APXvYqyBFRC7bbBOnpMBP0iijziJzkCnwBfMmkTyrvGtTOZ5MxkMdLyJozDW4iaZpvwCIKnY68puQg==
-X-Received: by 2002:a81:2396:: with SMTP id j144mr17565583ywj.219.1571166538119;
-        Tue, 15 Oct 2019 12:08:58 -0700 (PDT)
-Received: from 960 ([12.156.111.130])
-        by smtp.gmail.com with ESMTPSA id 137sm5466855ywp.64.2019.10.15.12.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 12:08:57 -0700 (PDT)
-Message-ID: <336c7fa6eebdbada759c9ad30a0a6b85af6f6c58.camel@gmail.com>
-Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix misuse of strcmp()
- function
-From:   ayman.bagabas@gmail.com
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 15 Oct 2019 15:08:57 -0400
-In-Reply-To: <20191015182549.GA13772@embeddedor>
-References: <20191015182549.GA13772@embeddedor>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        h=x-gm-message-state:sender:to:from:subject:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=Q5Zo1uyhPYG6G7rTKh8WceKdBKvJFHm7/Pwp+7AiANI=;
+        b=RlOhCQ3pDo97wIAiz4zjlQvl/ZQwpa8XN2PFBWl10QOS1sTjdBSM9cpVzoUBXOW7MR
+         bDeKGV1RMnfmcCPc/AsjBWQQMqIYwSVbQAkkEad7RtQj3PW0DhorNkfk1wCLsyeznz3w
+         dlVYTGIm2OV5L65k0i1GNWO28QvDZhWZVNtPWk/LAO4ZiuC5ynV8vL2vpk08kbc+hlc+
+         EhuPnESBbFMY/JhLN01l77D7IMsxLM19Ua+ncB0HvQ0LHRsMl03xyNc1h0jfBYnrVdLy
+         4qkR12BcA+9hvi3OSahjwYq929IY5wwrSYRiAPQKqJFM5qrteIq4gIvhFUcujZgY7nrN
+         lD0w==
+X-Gm-Message-State: APjAAAUmd3JroPdToSWznK2VOAGuiVrYYa6BGwkj1D2XMGCkh3Fi+Z6K
+        DLFVI7BBT7nYODB6uOMU3XA0CbRa
+X-Google-Smtp-Source: APXvYqxO9S3taEX88YfP36u6CEHGycPRZ/vEL74uqHiGivER7tejdwItjLofbToXAyrqHnlqLIuXYA==
+X-Received: by 2002:aca:620a:: with SMTP id w10mr121743oib.0.1571166581359;
+        Tue, 15 Oct 2019 12:09:41 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id s66sm6937597otb.65.2019.10.15.12.09.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 12:09:40 -0700 (PDT)
+To:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Build failures since 5.4-rc3
+Message-ID: <2da85bba-ab2a-b993-be1a-c98222819b37@lwfinger.net>
+Date:   Tue, 15 Oct 2019 14:09:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+Joe,
 
-On Tue, 2019-10-15 at 13:25 -0500, Gustavo A. R. Silva wrote:
-> Comparing the result of strcmp directly with 1 may cause it to be
-> misinterpreted. Note that strcmp may return an integer besides -1,
-> 0, or 1.
-> 
-> Fix this by returning -ENODEV only when strcmp() returns a value
-> other than 0.
-> 
-> Addresses-Coverity-ID: 1487035 ("Misuse of memcmp-style function")
-> Fixes: b7527d0f4502 ("platform/x86: huawei-wmi: Add battery charging
-> thresholds")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/platform/x86/huawei-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/huawei-wmi.c
-> b/drivers/platform/x86/huawei-wmi.c
-> index 6720f78c60c2..b43f76acbfea 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -470,7 +470,7 @@ static DEVICE_ATTR_RW(charge_control_thresholds);
->  static int huawei_wmi_battery_add(struct power_supply *battery)
->  {
->  	/* Huawei laptops come with one battery only */
-> -	if (strcmp(battery->desc->name, "BAT") != 1)
+Since commit 294f69e662d1("compiler_attributes.h: Add 'fallthrough' pseudo 
+keyword for switch/case use"), builds of VirtualBox are failing with the 
+following errors:
 
-Note we don't have a battery number in BATx, strcmp would return 1 if
-battery->desc->name is "BAT0" or any one digit. This is a desired
-behavior where some Huawei laptops identify the first battery as "BAT1"
-and this would match if name is greater than "BAT" by one digit.
+  1954s] In file included from 
+/usr/src/linux-5.4.0-rc3-1.g2309d7d/include/linux/compiler_types.h:59,
+[ 1954s]                  from <command-line>:
+[ 1954s] 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/SUPDrvGip.c: 
+In function 'supdrvTscDeltaThread':
+[ 1954s] 
+/usr/src/linux-5.4.0-rc3-1.g2309d7d/include/linux/compiler_attributes.h:200:41: 
+error: expected ')' before '__attribute__'
+[ 1954s]   200 | # define fallthrough 
+__attribute__((__fallthrough__))
+[ 1954s]       |                                         ^~~~~~~~~~~~~
+[ 1954s] 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/include/iprt/cdefs.h:1169:44: 
+note: in expansion of macro 'fallthrough'
+[ 1954s]  1169 | # define FALL_THROUGH      __attribute__ ((fallthrough))
+[ 1954s]       |                                            ^~~~~~~~~~~
+[ 1954s] 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/include/iprt/cdefs.h:1176:33: 
+note: in expansion of macro 'FALL_THROUGH'
+[ 1954s]  1176 | #define RT_FALL_THRU()          FALL_THROUGH
+[ 1954s]       |                                 ^~~~~~~~~~~~
+[ 1954s] 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/SUPDrvGip.c:4192:17: 
+note: in expansion of macro 'RT_FALL_THRU'
+[ 1954s]  4192 |                 RT_FALL_THRU();
+[ 1954s]       |                 ^~~~~~~~~~~~
+[ 1954s] In file included from 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/include/VBox/cdefs.h:32,
+[ 1954s]                  from 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/SUPDrvInternal.h:37,
+[ 1954s]                  from 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/SUPDrvGip.c:33:
+[ 1954s] 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/include/iprt/cdefs.h:1169:56: 
+error: expected identifier or '(' before ')' token
+[ 1954s]  1169 | # define FALL_THROUGH      __attribute__ ((fallthrough))
+[ 1954s]       |                                                        ^
+[ 1954s] 
+/home/abuild/rpmbuild/BUILD/VirtualBox-6.0.12/modules_build_dir/default/vboxdrv/include/iprt/cdefs.h:1176:33: 
+note: in expansion of macro 'FALL_THROUGH'
+[ 1954s]  1176 | #define RT_FALL_THRU()          FALL_THROUGH
+[ 1954s]       |                                 ^~~~~~~~~~~~
 
-Maybe strcmp(battery->desc->name, "BAT") < 0 is a better way to go.
+I think the internal macros in the Oracle code are correct - at least they 
+worked before the patch in question was applied.
 
-> +	if (strcmp(battery->desc->name, "BAT"))
->  		return -ENODEV;
+I would appreciate any suggestions.
 
-Now this would always return ENODEV.
+Thanks,
 
-Thank you,
-Ayman
-
->  
->  	device_create_file(&battery->dev,
-> &dev_attr_charge_control_start_threshold);
-
+Larry
