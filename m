@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4C3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D34ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A014D205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7040B2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kmL1KDpZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i7LzTF5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387630AbfJOPoM (ORCPT
+        id S2387682AbfJOPoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:44:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48040 "EHLO
+        Tue, 15 Oct 2019 11:44:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48102 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387596AbfJOPoJ (ORCPT
+        with ESMTP id S2387650AbfJOPoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:44:09 -0400
+        Tue, 15 Oct 2019 11:44:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/ErmilEEyXjJU23fxf3b2Cyj7hddJxYMkisxys+3qlE=; b=kmL1KDpZ6tqEEiaEs67UdlP0Ww
-        oxJH/inokbNCFcbr8XKDo3JpOgjotWhXKSzUKyke4U82Q9MzMbEsDqeplZHnpYmb99uveho6V2Acq
-        oXl0Vj/lzztPEEA8rts+/YK+bwF1FI1wgA6rXS8ijO5QglzXHRh3I5pUY52xxHSNswBCM89jU+rJu
-        qjpVKj77oOeUURGdENvQZ5+6DzqPGixwjs8PHlSDeX/ZUimVqs5fuY7ZdIrxUqN8W8VhHtwxfK3AT
-        Zjzhs0UNfnDkh3893OO0AcO+xjiRODISZ68ERS+6Oszkg3i++D97N1ZI9DhXJZA/qNuwpLvRd5d/S
-        3+ymUihg==;
+        bh=uEE4/TEUZf6DkBsTypfKTjZtEgJhC5jmAtfD4LRAFQE=; b=i7LzTF5Kz/txPrI7aLwDqypdeu
+        H7tEZDQmhJYI/x833Sr6io5JHl2oPB9VrUDysgkLcFwjyW4DXbQRup6oleOIwrn3fWUoKzqgp5i/5
+        U5vrlK8b/zcWR0ydEP2hQO7lQzr3St9aYXaA9TWIaGJZbMTy3mHKqdMpNyc321P7up+2nKq+zUiPz
+        N/bbsXIW6ZEyCubgKNT9TbPtPnQ6I19s7n80MQYsNE+uznysHXVi5H1TugZTfXM+kiDe2s0ZeYKgO
+        PxVuoTk7bzRNvaZI/NOw766Al117xAphojX0QExsxsyBUVvoeK0H0iBlTWtctzOUVSU34v8qQGt0X
+        xWrx9UCw==;
 Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKOzS-0007vQ-Q4; Tue, 15 Oct 2019 15:44:03 +0000
+        id 1iKOze-0007yB-Br; Tue, 15 Oct 2019 15:44:14 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J . Wong" <darrick.wong@oracle.com>
 Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/12] xfs: refactor the ioend merging code
-Date:   Tue, 15 Oct 2019 17:43:37 +0200
-Message-Id: <20191015154345.13052-5-hch@lst.de>
+Subject: [PATCH 08/12] iomap: lift the xfs readpage / readpages tracing to iomap
+Date:   Tue, 15 Oct 2019 17:43:41 +0200
+Message-Id: <20191015154345.13052-9-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191015154345.13052-1-hch@lst.de>
 References: <20191015154345.13052-1-hch@lst.de>
@@ -58,141 +58,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce two nicely abstracted helper, which can be moved to the
-iomap code later.  Also use list_pop_entry and list_first_entry_or_null
-to simplify the code a bit.
+Lift the xfs code for tracing address space operations to the iomap
+layer.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_aops.c | 73 +++++++++++++++++++++++++++--------------------
- 1 file changed, 42 insertions(+), 31 deletions(-)
+ fs/iomap/Makefile      | 16 ++++++++------
+ fs/iomap/buffered-io.c |  5 +++++
+ fs/iomap/trace.c       | 12 +++++++++++
+ fs/iomap/trace.h       | 49 ++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_aops.c      |  2 --
+ fs/xfs/xfs_trace.h     | 26 ----------------------
+ 6 files changed, 75 insertions(+), 35 deletions(-)
+ create mode 100644 fs/iomap/trace.c
+ create mode 100644 fs/iomap/trace.h
 
+diff --git a/fs/iomap/Makefile b/fs/iomap/Makefile
+index 93cd11938bf5..eef2722d93a1 100644
+--- a/fs/iomap/Makefile
++++ b/fs/iomap/Makefile
+@@ -3,13 +3,15 @@
+ # Copyright (c) 2019 Oracle.
+ # All Rights Reserved.
+ #
+-obj-$(CONFIG_FS_IOMAP)		+= iomap.o
+ 
+-iomap-y				+= \
+-					apply.o \
+-					buffered-io.o \
+-					direct-io.o \
+-					fiemap.o \
+-					seek.o
++ccflags-y += -I $(srctree)/$(src)		# needed for trace events
++
++obj-$(CONFIG_FS_IOMAP)		+= iomap.o
+ 
++iomap-y				+= trace.o \
++				   apply.o \
++				   buffered-io.o \
++				   direct-io.o \
++				   fiemap.o \
++				   seek.o
+ iomap-$(CONFIG_SWAP)		+= swapfile.o
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 181ee8477aad..d1620c3f2a4c 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -16,6 +16,7 @@
+ #include <linux/bio.h>
+ #include <linux/sched/signal.h>
+ #include <linux/migrate.h>
++#include "trace.h"
+ 
+ #include "../internal.h"
+ 
+@@ -301,6 +302,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+ 	unsigned poff;
+ 	loff_t ret;
+ 
++	trace_iomap_readpage(page->mapping->host, 1);
++
+ 	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
+ 		ret = iomap_apply(inode, page_offset(page) + poff,
+ 				PAGE_SIZE - poff, 0, ops, &ctx,
+@@ -397,6 +400,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+ 	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+ 	loff_t length = last - pos + PAGE_SIZE, ret = 0;
+ 
++	trace_iomap_readpages(mapping->host, nr_pages);
++
+ 	while (length > 0) {
+ 		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+ 				&ctx, iomap_readpages_actor);
+diff --git a/fs/iomap/trace.c b/fs/iomap/trace.c
+new file mode 100644
+index 000000000000..63ce9f0ce4dc
+--- /dev/null
++++ b/fs/iomap/trace.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019, Christoph Hellwig
++ */
++#include <linux/iomap.h>
++
++/*
++ * We include this last to have the helpers above available for the trace
++ * event implementations.
++ */
++#define CREATE_TRACE_POINTS
++#include "trace.h"
+diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+new file mode 100644
+index 000000000000..3900de1d871d
+--- /dev/null
++++ b/fs/iomap/trace.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2009-2019, Christoph Hellwig
++ *
++ * NOTE: none of these tracepoints shall be consider a stable kernel ABI
++ * as they can change at any time.
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM iomap
++
++#if !defined(_IOMAP_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _IOMAP_TRACE_H
++
++#include <linux/tracepoint.h>
++
++struct inode;
++
++DECLARE_EVENT_CLASS(iomap_readpage_class,
++	TP_PROTO(struct inode *inode, int nr_pages),
++	TP_ARGS(inode, nr_pages),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(u64, ino)
++		__field(int, nr_pages)
++	),
++	TP_fast_assign(
++		__entry->dev = inode->i_sb->s_dev;
++		__entry->ino = inode->i_ino;
++		__entry->nr_pages = nr_pages;
++	),
++	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->ino,
++		  __entry->nr_pages)
++)
++
++#define DEFINE_READPAGE_EVENT(name)		\
++DEFINE_EVENT(iomap_readpage_class, name,	\
++	TP_PROTO(struct inode *inode, int nr_pages), \
++	TP_ARGS(inode, nr_pages))
++DEFINE_READPAGE_EVENT(iomap_readpage);
++DEFINE_READPAGE_EVENT(iomap_readpages);
++
++#endif /* _IOMAP_TRACE_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++#define TRACE_INCLUDE_FILE trace
++#include <trace/define_trace.h>
 diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 91899de2be09..c29ef69d1e51 100644
+index 00fe40b35f72..e2033b070f4a 100644
 --- a/fs/xfs/xfs_aops.c
 +++ b/fs/xfs/xfs_aops.c
-@@ -116,6 +116,22 @@ xfs_destroy_ioend(
- 	}
- }
- 
-+static void
-+xfs_destroy_ioends(
-+	struct xfs_ioend	*ioend,
-+	int			error)
-+{
-+	struct list_head	tmp;
-+
-+	list_replace_init(&ioend->io_list, &tmp);
-+	xfs_destroy_ioend(ioend, error);
-+	while ((ioend = list_first_entry_or_null(&tmp, struct xfs_ioend,
-+			io_list))) {
-+		list_del_init(&ioend->io_list);
-+		xfs_destroy_ioend(ioend, error);
-+	}
-+}
-+
- /*
-  * Fast and loose check if this write could update the on-disk inode size.
-  */
-@@ -230,7 +246,6 @@ STATIC void
- xfs_end_ioend(
- 	struct xfs_ioend	*ioend)
+@@ -1184,7 +1184,6 @@ xfs_vm_readpage(
+ 	struct file		*unused,
+ 	struct page		*page)
  {
--	struct list_head	ioend_list;
- 	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
- 	xfs_off_t		offset = ioend->io_offset;
- 	size_t			size = ioend->io_size;
-@@ -275,16 +290,7 @@ xfs_end_ioend(
- done:
- 	if (ioend->io_append_trans)
- 		error = xfs_setfilesize_ioend(ioend, error);
--	list_replace_init(&ioend->io_list, &ioend_list);
--	xfs_destroy_ioend(ioend, error);
--
--	while (!list_empty(&ioend_list)) {
--		ioend = list_first_entry(&ioend_list, struct xfs_ioend,
--				io_list);
--		list_del_init(&ioend->io_list);
--		xfs_destroy_ioend(ioend, error);
--	}
--
-+	xfs_destroy_ioends(ioend, error);
- 	memalloc_nofs_restore(nofs_flag);
+-	trace_xfs_vm_readpage(page->mapping->host, 1);
+ 	return iomap_readpage(page, &xfs_iomap_ops);
  }
  
-@@ -333,17 +339,18 @@ xfs_ioend_try_merge(
- 	struct xfs_ioend	*ioend,
- 	struct list_head	*more_ioends)
+@@ -1195,7 +1194,6 @@ xfs_vm_readpages(
+ 	struct list_head	*pages,
+ 	unsigned		nr_pages)
  {
--	struct xfs_ioend	*next_ioend;
-+	struct xfs_ioend	*next;
-+
-+	INIT_LIST_HEAD(&ioend->io_list);
- 
--	while (!list_empty(more_ioends)) {
--		next_ioend = list_first_entry(more_ioends, struct xfs_ioend,
--				io_list);
--		if (!xfs_ioend_can_merge(ioend, next_ioend))
-+	while ((next = list_first_entry_or_null(more_ioends, struct xfs_ioend,
-+			io_list))) {
-+		if (!xfs_ioend_can_merge(ioend, next))
- 			break;
--		list_move_tail(&next_ioend->io_list, &ioend->io_list);
--		ioend->io_size += next_ioend->io_size;
--		if (next_ioend->io_append_trans)
--			xfs_ioend_merge_append_transactions(ioend, next_ioend);
-+		list_move_tail(&next->io_list, &ioend->io_list);
-+		ioend->io_size += next->io_size;
-+		if (next->io_append_trans)
-+			xfs_ioend_merge_append_transactions(ioend, next);
- 	}
+-	trace_xfs_vm_readpages(mapping->host, nr_pages);
+ 	return iomap_readpages(mapping, pages, nr_pages, &xfs_iomap_ops);
  }
  
-@@ -366,29 +373,33 @@ xfs_ioend_compare(
- 	return 0;
- }
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index eaae275ed430..eae4b29c174e 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -1197,32 +1197,6 @@ DEFINE_PAGE_EVENT(xfs_writepage);
+ DEFINE_PAGE_EVENT(xfs_releasepage);
+ DEFINE_PAGE_EVENT(xfs_invalidatepage);
  
-+static void
-+xfs_sort_ioends(
-+	struct list_head	*ioend_list)
-+{
-+	list_sort(NULL, ioend_list, xfs_ioend_compare);
-+}
-+
- /* Finish all pending io completions. */
- void
- xfs_end_io(
- 	struct work_struct	*work)
- {
--	struct xfs_inode	*ip;
-+	struct xfs_inode	*ip =
-+		container_of(work, struct xfs_inode, i_ioend_work);
- 	struct xfs_ioend	*ioend;
--	struct list_head	completion_list;
-+	struct list_head	tmp;
- 	unsigned long		flags;
- 
--	ip = container_of(work, struct xfs_inode, i_ioend_work);
+-DECLARE_EVENT_CLASS(xfs_readpage_class,
+-	TP_PROTO(struct inode *inode, int nr_pages),
+-	TP_ARGS(inode, nr_pages),
+-	TP_STRUCT__entry(
+-		__field(dev_t, dev)
+-		__field(xfs_ino_t, ino)
+-		__field(int, nr_pages)
+-	),
+-	TP_fast_assign(
+-		__entry->dev = inode->i_sb->s_dev;
+-		__entry->ino = inode->i_ino;
+-		__entry->nr_pages = nr_pages;
+-	),
+-	TP_printk("dev %d:%d ino 0x%llx nr_pages %d",
+-		  MAJOR(__entry->dev), MINOR(__entry->dev),
+-		  __entry->ino,
+-		  __entry->nr_pages)
+-)
 -
- 	spin_lock_irqsave(&ip->i_ioend_lock, flags);
--	list_replace_init(&ip->i_ioend_list, &completion_list);
-+	list_replace_init(&ip->i_ioend_list, &tmp);
- 	spin_unlock_irqrestore(&ip->i_ioend_lock, flags);
- 
--	list_sort(NULL, &completion_list, xfs_ioend_compare);
+-#define DEFINE_READPAGE_EVENT(name)		\
+-DEFINE_EVENT(xfs_readpage_class, name,	\
+-	TP_PROTO(struct inode *inode, int nr_pages), \
+-	TP_ARGS(inode, nr_pages))
+-DEFINE_READPAGE_EVENT(xfs_vm_readpage);
+-DEFINE_READPAGE_EVENT(xfs_vm_readpages);
 -
--	while (!list_empty(&completion_list)) {
--		ioend = list_first_entry(&completion_list, struct xfs_ioend,
--				io_list);
-+	xfs_sort_ioends(&tmp);
-+	while ((ioend = list_first_entry_or_null(&tmp, struct xfs_ioend,
-+			io_list))) {
- 		list_del_init(&ioend->io_list);
--		xfs_ioend_try_merge(ioend, &completion_list);
-+		xfs_ioend_try_merge(ioend, &tmp);
- 		xfs_end_ioend(ioend);
- 	}
- }
+ DECLARE_EVENT_CLASS(xfs_imap_class,
+ 	TP_PROTO(struct xfs_inode *ip, xfs_off_t offset, ssize_t count,
+ 		 int whichfork, struct xfs_bmbt_irec *irec),
 -- 
 2.20.1
 
