@@ -2,104 +2,79 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626F3ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C472083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355FA2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="iHkOuo1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733277AbfJOUSs (ORCPT
+        id S1729473AbfJOUUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 16:18:48 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39488 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfJOUSs (ORCPT
+        Tue, 15 Oct 2019 16:20:36 -0400
+Received: from valentin-vidic.from.hr ([94.229.67.141]:45561 "EHLO
+        valentin-vidic.from.hr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfJOUUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 16:18:48 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iKTHJ-0003KI-98; Tue, 15 Oct 2019 20:18:45 +0000
-Date:   Tue, 15 Oct 2019 21:18:45 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191015201845.GP26530@ZenIV.linux.org.uk>
-References: <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
- <20191013195949.GM26530@ZenIV.linux.org.uk>
- <20191015180846.GA31707@ZenIV.linux.org.uk>
- <CAHk-=wjyiiYhAbzVDUW1F3j9CAcu8+ugSvGYwUivdBfKoeU6yA@mail.gmail.com>
- <20191015194012.GO26530@ZenIV.linux.org.uk>
+        Tue, 15 Oct 2019 16:20:36 -0400
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id BD09E3BE3; Tue, 15 Oct 2019 22:20:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+        d=valentin-vidic.from.hr; s=2017; t=1571170831;
+        bh=r5jgY9ifSUvOUd+gKIcDCcH7C/V28agy969gTcxV0eA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iHkOuo1boWn8/LsMRocAMddV/OPGaik8ITt96W9ALN32dgiAjzcc1Ac6SVqhAXAln
+         ridBilD6G2ihAVPkZImuUtOxHFoNNw4Al20QzxxNk35eIiAO4aCB5JM3xVxY3TFEZy
+         jtY9h06zFu341M6o689XwDa7sH7gK8tZeUODS2+rfU5WjRl7peSI5PQh396iZaIRD8
+         MnVTMb1ky7oelvurQRKbNMq/patLb7x+5EmaklQG8gaEw7POPMv8reYGZ9g8LMi0do
+         YZXsr5GpbFEF+3hqlolXAMma7Kc2eO9zcHh37zKpF9qapPZiwK0Bp+kUF0t+fmC7Vi
+         vT9xNMvREnWbQ==
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Subject: [PATCH] net: usb: sr9800: fix uninitialized local variable
+Date:   Tue, 15 Oct 2019 22:20:20 +0200
+Message-Id: <20191015202020.29114-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191015194012.GO26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 08:40:12PM +0100, Al Viro wrote:
-> or this
-> static void ntb_memcpy_tx(struct ntb_queue_entry *entry, void __iomem *offset)
-> {
-> #ifdef ARCH_HAS_NOCACHE_UACCESS
->         /*
->          * Using non-temporal mov to improve performance on non-cached
->          * writes, even though we aren't actually copying from user space.
->          */
->         __copy_from_user_inatomic_nocache(offset, entry->buf, entry->len);
-> #else   
->         memcpy_toio(offset, entry->buf, entry->len);
-> #endif
-> 
->         /* Ensure that the data is fully copied out before setting the flags */
->         wmb();
-> 
->         ntb_tx_copy_callback(entry, NULL);
-> }
-> "user" part is bollocks in both cases; moreover, I really wonder about that
-> ifdef in ntb one - ARCH_HAS_NOCACHE_UACCESS is x86-only *at* *the* *moment*
-> and it just so happens that ..._toio() doesn't require anything special on
-> x86.  Have e.g. arm grow nocache stuff and the things will suddenly break,
-> won't they?
+Make sure res does not contain random value if the call to
+sr_read_cmd fails for some reason.
 
-Incidentally, there are two callers of __copy_from_user_inatomic_nocache() in
-generic code:
-lib/iov_iter.c:792:             __copy_from_user_inatomic_nocache((to += v.iov_len) - v.iov_len,
-lib/iov_iter.c:849:             if (__copy_from_user_inatomic_nocache((to += v.iov_len) - v.iov_len,
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+---
+ drivers/net/usb/sr9800.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Neither is done under under pagefault_disable(), AFAICS.  This one
-drivers/gpu/drm/qxl/qxl_ioctl.c:189:    unwritten = __copy_from_user_inatomic_nocache
-probably is - it has something called qxl_bo_kmap_atomic_page() called just prior,
-which would seem to imply kmap_atomic() somewhere in it.
-The same goes for
-drivers/gpu/drm/i915/i915_gem.c:500:    unwritten = __copy_from_user_inatomic_nocache((void __force *)vaddr + offset,
+diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
+index c5d4a0060124..681e0def6356 100644
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -335,7 +335,7 @@ static void sr_set_multicast(struct net_device *net)
+ static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(net);
+-	__le16 res;
++	__le16 res = 0;
+ 
+ 	mutex_lock(&dev->phy_mutex);
+ 	sr_set_sw_mii(dev);
+-- 
+2.20.1
 
-So we have 5 callers anywhere.  Two are not "inatomic" in any sense; source is
-in userspace and we want nocache behaviour.  Two _are_ done into a page that
-had been fed through kmap_atomic(); the source is, again, in userland.  And
-the last one is complete BS - it wants memcpy_toio_nocache() and abuses this
-thing.
-
-Incidentally, in case of fault i915 caller ends up unmapping the page,
-mapping it non-atomic (with kmap?) and doing plain copy_from_user(),
-nocache be damned.  qxl, OTOH, whines and fails all the way to userland...
