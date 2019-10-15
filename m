@@ -2,100 +2,98 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9552C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80211ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C9820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DF920640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i7vBn9gz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732930AbfJOOoD (ORCPT
+        id S1732873AbfJOOsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:44:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59290 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732636AbfJOOoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:44:03 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C88DE811DC;
-        Tue, 15 Oct 2019 14:44:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2104D5D6A9;
-        Tue, 15 Oct 2019 14:43:58 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 15 Oct 2019 16:44:01 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 16:43:57 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Christian Kellner <christian@kellner.me>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org, Jann Horn <jannh@google.com>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 1/2] pidfd: verify task is alive when printing fdinfo
-Message-ID: <20191015144356.GA16978@redhat.com>
-References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
+        Tue, 15 Oct 2019 10:48:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59558 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfJOOsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:48:36 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FEiRWZ111813;
+        Tue, 15 Oct 2019 14:47:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=iBvQZB/ymL6R4KRMnoHxP7zNs7BB23dad97HHnYj9Is=;
+ b=i7vBn9gzT8bsjv+0cdVDWD0gW4NWPuLALe/5yuh88vTXF02dUNtVtoGvjcGwRVB2tNa+
+ KP5tYV8fHga7gcnyhpEoVWusYR81SH3RqgRflolM0P3OHhN4cxnAOrMhdEL36GNxlmG7
+ hkZ2qodf3g9HhYkhcNpchMmWp1Xlbae0X9cWTgECfOE4TyMpceUYcjmHllaul8rnyb6b
+ 6hbnCWKR+ak4d7/RTi2IWwpTqccsw4HUl9LnBaCsvhj1bzPOOi8Ro7Q7JVV8eBTxwqu9
+ lHcBa6YHlGe1vlMdIs0H9vv03vJLtYrrQMHKhpuAU6Anthxu4fZRHjQzn75ky4QM7u+D Ug== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vk7fr8eeb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 14:47:31 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FEhnQw102633;
+        Tue, 15 Oct 2019 14:47:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vnf7rbfm0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 14:47:31 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9FElTeS030428;
+        Tue, 15 Oct 2019 14:47:29 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 14:47:28 +0000
+Date:   Tue, 15 Oct 2019 17:47:20 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191015144202.GI4774@kadam>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
+ <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+ <20191010113034.GN13286@kadam>
+ <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+ <20191015131955.GH4774@kadam>
+ <20191015143129.GA32565@AlexGordeev-DPT-VI0092>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015141332.4055-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 15 Oct 2019 14:44:03 +0000 (UTC)
+In-Reply-To: <20191015143129.GA32565@AlexGordeev-DPT-VI0092>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=908
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15, Christian Brauner wrote:
->
-> +static inline bool task_alive(struct pid *pid)
-> +{
-> +	bool alive = true;
-> +
-> +	rcu_read_lock();
-> +	if (!pid_task(pid, PIDTYPE_PID))
-> +		alive = false;
-> +	rcu_read_unlock();
-> +
-> +	return alive;
-> +}
+Ah that's fine then.  And since wr_flags[hw->d2h_last_id] is just
+true/false then it doesn't matter if it races.
 
-Well, the usage of rcu_read_lock/unlock looks confusing to me...
-
-I mean, this helper does not need rcu lock at all. Except
-rcu_dereference_check() will complain.
-
-	static inline bool task_alive(struct pid *pid)
-	{
-		bool alive;
-
-		/* shut up rcu_dereference_check() */
-		rcu_lock_acquire(&rcu_lock_map);
-		alive = !!pid_task(pid, PIDTYPE_PID));
-		rcu_lock_release(&rcu_lock_map);
-
-		return alive;
-	}
-
-looks more clear imo.
-
-But in fact I'd suggest to simply use !hlist_empty(&pid->tasks[PIDTYPE_PID])
-in pidfd_show_fdinfo() and do not add a new helper.
-
-Oleg.
+regards,
+dan carpenter
 
