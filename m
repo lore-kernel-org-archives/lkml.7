@@ -2,213 +2,186 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E53DECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821F5ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C37E21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581C920854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="K4LhDW80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfJOKWO (ORCPT
+        id S1730391AbfJOKX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:22:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54028 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727810AbfJOKWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:22:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5BE50B2D2;
-        Tue, 15 Oct 2019 10:22:11 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5A2961E485F; Tue, 15 Oct 2019 12:22:10 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 12:22:10 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     mm <linux-mm@kvack.org>, fsdev <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [RFC] writeback: add elastic bdi in cgwb bdp
-Message-ID: <20191015102210.GA29554@quack2.suse.cz>
-References: <20191012132740.12968-1-hdanton@sina.com>
+        Tue, 15 Oct 2019 06:23:29 -0400
+Received: from ozlabs.org ([203.11.71.1]:41499 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727810AbfJOKX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:23:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46ss2f4wgZz9sP7;
+        Tue, 15 Oct 2019 21:23:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1571135005;
+        bh=QDJF4xxVTIRvTYf+gOcubZ00WJm0i6g3A1Svt7cre38=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=K4LhDW80OVyaL3MN6pBE+6p+c+I+gygMW0OIttzIFCaEEqNVPTdC2Xy1S+Ah3t5wM
+         cuuapGFB5T+ItFF38gaATt7HAJUSbJ1gq+u8xa104hgVgFPrJjz2x7lH/7Ch6AzKuP
+         oEefqD48kMy00C06GMTiZU8LG84/u5V+9nPztjHDrRDX2sQv4xihUJemuko+Vpq/Z3
+         bFOJFPo8pOx2hZZwTOEJiGf1irYQysTSA9AWJYvNLOodxSpq9U9jYpq3YKJVkpU+yP
+         /iDvRqRyvLbeBrAzAdbaRd9s9sPhjpbq9NJD1ch4ZKujPsd34AseMSjx4XEoXsu+f1
+         HMzSkpQgjovXw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH v7 3/8] powerpc: detect the trusted boot state of the system
+In-Reply-To: <1570497267-13672-4-git-send-email-nayna@linux.ibm.com>
+References: <1570497267-13672-1-git-send-email-nayna@linux.ibm.com> <1570497267-13672-4-git-send-email-nayna@linux.ibm.com>
+Date:   Tue, 15 Oct 2019 21:23:19 +1100
+Message-ID: <877e56ux2g.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191012132740.12968-1-hdanton@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Nayna Jain <nayna@linux.ibm.com> writes:
+> PowerNV systems enables the IMA measurement rules only if the
+> trusted boot is enabled on the system.
 
-On Sat 12-10-19 21:27:40, Hillf Danton wrote:
-> The behaviors of the elastic bdi (ebdi) observed in the current cgwb
-> bandwidth measurement include
-> 
-> 1, like spinning disks on market ebdi can do ~128MB/s IOs in consective
-> minutes in few scenarios, or higher like SSD, or lower like USB key.
-> 
-> 2, with ebdi a bdi_writeback, wb-A, is able to do 80MB/s writeouts in the
-> current time window of 200ms, while it was 16M/s in the previous one.
-> 
-> 3, it will be either 100MB/s in the next time window if wb-B joins wb-A
-> writing pages out or 18MB/s if wb-C also decides to chime in.
-> 
-> With the help of bandwidth gauged above, what is left in balancing dirty
-> pages, bdp, is try to make wb-A's laundry speed catch up dirty speed in
-> every 200ms interval without knowing what wb-B is doing.
-> 
-> No heuristic is added in this work because ebdi does bdp without it.
+That confused me a lot. But the key is the distinction between appraisal
+rules vs measurement rules, right?
 
-Thanks for the patch but honestly, I have hard time understanding what is
-the purpose of this patch from the changelog. Some kind of writeback
-throttling? And why is this needed? Also some highlevel description of what
-your solution is would be good...
+I think it would be clearer if it was phrased as a positive statement, eg:
 
-								Honza
- 
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> ---
-> 
-> --- a/include/linux/backing-dev-defs.h
-> +++ b/include/linux/backing-dev-defs.h
-> @@ -157,6 +157,9 @@ struct bdi_writeback {
->  	struct list_head memcg_node;	/* anchored at memcg->cgwb_list */
->  	struct list_head blkcg_node;	/* anchored at blkcg->cgwb_list */
+  On PowerNV systems when trusted boot is enabled, additional IMA rules
+  are enabled to implement measurement.
+
+Or something like that.
+
+> This patch adds the function to detect if the system has trusted
+> boot enabled.
+
+It would probably help people to briefly explain the difference between
+secure vs trusted boot.
+
+> diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
+> index 23d2ef2f1f7b..ecd08515e301 100644
+> --- a/arch/powerpc/include/asm/secure_boot.h
+> +++ b/arch/powerpc/include/asm/secure_boot.h
+> @@ -12,6 +12,7 @@
 >  
-> +#ifdef CONFIG_CGWB_BDP_WITH_EBDI
-> +	struct wait_queue_head bdp_waitq;
-> +#endif
->  	union {
->  		struct work_struct release_work;
->  		struct rcu_head rcu;
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-> @@ -324,6 +324,10 @@ static int wb_init(struct bdi_writeback
->  			goto out_destroy_stat;
->  	}
+>  bool is_powerpc_os_secureboot_enabled(void);
+>  struct device_node *get_powerpc_os_sb_node(void);
+> +bool is_powerpc_trustedboot_enabled(void);
 >  
-> +	if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
-> +	    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
-> +		init_waitqueue_head(&wb->bdp_waitq);
-> +
->  	return 0;
+>  #else
 >  
->  out_destroy_stat:
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -1551,6 +1551,45 @@ static inline void wb_dirty_limits(struc
->  	}
+> @@ -25,5 +26,10 @@ static inline struct device_node *get_powerpc_os_sb_node(void)
+>  	return NULL;
 >  }
 >  
-> +#if defined(CONFIG_CGROUP_WRITEBACK) && defined(CONFIG_CGWB_BDP_WITH_EBDI)
-> +static bool cgwb_bdp_should_throttle(struct bdi_writeback *wb)
+> +static inline bool is_powerpc_os_trustedboot_enabled(void)
+
+That has an extra "_os" in it.
+
 > +{
-> +	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
-> +
-> +	if (fatal_signal_pending(current))
-> +		return false;
-> +
-> +	gdtc.avail = global_dirtyable_memory();
-> +
-> +	domain_dirty_limits(&gdtc);
-> +
-> +	gdtc.dirty = global_node_page_state(NR_FILE_DIRTY) +
-> +			global_node_page_state(NR_UNSTABLE_NFS) +
-> +			global_node_page_state(NR_WRITEBACK);
-> +
-> +	if (gdtc.dirty < gdtc.bg_thresh)
-> +		return false;
-> +
-> +	if (!writeback_in_progress(wb))
-> +		wb_start_background_writeback(wb);
-> +
-> +	/*
-> +	 * throttle if laundry speed remarkably falls behind dirty speed
-> +	 * in the current time window of 200ms
-> +	 */
-> +	return gdtc.dirty > gdtc.thresh &&
-> +		wb_stat(wb, WB_DIRTIED) >
-> +		wb_stat(wb, WB_WRITTEN) +
-> +		wb_stat_error();
+> +	return false;
 > +}
 > +
-> +static inline void cgwb_bdp(struct bdi_writeback *wb)
-> +{
-> +	wait_event_interruptible_timeout(wb->bdp_waitq,
-> +			!cgwb_bdp_should_throttle(wb), HZ);
-> +}
-> +#endif
+>  #endif
+>  #endif
+> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+> index 0488dbcab6b9..9d5ac1b39e46 100644
+> --- a/arch/powerpc/kernel/secure_boot.c
+> +++ b/arch/powerpc/kernel/secure_boot.c
+> @@ -7,6 +7,27 @@
+>  #include <linux/of.h>
+>  #include <asm/secure_boot.h>
+>  
+> +static const char * const fwsecureboot_compat[] = {
+> +	"ibm,secureboot-v1",
+> +	"ibm,secureboot-v2",
+> +	NULL,
+> +};
 > +
->  /*
->   * balance_dirty_pages() must be called by processes which are generating dirty
->   * data.  It looks at the number of dirty pages in the machine and will force
-> @@ -1910,7 +1949,11 @@ void balance_dirty_pages_ratelimited(str
->  	preempt_enable();
->  
->  	if (unlikely(current->nr_dirtied >= ratelimit))
-> -		balance_dirty_pages(wb, current->nr_dirtied);
-> +		if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
-> +		    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
-> +			cgwb_bdp(wb);
-> +		else
-> +			balance_dirty_pages(wb, current->nr_dirtied);
->  
->  	wb_put(wb);
+> +static struct device_node *get_powerpc_fw_sb_node(void)
+> +{
+> +	struct device_node *node;
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(fwsecureboot_compat); ++i) {
+> +		node = of_find_compatible_node(NULL, NULL,
+> +					       fwsecureboot_compat[i]);
+> +		if (node)
+> +			return node;
+> +	}
+> +
+> +	return NULL;
+> +}
+
+You shouldn't need to do that by hand, instead use
+of_find_matching_node(), eg:
+
+static struct device_node *get_powerpc_fw_sb_node(void)
+{
+	static const struct of_device_id ids[] = {
+		{ .compatible = "ibm,secureboot-v1", },
+		{ .compatible = "ibm,secureboot-v2", },
+		{},
+	};
+
+	return of_find_matching_node(NULL, ids);
+}
+
+
+> @@ -40,3 +61,17 @@ bool is_powerpc_os_secureboot_enabled(void)
+>  	pr_info("secureboot mode disabled\n");
+>  	return false;
 >  }
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -632,6 +632,11 @@ void wbc_detach_inode(struct writeback_c
->  	if (!wb)
->  		return;
->  
-> +	if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
-> +	    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
-> +		if (waitqueue_active(&wb->bdp_waitq))
-> +			wake_up_all(&wb->bdp_waitq);
 > +
->  	history = inode->i_wb_frn_history;
->  	avg_time = inode->i_wb_frn_avg_time;
->  
-> @@ -811,6 +816,9 @@ static long wb_split_bdi_pages(struct bd
->  	if (nr_pages == LONG_MAX)
->  		return LONG_MAX;
->  
-> +	if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
-> +	    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
-> +		return nr_pages;
->  	/*
->  	 * This may be called on clean wb's and proportional distribution
->  	 * may not make sense, just use the original @nr_pages in those
-> @@ -1599,6 +1607,10 @@ static long writeback_chunk_size(struct
->  	if (work->sync_mode == WB_SYNC_ALL || work->tagged_writepages)
->  		pages = LONG_MAX;
->  	else {
-> +		if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
-> +		    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
-> +			return work->nr_pages;
+> +bool is_powerpc_trustedboot_enabled(void)
+> +{
+> +	struct device_node *node;
 > +
->  		pages = min(wb->avg_write_bandwidth / 2,
->  			    global_wb_domain.dirty_limit / DIRTY_SCOPE);
->  		pages = min(pages, work->nr_pages);
-> --
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> +	node = get_powerpc_fw_sb_node();
+> +	if (node && (of_find_property(node, "trusted-enabled", NULL))) {
+
+Again this can use of_property_read_bool(), which copes with a NULL node
+also, so just:
+
++	if (of_property_read_bool(node, "trusted-enabled"))) {
+
+> +		pr_info("trustedboot mode enabled\n");
+> +		return true;
+> +	}
+> +
+> +	pr_info("trustedboot mode disabled\n");
+> +	return false;
+> +}
+> -- 
+> 2.20.1
+
+
+cheers
