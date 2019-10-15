@@ -2,102 +2,143 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A44C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702F9ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644772089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hVK+F4j8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NnBS+7x4"
+	by mail.kernel.org (Postfix) with ESMTP id 52C572089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfJOFVY (ORCPT
+        id S1728277AbfJOFYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:21:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49296 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbfJOFVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:21:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0040460A08; Tue, 15 Oct 2019 05:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571116883;
-        bh=I9WghGtYVeVXJlrf61PEkCMhAN/CWWt9s6E+2MBmULs=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=hVK+F4j87QFPu8H0DZGTPMxOIoi/Pgr5d+Mn0NCwieNYN1K7Uv72nxfTRqWS/uGn2
-         LadqbYPRTwrpLMSGeZHpT04abyU6lFTGDhlazzfSe6Ol1JWIqW7aODf374IQ5XjCT/
-         Qx2Y8/MVzaa0P8KkM0iNQwt7a4u13JaqaKf5JMBw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 15 Oct 2019 01:24:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51132 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728265AbfJOFYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:24:01 -0400
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D5BE60A08;
-        Tue, 15 Oct 2019 05:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571116882;
-        bh=I9WghGtYVeVXJlrf61PEkCMhAN/CWWt9s6E+2MBmULs=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=NnBS+7x4cXUBpHYlGfS2P9pXG0hRUwGdykafpD6XvkHSi6ZHk6Q5HEgtpQlPoNISP
-         aNXuk0+bDPWjjMTMjqPcLketao2JjtarTtgLPEgooWF+xnYw2z4vdkhZL/2/QPRc2I
-         e2Uvtqr11xwD/Wz+ObDG7J7LqU0OdjuQLAAMsqF4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5D5BE60A08
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id A6217859FC
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 05:24:00 +0000 (UTC)
+Received: by mail-io1-f69.google.com with SMTP id t11so30212967ioc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 22:24:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GX8bC+LvWnJ5dJICeG2nAc0CD2f9tU+0Yk6RVJKRFtA=;
+        b=gld90+XXU0shoZy+JcaLmfQx4IgZUBHkdD4We2sGNgzELATok5db6lpviae34lGkw2
+         IxhwzJ8ido4hCxMAl2Ld8KFygCYe4GWytRcHYkjmBeu0A4oTrJUQV01Dk8K2EIIA4fnE
+         bOaRgJpqjxsaLH4GgSrD3bYeUm1nlPUBZpl3wKVRzdPZVv8RE/naMHDFvnMQWu4h3yf/
+         d/+tcXkZasww2yXBO6Y8mPesUYsuCv8YOSVbHRl7Zi7SI0bio6J6gub9baDVoQZtcsZN
+         iyxOW0O6wNFnjiQ82I9dUd09iig7QQnxECqOPzIGrPOodHCpzFBKsSvDwTVDB6mlKzOI
+         RKhw==
+X-Gm-Message-State: APjAAAWmYmSU7TRMEDcA3e7bKyQzsyBKPGGNevIcjb5EOvFvVLeZg3wG
+        kxqDX+P86vpAvnbcFJzl5S7jEdWp6BVCrNlimWzL9Tk4fA78yZRqjBkc5VgLKnH1ga0X53PjbJ/
+        pPHUH0QQuSAZk02EvyShtZmLTVVQS1SiyVLvsXk/I
+X-Received: by 2002:a6b:d104:: with SMTP id l4mr6603812iob.50.1571117039945;
+        Mon, 14 Oct 2019 22:23:59 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqww5YfFPBA4nCSFpjo/cQDUXxSK3cOo8C1EDzKG3a48BASQG3eqI/WCzxReb0tvQtzyFwx3u5yJVlqH0eDl4Ms=
+X-Received: by 2002:a6b:d104:: with SMTP id l4mr6603788iob.50.1571117039602;
+ Mon, 14 Oct 2019 22:23:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3 20/24] wireless: Remove call to memset after
- dma_alloc_coherent
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190715031941.7120-1-huangfq.daxian@gmail.com>
-References: <20190715031941.7120-1-huangfq.daxian@gmail.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     unlisted-recipients:; (no To-header on input)
-        "David S . Miller" <davem@davemloft.net>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)"David S . Miller" <davem@davemloft.net>
-                                                                     ^-missing end of address
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191015052123.0040460A08@smtp.codeaurora.org>
-Date:   Tue, 15 Oct 2019 05:21:22 +0000 (UTC)
+References: <20191012034421.25027-1-kasong@redhat.com> <20191014101419.GA4715@zn.tnic>
+In-Reply-To: <20191014101419.GA4715@zn.tnic>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Tue, 15 Oct 2019 13:23:48 +0800
+Message-ID: <CACPcB9f6i_PvxDz9aLpAiakmnEOu-o5N_ZvP5dGe73yyS-KvjA@mail.gmail.com>
+Subject: Re: [PATCH v3] x86, efi: never relocate kernel below lowest
+ acceptable address
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+On Mon, Oct 14, 2019 at 6:14 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Sat, Oct 12, 2019 at 11:44:21AM +0800, Kairui Song wrote:
+> > Currently, kernel fails to boot on some HyperV VMs when using EFI.
+> > And it's a potential issue on all platforms.
+> >
+> > It's caused a broken kernel relocation on EFI systems, when below three
+> > conditions are met:
+> >
+> > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
+> >    by the loader.
+> > 2. There isn't enough room to contain the kernel, starting from the
+> >    default load address (eg. something else occupied part the region).
+> > 3. In the memmap provided by EFI firmware, there is a memory region
+> >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
+> >    kernel.
+> >
+> > Efi stub will perform a kernel relocation when condition 1 is met. But
+> > due to condition 2, efi stub can't relocate kernel to the preferred
+> > address, so it fallback to query and alloc from EFI firmware for lowest
+>
+> Your spelling of "EFI" is like a random number generator in this
+> paragraph: "Efi", "efi" and "EFI". Can you please be more careful when
+> writing your commit messages? They're not some random text you hurriedly
+> jot down before sending the patch but a most important description of
+> why a change is being done.
 
-> In commit 518a2f1925c3
-> ("dma-mapping: zero memory returned from dma_alloc_*"),
-> dma_alloc_coherent has already zeroed the memory.
-> So memset is not needed.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Sorry I just ignored the acronym usage problems, I did double check the text but
+didn't realize this is a problem... Will correct them.
 
-Patch applied to wireless-drivers-next.git, thanks.
+>
+> And if you don't see their importance now, just try doing some git
+> archeology, trying to understand why a change has been done in the past
+> and then encounter a commit message two-liner which doesn't say sh*t.
+> Then you'll start appreciating properly written commit messages.
+>
+> > usable memory region.
+> >
+> > It's incorrect to use the lowest memory address. In later stage, kernel
+> > will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
+> > but efi stub will end up relocating kernel below it.
+>
+> Why don't you simply explain what
+> choose_random_location()->find_random_virt_addr() does? That's the
+> problem you're solving, right? KASLR using LOAD_PHYSICAL_ADDR as the
+> minimum...
+>
+> > The later kernel decompressing code will forcefully correct the wrong
+> > kernel load location,
+>
+> ... or do you mean by that the dance in
+> arch/x86/boot/compressed/head_64.S where we move the kernel temporarily
+> to LOAD_PHYSICAL_ADDR for the decompression?
 
-52d4261862ec wireless: Remove call to memset after dma_alloc_coherent
+The kernel move in arch/x86/boot/compressed/head_64.S is the problem
+I'm saying here.
 
--- 
-https://patchwork.kernel.org/patch/11043359/
+I thought it's a bad idea to include too much details about codes and details in
+the commit message, so tried to describe it without mentioning the
+implementation details.
+It's making things confusing indeed.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+I'll rethink about how the commit message should be composed...
 
+>
+> You can simply say that here...
+>
+
+OK, then I'll do so. Will update the commit message.
+
+--
+Best Regards,
+Kairui Song
