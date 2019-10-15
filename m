@@ -2,157 +2,111 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9870ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD550C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CB72086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF4B2089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfJOE7j (ORCPT
+        id S1728151AbfJOFCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 00:59:39 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49602 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfJOE7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 00:59:39 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 35EBE1A043F;
-        Tue, 15 Oct 2019 06:59:36 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1488D1A00FD;
-        Tue, 15 Oct 2019 06:59:32 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F12394030B;
-        Tue, 15 Oct 2019 12:59:26 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v2,2/2] i2c: mux: pca954x: add property idle-state
-Date:   Tue, 15 Oct 2019 12:48:39 +0800
-Message-Id: <20191015044839.23746-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20191015044839.23746-1-biwen.li@nxp.com>
-References: <20191015044839.23746-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 15 Oct 2019 01:02:38 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3291 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728123AbfJOFCi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:02:38 -0400
+X-UUID: 62f03084beeb45c09eb9d12c94df3f27-20191015
+X-UUID: 62f03084beeb45c09eb9d12c94df3f27-20191015
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 706590738; Tue, 15 Oct 2019 13:02:33 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 15 Oct 2019 13:02:29 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 15 Oct 2019 13:02:29 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v2 2/2] kasan: add test for invalid size in memmove
+Date:   Tue, 15 Oct 2019 13:02:30 +0800
+Message-ID: <20191015050230.20521-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 76C7B23B7010F871BB120DC39271DA7F14504898BA30BE7C2D2C7F7C49CAD97A2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds property idle-state
+Test negative size in memmove in order to verify whether it correctly
+get KASAN report.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Casting negative numbers to size_t would indeed turn up as a 'large'
+size_t, so it will have out-of-bounds bug and detected by KASAN.
+
+Changes in v2:
+Add some descriptions for clarity the testcase.
+
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 ---
-Change in v2:
-	- update subject and description
-	- add property idle-state
+ lib/test_kasan.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
- drivers/i2c/muxes/i2c-mux-pca954x.c | 47 ++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 923aa3a5a3dc..8ec586342b92 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -86,7 +86,7 @@ struct pca954x {
- 
- 	u8 last_chan;		/* last register value */
- 	/* MUX_IDLE_AS_IS, MUX_IDLE_DISCONNECT or >= 0 for channel */
--	s8 idle_state;
-+	s32 idle_state;
- 
- 	struct i2c_client *client;
- 
-@@ -256,7 +256,7 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
- {
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 	struct i2c_client *client = data->client;
--	s8 idle_state;
-+	s32 idle_state;
- 
- 	idle_state = READ_ONCE(data->idle_state);
- 	if (idle_state >= 0)
-@@ -402,6 +402,25 @@ static void pca954x_cleanup(struct i2c_mux_core *muxc)
- 	i2c_mux_del_adapters(muxc);
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index 49cc4d570a40..06942cf585cc 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -283,6 +283,23 @@ static noinline void __init kmalloc_oob_in_memset(void)
+ 	kfree(ptr);
  }
  
-+static int pca954x_init(struct i2c_client *client, struct pca954x *data)
++static noinline void __init kmalloc_memmove_invalid_size(void)
 +{
-+	/*
-+	 * Write the mux register at addr to verify
-+	 * that the mux is in fact present. This also
-+	 * initializes the mux to disconnected state.
-+	 */
-+	if (data->idle_state >= 0) {
-+		/* Always enable multiplexer */
-+		if (data->chip->muxtype == pca954x_ismux)
-+			data->last_chan = data->idle_state | data->chip->enable;
-+		else
-+			data->last_chan = 1 << data->idle_state;
-+	} else {
-+		/* Disconnect multiplexer */
-+		data->last_chan = 0; /* force the first selection */
++	char *ptr;
++	size_t size = 64;
++
++	pr_info("invalid size in memmove\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
 +	}
-+	return i2c_smbus_write_byte(client, data->last_chan);
++
++	memset((char *)ptr, 0, 64);
++	memmove((char *)ptr, (char *)ptr + 4, -2);
++	kfree(ptr);
 +}
- /*
-  * I2C init/probing/exit functions
-  */
-@@ -411,7 +430,6 @@ static int pca954x_probe(struct i2c_client *client,
- 	struct i2c_adapter *adap = client->adapter;
- 	struct device *dev = &client->dev;
- 	struct device_node *np = dev->of_node;
--	bool idle_disconnect_dt;
- 	struct gpio_desc *gpio;
- 	struct i2c_mux_core *muxc;
- 	struct pca954x *data;
-@@ -462,22 +480,18 @@ static int pca954x_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	/* Write the mux register at addr to verify
--	 * that the mux is in fact present. This also
--	 * initializes the mux to disconnected state.
--	 */
--	if (i2c_smbus_write_byte(client, 0) < 0) {
-+	if (of_property_read_u32(np, "idle-state", &data->idle_state))
-+		data->idle_state = MUX_IDLE_AS_IS;
 +
-+	if (of_property_read_bool(np, "i2c-mux-idle-disconnect"))
-+		data->idle_state = MUX_IDLE_DISCONNECT;
-+
-+	ret = pca954x_init(client, data);
-+	if (ret < 0) {
- 		dev_warn(dev, "probe failed\n");
- 		return -ENODEV;
- 	}
- 
--	data->last_chan = 0;		   /* force the first selection */
--	data->idle_state = MUX_IDLE_AS_IS;
--
--	idle_disconnect_dt = np &&
--		of_property_read_bool(np, "i2c-mux-idle-disconnect");
--	if (idle_disconnect_dt)
--		data->idle_state = MUX_IDLE_DISCONNECT;
- 
- 	ret = pca954x_irq_setup(muxc);
- 	if (ret)
-@@ -531,8 +545,7 @@ static int pca954x_resume(struct device *dev)
- 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 
--	data->last_chan = 0;
--	return i2c_smbus_write_byte(client, 0);
-+	return pca954x_init(client, data);
- }
- #endif
- 
+ static noinline void __init kmalloc_uaf(void)
+ {
+ 	char *ptr;
+@@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
+ 	kmalloc_oob_memset_4();
+ 	kmalloc_oob_memset_8();
+ 	kmalloc_oob_memset_16();
++	kmalloc_memmove_invalid_size();
+ 	kmalloc_uaf();
+ 	kmalloc_uaf_memset();
+ 	kmalloc_uaf2();
 -- 
-2.17.1
+2.18.0
 
