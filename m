@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5368C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD8ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BB520872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156112084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHRbHEAH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F52AQVkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388592AbfJORCC (ORCPT
+        id S2388578AbfJORCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:02:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35588 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388540AbfJORB5 (ORCPT
+        Tue, 15 Oct 2019 13:02:01 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35583 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfJORBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:01:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m7so21041738lji.2;
-        Tue, 15 Oct 2019 10:01:55 -0700 (PDT)
+        Tue, 15 Oct 2019 13:01:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m7so21041543lji.2;
+        Tue, 15 Oct 2019 10:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OMLeb4rCRknKwJs2ldIvPlE4Vxnf8XUAiOeAjO+3B/E=;
-        b=qHRbHEAHSKjIsdIVNhFyZ8C9xJli6HjJrmNPlxXNgIudVULdjbjEIMpb4W6Lwyv3OV
-         ASpbuRqSx9yxiybq/Sx3AD3761Pgdf4VR/6X6AZvNLqcfx1om9owTpFkOjqcGXhxdHQ9
-         56F3yPgl2ydfJzyTVEDkqO5PUAl6m2QQnpLXLg8ipnI+WPwr8hFTXxT9FuKxOWfuLmC6
-         2mwtY6WtLYnbMNx3iW1fea/+zFdv8oiB9KsbwE2/n1o8pxfCgfy+KtGMVzd2Q+TbakAt
-         CbTRgur0cb1/VP9xpuv6Fjr9oncFCZPMu5fzo5l8FZEyVYH/+aPMCYi683syF1qpGYa9
-         8J7g==
+        bh=0El1r5sR/3XS90TExiIvdI2lmehipmygt0wHnvPAxUQ=;
+        b=F52AQVkzmm6cIIRIypc9mBwhZ7fvyTDY7hcqPeur1+oEE3ovBfJU1MvsVBIWxL22Ee
+         Qh2JXMr5LuNmYxVkcYFi7OpDcve1+wOQwswv1hY+akPnalpDaUUmm6Ym7qlHQXN7Teot
+         SA2fem0EyOAFSHJ9991h6xHNubcbb+KUT55JgqsoeP9+hTSnU8dI9KsiC6Z3G0akg5Fi
+         dNXRqA23sbJ4K79BX68XQlCJPSbcTKqQ/lmfULmG5J7Eqnhs0hWveC+vTp6nN9IwKsbb
+         ugMhT3KBW9jnvPBNGWlat46n2YDnQcDC6kYNBKc1r1RPREWw6KOm9BMSGmmKGzMdzngK
+         HVtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OMLeb4rCRknKwJs2ldIvPlE4Vxnf8XUAiOeAjO+3B/E=;
-        b=DrZD3oSful6wycVDxzzd7LcoMl0r8Ish7BMXNMlrCFw7IYv3kgogZcqP7qY3LbbLKg
-         OxKmvaD9kDGumBqfdZLo28HOHQ1yXv5p0DvDsWtCMFIgUwYNIR4DFnhD2ohjOCL5bgU7
-         z4exh+BVTwR3aOCdKUxbiQV92DzZyDR9NEyg3tXzwHtd6khGHMjmlNqm1KIcgUsprvbG
-         zJCZVJN+XofA8BTw4cnVZKuzP6gNiPrfDx4PzHkaUdjqcmS8skQeV3FAMSjJyKgeo3Go
-         AeRGlPvBsNOyaStFdhvF3eI5X22a/DhB+kKD7U9Q4EhuKCvaxo162CFncz7a6Zq8KdJ1
-         9f4A==
-X-Gm-Message-State: APjAAAU+3BEUML3vhWRJrwU2xJQ3KKppD9jF52hDzJSDs//G8cPYEFpP
-        ShIVIcuARb8WzPX7+vVRtkc=
-X-Google-Smtp-Source: APXvYqxPQFCF9LkpmQlTPq4C97WzGBzvjuaDG0tT65ZcTvYvFaKaYV9TlLRRD8DYZ0fQq31FiyQqxg==
-X-Received: by 2002:a2e:a41a:: with SMTP id p26mr206241ljn.49.1571158914703;
-        Tue, 15 Oct 2019 10:01:54 -0700 (PDT)
+        bh=0El1r5sR/3XS90TExiIvdI2lmehipmygt0wHnvPAxUQ=;
+        b=Q+j2cleNcHjPlMzqnjyDfXLQGRl3ReEKJxleNDvef5GD2WkjMGPEh5vlLvJ/IyOjV4
+         S8XeMesX/689zhZ5ty3NJzrLRzvcGyVjuaf12REIka8rUnoUDW7ViVBC97kDaOmBlPf1
+         17ubFZ/h3BN6M8cELYg+FCngbp4Bv7ZejWCxOdPymp77FA3/fdFcLXzivme+OdbaIHNE
+         Tcq/FEw3KP1NE+LQwNZqpsoTmLRp+6QG4Ob+BvB21WaHPp2iAB4pa+N5cgh7WMMIJFcp
+         vCombeJADKhsm+NBVXLe6JXdqkBn4nHHT0XS0OyCw53W0govl+ClJggfKHHMqXg3wUTl
+         RHlA==
+X-Gm-Message-State: APjAAAU1v5Bve6WP8zo3N17UcsMEXf8Lf7cu/empy3w8CerDFa4s3WGU
+        fiu6IvlxquwPKPd9EP/BdiU=
+X-Google-Smtp-Source: APXvYqz53Re3jOt2H62WWYr1iivI8KBu3qJtHSQkcLZcdLSKLbTaDCkqbRpPCXJSPKcloiZf5brhfQ==
+X-Received: by 2002:a05:651c:113b:: with SMTP id e27mr22344296ljo.125.1571158911288;
+        Tue, 15 Oct 2019 10:01:51 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.53
+        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:01:54 -0700 (PDT)
+        Tue, 15 Oct 2019 10:01:50 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 15/18] cpuidle: tegra: Support CPU cluster power-down state on Tegra30
-Date:   Tue, 15 Oct 2019 20:00:12 +0300
-Message-Id: <20191015170015.1135-16-digetx@gmail.com>
+Subject: [PATCH v6 12/18] arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
+Date:   Tue, 15 Oct 2019 20:00:09 +0300
+Message-Id: <20191015170015.1135-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191015170015.1135-1-digetx@gmail.com>
 References: <20191015170015.1135-1-digetx@gmail.com>
@@ -78,27 +78,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new Tegra CPU Idle driver now has a unified code path for the coupled
-CC6 (LP2) state, this allows to enable the deepest idling state on Tegra30
-SoC where the whole CPU cluster is power-gated.
+There is no good justification for smp_rmb() after returning from LP2
+because there are no memory operations that require SMP synchronization.
+Thus remove the confusing barrier.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/cpuidle/cpuidle-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/mach-tegra/cpuidle-tegra20.c | 2 --
+ arch/arm/mach-tegra/cpuidle-tegra30.c | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-index 1a2cff5d4ff3..e38a2f6c11e1 100644
---- a/drivers/cpuidle/cpuidle-tegra.c
-+++ b/drivers/cpuidle/cpuidle-tegra.c
-@@ -298,7 +298,6 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
- 		tegra_idle_driver.states[TEGRA_C7].disabled = true;
- 		break;
- 	case TEGRA30:
--		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
- 		break;
- 	default:
- 		return -EINVAL;
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
+index fe80f1988120..af2cd339db43 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra20.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
+@@ -193,8 +193,6 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+ 
+ 	local_fiq_enable();
+ 
+-	smp_rmb();
+-
+ 	return entered_lp2 ? index : 0;
+ }
+ #endif
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
+index a4f0add46a27..80ae64bcdf50 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra30.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
+@@ -113,8 +113,6 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
+ 
+ 	local_fiq_enable();
+ 
+-	smp_rmb();
+-
+ 	return (entered_lp2) ? index : 0;
+ }
+ #endif
 -- 
 2.23.0
 
