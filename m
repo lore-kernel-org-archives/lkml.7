@@ -2,109 +2,149 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA139ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0796AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8932B20640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B5420640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733306AbfJOPVp (ORCPT
+        id S2387414AbfJOPV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:21:45 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:57804 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732991AbfJOPVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:21:45 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id x9FFLZtr004347
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 17:21:35 +0200
-Received: from [139.25.68.37] ([139.25.68.37])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x9FFLHkl014570;
-        Tue, 15 Oct 2019 17:21:17 +0200
-Subject: Re: [PATCH] scripts/gdb: fix debugging modules on s390
-To:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20191015105313.12663-1-iii@linux.ibm.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <356384d7-d14f-2c9d-1c13-3d96e75e1727@siemens.com>
-Date:   Tue, 15 Oct 2019 17:21:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 15 Oct 2019 11:21:59 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:52000 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732659AbfJOPV7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:21:59 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKOe0-0006E0-Nb; Tue, 15 Oct 2019 16:21:52 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKOe0-0000UU-9v; Tue, 15 Oct 2019 16:21:52 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: xhci: fix __le32/__le64 accessors in debugfs code
+Date:   Tue, 15 Oct 2019 16:21:50 +0100
+Message-Id: <20191015152150.1840-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191015105313.12663-1-iii@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.10.19 12:53, Ilya Leoshkevich wrote:
-> Currently lx-symbols assumes that module text is always located at
-> module->core_layout->base, but s390 uses the following layout:
-> 
-> +------+  <- module->core_layout->base
-> | GOT  |
-> +------+  <- module->core_layout->base + module->arch->plt_offset
-> | PLT  |
-> +------+  <- module->core_layout->base + module->arch->plt_offset +
-> | TEXT |     module->arch->plt_size
-> +------+
-> 
-> Therefore, when trying to debug modules on s390, all the symbol
-> addresses are skewed by plt_offset + plt_size.
-> 
-> Fix by adding plt_offset + plt_size to module_addr in
-> load_module_symbols().
-> 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  scripts/gdb/linux/symbols.py | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-> index f0d8f2ecfde7..41c6d1a55b03 100644
-> --- a/scripts/gdb/linux/symbols.py
-> +++ b/scripts/gdb/linux/symbols.py
-> @@ -15,7 +15,7 @@ import gdb
->  import os
->  import re
->  
-> -from linux import modules
-> +from linux import modules, utils
->  
->  
->  if hasattr(gdb, 'Breakpoint'):
-> @@ -113,6 +113,12 @@ lx-symbols command."""
->          if module_file:
->              gdb.write("loading @{addr}: {filename}\n".format(
->                  addr=module_addr, filename=module_file))
-> +            if utils.is_target_arch('s390'):
-> +                # Module text is preceded by PLT stubs on s390.
-> +                module_arch = module['arch']
-> +                plt_offset = int(module_arch['plt_offset'])
-> +                plt_size = int(module_arch['plt_size'])
-> +                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
+It looks like some of the xhci debug code is passing
+u32 to functions directly from __le32/__le64 fields. Fix
+this by using le{32,64}_to_cpu() on these to fix the
+following sparse warnings;
 
-Shouldn't we report the actual address above, ie. reorder this tuning
-with the gdb.write?
+drivers/usb/host/xhci-debugfs.c:205:62: warning: incorrect type in argument 1 (different base types)
+drivers/usb/host/xhci-debugfs.c:205:62:    expected unsigned int [usertype] field0
+drivers/usb/host/xhci-debugfs.c:205:62:    got restricted __le32
+drivers/usb/host/xhci-debugfs.c:206:62: warning: incorrect type in argument 2 (different base types)
+drivers/usb/host/xhci-debugfs.c:206:62:    expected unsigned int [usertype] field1
+drivers/usb/host/xhci-debugfs.c:206:62:    got restricted __le32
+drivers/usb/host/xhci-debugfs.c:207:62: warning: incorrect type in argument 3 (different base types)
+drivers/usb/host/xhci-debugfs.c:207:62:    expected unsigned int [usertype] field2
+drivers/usb/host/xhci-debugfs.c:207:62:    got restricted __le32
+drivers/usb/host/xhci-debugfs.c:208:62: warning: incorrect type in argument 4 (different base types)
+drivers/usb/host/xhci-debugfs.c:208:62:    expected unsigned int [usertype] field3
+drivers/usb/host/xhci-debugfs.c:208:62:    got restricted __le32
+drivers/usb/host/xhci-debugfs.c:266:53: warning: incorrect type in argument 1 (different base types)
+drivers/usb/host/xhci-debugfs.c:266:53:    expected unsigned int [usertype] info
+drivers/usb/host/xhci-debugfs.c:266:53:    got restricted __le32 [usertype] dev_info
+drivers/usb/host/xhci-debugfs.c:267:53: warning: incorrect type in argument 2 (different base types)
+drivers/usb/host/xhci-debugfs.c:267:53:    expected unsigned int [usertype] info2
+drivers/usb/host/xhci-debugfs.c:267:53:    got restricted __le32 [usertype] dev_info2
+drivers/usb/host/xhci-debugfs.c:268:53: warning: incorrect type in argument 3 (different base types)
+drivers/usb/host/xhci-debugfs.c:268:53:    expected unsigned int [usertype] tt_info
+drivers/usb/host/xhci-debugfs.c:268:53:    got restricted __le32 [usertype] tt_info
+drivers/usb/host/xhci-debugfs.c:269:53: warning: incorrect type in argument 4 (different base types)
+drivers/usb/host/xhci-debugfs.c:269:53:    expected unsigned int [usertype] state
+drivers/usb/host/xhci-debugfs.c:269:53:    got restricted __le32 [usertype] dev_state
+drivers/usb/host/xhci-debugfs.c:289:57: warning: incorrect type in argument 1 (different base types)
+drivers/usb/host/xhci-debugfs.c:289:57:    expected unsigned int [usertype] info
+drivers/usb/host/xhci-debugfs.c:289:57:    got restricted __le32 [usertype] ep_info
+drivers/usb/host/xhci-debugfs.c:290:57: warning: incorrect type in argument 2 (different base types)
+drivers/usb/host/xhci-debugfs.c:290:57:    expected unsigned int [usertype] info2
+drivers/usb/host/xhci-debugfs.c:290:57:    got restricted __le32 [usertype] ep_info2
+drivers/usb/host/xhci-debugfs.c:291:57: warning: incorrect type in argument 3 (different base types)
+drivers/usb/host/xhci-debugfs.c:291:57:    expected unsigned long long [usertype] deq
+drivers/usb/host/xhci-debugfs.c:291:57:    got restricted __le64 [usertype] deq
+drivers/usb/host/xhci-debugfs.c:292:57: warning: incorrect type in argument 4 (different base types)
+drivers/usb/host/xhci-debugfs.c:292:57:    expected unsigned int [usertype] tx_info
+drivers/usb/host/xhci-debugfs.c:292:57:    got restricted __le32 [usertype] tx_info
 
->              cmdline = "add-symbol-file {filename} {addr}{sections}".format(
->                  filename=module_file,
->                  addr=module_addr,
-> 
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+.. (open list)
+---
+ drivers/usb/host/xhci-debugfs.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Jan
-
+diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
+index 7ba6afc7ef23..76c3f29562d2 100644
+--- a/drivers/usb/host/xhci-debugfs.c
++++ b/drivers/usb/host/xhci-debugfs.c
+@@ -202,10 +202,10 @@ static void xhci_ring_dump_segment(struct seq_file *s,
+ 		trb = &seg->trbs[i];
+ 		dma = seg->dma + i * sizeof(*trb);
+ 		seq_printf(s, "%pad: %s\n", &dma,
+-			   xhci_decode_trb(trb->generic.field[0],
+-					   trb->generic.field[1],
+-					   trb->generic.field[2],
+-					   trb->generic.field[3]));
++			   xhci_decode_trb(le32_to_cpu(trb->generic.field[0]),
++					   le32_to_cpu(trb->generic.field[1]),
++					   le32_to_cpu(trb->generic.field[2]),
++					   le32_to_cpu(trb->generic.field[3])));
+ 	}
+ }
+ 
+@@ -263,10 +263,10 @@ static int xhci_slot_context_show(struct seq_file *s, void *unused)
+ 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
+ 	slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
+ 	seq_printf(s, "%pad: %s\n", &dev->out_ctx->dma,
+-		   xhci_decode_slot_context(slot_ctx->dev_info,
+-					    slot_ctx->dev_info2,
+-					    slot_ctx->tt_info,
+-					    slot_ctx->dev_state));
++		   xhci_decode_slot_context(le32_to_cpu(slot_ctx->dev_info),
++					    le32_to_cpu(slot_ctx->dev_info2),
++					    le32_to_cpu(slot_ctx->tt_info),
++					    le32_to_cpu(slot_ctx->dev_state)));
+ 
+ 	return 0;
+ }
+@@ -286,10 +286,10 @@ static int xhci_endpoint_context_show(struct seq_file *s, void *unused)
+ 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
+ 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
+ 		seq_printf(s, "%pad: %s\n", &dma,
+-			   xhci_decode_ep_context(ep_ctx->ep_info,
+-						  ep_ctx->ep_info2,
+-						  ep_ctx->deq,
+-						  ep_ctx->tx_info));
++			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
++						  le32_to_cpu(ep_ctx->ep_info2),
++						  le64_to_cpu(ep_ctx->deq),
++						  le32_to_cpu(ep_ctx->tx_info)));
+ 	}
+ 
+ 	return 0;
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+2.23.0
+
