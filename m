@@ -2,98 +2,77 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F90ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048B8ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08019205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1D4205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbfJOMHX (ORCPT
+        id S1730206AbfJOMHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:07:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60176 "EHLO mx1.redhat.com"
+        Tue, 15 Oct 2019 08:07:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25440 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfJOMHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:07:23 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EE561106E288;
-        Tue, 15 Oct 2019 12:07:22 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-26.ams2.redhat.com [10.36.116.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B05A260C5D;
-        Tue, 15 Oct 2019 12:07:18 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>, stable@vger.kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1] hugetlbfs: don't access uninitialized memmaps in pfn_range_valid_gigantic()
-Date:   Tue, 15 Oct 2019 14:07:17 +0200
-Message-Id: <20191015120717.4858-1-david@redhat.com>
+        id S1726540AbfJOMHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:07:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 05:07:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,299,1566889200"; 
+   d="scan'208";a="347055145"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 15 Oct 2019 05:07:27 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iKLbq-0007Un-7c; Tue, 15 Oct 2019 15:07:26 +0300
+Date:   Tue, 15 Oct 2019 15:07:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 05/14] software node: clean up
+ property_copy_string_array()
+Message-ID: <20191015120726.GG32742@smile.fi.intel.com>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-6-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 15 Oct 2019 12:07:23 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011230721.206646-6-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uninitialized memmaps contain garbage and in the worst case trigger
-kernel BUGs, especially with CONFIG_PAGE_POISONING. They should not get
-touched.
+On Fri, Oct 11, 2019 at 04:07:12PM -0700, Dmitry Torokhov wrote:
+> Because property_copy_string_array() stores the newly allocated pointer in the
+> destination property, we have an awkward code in property_entry_copy_data()
+> where we fetch the new pointer from dst.
 
-Let's make sure that we only consider online memory (managed by the
-buddy) that has initialized memmaps. ZONE_DEVICE is not applicable.
+I don't see a problem in this function.
 
-page_zone() will call page_to_nid(), which will trigger
-VM_BUG_ON_PGFLAGS(PagePoisoned(page), page) with CONFIG_PAGE_POISONING
-and CONFIG_DEBUG_VM_PGFLAGS when called on uninitialized memmaps. This
-can be the case when an offline memory block (e.g., never onlined) is
-spanned by a zone.
+Rather 'awkward code' is a result of use property_set_pointer() which relies on
+data type.
 
-Note: As explained by Michal in [1], alloc_contig_range() will verify
-the range. So it boils down to the wrong access in this function.
+> Let's change property_copy_string_array() to return pointer and rely on the
+> common path in property_entry_copy_data() to store it in destination structure.
 
-[1] http://lkml.kernel.org/r/20180423000943.GO17484@dhcp22.suse.cz
-
-Reported-by: Michal Hocko <mhocko@kernel.org>
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
-Cc: stable@vger.kernel.org # v4.13+
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/hugetlb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index ef37c85423a5..b45a95363a84 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1084,11 +1084,10 @@ static bool pfn_range_valid_gigantic(struct zone *z,
- 	struct page *page;
- 
- 	for (i = start_pfn; i < end_pfn; i++) {
--		if (!pfn_valid(i))
-+		page = pfn_to_online_page(i);
-+		if (!page)
- 			return false;
- 
--		page = pfn_to_page(i);
--
- 		if (page_zone(page) != z)
- 			return false;
- 
 -- 
-2.21.0
+With Best Regards,
+Andy Shevchenko
+
 
