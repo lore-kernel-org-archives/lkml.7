@@ -2,101 +2,96 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B73DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A749ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D442C20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNB7zsId"
+	by mail.kernel.org (Postfix) with ESMTP id 2D35520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfJODbc (ORCPT
+        id S1727882AbfJODbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 23:31:32 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44350 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfJODbb (ORCPT
+        Mon, 14 Oct 2019 23:31:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35570 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfJODbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 23:31:31 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q15so8875619pll.11;
-        Mon, 14 Oct 2019 20:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kcTiANv3bdbvw944ObmUJeWBJyrPQFWZ0rLqctEkp3k=;
-        b=kNB7zsIdYUG3wLG6gGYVv52cd+gyptFAO4DIh6Z8KZ3IWYgVUBSYnbnYvHogqvoZHq
-         CdAowTkTxenQFx5sh4/Oh2vPHdy/2Fqp+oEYCrmz36cYzOTZU6sulNPyHfdCOtmi7wqR
-         n/32uySBMaCkubkVGFSOD+75IsaKFhFm2a2c4c/G0XnUaiRETiirn1EfojiKOHbA0Q0T
-         18aBDoRqBkS4kJf0kVtxzBstftE6RJeX4ZleeWkNFwu5fM4w0ffxMK9Y1tqLWK/0ydx/
-         SGq6lR5VOQY4ejQk+Ft0oBP1nNeqndhG6mSlyIepZ1JthtHdfQhRd0649Cj45MrSeHvd
-         u/NA==
+        Mon, 14 Oct 2019 23:31:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id q10so42795031iop.2;
+        Mon, 14 Oct 2019 20:31:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kcTiANv3bdbvw944ObmUJeWBJyrPQFWZ0rLqctEkp3k=;
-        b=QyW5/4NLYhd3cGwx5eZfrTShOTCIQq/ynVcXx33N/kcIeShJK1NaHtlOL3B0j6uBU/
-         b+E9QQqMRwyEE7zSkXtdPvIe4LY8yyEZktTpdCqZGzqkrsSw2C7tjPRcNMgzlbfEHU/R
-         lbTJZqkGjt7ajgzjzDQymTMpGAtw9Lh9yrZsIpGmPEsTVuqeV1Gv7KPITrdNj0CKmrg0
-         XByKn2wamDVNgXoWHvXuQ8L3m4jQi9hlFy/RSjS1N37/8RgETb3h3HpREIFhSxEjVkGl
-         0BSsfd4Qh4bsug2ALZ87YfB1jgWJxZCv3NLDej0inydroxkpOA2BNNB5WEB/ovVnP8Mc
-         QgIA==
-X-Gm-Message-State: APjAAAXu7h/IdVBQWKys2mLOP1uTMqGS4NbuI8IWgw3rSfTn6t7Zk3KG
-        JYhtV50ozwLPySPkH5z6HGxeqDAY
-X-Google-Smtp-Source: APXvYqyKaU0kicO0Q8U5Q4TPzIszdr401voEh0M21j5kNj87ZilmOxqwqkZMY0fhNSvAhGcigF7eiQ==
-X-Received: by 2002:a17:902:b70b:: with SMTP id d11mr32144741pls.339.1571110290299;
-        Mon, 14 Oct 2019 20:31:30 -0700 (PDT)
-Received: from localhost.localdomain (S0106d80d17472dbd.wp.shawcable.net. [24.79.253.190])
-        by smtp.gmail.com with ESMTPSA id y9sm7808565pgq.11.2019.10.14.20.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 20:31:29 -0700 (PDT)
-From:   jassisinghbrar@gmail.com
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     vkoul@kernel.org, masami.hiramatsu@linaro.org,
-        orito.takao@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
-Subject: [PATCH v3 0/2] Add support for AXI DMA controller on Milbeaut series
-Date:   Mon, 14 Oct 2019 22:31:16 -0500
-Message-Id: <20191015033116.14580-1-jassisinghbrar@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zhEjQGNeUYnva0C6Q5TMD839svsRDx2jkIkGQy4YWS4=;
+        b=Q29zXeYiB8XHeZ1EqJMpyBXIhr7P1bR8RsUvqgKC0ZGwwOccYqrk29sfcD4ab3Yjgm
+         II7djmY7O8yVxx0Cnj3N3j0anX0qJFH2o7lqsOFrvZ+AtuB51dg51ujml9xofT6yNvlM
+         fGuaGlTNYoMlAwsy7lRt5Y1aOvNCYknmt68C95fiTpXoytGiJ/kQdELL0l6/oN0ONpBU
+         q5l6h0D9RRNOld4kNz/c8PGGgUpWL/nrDsAOEuB1EJoSJKlwPv71FdFaTDbwHQafPosO
+         JZIjIBvvvKR/YdUncmp+2+ID3urmvALLvIvbvULDJCvlNwWzw1JvHsCDFFr+4U89Sj5C
+         nq5g==
+X-Gm-Message-State: APjAAAUOyW+vgr9UGlmj/YCArZzV1d+zxRLkTZC4558Oft3mWiJkIsGB
+        yjCyT7mtZ45uvAInodwr5eeQyHzbPeBvmBMiS8M=
+X-Google-Smtp-Source: APXvYqx6Khf29rFvlzokKbjYXTWq9VNplO9R+e7oZ+ApgNX8SsNYz4bHuRktyfwncTAjBC/ILe8JSLAO9SkVFEvcWDs=
+X-Received: by 2002:a5d:9c03:: with SMTP id 3mr11251986ioe.134.1571110298671;
+ Mon, 14 Oct 2019 20:31:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1571101656-871-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1571101656-871-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Tue, 15 Oct 2019 11:36:59 +0800
+Message-ID: <CAAhV-H573fv+NVqBRgU38BRDDX=syj3gUqnJqRp4CdBx+QcdpQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Loongson: Make default kernel log buffer size as
+ 128KB for Loongson3
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jassi Brar <jaswinder.singh@linaro.org>
+On Tue, Oct 15, 2019 at 10:12 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> When I update kernel with loongson3_defconfig based on the Loongson 3A3000
+> platform, then using dmesg command to show kernel ring buffer, the initial
+> kernel messages have disappeared due to the log buffer is too small, it is
+> better to change the default kernel log buffer size from 16KB to 128KB.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/mips/configs/loongson3_defconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+> index 90ee008..3aa2201 100644
+> --- a/arch/mips/configs/loongson3_defconfig
+> +++ b/arch/mips/configs/loongson3_defconfig
+> @@ -12,7 +12,7 @@ CONFIG_TASKSTATS=y
+>  CONFIG_TASK_DELAY_ACCT=y
+>  CONFIG_TASK_XACCT=y
+>  CONFIG_TASK_IO_ACCOUNTING=y
+> -CONFIG_LOG_BUF_SHIFT=14
+> +CONFIG_LOG_BUF_SHIFT=17
+Hi, Tiezhu,
 
-The following series adds AXI DMA (XDMAC) controller support on Milbeaut series.
-This controller is capable of only Mem<->MEM transfers. Number of channels is
-configurable {2,4,8}
+Why you choose 128KB but not 64KB or 256KB? I found 64KB is enough for
+our cases. And if you really need more, I think 256KB could be better
+because there are many platforms choose 256KB.
 
-Changes Since v2:
- # Drop unused variable
+Huacai
 
-Changes Since v1:
-  # Spelling mistake fix
-
-Jassi Brar (2):
-  dt-bindings: milbeaut-m10v-xdmac: Add Socionext Milbeaut XDMAC
-    bindings
-  dmaengine: milbeaut-xdmac: Add XDMAC driver for Milbeaut platforms
-
- .../bindings/dma/milbeaut-m10v-xdmac.txt      |  24 +
- drivers/dma/Kconfig                           |  10 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/milbeaut-xdmac.c                  | 418 ++++++++++++++++++
- 4 files changed, 453 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-xdmac.txt
- create mode 100644 drivers/dma/milbeaut-xdmac.c
-
--- 
-2.20.1
-
+>  CONFIG_MEMCG=y
+>  CONFIG_MEMCG_SWAP=y
+>  CONFIG_BLK_CGROUP=y
+> --
+> 2.1.0
+>
+>
