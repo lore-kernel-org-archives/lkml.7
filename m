@@ -2,37 +2,37 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C48EECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFD4ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C18217D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7A320854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389380AbfJOTSk (ORCPT
+        id S2389477AbfJOTSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:18:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45616 "EHLO
+        Tue, 15 Oct 2019 15:18:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45684 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731887AbfJOTSg (ORCPT
+        with ESMTP id S2389425AbfJOTSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:18:36 -0400
+        Tue, 15 Oct 2019 15:18:47 -0400
 Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1iKSL3-00067i-BD; Tue, 15 Oct 2019 21:18:33 +0200
+        id 1iKSLE-00067i-DS; Tue, 15 Oct 2019 21:18:44 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 05/34] c6x: Use CONFIG_PREEMPTION
-Date:   Tue, 15 Oct 2019 21:17:52 +0200
-Message-Id: <20191015191821.11479-6-bigeasy@linutronix.de>
+Cc:     tglx@linutronix.de,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>
+Subject: [PATCH 31/34] locking: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:18:18 +0200
+Message-Id: <20191015191821.11479-32-bigeasy@linutronix.de>
 In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
 References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -42,63 +42,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
-
 CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
 Both PREEMPT and PREEMPT_RT require the same functionality which today
 depends on CONFIG_PREEMPT.
 
-Switch the entry code over to use CONFIG_PREEMPTION.
+Switch the Kconfig dependency to use CONFIG_PREEMPTION.
 
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
-Cc: linux-c6x-dev@linux-c6x.org
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/c6x/kernel/entry.S | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/Kconfig.locks | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/c6x/kernel/entry.S b/arch/c6x/kernel/entry.S
-index 4332a10aec6c7..fb154d19625bc 100644
---- a/arch/c6x/kernel/entry.S
-+++ b/arch/c6x/kernel/entry.S
-@@ -18,7 +18,7 @@
- #define DP	B14
- #define SP	B15
+diff --git a/kernel/Kconfig.locks b/kernel/Kconfig.locks
+index e0852dc333acd..3de8fd11873b4 100644
+--- a/kernel/Kconfig.locks
++++ b/kernel/Kconfig.locks
+@@ -101,7 +101,7 @@ config UNINLINE_SPIN_UNLOCK
+ # unlock and unlock_irq functions are inlined when:
+ #   - DEBUG_SPINLOCK=3Dn and ARCH_INLINE_*LOCK=3Dy
+ #  or
+-#   - DEBUG_SPINLOCK=3Dn and PREEMPT=3Dn
++#   - DEBUG_SPINLOCK=3Dn and PREEMPTION=3Dn
+ #
+ # unlock_bh and unlock_irqrestore functions are inlined when:
+ #   - DEBUG_SPINLOCK=3Dn and ARCH_INLINE_*LOCK=3Dy
+@@ -139,7 +139,7 @@ config INLINE_SPIN_UNLOCK_BH
 =20
--#ifndef CONFIG_PREEMPT
-+#ifndef CONFIG_PREEMPTION
- #define resume_kernel restore_all
- #endif
+ config INLINE_SPIN_UNLOCK_IRQ
+ 	def_bool y
+-	depends on !PREEMPT || ARCH_INLINE_SPIN_UNLOCK_IRQ
++	depends on !PREEMPTION || ARCH_INLINE_SPIN_UNLOCK_IRQ
 =20
-@@ -287,7 +287,7 @@
- 	;; is a little bit different
- 	;;
- ENTRY(ret_from_exception)
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	MASK_INT B2
- #endif
+ config INLINE_SPIN_UNLOCK_IRQRESTORE
+ 	def_bool y
+@@ -168,7 +168,7 @@ config INLINE_READ_LOCK_IRQSAVE
 =20
-@@ -557,7 +557,7 @@ ENDPROC(_nmi_handler)
- 	;;
- 	;; Jump to schedule() then return to ret_from_isr
- 	;;
--#ifdef	CONFIG_PREEMPT
-+#ifdef	CONFIG_PREEMPTION
- resume_kernel:
- 	GET_THREAD_INFO A12
- 	LDW	.D1T1	*+A12(THREAD_INFO_PREEMPT_COUNT),A1
-@@ -582,7 +582,7 @@ ENDPROC(_nmi_handler)
- 	B	.S2	preempt_schedule_irq
- #endif
- 	ADDKPC	.S2	preempt_schedule,B3,4
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
+ config INLINE_READ_UNLOCK
+ 	def_bool y
+-	depends on !PREEMPT || ARCH_INLINE_READ_UNLOCK
++	depends on !PREEMPTION || ARCH_INLINE_READ_UNLOCK
 =20
- ENTRY(enable_exception)
- 	DINT
+ config INLINE_READ_UNLOCK_BH
+ 	def_bool y
+@@ -176,7 +176,7 @@ config INLINE_READ_UNLOCK_BH
+=20
+ config INLINE_READ_UNLOCK_IRQ
+ 	def_bool y
+-	depends on !PREEMPT || ARCH_INLINE_READ_UNLOCK_IRQ
++	depends on !PREEMPTION || ARCH_INLINE_READ_UNLOCK_IRQ
+=20
+ config INLINE_READ_UNLOCK_IRQRESTORE
+ 	def_bool y
+@@ -205,7 +205,7 @@ config INLINE_WRITE_LOCK_IRQSAVE
+=20
+ config INLINE_WRITE_UNLOCK
+ 	def_bool y
+-	depends on !PREEMPT || ARCH_INLINE_WRITE_UNLOCK
++	depends on !PREEMPTION || ARCH_INLINE_WRITE_UNLOCK
+=20
+ config INLINE_WRITE_UNLOCK_BH
+ 	def_bool y
+@@ -213,7 +213,7 @@ config INLINE_WRITE_UNLOCK_BH
+=20
+ config INLINE_WRITE_UNLOCK_IRQ
+ 	def_bool y
+-	depends on !PREEMPT || ARCH_INLINE_WRITE_UNLOCK_IRQ
++	depends on !PREEMPTION || ARCH_INLINE_WRITE_UNLOCK_IRQ
+=20
+ config INLINE_WRITE_UNLOCK_IRQRESTORE
+ 	def_bool y
 --=20
 2.23.0
 
