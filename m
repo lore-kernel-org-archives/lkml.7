@@ -2,121 +2,90 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C06ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D8DECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B648A20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B499221928
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732316AbfJOOCm (ORCPT
+        id S1732448AbfJOODR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:02:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37206 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732011AbfJOOCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:02:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4FC9B2C5;
-        Tue, 15 Oct 2019 14:02:39 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 16:02:38 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
-        jikos@kernel.org, pmladek@suse.com, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
-In-Reply-To: <f82e57ce-f33f-4ace-514e-75fcba42b5ba@redhat.com>
-Message-ID: <alpine.LSU.2.21.1910151555430.13169@pobox.suse.cz>
-References: <20191014105923.29607-1-mbenes@suse.cz> <20191014223100.GA16608@redhat.com> <alpine.LSU.2.21.1910151259220.30206@pobox.suse.cz> <f82e57ce-f33f-4ace-514e-75fcba42b5ba@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 15 Oct 2019 10:03:17 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42585 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732170AbfJOODQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:03:16 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i185so16845042oif.9;
+        Tue, 15 Oct 2019 07:03:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lOjJLF7sukvj2eKb65vV1HI25D8NmeruWTF/C6krm1Q=;
+        b=bjxevdDoTVfJ4gqJeH+FKT9XM3NZqH/LwPfYRFhcWwHSxLfriO01Jtn3V3Mpqczqkb
+         LHlhvvYXAC1asDG8OYBRWESpcyepJzeITzH8wJF1aGOnpzjo4HZa2/fmeB7duk4iK60D
+         6cmKCskWo6zDJqebLvmK+nGDo3p3sac6VRDBgSOZDIvXh+k0o+Q7NuIazdB12u4/5J2o
+         p4iYV5VEOBGkXcgsmvMlFfz8q03YTtll/OWlaRSRQeFx9lKyu/CWptHZiq/VLSQpIt57
+         T+vjBMCm5WZ7YkYVSFolmAqB4fDIrw86s7eYFt/xCnN61SEYJZu1YMvGJ+ijCEvOC2n/
+         GrHQ==
+X-Gm-Message-State: APjAAAXrZWDPydm8xYtfDoRmP0OQfVER1D/MsaTCIKJDeVDUy8LTkV4u
+        0TrAcL1KCCdnhN5HoPz69/CYpjC9ihAw13LzsVI=
+X-Google-Smtp-Source: APXvYqyr2Z8Smipppw7iBN2DU7emj0QxlbQzT35YfXNX6ZmXYwoICBBJd/mbfEEWv1S0yH9hYhQVJ4X3dWgp6QTqlV4=
+X-Received: by 2002:aca:882:: with SMTP id 124mr29310652oii.54.1571148195408;
+ Tue, 15 Oct 2019 07:03:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org> <20191015104621.62514-2-jacopo+renesas@jmondi.org>
+In-Reply-To: <20191015104621.62514-2-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Oct 2019 16:03:04 +0200
+Message-ID: <CAMuHMdVr=eVJWMC=oHsfUE8=ODj8aMw2Wq1nr0Cd+ngxW7nuMA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/8] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        Sean Paul <seanpaul@chromium.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019, Joe Lawrence wrote:
+Hi Jacopo,
 
-> On 10/15/19 7:23 AM, Miroslav Benes wrote:
-> >> Hi Miroslav,
-> >>
-> >> Maybe we should add a test to verify this new behavior?  See sample
-> >> version below (lightly tested).  We can add to this one, or patch
-> >> seperately if you prefer.
-> > 
-> > Thanks a lot, Joe. It looks nice. I'll include it in v3. One question
-> > below.
-> >   
-> >> -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-> >>
-> >>   
-> >> >From c8c9f22e3816ca4c90ab7e7159d2ce536eaa5fad Mon Sep 17 00:00:00 2001
-> >> From: Joe Lawrence <joe.lawrence@redhat.com>
-> >> Date: Mon, 14 Oct 2019 18:25:01 -0400
-> >> Subject: [PATCH] selftests/livepatch: test interaction with ftrace_enabled
-> >>
-> >> Since livepatching depends upon ftrace handlers to implement "patched"
-> >> functionality, verify that the ftrace_enabled sysctl value interacts
-> >> with livepatch registration as expected.
-> >>
-> >> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> >> ---
-> >>   tools/testing/selftests/livepatch/Makefile    |  3 +-
-> >>   .../testing/selftests/livepatch/functions.sh  | 18 +++++
-> >>   .../selftests/livepatch/test-ftrace.sh        | 65 +++++++++++++++++++
-> >>   3 files changed, 85 insertions(+), 1 deletion(-)
-> >>   create mode 100755 tools/testing/selftests/livepatch/test-ftrace.sh
-> >>
-> >> diff --git a/tools/testing/selftests/livepatch/Makefile
-> >> b/tools/testing/selftests/livepatch/Makefile
-> >> index fd405402c3ff..1886d9d94b88 100644
-> >> --- a/tools/testing/selftests/livepatch/Makefile
-> >> +++ b/tools/testing/selftests/livepatch/Makefile
-> >> @@ -4,6 +4,7 @@ TEST_PROGS_EXTENDED := functions.sh
-> >>   TEST_PROGS := \
-> >>    test-livepatch.sh \
-> >>    test-callbacks.sh \
-> >> -	test-shadow-vars.sh
-> >> +	test-shadow-vars.sh \
-> >> +	test-ftrace.sh
-> >>   
-> >>   include ../lib.mk
-> >> diff --git a/tools/testing/selftests/livepatch/functions.sh
-> >> b/tools/testing/selftests/livepatch/functions.sh
-> >> index 79b0affd21fb..556252efece0 100644
-> >> --- a/tools/testing/selftests/livepatch/functions.sh
-> >> +++ b/tools/testing/selftests/livepatch/functions.sh
-> >> @@ -52,6 +52,24 @@ function set_dynamic_debug() {
-> >>   		EOF
-> >>   }
-> >>   
-> >> +function push_ftrace_enabled() {
-> >> +	FTRACE_ENABLED=$(sysctl --values kernel.ftrace_enabled)
-> >> +}
-> > 
-> > Shouldn't we call push_ftrace_enabled() somewhere at the beginning of the
-> > test script? set_dynamic_debug() calls its push_dynamic_debug() directly,
-> > but set_ftrace_enabled() is different, because it is called more than once
-> > in the script.
-> > 
-> > One could argue that ftrace_enabled has to be true at the beginning of
-> > testing anyway, but I think it would be cleaner. Btw, we should probably
-> > guarantee that ftrace_enabled is true when livepatch selftests are
-> > invoked.
-> > 
-> 
-> Ah yes, that occurred to me while creating that piece of the patch. Something
-> like setup_test_config() that pushes both ftrace and the debugfs, etc. would
-> be cleaner for all scripts.  If you're onboard with that idea, I can make that
-> revision.
+On Tue, Oct 15, 2019 at 12:44 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
+>
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
 
-Yes, that would be perfect. Thanks.
+V2H is excluded, too.
 
-Miroslav
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
