@@ -2,293 +2,105 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3F9ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF174C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6E22054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8679C2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCjFd3RF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbfJOO6F (ORCPT
+        id S1733174AbfJOO7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:58:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43786 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbfJOO6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:58:04 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2D3E03175295;
-        Tue, 15 Oct 2019 14:58:04 +0000 (UTC)
-Received: from redhat.com (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23E7510027C5;
-        Tue, 15 Oct 2019 14:58:03 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 10:58:01 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
-        jikos@kernel.org, pmladek@suse.com, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191015145801.GA9922@redhat.com>
-References: <20191014105923.29607-1-mbenes@suse.cz>
- <20191014223100.GA16608@redhat.com>
- <alpine.LSU.2.21.1910151259220.30206@pobox.suse.cz>
+        Tue, 15 Oct 2019 10:59:03 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36636 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfJOO7D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:59:03 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y189so19463228qkc.3;
+        Tue, 15 Oct 2019 07:59:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0IKRgzJhEVbgVHJJC0u8XBcMR7mFdoVrs5PHFDROGLU=;
+        b=ZCjFd3RFO7SBtJEzInClfrVeO2THKMYaALHFTO7MGgGpbRxzC654FSftUNvOnEIlTL
+         QRxTcBkIT0vXQ1ozsibWl000dFh6DyU2z7sKGtg0hFfuLWdhvAxswXsCnukTByAzGXfV
+         /5/aGH9757HTW+HeBEY2uOQ4UiL2uB00QTj1EYdgvLq6rHP1Y2juhVkZuf0V4nKPIjcS
+         t3R/FK3eBjL0lv+4msEEOi6KklHSje3dkSPEgAXb5PCyma0pOYQpXNu/z36ZZykgztcT
+         zl8/gixky6G08BnmZjTnmgPka+y1jjdVl8Y8b0K86CwminiszXeUzMTo9wxXcBHMewbx
+         uunQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0IKRgzJhEVbgVHJJC0u8XBcMR7mFdoVrs5PHFDROGLU=;
+        b=Z0patw/eVeao7dzcl/HRIzVJ5dPTgqUQ8DXN7ILH9r5YvrpIcy3UjxuWK17TEqmOtE
+         wCbk51sIoeZvyOgn2LaH0LCnGo1AbiRgICjsSpxzC0g275L8ec+4ml1g3hTRajlRLi3t
+         7xoMEhKRnED7JXZmK+eGi9HqDwLxVs7y7vGqHLWDt04rdoGgemPbsfFmTSX2fOcVQDwu
+         sXnEARt8eNHafvXcXGDRLI6gNM9G+q0EDJJy9NnIARgutYKtTPArqweNZNME/gz9EONG
+         VQRRPgbi/Kuw4KCOoYXR6gUm+HXE+MFTFIy51L0Vr9/WiqA7n9/xWowL1q7yLHtSg/f0
+         Xp2g==
+X-Gm-Message-State: APjAAAWqsa2RLupxNU8RceAOM5CJX0HqMJb/8mfYbAifD06nYQ/P+Ruz
+        0donfpL+BtTjdeTC3VSMdi0=
+X-Google-Smtp-Source: APXvYqzv49zL8tQ+fv/E/gbnnJhKCx60+jHh7qJg6+s+jeS0X1pfV18QEBKgtEus9YEioLlrpMboNQ==
+X-Received: by 2002:ae9:f714:: with SMTP id s20mr34935941qkg.262.1571151542217;
+        Tue, 15 Oct 2019 07:59:02 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id f27sm9665024qtv.85.2019.10.15.07.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 07:59:00 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C905E4DD66; Tue, 15 Oct 2019 11:58:58 -0300 (-03)
+Date:   Tue, 15 Oct 2019 11:58:58 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, ilubashe@akamai.com,
+        ak@linux.intel.com, kan.liang@linux.intel.com,
+        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, hushiyuan@huawei.com,
+        linfeilong@huawei.com
+Subject: Re: [PATCH] perf tools: fix resource leak of closedir() on the error
+ paths
+Message-ID: <20191015145858.GA24098@kernel.org>
+References: <cd5f7cd2-b80d-6add-20a1-32f4f43e0744@huawei.com>
+ <20191015084451.GB10951@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1910151259220.30206@pobox.suse.cz>
+In-Reply-To: <20191015084451.GB10951@krava>
+X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 15 Oct 2019 14:58:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:23:10PM +0200, Miroslav Benes wrote:
-> > Hi Miroslav,
+Em Tue, Oct 15, 2019 at 10:44:51AM +0200, Jiri Olsa escreveu:
+> On Tue, Oct 15, 2019 at 04:30:08PM +0800, Yunfeng Ye wrote:
+> > Both build_mem_topology() and rm_rf_depth_pat() have resource leak of
+> > closedir() on the error paths.
 > > 
-> > Maybe we should add a test to verify this new behavior?  See sample
-> > version below (lightly tested).  We can add to this one, or patch
-> > seperately if you prefer.
+> > Fix this by calling closedir() before function returns.
+> > 
+> > Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
+> > Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
 > 
-> Thanks a lot, Joe. It looks nice. I'll include it in v3. One question 
-> below.
->  
-> [ ... snip ... ]
+> guilty as charged ;-)
 > 
-> Shouldn't we call push_ftrace_enabled() somewhere at the beginning of the 
-> test script? set_dynamic_debug() calls its push_dynamic_debug() directly, 
-> but set_ftrace_enabled() is different, because it is called more than once 
-> in the script.
-> 
-> One could argue that ftrace_enabled has to be true at the beginning of 
-> testing anyway, but I think it would be cleaner. Btw, we should probably 
-> guarantee that ftrace_enabled is true when livepatch selftests are 
-> invoked.
-> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Here's a new version that combines the ftrace_enabled configuration with
-the debugfs stuff (so its only pushed/pop once per test) and updates all
-the tests accordingly.  Feel free to any tweaks or flourishes when
-adding to v3.
+Thanks, applied to perf/urgent.
 
-Thanks,
-
--- Joe
-
--->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-
-From a22ca55b3f429b7c9ceed6be87a571f77520994c Mon Sep 17 00:00:00 2001
-From: Joe Lawrence <joe.lawrence@redhat.com>
-Date: Tue, 15 Oct 2019 10:33:18 -0400
-Subject: [PATCH] selftests/livepatch: test interaction with ftrace_enabled
-
-Since livepatching depends upon ftrace handlers to implement "patched"
-code functionality, verify that the ftrace_enabled sysctl value
-interacts with livepatch registration as expected.  At the same time,
-ensure that ftrace_enabled is set and part of the test environment
-configuration that is saved and restored when running the selftests.
-
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
----
- tools/testing/selftests/livepatch/Makefile    |  3 +-
- .../testing/selftests/livepatch/functions.sh  | 34 +++++++---
- .../selftests/livepatch/test-callbacks.sh     |  2 +-
- .../selftests/livepatch/test-ftrace.sh        | 65 +++++++++++++++++++
- .../selftests/livepatch/test-livepatch.sh     |  2 +-
- .../selftests/livepatch/test-shadow-vars.sh   |  2 +-
- 6 files changed, 95 insertions(+), 13 deletions(-)
- create mode 100755 tools/testing/selftests/livepatch/test-ftrace.sh
-
-diff --git a/tools/testing/selftests/livepatch/Makefile b/tools/testing/selftests/livepatch/Makefile
-index fd405402c3ff..1886d9d94b88 100644
---- a/tools/testing/selftests/livepatch/Makefile
-+++ b/tools/testing/selftests/livepatch/Makefile
-@@ -4,6 +4,7 @@ TEST_PROGS_EXTENDED := functions.sh
- TEST_PROGS := \
- 	test-livepatch.sh \
- 	test-callbacks.sh \
--	test-shadow-vars.sh
-+	test-shadow-vars.sh \
-+	test-ftrace.sh
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-index 79b0affd21fb..31eb09e38729 100644
---- a/tools/testing/selftests/livepatch/functions.sh
-+++ b/tools/testing/selftests/livepatch/functions.sh
-@@ -29,29 +29,45 @@ function die() {
- 	exit 1
- }
- 
--function push_dynamic_debug() {
--        DYNAMIC_DEBUG=$(grep '^kernel/livepatch' /sys/kernel/debug/dynamic_debug/control | \
--                awk -F'[: ]' '{print "file " $1 " line " $2 " " $4}')
-+function push_config() {
-+	DYNAMIC_DEBUG=$(grep '^kernel/livepatch' /sys/kernel/debug/dynamic_debug/control | \
-+			awk -F'[: ]' '{print "file " $1 " line " $2 " " $4}')
-+	FTRACE_ENABLED=$(sysctl --values kernel.ftrace_enabled)
- }
- 
--function pop_dynamic_debug() {
-+function pop_config() {
- 	if [[ -n "$DYNAMIC_DEBUG" ]]; then
- 		echo -n "$DYNAMIC_DEBUG" > /sys/kernel/debug/dynamic_debug/control
- 	fi
-+	if [[ -n "$FTRACE_ENABLED" ]]; then
-+		sysctl kernel.ftrace_enabled="$FTRACE_ENABLED" &> /dev/null
-+	fi
- }
- 
--# set_dynamic_debug() - save the current dynamic debug config and tweak
--# 			it for the self-tests.  Set a script exit trap
--#			that restores the original config.
- function set_dynamic_debug() {
--        push_dynamic_debug
--        trap pop_dynamic_debug EXIT INT TERM HUP
-         cat <<-EOF > /sys/kernel/debug/dynamic_debug/control
- 		file kernel/livepatch/* +p
- 		func klp_try_switch_task -p
- 		EOF
- }
- 
-+function set_ftrace_enabled() {
-+	local sysctl="$1"
-+	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
-+	echo "livepatch: $result" > /dev/kmsg
-+}
-+
-+# setup_config - save the current config and set a script exit trap that
-+#		 restores the original config.  Setup the dynamic debug
-+#		 for verbose livepatching output and turn on
-+#		 the ftrace_enabled sysctl.
-+function setup_config() {
-+	push_config
-+	set_dynamic_debug
-+	set_ftrace_enabled 1
-+	trap pop_config EXIT INT TERM HUP
-+}
-+
- # loop_until(cmd) - loop a command until it is successful or $MAX_RETRIES,
- #		    sleep $RETRY_INTERVAL between attempts
- #	cmd - command and its arguments to run
-diff --git a/tools/testing/selftests/livepatch/test-callbacks.sh b/tools/testing/selftests/livepatch/test-callbacks.sh
-index e97a9dcb73c7..a35289b13c9c 100755
---- a/tools/testing/selftests/livepatch/test-callbacks.sh
-+++ b/tools/testing/selftests/livepatch/test-callbacks.sh
-@@ -9,7 +9,7 @@ MOD_LIVEPATCH2=test_klp_callbacks_demo2
- MOD_TARGET=test_klp_callbacks_mod
- MOD_TARGET_BUSY=test_klp_callbacks_busy
- 
--set_dynamic_debug
-+setup_config
- 
- 
- # TEST: target module before livepatch
-diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
-new file mode 100755
-index 000000000000..e2a76887f40a
---- /dev/null
-+++ b/tools/testing/selftests/livepatch/test-ftrace.sh
-@@ -0,0 +1,65 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2019 Joe Lawrence <joe.lawrence@redhat.com>
-+
-+. $(dirname $0)/functions.sh
-+
-+MOD_LIVEPATCH=test_klp_livepatch
-+
-+setup_config
-+
-+
-+# TEST: livepatch interaction with ftrace_enabled sysctl
-+# - turn ftrace_enabled OFF and verify livepatches can't load
-+# - turn ftrace_enabled ON and verify livepatch can load
-+# - verify that ftrace_enabled can't be turned OFF while a livepatch is loaded
-+
-+echo -n "TEST: livepatch interaction with ftrace_enabled sysctl ... "
-+dmesg -C
-+
-+set_ftrace_enabled 0
-+load_failing_mod $MOD_LIVEPATCH
-+
-+set_ftrace_enabled 1
-+load_lp $MOD_LIVEPATCH
-+if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
-+	echo -e "FAIL\n\n"
-+	die "livepatch kselftest(s) failed"
-+fi
-+
-+set_ftrace_enabled 0
-+if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
-+	echo -e "FAIL\n\n"
-+	die "livepatch kselftest(s) failed"
-+fi
-+disable_lp $MOD_LIVEPATCH
-+unload_lp $MOD_LIVEPATCH
-+
-+check_result "livepatch: kernel.ftrace_enabled = 0
-+% modprobe $MOD_LIVEPATCH
-+livepatch: enabling patch '$MOD_LIVEPATCH'
-+livepatch: '$MOD_LIVEPATCH': initializing patching transition
-+livepatch: failed to register ftrace handler for function 'cmdline_proc_show' (-16)
-+livepatch: failed to patch object 'vmlinux'
-+livepatch: failed to enable patch '$MOD_LIVEPATCH'
-+livepatch: '$MOD_LIVEPATCH': canceling patching transition, going to unpatch
-+livepatch: '$MOD_LIVEPATCH': completing unpatching transition
-+livepatch: '$MOD_LIVEPATCH': unpatching complete
-+modprobe: ERROR: could not insert '$MOD_LIVEPATCH': Device or resource busy
-+livepatch: kernel.ftrace_enabled = 1
-+% modprobe $MOD_LIVEPATCH
-+livepatch: enabling patch '$MOD_LIVEPATCH'
-+livepatch: '$MOD_LIVEPATCH': initializing patching transition
-+livepatch: '$MOD_LIVEPATCH': starting patching transition
-+livepatch: '$MOD_LIVEPATCH': completing patching transition
-+livepatch: '$MOD_LIVEPATCH': patching complete
-+livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
-+% echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
-+livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
-+livepatch: '$MOD_LIVEPATCH': starting unpatching transition
-+livepatch: '$MOD_LIVEPATCH': completing unpatching transition
-+livepatch: '$MOD_LIVEPATCH': unpatching complete
-+% rmmod $MOD_LIVEPATCH"
-+
-+
-+exit 0
-diff --git a/tools/testing/selftests/livepatch/test-livepatch.sh b/tools/testing/selftests/livepatch/test-livepatch.sh
-index f05268aea859..493e3df415a1 100755
---- a/tools/testing/selftests/livepatch/test-livepatch.sh
-+++ b/tools/testing/selftests/livepatch/test-livepatch.sh
-@@ -7,7 +7,7 @@
- MOD_LIVEPATCH=test_klp_livepatch
- MOD_REPLACE=test_klp_atomic_replace
- 
--set_dynamic_debug
-+setup_config
- 
- 
- # TEST: basic function patching
-diff --git a/tools/testing/selftests/livepatch/test-shadow-vars.sh b/tools/testing/selftests/livepatch/test-shadow-vars.sh
-index 04a37831e204..1aae73299114 100755
---- a/tools/testing/selftests/livepatch/test-shadow-vars.sh
-+++ b/tools/testing/selftests/livepatch/test-shadow-vars.sh
-@@ -6,7 +6,7 @@
- 
- MOD_TEST=test_klp_shadow_vars
- 
--set_dynamic_debug
-+setup_config
- 
- 
- # TEST: basic shadow variable API
--- 
-2.21.0
-
+- Arnaldo
