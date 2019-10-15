@@ -2,84 +2,101 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1173C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3889EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BB92086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IwQ6tTgg"
+	by mail.kernel.org (Postfix) with ESMTP id 17C6D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfJOHpi (ORCPT
+        id S1728069AbfJOHpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 03:45:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33518 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfJOHpi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 03:45:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2Hgn7iVDBV+n+q/nBUSuDJ2Mme2Wkao4IdSyE+LUxiE=; b=IwQ6tTggyHqxATubsClf1JVOH
-        Qsg2v646S3Af948s+WcM6EYBwvPYGUJ0Ceu4ZeUx3DIvU3smHQZ2DIffehy5q8jR7qp14p7Ij4MKX
-        Yet/dmI2VoYHalcZxFiHZAre9MhepTrI94V/q1X483+jneHAJBBKShqFmWRfvEXv1/6nb402HjDw3
-        W/hHo6QxiRPNxC1rL4WRvouBvwp6ZbA7oyBaK+BXnOuPWasB4QuFkEL2S16TWh3VOJNgB0pB1aY6Q
-        +ud3rq4a6BY+h6WIXLBY6qLdDFSrv5zjwxp45Jizm+O6D+3bAiyAiyCSmjdGNN2o32bW2R0PB5Z13
-        mfezhuHIQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKHWI-0008M7-45; Tue, 15 Oct 2019 07:45:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5729B300B8D;
-        Tue, 15 Oct 2019 09:44:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B798120238A89; Tue, 15 Oct 2019 09:45:22 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 09:45:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manfred Spraul <manfred@colorfullife.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 6/6] Documentation/memory-barriers.txt: Clarify cmpxchg()
-Message-ID: <20191015074522.GB2311@hirez.programming.kicks-ass.net>
-References: <20191012054958.3624-1-manfred@colorfullife.com>
- <20191012054958.3624-7-manfred@colorfullife.com>
- <20191014130321.GG2328@hirez.programming.kicks-ass.net>
- <ef45c2ca-942a-df83-22cf-690eaf761fb7@colorfullife.com>
+        Tue, 15 Oct 2019 03:45:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44420 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727451AbfJOHpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 03:45:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CB419AC59;
+        Tue, 15 Oct 2019 07:45:40 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 09:45:40 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>, jikos@kernel.org,
+        joe.lawrence@redhat.com, jpoimboe@redhat.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
+Message-ID: <20191015074540.bxehllisibls3kk7@pathway.suse.cz>
+References: <20191014105923.29607-1-mbenes@suse.cz>
+ <20191014111719.141bd4fa@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ef45c2ca-942a-df83-22cf-690eaf761fb7@colorfullife.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191014111719.141bd4fa@gandalf.local.home>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 07:49:56PM +0200, Manfred Spraul wrote:
-
-> From 61c85a56994e32ea393af9debef4cccd9cd24abd Mon Sep 17 00:00:00 2001
-> From: Manfred Spraul <manfred@colorfullife.com>
-> Date: Fri, 11 Oct 2019 10:33:26 +0200
-> Subject: [PATCH] Update Documentation for _{acquire|release|relaxed}()
+On Mon 2019-10-14 11:17:19, Steven Rostedt wrote:
+> On Mon, 14 Oct 2019 12:59:23 +0200
+> Miroslav Benes <mbenes@suse.cz> wrote:
 > 
-> When adding the _{acquire|release|relaxed}() variants of some atomic
-> operations, it was forgotten to update Documentation/memory_barrier.txt:
+> >  int
+> >  ftrace_enable_sysctl(struct ctl_table *table, int write,
+> >  		     void __user *buffer, size_t *lenp,
+> > @@ -6740,8 +6754,6 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+> >  	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
+> >  		goto out;
+> >  
+> > -	last_ftrace_enabled = !!ftrace_enabled;
+> > -
+> >  	if (ftrace_enabled) {
+> >  
+> >  		/* we are starting ftrace again */
+> > @@ -6752,12 +6764,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+> >  		ftrace_startup_sysctl();
+> >  
+> >  	} else {
+> > +		if (is_permanent_ops_registered()) {
+> > +			ftrace_enabled = last_ftrace_enabled;
 > 
-> smp_mb__{before,after}_atomic() is now indended for all RMW operations
+> Although this is not incorrect, but may be somewhat confusing.
+> 
+> At this location, last_ftrace_enabled is always true.
+> 
+> I'm thinking this would be better to simply set it to false here.
 
-"intended"
+IMHO, we want to set ftrace_enabled = true here.
 
-Otherwise it looks fine, thanks!
+It was set to "false" by writing to the sysfs file. But the change
+gets rejected. ftrace will stay enabled. So, we should set
+the value back to "true".
+
+
+> > +			ret = -EBUSY;
+> > +			goto out;
+> > +		}
+> > +
+> >  		/* stopping ftrace calls (just send to ftrace_stub) */
+> >  		ftrace_trace_function = ftrace_stub;
+> >  
+> >  		ftrace_shutdown_sysctl();
+> >  	}
+> >  
+> > +	last_ftrace_enabled = !!ftrace_enabled;
+> >   out:
+> 
+> And move the assignment of last_ftrace_enabled to after the "out:"
+> label.
+
+This change might make sense anyway. But it is not strictly necessary
+from my POV.
+
+Best Regards,
+Petr
