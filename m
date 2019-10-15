@@ -2,102 +2,66 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F53ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459E4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720EE2089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEA921925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:04:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p8gST8Pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfJOKEL (ORCPT
+        id S1730051AbfJOKEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:04:11 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63131 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfJOKEL (ORCPT
+        Tue, 15 Oct 2019 06:04:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40704 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfJOKEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:04:11 -0400
-Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 2827a5d82acf5506; Tue, 15 Oct 2019 12:04:08 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the pm tree (Was: linux-next: build warning after merge of the pm tree)
-Date:   Tue, 15 Oct 2019 12:04:08 +0200
-Message-ID: <4823987.OjxUhv8yZC@kreacher>
-In-Reply-To: <20191015101650.2a1541af@canb.auug.org.au>
-References: <20191015100855.31b8a3d5@canb.auug.org.au> <20191015101650.2a1541af@canb.auug.org.au>
+        Tue, 15 Oct 2019 06:04:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KeSiQTLT5+yUYgIlTjDJIYnfdPX9XyC/fQqAdAFrXwA=; b=p8gST8Pmdk8tN5w1R3L7qghN0
+        wvgF183kCQmYV1dcdqLrMf0q+n25gOlLCWOJJX4Icj4VB/IXiGYE4/acROOU0l6Axq85KfjPoVKos
+        D1lMywlCB/rrSFvteE5GmN/0tm7LPO/jc9Mm1e3FJYm8xhBtV+bn1TswBFJQGE+flh/fLJo5GccyW
+        jM4j2hGgiRtbyzpgWl8+XdqJbp2diK/jRAhGmBTvmxh8kyDu+W1Od/73ux0av5o42qUwQxGo4VgoY
+        pDIUBPQlCz/VO+5sIuBwGqUhdtHq+xVmzjWw3FCG3P6seqzLgX2WmNHAZ+AGgz/Uflww0PCYeoUUw
+        tbckxSJWQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKJgs-0003gF-EB; Tue, 15 Oct 2019 10:04:30 +0000
+Date:   Tue, 15 Oct 2019 03:04:30 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, mbrugger@suse.com, f.fainelli@gmail.com,
+        wahrenst@gmx.net, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH RFC 2/5] ARM: introduce arm_dma_direct
+Message-ID: <20191015100430.GA13893@infradead.org>
+References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+ <20191014183108.24804-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014183108.24804-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 15, 2019 1:16:50 AM CEST Stephen Rothwell wrote:
-> 
-> --Sig_/6GS1h5au_w04qPbsgg/ztsa
-> Content-Type: text/plain; charset=US-ASCII
-> Content-Transfer-Encoding: quoted-printable
-> 
-> Hi all,
-> 
-> On Tue, 15 Oct 2019 10:08:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-> wrote:
-> >
-> > After merging the pm tree, today's linux-next build (arm
-> > multi_v7_defconfig) produced this warning:
-> >=20
-> > In file included from include/linux/irqchip.h:14,
-> >                  from arch/arm/kernel/irq.c:26:
-> > include/linux/acpi.h:682:31: warning: 'struct acpi_device' declared insid=
-> e parameter list will not be visible outside of this definition or declarat=
-> ion
-> >   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2=
-> , const char *uid2)
-> >       |                               ^~~~~~~~~~~
-> >=20
-> > and many more.
-> >=20
-> > Introduced by commit
-> >=20
-> >   d1748b57dc88 ("ACPI / utils: Introduce acpi_dev_hid_uid_match() helper")
-> >=20
-> > CONFIG_ACPI is not set for this build.
-> 
-> This became a build failure for the powerpc ppc64_allmodconfig build:
-> 
-> In file included from include/linux/i2c.h:13,
->                  from arch/powerpc/platforms/pasemi/misc.c:14:
-> include/linux/acpi.h:682:31: error: 'struct acpi_device' declared inside pa=
-> rameter list will not be visible outside of this definition or declaration =
-> [-Werror]
->   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, =
-> const char *uid2)
->       |                               ^~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> 
-> (and many more)
-> 
-> I have used the pm tree from next-20191014 for today.
-
-So this looks weird, because there is an acpi_dev_put() stub in
-include/linux/acpi.h too in the same #else block and it takes a
-(struct acpi_device *) pointer too and it has not been touched by
-the commit in question.  So why has it built successfully so far?
-
-Also I wonder why 0-day didn't warn about that commit.
-
-Anyway, I've added an extra declaration of struct acpi_device to the #else
-block in question to suppress the warning(s).
-
-
-
+I think we just need to byte the bullet and move over arm to dma-direct
+entirely.  This needs a careful audit of what differs, but the biggest
+item is that we need to ensure dmabounce keeps working (or is replaced
+with swiotlb in a suitable way, but that might be a lot more work).
