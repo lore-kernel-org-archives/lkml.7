@@ -2,178 +2,109 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1233C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DECC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB4420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:07:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NPijPlHE"
+	by mail.kernel.org (Postfix) with ESMTP id 3646620873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732481AbfJOOHd (ORCPT
+        id S1732482AbfJOOJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:07:33 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39649 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732292AbfJOOHc (ORCPT
+        Tue, 15 Oct 2019 10:09:18 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:49386 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbfJOOJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:07:32 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a15so18149083edt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
-        b=NPijPlHE9mOZETSF+T0qFTrnynppESRm1hPk8m15z6BtFKp/f35nb6fP0AtxA+vICD
-         JOWnOXgGumAnnyCgoxgqcArGuemzJeDfqPdA4LYis0/rmWoNPx8t+Aa38BhPM8yc5J1y
-         jTOJ95BLBFELDrUekBUcpVOI1TGYpw9L5o3bg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
-        b=ipWIOzCw/uRmubq1B4oZWmXwIlwEeDtehxHJwQoLd8ew6OLciyHyAbZC2/fJ5jIaxT
-         KraQOY5K09gKeeqGG+4OqB5TTAH4t4xN5YM5xVMlH/0OwkmSxRLqeDwwKvs3bNO/qWfO
-         AKsFr4CkM2MuI3xE0uYjMRXQ7pqK0RqpquZZX0AzEBCkq9WUaAXFt2YRxJT52NlDTr5v
-         nb+n0RrzXOl5XEDMnAtxFvIZXArx4ayX31DEOUztMXmJUV3HqD1VAv3Ns4CNwYjdpoUY
-         uCAuZlnNIhkMLgDQlh/0XfM+l89/sot7wKFAChgDnnQqLLMi3OAoY/p0m+d9z7IimZGp
-         Px1g==
-X-Gm-Message-State: APjAAAWYCWAXQQqBRa3j/sBKy7qBb8cX6Emlj2ZNprPbABNExHQ9IcKY
-        nC9lgo6bUy4qr5iAPKAHXInGDw==
-X-Google-Smtp-Source: APXvYqxwy4bxug6xoJIsFM59wzr8Eu7OLed7aQTfUGOfiWObU9eeM/ertrRHn6MHc5kJuwT0SZQfrw==
-X-Received: by 2002:a17:906:6a8e:: with SMTP id p14mr34255737ejr.137.1571148449724;
-        Tue, 15 Oct 2019 07:07:29 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id d2sm3745355eda.20.2019.10.15.07.07.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 07:07:28 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 16:07:26 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191015140726.GN11828@phenom.ffwll.local>
-Mail-Followup-To: Johan Hovold <johan@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
- <20191011093633.GD27819@localhost>
- <20191014084847.GD11828@phenom.ffwll.local>
- <20191014161326.GO13531@localhost>
+        Tue, 15 Oct 2019 10:09:17 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKNVe-0004HK-Un; Tue, 15 Oct 2019 15:09:11 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKNVe-0000DJ-8u; Tue, 15 Oct 2019 15:09:10 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: imx: gpc: fix initialiser format
+Date:   Tue, 15 Oct 2019 15:09:09 +0100
+Message-Id: <20191015140909.778-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014161326.GO13531@localhost>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:13:26PM +0200, Johan Hovold wrote:
-> On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
-> > On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
-> > > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> > > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > > > > Two old USB drivers had a bug in them which could lead to memory leaks
-> > > > > if an interrupted process raced with a disconnect event.
-> > > > > 
-> > > > > Turns out we had a few more driver in other subsystems with the same
-> > > > > kind of bug in them.
-> > > 
-> > > > Random funny idea: Could we do some debug annotations (akin to
-> > > > might_sleep) that splats when you might_sleep_interruptible somewhere
-> > > > where interruptible sleeps are generally a bad idea? Like in
-> > > > fops->release?
-> > > 
-> > > There's nothing wrong with interruptible sleep in fops->release per se,
-> > > it's just that drivers cannot return -ERESTARTSYS and friends and expect
-> > > to be called again later.
-> > 
-> > Do you have a legit usecase for interruptible sleeps in fops->release?
-> 
-> The tty layer depends on this for example when waiting for buffered
-> writes to complete (something which may never happen when using flow
-> control).
-> 
-> > I'm not even sure killable is legit in there, since it's an fd, not a
-> > process context ...
-> 
-> It will be run in process context in many cases, and for ttys we're good
-> AFAICT.
+Make the initialiers in imx_gpc_domains C99 format to fix the
+following sparse warnings:
 
-Huh, read it a bit, all the ->shutdown callbacks have void return type.
-But there's indeed interruptible sleeps in there. Doesn't this break
-userspace that expects that a close() actually flushes the tty?
+drivers/soc/imx/gpc.c:252:30: warning: obsolete array initializer, use C99 syntax
+drivers/soc/imx/gpc.c:258:29: warning: obsolete array initializer, use C99 syntax
+drivers/soc/imx/gpc.c:269:34: warning: obsolete array initializer, use C99 syntax
+drivers/soc/imx/gpc.c:278:30: warning: obsolete array initializer, use C99 syntax
 
-Imo if you're ->release callbacks feels like it should do a wait to
-guaranteed something userspace expects, then doing a
-wait_interruptible/killable feels like a bug. Or alternatively, the wait
-isn't really needed in the first place.
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/soc/imx/gpc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> > > The return value from release() is ignored by vfs, and adding a splat in
-> > > __fput() to catch these buggy drivers might be overkill.
-> > 
-> > Ime once you have a handful of instances of a broken pattern, creating a
-> > check for it (under a debug option only ofc) is very much justified.
-> > Otherwise they just come back to life like the undead, all the time. And
-> > there's a _lot_ of fops->release callbacks in the kernel.
-> 
-> Yeah, you have a point.
-> 
-> But take tty again as an example, the close tty operation called from
-> release() is declared void so there's no propagated return value for vfs
-> to check.
-> 
-> It may even be better to fix up the 100 or so callbacks potentially
-> returning non-zero and make fops->release void so that the compiler
-> would help us catch any future bugs and also serve as a hint for
-> developers that returning errnos from fops->release is probably not
-> what you want to do.
-> 
-> But that's a lot of churn of course.
-
-Hm indeed ->release has int as return type. I guess that's needed for
-file I/O errno and similar stuff ...
-
-Still void return value doesn't catch funny stuff like doing interruptible
-waits and occasionally failing if you have a process that likes to use
-signals and also uses some library somewhere to do something. In graphics
-we have that, with Xorg loving signals for various things.
--Daniel
+diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+index d9231bd3c691..98b9d9a902ae 100644
+--- a/drivers/soc/imx/gpc.c
++++ b/drivers/soc/imx/gpc.c
+@@ -249,13 +249,13 @@ static struct genpd_power_state imx6_pm_domain_pu_state = {
+ };
+ 
+ static struct imx_pm_domain imx_gpc_domains[] = {
+-	[GPC_PGC_DOMAIN_ARM] {
++	[GPC_PGC_DOMAIN_ARM] = {
+ 		.base = {
+ 			.name = "ARM",
+ 			.flags = GENPD_FLAG_ALWAYS_ON,
+ 		},
+ 	},
+-	[GPC_PGC_DOMAIN_PU] {
++	[GPC_PGC_DOMAIN_PU] = {
+ 		.base = {
+ 			.name = "PU",
+ 			.power_off = imx6_pm_domain_power_off,
+@@ -266,7 +266,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
+ 		.reg_offs = 0x260,
+ 		.cntr_pdn_bit = 0,
+ 	},
+-	[GPC_PGC_DOMAIN_DISPLAY] {
++	[GPC_PGC_DOMAIN_DISPLAY] = {
+ 		.base = {
+ 			.name = "DISPLAY",
+ 			.power_off = imx6_pm_domain_power_off,
+@@ -275,7 +275,7 @@ static struct imx_pm_domain imx_gpc_domains[] = {
+ 		.reg_offs = 0x240,
+ 		.cntr_pdn_bit = 4,
+ 	},
+-	[GPC_PGC_DOMAIN_PCI] {
++	[GPC_PGC_DOMAIN_PCI] = {
+ 		.base = {
+ 			.name = "PCI",
+ 			.power_off = imx6_pm_domain_power_off,
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.23.0
+
