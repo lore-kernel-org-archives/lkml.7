@@ -2,182 +2,193 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FC4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE12ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13B021848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF90121848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="U+go+LWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfJOMRe (ORCPT
+        id S1728880AbfJOMRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:17:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57608 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfJOMRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:17:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 12DEBC05B00E;
-        Tue, 15 Oct 2019 12:17:33 +0000 (UTC)
-Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 99C9760BE2;
-        Tue, 15 Oct 2019 12:17:02 +0000 (UTC)
-Subject: Re: [PATCH V3 4/7] mdev: introduce device specific ops
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-5-jasowang@redhat.com>
- <20191015124137.4f948bd2.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <eb7ecd99-7465-6be4-7ecd-84c11f66e0ac@redhat.com>
-Date:   Tue, 15 Oct 2019 20:17:01 +0800
+        Tue, 15 Oct 2019 08:17:50 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44298 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfJOMRu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:17:50 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m13so19955849ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 05:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CUJTabcY6j71b4GEzT6XKyo8OBw2INdC4r2qptOidxI=;
+        b=U+go+LWtGXKusitb49F19WlIVIDHj7gSpDxev5jxUs+tgODOSSljUeAI0z+9yRTyC4
+         rq04lPaNiYgxNTccdFQenABGPqWjBdycG5N1Z1BSlIy2NeaNR//k1BvoXbUhY43l838m
+         b6I82UTLrEw6GlvXjKx/KmhWJY23aBSqyVq/0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CUJTabcY6j71b4GEzT6XKyo8OBw2INdC4r2qptOidxI=;
+        b=Uug2ie7Snsnlg8t7fdlAazoGJe3SpBVUVg2xLvM/lyEjgSycQgxRPw5QDA5KFSVZvt
+         Miu0OTB+YJcHV5hqdjik+q4NfpJIuvknekmNyDcVKals7YoUtp0bydboFC094Qp9obaw
+         0o5bs0J4w6uARdYRxsrkVG7uslX+9/bkUf3IHDsXzXaiNZwJMjH0uJzAXLwFZF/4wV5v
+         h6aE5uz6NJdY82a/m2qFSntmQJx7QHi2BHVdf/jOjcaGyHEK5GMyKVbyI0mkZ4f6sxK0
+         2KWK6Acp9q07TFw0Uk4IVbqqs5Ij7Zmi42TtTP11tyXPmWXxfQPsk6ViF9O+fNAReAer
+         Pu+g==
+X-Gm-Message-State: APjAAAWvkykIFrjQaaafcxlGWNTs9xHLw4QZsfiaveME6/QlrwlI+o90
+        2QltHuWgAMmblw02v6kqLLAxADaC1XY/tPWM
+X-Google-Smtp-Source: APXvYqxJv/tHWvf7G4r3UK0GcZfBDev93FD7sy9ciNDJgJRGLVALObpk0pPQfbLqW5qg4me40tsapg==
+X-Received: by 2002:a2e:8e87:: with SMTP id z7mr19558852ljk.207.1571141866797;
+        Tue, 15 Oct 2019 05:17:46 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id l3sm4890962lfc.31.2019.10.15.05.17.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 05:17:45 -0700 (PDT)
+Subject: Re: [PATCH v4 1/1] printf: add support for printing symbolic error
+ names
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Joe Perches <joe@perches.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+References: <20190917065959.5560-1-linux@rasmusvillemoes.dk>
+ <20191011133617.9963-1-linux@rasmusvillemoes.dk>
+ <20191011133617.9963-2-linux@rasmusvillemoes.dk>
+ <20191014130247.rag2g7qz54uiw54z@pathway.suse.cz>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <226edb75-b954-cbb4-4ba5-6529a725fe43@rasmusvillemoes.dk>
+Date:   Tue, 15 Oct 2019 14:17:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191015124137.4f948bd2.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191014130247.rag2g7qz54uiw54z@pathway.suse.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 15 Oct 2019 12:17:33 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/10/15 下午6:41, Cornelia Huck wrote:
-> On Fri, 11 Oct 2019 16:15:54 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Currently, except for the create and remove, the rest of
->> mdev_parent_ops is designed for vfio-mdev driver only and may not help
->> for kernel mdev driver. With the help of class id, this patch
->> introduces device specific callbacks inside mdev_device
->> structure. This allows different set of callback to be used by
->> vfio-mdev and virtio-mdev.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   .../driver-api/vfio-mediated-device.rst       | 22 +++++---
->>   MAINTAINERS                                   |  1 +
->>   drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
->>   drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
->>   drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
->>   drivers/vfio/mdev/mdev_core.c                 |  9 +++-
->>   drivers/vfio/mdev/mdev_private.h              |  1 +
->>   drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
->>   include/linux/mdev.h                          | 42 +++------------
->>   include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
->>   samples/vfio-mdev/mbochs.c                    | 20 ++++---
->>   samples/vfio-mdev/mdpy.c                      | 21 +++++---
->>   samples/vfio-mdev/mtty.c                      | 18 ++++---
->>   13 files changed, 177 insertions(+), 96 deletions(-)
->>   create mode 100644 include/linux/vfio_mdev.h
->>
->> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
->> index 2035e48da7b2..553574ebba73 100644
->> --- a/Documentation/driver-api/vfio-mediated-device.rst
->> +++ b/Documentation/driver-api/vfio-mediated-device.rst
->> @@ -152,11 +152,20 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
->>   Vendor drivers are expected to be fully asynchronous in this respect or
->>   provide their own internal resource protection.)
->>   
->> -The callbacks in the mdev_parent_ops structure are as follows:
->> +In order to support multiple types of device/driver, device needs to
->> +provide both class_id and device_ops through:
-> "As multiple types of mediated devices may be supported, the device
-> needs to set up the class id and the device specific callbacks via:"
->
-> ?
->
->>   
->> -* open: open callback of mediated device
->> -* close: close callback of mediated device
->> -* ioctl: ioctl callback of mediated device
->> +    void mdev_set_class(struct mdev_device *mdev, u16 id, const void *ops);
+On 14/10/2019 15.02, Petr Mladek wrote:
+> On Fri 2019-10-11 15:36:17, Rasmus Villemoes wrote:
+>> It has been suggested several times to extend vsnprintf() to be able
+>> to convert the numeric value of ENOSPC to print "ENOSPC". This
+>> implements that as a %p extension: With %pe, one can do
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> I like the patch. There are only two rather cosmetic things.
+> 
+>> diff --git a/lib/errname.c b/lib/errname.c
+>> new file mode 100644
+>> index 000000000000..30d3bab99477
+>> --- /dev/null
+>> +++ b/lib/errname.c
+>> +const char *errname(int err)
+>> +{
+>> +	bool pos = err > 0;
+>> +	const char *name = __errname(err > 0 ? err : -err);
 >> +
->> +The class_id is used to be paired with ids in id_table in mdev_driver
->> +structure for probing the correct driver.
-> "The class id  (specified in id) is used to match a device with an mdev
-> driver via its id table."
->
-> ?
->
->> The device_ops is device
->> +specific callbacks which can be get through mdev_get_dev_ops()
->> +function by mdev bus driver.
-> "The device specific callbacks (specified in *ops) are obtainable via
-> mdev_get_dev_ops() (for use by the mdev bus driver.)"
->
-> ?
->
->> For vfio-mdev device, its device specific
->> +ops are as follows:
-> "A vfio-mdev device (class id MDEV_ID_VFIO) uses the following
-> device-specific ops:"
->
-> ?
+>> +	return name ? name + pos : NULL;
+> 
+> This made me to check C standard. It seems that "true" really has
+> to be "1".
+> 
+> But I think that I am not the only one who is not sure.
+> I would prefer to make it less tricky and use, for example:
+> 
+> 	const char *name = __errname(err > 0 ? err : -err);
+> 	if (!name)
+> 		return NULL;
+> 
+> 	return err > 0 ? name + 1 : name;
 
+I didn't even stop to think that using the value of a comparison
+operator/bool in arithmetic might be the littlest bit surprising for C
+programmers. But your suggestion isn't terrible, so go ahead and write
+it that way. And can I get you to fix the missing "-" in the MIPS
+"EDQUOT" special case while you're at it?
 
-All you propose is better than what I wrote, will change the docs.
-
-
->
+>> +static void __init
+>> +errptr(void)
+>> +{
+>> +	char buf[PLAIN_BUF_SIZE];
 >> +
->> +* open: open callback of vfio mediated device
->> +* close: close callback of vfio mediated device
->> +* ioctl: ioctl callback of vfio mediated device
->>   * read : read emulation callback
->>   * write: write emulation callback
->>   * mmap: mmap emulation callback
->> @@ -167,9 +176,10 @@ register itself with the mdev core driver::
->>   	extern int  mdev_register_device(struct device *dev,
->>   	                                 const struct mdev_parent_ops *ops);
->>   
->> -It is also required to specify the class_id through::
->> +It is also required to specify the class_id and device specific ops through::
->>   
->> -	extern int mdev_set_class(struct device *dev, u16 id);
->> +	extern int mdev_set_class(struct device *dev, u16 id,
->> +	                          const void *ops);
-> Apologies if that has already been discussed, but do we want a 1:1
-> relationship between id and ops, or can different devices with the same
-> id register different ops?
+>> +	test("-1234", "%pe", ERR_PTR(-1234));
+>> +
+>> +	/* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
+>> +	BUILD_BUG_ON(IS_ERR(PTR));
+>> +	snprintf(buf, sizeof(buf), "(%p)", PTR);
+>> +	test(buf, "(%pe)", PTR);
+> 
+> There is a small race. "(____ptrval____)" is used for %p before
+> random numbers are initialized. The switch is done via workqueue
+> work, see enable_ptr_key_workfn(). It means that it can be done
+> in parallel.
+
+I know.
+
+> I doubt that anyone would ever hit the race. But it could be very confusing
+> and hard to debug.
+
+I thought about it and decided not to care, as long as the errptr test
+comes after the hashing test, because if the hashing is not initialized
+then one gets a warning. I also considered setting a flag in that case
+and then skipping the errptr hash test, but again, decided that the
+warning would be enough.
+
+> I would replace it with:
+
+> 	test_hashed("%pe", PTR);
+
+Sure, that will repeat the warning, but it doesn't seem to prevent a
+false positive: Between plain_hash_to_buffer emitting the warning (and
+returning 0) and the caller test_hashed() then performing the test()
+against the buffer contents, the hash can become initialized and thus
+change how %p[e] gets formatted. But ok, perhaps it is cleaner to reuse
+test_hashed and avoid the local buffer in errptr. So yeah, I suppose
+this on top is fine:
+
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 4fa0ccf58420..030daeb4fe21 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -596,14 +596,11 @@ flags(void)
+ static void __init
+ errptr(void)
+ {
+-       char buf[PLAIN_BUF_SIZE];
+-
+        test("-1234", "%pe", ERR_PTR(-1234));
+
+        /* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
+        BUILD_BUG_ON(IS_ERR(PTR));
+-       snprintf(buf, sizeof(buf), "(%p)", PTR);
+-       test(buf, "(%pe)", PTR);
++       test_hashed("%pe", PTR);
+
+ #ifdef CONFIG_SYMBOLIC_ERRNAME
+        test("(-ENOTSOCK)", "(%pe)", ERR_PTR(-ENOTSOCK));
 
 
-I think we have a N:1 mapping between id and ops, e.g we want both 
-virtio-mdev and vhost-mdev use a single set of device ops.
 
-Thanks
+> If would like to have the two things fixed. I am not sure if you want
+> to send one more revision. Or I could also change it by follow
+> up patch when pushing.
 
+I prefer you to fold in both changes instead of an extra patch, and if
+you can't, I'll send a new revision.
 
-> If the former, would it make sense to first
-> register the ops for an id (once), and then have the ->create callback
-> only set the class id (with the core doing the lookup of the ops)?
->
->>   
->>   However, the mdev_parent_ops structure is not required in the function call
->>   that a driver should use to unregister itself with the mdev core driver::
+Rasmus
