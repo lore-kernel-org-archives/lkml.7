@@ -2,92 +2,174 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B02ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3BEECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011DE20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92AF20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbfJOQpg (ORCPT
+        id S2388256AbfJOQtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:45:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41320 "EHLO mx1.redhat.com"
+        Tue, 15 Oct 2019 12:49:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:43176 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727643AbfJOQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:45:36 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1058D2CE955
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 16:36:16 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id o8so8908350wmc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 09:36:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6SU2iYxBpciwSkgWiOL6iZkMAxSRBo4v5NF0FEchK38=;
-        b=Q/+fk9bK0bushYjNLqjEXk26G9RovYAYyPgT0i+Wskuq9l4TEQepYhkggV5uLqUvFu
-         +HeBj4769krhjs2FG9D8kWREr/7kNParbCM0/DeC7Z48GPtMQtvTvgR7w4n+Q2eumqlz
-         26McIZCnP/BaMmM0nvnFkY9/ShW9MOngXG68viPAKnvCB2VDGB7VM63dGDSIPjnnVJV6
-         6HOE0EYmIuL7w0ZMbgy/QN7UqzMJ6zo+hZqCovqPSB0qn6C7dC3How6u6S7lr5NZ+lDH
-         aBuQiE1sQTZPb4rTfO80/JR6JRZeI5xlYkNZOrufxsB4LG/ekRMksFRs0iZyixVHX4f8
-         d6NA==
-X-Gm-Message-State: APjAAAUT5LwSfjeCdhq5dbD36qWU0youd8znfvcnrIFS3BnzI9DbL9fc
-        TWIqiuGv4+zQVf3bYFp3ls4eYCwc/fJs+T+Tg64HUI1VYGaFIiRsEscyRnJPSPAf0CbdZmo+mbY
-        cSirMHmLUEymOb/B/OtaRx7/e
-X-Received: by 2002:a1c:e086:: with SMTP id x128mr19487201wmg.139.1571157374398;
-        Tue, 15 Oct 2019 09:36:14 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzIfVMIbG+6mpdFJ1PD9Fm1XVFu7mH9sLaGR+C1rC7u9raqVC9mEMICjHeKjSaYaX9uuQ3HNA==
-X-Received: by 2002:a1c:e086:: with SMTP id x128mr19487181wmg.139.1571157374101;
-        Tue, 15 Oct 2019 09:36:14 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d001:591b:c73b:6c41? ([2001:b07:6468:f312:d001:591b:c73b:6c41])
-        by smtp.gmail.com with ESMTPSA id a4sm19159768wmm.10.2019.10.15.09.36.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 09:36:13 -0700 (PDT)
-Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>
-References: <20191014162247.61461-1-xiaoyao.li@intel.com>
- <87y2xn462e.fsf@vitty.brq.redhat.com>
- <20191014183723.GE22962@linux.intel.com>
- <87v9sq46vz.fsf@vitty.brq.redhat.com>
- <97255084-7b10-73a5-bfb4-fdc1d5cc0f6e@redhat.com>
- <87lftm3wja.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <f00edd02-7d25-54f4-0972-c702e8254016@redhat.com>
-Date:   Tue, 15 Oct 2019 18:36:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726362AbfJOQtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:49:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ED34337;
+        Tue, 15 Oct 2019 09:49:10 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38C063F68E;
+        Tue, 15 Oct 2019 09:49:07 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 17:49:05 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v2 09/12] arm64: traps: Fix inconsistent faulting
+ instruction skipping
+Message-ID: <20191015164904.GY27757@arm.com>
+References: <1570733080-21015-1-git-send-email-Dave.Martin@arm.com>
+ <1570733080-21015-10-git-send-email-Dave.Martin@arm.com>
+ <20191011152453.GF33537@lakrids.cambridge.arm.com>
+ <20191015152108.GX27757@arm.com>
+ <20191015164204.GC24604@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <87lftm3wja.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015164204.GC24604@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/19 16:36, Vitaly Kuznetsov wrote:
->> On 15/10/19 12:53, Vitaly Kuznetsov wrote:
->>> A very theoretical question: why do we have 'struct vcpu' embedded in
->>> vcpu_vmx/vcpu_svm and not the other way around (e.g. in a union)? That
->>> would've allowed us to allocate memory in common code and then fill in
->>> vendor-specific details in .create_vcpu().
->> Probably "because it's always been like that" is the most accurate answer.
->>
-> OK, so let me make my question a bit less theoretical: would you be in
-> favor of changing the status quo? :-)
+On Tue, Oct 15, 2019 at 05:42:04PM +0100, Mark Rutland wrote:
+> On Tue, Oct 15, 2019 at 04:21:09PM +0100, Dave Martin wrote:
+> > On Fri, Oct 11, 2019 at 04:24:53PM +0100, Mark Rutland wrote:
+> > > On Thu, Oct 10, 2019 at 07:44:37PM +0100, Dave Martin wrote:
+> > > > Correct skipping of an instruction on AArch32 works a bit
+> > > > differently from AArch64, mainly due to the different CPSR/PSTATE
+> > > > semantics.
+> > > > 
+> > > > There have been various attempts to get this right.  Currenty
+> > > > arm64_skip_faulting_instruction() mostly does the right thing, but
+> > > > does not advance the IT state machine for the AArch32 case.
+> > > > 
+> > > > arm64_compat_skip_faulting_instruction() handles the IT state
+> > > > machine but is local to traps.c, and porting other code to use it
+> > > > will make a mess since there are some call sites that apply for
+> > > > both the compat and native cases.
+> > > > 
+> > > > Since manual instruction skipping implies a trap, it's a relatively
+> > > > slow path.
+> > > > 
+> > > > So, make arm64_skip_faulting_instruction() handle both compat and
+> > > > native, and get rid of the arm64_compat_skip_faulting_instruction()
+> > > > special case.
+> > > > 
+> > > > Fixes: 32a3e635fb0e ("arm64: compat: Add CNTFRQ trap handler")
+> > > > Fixes: 1f1c014035a8 ("arm64: compat: Add condition code checks and IT advance")
+> > > > Fixes: 6436beeee572 ("arm64: Fix single stepping in kernel traps")
+> > > > Fixes: bd35a4adc413 ("arm64: Port SWP/SWPB emulation support from arm")
+> > > > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > > > ---
+> > > >  arch/arm64/kernel/traps.c | 18 ++++++++----------
+> > > >  1 file changed, 8 insertions(+), 10 deletions(-)
+> > > 
+> > > This looks good to me; it's certainly easier to reason about.
+> > > 
+> > > I couldn't spot a place where we do the wrong thing today, given AFAICT
+> > > all the instances in arch/arm64/kernel/armv8_deprecated.c would be
+> > > UNPREDICTABLE within an IT block.
+> > > 
+> > > It might be worth calling out an example in the commit message to
+> > > justify the fixes tags.
+> > 
+> > IIRC I found no bug here; rather we have pointlessly fragmented code,
+> > so I followed the "if fixing the same bug in multiple places, merge
+> > those places so you need only fix it in one place next time" rule.
+> 
+> Sure thing, that makes sense to me.
+> 
+> > Since arm64_skip_faulting_instruction() is most of the way to being
+> > generically usable anyway, this series merges all the special-case
+> > handling into it.
+> > 
+> > I could add something like
+> > 
+> > --8<--
+> > 
+> > This allows this fiddly operation to be maintained in a single
+> > place rather than trying to maintain fragmented versions spread
+> > around arch/arm64.
+> > 
+> > -->8--
+> > 
+> > Any good?
+> 
+> My big concern is that the commit message reads as a fix, implying that
+> there's an existing correctness bug. I think that simplifying it to make
+> it clearer that it's a cleanup/improvement would be preferable.
+> 
+> How about:
+> 
+> | arm64: unify native/compat instruction skipping
+> |
+> | Skipping of an instruction on AArch32 works a bit differently from
+> | AArch64, mainly due to the different CPSR/PSTATE semantics.
+> |
+> | Currently arm64_skip_faulting_instruction() is only suitable for
+> | AArch64, and arm64_compat_skip_faulting_instruction() handles the IT
+> | state machine but is local to traps.c.
+> | 
+> | Since manual instruction skipping implies a trap, it's a relatively
+> | slow path.
+> | 
+> | So, make arm64_skip_faulting_instruction() handle both compat and
+> | native, and get rid of the arm64_compat_skip_faulting_instruction()
+> | special case.
+> |
+> | Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
-Not really, it would be a lot of churn for debatable benefit.
+And drop the Fixes tags.  Yes, I think that's reasonable.
 
-Paolo
+I think I was probably glossing over the fact that we don't need to get
+the ITSTATE machine advance correct for the compat insn emulation; as
+you say, I can't see what else this patch "fixes".
+
+> With that, feel free to add:
+>
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks!
+
+> We could even point out that the armv8_deprecated cases are
+> UNPREDICTABLE in an IT block, and correctly emulated either way.
+
+Yes, I'll add something along those lines.
+
+Cheers
+---Dave
