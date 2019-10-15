@@ -2,143 +2,139 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702F9ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919F8C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C572089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6DA2089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfJOFYB (ORCPT
+        id S1728294AbfJOFZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:24:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51132 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbfJOFYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:24:01 -0400
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A6217859FC
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 05:24:00 +0000 (UTC)
-Received: by mail-io1-f69.google.com with SMTP id t11so30212967ioc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 22:24:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GX8bC+LvWnJ5dJICeG2nAc0CD2f9tU+0Yk6RVJKRFtA=;
-        b=gld90+XXU0shoZy+JcaLmfQx4IgZUBHkdD4We2sGNgzELATok5db6lpviae34lGkw2
-         IxhwzJ8ido4hCxMAl2Ld8KFygCYe4GWytRcHYkjmBeu0A4oTrJUQV01Dk8K2EIIA4fnE
-         bOaRgJpqjxsaLH4GgSrD3bYeUm1nlPUBZpl3wKVRzdPZVv8RE/naMHDFvnMQWu4h3yf/
-         d/+tcXkZasww2yXBO6Y8mPesUYsuCv8YOSVbHRl7Zi7SI0bio6J6gub9baDVoQZtcsZN
-         iyxOW0O6wNFnjiQ82I9dUd09iig7QQnxECqOPzIGrPOodHCpzFBKsSvDwTVDB6mlKzOI
-         RKhw==
-X-Gm-Message-State: APjAAAWmYmSU7TRMEDcA3e7bKyQzsyBKPGGNevIcjb5EOvFvVLeZg3wG
-        kxqDX+P86vpAvnbcFJzl5S7jEdWp6BVCrNlimWzL9Tk4fA78yZRqjBkc5VgLKnH1ga0X53PjbJ/
-        pPHUH0QQuSAZk02EvyShtZmLTVVQS1SiyVLvsXk/I
-X-Received: by 2002:a6b:d104:: with SMTP id l4mr6603812iob.50.1571117039945;
-        Mon, 14 Oct 2019 22:23:59 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqww5YfFPBA4nCSFpjo/cQDUXxSK3cOo8C1EDzKG3a48BASQG3eqI/WCzxReb0tvQtzyFwx3u5yJVlqH0eDl4Ms=
-X-Received: by 2002:a6b:d104:: with SMTP id l4mr6603788iob.50.1571117039602;
- Mon, 14 Oct 2019 22:23:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191012034421.25027-1-kasong@redhat.com> <20191014101419.GA4715@zn.tnic>
-In-Reply-To: <20191014101419.GA4715@zn.tnic>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Tue, 15 Oct 2019 13:23:48 +0800
-Message-ID: <CACPcB9f6i_PvxDz9aLpAiakmnEOu-o5N_ZvP5dGe73yyS-KvjA@mail.gmail.com>
-Subject: Re: [PATCH v3] x86, efi: never relocate kernel below lowest
- acceptable address
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
+        Tue, 15 Oct 2019 01:25:34 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:25467 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728254AbfJOFZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:25:33 -0400
+X-UUID: b4cbd657f3384a4d9f398a13e478d426-20191015
+X-UUID: b4cbd657f3384a4d9f398a13e478d426-20191015
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 420262602; Tue, 15 Oct 2019 13:25:21 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 15 Oct
+ 2019 13:25:17 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 15 Oct 2019 13:25:16 +0800
+Message-ID: <1571117118.19130.81.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 4/7] iommu/mediatek: Delete the leaf in the tlb flush
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>, <youlin.pei@mediatek.com>,
+        <anan.sun@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
+        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
+        <chao.hao@mediatek.com>, <edison.hsieh@mediatek.com>,
+        <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 15 Oct 2019 13:25:18 +0800
+In-Reply-To: <20c74c20-864e-88af-3c58-ad3bb7600bcc@arm.com>
+References: <1571035101-4213-1-git-send-email-yong.wu@mediatek.com>
+         <1571035101-4213-5-git-send-email-yong.wu@mediatek.com>
+         <20c74c20-864e-88af-3c58-ad3bb7600bcc@arm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 1320629692F0D088FC9AD967C2A18864D2766ABDB9AA66C650AFFE4EBC49898F2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 6:14 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Sat, Oct 12, 2019 at 11:44:21AM +0800, Kairui Song wrote:
-> > Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> > And it's a potential issue on all platforms.
-> >
-> > It's caused a broken kernel relocation on EFI systems, when below three
-> > conditions are met:
-> >
-> > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
-> >    by the loader.
-> > 2. There isn't enough room to contain the kernel, starting from the
-> >    default load address (eg. something else occupied part the region).
-> > 3. In the memmap provided by EFI firmware, there is a memory region
-> >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
-> >    kernel.
-> >
-> > Efi stub will perform a kernel relocation when condition 1 is met. But
-> > due to condition 2, efi stub can't relocate kernel to the preferred
-> > address, so it fallback to query and alloc from EFI firmware for lowest
->
-> Your spelling of "EFI" is like a random number generator in this
-> paragraph: "Efi", "efi" and "EFI". Can you please be more careful when
-> writing your commit messages? They're not some random text you hurriedly
-> jot down before sending the patch but a most important description of
-> why a change is being done.
+On Mon, 2019-10-14 at 15:22 +0100, Robin Murphy wrote:
+> On 14/10/2019 07:38, Yong Wu wrote:
+> > In our tlb range flush, we don't care the "leaf". Remove it to simplify
+> > the code. no functional change.
+> 
+> Presumably you don't care about the granule either?
 
-Sorry I just ignored the acronym usage problems, I did double check the text but
-didn't realize this is a problem... Will correct them.
+Yes. I only keep "granule" to satisfy the format of "tlb_flush_walk",
+then it's no need add a new helper function.
 
->
-> And if you don't see their importance now, just try doing some git
-> archeology, trying to understand why a change has been done in the past
-> and then encounter a commit message two-liner which doesn't say sh*t.
-> Then you'll start appreciating properly written commit messages.
->
-> > usable memory region.
-> >
-> > It's incorrect to use the lowest memory address. In later stage, kernel
-> > will assume LOAD_PHYSICAL_ADDR as the minimal acceptable relocate address,
-> > but efi stub will end up relocating kernel below it.
->
-> Why don't you simply explain what
-> choose_random_location()->find_random_virt_addr() does? That's the
-> problem you're solving, right? KASLR using LOAD_PHYSICAL_ADDR as the
-> minimum...
->
-> > The later kernel decompressing code will forcefully correct the wrong
-> > kernel load location,
->
-> ... or do you mean by that the dance in
-> arch/x86/boot/compressed/head_64.S where we move the kernel temporarily
-> to LOAD_PHYSICAL_ADDR for the decompression?
+> 
+> Robin.
+> 
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > ---
+> >   drivers/iommu/mtk_iommu.c | 16 ++++------------
+> >   1 file changed, 4 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > index 8712afc..19f936c 100644
+> > --- a/drivers/iommu/mtk_iommu.c
+> > +++ b/drivers/iommu/mtk_iommu.c
+> > @@ -174,8 +174,7 @@ static void mtk_iommu_tlb_flush_all(void *cookie)
+> >   }
+> >   
+> >   static void mtk_iommu_tlb_add_flush_nosync(unsigned long iova, size_t size,
+> > -					   size_t granule, bool leaf,
+> > -					   void *cookie)
+> > +					   size_t granule, void *cookie)
+> >   {
+> >   	struct mtk_iommu_data *data = cookie;
+> >   
+> > @@ -219,14 +218,7 @@ static void mtk_iommu_tlb_sync(void *cookie)
+> >   static void mtk_iommu_tlb_flush_walk(unsigned long iova, size_t size,
+> >   				     size_t granule, void *cookie)
+> >   {
+> > -	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, false, cookie);
+> > -	mtk_iommu_tlb_sync(cookie);
+> > -}
+> > -
+> > -static void mtk_iommu_tlb_flush_leaf(unsigned long iova, size_t size,
+> > -				     size_t granule, void *cookie)
+> > -{
+> > -	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, true, cookie);
+> > +	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, cookie);
+> >   	mtk_iommu_tlb_sync(cookie);
+> >   }
+> >   
+> > @@ -245,7 +237,7 @@ static void mtk_iommu_tlb_flush_page_nosync(struct iommu_iotlb_gather *gather,
+> >   static const struct iommu_flush_ops mtk_iommu_flush_ops = {
+> >   	.tlb_flush_all = mtk_iommu_tlb_flush_all,
+> >   	.tlb_flush_walk = mtk_iommu_tlb_flush_walk,
+> > -	.tlb_flush_leaf = mtk_iommu_tlb_flush_leaf,
+> > +	.tlb_flush_leaf = mtk_iommu_tlb_flush_walk,
+> >   	.tlb_add_page = mtk_iommu_tlb_flush_page_nosync,
+> >   };
+> >   
+> > @@ -475,7 +467,7 @@ static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
+> >   		spin_lock_irqsave(&dom->pgtlock, flags);
+> >   
+> >   	mtk_iommu_tlb_add_flush_nosync(gather->start, length, gather->pgsize,
+> > -				       false, data);
+> > +				       data);
+> >   	mtk_iommu_tlb_sync(data);
+> >   
+> >   	if (!is_in_gather)
+> > 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
-The kernel move in arch/x86/boot/compressed/head_64.S is the problem
-I'm saying here.
 
-I thought it's a bad idea to include too much details about codes and details in
-the commit message, so tried to describe it without mentioning the
-implementation details.
-It's making things confusing indeed.
-
-I'll rethink about how the commit message should be composed...
-
->
-> You can simply say that here...
->
-
-OK, then I'll do so. Will update the commit message.
-
---
-Best Regards,
-Kairui Song
