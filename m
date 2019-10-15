@@ -2,149 +2,233 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8F1ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7468ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0856217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:20:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qr7X/dmJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8ECAD21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbfJOJUH (ORCPT
+        id S1729307AbfJOJVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:20:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33360 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfJOJUH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:20:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9F9DCsw015460;
-        Tue, 15 Oct 2019 09:19:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=XOS9EXMDrfcapa0yCPVW2tWQBekI+jT6QODKtdRu1OU=;
- b=Qr7X/dmJF+BJSy/GF+LmiqYPiI+bOcgWHfpXFx/5BLQ6rY4195UOzl0XLlo993ZEA5j3
- 6nI7jwwM2pGULD13DKQRxvmtC76O8SlY9peYOEUcdupYGw52asJDIxLFPMdUe7DbdzFZ
- A0Mmjkwxv6LNYGWWYJm+EtDbhSUgOrbbUh4piVJWdYGu7kxyRJbOkk9GzowxQjvFIiNk
- JOMHwxkSnPB1PECWXFjn4AsQnzAnMIht/SOl3vWpQ7cTyn2Tdt8vpIKu1x1/CUvthX6+
- B7jI+RzhhZ6dQxmvyLZenQFzC+707MWvqQEvdezbZSa2KJuveo6jNiFlXKdq3P5noZ1g JA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2vk68ueh7b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 09:19:40 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9F98DWJ147688;
-        Tue, 15 Oct 2019 09:19:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2vnb0erxc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 09:19:39 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9F9JV6N021786;
-        Tue, 15 Oct 2019 09:19:31 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 09:19:30 +0000
-Date:   Tue, 15 Oct 2019 12:19:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Xin Ji <xji@analogixsemi.com>
-Cc:     kbuild-all@lists.01.org,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v2 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP bridge driver
-Message-ID: <20191015091921.GC21344@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55295c49503a963f3417b917fd7163feb26ed0b6.1570760115.git.xji@analogixsemi.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150086
+        Tue, 15 Oct 2019 05:21:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:33098 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbfJOJVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:21:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3CD728;
+        Tue, 15 Oct 2019 02:21:30 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.142])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9AF7D3F718;
+        Tue, 15 Oct 2019 02:21:19 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V6 0/2] mm/debug: Add tests validating architecture page table helpers
+Date:   Tue, 15 Oct 2019 14:51:40 +0530
+Message-Id: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[  These are automated text from the 0-day bot -dan ]
+This series adds a test validation for architecture exported page table
+helpers. Patch in the series adds basic transformation tests at various
+levels of the page table. Before that it exports gigantic page allocation
+function from HugeTLB.
 
-Hi Xin,
+This test was originally suggested by Catalin during arm64 THP migration
+RFC discussion earlier. Going forward it can include more specific tests
+with respect to various generic MM functions like THP, HugeTLB etc and
+platform specific tests.
 
-Thank you for the patch! Perhaps something to improve:
+https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
 
-url:    https://github.com/0day-ci/linux/commits/Xin-Ji/dt-bindings-drm-bridge-anx7625-MIPI-to-DP-transmitter-binding/20191014-043019
+Changes in V6:
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+- Moved alloc_gigantic_page_order() into mm/page_alloc.c per Michal
+- Moved alloc_gigantic_page_order() within CONFIG_CONTIG_ALLOC in the test
+- Folded Andrew's include/asm-generic/pgtable.h fix into the test patch 2/2
 
-New smatch warnings:
-drivers/gpu/drm/bridge/analogix/anx7625.c:1274 anx7625_start_dp_work() error: uninitialized symbol 'sp_tx_lane_count'.
+Changes in V5: (https://patchwork.kernel.org/project/linux-mm/list/?series=185991)
 
-# https://github.com/0day-ci/linux/commit/152a82b6747f10d6c13c7a422173947c2f2e1aa2
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 152a82b6747f10d6c13c7a422173947c2f2e1aa2
-vim +/sp_tx_lane_count +1274 drivers/gpu/drm/bridge/analogix/anx7625.c
+- Redefined and moved X86 mm_p4d_folded() into a different header per Kirill/Ingo
+- Updated the config option comment per Ingo and dropped 'kernel module' reference
+- Updated the commit message and dropped 'kernel module' reference
+- Changed DEBUG_ARCH_PGTABLE_TEST into DEBUG_VM_PGTABLE per Ingo
+- Moved config option from mm/Kconfig.debug into lib/Kconfig.debug
+- Renamed core test function arch_pgtable_tests() as debug_vm_pgtable()
+- Renamed mm/arch_pgtable_test.c as mm/debug_vm_pgtable.c
+- debug_vm_pgtable() gets called from kernel_init_freeable() after init_mm_internals()
+- Added an entry in Documentation/features/debug/ per Ingo
+- Enabled the test on arm64 and x86 platforms for now
 
-152a82b6747f10 Xin Ji 2019-10-11  1253  static void anx7625_start_dp_work(struct anx7625_data *ctx)
-152a82b6747f10 Xin Ji 2019-10-11  1254  {
-152a82b6747f10 Xin Ji 2019-10-11  1255  	int ret;
-152a82b6747f10 Xin Ji 2019-10-11  1256  	u8 buf[MAX_DPCD_BUFFER_SIZE];
-152a82b6747f10 Xin Ji 2019-10-11  1257  	u8 hdcp_cap;
-152a82b6747f10 Xin Ji 2019-10-11  1258  	struct device *dev = &ctx->client->dev;
-152a82b6747f10 Xin Ji 2019-10-11  1259  	u8 sp_tx_bw; /* linktraining banwidth */
-152a82b6747f10 Xin Ji 2019-10-11  1260  	u8 sp_tx_lane_count; /* link training lane count */
-152a82b6747f10 Xin Ji 2019-10-11  1261  
-152a82b6747f10 Xin Ji 2019-10-11  1262  	if (ctx->hpd_high_cnt >= 2) {
-152a82b6747f10 Xin Ji 2019-10-11  1263  		DRM_DEV_DEBUG_DRIVER(dev, "anx7625 filter useless HPD\n");
-152a82b6747f10 Xin Ji 2019-10-11  1264  		return;
-152a82b6747f10 Xin Ji 2019-10-11  1265  	}
-152a82b6747f10 Xin Ji 2019-10-11  1266  
-152a82b6747f10 Xin Ji 2019-10-11  1267  	ctx->hpd_high_cnt++;
-152a82b6747f10 Xin Ji 2019-10-11  1268  
-152a82b6747f10 Xin Ji 2019-10-11  1269  	sp_tx_get_rx_bw(ctx, &sp_tx_bw);
-152a82b6747f10 Xin Ji 2019-10-11  1270  
-152a82b6747f10 Xin Ji 2019-10-11  1271  	sp_tx_aux_dpcdread_bytes(ctx, 0x00, 0x00, DPCD_MAX_LANE_COUNT,
-152a82b6747f10 Xin Ji 2019-10-11  1272  				 1, &sp_tx_lane_count);
-                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Smatch thinks sp_tx_aux_dpcdread_bytes() can fail and we don't check
-for errors.
+Changes in V4: (https://patchwork.kernel.org/project/linux-mm/list/?series=183465)
 
-152a82b6747f10 Xin Ji 2019-10-11  1273  
-152a82b6747f10 Xin Ji 2019-10-11 @1274  	sp_tx_lane_count = sp_tx_lane_count & 0x1f;
-152a82b6747f10 Xin Ji 2019-10-11  1275  	sp_tx_aux_dpcdread_bytes(ctx, 0x06, 0x80, 0x28, 1, buf);/* read Bcap */
-152a82b6747f10 Xin Ji 2019-10-11  1276  
-152a82b6747f10 Xin Ji 2019-10-11  1277  	hdcp_cap = buf[0] & 0x01;
-152a82b6747f10 Xin Ji 2019-10-11  1278  
+- Disable DEBUG_ARCH_PGTABLE_TEST for ARM and IA64 platforms
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Changes in V3: (https://lore.kernel.org/patchwork/project/lkml/list/?series=411216)
+
+- Changed test trigger from module format into late_initcall()
+- Marked all functions with __init to be freed after completion
+- Changed all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded()
+- Folded in PPC32 fixes from Christophe
+
+Changes in V2:
+
+https://lore.kernel.org/linux-mm/1568268173-31302-1-git-send-email-anshuman.khandual@arm.com/T/#t
+
+- Fixed small typo error in MODULE_DESCRIPTION()
+- Fixed m64k build problems for lvalue concerns in pmd_xxx_tests()
+- Fixed dynamic page table level folding problems on x86 as per Kirril
+- Fixed second pointers during pxx_populate_tests() per Kirill and Gerald
+- Allocate and free pte table with pte_alloc_one/pte_free per Kirill
+- Modified pxx_clear_tests() to accommodate s390 lower 12 bits situation
+- Changed RANDOM_NZVALUE value from 0xbe to 0xff
+- Changed allocation, usage, free sequence for saved_ptep
+- Renamed VMA_FLAGS as VMFLAGS
+- Implemented a new method for random vaddr generation
+- Implemented some other cleanups
+- Dropped extern reference to mm_alloc()
+- Created and exported new alloc_gigantic_page_order()
+- Dropped the custom allocator and used new alloc_gigantic_page_order()
+
+Changes in V1:
+
+https://lore.kernel.org/linux-mm/1567497706-8649-1-git-send-email-anshuman.khandual@arm.com/
+
+- Added fallback mechanism for PMD aligned memory allocation failure
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-mm/1565335998-22553-1-git-send-email-anshuman.khandual@arm.com/T/#u
+
+- Moved test module and it's config from lib/ to mm/
+- Renamed config TEST_ARCH_PGTABLE as DEBUG_ARCH_PGTABLE_TEST
+- Renamed file from test_arch_pgtable.c to arch_pgtable_test.c
+- Added relevant MODULE_DESCRIPTION() and MODULE_AUTHOR() details
+- Dropped loadable module config option
+- Basic tests now use memory blocks with required size and alignment
+- PUD aligned memory block gets allocated with alloc_contig_range()
+- If PUD aligned memory could not be allocated it falls back on PMD aligned
+  memory block from page allocator and pud_* tests are skipped
+- Clear and populate tests now operate on real in memory page table entries
+- Dummy mm_struct gets allocated with mm_alloc()
+- Dummy page table entries get allocated with [pud|pmd|pte]_alloc_[map]()
+- Simplified [p4d|pgd]_basic_tests(), now has random values in the entries
+
+Original RFC V1:
+
+https://lore.kernel.org/linux-mm/1564037723-26676-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Steven Price <Steven.Price@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sri Krishna chowdary <schowdary@nvidia.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+
+Anshuman Khandual (2):
+  mm/page_alloc: Make alloc_gigantic_page() available for general use
+  mm/debug: Add tests validating architecture page table helpers
+
+ .../debug/debug-vm-pgtable/arch-support.txt   |  34 ++
+ arch/arm64/Kconfig                            |   1 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/include/asm/pgtable_64.h             |   6 +
+ include/asm-generic/pgtable.h                 |   6 +
+ include/linux/gfp.h                           |   3 +
+ init/main.c                                   |   1 +
+ lib/Kconfig.debug                             |  21 +
+ mm/Makefile                                   |   1 +
+ mm/debug_vm_pgtable.c                         | 450 ++++++++++++++++++
+ mm/hugetlb.c                                  |  76 +--
+ mm/page_alloc.c                               |  98 ++++
+ 12 files changed, 623 insertions(+), 75 deletions(-)
+ create mode 100644 Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+ create mode 100644 mm/debug_vm_pgtable.c
+
+-- 
+2.20.1
+
