@@ -2,171 +2,306 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BBCECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C36ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1202920854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5mFqjgm"
+	by mail.kernel.org (Postfix) with ESMTP id 8B24D20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbfJOWGt (ORCPT
+        id S2389087AbfJOWH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:06:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39606 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfJOWGs (ORCPT
+        Tue, 15 Oct 2019 18:07:27 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33078 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726422AbfJOWH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:06:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so3640641pgn.6;
-        Tue, 15 Oct 2019 15:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dYO7GjWloOND6hSPOAQvEuLC+MRq67dhIYtSI7PDZqA=;
-        b=I5mFqjgmw/+rduOfSa7mdjY2+pVAum2a1hPeqtC+2baLDKGIK0Y9kG+jislEeUPrN0
-         6DV9KDhYW84DcD4ZOgqof0Ysz/9vf2FbIiivaqgAiZKAxe4MoAamj0nEb47//Jfba8aq
-         Lv550R4tE71yNe5+A0HCes9R/NvNAVKkr0bv6F18kU8HdY/9zGDiBSVqe+pQREv5OeAR
-         Hx6KWY8JqRZYxAStOvrG9CLt1mzoDHyE7/LFTW786gem9sk42Q+p9sHczjGy/HxahiX7
-         E3rpGfWcGXunrav4zcN4dI9ocfCE9TdunrQ2eKXi2VIbtDOfiP4G92GMIPPcraaI04S8
-         sXoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dYO7GjWloOND6hSPOAQvEuLC+MRq67dhIYtSI7PDZqA=;
-        b=k0j/zvRl10UFN9OESvKw94Z4pqOdUCg/+mMGJFf75bRfnTpxeH8xhESA7hUP1Pjh+w
-         XhIM6oMeSRcCJYZkvB4hmLu98vxmDs0MXiTjNEOoS4Ov1IkaPRb2K04RMgjICzg3KgLN
-         9G3Oc3EPj24r+YNlt/OumNwrRMiV6L9VvA0Ugd7ViLKGaEAyloXDP69N6n7VecTGRmnF
-         0P2ZcUfsO70dtcAeNl/ro7ra5gVGfi7hOe32WSec4HGG8ghzalTA06C9vpIhYTQuDq7s
-         z1NJuOl5yGtBoJvdZ51fiJLzC2WSSRS1NRxPEFBz5/2JFYYH2lp4Ag7q0Wh7v/ccnfMb
-         6L7A==
-X-Gm-Message-State: APjAAAWjlkvnF9kVWXOyNEprkC4NlukoaIa15q1GZbVcAvdfIVRba+5z
-        JxHo6KCSQU8jN3NyoT4WTyoA4GXPokgAkw==
-X-Google-Smtp-Source: APXvYqxrxRkxDS61JrACgr6FX1z8oQ+rjZqY8ssnNx1gZukRLOwK/xG0kqhV2cKTvjvrk7K9ZLC6NQ==
-X-Received: by 2002:a17:90a:6302:: with SMTP id e2mr878823pjj.20.1571177206148;
-        Tue, 15 Oct 2019 15:06:46 -0700 (PDT)
-Received: from [192.168.110.119] ([198.182.47.47])
-        by smtp.gmail.com with ESMTPSA id o60sm292236pje.21.2019.10.15.15.06.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 15:06:44 -0700 (PDT)
-Subject: Re: [PATCH v2 1/5] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Piggin <npiggin@gmail.com>, Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-snps-arc@lists.infradead.org, Will Deacon <will@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20191015191926.9281-1-vgupta@synopsys.com>
- <20191015191926.9281-2-vgupta@synopsys.com>
- <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
-From:   Vineet Gupta <vineetg76@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vineetg76@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- deE0Dvw98SWmZSNtdOPnJZ0D
-Message-ID: <a1aee16f-cde7-0bed-e1ab-f94b6268e4ff@gmail.com>
-Date:   Tue, 15 Oct 2019 15:06:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 18:07:27 -0400
+Received: from dread.disaster.area (pa49-181-198-88.pa.nsw.optusnet.com.au [49.181.198.88])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D073343DDD4;
+        Wed, 16 Oct 2019 09:07:21 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.2)
+        (envelope-from <david@fromorbit.com>)
+        id 1iKUyP-00012g-BR; Wed, 16 Oct 2019 09:07:21 +1100
+Date:   Wed, 16 Oct 2019 09:07:21 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/12] iomap: lift the xfs writeback code to iomap
+Message-ID: <20191015220721.GC16973@dread.disaster.area>
+References: <20191015154345.13052-1-hch@lst.de>
+ <20191015154345.13052-10-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015154345.13052-10-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=ocld+OpnWJCUTqzFQA3oTA==:117 a=ocld+OpnWJCUTqzFQA3oTA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=7-415B0cAAAA:8 a=vuri3833d9zUTJQm3joA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 2:48 PM, Linus Torvalds wrote:
-> On Tue, Oct 15, 2019 at 12:19 PM Vineet Gupta
-> <Vineet.Gupta1@synopsys.com> wrote:
->> This is a non-functional change anyways since ARC has software page walker
->> with 2 lookup levels (pgd -> pte)
+On Tue, Oct 15, 2019 at 05:43:42PM +0200, Christoph Hellwig wrote:
+> Take the xfs writeback code and move it to fs/iomap.  A new structure
+> with three methods is added as the abstraction from the generic writeback
+> code to the file system.  These methods are used to map blocks, submit an
+> ioend, and cancel a page that encountered an error before it was added to
+> an ioend.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/iomap/buffered-io.c | 564 ++++++++++++++++++++++++++++++++++-
+>  fs/iomap/trace.h       |  39 +++
+>  fs/xfs/xfs_aops.c      | 662 ++++-------------------------------------
+>  fs/xfs/xfs_aops.h      |  17 --
+>  fs/xfs/xfs_super.c     |  11 +-
+>  fs/xfs/xfs_trace.h     |  39 ---
+>  include/linux/iomap.h  |  59 ++++
+>  7 files changed, 722 insertions(+), 669 deletions(-)
+.....
+> @@ -468,6 +471,8 @@ EXPORT_SYMBOL_GPL(iomap_is_partially_uptodate);
+>  int
+>  iomap_releasepage(struct page *page, gfp_t gfp_mask)
+>  {
+> +	trace_iomap_releasepage(page->mapping->host, page, 0, 0);
+> +
+>  	/*
+>  	 * mm accommodates an old ext3 case where clean pages might not have had
+>  	 * the dirty bit cleared. Thus, it can send actual dirty pages to
+> @@ -483,6 +488,8 @@ EXPORT_SYMBOL_GPL(iomap_releasepage);
+>  void
+>  iomap_invalidatepage(struct page *page, unsigned int offset, unsigned int len)
+>  {
+> +	trace_iomap_invalidatepage(page->mapping->host, page, offset, len);
+> +
+
+These tracepoints should be split out into a separate patch like
+the readpage(s) tracepoints. Maybe just lift all the non-writeback
+ones in a single patch...
+
+>  	/*
+>  	 * If we are invalidating the entire page, clear the dirty state from it
+>  	 * and release it to avoid unnecessary buildup of the LRU.
+> @@ -1084,3 +1091,558 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
+>  	return block_page_mkwrite_return(ret);
+>  }
+>  EXPORT_SYMBOL_GPL(iomap_page_mkwrite);
+> +
+> +static void
+> +iomap_finish_page_writeback(struct inode *inode, struct bio_vec *bvec,
+> +		int error)
+> +{
+> +	struct iomap_page *iop = to_iomap_page(bvec->bv_page);
+> +
+> +	if (error) {
+> +		SetPageError(bvec->bv_page);
+> +		mapping_set_error(inode->i_mapping, -EIO);
+> +	}
+> +
+> +	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
+> +	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
+> +
+> +	if (!iop || atomic_dec_and_test(&iop->write_count))
+> +		end_page_writeback(bvec->bv_page);
+> +}
+
+Can we just pass the struct page into this function?
+
+.....
+
+> +/*
+> + * Submit the bio for an ioend. We are passed an ioend with a bio attached to
+> + * it, and we submit that bio. The ioend may be used for multiple bio
+> + * submissions, so we only want to allocate an append transaction for the ioend
+> + * once.  In the case of multiple bio submission, each bio will take an IO
+
+This needs to be changed to describe what wpc->ops->submit_ioend()
+is used for rather than what XFS might use this hook for.
+
+> + * reference to the ioend to ensure that the ioend completion is only done once
+> + * all bios have been submitted and the ioend is really done.
+> + *
+> + * If @error is non-zero, it means that we have a situation where some part of
+> + * the submission process has failed after we have marked paged for writeback
+> + * and unlocked them. In this situation, we need to fail the bio and ioend
+> + * rather than submit it to IO. This typically only happens on a filesystem
+> + * shutdown.
+> + */
+> +static int
+> +iomap_submit_ioend(struct iomap_writepage_ctx *wpc, struct iomap_ioend *ioend,
+> +		int error)
+> +{
+> +	ioend->io_bio->bi_private = ioend;
+> +	ioend->io_bio->bi_end_io = iomap_writepage_end_bio;
+> +
+> +	if (wpc->ops->submit_ioend)
+> +		error = wpc->ops->submit_ioend(ioend, error);
+
+I'm not sure that "submit_ioend" is the best name for this method,
+as it is a pre-bio-submission hook, not an actual IO submission
+method. "prepare_ioend_for_submit" is more descriptive, but probably
+too long. wpc->ops->prepare_submit(ioend, error) reads pretty well,
+though...
+
+> +	if (error) {
+> +		/*
+> +		 * If we are failing the IO now, just mark the ioend with an
+> +		 * error and finish it.  This will run IO completion immediately
+> +		 * as there is only one reference to the ioend at this point in
+> +		 * time.
+> +		 */
+> +		ioend->io_bio->bi_status = errno_to_blk_status(error);
+> +		bio_endio(ioend->io_bio);
+> +		return error;
+> +	}
+> +
+> +	submit_bio(ioend->io_bio);
+> +	return 0;
+> +}
+
+.....
+> +/*
+> + * We implement an immediate ioend submission policy here to avoid needing to
+> + * chain multiple ioends and hence nest mempool allocations which can violate
+> + * forward progress guarantees we need to provide. The current ioend we are
+> + * adding blocks to is cached on the writepage context, and if the new block
+
+adding pages to ... , and if the new block mapping
+
+> + * does not append to the cached ioend it will create a new ioend and cache that
+> + * instead.
+> + *
+> + * If a new ioend is created and cached, the old ioend is returned and queued
+> + * locally for submission once the entire page is processed or an error has been
+> + * detected.  While ioends are submitted immediately after they are completed,
+> + * batching optimisations are provided by higher level block plugging.
+> + *
+> + * At the end of a writeback pass, there will be a cached ioend remaining on the
+> + * writepage context that the caller will need to submit.
+> + */
+> +static int
+> +iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+> +		struct writeback_control *wbc, struct inode *inode,
+> +		struct page *page, u64 end_offset)
+> +{
+> +	struct iomap_page *iop = to_iomap_page(page);
+> +	struct iomap_ioend *ioend, *next;
+> +	unsigned len = i_blocksize(inode);
+> +	u64 file_offset; /* file offset of page */
+> +	int error = 0, count = 0, i;
+> +	LIST_HEAD(submit_list);
+> +
+> +	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
+> +	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
+> +
+> +	/*
+> +	 * Walk through the page to find areas to write back. If we run off the
+> +	 * end of the current map or find the current map invalid, grab a new
+> +	 * one.
+> +	 */
+> +	for (i = 0, file_offset = page_offset(page);
+> +	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
+> +	     i++, file_offset += len) {
+> +		if (iop && !test_bit(i, iop->uptodate))
+> +			continue;
+> +
+> +		error = wpc->ops->map_blocks(wpc, inode, file_offset);
+> +		if (error)
+> +			break;
+> +		if (wpc->iomap.type == IOMAP_HOLE)
+> +			continue;
+> +		iomap_add_to_ioend(inode, file_offset, page, iop, wpc, wbc,
+> +				 &submit_list);
+> +		count++;
+> +	}
+> +
+> +	WARN_ON_ONCE(!wpc->ioend && !list_empty(&submit_list));
+> +	WARN_ON_ONCE(!PageLocked(page));
+> +	WARN_ON_ONCE(PageWriteback(page));
+> +
+> +	/*
+> +	 * On error, we have to fail the ioend here because we may have set
+> +	 * pages under writeback, we have to make sure we run IO completion to
+> +	 * mark the error state of the IO appropriately, so we can't cancel the
+> +	 * ioend directly here.
+
+Few too many commas and run-ons here. Maybe reword it like this:
+
+	/*
+	 * We cannot cancel the ioend directly here if there is a submission
+	 * error. We may have already set pages under writeback and hence we
+	 * have to run IO completion to mark the error state of the pages under
+	 * writeback appropriately.
+
 >
-> Could we encourage other architectures to do the same, and get rid of
-> all uses of __ARCH_USE_5LEVEL_HACK?
+>
+>				That means we have to mark this page as under
+> +	 * writeback if we included any blocks from it in the ioend chain so
+> +	 * that completion treats it correctly.
+> +	 *
+> +	 * If we didn't include the page in the ioend, the on error we can
+                                                       then on error
 
-IMHO this should have been done at the onset. The actual changes don't seem that
-difficult, just need to add the missing p4d calls although I can sympathize with
-hassles of coordinating/building/testing/yadi yada cross arch.
+> +	 * simply discard and unlock it as there are no other users of the page
+> +	 * now.  The caller will still need to trigger submission of outstanding
+> +	 * ioends on the writepage context so they are treated correctly on
+> +	 * error.
+> +	 */
 
-OTOH, the [45]LEVEL_HACK seem like a nice way to "fold" the levels: the
-skipped/folded level vanishes completely. Among others it does things like
+.....
 
-     #define p4d_t	pgd_t	
+> +static int
+> +iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+> +{
+> +	struct iomap_writepage_ctx *wpc = data;
+> +	struct inode *inode = page->mapping->host;
+> +	pgoff_t end_index;
+> +	u64 end_offset;
+> +	loff_t offset;
+> +
+> +	trace_iomap_writepage(inode, page, 0, 0);
+> +
+> +	/*
+> +	 * Refuse to write the page out if we are called from reclaim context.
+> +	 *
+> +	 * This avoids stack overflows when called from deeply used stacks in
+> +	 * random callers for direct reclaim or memcg reclaim.  We explicitly
+> +	 * allow reclaim from kswapd as the stack usage there is relatively low.
+> +	 *
+> +	 * This should never happen except in the case of a VM regression so
+> +	 * warn about it.
+> +	 */
+> +	if (WARN_ON_ONCE((current->flags & (PF_MEMALLOC|PF_KSWAPD)) ==
+> +			PF_MEMALLOC))
+> +		goto redirty;
+> +
+> +	/*
+> +	 * Given that we do not allow direct reclaim to call us, we should
+> +	 * never be called while in a filesystem transaction.
+> +	 */
 
-On ARC 2-level code:
+	   never be called in a recursive filesystem reclaim context.
 
-   free_pte_range
-	pmd_pgtable(*pmd);
+> +	if (WARN_ON_ONCE(current->flags & PF_MEMALLOC_NOFS))
+> +		goto redirty;
+> +
 
-	    ((((((*pmd).pud).pgd))) & PAGE_MASK));	     <-- 5LEVEL_HACK
-			vs.
-	    ((((((((*pmd).pud).p4d).pgd)))) & PAGE_MASK ));  <-- w/o 5LEVEL_HACK
-	
-	pmd_clear(pmd);
+Cheers,
 
-	    *(pmd)).pud).pgd)))) = 0
-			vs.
-	    *(pmd)).pud).p4d).pgd)))) = 0
-
-
-So we may not be able to fix all he historical misgivigs, but this might alleviate
-the pain a bit. I'll try to dabble a bit.
-
-Thx for taking a look and te ACKs.
--Vineet
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
