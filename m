@@ -2,142 +2,76 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FB8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CF3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F6F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8CE2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387839AbfJOQSF (ORCPT
+        id S2387850AbfJOQSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:18:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4158 "EHLO huawei.com"
+        Tue, 15 Oct 2019 12:18:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33016 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727809AbfJOQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:18:02 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6A11845CFA3A86B36F55;
-        Wed, 16 Oct 2019 00:17:55 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.179) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 00:17:53 +0800
-Subject: Re: ahci KASAN warning in experimental arm64 allmodconfig boot
-To:     <linux-ide@vger.kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>
-References: <758acedf-4007-9937-e777-bd1371c84e21@huawei.com>
- <67ee2965-7907-a9aa-b7e8-c5c9bf3ea1fc@huawei.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <bdf02e03-86a1-3d35-2908-28187f504495@huawei.com>
-Date:   Tue, 15 Oct 2019 17:17:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
-MIME-Version: 1.0
-In-Reply-To: <67ee2965-7907-a9aa-b7e8-c5c9bf3ea1fc@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-CFilter-Loop: Reflected
+        id S1727809AbfJOQSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:18:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 670E5B4B0;
+        Tue, 15 Oct 2019 16:18:18 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     herbert@gondor.apana.org.au
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dave@stgolabs.net, Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH] drivers,crypto/cavium: Fix barrier barrier usage after atomic_set()
+Date:   Tue, 15 Oct 2019 09:16:57 -0700
+Message-Id: <20191015161657.10760-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 15:17, John Garry wrote:
->>
->>
->> I'll continue to look at this as time allows.
->>
->> I have cc'ed the scsi list as this may be related to the SAS host (using
->> libsas), but I'm doubtful, considering the log mentions ahci_init_one().
->>
->
-> It may very well be related - just CONFIG_DEBUG_TEST_DRIVER_REMOVE
-> triggers this WARN:
->
-> [   23.452574] ------------[ cut here ]------------
-> [   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676
-> ata_host_detach+0x15c/0x168
-> [   23.466047] Modules linked in:
-> [   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted
-> 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
-> [   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
-> RC0 - V1.16.01 03/15/2019
-> [   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
-> [   23.491065] pc : ata_host_detach+0x15c/0x168
-> [   23.495322] lr : ata_host_detach+0x88/0x168
-> [   23.499491] sp : ffff800011cabb50
-> [   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
-> [   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
-> [   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
-> [   23.518689] x23: 0000000000000001 x22: 00000000000014c0
-> [   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
-> [   23.529286] x19: 0000000000000000 x18: 0000000000000004
-> [   23.534584] x17: 0000000000000001 x16: 00000000000000f0
-> [   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
-> [   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
-> [   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
-> [   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
-> [   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
-> [   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
-> [   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
-> [   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
-> [   23.582272] Call trace:
-> [   23.584706]  ata_host_detach+0x15c/0x168
-> [   23.588616]  ata_pci_remove_one+0x10/0x18
-> [   23.592615]  ahci_remove_one+0x20/0x40
-> [   23.596356]  pci_device_remove+0x3c/0xe0
-> [   23.600267]  really_probe+0xdc/0x3e0
-> [   23.603830]  driver_probe_device+0x58/0x100
-> [   23.608000]  device_driver_attach+0x6c/0x90
-> [   23.612169]  __driver_attach+0x84/0xc8
-> [   23.615908]  bus_for_each_dev+0x74/0xc8
-> [   23.619730]  driver_attach+0x20/0x28
-> [   23.623292]  bus_add_driver+0x148/0x1f0
-> [   23.627115]  driver_register+0x60/0x110
-> [   23.630938]  __pci_register_driver+0x40/0x48
-> [   23.635199]  ahci_pci_driver_init+0x20/0x28
-> [   23.639372]  do_one_initcall+0x5c/0x1b0
-> [   23.643199]  kernel_init_freeable+0x1a4/0x24c
-> [   23.647546]  kernel_init+0x10/0x108
-> [   23.651023]  ret_from_fork+0x10/0x18
-> [   23.654590] ---[ end trace 634a14b675b71c13 ]---
->
-> I'll dig deeper if I get a chance.
->
+Because it is not a Rmw operation, atomic_set() is not serialized,
+and therefore the 'upgradable' smp_mb__after_atomic() call after
+the atomic_set() is completely bogus (not to mention the comment
+could also use some love, but that's a different matter).
 
-So it seems that problem comes from the way we async probe the ata_port.
+This patch replaces these with smp_mb(), which seems like the
+original intent of when the code was written.
 
-What I find is that at the point when we async probe the ata_port, with 
-CONFIG_DEBUG_TEST_DRIVER_REMOVE set we start to detach the driver and 
-tear everything down before the probe runs.
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ drivers/crypto/cavium/nitrox/nitrox_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-There's no synchronisation in detach to ensure that the probe has 
-actually completed, and when it does, use-after-free, WARNs, etc...
-
-This change fixes the issue for me:
-
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 28c492be0a57..ff3d4ab81818 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6708,6 +6708,8 @@ void ata_host_detach(struct ata_host *host)
-  {
-         int i;
-
-+       async_synchronize_full();
-+
-         for (i = 0; i < host->n_ports; i++)
-                 ata_port_detach(host->ports[i]);
-
-
-
-> John
->
->> Thanks,
-
+diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
+index bc924980e10c..da2e0edceb50 100644
+--- a/drivers/crypto/cavium/nitrox/nitrox_main.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+@@ -504,7 +504,7 @@ static int nitrox_probe(struct pci_dev *pdev,
+ 
+ 	atomic_set(&ndev->state, __NDEV_READY);
+ 	/* barrier to sync with other cpus */
+-	smp_mb__after_atomic();
++	smp_mb();
+ 
+ 	err = nitrox_crypto_register();
+ 	if (err)
+@@ -551,7 +551,7 @@ static void nitrox_remove(struct pci_dev *pdev)
+ 
+ 	atomic_set(&ndev->state, __NDEV_NOT_READY);
+ 	/* barrier to sync with other cpus */
+-	smp_mb__after_atomic();
++	smp_mb();
+ 
+ 	nitrox_remove_from_devlist(ndev);
+ 
+-- 
+2.16.4
 
