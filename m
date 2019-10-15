@@ -2,101 +2,167 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10180C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA764ECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5DF42083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B959F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="DWS32Jsm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bwp3mTn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfJOSrb (ORCPT
+        id S1727872AbfJOSxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:47:31 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44643 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfJOSrb (ORCPT
+        Tue, 15 Oct 2019 14:53:17 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35843 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfJOSxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:47:31 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r16so18977675edq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 11:47:30 -0700 (PDT)
+        Tue, 15 Oct 2019 14:53:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 23so12691483pgk.3;
+        Tue, 15 Oct 2019 11:53:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pfvg+FTtrisg7B2S8oM0CWu26E9e8Sf1gXQfTf34924=;
-        b=DWS32JsmOlg5VgikKYtVcPLKwn3b9Q4/V0KNahVXNAMx9O+6dQVwKcEF+Lndyz/cUP
-         T8qVbCzzI3QD4vSRPTkIfkRWU0VtopbR5bmjoK4EhIeo9z9nHu8Y2+S4WUCHESEGLueY
-         kZnycdUuYFT92OAHv90YZyjrMLD64mqJ+UjTBIxOfJG0g2TXBBHtiI1uNutceqDunni7
-         83OPAVIphlgUTv6vOQ4XNmhn+EIzhha33eHjbIWmFxMuCd9Q36GIFYhc2Df2CVCFka+j
-         tj76RJeVAtrK9OBMXa9y9PmMSeCS5tBi6bId/9RNBVnNplRBX3EyVTbe+cvZFAJ/BjE7
-         ZpZA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gxBrl95Ves/UBT7JJY5pCxPb14GQ2WnyWP0Eh+ZW0mE=;
+        b=Bwp3mTn+ndpwnB5ppMeUJ3lxxt82iv/LnzNza53HhABvrWVvh/hbteZDEpq++KdV5U
+         1k3TKm1SuR7oG/g96k7VGJA5M9Waearj2E6bEJcYGVfFl2e4hlGAzm+Y/ooj34f3OThg
+         nBkZutOtVBo7cVOuc4T63WWDEdPMHoJ4N8NkRN9ITJ6BkM4k4yxYAnI3EDp3bjFkY62C
+         Ncu9+lGyPQobbIQMcvuIBisSRPO0ZHmEQl9J6iKHEqRj98SXJTU1yGDj/ZfzQNOxVsJ3
+         BLOTH1EtTt1v+MXgM8sHrFacYJphxTjBP3tcoRX1hlzHKtUIAaDrd9ePbdKGN37lFpKD
+         2H5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pfvg+FTtrisg7B2S8oM0CWu26E9e8Sf1gXQfTf34924=;
-        b=hQBHGnIeZLePC9XI0DtwiqQOxwmU+3+oK5EGZIZYkAPopAI6R285UL9lF3/QO1JWFZ
-         OXHJWnc+XYkPRQDCXQk4k8bkPA+qRw27CuS21457mM/Brl7xVD0m2UIpvCwYJsTHVgdT
-         d62W3O5FQ1mMztUfft/aGSTjjR4+RZipgKvAKK7R/m5fXyhOUXw+GZoi0dmeH5PW88sZ
-         nEy+JJy/lSzu9JiHZxOnDGb7Bi8ZRM2Oss5TM5PBlxAH13eyA4ip+eFTs3QOacsUs88t
-         XiGI/DBeXmVsF9iPoh1QzDEVBsUMFcO+FEg+p71G2WC05iOlfVLUCdqTMkAu7TQQ3MQW
-         Bapw==
-X-Gm-Message-State: APjAAAXlMcj5BaxbyE4mUANVBujjvCGbHuD7gAG8JQRQ2zislP/DfY26
-        FGaDnD82uoqk413Ewo7Q3a0vT30xAowRKwATQOeXYQ==
-X-Google-Smtp-Source: APXvYqwYBNXfzf8UL1/6WH3Lzo2PnVa4eH7g/2iw18YIH4cRXry4dS5x/CxY7akvONtDlQt0LutAiqvmrk0BHlBahoo=
-X-Received: by 2002:a05:6402:2022:: with SMTP id ay2mr34963109edb.219.1571165249255;
- Tue, 15 Oct 2019 11:47:29 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gxBrl95Ves/UBT7JJY5pCxPb14GQ2WnyWP0Eh+ZW0mE=;
+        b=nr2wfxtsjaiLnNihe576XstNxh2qqP3dAxJbsX1Hh0FNNDL3Or5ZsInm1bDnQzn6j1
+         cXmWJZ2VZzHhcXMsACoH8t7SIa53cETtW87KBJnTUAIxi8/1QRgvnIYMVih3BKMCYGqt
+         L/eoIifN7iwOnnjxwjjD5RFzlqcfzxBJ1tX0XhAxqjFSl+gKLvL33YNs1RVmd0GcVHmj
+         Bar5GhnHOjRHE9ACFgJtkcqLIo89reNL9bTJlRxOft8ZXK6tCqK+0gac/W3FDwtrXhIU
+         ZFC2Iabk/64QR3rHagYc8jir36NbbipeHQBGqdCIoSUxxujwC7vmMuS0kGKt7uG0ZB4W
+         /Ueg==
+X-Gm-Message-State: APjAAAWRc1+VXlrw1Ckrl+CJ/4QFynUCzW+rXZNrCPpaGxymTMPokPgd
+        VHdQElLEq64aZRSPS+E4TcI=
+X-Google-Smtp-Source: APXvYqzo5Gt/uMiVHyuN51jLi1A+BXy2FzWuZi6h/ALjPtXdFXuXFwsUsgP7pX292M0jSGuM4GbsTQ==
+X-Received: by 2002:a17:90a:8c02:: with SMTP id a2mr9570pjo.79.1571165593864;
+        Tue, 15 Oct 2019 11:53:13 -0700 (PDT)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id 19sm51467pjd.23.2019.10.15.11.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 11:53:13 -0700 (PDT)
+From:   Paul Burton <paulburton89@gmail.com>
+X-Google-Original-From: Paul Burton <paul.burton@mips.com>
+Date:   Tue, 15 Oct 2019 11:53:21 -0700
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: Loongson: Make default kernel log buffer size as
+ 128KB for Loongson3
+Message-ID: <20191015184745.xxihqrcaezbazzgm@lantea.localdomain>
+References: <1571101656-871-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H573fv+NVqBRgU38BRDDX=syj3gUqnJqRp4CdBx+QcdpQ@mail.gmail.com>
+ <d897527b-3c36-41a8-b878-64a099cbdfa0@loongson.cn>
 MIME-Version: 1.0
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
- <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com> <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
- <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
-In-Reply-To: <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Tue, 15 Oct 2019 14:47:18 -0400
-Message-ID: <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
-Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
-To:     James Morse <james.morse@arm.com>
-Cc:     prsriva <prsriva@linux.microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-integrity@vger.kernel.org,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>, jean-philippe@linaro.org,
-        arnd@arndb.de, takahiro.akashi@linaro.org, sboyd@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>, zohar@linux.ibm.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>, duwe@lst.de,
-        bauerman@linux.ibm.com, Thomas Gleixner <tglx@linutronix.de>,
-        allison@lohutok.net, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d897527b-3c36-41a8-b878-64a099cbdfa0@loongson.cn>
+X-Mutt-References: <d897527b-3c36-41a8-b878-64a099cbdfa0@loongson.cn>
+X-Mutt-Fcc: ~/sent
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I think the UEFI persistent-memory-reservations thing is a better fit for this [0][1].
+Hi Tiezhu & Huacai,
 
-Hi James,
+On Tue, Oct 15, 2019 at 12:00:25PM +0800, Tiezhu Yang wrote:
+> On 10/15/2019 11:36 AM, Huacai Chen wrote:
+> > On Tue, Oct 15, 2019 at 10:12 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> > > When I update kernel with loongson3_defconfig based on the Loongson 3A3000
+> > > platform, then using dmesg command to show kernel ring buffer, the initial
+> > > kernel messages have disappeared due to the log buffer is too small, it is
+> > > better to change the default kernel log buffer size from 16KB to 128KB.
+> > > 
+> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > ---
+> > >   arch/mips/configs/loongson3_defconfig | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+> > > index 90ee008..3aa2201 100644
+> > > --- a/arch/mips/configs/loongson3_defconfig
+> > > +++ b/arch/mips/configs/loongson3_defconfig
+> > > @@ -12,7 +12,7 @@ CONFIG_TASKSTATS=y
+> > >   CONFIG_TASK_DELAY_ACCT=y
+> > >   CONFIG_TASK_XACCT=y
+> > >   CONFIG_TASK_IO_ACCOUNTING=y
+> > > -CONFIG_LOG_BUF_SHIFT=14
+> > > +CONFIG_LOG_BUF_SHIFT=17
+> > Hi, Tiezhu,
+> > 
+> > Why you choose 128KB but not 64KB or 256KB? I found 64KB is enough for
+> > our cases. And if you really need more, I think 256KB could be better
+> > because there are many platforms choose 256KB.
+> 
+> Hi Huacai,
+> 
+> Thanks for your reply and suggestion, I will send a v2 patch.
 
-Thank you for your thought. As I understand you propose the to use the
-existing method as such:
-1. Use the existing kexec ABI to pass reservation from kernel to
-kernel using EFI the same as is done for GICv3 tables.
-2. Allow this memory to be reservable only during first Linux boot via
-EFI memory reserve
-3. Allow to have this memory pre-reserved by firmware or to be
-embedded into device tree.
+Thanks for the patches.
 
-A question I have is how to tell that a reserved region is reserved
-for IMA use. With GICv3 it is done by reading the registers, finding
-the interrupt tables memory, and check that the memory ranges are
-indeed pre-reserved.
+I actually have a slight preference for 128KB if you've no specific
+need, since 128KB is the default. Some quick grepping says that of 405
+defconfigs in tree (as of v5.4-rc3), we have:
 
-Is there a way to name memory with the current ABI that you think is acceptable?
+  LOG_BUF_SHIFT  Count
+             12  1
+	     13  3
+	     14  235
+	     15  18
+	     16  39
+	     17  90
+	     18  13
+	     19  2
+	     20  4
 
-Thank you,
-Pasha
+ie. 16KiB is by far the most common, then second most common is the
+default 128KiB. 256KiB is comparatively rare.
+
+However, I don't think your v1 patch is quite right Tiezhu - since 17 is
+the default it shouldn't be specified in the defconfig at all. Did you
+manually make the change in the loongson3_defconfig file? If so please
+take a look at the savedefconfig make target & try something like this:
+
+  make ARCH=mips loongson3_defconfig
+  make ARCH=mips menuconfig
+  # Change LOG_BUF_SHIFT
+  make ARCH=mips savedefconfig
+  mv defconfig arch/mips/configs/loongson3_defconfig
+  git add -i arch/mips/configs/loongson3_defconfig
+  # Stage the relevant changes, drop the others
+
+You should end up with the CONFIG_LOG_BUF_SHIFT line just getting
+deleted.
+
+If on the other hand you really do prefer 256KiB for these systems
+please describe why in the commit message. It could be something as
+simple as "we have lots of memory so using 256KiB isn't a big deal, and
+gives us a better chance of preserving boot messages until they're
+examined". But if your log is getting this big before you look at it (or
+before something like systemd copies it into its journal), there's
+probably something fishy going on.
+
+Thanks,
+    Paul
