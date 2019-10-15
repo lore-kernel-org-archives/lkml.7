@@ -2,153 +2,350 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22944ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D51AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8FE205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277622064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ljbIiqwT"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eXlx+rz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389024AbfJOSGJ (ORCPT
+        id S2389037AbfJOSGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:06:09 -0400
-Received: from mail-pl1-f172.google.com ([209.85.214.172]:33752 "EHLO
-        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfJOSGJ (ORCPT
+        Tue, 15 Oct 2019 14:06:13 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57592 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfJOSGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:06:09 -0400
-Received: by mail-pl1-f172.google.com with SMTP id d22so9970755pls.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 11:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hBqT9Ybr/Ipic63e3mRedQn/6ltePkNsW7NCVWavp3g=;
-        b=ljbIiqwTrf9NgeFAUtAMBFbK8YLkRUnSe2tlxycaq/vf6DF+H5f5YZwmFn6BZThyMx
-         GMnP05W2z06TEWbrr7e6mBtKXgyQ5vwWFyMHlx0eP1C8o7USaba3spZ3vAdAFxGi5Ych
-         6R3em4hnjlCV/+9+5aVmTHipoSIFG1IeYAEjGz4CKeox9hY6sRiPne5GqYdWOhcz8SMs
-         ux2fodB3vdy1OJcfDNCV1X1Es8hxIxqLqoRVfszKdjWtw1kgx1acKA9VnvaPt5lEaSSO
-         Xuy0A5V5kkr3AnMXf5BTFZe6/IlOrY6vcqNsE8S1jhoMBzXKNhN5JGucaw2Q+m7Wv0na
-         +gXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hBqT9Ybr/Ipic63e3mRedQn/6ltePkNsW7NCVWavp3g=;
-        b=eaiUKE/MdrHoU9SbqO+i4EwNvqhGaKYjJuiEY+/uw9/tw6reqkuLrnRq/uYm5UkAUd
-         fEclmWFui4YEe2IaQ0oJ655qrp5hXqjBnkKBqQntC8ieAEQZSQmaB6K0nJOWRXjSU6C+
-         cnEc9J5EDnj7lh4nOU+plEGwAF5kl0xdDX5MEK4+yVtk94u/x16jeqa3O8w2yiNKzzVy
-         H0ce+OJShF63M/8uElLkpCCRAVBRDSZnIcGVeHgSZn/hYLDn/u88Oh40BK1jW1t6JC5j
-         FuZygaxbGatHovJKSzEzURBrij5kY2kx2AnToK4L+QnIyI8gi0ELeQ+O/JvCqYsgrt8C
-         5XPQ==
-X-Gm-Message-State: APjAAAX+eHuuu0RhXNU351zk8Zk591/f/UOVnqM+uKGBvrXKC0IQeSJQ
-        RICw0m1bS55JHsHh0IcJazNArPmrX+zqfGmhDiqEOw==
-X-Google-Smtp-Source: APXvYqx/GzA2ea/qqOKmR0URniymnPEQbAPNCRFY3WJQqBqUY31DiRHgDGzArE6Z+eGUbLr7QD5P9iMo1PzrV5IgrKA=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr36165530plp.179.1571162768113;
- Tue, 15 Oct 2019 11:06:08 -0700 (PDT)
+        Tue, 15 Oct 2019 14:06:12 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 63B93324;
+        Tue, 15 Oct 2019 20:06:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571162768;
+        bh=gGZ92IHX4aErxdxSECBpzax+mh5hsPtQqSv5CKMIOcw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eXlx+rz4JfFCNkXO/MpQUDisyDAnlsYX4gM3rx5ozAyNJNmhB+JupPV/wfmXsVEWP
+         jE/RuY6ozqxR+qiDsAi9vtvEzVADlTCYPE0N7m4C2wpXZDBYZ3QnkHhQIwiUHLP6rf
+         gryuhbu+fleqi8xI2VRp3+YtGhYfe0YxhmVs0QmU=
+Date:   Tue, 15 Oct 2019 21:06:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 7/8] arm64: dts: renesas: Add CMM units to Gen3 SoCs
+Message-ID: <20191015180605.GO4875@pendragon.ideasonboard.com>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20191015104621.62514-8-jacopo+renesas@jmondi.org>
+ <84f7b344-6a3a-edcc-3f3d-588825516bc2@ideasonboard.com>
 MIME-Version: 1.0
-References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
- <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com> <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 15 Oct 2019 11:05:56 -0700
-Message-ID: <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
-Subject: Re: AMDGPU and 16B stack alignment
-To:     Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>
-Cc:     "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
-        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Matthias Kaehlcke <mka@google.com>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <84f7b344-6a3a-edcc-3f3d-588825516bc2@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 12:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Oct 15, 2019 at 9:08 AM S, Shirish <sshankar@amd.com> wrote:
-> > On 10/15/2019 3:52 AM, Nick Desaulniers wrote:
->
-> > My gcc build fails with below errors:
-> >
-> > dcn_calcs.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
-> >
-> > dcn_calc_math.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
+Hi Jacopo and Kieran,
 
-I was able to reproduce this failure on pre-7.1 versions of GCC.  It
-seems that when:
-1. code is using doubles
-2. setting -mpreferred-stack-boundary=3 -mno-sse2, ie. 8B stack alignment
-than GCC produces that error:
-https://godbolt.org/z/7T8nbH
+On Tue, Oct 15, 2019 at 01:52:29PM +0100, Kieran Bingham wrote:
+> On 15/10/2019 11:46, Jacopo Mondi wrote:
+> > Add CMM units to Renesas R-Car Gen3 SoC that support it, and reference them
+> > from the Display Unit they are connected to.
+> > 
+> > Sort the 'vsps', 'renesas,cmm' and 'status' properties in the DU unit
+> > consistently in all the involved DTS.
+> 
+> Going through this, I think I'm happy, except for a 'future' gotcha
+> detailed below.
+> 
+> The H3-N is possibly going to cause some issues (not
+> supporting/connecting/using the CMM2) ... but as we don't really have
+> that yet ... I'm going to say "la la la " ... and put this here:
+> 
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 39 +++++++++++++++++++++++
+> >  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 31 +++++++++++++++++-
+> >  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 31 +++++++++++++++++-
+> >  arch/arm64/boot/dts/renesas/r8a77990.dtsi | 21 ++++++++++++
+> >  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 21 ++++++++++++
+> >  5 files changed, 141 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > index 6675462f7585..e16757af8c27 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > @@ -2939,6 +2939,42 @@
+> >  			iommus = <&ipmmu_vi1 10>;
+> >  		};
+> > 
+> > +		cmm0: cmm@fea40000 {
+> > +			compatible = "renesas,r8a7795-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea40000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 711>;
+> > +			resets = <&cpg 711>;
+> > +		};
+> > +
+> > +		cmm1: cmm@fea50000 {
+> > +			compatible = "renesas,r8a7795-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea50000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 710>;
+> > +			resets = <&cpg 710>;
+> > +		};
+> > +
+> > +		cmm2: cmm@fea60000 {
+> > +			compatible = "renesas,r8a7795-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea60000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 709>;
+> > +			resets = <&cpg 709>;
+> > +		};
+> 
+> Yeouch. CMM2 is not available on the H3-N - but as far as I can tell the
+> H3-N is an R8A7795 ...
+> 
+> Geert, How will we differentiate this, or perhaps it just won't matter.
+> 
+> The key part here will be handling it in the DU perhaps anyway.
 
-That's already a tall order of constraints, so it's understandable
-that the compiler would just error likely during instruction
-selection, but was eventually taught how to solve such constraints.
+I think we'll figure it out when we'll have more information about the
+H3-N, and in particular if DU2 will be present (but not usable) or
+completely absent. In the latter case we'll need a separate .dtsi.
 
-> >
-> > While GPF observed on clang builds seem to be fixed.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks for the report.  Your testing these patches is invaluable, Shirish!
+> > +
+> > +		cmm3: cmm@fea70000 {
+> > +			compatible = "renesas,r8a7795-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea70000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 708>;
+> > +			resets = <&cpg 708>;
+> > +		};
+> > +
+> >  		csi20: csi2@fea80000 {
+> >  			compatible = "renesas,r8a7795-csi2";
+> >  			reg = <0 0xfea80000 0 0x10000>;
+> > @@ -3142,7 +3178,10 @@
+> >  				 <&cpg CPG_MOD 722>,
+> >  				 <&cpg CPG_MOD 721>;
+> >  			clock-names = "du.0", "du.1", "du.2", "du.3";
+> > +
+> > +			renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>, <&cmm3>;
+> >  			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+> > +
+> >  			status = "disabled";
+> > 
+> >  			ports {
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > index 822c96601d3c..597c47f3f994 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > @@ -2641,6 +2641,33 @@
+> >  			renesas,fcp = <&fcpvi0>;
+> >  		};
+> > 
+> > +		cmm0: cmm@fea40000 {
+> > +			compatible = "renesas,r8a7796-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea40000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 711>;
+> > +			resets = <&cpg 711>;
+> > +		};
+> > +
+> > +		cmm1: cmm@fea50000 {
+> > +			compatible = "renesas,r8a7796-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea50000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 710>;
+> > +			resets = <&cpg 710>;
+> > +		};
+> > +
+> > +		cmm2: cmm@fea60000 {
+> > +			compatible = "renesas,r8a7796-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea60000 0 0x1000>;
+> > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 709>;
+> > +			resets = <&cpg 709>;
+> > +		};
+> > +
+> >  		csi20: csi2@fea80000 {
+> >  			compatible = "renesas,r8a7796-csi2";
+> >  			reg = <0 0xfea80000 0 0x10000>;
+> > @@ -2791,10 +2818,12 @@
+> >  				 <&cpg CPG_MOD 723>,
+> >  				 <&cpg CPG_MOD 722>;
+> >  			clock-names = "du.0", "du.1", "du.2";
+> > -			status = "disabled";
+> > 
+> > +			renesas,cmms = <&cmm0>, <&cmm1>, <&cmm2>;
+> >  			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+> > 
+> > +			status = "disabled";
+> > +
+> >  			ports {
+> >  				#address-cells = <1>;
+> >  				#size-cells = <0>;
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> > index 4ae163220f60..c3da8d26ccba 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> > @@ -2320,6 +2320,33 @@
+> >  			resets = <&cpg 611>;
+> >  		};
+> > 
+> > +		cmm0: cmm@fea40000 {
+> > +			compatible = "renesas,r8a77965-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea40000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 711>;
+> > +			resets = <&cpg 711>;
+> > +		};
+> > +
+> > +		cmm1: cmm@fea50000 {
+> > +			compatible = "renesas,r8a77965-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea50000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 710>;
+> > +			resets = <&cpg 710>;
+> > +		};
+> > +
+> > +		cmm3: cmm@fea70000 {
+> > +			compatible = "renesas,r8a77965-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea70000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 708>;
+> > +			resets = <&cpg 708>;
+> > +		};
+> > +
+> >  		csi20: csi2@fea80000 {
+> >  			compatible = "renesas,r8a77965-csi2";
+> >  			reg = <0 0xfea80000 0 0x10000>;
+> > @@ -2467,10 +2494,12 @@
+> >  				 <&cpg CPG_MOD 723>,
+> >  				 <&cpg CPG_MOD 721>;
+> >  			clock-names = "du.0", "du.1", "du.3";
+> > -			status = "disabled";
+> > 
+> > +			renesas,cmms = <&cmm0>, <&cmm1>, <&cmm3>;
+> >  			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd0 1>;
+> > 
+> > +			status = "disabled";
+> > +
+> >  			ports {
+> >  				#address-cells = <1>;
+> >  				#size-cells = <0>;
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> > index 455954c3d98e..bab9b7f96c72 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+> > @@ -1727,6 +1727,24 @@
+> >  			iommus = <&ipmmu_vi0 9>;
+> >  		};
+> > 
+> > +		cmm0: cmm@fea40000 {
+> > +			compatible = "renesas,r8a77990-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea40000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 711>;
+> > +			resets = <&cpg 711>;
+> > +		};
+> > +
+> > +		cmm1: cmm@fea50000 {
+> > +			compatible = "renesas,r8a77990-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea50000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 710>;
+> > +			resets = <&cpg 710>;
+> > +		};
+> > +
+> >  		csi40: csi2@feaa0000 {
+> >  			compatible = "renesas,r8a77990-csi2";
+> >  			reg = <0 0xfeaa0000 0 0x10000>;
+> > @@ -1768,7 +1786,10 @@
+> >  			clock-names = "du.0", "du.1";
+> >  			resets = <&cpg 724>;
+> >  			reset-names = "du.0";
+> > +
+> > +			renesas,cmms = <&cmm0>, <&cmm1>;
+> >  			vsps = <&vspd0 0>, <&vspd1 0>;
+> > +
+> >  			status = "disabled";
+> > 
+> >  			ports {
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > index 183fef86cf7c..871c70cc2d2e 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> > @@ -993,6 +993,24 @@
+> >  			iommus = <&ipmmu_vi0 9>;
+> >  		};
+> > 
+> > +		cmm0: cmm@fea40000 {
+> > +			compatible = "renesas,r8a77995-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea40000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 711>;
+> > +			resets = <&cpg 711>;
+> > +		};
+> > +
+> > +		cmm1: cmm@fea50000 {
+> > +			compatible = "renesas,r8a77995-cmm",
+> > +				     "renesas,rcar-gen3-cmm";
+> > +			reg = <0 0xfea50000 0 0x1000>;
+> > +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> > +			clocks = <&cpg CPG_MOD 710>;
+> > +			resets = <&cpg 710>;
+> > +		};
+> > +
+> >  		du: display@feb00000 {
+> >  			compatible = "renesas,du-r8a77995";
+> >  			reg = <0 0xfeb00000 0 0x40000>;
+> > @@ -1003,7 +1021,10 @@
+> >  			clock-names = "du.0", "du.1";
+> >  			resets = <&cpg 724>;
+> >  			reset-names = "du.0";
+> > +
+> > +			renesas,cmms = <&cmm0>, <&cmm1>;
+> >  			vsps = <&vspd0 0>, <&vspd1 0>;
+> > +
+> >  			status = "disabled";
+> > 
+> >  			ports {
 
->
-> Ok, so it seems that gcc insists on having at least 2^4 bytes stack
-> alignment when
-> SSE is enabled on x86-64, but does not actually rely on that for
-> correct operation
-> unless it's using sse2. So -msse always has to be paired with
->  -mpreferred-stack-boundary=3.
-
-Seemingly only for older versions of GCC, pre 7.1.
-
->
-> For clang, it sounds like the opposite is true: when passing 16 byte
-> stack alignment
-> and having sse/sse2 enabled, it requires the incoming stack to be 16
-> byte aligned,
-
-I don't think it requires the incoming stack to be 16B aligned for
-sse2, I think it requires the incoming and current stack alignment to
-match. Today it does not, which is why we observe GPFs.
-
-> but passing 8 byte alignment makes it do the right thing.
->
-> So, should we just always pass $(call cc-option, -mpreferred-stack-boundary=4)
-> to get the desired outcome on both?
-
-Hmmm...I would have liked to remove it outright, as it is an ABI
-mismatch that is likely to result in instability and non-fun-to-debug
-runtime issues in the future.  I suspect my patch does work for GCC
-7.1+.  The question is: Do we want to either:
-1. mark AMDGPU broken for GCC < 7.1, or
-2. continue supporting it via stack alignment mismatch?
-
-2 is brittle, and may break at any point in the future, but if it's
-working for someone it does make me feel bad to outright disable it.
-What I'd image 2 looks like is (psuedo code in a Makefile):
-
-if CC_IS_GCC && GCC_VERSION < 7.1:
-  set stack alignment to 16B and hope for the best
-
-So my diff would be amended to keep the stack alignment flags, but
-only to support GCC < 7.1.  And that assumes my change compiles with
-GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
-feel even more confident if someone with hardware to test on and GCC
-7.1+ could boot test).
 -- 
-Thanks,
-~Nick Desaulniers
+Regards,
+
+Laurent Pinchart
