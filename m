@@ -2,121 +2,68 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A09FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC24ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7395F20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k3yULwCr"
+	by mail.kernel.org (Postfix) with ESMTP id 7DB5B2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfJOSe2 (ORCPT
+        id S2389172AbfJOSiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:34:28 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33006 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfJOSe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:34:27 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FITFtR114611;
-        Tue, 15 Oct 2019 18:34:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=MThrjEj9/0CfZX70Z4dae2R2GHQaF5mGxzVKKwafNro=;
- b=k3yULwCrhXn2/tiQpMANbqF6M6IqBOKsfV+H147L2s4bg3mB2I3D1rupHUL+PCojwhfV
- zYiI38rrr6tPstl18nIrQN3Cork5o/jnxN1NHWHWCEpgA9UUULiGteD76XKh4fhI7+K0
- ufhFk7GVeviH4c/2C5mRLUxFtNLWcOrUoQIENDumC90buIjPhEnbQKeetpS5UFuf7COs
- kuAkQrWsX4BeOfEui/bwEFoLBDgNRXWLoEwyk/If/BSwIM1bY98BXmRKwsXf04SNuTEc
- Rj7992wuaQ4TgoC9a9YLn5S46bTKGl6136qjweWfl1YQKMRXmwz6eriuNECTEd/878hm 4A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vk6sqj27q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 18:34:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FISeTN039074;
-        Tue, 15 Oct 2019 18:34:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vn8enqj4v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 18:34:16 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FIYFPU031925;
-        Tue, 15 Oct 2019 18:34:15 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 18:34:14 +0000
-Subject: Re: [PATCH v1] hugetlbfs: don't access uninitialized memmaps in
- pfn_range_valid_gigantic()
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>,
-        stable@vger.kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191015120717.4858-1-david@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <8ac821b6-7575-ab0d-1336-c376a30b8fbb@oracle.com>
-Date:   Tue, 15 Oct 2019 11:34:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 15 Oct 2019 14:38:04 -0400
+Received: from ms.lwn.net ([45.79.88.28]:36224 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfJOSiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 14:38:03 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id EE8AC316;
+        Tue, 15 Oct 2019 18:38:02 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 12:38:01 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/4] docs: admin-guide: Sort the "unordered guides"
+ to avoid merge conflicts
+Message-ID: <20191015123801.0ba2d123@lwn.net>
+In-Reply-To: <20191012171114.6589-1-j.neuschaefer@gmx.net>
+References: <20191012171114.6589-1-j.neuschaefer@gmx.net>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20191015120717.4858-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150157
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 5:07 AM, David Hildenbrand wrote:
-> Uninitialized memmaps contain garbage and in the worst case trigger
-> kernel BUGs, especially with CONFIG_PAGE_POISONING. They should not get
-> touched.
-> 
-> Let's make sure that we only consider online memory (managed by the
-> buddy) that has initialized memmaps. ZONE_DEVICE is not applicable.
-> 
-> page_zone() will call page_to_nid(), which will trigger
-> VM_BUG_ON_PGFLAGS(PagePoisoned(page), page) with CONFIG_PAGE_POISONING
-> and CONFIG_DEBUG_VM_PGFLAGS when called on uninitialized memmaps. This
-> can be the case when an offline memory block (e.g., never onlined) is
-> spanned by a zone.
-> 
-> Note: As explained by Michal in [1], alloc_contig_range() will verify
-> the range. So it boils down to the wrong access in this function.
-> 
-> [1] http://lkml.kernel.org/r/20180423000943.GO17484@dhcp22.suse.cz
-> 
-> Reported-by: Michal Hocko <mhocko@kernel.org>
-> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
-> Cc: stable@vger.kernel.org # v4.13+
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Sat, 12 Oct 2019 19:11:09 +0200
+Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
 
-Thanks David,
+> Since the "unordered guides" linked in admin-guide/index.rst are not
+> supposed to be in any particular order, let's sort them alphabetically
+> to avoid the risk of merge conflicts by spreading newly added lines more
+> evenly.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+I've applied this as being better than nothing, but I would *really* be
+pleased if somebody could spend some time imposing a more interesting
+order on those unordered guides.  Making readers pick through a long list
+of random documents isn't all that friendly.
 
--- 
-Mike Kravetz
+(The rest of the set is applied as well).
+
+Thanks,
+
+jon
