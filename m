@@ -2,102 +2,90 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92366ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCD5ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6892A21848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E006521925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKjy0lXq"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="y5eyFIzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbfJONx2 (ORCPT
+        id S1732251AbfJONxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:53:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38175 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbfJONx1 (ORCPT
+        Tue, 15 Oct 2019 09:53:52 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34583 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732239AbfJONxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:53:27 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w3so5289301pgt.5;
-        Tue, 15 Oct 2019 06:53:27 -0700 (PDT)
+        Tue, 15 Oct 2019 09:53:51 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 3so30709893qta.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 06:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QhHgBu9DtlVuSa/jKN81LxnRQ5IePxEDrqTOOn2qwlc=;
-        b=oKjy0lXqfaBGQOGxCfyXjK5IpuMO/YOWCF5nkjtbivKJ5HRGK6luMngGsN9xTcQq23
-         2krqRfsoPw28MJcSKfyxYGQjH2hqwBkP+qygdHQapWzARXN0xn5zyr2s/zOcMIWYajDL
-         0ufPvELGFhkOlnpI+Ydymyi7FwXQ+9ap+zpW6wY/O0gn1ZNIixNKIRHDF7SmBxLWZu3Z
-         qzIFUJMub6bE+NZgTwew5E31oxZjyzk7CIqg7lqKbSzO/3j1bjzxabtnkg2BMZlMX79C
-         Jv4P/XpW9ksJ8iQu0iMgboaSQr9NzD0MntkcvM0WhdgoGjuFoPzzPbPBwv34r3ZGZoAh
-         FR2g==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rdFD1ySM7snbTlYVusRsUK5w8tupUNVkhhCAYZ7l2Pc=;
+        b=y5eyFIzUZPf7JNQjTnetQoWn3BAyiwEjxA5Z4qE2NKrnEC5SXIMN2+3NTw9lnNtQpl
+         8jXl1nYoG97Myed+YXA4VidWTzzkb728WjXDdyiTxMAnQnJCgfOxgYm+hXr813ku/ApS
+         D/V/R44Njsqn3oEV6/kJ7kxFhqWh4qQzvA/G0IpIq0MYI9ymag/1KcZjH4FecF15gYer
+         FWTe0oBPGVvjex692yOemBosnoB8ax+5iL9DTQF+3g1QQvhV+wm+0euRJZqpsxIc5fHh
+         t7R60n9eCfBoflqA7J0pr4mOMAlD6cCJW5kjSZJkYio+WNor05cV2ad46SLhRD6o/TXk
+         48kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QhHgBu9DtlVuSa/jKN81LxnRQ5IePxEDrqTOOn2qwlc=;
-        b=Y2ejVFrZ4hz1EBNCTxtFvEyCTAFKxzgpCjLHZ+O3anAFk7rPeJK1kfTiv4TKWUJ/Sg
-         2lGZ7w8yRQkm39ySTXG3RNWi1FlfvJALeYCyHJvZo81KWwzJuDSdQtI3jCCX4rIAgG15
-         qnvY+4uTxvpMpndOKy61jgexNQPHCuYtW1MwYgGkjGVAwIyEKjiq4WjhFkpbDPn3PnXo
-         f0eCyHN46QLcw6ZsX8uv1EjlyEGB7unMPbXTP+HZQKKxQuTMkvU9LwAVKY8QBL3XjaN8
-         vib8glQKDSxTw+hfI2GtbdRzIqcghEX/3zTAcBIkEz0BsJ71VYAmlVKZUFZ2M3Xnoh6O
-         rkxQ==
-X-Gm-Message-State: APjAAAVX0r5N9BjgU2zjW8ayzFYpBerqVH9HfXXhpw5UL1kWYspQqEl1
-        l1VY+MpGZjSJoIOjMn/IWTCdnxNB5/dnjvKyqcY=
-X-Google-Smtp-Source: APXvYqyuQKWewX3MTgBBY9LImkYYICsBBlZXn7ZhrfDVATCJxjHgqylTK7hQwpt/Bk5EGGJetAsik/a2Fy6Yjpul6E0=
-X-Received: by 2002:a62:e206:: with SMTP id a6mr38798141pfi.64.1571147606854;
- Tue, 15 Oct 2019 06:53:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rdFD1ySM7snbTlYVusRsUK5w8tupUNVkhhCAYZ7l2Pc=;
+        b=jFjMPQvqjk/fOVMZgRPWeMbJEA0j2eag6F97BTzmrWmpj+PIa+SxVgAsoKBKurJ1M3
+         MDiKdtStGaA3W6IzPe0IhJlKjyq841O1Z5jPBntMyPLMMXf7bJxHKFMRqvtmX0Qqaa3l
+         NO490Kd1uCxMG78Z9EPQdRv3hiok8CKoE5yFp/T1L/Q/lSWbCV/95agOvsOQpDBIKlQN
+         C1zMRn5nDFPdmDCZhjWv9kdhIX0MMMRkt5movbc8fuKmL3QDQzro4q0usAkr59hiw+ZH
+         20gMohSSS1rJUryoA0A86O+lnlW0yEIqIz7XqMQPCoP3xybTYdRRkYX7zb9hXcyXJnxN
+         fk0A==
+X-Gm-Message-State: APjAAAWyd6UL3QJhF/L9s5IJG+u7xMmDPaFyFUdathCZNeCpukI2Gc0i
+        h7b4eHTHNNFc5KRpf+su6yrAIg==
+X-Google-Smtp-Source: APXvYqyhlPRXzOnBK2H9VoOhhErMUW+uFAJUl6CEm6oB8pyKripwSp26aw+YsSeqMP5Lxhsfcz7ugA==
+X-Received: by 2002:a0c:b068:: with SMTP id l37mr28886665qvc.36.1571147630166;
+        Tue, 15 Oct 2019 06:53:50 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:d056])
+        by smtp.gmail.com with ESMTPSA id t17sm14675129qtt.57.2019.10.15.06.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 06:53:49 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 09:53:48 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
+ mem_cgroup_move_account
+Message-ID: <20191015135348.GA139269@cmpxchg.org>
+References: <157112699975.7360.1062614888388489788.stgit@buzz>
 MIME-Version: 1.0
-References: <20191012035420.13904-3-dan@dlrobertson.com> <201910150017.MkSBCEcB%lkp@intel.com>
-In-Reply-To: <201910150017.MkSBCEcB%lkp@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Oct 2019 16:53:16 +0300
-Message-ID: <CAHp75VeyB2rZXXF34cUKp2iBfJMeN3fw8SfBMW=13sZY3z2DNA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: (bma400) add driver for the BMA400
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Dan Robertson <dan@dlrobertson.com>, kbuild-all@lists.01.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157112699975.7360.1062614888388489788.stgit@buzz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 12:25 AM kbuild test robot <lkp@intel.com> wrote:
+On Tue, Oct 15, 2019 at 11:09:59AM +0300, Konstantin Khlebnikov wrote:
+> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
+> These counters needs update when page is moved between cgroups.
+> 
+> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-> smatch warnings:
-> drivers/iio/accel/bma400_core.c:422 bma400_set_accel_oversampling_ratio() warn: unsigned 'acc_config' is never less than zero.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
->    420                  ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG,
->    421                                    &acc_config);
->  > 422                  if (acc_config < 0)
->    423                          return acc_config;
-
-Obvious typo, has to be if (ret < 0)
-
->    424
->    425                  ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
->    426                                     (acc_config & ~BMA400_LP_OSR_MASK) |
->    427                                     (val << BMA400_LP_OSR_SHIFT));
->    428                  if (ret < 0) {
->    429                          dev_err(data->dev, "Failed to write out OSR");
->    430                          return ret;
->    431                  }
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Please mention in the changelog that currently is nobody *consuming*
+the lruvec versions of these counters and that there is no
+user-visible effect. Thanks
