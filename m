@@ -2,230 +2,227 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27B6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BBDECE595
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5CF20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:08:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rHXUMkGe"
+	by mail.kernel.org (Postfix) with ESMTP id A880F21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfJOJIT (ORCPT
+        id S1729033AbfJOJJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:08:19 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37150 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfJOJIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:08:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PE8+nIoxzD1zQdezsHIaVtBqecbIPWzv31qj99+GMFI=; b=rHXUMkGeY1/C+REceyjWg+4Rm
-        01qjEdQ6LSV1hNiGadSYIGoQaUN97i2TAxt77SO9nWKaaBDGqACYgzfg6kiZjoOfvDWHvfW5yh1aY
-        KyV9+zesdK06b1T11yiw+ZF81rVkFrdjOfPZvHvwd0E4nEU2l9/M9Paq2TFNVojY4Q5osIbiipDKg
-        C3reJlQ+75m6pOM9628sIktXXyQ0osAu8zYoVXCqAMPh8wkWAeNjueaE0aZLD6rBfiWQeCIBm9EFW
-        OoTv9Gvz2PNSeTmiyuvOIpKzXV3yiPEFR1Hr4a6hsnvTB5AJ5c4w1JjHh6QDxGQYDHfmJwnmvDQMd
-        E4DF8O0lA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43732)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iKIoB-0003R7-Is; Tue, 15 Oct 2019 10:07:59 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iKIo8-0005B3-As; Tue, 15 Oct 2019 10:07:56 +0100
-Date:   Tue, 15 Oct 2019 10:07:56 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
- Layerscape SoCs
-Message-ID: <20191015090756.GS25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-4-xiaowei.bao@nxp.com>
- <20190924163850.GY25745@shell.armlinux.org.uk>
- <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        Tue, 15 Oct 2019 05:09:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42534 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726373AbfJOJJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:09:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5937AB39B;
+        Tue, 15 Oct 2019 09:09:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 19D791E4A8A; Tue, 15 Oct 2019 11:09:33 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 11:09:33 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, tj@kernel.org,
+        Jan Kara <jack@suse.cz>, Dennis Zhou <dennis@kernel.org>
+Subject: Re: [PATCH v2] cgroup, blkcg: prevent dirty inodes to pin dying
+ memory cgroups
+Message-ID: <20191015090933.GA21104@quack2.suse.cz>
+References: <20191010234036.2860655-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB32991D0D69769CE29E0F8DAEF5930@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <20191010234036.2860655-1-guro@fb.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 07:46:12AM +0000, Xiaowei Bao wrote:
+On Thu 10-10-19 16:40:36, Roman Gushchin wrote:
+> We've noticed that the number of dying cgroups on our production hosts
+> tends to grow with the uptime. This time it's caused by the writeback
+> code.
 > 
+> An inode which is getting dirty for the first time is associated
+> with the wb structure (look at __inode_attach_wb()). It can later
+> be switched to another wb under some conditions (e.g. some other
+> cgroup is writing a lot of data to the same inode), but generally
+> stays associated up to the end of life of the inode structure.
 > 
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: 2019年9月25日 0:39
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com;
-> > robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h. Lian
-> > <minghuan.lian@nxp.com>; andrew.murray@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
-> > Layerscape SoCs
-> > 
-> > On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
-> > > This PCIe controller is based on the Mobiveil GPEX IP, it work in EP
-> > > mode if select this config opteration.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  MAINTAINERS                                        |   2 +
-> > >  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
-> > >  drivers/pci/controller/mobiveil/Makefile           |   1 +
-> > >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156
-> > > +++++++++++++++++++++
-> > >  4 files changed, 173 insertions(+), 3 deletions(-)  create mode
-> > > 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS index b997056..0858b54 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -12363,11 +12363,13 @@ F:
-> > 	drivers/pci/controller/dwc/*layerscape*
-> > >
-> > >  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-> > >  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
-> > >  L:	linux-pci@vger.kernel.org
-> > >  L:	linux-arm-kernel@lists.infradead.org
-> > >  S:	Maintained
-> > >  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> > >  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> > > +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > >
-> > >  PCI DRIVER FOR GENERIC OF HOSTS
-> > >  M:	Will Deacon <will@kernel.org>
-> > > diff --git a/drivers/pci/controller/mobiveil/Kconfig
-> > > b/drivers/pci/controller/mobiveil/Kconfig
-> > > index 2054950..0696b6e 100644
-> > > --- a/drivers/pci/controller/mobiveil/Kconfig
-> > > +++ b/drivers/pci/controller/mobiveil/Kconfig
-> > > @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
-> > >  	  for address translation and it is a PCIe Gen4 IP.
-> > >
-> > >  config PCIE_LAYERSCAPE_GEN4
-> > > -	bool "Freescale Layerscape PCIe Gen4 controller"
-> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
-> > >  	depends on PCI
-> > >  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > >  	depends on PCI_MSI_IRQ_DOMAIN
-> > >  	select PCIE_MOBIVEIL_HOST
-> > >  	help
-> > >  	  Say Y here if you want PCIe Gen4 controller support on
-> > > -	  Layerscape SoCs. The PCIe controller can work in RC or
-> > > -	  EP mode according to RCW[HOST_AGT_PEX] setting.
-> > > +	  Layerscape SoCs. And the PCIe controller work in RC mode
-> > > +	  by setting the RCW[HOST_AGT_PEX] to 0.
-> > > +
-> > > +config PCIE_LAYERSCAPE_GEN4_EP
-> > > +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
-> > > +	depends on PCI
-> > > +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
-> > > +	depends on PCI_ENDPOINT
-> > > +	select PCIE_MOBIVEIL_EP
-> > > +	help
-> > > +	  Say Y here if you want PCIe Gen4 controller support on
-> > > +	  Layerscape SoCs. And the PCIe controller work in EP mode
-> > > +	  by setting the RCW[HOST_AGT_PEX] to 1.
-> > >  endmenu
-> > > diff --git a/drivers/pci/controller/mobiveil/Makefile
-> > > b/drivers/pci/controller/mobiveil/Makefile
-> > > index 686d41f..6f54856 100644
-> > > --- a/drivers/pci/controller/mobiveil/Makefile
-> > > +++ b/drivers/pci/controller/mobiveil/Makefile
-> > > @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) +=
-> > > pcie-mobiveil-host.o
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
-> > >  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
-> > >  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
-> > > +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) +=
-> > pcie-layerscape-gen4-ep.o
-> > > diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > new file mode 100644
-> > > index 0000000..7bfec51
-> > > --- /dev/null
-> > > +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> > > @@ -0,0 +1,156 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * PCIe controller EP driver for Freescale Layerscape SoCs
-> > > + *
-> > > + * Copyright (C) 2019 NXP Semiconductor.
-> > > + *
-> > > + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>  */
-> > > +
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/of_pci.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/pci.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/resource.h>
-> > > +
-> > > +#include "pcie-mobiveil.h"
-> > > +
-> > > +#define PCIE_LX2_BAR_NUM	4
-> > > +
-> > > +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
-> > > +
-> > > +struct ls_pcie_g4_ep {
-> > > +	struct mobiveil_pcie		*mv_pci;
-> > > +};
-> > > +
-> > > +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
-> > > +	{ .compatible = "fsl,lx2160a-pcie-ep",},
-> > > +	{ },
-> > > +};
-> > > +
-> > > +static const struct pci_epc_features ls_pcie_g4_epc_features = {
-> > > +	.linkup_notifier = false,
-> > > +	.msi_capable = true,
-> > > +	.msix_capable = true,
-> > > +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
-> > 
-> > 			BIT(BAR_4) | BIT(BAR_5) ?
+> The problem is that the wb structure holds a reference to the original
+> memory cgroup. So if an inode has been dirty once, it has a good chance
+> to pin down the original memory cgroup.
 > 
-> I think use .reserved_bar = (1 << BAR_4) | (1 << BAR_5), is better, because BAR_4 
-> is not a bit of register.
+> An example from the real life: some service runs periodically and
+> updates rpm packages. Each time in a new memory cgroup. Installed
+> .so files are heavily used by other cgroups, so corresponding inodes
+> tend to stay alive for a long. So do pinned memory cgroups.
+> In production I've seen many hosts with 1-2 thousands of dying
+> cgroups.
+> 
+> This is not the first problem with the dying memory cgroups. As
+> always, the problem is with their relative size: memory cgroups
+> are large objects, easily 100x-1000x larger that inodes. So keeping
+> a couple of thousands of dying cgroups in memory without a good reason
+> (what we easily do with inodes) is quite costly (and is measured
+> in tens and hundreds of Mb).
+> 
+> To solve this problem let's perform a periodic scan of inodes
+> attached to the dying wbs, and detach those of them, which are clean
+> and don't have an active io operation.
+> That will eventually release the wb structure and corresponding
+> memory cgroup.
+> 
+> To make this scanning effective, let's keep a list of attached
+> inodes. inode->i_io_list can be reused for this purpose.
+> 
+> The scan is performed from the cgroup offlining path. Dying wbs
+> are placed on the global list. On each cgroup removal we traverse
+> the whole list ignoring wbs with active io operations. That will
+> allow the majority of io operations to be finished after the
+> removal of the cgroup.
+> 
+> Big thanks to Jan Kara and Dennis Zhou for their ideas and
+> contribution to this patch.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  fs/fs-writeback.c                | 52 +++++++++++++++++++++++---
+>  include/linux/backing-dev-defs.h |  2 +
+>  include/linux/writeback.h        |  1 +
+>  mm/backing-dev.c                 | 63 ++++++++++++++++++++++++++++++--
+>  4 files changed, 108 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index e88421d9a48d..c792db951274 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -136,16 +136,21 @@ static bool inode_io_list_move_locked(struct inode *inode,
+>   * inode_io_list_del_locked - remove an inode from its bdi_writeback IO list
+>   * @inode: inode to be removed
+>   * @wb: bdi_writeback @inode is being removed from
+> + * @keep_attached: keep the inode on the list of inodes attached to wb
+>   *
+>   * Remove @inode which may be on one of @wb->b_{dirty|io|more_io} lists and
+>   * clear %WB_has_dirty_io if all are empty afterwards.
+>   */
+>  static void inode_io_list_del_locked(struct inode *inode,
+> -				     struct bdi_writeback *wb)
+> +				     struct bdi_writeback *wb,
+> +				     bool keep_attached)
+>  {
+>  	assert_spin_locked(&wb->list_lock);
+>  
+> -	list_del_init(&inode->i_io_list);
+> +	if (keep_attached)
+> +		list_move(&inode->i_io_list, &wb->b_attached);
+> +	else
+> +		list_del_init(&inode->i_io_list);
+>  	wb_io_lists_depopulated(wb);
+>  }
 
-Why is whether it's a register or not relevent?
+Rather than adding this (somewhat ugly) bool argument to
+inode_io_list_del_locked() I'd teach inode_io_list_move_locked() about the
+new b_attached list and use that function where needed...
 
+> @@ -426,7 +431,7 @@ static void inode_switch_wbs_work_fn(struct work_struct *work)
+>  	if (!list_empty(&inode->i_io_list)) {
+>  		struct inode *pos;
+>  
+> -		inode_io_list_del_locked(inode, old_wb);
+> +		inode_io_list_del_locked(inode, old_wb, false);
+>  		inode->i_wb = new_wb;
+>  		list_for_each_entry(pos, &new_wb->b_dirty, i_io_list)
+>  			if (time_after_eq(inode->dirtied_when,
+
+This bit looks wrong. Not the change you made as such but the fact that you
+can now move inode from b_attached list of old wb to the dirty list of new
+wb.
+
+> @@ -544,6 +549,41 @@ static void inode_switch_wbs(struct inode *inode, int new_wb_id)
+>  	kfree(isw);
+>  }
+>  
+> +/**
+> + * cleanup_offline_wb - detach attached clean inodes
+> + * @wb: target wb
+> + *
+> + * Clear the ->i_wb pointer of the attached inodes and drop
+> + * the corresponding wb reference. Skip inodes which are dirty,
+> + * freeing, switching or in the active writeback process.
+> + */
+> +void cleanup_offline_wb(struct bdi_writeback *wb)
+> +{
+> +	struct inode *inode, *tmp;
+> +	bool ret = true;
+> +
+> +	spin_lock(&wb->list_lock);
+> +	if (list_empty(&wb->b_attached))
+> +		goto unlock;
+
+What's the point of this check? list_for_each_entry_safe() below will just
+do the same...
+
+> +
+> +	list_for_each_entry_safe(inode, tmp, &wb->b_attached, i_io_list) {
+> +		if (!spin_trylock(&inode->i_lock))
+> +			continue;
+> +		xa_lock_irq(&inode->i_mapping->i_pages);
+> +		if (!(inode->i_state &
+> +		      (I_FREEING | I_CLEAR | I_SYNC | I_DIRTY | I_WB_SWITCH))) {
+> +			WARN_ON_ONCE(inode->i_wb != wb);
+> +			inode->i_wb = NULL;
+> +			wb_put(wb);
+
+Hum, currently the code assumes that once i_wb is set, it never becomes
+NULL again. In particular the inode e.g. in
+fs/fs-writeback.c:inode_congested() or generally unlocked_inode_to_wb_begin()
+users could get broken by this. The i_wb switching code is so complex
+exactly because of these interactions.
+
+Maybe you thought through the interactions and things are actually fine but
+if nothing else you'd need a big fat comment here explaining why this is
+fine and update inode_congested() comments etc.
+
+> +			list_del_init(&inode->i_io_list);
+> +		}
+> +		xa_unlock_irq(&inode->i_mapping->i_pages);
+> +		spin_unlock(&inode->i_lock);
+> +	}
+> +unlock:
+> +	spin_unlock(&wb->list_lock);
+> +}
+> +
+
+...
+
+> diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+> index 4fc87dee005a..68b167fda259 100644
+> --- a/include/linux/backing-dev-defs.h
+> +++ b/include/linux/backing-dev-defs.h
+> @@ -137,6 +137,7 @@ struct bdi_writeback {
+>  	struct list_head b_io;		/* parked for writeback */
+>  	struct list_head b_more_io;	/* parked for more writeback */
+>  	struct list_head b_dirty_time;	/* time stamps are dirty */
+> +	struct list_head b_attached;	/* attached inodes */
+
+Maybe
+	/* clean inodes pointing to this wb through inode->i_wb */
+would be more explanatory?
+
+>  	spinlock_t list_lock;		/* protects the b_* lists */
+>  
+>  	struct percpu_counter stat[NR_WB_STAT_ITEMS];
+
+									Honza
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
