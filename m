@@ -6,152 +6,97 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F87C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24565C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BDC20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24ED2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfJODHX (ORCPT
+        id S1727651AbfJODLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 23:07:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49026 "EHLO huawei.com"
+        Mon, 14 Oct 2019 23:11:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3713 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727091AbfJODHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 23:07:23 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 298D293D40F504CE2C73;
-        Tue, 15 Oct 2019 11:07:21 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 11:07:11 +0800
-Subject: Re: [RFC PATCH 6/6] ACPI/IORT: Drop code to set the PMCG
- software-defined model
-To:     John Garry <john.garry@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <sudeep.holla@arm.com>, <robin.murphy@arm.com>,
-        <mark.rutland@arm.com>, <will@kernel.org>
-CC:     <shameerali.kolothum.thodi@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <nleeder@codeaurora.org>,
-        <linuxarm@huawei.com>
-References: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
- <1569854031-237636-7-git-send-email-john.garry@huawei.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <e4e8adfd-a0af-82cb-c5f6-77153474330a@huawei.com>
-Date:   Tue, 15 Oct 2019 11:06:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        id S1726946AbfJODLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 23:11:38 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1172FD442D4F658B0507;
+        Tue, 15 Oct 2019 10:54:44 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 10:54:37 +0800
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] perf c2c: fix memory leak in build_cl_output()
+CC:     <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
+        <linfeilong@huawei.com>
+Message-ID: <4d3c0178-5482-c313-98e1-f82090d2d456@huawei.com>
+Date:   Tue, 15 Oct 2019 10:54:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1569854031-237636-7-git-send-email-john.garry@huawei.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
+X-Originating-IP: [10.177.251.225]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/30 22:33, John Garry wrote:
-> Now that we can identify a PMCG implementation from the parent SMMUv3
-> IIDR, drop all the code to match based on the ACPI OEM ID.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  drivers/acpi/arm64/iort.c | 35 +----------------------------------
->  include/linux/acpi_iort.h |  8 --------
->  2 files changed, 1 insertion(+), 42 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 0b687520c3e7..d04888cb8cff 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1377,27 +1377,6 @@ static void __init arm_smmu_v3_pmcg_init_resources(struct resource *res,
->  				       ACPI_EDGE_SENSITIVE, &res[2]);
->  }
->  
-> -static struct acpi_platform_list pmcg_plat_info[] __initdata = {
-> -	/* HiSilicon Hip08 Platform */
-> -	{"HISI  ", "HIP08   ", 0, ACPI_SIG_IORT, greater_than_or_equal,
-> -	 "Erratum #162001800", IORT_SMMU_V3_PMCG_HISI_HIP08},
-> -	{ }
-> -};
-> -
-> -static int __init arm_smmu_v3_pmcg_add_platdata(struct platform_device *pdev)
-> -{
-> -	u32 model;
-> -	int idx;
-> -
-> -	idx = acpi_match_platform_list(pmcg_plat_info);
-> -	if (idx >= 0)
-> -		model = pmcg_plat_info[idx].data;
-> -	else
-> -		model = IORT_SMMU_V3_PMCG_GENERIC;
-> -
-> -	return platform_device_add_data(pdev, &model, sizeof(model));
-> -}
-> -
->  struct iort_dev_config {
->  	const char *name;
->  	int (*dev_init)(struct acpi_iort_node *node);
-> @@ -1408,7 +1387,6 @@ struct iort_dev_config {
->  				     struct acpi_iort_node *node);
->  	int (*dev_set_proximity)(struct device *dev,
->  				    struct acpi_iort_node *node);
-> -	int (*dev_add_platdata)(struct platform_device *pdev);
->  };
->  
->  static const struct iort_dev_config iort_arm_smmu_v3_cfg __initconst = {
-> @@ -1430,7 +1408,6 @@ static const struct iort_dev_config iort_arm_smmu_v3_pmcg_cfg __initconst = {
->  	.name = "arm-smmu-v3-pmcg",
->  	.dev_count_resources = arm_smmu_v3_pmcg_count_resources,
->  	.dev_init_resources = arm_smmu_v3_pmcg_init_resources,
-> -	.dev_add_platdata = arm_smmu_v3_pmcg_add_platdata,
->  };
->  
->  static __init const struct iort_dev_config *iort_get_dev_cfg(
-> @@ -1494,17 +1471,7 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
->  	if (ret)
->  		goto dev_put;
->  
-> -	/*
-> -	 * Platform devices based on PMCG nodes uses platform_data to
-> -	 * pass the hardware model info to the driver. For others, add
-> -	 * a copy of IORT node pointer to platform_data to be used to
-> -	 * retrieve IORT data information.
-> -	 */
-> -	if (ops->dev_add_platdata)
-> -		ret = ops->dev_add_platdata(pdev);
-> -	else
-> -		ret = platform_device_add_data(pdev, &node, sizeof(node));
-> -
-> +	ret = platform_device_add_data(pdev, &node, sizeof(node));
->  	if (ret)
->  		goto dev_put;
->  
-> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-> index 8e7e2ec37f1b..7a8961e6a8bb 100644
-> --- a/include/linux/acpi_iort.h
-> +++ b/include/linux/acpi_iort.h
-> @@ -14,14 +14,6 @@
->  #define IORT_IRQ_MASK(irq)		(irq & 0xffffffffULL)
->  #define IORT_IRQ_TRIGGER_MASK(irq)	((irq >> 32) & 0xffffffffULL)
->  
-> -/*
-> - * PMCG model identifiers for use in smmu pmu driver. Please note
-> - * that this is purely for the use of software and has nothing to
-> - * do with hardware or with IORT specification.
-> - */
-> -#define IORT_SMMU_V3_PMCG_GENERIC        0x00000000 /* Generic SMMUv3 PMCG */
-> -#define IORT_SMMU_V3_PMCG_HISI_HIP08     0x00000001 /* HiSilicon HIP08 PMCG */
+There is a memory leak problem in the failure paths of
+build_cl_output(), so fix it.
 
-Since only HiSilicon platform has such erratum, and I think it works with
-both old version of firmware, I'm fine with removing this erratum framework.
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ tools/perf/builtin-c2c.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 3542b6a..e69f449 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2635,6 +2635,7 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 	bool add_sym   = false;
+ 	bool add_dso   = false;
+ 	bool add_src   = false;
++	int ret = 0;
 
-Thanks
-Hanjun
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -2653,7 +2654,8 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 			add_dso = true;
+ 		} else if (strcmp(tok, "offset")) {
+ 			pr_err("unrecognized sort token: %s\n", tok);
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto err;
+ 		}
+ 	}
+
+@@ -2676,13 +2678,15 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 		add_sym ? "symbol," : "",
+ 		add_dso ? "dso," : "",
+ 		add_src ? "cl_srcline," : "",
+-		"node") < 0)
+-		return -ENOMEM;
++		"node") < 0) {
++		ret = -ENOMEM;
++		goto err;
++	}
+
+ 	c2c.show_src = add_src;
+-
++err:
+ 	free(buf);
+-	return 0;
++	return ret;
+ }
+
+ static int setup_coalesce(const char *coalesce, bool no_source)
+-- 
+2.7.4.3
 
