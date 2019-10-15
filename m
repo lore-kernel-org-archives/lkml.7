@@ -2,156 +2,122 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EC3ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3C1ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C0F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A3520873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrR9Hxcw"
+	dkim=pass (1024-bit key) header.d=daktronics.com header.i=@daktronics.com header.b="br6Lr4Ah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbfJOObf (ORCPT
+        id S1732840AbfJOObl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:31:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33234 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732599AbfJOObf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:31:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b9so24188154wrs.0;
-        Tue, 15 Oct 2019 07:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9UK0oVrOW9D5IBSM1Dzz1X4iB4H2rdT5rdPNgZz/QRI=;
-        b=BrR9Hxcw6qGVb3g9Q9/obyWtOAKteAGCgYeNta/bIWNvRs1h/gSf3rtMqp3YWY6fG2
-         B4Bel2vc2H6pSYyU0UvydIvGsOIM/Mhyr+/bpEVRwIzE4JOyDJujuFk3WcDgL85yBt7L
-         0CFpr8XSIZKH1ou0IxGQQp38Dtj9ndq8li55g8sVOJUmT0m3ms0QoBf8G2+iaHHYDj6v
-         /+uHdnVqsZYRO7c1ICNAuKcNSrxRS1keuYj6DXMn/rxjyJAWlv8XFDzhurID1RC3zC98
-         B/h1V1ai81O8Ag9397s6Bx5KpG7CxEaT6kMVl7Jf3N7hjSCuk8MrHjrBorytVXl/4sMl
-         +fIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9UK0oVrOW9D5IBSM1Dzz1X4iB4H2rdT5rdPNgZz/QRI=;
-        b=C2f+pQ72dOajcceIoCpqpq1HaB+hg9iSxdZLGWCLEM7vKFBs2sgziwSNtCApiDxANX
-         4QYvUDPj8lIAMda+TTc0LAfu8LLnHtbq0ToO5+JhosynJ4wyPi0fKp2xIE0WPjiSsPqb
-         W3AD0oQAz3psiCUI9iZVWtSvUlOrQPcS+UvG9RpwIt+kHI7iLNCezIjlTp0zsBigKbNE
-         Jcal2pucbtGKJVwta4uND5nLxyUZEb/LrIavj1xMTAylpyAVPzDHqcrX3kE7pLzMLAfy
-         xri5xQdg9MSn4F8gMf+hllNOz/20DO4r30PsyjMl5UYAG4p+Ah3OK3XB92wlYwqJuNUu
-         XsHg==
-X-Gm-Message-State: APjAAAW9TLjYADNnBYfhZRyHAjFI34sDqbq4kM7hg4UIhBgIECmICK6Q
-        doWD7AIEDHaPW8HRljvhHlA=
-X-Google-Smtp-Source: APXvYqyCVC54sqGweqKHXCeLjthXHvwPS6MbVoX+RH5ac8O7X7fMgmTPXEBQUBWzupEwoWvJ4LvaJg==
-X-Received: by 2002:adf:bad3:: with SMTP id w19mr8664785wrg.17.1571149892720;
-        Tue, 15 Oct 2019 07:31:32 -0700 (PDT)
-Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
-        by smtp.gmail.com with ESMTPSA id o4sm52833357wre.91.2019.10.15.07.31.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 15 Oct 2019 07:31:32 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 16:31:30 +0200
-From:   Alexander Gordeev <a.gordeev.box@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191015143129.GA32565@AlexGordeev-DPT-VI0092>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
- <20191009121441.GM25098@kadam>
- <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
- <20191009185323.GG13286@kadam>
- <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
- <20191010113034.GN13286@kadam>
- <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
- <20191015131955.GH4774@kadam>
+        Tue, 15 Oct 2019 10:31:41 -0400
+Received: from mail-eopbgr720052.outbound.protection.outlook.com ([40.107.72.52]:35376
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732599AbfJOObi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:31:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RfXRkD7gM6qWzXjXKKcrr1B8O4QA/lvmHgsyGKfBI71wCGTvSIGyW4NsuCj6kkrYfk0+xKIUJrE3Brt7KkN8IJivJ0I0lzIjwTJMWvQ31xwCjmxOSgLYNfx+ylStr2KI3FKoFM0UDbVy3U1nzcV5CgtVvodfEhChQar48dS2wLSKseAxPgCz7J5YPf2xmV1eOYwcNBByVd+JY1qV6dmPx+1nCDkaTAUpWRub/Kyo8BXbMh/WsnCXmCa8oFMRUh6Tys1vUwE5bPQ3yTRohkODisAMq0nNCY+99LBW29J9wL+lVInSTcBNpYk+2ldjeO4crFIG+wU/XliwdoKaOshH4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sP0q4XouXJc9lVYM1pusLc3PQJ+bDeWaxAir6zEOMdk=;
+ b=R80SsPNPlWyMjOCOiy9JUOM1IzEPiwGXvwWmNOh2hK/+eKHYXtFQ/UR08djzWEHgXTgGjDHGGMrqIGU01R1C30XbTq30Iy1RqT4CMa+kLqFXezVpz9BCARqjqlzCKwYdg6hA6OhefM64HRWTlqbVNZ8RZGYMly1h0n9wBhKjxLKzhLvDRJeOP+urGUJ7P8RcXOkUHw7CqmJfqbgA7T6XSEsmzEQyiWnUY++NLU/LKplxpUdAlix0NYt+K0tZ+2SgpaJToWEfI0o5Z/NeKEui8gRW8VBIIHskLN+K73Gn7LuH6ze39FT4Jni12YPod58pLCK3pwuB3S7+kyHBjzU2NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=daktronics.com; dmarc=pass action=none
+ header.from=daktronics.com; dkim=pass header.d=daktronics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=daktronics.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sP0q4XouXJc9lVYM1pusLc3PQJ+bDeWaxAir6zEOMdk=;
+ b=br6Lr4AhRzfxS6kVUaTt2yO9XJyvc8N5+4gzm1RJt82qKfytqimOi/I69av03cKmkEP0nn/Aygw03bg5WjqGVYDB5Le6hgfemAB8cXIqBxujntTYehPAqzGkxWexDpFc+qyY5Ul8Lz1nMcwy3Jm+5CrR9vLScxkLPzBaB4jx9fE=
+Received: from SN6PR02MB4016.namprd02.prod.outlook.com (52.135.69.145) by
+ SN6PR02MB5343.namprd02.prod.outlook.com (52.135.104.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Tue, 15 Oct 2019 14:31:35 +0000
+Received: from SN6PR02MB4016.namprd02.prod.outlook.com
+ ([fe80::ec31:ae9d:c354:319a]) by SN6PR02MB4016.namprd02.prod.outlook.com
+ ([fe80::ec31:ae9d:c354:319a%5]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
+ 14:31:35 +0000
+From:   Matt Sickler <Matt.Sickler@daktronics.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "trivial@kernel.org" <trivial@kernel.org>
+Subject: [PATCH] MAINTAINERS: Add myself as maintainer
+Thread-Topic: [PATCH] MAINTAINERS: Add myself as maintainer
+Thread-Index: AdWDZCk+mJVt8MIbSyGixWGVWbDdAg==
+Date:   Tue, 15 Oct 2019 14:31:35 +0000
+Message-ID: <SN6PR02MB401607858423D8BF3781A399EE930@SN6PR02MB4016.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Matt.Sickler@daktronics.com; 
+x-originating-ip: [2620:9b:8000:6046:242b:c155:97bc:1f1f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9ad0700f-dc9a-42a8-b6da-08d7517c61d8
+x-ms-traffictypediagnostic: SN6PR02MB5343:
+x-microsoft-antispam-prvs: <SN6PR02MB53437E4C9E040C0DABE5EDDCEE930@SN6PR02MB5343.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 01917B1794
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39850400004)(376002)(396003)(136003)(199004)(189003)(76116006)(476003)(7736002)(305945005)(66446008)(66946007)(74316002)(71200400001)(71190400001)(6916009)(64756008)(66556008)(66476007)(8676002)(8936002)(81156014)(81166006)(86362001)(186003)(102836004)(486006)(2906002)(33656002)(52536014)(5660300002)(99286004)(53546011)(316002)(4744005)(7696005)(6116002)(2501003)(2351001)(6506007)(25786009)(9686003)(55016002)(46003)(4326008)(6436002)(5640700003)(478600001)(14454004)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5343;H:SN6PR02MB4016.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: daktronics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tFaJicNXFB/U2yQOjdTDNM0bUb5R0Lvz2SNZWyGMzSdbgtgzCAZt4kEiB7diwr1B1b5hFxQA+th+PQCnwuPCTcuCSZ5jJrrLf9MxZssTZFtIjkB/8XJawHZoruC3ClS0DCAtXTboullBxzB3OyHvmh6qdJedeu+hWp+gVtfXeZM9YZRm4/TiFu5n+7f1zDR3uocDstz7qnTfeUghLZwACTaltNd7D2P4wBJqy2BdcC3SpuHhZEiAhH2QCJWa/CP8J3vxWvxAHk4MDy76eacWT0oeWWF9v2vLa0tsqwlOMdjmJg6dSD4PP7BXDMdVdDA/kM0agqTYlen3Al6KIlVy8w88NlQh/8gQ5cCcL/armYC2AK5+xKIuas3/lQPKP0hkrECt1gD+Nmy25yPnF93R5lypUrt1dSiswKwTWXyd6YI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015131955.GH4774@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: daktronics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ad0700f-dc9a-42a8-b6da-08d7517c61d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 14:31:35.3422
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: be88af81-0945-42aa-a3d2-b122777351a2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A5B+4z+IkcSf5eTKBqKK6i6jh0UePD+Gvt3UnmiWWiY/Bwsbn4ICNDcQGU/LpmPkJ8TBJFBYHnZNbvLpdbOPqxkQ68VgAm75md/CunUk1Xc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5343
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 04:19:55PM +0300, Dan Carpenter wrote:
-> On Tue, Oct 15, 2019 at 01:24:50PM +0200, Alexander Gordeev wrote:
-> > On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
-> > > On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
-> > > > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
-> > > > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> > > > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-> > > > > > > > +	struct avalon_dma_desc *desc;
-> > > > > > > > +	struct virt_dma_desc *vdesc;
-> > > > > > > > +	bool rd_done;
-> > > > > > > > +	bool wr_done;
-> > > > > > > > +
-> > > > > > > > +	spin_lock(lock);
-> > 
-> > [*]
-> > 
-> > > > > > > > +
-> > > > > > > > +	rd_done = (hw->h2d_last_id < 0);
-> > > > > > > > +	wr_done = (hw->d2h_last_id < 0);
-> > > > > > > > +
-> > > > > > > > +	if (rd_done && wr_done) {
-> > > > > > > > +		spin_unlock(lock);
-> > > > > > > > +		return IRQ_NONE;
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > > +	do {
-> > > > > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
-> > > > > > > > +			rd_done = true;
-> > > > > > > > +
-> > > > > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
-> > > > > > > > +			wr_done = true;
-> > > > > > > > +	} while (!rd_done || !wr_done);
-> 
-> 
-> Thinking about this some more, my initial instinct was still correct
-> actually.  If we're holding the lock to prevent the CPU from writing
-> to it then how is hw->d2h_last_id updated in the other thread?  Either
-> it must deadlock or it must be a race condition.
+From 1943c35f5c6068cea3cdfb33a48990eca5767c9b Mon Sep 17 00:00:00 2001
+From: Matt Sickler <Matt.Sickler@daktronics.com>
+Date: Tue, 15 Oct 2019 09:11:17 -0500
+Subject: [PATCH] MAINTAINERS: Add myself as maintainer for the Daktronics
+ Drivers
 
-hw->d2h_last_id and hw->h2d_last_id indexes are not expected to get
-updated while within the handler.
+Signed-off-by: Matt Sickler <Matt.Sickler@daktronics.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-It is wr_flags[hw->d2h_last_id] and/or rd_flags[hw->h2d_last_id] that
-should be set from zero to one by the DMA controller once/before it
-sends the MSI interrupt. Therefore, once we're in the handler, either
-wr_flags[hw->d2h_last_id] or rd_flags[hw->h2d_last_id] should be non-
-zero.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a69e6db80c79..b2c084c2face 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4563,6 +4563,11 @@ L:	linux-input@vger.kernel.org
+ S:	Supported
+ F:	drivers/input/keyboard/dlink-dir685-touchkeys.c
+=20
++DAKTRONICS KADOKA DRIVERS
++M:	Matt Sickler <matt.sickler@daktronics.com>
++S:	Supported
++F:	drivers/staging/kpc2000/
++
+ DALLAS/MAXIM DS1685-FAMILY REAL TIME CLOCK
+ M:	Joshua Kinard <kumba@gentoo.org>
+ S:	Maintained
+--=20
+2.11.0
 
-However, the Intel documentation uses a suspicious wording for description
-of the above: "The Descriptor Controller writes a 1 to the done bit of
-the status DWORD to indicate successful completion. The Descriptor
-Controller also sends an MSI interrupt for the final descriptor.
-After receiving this MSI, host software can poll the done bit to
-determine status."
-
-(The "the status DWORD" in the excerpt above are located in coherent DMA
-memory-mapped arrays wr_flags[hw->d2h_last_id] and rd_flags[hw->h2d_last_id])
-
-The confusing statement is "After receiving this MSI, host software can
-poll the done bit to determine status." Why would one poll a bit *after*
-the MSI received? In good design it should be set by the time the MSI
-arrived. May be they meant "checked" rather than "polled" or implied the
-CPU still could see zero in the status DWORD due to DMA memory incoherency..
-
-Anyways, that has never been observed and I added the loop out of the
-paranoia, it never loops for me.
-
-HTH
-
-> regards,
-> dan carpenter
-> 
