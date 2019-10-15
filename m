@@ -2,214 +2,154 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E22ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D5CECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415FC205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:45:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MiDaGBSU"
+	by mail.kernel.org (Postfix) with ESMTP id 4CE0F2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571179560;
+	bh=8b4HLUZh6quLwZGk+IhsDPegY8/KoMLOAua/JsXlaFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LBH66eb7dA3d/cTu/v/4q1iC5H2UGXothjsxgwmQaOhEFGnj028EGKVRS3mZWWtu/
+	 RCEe5Q4TNg/k9v6V6UQTtKUqFCkQBet/vK+uoXsIW9J+Clz+pwXbiVWuz0Ur3RbI3X
+	 eFg4Uaa2V8rHeZGgOm7+EQrSSdsQeqM/Gl6/k9lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390018AbfJOWpz (ORCPT
+        id S2390032AbfJOWp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:45:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36868 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732531AbfJOWpy (ORCPT
+        Tue, 15 Oct 2019 18:45:58 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46978 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732531AbfJOWp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:45:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u20so10291616plq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 15:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NszovcrmeizweFufzZjrkW8f6hhK6QnYuVsht4WHchE=;
-        b=MiDaGBSUt8KaxANsMCLt/lqC4wjaFlMnpMkUl7eV8BUrp00yAkHdwbpj1MErqfLbtd
-         IGrR5a5ucjrZ0ZgOFLgMqVDre1osREK130TeFuIfWhqNhOqezR7cbbCrsvot70LZah4f
-         ekQWx4vDVJkOHSiuYF12fYV/JxInqNfT6FcCU=
+        Tue, 15 Oct 2019 18:45:57 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 89so18418678oth.13;
+        Tue, 15 Oct 2019 15:45:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NszovcrmeizweFufzZjrkW8f6hhK6QnYuVsht4WHchE=;
-        b=K7cnXUXUYfxzmGupoHXfh2EEF7nfYSNHJJ3EflG7/ZV9ncaZthPb4YVZwfk34ssUCi
-         TuOx8F+qkRyiEvdK3GiC/OdSY01fcnrmy8ALbbYKe/oFVLAZCX/SdK3G6McHPfXB61De
-         vH9lQt4pyY0i5eZ9JMiVKzrK/sP8rVPmiaIYYdn85mg2JRcGQnAIwOYqjZdOOn8emFPF
-         FuxwkFcVTT+ScPEWNvz9UetDmF0GzcG3DhyZljk7qK4hjFMzGTCNXh/MGH7F+8jNk45n
-         2aozwe2CCdE0cdqPMWbm80dvvzLWaYDTM1UN3MeFSunovpIQ55HK+6Embv5o1rviHv6t
-         n3cA==
-X-Gm-Message-State: APjAAAX/3KKwGdLnsD5izN5SUZNFCPkzwJ/C2/f6LC3Fg3Ae60zv0Qn0
-        pKsZlGTTEOqFPQjwQi9DdrOcFg==
-X-Google-Smtp-Source: APXvYqziY7vPjk2T010iyMGZDzq6jJCb4rzcDFVf3OVxNv8oL/5/7Ll+wdzceBfFHS9rEv4TmwI94g==
-X-Received: by 2002:a17:902:d204:: with SMTP id t4mr35234943ply.253.1571179553270;
-        Tue, 15 Oct 2019 15:45:53 -0700 (PDT)
-Received: from lbrmn-mmayer.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e127sm23019837pfe.37.2019.10.15.15.45.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MaWp6Jn60uj0bT6sKCogPI4dguf5DlDQ3ZrBSjZQ+hQ=;
+        b=BnGN+2Y/7C4yic9FHhR6n/xkvlokZdM5f+PCeegSm/85ytr0Y3z2e5GpzBm9zWvG0m
+         n/RmFIHNbFK7byMaua9U+1C3eQdeBueXJ0yhoYSZ8vzQAO5wvXL+MIhHZ/T2OigtF0l7
+         +Y3SlVXTPAueryS1hBCFqYQvaY+vMTyLTabqv+kaPv71agkipgXfb4p+NY1QafBR+MlD
+         r2haiwHrMNsK8S1a9zsJcSTcdtaQsue32MI4RZSPedrW/PXfzLRLHq/RyB3fHtZjfIuy
+         JjGzR3prpUA2u+IOPosWjBMbwlqRBtni/G2ywXtDbdK+DB5LLUCsl746OoDPLK7YfPce
+         a8sQ==
+X-Gm-Message-State: APjAAAVTLv4sEZ8J5orX8zKMLKhh9jDoDt/UqegNvyTfxlwtNu2tuKwh
+        lpT+KPE4GR4bnS6pPFo6WFURgtE=
+X-Google-Smtp-Source: APXvYqx++w9zqh0aKrrTNQxwptQw2IBBKd30UczgzL9fYL5LBBi4ThJTdAd91a3CRCBWp8KOLN+6ww==
+X-Received: by 2002:a9d:6b82:: with SMTP id b2mr7915218otq.56.1571179555334;
+        Tue, 15 Oct 2019 15:45:55 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c19sm6786305oib.21.2019.10.15.15.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 15:45:52 -0700 (PDT)
-From:   Markus Mayer <mmayer@broadcom.com>
-To:     Brian Norris <computersforpeace@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/8] memory: brcmstb: dpfe: rename struct private_data
-Date:   Tue, 15 Oct 2019 15:45:06 -0700
-Message-Id: <20191015224513.16969-2-mmayer@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015224513.16969-1-mmayer@broadcom.com>
-References: <20191015224513.16969-1-mmayer@broadcom.com>
+        Tue, 15 Oct 2019 15:45:54 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 17:45:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191015224554.GA5634@bogus>
+References: <20191011035613.13598-1-manivannan.sadhasivam@linaro.org>
+ <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid potential (future) conflicts with other data structures we
-rename "struct private_data" to "struct brcmstb_dpfe_priv".
+On Fri, Oct 11, 2019 at 09:26:12AM +0530, Manivannan Sadhasivam wrote:
+> Add devicetree binding for IMX296 CMOS image sensor.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/media/i2c/imx296.txt  | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.txt
 
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
----
- drivers/memory/brcmstb_dpfe.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+You should know by now, use DT schema format please.
 
-diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
-index 6827ed484750..0c4c01d2bf48 100644
---- a/drivers/memory/brcmstb_dpfe.c
-+++ b/drivers/memory/brcmstb_dpfe.c
-@@ -180,7 +180,7 @@ struct dpfe_api {
- };
- 
- /* Things we need for as long as we are active. */
--struct private_data {
-+struct brcmstb_dpfe_priv {
- 	void __iomem *regs;
- 	void __iomem *dmem;
- 	void __iomem *imem;
-@@ -343,7 +343,7 @@ static unsigned int get_msg_chksum(const u32 msg[], unsigned int max)
- 	return sum;
- }
- 
--static void __iomem *get_msg_ptr(struct private_data *priv, u32 response,
-+static void __iomem *get_msg_ptr(struct brcmstb_dpfe_priv *priv, u32 response,
- 				 char *buf, ssize_t *size)
- {
- 	unsigned int msg_type;
-@@ -382,7 +382,7 @@ static void __iomem *get_msg_ptr(struct private_data *priv, u32 response,
- 	return ptr;
- }
- 
--static void __finalize_command(struct private_data *priv)
-+static void __finalize_command(struct brcmstb_dpfe_priv *priv)
- {
- 	unsigned int release_mbox;
- 
-@@ -395,7 +395,7 @@ static void __finalize_command(struct private_data *priv)
- 	writel_relaxed(0, priv->regs + release_mbox);
- }
- 
--static int __send_command(struct private_data *priv, unsigned int cmd,
-+static int __send_command(struct brcmstb_dpfe_priv *priv, unsigned int cmd,
- 			  u32 result[])
- {
- 	const u32 *msg = priv->dpfe_api->command[cmd];
-@@ -517,7 +517,7 @@ static int __verify_firmware(struct init_data *init,
- 
- /* Verify checksum by reading back the firmware from co-processor RAM. */
- static int __verify_fw_checksum(struct init_data *init,
--				struct private_data *priv,
-+				struct brcmstb_dpfe_priv *priv,
- 				const struct dpfe_firmware_header *header,
- 				u32 checksum)
- {
-@@ -578,7 +578,7 @@ static int brcmstb_dpfe_download_firmware(struct platform_device *pdev,
- 	unsigned int dmem_size, imem_size;
- 	struct device *dev = &pdev->dev;
- 	bool is_big_endian = false;
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	const struct firmware *fw;
- 	const u32 *dmem, *imem;
- 	const void *fw_blob;
-@@ -647,7 +647,7 @@ static int brcmstb_dpfe_download_firmware(struct platform_device *pdev,
- }
- 
- static ssize_t generic_show(unsigned int command, u32 response[],
--			    struct private_data *priv, char *buf)
-+			    struct brcmstb_dpfe_priv *priv, char *buf)
- {
- 	int ret;
- 
-@@ -665,7 +665,7 @@ static ssize_t show_info(struct device *dev, struct device_attribute *devattr,
- 			 char *buf)
- {
- 	u32 response[MSG_FIELD_MAX];
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	unsigned int info;
- 	ssize_t ret;
- 
-@@ -688,7 +688,7 @@ static ssize_t show_refresh(struct device *dev,
- {
- 	u32 response[MSG_FIELD_MAX];
- 	void __iomem *info;
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	u8 refresh, sr_abort, ppre, thermal_offs, tuf;
- 	u32 mr4;
- 	ssize_t ret;
-@@ -721,7 +721,7 @@ static ssize_t store_refresh(struct device *dev, struct device_attribute *attr,
- 			  const char *buf, size_t count)
- {
- 	u32 response[MSG_FIELD_MAX];
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	void __iomem *info;
- 	unsigned long val;
- 	int ret;
-@@ -747,7 +747,7 @@ static ssize_t show_vendor(struct device *dev, struct device_attribute *devattr,
- 			   char *buf)
- {
- 	u32 response[MSG_FIELD_MAX];
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	void __iomem *info;
- 	ssize_t ret;
- 	u32 mr5, mr6, mr7, mr8, err;
-@@ -778,7 +778,7 @@ static ssize_t show_dram(struct device *dev, struct device_attribute *devattr,
- 			 char *buf)
- {
- 	u32 response[MSG_FIELD_MAX];
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	ssize_t ret;
- 	u32 mr4, mr5, mr6, mr7, mr8, err;
- 
-@@ -808,7 +808,7 @@ static int brcmstb_dpfe_resume(struct platform_device *pdev)
- static int brcmstb_dpfe_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct private_data *priv;
-+	struct brcmstb_dpfe_priv *priv;
- 	struct init_data init;
- 	struct resource *res;
- 	int ret;
-@@ -867,7 +867,7 @@ static int brcmstb_dpfe_probe(struct platform_device *pdev)
- 
- static int brcmstb_dpfe_remove(struct platform_device *pdev)
- {
--	struct private_data *priv = dev_get_drvdata(&pdev->dev);
-+	struct brcmstb_dpfe_priv *priv = dev_get_drvdata(&pdev->dev);
- 
- 	sysfs_remove_groups(&pdev->dev.kobj, priv->dpfe_api->sysfs_attrs);
- 
--- 
-2.17.1
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.txt b/Documentation/devicetree/bindings/media/i2c/imx296.txt
+> new file mode 100644
+> index 000000000000..25d3b15162c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.txt
+> @@ -0,0 +1,55 @@
+> +* Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> +
+> +The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> +sensor with square pixel array and 1.58 M effective pixels. This chip features
+> +a global shutter with variable charge-integration time. It is programmable
+> +through I2C and 4-wire interfaces. The sensor output is available via CSI-2
+> +serial data output (1 Lane).
+> +
+> +Required Properties:
+> +- compatible: Should be "sony,imx296"
+> +- reg: I2C bus address of the device
+> +- clocks: Reference to the mclk clock.
+> +- clock-names: Should be "mclk".
+> +- clock-frequency: Frequency of the mclk clock in Hz.
+> +- vddo-supply: Interface power supply.
+> +- vdda-supply: Analog power supply.
+> +- vddd-supply: Digital power supply.
+> +
+> +Optional Properties:
+> +- reset-gpios: Sensor reset GPIO
+> +
+> +The imx296 device node should contain one 'port' child node with
+> +an 'endpoint' subnode. For further reading on port node refer to
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Required Properties on endpoint:
+> +- data-lanes: check ../video-interfaces.txt
 
+This should only be required when not using all the lanes on the device.
+
+> +- remote-endpoint: check ../video-interfaces.txt
+
+Don't really need to document this.
+
+> +
+> +Example:
+> +	&i2c1 {
+> +		...
+> +		imx296: camera-sensor@1a {
+> +			compatible = "sony,imx296";
+> +			reg = <0x1a>;
+> +
+> +			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&camera_rear_default>;
+> +
+> +			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> +			clock-names = "mclk";
+> +			clock-frequency = <37125000>;
+> +
+> +			vddo-supply = <&camera_vddo_1v8>;
+> +			vdda-supply = <&camera_vdda_3v3>;
+> +			vddd-supply = <&camera_vddd_1v2>;
+> +
+> +			port {
+> +				imx296_ep: endpoint {
+> +					data-lanes = <1>;
+> +					remote-endpoint = <&csiphy0_ep>;
+> +				};
+> +			};
+> +		};
+> -- 
+> 2.17.1
+> 
