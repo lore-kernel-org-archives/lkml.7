@@ -2,239 +2,127 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FD7ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39882ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110142086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:23:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="BIJz1e/f"
+	by mail.kernel.org (Postfix) with ESMTP id 0A84420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571156647;
+	bh=+3bA41N9zG3Na8eiZmgyqf6wPpM7u7VDlcQ7i85yw3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yCX4YJOTsaiMyMoJ33uqNgjT9VWBnTNlZTnxOqwybdHnPclxwxWZyrdmp73vL8Kzs
+	 wD+Xed/jplVvz+0NB/XHYV3OPvnLOFu3bHNYFRKzrOK7HlpM5HdKJKpVd6hbyTautu
+	 QALG3ZJiQpueoJQIU1Rqim4m0iBHY0EaWbGXvJEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388029AbfJOQXl (ORCPT
+        id S2388038AbfJOQYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:23:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55786 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfJOQXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:23:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a6so21529058wma.5
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 09:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ex0SLXkZGXD3DFPb0/08PvEQYRToQtcPv9JSualxRuI=;
-        b=BIJz1e/fCpl0NKvbL/GHwCFIzcJBblO+Nq6Cpv7EOXKlPk5kR2etqCqSpAVdnEafjy
-         kuN+I3NsQr7MQzEmyfvk9SThXgsbwcHTjjjRNp/I1wwoFYCI+c+l7GthAeXxBESBEd5c
-         NFrZYAkBvgHkaNDbRD4cGcJ4By4LGi+jq1aiMkORXyjKoqlZQkPYr5waREf2DTtMQJPZ
-         2li2D6JTV4YhOD0s94JVlr9I5JiECTT4MnBLD9bX8aemqQgKJFrbPZ4uG4363CJYPJ+V
-         /obMJ9e+AZG3RhubBMkscKFBZ6asziB4WpXFo9Gca1hdKfHJDvFvI3YUIn9isgVu21Xy
-         3z2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ex0SLXkZGXD3DFPb0/08PvEQYRToQtcPv9JSualxRuI=;
-        b=N2tHBcbcN/EbfYMhY6gK6IpNgttN73c76EfU6qRvQEV8WsVEQyAtGZKvwVpkQHoArM
-         lug2n9ynxGFlYI/BhtAgzzOBLdStM6TSB59M4bPTiY2oj4uS8JOlPm8H+eyZnDkdRYhw
-         Lpz2AlCgrFQZVnuTu+YAuWRzlVJZW3Xr9P6taXycdIf3Z+tgf9oXruqfnlaeKM25K55k
-         MCG7B1mnzH4WD6K4HBg87A50R/7ufFXEyPuo1ZVPdWVLyoue6IkXiDVb+dhXnwHzhX4T
-         PoFgcynb1pxHM509Mm5dhZwyP7WkYyDVVLOC570qLISic8xW8ScUkBshbiss9njKOlG4
-         KeLg==
-X-Gm-Message-State: APjAAAUki5OV2J/AIYl74ULu1a83RLI4sqZ71aRodUGv4BEWef07nQV5
-        EYHkEu7uxGiH2F3JJXSAyfM07g==
-X-Google-Smtp-Source: APXvYqxTfL2KaH12S3EeWh7aakG4qW2zEmhcGsL4Xn/pS39512jhH6exXh3kAyTmONoMUp1g+FGl5A==
-X-Received: by 2002:a1c:f201:: with SMTP id s1mr19060581wmc.59.1571156587196;
-        Tue, 15 Oct 2019 09:23:07 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id x129sm41427605wmg.8.2019.10.15.09.23.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 09:23:06 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 1/6] dt-bindings: mfd: max77650: convert the binding document to yaml
-Date:   Tue, 15 Oct 2019 18:22:55 +0200
-Message-Id: <20191015162300.22024-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191015162300.22024-1-brgl@bgdev.pl>
-References: <20191015162300.22024-1-brgl@bgdev.pl>
+        Tue, 15 Oct 2019 12:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfJOQYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:24:05 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81B3F2086A;
+        Tue, 15 Oct 2019 16:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571156644;
+        bh=+3bA41N9zG3Na8eiZmgyqf6wPpM7u7VDlcQ7i85yw3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=StYJMA5/BLxta6Bq7ntiXfwvCAGN+ItksqqushdPMj8/N5YyCsnDGO0W16VHdpGB0
+         IxG4cxi6wDfDKCaXcI8oBfLjDBrt6KHc8VekcXdhf8yBRzt7ba+Z1BuhDx6bOHJUOo
+         GMMMTfPhgpPP4m43Rut46SbGtc+mKa19vvgUyeJ0=
+Date:   Tue, 15 Oct 2019 17:23:59 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>, sudeep.holla@arm.com
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>
+Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
+ cpu_psci_cpu_kill()
+Message-ID: <20191015162358.bt5rffidkv2j4xqb@willie-the-truck>
+References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi,
 
-Convert the binding document for MAX77650 core MFD module to YAML.
+On Sat, Sep 21, 2019 at 07:21:17PM +0800, Yunfeng Ye wrote:
+> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
+> take so long in the right case. Use usleep_range() instead of msleep(),
+> reduce the waiting time, and give a chance to busy wait before sleep.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../devicetree/bindings/mfd/max77650.txt      | 47 +----------
- .../devicetree/bindings/mfd/max77650.yaml     | 83 +++++++++++++++++++
- 2 files changed, 84 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+Can you elaborate on "the right case" please? It's not clear to me
+exactly what problem you're solving here.
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
-index b529d8d19335..080871686b3b 100644
---- a/Documentation/devicetree/bindings/mfd/max77650.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77650.txt
-@@ -1,46 +1 @@
--MAX77650 ultra low-power PMIC from Maxim Integrated.
--
--Required properties:
---------------------
--- compatible:		Must be "maxim,max77650"
--- reg:			I2C device address.
--- interrupts:		The interrupt on the parent the controller is
--			connected to.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells:	Must be <2>.
--
--- gpio-controller:	Marks the device node as a gpio controller.
--- #gpio-cells:		Must be <2>. The first cell is the pin number and
--			the second cell is used to specify the gpio active
--			state.
--
--Optional properties:
----------------------
--gpio-line-names:	Single string containing the name of the GPIO line.
--
--The GPIO-controller module is represented as part of the top-level PMIC
--node. The device exposes a single GPIO line.
--
--For device-tree bindings of other sub-modules (regulator, power supply,
--LEDs and onkey) refer to the binding documents under the respective
--sub-system directories.
--
--For more details on GPIO bindings, please refer to the generic GPIO DT
--binding document <devicetree/bindings/gpio/gpio.txt>.
--
--Example:
----------
--
--	pmic@48 {
--		compatible = "maxim,max77650";
--		reg = <0x48>;
--
--		interrupt-controller;
--		interrupt-parent = <&gpio2>;
--		#interrupt-cells = <2>;
--		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
--
--		gpio-controller;
--		#gpio-cells = <2>;
--		gpio-line-names = "max77650-charger";
--	};
-+This file has been moved to max77650.yaml.
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Documentation/devicetree/bindings/mfd/max77650.yaml
-new file mode 100644
-index 000000000000..5186ad287ec7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/max77650.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MAX77650 ultra low-power PMIC from Maxim Integrated.
-+
-+maintainers:
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+description: |
-+  This document describes the DT properties of the core MFD controller.
-+
-+  The GPIO-controller module is represented as part of the top-level PMIC
-+  node. The device exposes a single GPIO line.
-+
-+  For device-tree bindings of other sub-modules (regulator, power supply,
-+  LEDs and onkey) refer to the binding documents under the respective
-+  sub-system directories.
-+
-+  For more details on GPIO bindings, please refer to the generic GPIO DT
-+  binding document <devicetree/bindings/gpio/gpio.txt>.
-+
-+properties:
-+  compatible:
-+    const: maxim,max77650
-+
-+  reg:
-+    description:
-+      I2C device address.
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The interrupt on the parent the controller is connected to.
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell is the trigger type.
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+    description:
-+      The first cell is the pin number and the second cell is used to specify
-+      the gpio active state.
-+
-+  gpio-line-names:
-+    $ref: '/schemas/types.yaml#/definitions/string-array'
-+    maxItems: 1
-+    description:
-+      Single string containing the name of the GPIO line.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+examples:
-+  - |
-+    pmic@48 {
-+        compatible = "maxim,max77650";
-+        reg = <0x48>;
-+
-+        interrupt-controller;
-+        interrupt-parent = <&gpio2>;
-+        #interrupt-cells = <2>;
-+        interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-line-names = "max77650-charger";
-+    };
--- 
-2.23.0
+I've also added Sudeep to the thread, since I'd like his ack on the change.
 
+Will
+
+>  arch/arm64/kernel/psci.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index c9f72b2..99b3122 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -82,6 +82,7 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+>  static int cpu_psci_cpu_kill(unsigned int cpu)
+>  {
+>  	int err, i;
+> +	unsigned long timeout;
+> 
+>  	if (!psci_ops.affinity_info)
+>  		return 0;
+> @@ -91,16 +92,24 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  	 * while it is dying. So, try again a few times.
+>  	 */
+> 
+> -	for (i = 0; i < 10; i++) {
+> +	i = 0;
+> +	timeout = jiffies + msecs_to_jiffies(100);
+> +	do {
+>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+>  			pr_info("CPU%d killed.\n", cpu);
+>  			return 0;
+>  		}
+> 
+> -		msleep(10);
+> -		pr_info("Retrying again to check for CPU kill\n");
+> -	}
+> +		/* busy-wait max 1ms */
+> +		if (i++ < 100) {
+> +			cond_resched();
+> +			udelay(10);
+> +			continue;
+> +		}
+> +
+> +		usleep_range(100, 1000);
+> +	} while (time_before(jiffies, timeout));
+> 
+>  	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+>  			cpu, err);
+> -- 
+> 2.7.4.huawei.3
+> 
