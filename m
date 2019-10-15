@@ -2,123 +2,110 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1747BECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F82ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D1921848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A278E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PanbLKwT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WjIQD1PC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbfJOIig (ORCPT
+        id S1729276AbfJOIj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:38:36 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45953 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfJOIig (ORCPT
+        Tue, 15 Oct 2019 04:39:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46962 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfJOIj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:38:36 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z67so18382735qkb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 01:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=uWQ6Z/m/ZDOV1Cq6uOj2bgGUSJ4jAFpiEa/ETfmRIz0=;
-        b=PanbLKwT95zYTPNoDfQLUrTe8LpcDTpB/+8zrQaOJvO5wRF0jR9uiFNODKCeXO3ZDd
-         mCzV7G00OU7j/SbdNN1vSsAPox72wynTKGJ+h3bQHnOA3u+fe7MW89YxKHBoSKuODn/L
-         /gfF2y3pCE1SDIPiURbC5llKyb/x9gxYP34ad0GzStWE0temDtHhQlOty9MHNha+ylh0
-         7x1EwgUAdTd3PyFwwh/RBMwROq3TXjUPMbRc4nFXlL9PMtlAdyUjSDI5zJzMU576dwDx
-         2SV9i1yIhN0j5VEHttttOtgB33kx3KbHGhinH5R2m5EnpMQbAiYCQdgTfBF2jcfNzraZ
-         ODkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=uWQ6Z/m/ZDOV1Cq6uOj2bgGUSJ4jAFpiEa/ETfmRIz0=;
-        b=KDQUcoibXjjCfM8l0T212qbWVkqZm1czwUpq1p5UASKeo2jk9mjAA9+x8we1Qe0Noj
-         RcrzJkPLc7jwG8yXGZ1zXZaGCIUmsl7IbkvTHz8I/WOtVcXusrKKMeR0kwXETT/o4+QW
-         dX8cQj8OARdlNUIVaMnyo2s3yswnuksX4TAEOx0Fg9ryBfeCHznMo1TDnch/sb+fuGwb
-         X2dROMjnK5oU6HxxsWivtJZgD2582gdT8Gm8vlft4sDGblwwENOmuqMZcepivB867dtZ
-         aiLi0P8cGofTxH6hz/OkTP0RnQpUwjWkFhjgIndI0+SoSgZQr63DUpIuAh4zVtIq7c/U
-         D/4g==
-X-Gm-Message-State: APjAAAVA0FMxYTgR3DaBj7GmioJFJ+sda0hVwm1YvxtBr42iRXPUQ3M2
-        TKTV32xQO6ng01K6eUPYFjg5uA==
-X-Google-Smtp-Source: APXvYqwsK2EsGslXg9ZERZ0s0xLmXi6sseHDBOW4+UFU6how9/uDB3OrwnIXla2BLbjasR6UBLcqNw==
-X-Received: by 2002:ae9:f707:: with SMTP id s7mr26514828qkg.82.1571128715239;
-        Tue, 15 Oct 2019 01:38:35 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 22sm9035786qkj.0.2019.10.15.01.38.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 01:38:34 -0700 (PDT)
+        Tue, 15 Oct 2019 04:39:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9F8cOk9178994;
+        Tue, 15 Oct 2019 08:39:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=ARgJngw/EKwo7//1vnF1N8vdv7+VDvf0AqFaDb+ArC8=;
+ b=WjIQD1PCdG8gNqNaB4rr68DTWdc5GwKT9T8LDyX/d5fU4RXXt7n/Uno1y8fdniBOPp7X
+ tfItlcZ0j4CmBWhGSixmMmMSdK4xnZZAM1So5KMBKdkmV2gbI6VT0wtuhFv6TQyTDyiE
+ D4Sax8+H56C8cYelm5Zr0lG0O+QzLgIUQ3xXYG+b0ghE4YaWUXxF4GxERx/i/AD9pi0L
+ SC/ij6fiPRXvR//QxR8PrbdyydYXPiq9RsX3zjGBAYxhiwPzfS08Egj0JaLu3M+SQ/sn
+ G9jfh+CVpjMcKuP2IFUzuBpGeIMDvkS/ZO6Xb0rjDGl9NqjjvTkNPIepcTc7cxi4dJJq hw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2vk68ue96d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 08:39:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9F8ckIx076448;
+        Tue, 15 Oct 2019 08:39:08 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2vkrbmh85f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 08:39:06 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9F8ckaZ007044;
+        Tue, 15 Oct 2019 08:38:46 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 08:38:46 +0000
+Date:   Tue, 15 Oct 2019 11:38:38 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc:     Andy Shevchenko <andy@infradead.org>, Takashi Iwai <tiwai@suse.de>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/x86: huawei-wmi: make validation stricter in
+ huawei_wmi_battery_set()
+Message-ID: <20191015083837.GA29104@mwanda>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH V2] hugetlb: Add nohugepages parameter to prevent hugepages creation
-Date:   Tue, 15 Oct 2019 04:38:33 -0400
-Message-Id: <3340809E-6529-4A14-9D42-B14D7E54A8F3@lca.pw>
-References: <20191015045158.5297-1-gpiccoli@canonical.com>
-Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
-        linux-kernel@vger.kernel.org, jay.vosburgh@canonical.com,
-        kernel@gpiccoli.net
-In-Reply-To: <20191015045158.5297-1-gpiccoli@canonical.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-X-Mailer: iPhone Mail (17A860)
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I don't think it makes sense for "end" to be negative or for even for it
+to be less than "start".  That also means that "start" can't be more
+than 100 which is good.
 
+Fixes: b7527d0f4502 ("platform/x86: huawei-wmi: Add battery charging thresholds")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/platform/x86/huawei-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Oct 15, 2019, at 12:52 AM, Guilherme G. Piccoli <gpiccoli@canonical.com=
-> wrote:
->=20
-> Kdump kernels won't benefit from hugepages - in fact it's quite opposite,
-> it may be the case hugepages on kdump kernel can lead to OOM if kernel
-> gets unable to allocate demanded pages due to the fact the preallocated
-> hugepages are consuming a lot of memory.
->=20
-> This patch proposes a new kernel parameter to prevent the creation of
-> HugeTLB hugepages - we currently don't have a way to do that. We can
-> even have kdump scripts removing the kernel command-line options to
-> set hugepages, but it's not straightforward to prevent sysctl/sysfs
-> configuration, given it happens in later boot or anytime when the
-> system is running.
->=20
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-> ---
-> .../admin-guide/kernel-parameters.txt         |  4 +++
-> fs/hugetlbfs/inode.c                          |  5 ++--
-> include/linux/hugetlb.h                       |  7 ++++++
-> mm/hugetlb.c                                  | 25 +++++++++++++------
-> 4 files changed, 32 insertions(+), 9 deletions(-)
->=20
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentati=
-on/admin-guide/kernel-parameters.txt
-> index a84a83f8881e..061bec851114 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2982,6 +2982,10 @@
->=20
->    nohugeiomap    [KNL,x86,PPC] Disable kernel huge I/O mappings.
->=20
-> +    nohugepages    [KNL] Disable HugeTLB hugepages completely, preventing=
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 6720f78c60c2..02a505a72172 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -343,7 +343,7 @@ static int huawei_wmi_battery_set(int start, int end)
+ 	union hwmi_arg arg;
+ 	int err;
+ 
+-	if (start < 0 || end > 100)
++	if (start < 0 || end < start || end > 100)
+ 		return -EINVAL;
+ 
+ 	arg.cmd = BATTERY_THRESH_SET;
+-- 
+2.20.1
 
-> +            its setting either by kernel parameter or sysfs;
-> +            useful specially in kdump kernel.
-> +
->    nosmt        [KNL,S390] Disable symmetric multithreading (SMT).
->            Equivalent to smt=3D1.
-
-No, it does make much sense to even mention kdump here at all as a justifica=
-tion. If somebody blindly set sysfs in the kdump kernel, it will be garbage i=
-n and garbage out. It is trivial enough to disable it, as it is what have be=
-en done in enterprise distros implementation of kdump where it has no such p=
-roblem for a decade.=
