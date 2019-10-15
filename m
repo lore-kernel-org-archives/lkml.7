@@ -2,108 +2,94 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4BAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74358C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA8020659
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551F020659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfJOJyF (ORCPT
+        id S1729694AbfJOJy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:54:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:34004 "EHLO foss.arm.com"
+        Tue, 15 Oct 2019 05:54:29 -0400
+Received: from smtp3.goneo.de ([85.220.129.37]:51302 "EHLO smtp3.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfJOJyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:54:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8074C28;
-        Tue, 15 Oct 2019 02:54:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2BD3F68E;
-        Tue, 15 Oct 2019 02:54:03 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 10:53:58 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before
- training link
-Message-ID: <20191015095358.GA32431@e121166-lin.cambridge.arm.com>
-References: <20190522213351.21366-2-repk@triplefau.lt>
+        id S1725890AbfJOJy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:54:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id B639723F83E;
+        Tue, 15 Oct 2019 11:54:25 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tdP6agb7XihY; Tue, 15 Oct 2019 11:54:24 +0200 (CEST)
+Received: from lem-wkst-02.lemonage (hq.lemonage.de [87.138.178.34])
+        by smtp3.goneo.de (Postfix) with ESMTPSA id BCF4B23F80C;
+        Tue, 15 Oct 2019 11:54:22 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 11:54:21 +0200
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Allison Randal <allison@lohutok.net>,
+        Johan Hovold <johan@kernel.org>,
+        Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v9 0/7] nfc: pn533: add uart phy driver
+Message-ID: <20191015095421.GB17778@lem-wkst-02.lemonage>
+References: <20191008140544.17112-1-poeschel@lemonage.de>
+ <20191009172907.2f0877f4@cakuba.netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522213351.21366-2-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191009172907.2f0877f4@cakuba.netronome.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:33:50PM +0200, Remi Pommarel wrote:
-> When configuring pcie reset pin from gpio (e.g. initially set by
-> u-boot) to pcie function this pin goes low for a brief moment
-> asserting the PERST# signal. Thus connected device enters fundamental
-> reset process and link configuration can only begin after a minimal
-> 100ms delay (see [1]).
+On Wed, Oct 09, 2019 at 05:29:07PM -0700, Jakub Kicinski wrote:
+> On Tue,  8 Oct 2019 16:05:37 +0200, Lars Poeschel wrote:
+> > The purpose of this patch series is to add a uart phy driver to the
+> > pn533 nfc driver.
+> > It first changes the dt strings and docs. The dt compatible strings
+> > need to change, because I would add "pn532-uart" to the already
+> > existing "pn533-i2c" one. These two are now unified into just
+> > "pn532". Then the neccessary changes to the pn533 core driver are
+> > made. Then the uart phy is added.
+> > As the pn532 chip supports a autopoll, I wanted to use this instead
+> > of the software poll loop in the pn533 core driver. It is added and
+> > activated by the last to patches.
+> > The way to add the autopoll later in seperate patches is chosen, to
+> > show, that the uart phy driver can also work with the software poll
+> > loop, if someone needs that for some reason.
+> > This patchset is already rebased on Johans "NFC: pn533: fix
+> > use-after-free and memleaks" patch
+> > https://lore.kernel.org/netdev/20191007164059.5927-1-johan@kernel.org/
+> > as they would conflict.
+> > If for some reason Johans patch will not get merged, I can of course
+> > provide the patchset without depending on this patch.
 > 
-> Because the pin configuration comes from the "default" pinctrl it is
-> implicitly configured before the probe callback is called:
+> The memleak patch was a fix and it's on its way to the current 5.4-rc
+> releases - therefore it was merged into the net tree. Your set adds
+> support for a new bus, and will go into the net-next tree.
 > 
-> driver_probe_device()
->   really_probe()
->     ...
->     pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
->                            function and PERST# is asserted */
->     ...
->     drv->probe()
-> 
-> [1] "PCI Express Base Specification", REV. 4.0
->     PCI Express, February 19 2014, 6.6.1 Conventional Reset
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->   - Add a comment about pinctrl implicit pin configuration
->   - Use more legible msleep
->   - Use PCI_PM_D3COLD_WAIT macro
-> 
-> Please note that I will unlikely be able to answer any comments from May
-> 24th to June 10th.
-> ---
->  drivers/pci/controller/pci-aardvark.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> It'd be best if you reposted once the net tree was merged into the
+> net-next tree (which usually happens every week or two). If you'd
+> rather not wait you need to rebase on top of the current net-next tree,
+> and maintainers will handle the conflicts.
 
-Applied to pci/aardvark, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..d998c2b9cd04 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -324,6 +324,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
->  	advk_writel(pcie, reg, PIO_CTRL);
->  
-> +	/*
-> +	 * PERST# signal could have been asserted by pinctrl subsystem before
-> +	 * probe() callback has been called, making the endpoint going into
-> +	 * fundamental reset. As required by PCI Express spec a delay for at
-> +	 * least 100ms after such a reset before link training is needed.
-> +	 */
-> +	msleep(PCI_PM_D3COLD_WAIT);
-> +
->  	/* Start link training */
->  	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
->  	reg |= PCIE_CORE_LINK_TRAINING;
-> -- 
-> 2.20.1
-> 
+Thank you very much for this valueable information. I will repost the
+v10 of this patchset rebased on net-next, when the fix is appears there.
