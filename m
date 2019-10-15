@@ -2,155 +2,211 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825F3ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39318ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578D02067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01C52067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yh1LUCBf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PoVcA8yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388986AbfJOSCm (ORCPT
+        id S2389001AbfJOSDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:02:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39426 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfJOSCl (ORCPT
+        Tue, 15 Oct 2019 14:03:18 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49020 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfJOSDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:02:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s17so9949036plp.6;
-        Tue, 15 Oct 2019 11:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z8vZY3UjYGee0rVR6bJWDTeILO13q3DsBmT7g8D5CqE=;
-        b=Yh1LUCBfKlisSW5aft0X27Z7Yn3scBV0ebad7io6LVBj2c3tHvRnoHTaJSqLf296+9
-         uhJPZm4gc5jGPcAg5fHjzTXFXl31R34LQGTU6ZRCXeIc+gMrTv7OJ4goNXrSNViX9X/n
-         qXQmTSElNpCuTSInmJXKBaetLLKyZZdzJeHhdte7UDazZdJWMms4NI0XXpLk0+ghINhA
-         SZx1w5QoVQgFXFNbZdeK2zX+cVOj54vnVvgtEgQHPU0OucR8uY7jzbOJvk4pJUHPl8Uv
-         NRSs4bM/nGvnflwGssWNzXexl/UM2a8u/UyMJV3y7Tlngg+/M0Bd5w5FqxQXGZTHHkdy
-         3Nkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z8vZY3UjYGee0rVR6bJWDTeILO13q3DsBmT7g8D5CqE=;
-        b=iZv5lQ6o+/kQkqJH8m4/jQP19MfREaFVWkm+e/Kv2XuoZmar+1LElMBdWTubaGfwB5
-         LDEAMQ70AGY60AfzMK8u3VNI4i0ubqWHjZ88yuNnyZKPq8HMA2urCQQru1QBDm45spJe
-         A6GXM9cfZflj6y5y0ZVg8NVrOHl2aety5Y4nv9Bf+I0QD/9qtlmUk9+ABi72FdQP+1M9
-         9UnfaBCEqogv2/qPOtfnvnbjzGglcARTFFxfsMmL5c5pq94Oosgf0BRpb/EnHJWHZpOW
-         U1Z/hJTDoW7MHxOwnzAC1L6+toA/ityQnztV1+RKDLg51DoossPa9+stPb0KDiXUBwnf
-         xmCw==
-X-Gm-Message-State: APjAAAWTttbgDfTVo/ScZbu0ITLITz4dTt8bCrib5iYB6Hl8lJMJwihx
-        YO8f9rOxiimyhftN8P3jouWHM/fd
-X-Google-Smtp-Source: APXvYqxkWnBL+x9PExP4ITEzDQtYCrjG6zT3F068IaSil8nFMxXZpISLdsrwWxHkwZQFeT8LyPU6rA==
-X-Received: by 2002:a17:902:a5c3:: with SMTP id t3mr37290040plq.335.1571162560542;
-        Tue, 15 Oct 2019 11:02:40 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id c1sm33439904pfb.135.2019.10.15.11.02.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 11:02:39 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 11:02:36 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 03/14] efi/apple-properties: use
- PROPERTY_ENTRY_U8_ARRAY_LEN
-Message-ID: <20191015180236.GB105649@dtor-ws>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-4-dmitry.torokhov@gmail.com>
- <20191015120149.GD32742@smile.fi.intel.com>
+        Tue, 15 Oct 2019 14:03:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FHmZe7077029;
+        Tue, 15 Oct 2019 18:03:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=aCaTnFQPPEM73tLQl9o5ZZRtFT9/0aRVHchdJ5i3nKw=;
+ b=PoVcA8yBsANGExGoXSt1OKCPVUwx0ngIxZ8SMIk8/1YGbyJkOaD/l0PpN208TkJ0E0e+
+ t5s4bi8Ug9eiLbsbWNfVTsgSJdIpj4wDSvVDVGVetmR3dCYrITSFwkTgu7oVWSkai69A
+ sKDZQXKRRZg0GQtfpuXAWzKHWvaVi8jvD8L21q9KaPDm/lfGYHdJnbm7Cg8eA/dmAlfA
+ X//YdO43m8EnerEHLTHHyOZvXYKLEVZhxb7X3khPJJa8BTBX5zznyqPdtAr7/IGEZRw/
+ YHSQGzJfRTSbFxrU3Ag2gs4xBBLkCq/9Rlra0ErJnVnkg18pOgCcojcWPnQWQ5dzQEwV 8Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2vk6sqhumr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 18:02:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FHmPkF060075;
+        Tue, 15 Oct 2019 18:02:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vnb0fm2mb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 18:02:58 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9FI2vbN010420;
+        Tue, 15 Oct 2019 18:02:57 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Oct 2019 11:02:57 -0700
+Date:   Tue, 15 Oct 2019 11:02:56 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/12] xfs: turn io_append_trans into an io_private void
+ pointer
+Message-ID: <20191015180256.GR13108@magnolia>
+References: <20191015154345.13052-1-hch@lst.de>
+ <20191015154345.13052-6-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015120149.GD32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015154345.13052-6-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910150153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910150153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 03:01:49PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 11, 2019 at 04:07:10PM -0700, Dmitry Torokhov wrote:
-> > Let's switch to using PROPERTY_ENTRY_U8_ARRAY_LEN() to initialize
-> > property entries. Also, when dumping data, rely on local variables
-> > instead of poking into the property entry structure directly.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/firmware/efi/apple-properties.c | 18 ++++++++----------
-> >  1 file changed, 8 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
-> > index 0e206c9e0d7a..5ccf39986a14 100644
-> > --- a/drivers/firmware/efi/apple-properties.c
-> > +++ b/drivers/firmware/efi/apple-properties.c
-> > @@ -53,7 +53,8 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
-> >  
-> >  	for (i = 0; i < dev_header->prop_count; i++) {
-> >  		int remaining = dev_header->len - (ptr - (void *)dev_header);
-> > -		u32 key_len, val_len;
-> > +		u32 key_len, val_len, entry_len;
-> > +		const u8 *entry_data;
-> >  		char *key;
-> >  
-> >  		if (sizeof(key_len) > remaining)
-> > @@ -85,17 +86,14 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
-> >  		ucs2_as_utf8(key, ptr + sizeof(key_len),
-> >  			     key_len - sizeof(key_len));
-> >  
-> > -		entry[i].name = key;
-> > -		entry[i].length = val_len - sizeof(val_len);
-> > -		entry[i].is_array = !!entry[i].length;
-> > -		entry[i].type = DEV_PROP_U8;
-> > -		entry[i].pointer.u8_data = ptr + key_len + sizeof(val_len);
-> > -
-> > +		entry_data = ptr + key_len + sizeof(val_len);
-> > +		entry_len = val_len - sizeof(val_len);
-> > +		entry[i] = PROPERTY_ENTRY_U8_ARRAY_LEN(key, entry_data,
-> > +						       entry_len);
+On Tue, Oct 15, 2019 at 05:43:38PM +0200, Christoph Hellwig wrote:
+> In preparation for moving the ioend structure to common code we need
+> to get rid of the xfs-specific xfs_trans type.  Just make it a file
+> system private void pointer instead.
 > 
-> I would rather leave on one line.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-I am trying to stay withing 80 char limit by default, but do not have
-strong opinion on the code I do not maintain. Up to Ard I suppose.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-> Nevertheless,
+--D
+
+> ---
+>  fs/xfs/xfs_aops.c | 26 +++++++++++++-------------
+>  fs/xfs/xfs_aops.h |  2 +-
+>  2 files changed, 14 insertions(+), 14 deletions(-)
 > 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Thank you for looking the patches over.
-
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index c29ef69d1e51..df5955388adc 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -153,7 +153,7 @@ xfs_setfilesize_trans_alloc(
+>  	if (error)
+>  		return error;
+>  
+> -	ioend->io_append_trans = tp;
+> +	ioend->io_private = tp;
+>  
+>  	/*
+>  	 * We may pass freeze protection with a transaction.  So tell lockdep
+> @@ -220,7 +220,7 @@ xfs_setfilesize_ioend(
+>  	int			error)
+>  {
+>  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
+> -	struct xfs_trans	*tp = ioend->io_append_trans;
+> +	struct xfs_trans	*tp = ioend->io_private;
+>  
+>  	/*
+>  	 * The transaction may have been allocated in the I/O submission thread,
+> @@ -285,10 +285,10 @@ xfs_end_ioend(
+>  	else if (ioend->io_type == IOMAP_UNWRITTEN)
+>  		error = xfs_iomap_write_unwritten(ip, offset, size, false);
+>  	else
+> -		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_append_trans);
+> +		ASSERT(!xfs_ioend_is_append(ioend) || ioend->io_private);
+>  
+>  done:
+> -	if (ioend->io_append_trans)
+> +	if (ioend->io_private)
+>  		error = xfs_setfilesize_ioend(ioend, error);
+>  	xfs_destroy_ioends(ioend, error);
+>  	memalloc_nofs_restore(nofs_flag);
+> @@ -321,13 +321,13 @@ xfs_ioend_can_merge(
+>   * as it is guaranteed to be clean.
+>   */
+>  static void
+> -xfs_ioend_merge_append_transactions(
+> +xfs_ioend_merge_private(
+>  	struct xfs_ioend	*ioend,
+>  	struct xfs_ioend	*next)
+>  {
+> -	if (!ioend->io_append_trans) {
+> -		ioend->io_append_trans = next->io_append_trans;
+> -		next->io_append_trans = NULL;
+> +	if (!ioend->io_private) {
+> +		ioend->io_private = next->io_private;
+> +		next->io_private = NULL;
+>  	} else {
+>  		xfs_setfilesize_ioend(next, -ECANCELED);
+>  	}
+> @@ -349,8 +349,8 @@ xfs_ioend_try_merge(
+>  			break;
+>  		list_move_tail(&next->io_list, &ioend->io_list);
+>  		ioend->io_size += next->io_size;
+> -		if (next->io_append_trans)
+> -			xfs_ioend_merge_append_transactions(ioend, next);
+> +		if (next->io_private)
+> +			xfs_ioend_merge_private(ioend, next);
+>  	}
+>  }
+>  
+> @@ -415,7 +415,7 @@ xfs_end_bio(
+>  
+>  	if (ioend->io_fork == XFS_COW_FORK ||
+>  	    ioend->io_type == IOMAP_UNWRITTEN ||
+> -	    ioend->io_append_trans != NULL) {
+> +	    ioend->io_private) {
+>  		spin_lock_irqsave(&ip->i_ioend_lock, flags);
+>  		if (list_empty(&ip->i_ioend_list))
+>  			WARN_ON_ONCE(!queue_work(mp->m_unwritten_workqueue,
+> @@ -680,7 +680,7 @@ xfs_submit_ioend(
+>  	    (ioend->io_fork == XFS_COW_FORK ||
+>  	     ioend->io_type != IOMAP_UNWRITTEN) &&
+>  	    xfs_ioend_is_append(ioend) &&
+> -	    !ioend->io_append_trans)
+> +	    !ioend->io_private)
+>  		status = xfs_setfilesize_trans_alloc(ioend);
+>  
+>  	memalloc_nofs_restore(nofs_flag);
+> @@ -729,7 +729,7 @@ xfs_alloc_ioend(
+>  	ioend->io_inode = inode;
+>  	ioend->io_size = 0;
+>  	ioend->io_offset = offset;
+> -	ioend->io_append_trans = NULL;
+> +	ioend->io_private = NULL;
+>  	ioend->io_bio = bio;
+>  	return ioend;
+>  }
+> diff --git a/fs/xfs/xfs_aops.h b/fs/xfs/xfs_aops.h
+> index 4af8ec0115cd..6a45d675dcba 100644
+> --- a/fs/xfs/xfs_aops.h
+> +++ b/fs/xfs/xfs_aops.h
+> @@ -18,7 +18,7 @@ struct xfs_ioend {
+>  	struct inode		*io_inode;	/* file being written to */
+>  	size_t			io_size;	/* size of the extent */
+>  	xfs_off_t		io_offset;	/* offset in the file */
+> -	struct xfs_trans	*io_append_trans;/* xact. for size update */
+> +	void			*io_private;	/* file system private data */
+>  	struct bio		*io_bio;	/* bio being built */
+>  	struct bio		io_inline_bio;	/* MUST BE LAST! */
+>  };
+> -- 
+> 2.20.1
 > 
-> >  		if (dump_properties) {
-> > -			dev_info(dev, "property: %s\n", entry[i].name);
-> > +			dev_info(dev, "property: %s\n", key);
-> >  			print_hex_dump(KERN_INFO, pr_fmt(), DUMP_PREFIX_OFFSET,
-> > -				16, 1, entry[i].pointer.u8_data,
-> > -				entry[i].length, true);
-> > +				16, 1, entry_data, entry_len, true);
-> >  		}
-> >  
-> >  		ptr += key_len + val_len;
-> > -- 
-> > 2.23.0.700.g56cf767bdb-goog
-> > 
-> 
-
-Thanks.
-
--- 
-Dmitry
