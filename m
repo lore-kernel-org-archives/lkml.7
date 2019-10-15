@@ -2,112 +2,149 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F496ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C9FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BC72064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571139977;
-	bh=sNE9cceqp0gTpe9FqHpK+Ks+/viCQJhXqeZ7FmQWBd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OUfE59yQZclqizQN7Jx/c9/h6BgDtC0V2mLFryVNhFO0hkdlsLklg5tuYAUwaZPud
-	 Un+SbLT+goOfNIClVUlHQdKhEQB4NQ0mgO74G/KH+DYIOxzkoIZGZDJr/BIV3K8Mra
-	 Ag3Oa0sa8IYZmS7633rLYWGe8sztDpf11G4FE3UU=
+	by mail.kernel.org (Postfix) with ESMTP id 27C8421925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvSGZhiO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfJOLqP (ORCPT
+        id S1729318AbfJOLqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:46:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42162 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbfJOLqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:46:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 41B27AD79;
-        Tue, 15 Oct 2019 11:46:12 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 13:46:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6 2/2] mm/debug: Add tests validating architecture page
- table helpers
-Message-ID: <20191015114611.GC317@dhcp22.suse.cz>
-References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
- <1571131302-32290-3-git-send-email-anshuman.khandual@arm.com>
+        Tue, 15 Oct 2019 07:46:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46547 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfJOLqn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:46:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q5so12299662pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 04:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7nxz6zGMrO8KEWQH3HeYGqaLsVZGUP/TEpFv7v6lvxs=;
+        b=zvSGZhiOtHdGvy14s6GyHZuv88yUqPbQwJpWSzfbMYO5X9dWo5YYuHa6rNSQRvD+So
+         gQqpIGP5TbYKTxYrAaCidrqfnNq0975PPFG+AhBp5OL22ab8iRsCR4gYyxixRlxbL69N
+         ssAf4NW0g2tZmUBkUmujAHGpHMb6+WfP4J8z5bmZT8fe4Pit9+XMbFzXSqnf/4KpgFpT
+         7gZ4fLKI89TDHttIkcS/qIKANqSXF4n+rTDvJkWKO34sz/OO5A1m86i8ZpfWJXfnANN0
+         8TsSdz2p4rGez9OJseuDXbHApFTnFax32bcky64+HFr7AX4kTvxfPfzmDLYEuWed5e55
+         BXQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7nxz6zGMrO8KEWQH3HeYGqaLsVZGUP/TEpFv7v6lvxs=;
+        b=J/R12/yaB5r19v6EsdlvzDYYShpcQgJHGRA7Bxew80BxBSNh/aUpcJqyMcnuvFiVGl
+         wXdQzjGvxnurzCIPHI9lZFZgH/wa1UfFwFgqn2g9ZrmOnga5WVW58DcSmepexU5W2J/X
+         hCMz/97fE4Be0ExB13cOHeHMjuukS8G+aSk8Q08YKfqC5BBMTcutEbf95R7zuZlDnBuc
+         pvrTBZsHCEThNcEZajK6Lzoggwgm7ykxlm/f2KgS6G8kKdI9Egr+Nf2Zm2nDtpDCxUGy
+         VJcLP4cULd2rQ5VO25oh5DduVtI8yLoef8OGKQ/Wxdec1U9TlHu9GoK2nZd+S8o0aBe2
+         x4Hw==
+X-Gm-Message-State: APjAAAWgt1CGPlZLTlxYw3iusotJgRSjwzgIYZTbC1Iz8CyQOW5rcF36
+        2rU2y7GVhddedFKuPDzZU9SEOg==
+X-Google-Smtp-Source: APXvYqx57AELHzxiNgpMzoxeCvv9cjy2XscqdyIxlwGe5Q3KNTjsdl/RhoTDUKUsXGBSzws2Bo9sCw==
+X-Received: by 2002:a63:9255:: with SMTP id s21mr39408310pgn.325.1571140002251;
+        Tue, 15 Oct 2019 04:46:42 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id q2sm24373495pfg.144.2019.10.15.04.46.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 04:46:40 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 17:16:37 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
+        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
+ framework
+Message-ID: <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571131302-32290-3-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 15-10-19 14:51:42, Anshuman Khandual wrote:
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
+On 22-09-19, 23:12, Dmitry Osipenko wrote:
+> Hello Viresh,
 > 
-> Test page table and memory pages creating it's entries at various level are
-> all allocated from system memory with required size and alignments. But if
-> memory pages with required size and alignment could not be allocated, then
-> all depending individual tests are just skipped afterwards. This test gets
-> called right after init_mm_internals() required for alloc_contig_range() to
-> work correctly.
+> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
 > 
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
-> arm64. Going forward, other architectures too can enable this after fixing
-> build or runtime problems (if any) with their page table helpers.
+> 
+> [   87.952369] ==================================================================
+> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
+> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
+> 
+> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
+> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
+> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
+> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
+> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
+> (print_address_description.constprop.0+0x3d/0x340)
+> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
+> (__kasan_report+0xe3/0x12c)
+> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
+> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
+> (blocking_notifier_chain_register+0x29/0x3c)
+> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
+> (dev_pm_qos_add_notifier+0x79/0xf8)
+> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+> [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
+> [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
+> [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
+> (cpufreq_register_driver+0x13b/0x1ec)
+> [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
+> (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
 
-A highlevel description of tests and what they are testing for would be
-really appreciated. Who wants to run these tests and why/when? What kind
-of bugs would get detected? In short why do we really need/want this
-code in the tree?
+Hi Dmitry,
+
+Thanks for the bug report and I was finally able to reproduce it at my end and
+this was quite an interesting debugging exercise :)
+
+When a cpufreq driver gets registered, we register with the subsys interface and
+it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
+notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
+
+When the cpufreq driver gets unregistered, we unregister with the subsys
+interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
+(should have been in reverse order I feel). We remove the QoS notifier only when
+cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
+CPUx. Now this has a different notifier list as compared to CPU0.
+
+In short, we are adding the cpufreq notifiers to CPU0 and removing them from
+CPUx. When we try to add it again by inserting the module for second time, we
+find a node in the notifier list which is already freed but still in the list as
+we removed it from CPUx's list (which doesn't do anything as the node wasn't
+there in the first place).
+
+@Rafael: How do you see we solve this problem ? Here are the options I could
+think of:
+
+- Update subsys layer to reverse the order of devices while unregistering (this
+  will fix the current problem, but we will still have corner cases hanging
+  around, like if the CPU0 is hotplugged out, etc).
+
+- Update QoS framework with the knowledge of related CPUs, this has been pending
+  until now from my side. And this is the thing we really need to do. Eventually
+  we shall have only a single notifier list for all CPUs of a policy, at least
+  for MIN/MAX frequencies.
+
+- ??
 
 -- 
-Michal Hocko
-SUSE Labs
+viresh
