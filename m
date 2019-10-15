@@ -2,70 +2,142 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31D1ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09476ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B501F20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571136333;
-	bh=77WBH2h9bRchd3kaucl/YpLXYB2oYx+m7W/9F0lJXvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y0B4HWcHG08cxFODMxa7yPMwg8zJyfqVq3QNNyjd1vOHl9pncdc93SLTT+UUZntAI
-	 SbHQ09QzcQpA9jHJiKd2JhU/C7Ga2/sx5DhUnWZzqI328808WUbtMJqtc2fD8J26r8
-	 yQ5wMNHL1qdl/KjtJ+BTpAN65ZSTtog6hqFUPX58=
+	by mail.kernel.org (Postfix) with ESMTP id D9FF820854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfJOKpc (ORCPT
+        id S1731259AbfJOKpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbfJOKpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:45:32 -0400
-Received: from localhost (unknown [171.76.96.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D741F2086A;
-        Tue, 15 Oct 2019 10:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571136331;
-        bh=77WBH2h9bRchd3kaucl/YpLXYB2oYx+m7W/9F0lJXvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PyUD/4NOrGSzWLXzapptVHYY7NBEA/f14KabnbZdQCl9yYXhRHHK5fNn6TQ+lYLco
-         9UMGzrfIREaj2fHCHC1soEe6LP/nWEmlZczRND4gokDE9nCh9CH4xT4tAqati0PFls
-         VGB5xQ5P4mYFXr3JVBie0/AXxoUNqMnz7fA9uHMo=
-Date:   Tue, 15 Oct 2019 16:15:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Michal Suchanek <msuchanek@suse.de>
-Cc:     alsa-devel@alsa-project.org, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] soundwire: depend on ACPI
-Message-ID: <20191015104527.GX2654@vkoul-mobl>
-References: <20191002081717.GA4015@kitsune.suse.cz>
- <bd685232ea511251eeb9554172f1524eabf9a46e.1570097621.git.msuchanek@suse.de>
+        Tue, 15 Oct 2019 06:45:40 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:23344
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726653AbfJOKpj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:45:39 -0400
+X-IronPort-AV: E=Sophos;i="5.67,299,1566856800"; 
+   d="scan'208";a="322757829"
+Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 12:45:06 +0200
+Date:   Tue, 15 Oct 2019 12:45:06 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Dan Robertson <dan@dlrobertson.com>
+cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Dan Robertson <dan@dlrobertson.com>,
+        kbuild-all@lists.01.org
+Subject: Re: [PATCH v3 2/2] iio: (bma400) add driver for the BMA400 (fwd)
+Message-ID: <alpine.DEB.2.21.1910151243270.2818@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd685232ea511251eeb9554172f1524eabf9a46e.1570097621.git.msuchanek@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-10-19, 12:13, Michal Suchanek wrote:
-> The device cannot be probed on !ACPI and gives this warning:
-> 
-> drivers/soundwire/slave.c:16:12: warning: ‘sdw_slave_add’ defined but
-> not used [-Wunused-function]
->  static int sdw_slave_add(struct sdw_bus *bus,
+acc_config is unsigned, so it won't be negative (line 390).
 
-Applied both, thanks
--- 
-~Vinod
+julia
+
+---------- Forwarded message ----------
+Date: Mon, 14 Oct 2019 07:23:53 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@lists.01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v3 2/2] iio: (bma400) add driver for the BMA400
+
+Hi Dan,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on iio/togreg]
+[cannot apply to v5.4-rc2 next-20191011]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Dan-Robertson/iio-add-driver-for-Bosch-BMA400-accelerometer/20191014-035631
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+:::::: branch date: 3 hours ago
+:::::: commit date: 3 hours ago
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+
+>> drivers/iio/accel/bma400_core.c:390:6-16: WARNING: Unsigned expression compared with zero: acc_config < 0
+
+# https://github.com/0day-ci/linux/commit/76b89222e99357a9fdbcfb61982e10d2fe74a409
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 76b89222e99357a9fdbcfb61982e10d2fe74a409
+vim +390 drivers/iio/accel/bma400_core.c
+
+76b89222e99357 Dan Robertson 2019-10-12  372
+76b89222e99357 Dan Robertson 2019-10-12  373  static int bma400_set_accel_oversampling_ratio(struct bma400_data *data,
+76b89222e99357 Dan Robertson 2019-10-12  374  					       int val)
+76b89222e99357 Dan Robertson 2019-10-12  375  {
+76b89222e99357 Dan Robertson 2019-10-12  376  	int ret;
+76b89222e99357 Dan Robertson 2019-10-12  377  	unsigned int acc_config;
+76b89222e99357 Dan Robertson 2019-10-12  378
+76b89222e99357 Dan Robertson 2019-10-12  379  	if (val & ~BMA400_TWO_BITS_MASK)
+76b89222e99357 Dan Robertson 2019-10-12  380  		return -EINVAL;
+76b89222e99357 Dan Robertson 2019-10-12  381
+76b89222e99357 Dan Robertson 2019-10-12  382  	/*
+76b89222e99357 Dan Robertson 2019-10-12  383  	 * The oversampling ratio is stored in a different register
+76b89222e99357 Dan Robertson 2019-10-12  384  	 * based on the power-mode.
+76b89222e99357 Dan Robertson 2019-10-12  385  	 */
+76b89222e99357 Dan Robertson 2019-10-12  386  	switch (data->power_mode) {
+76b89222e99357 Dan Robertson 2019-10-12  387  	case POWER_MODE_LOW:
+76b89222e99357 Dan Robertson 2019-10-12  388  		ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG,
+76b89222e99357 Dan Robertson 2019-10-12  389  				  &acc_config);
+76b89222e99357 Dan Robertson 2019-10-12 @390  		if (acc_config < 0)
+76b89222e99357 Dan Robertson 2019-10-12  391  			return acc_config;
+76b89222e99357 Dan Robertson 2019-10-12  392
+76b89222e99357 Dan Robertson 2019-10-12  393  		ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
+76b89222e99357 Dan Robertson 2019-10-12  394  				   (acc_config & ~BMA400_LP_OSR_MASK) |
+76b89222e99357 Dan Robertson 2019-10-12  395  				   (val << BMA400_LP_OSR_SHIFT));
+76b89222e99357 Dan Robertson 2019-10-12  396  		if (ret < 0) {
+76b89222e99357 Dan Robertson 2019-10-12  397  			dev_err(data->dev, "Failed to write out OSR");
+76b89222e99357 Dan Robertson 2019-10-12  398  			return ret;
+76b89222e99357 Dan Robertson 2019-10-12  399  		}
+76b89222e99357 Dan Robertson 2019-10-12  400
+76b89222e99357 Dan Robertson 2019-10-12  401  		data->oversampling_ratio = val;
+76b89222e99357 Dan Robertson 2019-10-12  402  		return 0;
+76b89222e99357 Dan Robertson 2019-10-12  403  	case POWER_MODE_NORMAL:
+76b89222e99357 Dan Robertson 2019-10-12  404  		ret = regmap_read(data->regmap, BMA400_ACC_CONFIG1_REG,
+76b89222e99357 Dan Robertson 2019-10-12  405  				  &acc_config);
+76b89222e99357 Dan Robertson 2019-10-12  406  		if (ret < 0)
+76b89222e99357 Dan Robertson 2019-10-12  407  			return ret;
+76b89222e99357 Dan Robertson 2019-10-12  408
+76b89222e99357 Dan Robertson 2019-10-12  409  		ret = regmap_write(data->regmap, BMA400_ACC_CONFIG1_REG,
+76b89222e99357 Dan Robertson 2019-10-12  410  				   (acc_config & ~BMA400_NP_OSR_MASK) |
+76b89222e99357 Dan Robertson 2019-10-12  411  				   (val << BMA400_NP_OSR_SHIFT));
+76b89222e99357 Dan Robertson 2019-10-12  412  		if (ret < 0) {
+76b89222e99357 Dan Robertson 2019-10-12  413  			dev_err(data->dev, "Failed to write out OSR");
+76b89222e99357 Dan Robertson 2019-10-12  414  			return ret;
+76b89222e99357 Dan Robertson 2019-10-12  415  		}
+76b89222e99357 Dan Robertson 2019-10-12  416
+76b89222e99357 Dan Robertson 2019-10-12  417  		data->oversampling_ratio = val;
+76b89222e99357 Dan Robertson 2019-10-12  418  		return 0;
+76b89222e99357 Dan Robertson 2019-10-12  419  	default:
+76b89222e99357 Dan Robertson 2019-10-12  420  		return -EINVAL;
+76b89222e99357 Dan Robertson 2019-10-12  421  	}
+76b89222e99357 Dan Robertson 2019-10-12  422  	return ret;
+76b89222e99357 Dan Robertson 2019-10-12  423  }
+76b89222e99357 Dan Robertson 2019-10-12  424
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
