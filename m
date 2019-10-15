@@ -2,118 +2,122 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D3EECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B87C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B26218DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TgUlqaBG"
+	by mail.kernel.org (Postfix) with ESMTP id 1893E21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfJOMqy (ORCPT
+        id S1726343AbfJOMrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:46:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53658 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfJOMqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:46:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FCivSY187110;
-        Tue, 15 Oct 2019 12:46:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=TxP0ZWs0Ifhgzr9mzKZ5K8VfBbMXyx7BesdvQuxDWL4=;
- b=TgUlqaBGOJKG4fHX334bsbAgcF/WLNv6HPiMv80K3LFGMwN9sX0yjWJfG65KoL14Iv6l
- jNtjc3ZBMD8bVoanWIXlAfJokXaDcxObjB5eVRqaJtJmYP8akalnuomIGNrXf8D8vav2
- k1IB9mSrNgNG8kAn9jLOvmNkYdnJ67BE0EI5b+EHTqdVf95iV5RhTT3DjEgm8ZpJhujP
- FTR4fQwrZplv+b7l5VntezIyN0cnLXMhRRnziZpBxzwaKZ9UG6nD0Y7Qy6V4GiIXk9RB
- NznvbDBteI+8TMkZlUsAY/KI9ArBlIhACNl0sI1BSMVjv1415HLFZzjwbI8/HiCBkmC8 TQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7fr7hhs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 12:46:35 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FCh3Le134869;
-        Tue, 15 Oct 2019 12:46:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vn7184x0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 12:46:35 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FCkXqt017011;
-        Tue, 15 Oct 2019 12:46:33 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 12:46:32 +0000
-Date:   Tue, 15 Oct 2019 15:46:23 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ayman Bagabas <ayman.bagabas@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: huawei-wmi: make validation stricter in
- huawei_wmi_battery_set()
-Message-ID: <20191015124623.GF21344@kadam>
-References: <20191015083837.GA29104@mwanda>
- <CAB3uXr63uUwxBjkeeoftZ6HYm_hmN+E5EUhu15_Mta2qruOugA@mail.gmail.com>
+        Tue, 15 Oct 2019 08:47:20 -0400
+Received: from mga07.intel.com ([134.134.136.100]:26311 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbfJOMrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:47:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 05:47:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
+   d="scan'208";a="207538674"
+Received: from shacharl-mobl.ger.corp.intel.com (HELO localhost) ([10.252.9.88])
+  by orsmga002.jf.intel.com with ESMTP; 15 Oct 2019 05:47:14 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Safford <david.safford@ge.com>,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] tpm: Salt tpm_get_random() result with get_random_bytes()
+Date:   Tue, 15 Oct 2019 15:47:02 +0300
+Message-Id: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB3uXr63uUwxBjkeeoftZ6HYm_hmN+E5EUhu15_Mta2qruOugA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150116
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 08:21:59AM -0400, Ayman Bagabas wrote:
-> Hi Dan
-> 
-> On Tue, Oct 15, 2019, 4:39 AM Dan Carpenter <dan.carpenter@oracle.com>
-> wrote:
-> 
-> > I don't think it makes sense for "end" to be negative or for even for it
-> > to be less than "start".  That also means that "start" can't be more
-> > than 100 which is good.
-> >
-> 
-> While this makes sense, you run into issues where you cannot set "start"
-> before "end" and vice versa.
-> 
-> Take this scenario, you have start=70 and end=90, now you want to set these
-> to start=40 and end=60, you would have to set "start" first before you can
-> change the value of "end" otherwise you will run into EINVAL. Now imagine
-> you wanna go the opposite direction, you would have to set "end" before you
-> can change "start".
-> I think having a little wiggle room is fine for such scenarios.
-> 
+Salt the result that comes from the TPM RNG with random bytes from the
+kernel RNG. This will allow to use tpm_get_random() as a substitute for
+get_random_bytes().  TPM could have a bug (making results predicatable),
+backdoor or even an inteposer in the bus. Salting gives protections
+against these concerns.
 
-I haven't tested this code...  What you're describing sounds really
-very weird to me, but I will accept that you know more about your
-use cases than I do.
+Cc: David Safford <david.safford@ge.com>
+Cc: Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ drivers/char/tpm/tpm-interface.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-My other concern is that right now you can set start > 100 or end < 0.
-
-regards,
-dan carpenter
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index 7f105490604c..a135b1cd5a17 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -22,6 +22,7 @@
+ #include <linux/poll.h>
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
++#include <linux/random.h>
+ #include <linux/spinlock.h>
+ #include <linux/suspend.h>
+ #include <linux/freezer.h>
+@@ -431,16 +432,24 @@ int tpm_pm_resume(struct device *dev)
+ EXPORT_SYMBOL_GPL(tpm_pm_resume);
+ 
+ /**
+- * tpm_get_random() - get random bytes from the TPM's RNG
++ * tpm_get_random() - Get random bytes from the TPM's RNG
+  * @chip:	a &struct tpm_chip instance, %NULL for the default chip
+  * @out:	destination buffer for the random bytes
+  * @max:	the max number of bytes to write to @out
+  *
+- * Return: number of random bytes read or a negative error value.
++ * Get random bytes from the TPM's RNG and salt the result with the same amount
++ * of bytes from the kernel RNG. Salting allows to call this function as a
++ * substitute for get_random_bytes() where appropriate.
++ *
++ * Return:
++ *   number of random bytes on success,
++ *   -errno on error
+  */
+ int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
+ {
++	u8 salt[TPM_MAX_RNG_DATA];
+ 	int rc;
++	int i;
+ 
+ 	if (!out || max > TPM_MAX_RNG_DATA)
+ 		return -EINVAL;
+@@ -455,6 +464,14 @@ int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
+ 		rc = tpm1_get_random(chip, out, max);
+ 
+ 	tpm_put_ops(chip);
++
++	if (rc > 0) {
++		get_random_bytes(salt, rc);
++
++		for (i = 0; i < rc; i++)
++			out[i] ^= salt[i];
++	}
++
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(tpm_get_random);
+-- 
+2.20.1
 
