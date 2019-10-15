@@ -2,100 +2,69 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527F1ECE59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C247CECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5562064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9874E2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571178268;
-	bh=7wD/sv1cp59b0s917sG2wb/i73fxap9yaREzOUv1GHk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=u3xeD0W5jUeOt+77PBmsCiIebcOEVAwc9L/EG+fEUZpW02Pce7UajyllWrHyMUNE6
-	 2YdngXtGzKToEEHdAllg5FhGFGROeL/tA8ohFrtlbnAQiLrve9i8abqHoPKvXrHomB
-	 r/DIiGik6pRteoCyjrwddN9A9otHmEy0p3Y1JMNg=
+	s=default; t=1571178309;
+	bh=GWtoYLouoEUtiIUBaW8ZMAl2graqxJ0lem6OOb/gf7k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=csB4NUuQPIeGCC5Duc/8M4Hl14gX1NnZdIjHJDd/KwAg7zHFRnsHv01Cm84AzqVEA
+	 jtSmTPXt2hMAQaV+tZu7ixwhkMNss4GYhEwURQI/KWzfwM+c6SlciF+0beXBAV2p7r
+	 ayWMr2mEaUBiMm/zC+jyb20hOzMnd62zcT9HzTwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389841AbfJOWY1 (ORCPT
+        id S2389865AbfJOWZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 18:25:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389809AbfJOWY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:24:26 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0E622064A;
-        Tue, 15 Oct 2019 22:24:23 +0000 (UTC)
+        id S1726417AbfJOWZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:25:08 -0400
+Subject: Re: [GIT PULL] SCSI fixes for 5.4-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571178266;
-        bh=7wD/sv1cp59b0s917sG2wb/i73fxap9yaREzOUv1GHk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Qa8FOoODC83mp3W205B7mOZ3mQ2bwlNINhhmwHUDDwntGVXNfzz/AN5WbUDcCC4Ss
-         K7ureGdXByoli4H0GCReDKB63KkS8Gb6p7soa3E1+BxpwUAvrZ6zXEHlEFnm34z5Oz
-         GjQ6H5CK2MmV/SZK0hMThsATz+SIX5hfTCeG9CWU=
-Date:   Tue, 15 Oct 2019 17:24:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     gregkh@linuxfoundation.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatxjain@gmail.com
-Subject: Re: [PATCH v3 1/2] PCI/AER: Add PoisonTLPBlocked to Uncorrectable
- errors
-Message-ID: <20191015222421.GA184682@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190827222145.32642-1-rajatja@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1571178307;
+        bh=GWtoYLouoEUtiIUBaW8ZMAl2graqxJ0lem6OOb/gf7k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=LphwLpoyJTTWCoIJe5m0mUlZCI7mn12BuHX+0U4POorgLnGR2l0/Kn72ZXJ3ANMXo
+         eSYdc1tKpl8KXbhpagkAL65YaAqZC2c3/GcmBjHMEND0HrQLUOZrFLtmMhVRMf/VYb
+         GMv9Z5yXbV71NBa9X7P+oqOTckFYgnL1cBHoIL58=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1571166922.15362.19.camel@HansenPartnership.com>
+References: <1571166922.15362.19.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1571166922.15362.19.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: b23f330d5145b92f90cf16f1adc5444ad06764b4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8625732e7712882bd14e1fce962bdc3c315acd41
+Message-Id: <157117830755.470.5428874714764092445.pr-tracker-bot@kernel.org>
+Date:   Tue, 15 Oct 2019 22:25:07 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 03:21:44PM -0700, Rajat Jain wrote:
-> The elements in the aer_uncorrectable_error_string[] refer to
-> the bit names in Uncorrectable Error status Register in the PCIe spec
-> (Sec 7.8.4.2 in PCIe 4.0)
-> 
-> Add the last error bit in the strings array that was missing.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+The pull request you sent on Tue, 15 Oct 2019 15:15:22 -0400:
 
-I applied this to pci/aer for v5.5, thanks, Rajat!
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-> ---
-> v3: same as v2
-> v2: same as v1
-> 
->  drivers/pci/pcie/aer.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index b45bc47d04fe..68060a290291 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -36,7 +36,7 @@
->  #define AER_ERROR_SOURCES_MAX		128
->  
->  #define AER_MAX_TYPEOF_COR_ERRS		16	/* as per PCI_ERR_COR_STATUS */
-> -#define AER_MAX_TYPEOF_UNCOR_ERRS	26	/* as per PCI_ERR_UNCOR_STATUS*/
-> +#define AER_MAX_TYPEOF_UNCOR_ERRS	27	/* as per PCI_ERR_UNCOR_STATUS*/
->  
->  struct aer_err_source {
->  	unsigned int status;
-> @@ -560,6 +560,7 @@ static const char *aer_uncorrectable_error_string[AER_MAX_TYPEOF_UNCOR_ERRS] = {
->  	"BlockedTLP",			/* Bit Position 23	*/
->  	"AtomicOpBlocked",		/* Bit Position 24	*/
->  	"TLPBlockedErr",		/* Bit Position 25	*/
-> +	"PoisonTLPBlocked",		/* Bit Position 26	*/
->  };
->  
->  static const char *aer_agent_string[] = {
-> -- 
-> 2.23.0.187.g17f5b7556c-goog
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8625732e7712882bd14e1fce962bdc3c315acd41
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
