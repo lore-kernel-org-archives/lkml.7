@@ -2,101 +2,121 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFE9ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328C7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA02217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CB0217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfJOKsk (ORCPT
+        id S1731281AbfJOKsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:48:40 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:25387 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbfJOKsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:48:39 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-4-OcvsGto7M5O-CokwjfVoxg-1;
- Tue, 15 Oct 2019 11:48:35 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 15 Oct 2019 11:48:35 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 15 Oct 2019 11:48:35 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arnd Bergmann' <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>
-CC:     Nick Desaulniers <ndesaulniers@google.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
-        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Matthias Kaehlcke <mka@google.com>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: AMDGPU and 16B stack alignment
-Thread-Topic: AMDGPU and 16B stack alignment
-Thread-Index: AQHVgyjgGlq8x7ABFEya7CGn/JANAKdbg66A
-Date:   Tue, 15 Oct 2019 10:48:35 +0000
-Message-ID: <309b52a1c174410f8c6c14fe69c32e51@AcuMS.aculab.com>
-References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
- <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com>
- <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: OcvsGto7M5O-CokwjfVoxg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Tue, 15 Oct 2019 06:48:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:35070 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfJOKsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:48:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64EFE28;
+        Tue, 15 Oct 2019 03:48:53 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A23423F68E;
+        Tue, 15 Oct 2019 03:48:48 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v5 0/6] Enable ptp_kvm for arm64
+Date:   Tue, 15 Oct 2019 18:48:16 +0800
+Message-Id: <20191015104822.13890-1-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAxNSBPY3RvYmVyIDIwMTkgMDg6MTkNCj4gDQo+
-IE9uIFR1ZSwgT2N0IDE1LCAyMDE5IGF0IDk6MDggQU0gUywgU2hpcmlzaCA8c3NoYW5rYXJAYW1k
-LmNvbT4gd3JvdGU6DQo+ID4gT24gMTAvMTUvMjAxOSAzOjUyIEFNLCBOaWNrIERlc2F1bG5pZXJz
-IHdyb3RlOg0KPiANCj4gPiBNeSBnY2MgYnVpbGQgZmFpbHMgd2l0aCBiZWxvdyBlcnJvcnM6DQo+
-ID4NCj4gPiBkY25fY2FsY3MuYzoxOjA6IGVycm9yOiAtbXByZWZlcnJlZC1zdGFjay1ib3VuZGFy
-eT0zIGlzIG5vdCBiZXR3ZWVuIDQgYW5kIDEyDQo+ID4NCj4gPiBkY25fY2FsY19tYXRoLmM6MTow
-OiBlcnJvcjogLW1wcmVmZXJyZWQtc3RhY2stYm91bmRhcnk9MyBpcyBub3QgYmV0d2VlbiA0IGFu
-ZCAxMg0KPiA+DQo+ID4gV2hpbGUgR1BGIG9ic2VydmVkIG9uIGNsYW5nIGJ1aWxkcyBzZWVtIHRv
-IGJlIGZpeGVkLg0KPiANCj4gT2ssIHNvIGl0IHNlZW1zIHRoYXQgZ2NjIGluc2lzdHMgb24gaGF2
-aW5nIGF0IGxlYXN0IDJeNCBieXRlcyBzdGFjaw0KPiBhbGlnbm1lbnQgd2hlbg0KPiBTU0UgaXMg
-ZW5hYmxlZCBvbiB4ODYtNjQsIGJ1dCBkb2VzIG5vdCBhY3R1YWxseSByZWx5IG9uIHRoYXQgZm9y
-DQo+IGNvcnJlY3Qgb3BlcmF0aW9uDQo+IHVubGVzcyBpdCdzIHVzaW5nIHNzZTIuIFNvIC1tc3Nl
-IGFsd2F5cyBoYXMgdG8gYmUgcGFpcmVkIHdpdGgNCj4gIC1tcHJlZmVycmVkLXN0YWNrLWJvdW5k
-YXJ5PTMuDQo+IA0KPiBGb3IgY2xhbmcsIGl0IHNvdW5kcyBsaWtlIHRoZSBvcHBvc2l0ZSBpcyB0
-cnVlOiB3aGVuIHBhc3NpbmcgMTYgYnl0ZQ0KPiBzdGFjayBhbGlnbm1lbnQNCj4gYW5kIGhhdmlu
-ZyBzc2Uvc3NlMiBlbmFibGVkLCBpdCByZXF1aXJlcyB0aGUgaW5jb21pbmcgc3RhY2sgdG8gYmUg
-MTYNCj4gYnl0ZSBhbGlnbmVkLA0KPiBidXQgcGFzc2luZyA4IGJ5dGUgYWxpZ25tZW50IG1ha2Vz
-IGl0IGRvIHRoZSByaWdodCB0aGluZy4NCj4gDQo+IFNvLCBzaG91bGQgd2UganVzdCBhbHdheXMg
-cGFzcyAkKGNhbGwgY2Mtb3B0aW9uLCAtbXByZWZlcnJlZC1zdGFjay1ib3VuZGFyeT00KQ0KPiB0
-byBnZXQgdGhlIGRlc2lyZWQgb3V0Y29tZSBvbiBib3RoPw0KDQpJdCBwcm9iYWJseSB3b24ndCBz
-b2x2ZSB0aGUgcHJvYmxlbS4NCllvdSBuZWVkIHRvIGZpbmQgYWxsIHRoZSBhc20gYmxvY2tzIHRo
-YXQgY2FsbCBiYWNrIGludG8gQyBhbmQgZW5zdXJlIHRoZXkNCm1haW50YWluIHRoZSByZXF1aXJl
-ZCBzdGFjayBhbGlnbm1lbnQuDQpUaGlzIG1pZ2h0IGJlIHBvc3NpYmxlIGluIHRoZSBrZXJuZWws
-IGJ1dCBpcyBhbG1vc3QgaW1wb3NzaWJsZSBpbiB1c2Vyc3BhY2UuDQoNCklTVFIgdGhhdCBnY2Mg
-YXJiaXRyYXJpbHkgY2hhbmdlZCB0aGUgc3RhY2sgYWxpZ25tZW50IGZvciBpMzg2IGEgZmV3IHll
-YXJzIGFnby4NCldoaWxlIGl0IGhlbHBlZCBjb2RlIGdlbmVyYXRpb24gaXQgYnJva2UgYSBsb3Qg
-b2YgdGhpbmdzLg0KSSBjYW4ndCByZW1lbWJlciB0aGUgY29ycmVjdCBzZXQgb2Ygb3B0aW9ucyB0
-byBnZXQgdGhlIHN0YWNrIGFsaWdubWVudA0KY29kZSBhZGRlZCBvbmx5IHdoZXJlIGl0IHdhcyBu
-ZWVkZWQgKGdlbmVyYXRlcyBhIGRvdWJsZSAlYnAgZnJhbWUpLg0KDQoJRGF2aWQNCg0KLQ0KUmVn
-aXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRv
-biBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+kvm ptp targets to provide high precision time sync between guest
+and host in virtualization environment. This patch enable kvm ptp
+for arm64.
+This patch set base on [1][2][3]
+
+change log:
+from v4 to v5:
+        (1) remove hvc delay compensasion as it should leave to userspace.
+        (2) check current clocksource in hvc call service.
+        (3) expose current clocksource by adding it to
+system_time_snapshot.
+        (4) add helper to check if clocksource is arm_arch_counter.
+        (5) rename kvm_ptp.c to ptp_kvm_common.c
+from v3 to v4:
+        (1) fix clocksource of ptp_kvm to arch_sys_counter.
+        (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
+        (3) subtract cntvoff before return cycles from host.
+        (4) use ktime_get_snapshot instead of getnstimeofday and
+get_current_counterval to return time and counter value.
+        (5) split ktime and counter into two 32-bit block respectively
+to avoid Y2038-safe issue.
+        (6) set time compensation to device time as half of the delay of hvc call.
+        (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for
+arm64.
+from v2 to v3:
+        (1) fix some issues in commit log.
+        (2) add some receivers in send list.
+from v1 to v2:
+        (1) move arch-specific code from arch/ to driver/ptp/
+        (2) offer mechanism to inform userspace if ptp_kvm service is
+available.
+        (3) separate ptp_kvm code for arm64 into hypervisor part and
+guest part.
+	(4) add API to expose monotonic clock and counter value.
+        (5) refine code: remove no necessary part and reconsitution.
+
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=125ea89e4a21e2fc5235410f966a996a1a7148bf
+[2]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=464f5a1741e5959c3e4d2be1966ae0093b4dce06
+[3]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=6597490e005d0eeca8ed8c1c1d7b4318ee014681
+
+Jianyong Wu (6):
+  psci: Export psci_ops.conduit symbol as modules will use it.
+  ptp: Reorganize ptp_kvm modules to make it arch-independent.
+  timekeeping: Add clocksource to system_time_snapshot
+  psci: Add hvc call service for ptp_kvm.
+  ptp: arm64: Enable ptp_kvm for arm64
+  kvm: arm64: Add capability check extension for ptp_kvm
+
+ drivers/clocksource/arm_arch_timer.c        | 27 +++++++
+ drivers/firmware/psci/psci.c                |  6 ++
+ drivers/ptp/Kconfig                         |  2 +-
+ drivers/ptp/Makefile                        |  1 +
+ drivers/ptp/ptp_kvm_arm64.c                 | 54 +++++++++++++
+ drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} | 77 +++++-------------
+ drivers/ptp/ptp_kvm_x86.c                   | 87 +++++++++++++++++++++
+ include/asm-generic/ptp_kvm.h               | 12 +++
+ include/clocksource/arm_arch_timer.h        |  5 ++
+ include/linux/arm-smccc.h                   | 14 +++-
+ include/linux/psci.h                        |  1 +
+ include/linux/timekeeping.h                 | 35 +++++----
+ include/uapi/linux/kvm.h                    |  1 +
+ kernel/time/timekeeping.c                   |  7 +-
+ virt/kvm/arm/arm.c                          |  1 +
+ virt/kvm/arm/psci.c                         | 21 +++++
+ 16 files changed, 270 insertions(+), 81 deletions(-)
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+ rename drivers/ptp/{ptp_kvm.c => ptp_kvm_common.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
+ create mode 100644 include/asm-generic/ptp_kvm.h
+
+-- 
+2.17.1
 
