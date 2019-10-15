@@ -2,83 +2,127 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D3ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D614ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9296C2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571149600;
-	bh=5nnNdAf6WXH+v00l5Zeozfrj8EhYQJPb342rxJehYoo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dkCckz/uHyfuBdP+tbOAv437uV2HUzP9Uvag2PdDr2Uve5sHGsqhNlN+KgfZUZYb4
-	 pAS8iAp7HoPKclmnibuaCdYZOIiOp/6R71xVIeR950XaOQIZCX+eIZOlO49TJxKwJI
-	 pnZDe3UBP18NxNbSCfP/I/Ync7kisBNS34WmEYqI=
+	by mail.kernel.org (Postfix) with ESMTP id 4918C2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mEDe4FAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732659AbfJOO0j (ORCPT
+        id S1732675AbfJOO0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732050AbfJOO0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:26:38 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B4F2168B;
-        Tue, 15 Oct 2019 14:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571149598;
-        bh=5nnNdAf6WXH+v00l5Zeozfrj8EhYQJPb342rxJehYoo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=w6kJzt5rCxA+Nlnc6hyIEBdHPLR9CJR6dh6IqwJ/WXAz5GRdYwAlefDCa5ef3V271
-         ls2UZPhGQCoIqPOU4JcYp3QDCydF113tQQy89ztJklOt0nRytgyFF1PR5PBOLiY/+V
-         OovPE2XgvnVLIRFhxz5FdEp8dIte+utA3TCTK5Y0=
-Received: by mail-qt1-f173.google.com with SMTP id c21so30764130qtj.12;
-        Tue, 15 Oct 2019 07:26:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAXHoNnpul/Mmefy6IG707ulo6YzPf1+U0KtjUZvOylO461wk7qi
-        2xhzWn4LBz/sdbJYDfFFensVIO1SUNXiBRsnvIc=
-X-Google-Smtp-Source: APXvYqxJeXGDIDIxntmOPHKIT4TVJ5vltdtc+3C0nxOmveI8caoOTLYE4Qxbn38fdBc1CblJtiI19abZIqkd7fxC1QQ=
-X-Received: by 2002:ad4:4503:: with SMTP id k3mr1579944qvu.155.1571149597331;
- Tue, 15 Oct 2019 07:26:37 -0700 (PDT)
+        Tue, 15 Oct 2019 10:26:42 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55748 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732050AbfJOO0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:26:40 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6066B324;
+        Tue, 15 Oct 2019 16:26:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571149598;
+        bh=hSdNGSSn5zc6mkejUmeqIoT8CVOAQ/twmh0YdLHeH+o=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mEDe4FAheoUDNwti7vv8FKUNaowQCfW1YFt/S+SvDJtxZOPsbMHfBKWw3G+DMAI01
+         rpFSW2xzRslhHapJtvtGno4nMPinthakiNafukrcXzCkhp65xy2pph3khkkI+rJgS5
+         t0nzccfeMmxoU7me05bt9PnE4edElreGkhEmqRaw=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v5 3/8] drm: rcar-du: Add support for CMM
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20191015104621.62514-4-jacopo+renesas@jmondi.org>
+ <2aefe646-45db-aafa-b22b-e1cf9616259d@ideasonboard.com>
+ <20191015133320.uj4y5twxfkyopqi5@uno.localdomain>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <2e6e5e8d-e502-5957-5708-4e4d7ef84d8e@ideasonboard.com>
+Date:   Tue, 15 Oct 2019 15:26:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191015114646.15354-1-parri.andrea@gmail.com>
-In-Reply-To: <20191015114646.15354-1-parri.andrea@gmail.com>
-From:   Wei Liu <wei.liu@kernel.org>
-Date:   Tue, 15 Oct 2019 15:26:26 +0100
-X-Gmail-Original-Message-ID: <CAHd7Wqx8VzTdyo_e7NxYg83kgV27HSeKdpij3+s=VR6GZT197A@mail.gmail.com>
-Message-ID: <CAHd7Wqx8VzTdyo_e7NxYg83kgV27HSeKdpij3+s=VR6GZT197A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Drivers: hv: vmbus: Miscellaneous improvements
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191015133320.uj4y5twxfkyopqi5@uno.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 at 12:47, Andrea Parri <parri.andrea@gmail.com> wrote:
-[...]
-> [1] https://lkml.kernel.org/r/20191010154600.23875-1-parri.andrea@gmail.com
-> [2] https://lkml.kernel.org/r/20191007163115.26197-1-parri.andrea@gmail.com
->
-> Andrea Parri (3):
->   Drivers: hv: vmbus: Introduce table of VMBus protocol versions
->   Drivers: hv: vmbus: Enable VMBus protocol versions 4.1, 5.1 and 5.2
->   Drivers: hv: vmbus: Add module parameter to cap the VMBus version
+On 15/10/2019 14:33, Jacopo Mondi wrote:
+> Hi Kieran, thanks for review
 
-For the whole series:
+<snip>
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
+>>> +config DRM_RCAR_CMM
+>>> +	bool "R-Car DU Color Management Module (CMM) Support"
+>>> +	depends on DRM && OF
+>>> +	depends on DRM_RCAR_DU
+>>
+>>
+>> DRM_RCAR_DU already depends on both DRM && OF, so I wonder if those are
+>> needed to be specified explicitly.
+>>
+>> Doesn't hurt of course, but I see DRM_RCAR_DW_HDMI does the same, and so
+>> does DRM_RCAR_LVDS, so I don't think you need to remove it.
+>>
+> 
+> I did the same as it is done for HDMI and LVDS here. The extra
+> dependencies could be dropped yes, I chose to be consistent.
+
+Consistent is fine with me.
+
+
+<snip>
+
+>>> +struct rcar_cmm {
+>>> +	void __iomem *base;
+>>> +
+>>> +	/*
+>>> +	 * @lut:		1D-LUT status
+>>> +	 * @lut.enabled:	1D-LUT enabled flag
+>>> +	 */
+>>> +	struct {
+>>> +		bool enabled;
+>>> +	} lut;
+>>
+>> This used to be a more complex structure in an earlier version storing a
+>> cached version of the table. Now that the cached entry is removed, does
+>> this need to be such a complex structure rather than just say, a bool
+>> lut_enabled?
+>>
+>> (We will soon add an equivalent clu_enabled too, but I don't know what
+>> other per-table options we'll need.)
+>>
+>> In fact, we'll potentially have other options specific to the HGO, and
+>> CSC at some point in the future - so grouping by entity is indeed a good
+>> thing IMO.
+> 
+> You are right, I pondered a bit it this was worth it, but I assume the
+> other CMM functions would have required some more complex fields so I
+> chose to keep it separate. I have no problem to make this a
+> lut_enabled, but I fear as soon as we support say, double buffering
+> for the lut, having a dedicated struct would be nice.
+> 
+> Is it ok if I keep this the way it is?
+
+Certainly fine for me. (That's what I tried to imply with "so grouping
+by entity is indeed a good thing IMO.")
+
+<snip>
+--
+Kieran
