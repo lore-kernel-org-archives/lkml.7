@@ -2,54 +2,60 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF432ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5596ECE59F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA96B20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9280A214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:39:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfJOVjE (ORCPT
+        id S1730327AbfJOVjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:39:04 -0400
-Received: from www381.your-server.de ([78.46.137.84]:49436 "EHLO
+        Tue, 15 Oct 2019 17:39:16 -0400
+Received: from www381.your-server.de ([78.46.137.84]:49540 "EHLO
         www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbfJOVjD (ORCPT
+        with ESMTP id S1728174AbfJOVjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:39:03 -0400
-X-Greylist: delayed 1923 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 17:39:02 EDT
+        Tue, 15 Oct 2019 17:39:15 -0400
+X-Greylist: delayed 1643 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 17:39:13 EDT
 Received: from sslproxy01.your-server.de ([88.198.220.130])
         by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89_1)
         (envelope-from <lars@metafoo.de>)
-        id 1iKU1s-00079J-3q; Tue, 15 Oct 2019 23:06:52 +0200
+        id 1iKU6b-0007VH-CM; Tue, 15 Oct 2019 23:11:45 +0200
 Received: from [93.104.114.34] (helo=[192.168.178.20])
         by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89)
         (envelope-from <lars@metafoo.de>)
-        id 1iKU1r-0001zM-Ky; Tue, 15 Oct 2019 23:06:51 +0200
-Subject: Re: [PATCH] dmaengine: axi-dmac: simple device_config operation
- implemented
-To:     Vinod Koul <vkoul@kernel.org>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "alencar.fmce@imbel.gov.br" <alencar.fmce@imbel.gov.br>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190913145404.28715-1-alexandru.ardelean@analog.com>
- <20191014070142.GB2654@vkoul-mobl>
- <4384347cc94a54e3fa22790aaa91375afda54e1b.camel@analog.com>
- <20191015104342.GW2654@vkoul-mobl>
+        id 1iKU6a-0002ns-Tt; Tue, 15 Oct 2019 23:11:45 +0200
+Subject: Re: [PATCH][RFC] iio: core: add a class hierarchy on iio device lock
+To:     Olivier MOYSAN <olivier.moysan@st.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+References: <20191011151314.5365-1-olivier.moysan@st.com>
+ <20191012095747.3acd95e6@archlinux>
+ <db362ddf-390e-0847-1269-f3cd0c757d2a@st.com>
 From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <4428e1fa-1a2a-5a5f-ada8-806078c8da94@metafoo.de>
-Date:   Tue, 15 Oct 2019 23:06:50 +0200
+Message-ID: <9ddc41c4-3d84-cc94-5494-a5ef06697ce8@metafoo.de>
+Date:   Tue, 15 Oct 2019 23:11:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015104342.GW2654@vkoul-mobl>
+In-Reply-To: <db362ddf-390e-0847-1269-f3cd0c757d2a@st.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,126 +66,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 12:43 PM, Vinod Koul wrote:
-> On 15-10-19, 07:05, Ardelean, Alexandru wrote:
->> On Mon, 2019-10-14 at 12:31 +0530, Vinod Koul wrote:
->>> [External]
+On 10/14/19 5:59 PM, Olivier MOYSAN wrote:
+> Hello Jonathan,
+> 
+> Thanks for your comment.
+> 
+> On 10/12/19 10:57 AM, Jonathan Cameron wrote:
+>> On Fri, 11 Oct 2019 17:13:14 +0200
+>> Olivier Moysan <olivier.moysan@st.com> wrote:
+>>
+>>> The aim of this patch is to correct a recursive locking warning,
+>>> detected when setting CONFIG_PROVE_LOCKING flag (as shown in message below).
+>>> This message was initially triggered by the following call sequence
+>>> in stm32-dfsdm-adc.c driver, when using IIO hardware consumer interface.
 >>>
+>>> in stm32_dfsdm_read_raw()
+>>> 	iio_device_claim_direct_mode
+>>> 		mutex_lock(&indio_dev->mlock);			-> lock on dfsdm device
+>>> 	iio_hw_consumer_enable
+>>> 		iio_update_buffers
+>>> 			mutex_lock(&indio_dev->mlock);		-> lock on hw consumer device
+>> Hmm.  I'm not sure I follow the logic.  That lock is
+>> for one thing and one thing only, preventing access
+>> to the iio device that are unsafe when it is running
+>> in a buffered mode.  We shouldn't be in a position where
+>> we both say don't do this if we are in buffered mode, + enter
+>> buffered mode whilst doing this, or we need special functions
+>> for entering buffering mode if in this state.  We are in
+>> some sense combining internal driver logic with overall
+>> IIO states.  IIO shouldn't care that the device is using
+>> the same methods under the hood for buffered and non
+>> buffered operations.
 >>
->> Hey,
+>> I can't really recall how this driver works.   Is it actually
+>> possible to have multiple hw_consumers at the same time?
 >>
->>> On 13-09-19, 17:54, Alexandru Ardelean wrote:
->>>> From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
->>>>
->>>> dmaengine_slave_config is called by dmaengine_pcm_hw_params when using
->>>> axi-i2s with axi-dmac. If device_config is NULL, -ENOSYS  is returned,
->>>> which breaks the snd_pcm_hw_params function.
->>>> This is a fix for the error:
->>>
->>> and what is that?
->>>
->>>> $ aplay -D plughw:ADAU1761 /usr/share/sounds/alsa/Front_Center.wav
->>>> Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit
->>>> Little Endian, Rate 48000 Hz, Mono
->>>> axi-i2s 43c20000.axi-i2s: ASoC: 43c20000.axi-i2s hw params failed: -38
+>> So do we end up with multiple buffers registered and have
+>> to demux out to the read_raw + the actual buffered path?
+>> Given we have a bit of code saying grab one sample, I'm
+>> going to guess we don't...
 >>
->> Error is above this line [code -38].
+>> If so, the vast majority of the buffer setup code in IIO
+>> is irrelevant here and we just need to call a few of
+>> the callbacks from this driver directly... (I think
+>> though I haven't chased through every corner.
+>>
+>> I'd rather avoid introducing this nesting for a corner
+>> case that makes no 'semantic' sense in IIO as it leaves us
+>> in two separate states at the same time that the driver
+>> is trying to make mutually exclusive.  We can't both
+>> not be in buffered mode, and in buffered mode.
+>>
+>> Thanks and good luck with this nasty corner!
+>>
+>> Jonathan
+>>
+> Here I consider the following use case:
+> A single conversion is performed. The dfsdm (filter) is chained with a 
+> front-end, which can be an ADC or a sensor. So we have two IIO devices, 
+> the dfsdm and its front-end handled through the hw consumer interface.
 > 
-> Right and it would help explaining a bit more on the error!
+> You are right. There is something wrong here, in buffered/non-buffered 
+> mode mixing.
+> iio_hw_consumer_enable() call is used to enable the front-end device. 
+> But this interface is intended for buffered mode.
+> So this is not coherent with the expected single conversion mode, 
+> indeed. Another interface is required to manage the front-end device. I 
+> have a poor knowledge of iio framework, but it seems to me that there is 
+> no interface to manage this.
 > 
->>
->>>> aplay: set_params:1403: Unable to install hw params:
->>>> ACCESS:  RW_INTERLEAVED
->>>> FORMAT:  S16_LE
->>>> SUBFORMAT:  STD
->>>> SAMPLE_BITS: 16
->>>> FRAME_BITS: 16
->>>> CHANNELS: 1
->>>> RATE: 48000
->>>> PERIOD_TIME: 125000
->>>> PERIOD_SIZE: 6000
->>>> PERIOD_BYTES: 12000
->>>> PERIODS: 4
->>>> BUFFER_TIME: 500000
->>>> BUFFER_SIZE: 24000
->>>> BUFFER_BYTES: 48000
->>>> TICK_TIME: 0
->>>>
->>>> Signed-off-by: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
->>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->>>> ---
->>>>
->>>> Note: Fixes tag not added intentionally.
->>>>
->>>>  drivers/dma/dma-axi-dmac.c | 16 ++++++++++++++++
->>>>  1 file changed, 16 insertions(+)
->>>>
->>>> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
->>>> index a0ee404b736e..ab2677343202 100644
->>>> --- a/drivers/dma/dma-axi-dmac.c
->>>> +++ b/drivers/dma/dma-axi-dmac.c
->>>> @@ -564,6 +564,21 @@ static struct dma_async_tx_descriptor
->>>> *axi_dmac_prep_slave_sg(
->>>>  	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
->>>>  }
->>>>  
->>>> +static int axi_dmac_device_config(struct dma_chan *c,
->>>> +			struct dma_slave_config *slave_config)
->>>> +{
->>>> +	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
->>>> +	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
->>>> +
->>>> +	/* no configuration required, a sanity check is done instead */
->>>> +	if (slave_config->direction != chan->direction) {
->>>
->>>  slave_config->direction is a deprecated field, pls dont use that
->>
->> ack
->> any alternative recommendations of what to do in this case?
+> My understanding regarding mlock, is that it is used to protect the 
+> state of the iio device.
+> I we want to do a conversion from the chained devices, I think we need 
+> to activate the first device
+> and keep it performing conversion, as long as the second device has done 
+> its conversion.
+> We need to protect both devices, and we should have to do it in a nested 
+> way.
+> So, I guess that anyway, nested mutexes would be required in this case.
+>
 
-iirc direction is checked when the channel is requested, there should be
-no need to check it again.
+Others like regmap have solved this by having a lockclass per instance.
+Although that is not ideal either since it will slow down lockdep.
 
->> i can take a look, but if you have something on-the-top-of-your-head, i'm
->> open to suggestions
->> we can also just drop this completely and let userspace fail
-> 
-> Yeah it is tricky, this should be ideally implemented properly.
-> 
->>>> +		dev_err(dmac->dma_dev.dev, "Direction not supported by this
->>>> DMA Channel");
->>>> +		return -EINVAL;
->>>
->>> So you intent to support slave dma but do not use dma_slave_config.. how
->>> are you getting the slave address and other details?
->>
->> This DMA controller is a bit special.
->> It gets synthesized in FPGA, so the configuration is fixed and cannot be
->> changed at runtime. Maybe later we would allow/implement this
->> functionality, but this is a question for my HDL colleagues.
->>
->> Two things are done (in this order):
->> 1. For some paramters, axi_dmac_parse_chan_dt() is used to determine things
->> from device-tree; as it's an FPGA core, things are synthesized once and
->> cannot change (yet)
->> 2. For other parameters, the axi_dmac_detect_caps() is used to guess some
->> of them at probe time, by doing some reg reads/writes
-> 
-> So the question for you hw folks is how would a controller work with
-> multiple slave devices, do they need to synthesize it everytime?
-> 
-> Rather than that why cant they make the peripheral addresses
-> programmable so that you dont need updating fpga everytime!
-
-The DMA has a direct connection to the peripheral and the peripheral
-data port is not connected to the general purpose memory interconnect.
-So you can't write to it by an MMIO address and	 there is no address
-that needs to be configured. For an FPGA based design this is quite a
-good solution in terms of resource usage, performance and simplicity. A
-direct connection requires less resources than connection it to the
-central memory interconnect, while at the same time having lower latency
-and not eating up any additional bandwidth on the central memory connect.
-
-So slave config in this case is a noop and all it can do is verify that
-the requested configuration matches the available configuration.
-
+See
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/regmap.h#n629
