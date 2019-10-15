@@ -2,112 +2,175 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38672ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8188CECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178D921882
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57521217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 04:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbfJOEAv (ORCPT
+        id S1725938AbfJOEIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 00:00:51 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:45052 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfJOEAu (ORCPT
+        Tue, 15 Oct 2019 00:08:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725268AbfJOEIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 00:00:50 -0400
-Received: from [10.20.41.27] (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPDxz2JgRKVdtuEQAA--.1S3;
-        Tue, 15 Oct 2019 12:00:43 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Loongson: Make default kernel log buffer size as
- 128KB for Loongson3
-To:     Huacai Chen <chenhc@lemote.com>
-References: <1571101656-871-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H573fv+NVqBRgU38BRDDX=syj3gUqnJqRp4CdBx+QcdpQ@mail.gmail.com>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d897527b-3c36-41a8-b878-64a099cbdfa0@loongson.cn>
-Date:   Tue, 15 Oct 2019 12:00:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 15 Oct 2019 00:08:11 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9F488o7109846
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 00:08:09 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vn38n64c0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 00:08:09 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
+        Tue, 15 Oct 2019 05:07:36 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 15 Oct 2019 05:07:33 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9F47VIl39125208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 04:07:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA2FA4204C;
+        Tue, 15 Oct 2019 04:07:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A84742047;
+        Tue, 15 Oct 2019 04:07:30 +0000 (GMT)
+Received: from [9.199.158.130] (unknown [9.199.158.130])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 15 Oct 2019 04:07:30 +0000 (GMT)
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, wugyuan@cn.ibm.com,
+        jlayton@kernel.org, hsiangkao@aol.com
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Tue, 15 Oct 2019 09:37:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H573fv+NVqBRgU38BRDDX=syj3gUqnJqRp4CdBx+QcdpQ@mail.gmail.com>
+In-Reply-To: <20190927044243.18856-1-riteshh@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: QMiowPDxz2JgRKVdtuEQAA--.1S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1ruF1rGw13tr18Xw1UJrb_yoW8Gw4rpw
-        4rJa1DKrWkXr1rCFWkCas7WrWxtFZxZFn7WF48AF1rAF95W3WUXr1qqw1jgrZrXF9rt3W0
-        9F95Kr1Yka17ua7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1ZXrUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-TM-AS-GCONF: 00
+x-cbid: 19101504-4275-0000-0000-000003721EB3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101504-4276-0000-0000-000038852F18
+Message-Id: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910150036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/2019 11:36 AM, Huacai Chen wrote:
-> On Tue, Oct 15, 2019 at 10:12 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->> When I update kernel with loongson3_defconfig based on the Loongson 3A3000
->> platform, then using dmesg command to show kernel ring buffer, the initial
->> kernel messages have disappeared due to the log buffer is too small, it is
->> better to change the default kernel log buffer size from 16KB to 128KB.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   arch/mips/configs/loongson3_defconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
->> index 90ee008..3aa2201 100644
->> --- a/arch/mips/configs/loongson3_defconfig
->> +++ b/arch/mips/configs/loongson3_defconfig
->> @@ -12,7 +12,7 @@ CONFIG_TASKSTATS=y
->>   CONFIG_TASK_DELAY_ACCT=y
->>   CONFIG_TASK_XACCT=y
->>   CONFIG_TASK_IO_ACCOUNTING=y
->> -CONFIG_LOG_BUF_SHIFT=14
->> +CONFIG_LOG_BUF_SHIFT=17
-> Hi, Tiezhu,
->
-> Why you choose 128KB but not 64KB or 256KB? I found 64KB is enough for
-> our cases. And if you really need more, I think 256KB could be better
-> because there are many platforms choose 256KB.
+ping!!
 
-Hi Huacai,
-
-Thanks for your reply and suggestion, I will send a v2 patch.
-
-Thanks,
-
-Tiezhu Yang
-
->
-> Huacai
->
->>   CONFIG_MEMCG=y
->>   CONFIG_MEMCG_SWAP=y
->>   CONFIG_BLK_CGROUP=y
->> --
->> 2.1.0
->>
->>
+On 9/27/19 10:12 AM, Ritesh Harjani wrote:
+> d_is_negative can race with d_instantiate_new()
+> -> __d_set_inode_and_type().
+> For e.g. in use cases where Thread-1 is creating
+> symlink (doing d_instantiate_new()) & Thread-2 is doing
+> cat of that symlink while doing lookup_fast (via REF-walk-
+> one such case is, when ->permission returns -ECHILD).
+> 
+> During this race if __d_set_and_inode_type() does out-of-order
+> execution and set the dentry->d_flags before setting
+> dentry->inode, then it can result into following kernel panic.
+> 
+> This change fixes the issue by directly checking for inode.
+> 
+> E.g. kernel panic, since inode was NULL.
+> trailing_symlink() -> may_follow_link() -> inode->i_uid.
+> Issue signature:-
+>    [NIP  : trailing_symlink+80]
+>    [LR   : trailing_symlink+1092]
+>    #4 [c00000198069bb70] trailing_symlink at c0000000004bae60  (unreliable)
+>    #5 [c00000198069bc00] path_openat at c0000000004bdd14
+>    #6 [c00000198069bc90] do_filp_open at c0000000004c0274
+>    #7 [c00000198069bdb0] do_sys_open at c00000000049b248
+>    #8 [c00000198069be30] system_call at c00000000000b388
+> 
+> Sequence of events:-
+> Thread-2(Comm: ln) 	       Thread-1(Comm: cat)
+> 
+> 	                dentry = __d_lookup() //nonRCU
+> 
+> __d_set_and_inode_type() (Out-of-order execution)
+>      flags = READ_ONCE(dentry->d_flags);
+>      flags &= ~(DCACHE_ENTRY_TYPE | DCACHE_FALLTHRU);
+>      flags |= type_flags;
+>      WRITE_ONCE(dentry->d_flags, flags);
+> 
+> 	                if (unlikely(d_is_negative()) // fails
+> 	                       {}
+> 	                // since d_flags is already updated in
+> 	                // Thread-2 in parallel but inode
+> 	                // not yet set.
+> 	                // d_is_negative returns false
+> 
+> 	                *inode = d_backing_inode(path->dentry);
+> 	                // means inode is still NULL
+> 
+>      dentry->d_inode = inode;
+> 
+> 	                trailing_symlink()
+> 	                    may_follow_link()
+> 	                        inode = nd->link_inode;
+> 	                        // nd->link_inode = NULL
+> 	                        //Then it crashes while
+> 	                        //doing inode->i_uid
+> 
+> Reported-by: Guang Yuan Wu <wugyuan@cn.ibm.com>
+> Tested-by: Guang Yuan Wu <wugyuan@cn.ibm.com>
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> ---
+>   fs/namei.c | 16 +++++++++++++++-
+>   1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 671c3c1a3425..7c5337cddebd 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -1617,7 +1617,21 @@ static int lookup_fast(struct nameidata *nd,
+>   		dput(dentry);
+>   		return status;
+>   	}
+> -	if (unlikely(d_is_negative(dentry))) {
+> +
+> +	/*
+> +	 * Caution: d_is_negative() can race with
+> +	 * __d_set_inode_and_type().
+> +	 * For e.g. in use cases where Thread-1 is creating
+> +	 * symlink (doing d_instantiate_new()) & Thread-2 is doing
+> +	 * cat of that symlink and falling here (via Ref-walk) while
+> +	 * doing lookup_fast (one such case is when ->permission
+> +	 * returns -ECHILD).
+> +	 * Now if __d_set_inode_and_type() does out-of-order execution
+> +	 * i.e. it first sets the dentry->d_flags & then dentry->inode
+> +	 * then it can result into inode being NULL, causing panic later.
+> +	 * Hence directly check if inode is NULL here.
+> +	 */
+> +	if (unlikely(d_really_is_negative(dentry))) {
+>   		dput(dentry);
+>   		return -ENOENT;
+>   	}
+> 
 
