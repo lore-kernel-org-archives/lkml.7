@@ -2,129 +2,116 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A50BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68956C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F9421848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3790221925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571144872;
+	bh=+whaQ+MwPGJtmr2IHZWtOifmLos+iQ1uyyBF1Jo9wo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f9JQG9y7nR7DTpXoTfonxjwRKAFH8zIgyEEwOfUr9zUa76hoC1HqGQDuWtmZjQHuc
+	 ze6CsVLPOhhhLmwUPVurArbgkb3Azz4tHSQAoNtHqkEWdtm81puoCHtMiZ46YkBJL7
+	 Dxxn/IsfKcCGHTJnOPp90Ds03+olXvxw1vOl38qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730641AbfJONHP (ORCPT
+        id S1730697AbfJONHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:07:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35404 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727076AbfJONHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:07:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D5344B300;
-        Tue, 15 Oct 2019 13:07:12 +0000 (UTC)
-Message-ID: <d57feba7e3956136a5d77cebbbf2807c2950d6df.camel@suse.de>
-Subject: Re: [PATCH RFC 4/5] dma/direct: check for overflows in ARM's
- dma_capable()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     mbrugger@suse.com, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        iommu@lists.linux-foundation.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Date:   Tue, 15 Oct 2019 15:07:08 +0200
-In-Reply-To: <20191015102346.GA9071@infradead.org>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
-         <20191014183108.24804-5-nsaenzjulienne@suse.de>
-         <20191015102346.GA9071@infradead.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-QilbOjg9rL1IFStaY+t4"
-User-Agent: Evolution 3.32.4 
+        Tue, 15 Oct 2019 09:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbfJONHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:07:50 -0400
+Received: from linux-8ccs (ip5f5adbbb.dynamic.kabel-deutschland.de [95.90.219.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC2321848;
+        Tue, 15 Oct 2019 13:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571144870;
+        bh=+whaQ+MwPGJtmr2IHZWtOifmLos+iQ1uyyBF1Jo9wo4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iSWhwaqhbADtsPJv5sDQ8fvqZR5CgmAUDS8fHrqYqWm5BO6wc42vCi2mpotfTsa6N
+         u2yuYWnNou+6OsOBOyuv7f5aCNfCAHrcMFI6MUyXYmJOY5BudHglwFphd09hR5DJf7
+         hFstr53SfQarJVb1bfu8zvbQ36Rp2QUdRuWnayvg=
+Date:   Tue, 15 Oct 2019 15:07:40 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191015130739.GA23565@linux-8ccs>
+References: <20191007081716.07616230.8@infradead.org>
+ <20191007081945.10951536.8@infradead.org>
+ <20191008104335.6fcd78c9@gandalf.local.home>
+ <20191009224135.2dcf7767@oasis.local.home>
+ <20191010092054.GR2311@hirez.programming.kicks-ass.net>
+ <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net>
+ <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Peter Zijlstra [11/10/19 14:59 +0200]:
+>On Thu, Oct 10, 2019 at 07:28:19PM +0200, Peter Zijlstra wrote:
+>
+>> Really the best solution is to move all the poking into
+>> ftrace_module_init(), before we mark it RO+X. That's what I'm going to
+>> do for jump_label and static_call as well, I just need to add that extra
+>> notifier callback.
+>
+>OK, so I started writing that patch... or rather, I wrote the patch and
+>started on the Changelog when I ran into trouble describing why we need
+>it.
+>
+>That is, I'm struggling to explain why we cannot flip
+>prepare_coming_module() and complete_formation().
+>
+>Yes, it breaks ftrace, but I'm thinking that is all it breaks. So let me
+>see if we can cure that.
 
---=-QilbOjg9rL1IFStaY+t4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I'm having trouble visualizing what changes you're planning on making.
+I get that you want to squash ftrace_module_enable() into
+ftrace_module_init(), before module_enable_ro(). I'm fine with that as
+long as the races Steven described are addressed for affected arches.
+And livepatch should be OK as long as klp_module_coming() is always
+called *after* ftrace_module_enable(). But are you moving
+klp_module_coming() before the module_enable_* calls as well?  And if
+so, why?
 
-On Tue, 2019-10-15 at 03:23 -0700, Christoph Hellwig wrote:
-> On Mon, Oct 14, 2019 at 08:31:06PM +0200, Nicolas Saenz Julienne wrote:
-> > The Raspberry Pi 4 has a 1GB ZONE_DMA area starting at address
-> > 0x00000000 and a mapping between physical and DMA memory offset by
-> > 0xc0000000.  It transpires that, on non LPAE systems, any attempt to
-> > translate physical addresses outside of ZONE_DMA will result in an
-> > overflow. The resulting DMA addresses will not be detected by arm's
-> > dma_capable() as they still fit in the device's DMA mask.
-> >=20
-> > Fix this by failing to validate a DMA address smaller than the lowest
-> > possible DMA address.
->=20
-> I think the main problem here is that arm doesn't respect the
-> bus_dma_mask.  If you replace the arm version of dma_capable with
-> the generic one, does that fi the issue for you as well?
+>The fact that it is executable; also the fact that you do it right after
+>we mark it ro. Flipping the memory protections back and forth is just
+>really poor everything.
+>
+>Once this ftrace thing is sorted, we'll change x86 to _refuse_ to make
+>executable (kernel) memory writable.
 
-Yeah, that was my fist thought too, but it doesn't help.
-
-So with RPi4's DMA mapping:
-
-soc {
-	dma-ranges =3D <0xc0000000  0x0 0x00000000  0x3c000000>;
-	[...]
-};
-
-You'll get a 32bit bus dma map (log2i(0xc0000000 + 0x3c000000) + 1 =3D 32).
-
-Trouble is, taking into account arm's multi_v7_defconfig uses 32bit address=
-es,
-most phys_to_dma() translations are likely to overflow. For example phys
-0x60000000 will be translated to DMA 0x20000000, which is no good.
-
-No mask is going to catch this, and both dma_capable() implementations will
-fail.
-
-> We need to untangle the various macros arm uses for the direct mapping
-> and eventually we should be able to use the linux/dma-direct.h helpers
-> directly.  Here is a branch with some simple preps I had.  Freshly
-> rebased, not actually tested:
->=20
->=20
-http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/arm-generic=
--dma-preps
-
-Noted, looks good to me.
-
-Actually, an alternative to this patch would be to kill all custom
-dma_capable() implementations, which are mostly redundant, and add these ex=
-tra
-checks conditional to the DMA address size in the generic version. I'll try=
- to
-respin this if I manage to understand what's going on with x86/sta211-fixup=
-.c.
-
-
---=-QilbOjg9rL1IFStaY+t4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2lxHwACgkQlfZmHno8
-x/5Qcgf9EYUZQRbilIK5s8eKqWcMhlpK7Df2P6SPXLkx+Vmkt2iYDyTfPLwB0Avl
-I9aSjwDP/vRSkR7DgiKGQkh2PtdHWFDUoCerdQnJb69v+DiObndKo5Zd0XCtbYx+
-+gPtyf43YhEGosmXi6aTI7pEh7HBYqu8ORrFJrdWaff3K5LJ8p4Phkkckup0NjHH
-Ddq96VamoZdnKmA171GZ6HNgUdYn8cOjUBA5DLOWK5LAX2rAd1g6bNCgs/GcUL4l
-sjoBu3utxJ9O9oe5reVU2XYfmX65xZqHqd1KkwN51Qo/w483+Hn0eSEclTVqT3hm
-8tkxAlJWOPwPdLB8706dF6mwsGp2Lw==
-=CUJl
------END PGP SIGNATURE-----
-
---=-QilbOjg9rL1IFStaY+t4--
-
+Not sure if relevant, but just thought I'd clarify: IIRC,
+klp_module_coming() is not poking the coming module, but it calls
+module_enable_ro() on itself (the livepatch module) so it can apply
+relocations and such on the new code, which lives inside the livepatch
+module, and it needs to possibly do this numerous times over the
+lifetime of the patch module for any coming module it is responsible
+for patching (i.e., call module_enable_ro() on the patch module, not
+necessarily the coming module). So I am not be sure why
+klp_module_coming() should be moved before complete_formation(). I
+hope I'm remembering the details correctly, livepatch folks feel free
+to chime in if I'm incorrect here.
