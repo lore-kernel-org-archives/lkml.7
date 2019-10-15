@@ -2,90 +2,118 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE4DECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1140FECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C066320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50F820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 20:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571171110;
+	bh=cNITrL0R424JvKCKW2ZKPmfFau8DO5shbDyf+rDzsYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KJMUM5vfOgLyCuEW8dlWc6v7yMRa4HMj1Xj52158Z6WoQtak4svHeoE6p/JUXqN39
+	 ovJL0wL5Nux7rmzh990Co4spz08SNm6fmya/oE5cLrL47lK6BZk1OKXwcy5hVIJytP
+	 ir335E0yqnXXdNN1qP6c3rPuPyLS3pYEKgmsf41w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfJOUXZ convert rfc822-to-8bit (ORCPT
+        id S1733223AbfJOUZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 16:23:25 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39422 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbfJOUXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 16:23:24 -0400
-Received: from remote.shanghaihotelholland.com ([46.44.148.63] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iKTLm-00085H-4l; Tue, 15 Oct 2019 22:23:22 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v7 0/6] tpm: Add driver for cr50
-Date:   Tue, 15 Oct 2019 22:23:15 +0200
-Message-ID: <11998737.dOvWaeisEJ@phil>
-In-Reply-To: <20191014195607.GK15552@linux.intel.com>
-References: <20190920183240.181420-1-swboyd@chromium.org> <4042311.vcUrecXYXX@diego> <20191014195607.GK15552@linux.intel.com>
+        Tue, 15 Oct 2019 16:25:09 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36682 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfJOUZJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 16:25:09 -0400
+Received: by mail-pl1-f196.google.com with SMTP id j11so10130712plk.3;
+        Tue, 15 Oct 2019 13:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6sUvpr0WehID8pP80ZhvLsnSYvQFqygK8r5rIP0jlhs=;
+        b=lFw2H/d04tmnSUjS0uTmjPBEjbFYOOyTyG77Xpn90x3mUDRTuX2S1ZORxoelbYIBEV
+         LxjXWKMg2mT1TOerkntyXB/2ZFZHIs8BFe5kI+FprTdedjNGUj+2n7uylGLqklxo2V/U
+         E5003/iZC5RxGhMo7oMubgy1yOIdZKNg0qb9XfcJB3hVcmMs8VICx7Ma9/mfDCTH14FL
+         GuAdgFvyEazpfFYeMFcL75VcLxUMM/gxzL+pYE8rk1awzAP6j2VZIcDrcDgVbmKy5bOS
+         L+zbTMbAPHo0cZ8DYmyZ7mgoLOHjK5vp2fwoOY95Rh1o+SCRFRc4Wo0JkvgzgqkHn2Zg
+         02uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6sUvpr0WehID8pP80ZhvLsnSYvQFqygK8r5rIP0jlhs=;
+        b=F4v3+MHVNPtilm1RWn0AYiBCi0gbpYlmNW8xexMVY0AGBqSPqnr2rh3+1ne4gf01YR
+         ZllaUK0VxAM9MDhO/7bNoQWyCAMWopXfoNpI+jnNmZK1Q3suMvv5WRvMPSUgPhrOfDvF
+         MBrud8k5mDvESA4GCjItPvZRhwZjrk/3aUpkaNNAPYmCs1/98XOFJBI8g4zvEJ2CyF4c
+         lGbqxCwz67s/b4GKKtIL/7JwGROONpmIhdyglMhGAMnkqpJ8uWrNfcfw27voRM2hWDIb
+         Xg6/2LDFW7Wl1bYSEj0l8Nl+pey2o33kjHRG1o2D93TZty23pznWyCsLqCzC6xLJ9aiy
+         3Vmw==
+X-Gm-Message-State: APjAAAXdiH15D/2zoaC9DjfcTMNfgGdu5nGl3fTsa5he+sWpq1jTv3/i
+        DEtkB2/LZp0/ZezAA2/HBIg=
+X-Google-Smtp-Source: APXvYqwtfk//M4xoUiQ5GTOjTRH/d8dzRFbzMN73Qrnf7vvxbxpNaMTZrjExHyKgYQcjHbM4zH32sg==
+X-Received: by 2002:a17:902:b70f:: with SMTP id d15mr37719790pls.210.1571171108389;
+        Tue, 15 Oct 2019 13:25:08 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id u65sm18851477pgb.36.2019.10.15.13.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 13:25:07 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 13:25:05 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Chen Wandun <chenwandun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
+        axboe@kernel.dk, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] zram: fix race between backing_dev_show and
+ backing_dev_store
+Message-ID: <20191015202505.GA246210@google.com>
+References: <1571046839-16814-1-git-send-email-chenwandun@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571046839-16814-1-git-send-email-chenwandun@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Am Montag, 14. Oktober 2019, 21:56:30 CEST schrieb Jarkko Sakkinen:
-> On Fri, Oct 11, 2019 at 09:50:27AM +0200, Heiko Stübner wrote:
-> > Am Montag, 7. Oktober 2019, 00:39:00 CEST schrieb Jarkko Sakkinen:
-> > > On Fri, Sep 20, 2019 at 11:32:34AM -0700, Stephen Boyd wrote:
-> > > > This patch series adds support for the H1 secure microcontroller
-> > > > running cr50 firmware found on various recent Chromebooks. This driver
-> > > > is necessary to boot into a ChromeOS userspace environment. It
-> > > > implements support for several functions, including TPM-like
-> > > > functionality over a SPI interface.
-> > > > 
-> > > > The last time this was series sent looks to be [1]. I've looked over the
-> > > > patches and review comments and tried to address any feedback that
-> > > > Andrey didn't address (really minor things like newlines). I've reworked
-> > > > the patches from the last version to layer on top of the existing TPM
-> > > > TIS SPI implementation in tpm_tis_spi.c. Hopefully this is more
-> > > > palatable than combining the two drivers together into one file.
-> > > > 
-> > > > Please review so we can get the approach to supporting this device
-> > > > sorted out.
-> > > > 
-> > > > [1] https://lkml.kernel.org/r/1469757314-116169-1-git-send-email-apronin@chromium.org
-> > 
-> > [...]
-> > 
-> > > OK, so, I put these to my master in hopes to get testing exposure.
-> > > I think the changes are in great shape now. Thank you.
-> > 
-> > on a rk3399-gru-bob it works nicely for me, so
-> > Tested-by: Heiko Stuebner <heiko@sntech.de>
+On Mon, Oct 14, 2019 at 05:53:59PM +0800, Chen Wandun wrote:
+> From: Chenwandun <chenwandun@huawei.com>
 > 
-> Thank you! I updated my tree with your tag. Mind if I also add
-> reviewed-by's?
+> CPU0:				       CPU1:
+> backing_dev_show		       backing_dev_store
+>     ......				   ......
+>     file = zram->backing_dev;
+>     down_read(&zram->init_lock);	   down_read(&zram->init_init_lock)
+>     file_path(file, ...);		   zram->backing_dev = backing_dev;
+>     up_read(&zram->init_lock);		   up_read(&zram->init_lock);
+> 
+> get the value of zram->backing_dev too early in backing_dev_show,
+> that will result the value may be NULL at the begining, and not
+> NULL later.
+> 
+> backtrace:
+> [<ffffff8570e0f3ec>] d_path+0xcc/0x174
+> [<ffffff8570decd90>] file_path+0x10/0x18
+> [<ffffff85712f7630>] backing_dev_show+0x40/0xb4
+> [<ffffff85712c776c>] dev_attr_show+0x20/0x54
+> [<ffffff8570e835e4>] sysfs_kf_seq_show+0x9c/0x10c
+> [<ffffff8570e82b98>] kernfs_seq_show+0x28/0x30
+> [<ffffff8570e1c580>] seq_read+0x184/0x488
+> [<ffffff8570e81ec4>] kernfs_fop_read+0x5c/0x1a4
+> [<ffffff8570dee0fc>] __vfs_read+0x44/0x128
+> [<ffffff8570dee310>] vfs_read+0xa0/0x138
+> [<ffffff8570dee860>] SyS_read+0x54/0xb4
+> 
+> Signed-off-by: Chenwandun <chenwandun@huawei.com>
 
-I think I did spent enough time with the patches to warrant that, so
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+It should be stable material.
+Cc: <stable@vger.kernel.org> [4.14+]
+Acked-by: Minchan Kim <minchan@kernel.org>
 
-Heiko
-
-
+Thanks!
