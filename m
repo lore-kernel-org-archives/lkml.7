@@ -7,97 +7,98 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31E3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B786C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F6F2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7015C2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YOT0SMP8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pye2eFOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfJOG7k (ORCPT
+        id S1727727AbfJOG7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 02:59:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41901 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfJOG7k (ORCPT
+        Tue, 15 Oct 2019 02:59:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40659 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfJOG7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 02:59:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so11531862pga.8
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 23:59:40 -0700 (PDT)
+        Tue, 15 Oct 2019 02:59:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so11833589pfb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 23:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=WEvY8mI7wziVLeSGskg+VNlvZA9UmNy6YweIvzpqB9w=;
-        b=YOT0SMP8zAfJji7EtL9vvZypd6z4pxouSQAnJufkKRSOMQ4ymp7uwYdjKZcCXY7Zr/
-         vlHfrHfFTdZDS7kxk9/xC++gQjcLxWTpFf1Emh86cDYBMu9X0nyxBsOvX6zpeyDGFXg8
-         sHb+qmocNkSYNxf9LblfFZD/XBXqzbvc/zUvVX/hYJjquDKKTQ0o0sY4IgVjCL2LiSi8
-         qMPvK2TNwjKMR41GCEAWL3IiVLt/FAhHUOeXJouxPtHSvK/9eLS8eODPM1bEWkWRDHmr
-         1L4HLAOGKmMoAC1as61Tls400S2SuDX1FGS1HRWvfX7H83dewtHM792iH76FBZw+XJya
-         I/DQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=d6TuX5wbjT0cVL+CWwuFac6eFY+2DAq9db0NWeLvHfw=;
+        b=Pye2eFODufy4FTc3Xuhtdnel9539e3atHEkUYgW5W90Gt+TPrWlJaLHjhn8B8ywWxY
+         JoudPnOzfKiGz6r/GXUjxsc4y9rmrC8nFGkyt8fSr7TSs1mm4WMoH8rNZ0mldDmfBtk2
+         U1SNxtyH+z30OFykMII7vnC5xK8AngQM6Dtw8G5BPgn45gK2tBi9zBLJH1Io0eoWDHZD
+         qy8D4/WWO0Jwnx529wxnERHIqvwFUr21JjxqduVRUwPGrduJGGtSYPoXVgxyF0mmB2Ce
+         fAw+5B5ywpYV68NUjSKvUhv3Gtx0ZCheLTTiffLXcmdB6dzRX5oaNEvD26RWP41nZxAE
+         q2RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WEvY8mI7wziVLeSGskg+VNlvZA9UmNy6YweIvzpqB9w=;
-        b=cO7tY9+tSgDN1KXanm2AfaW+bHjEwqf5dDSCsQIVQbInaxk9CI1SyP0QFjkIPSr04M
-         zscp7YKmAuAkDCLLXeBwIu25EnZOgArpLEsdja88NSMgCPzpOwxbzo4l82kxSajVgkHz
-         FmgIrr/mMQdP2n/XNTtQQxVVfZwgXdvN6jKK5P5XLzYzL4MgbLMPoKmVvxpC7v1fXfzH
-         aJS330MYcnrfITsCWZtYAD5rYZIDqJSXXDXebDTzyNBM2qDQkGBx1r/gkpD+HGAjWREF
-         zW54NlueQOr3R3GvR65b42Ed01c6NgoGYb1B9HFoeHiPOQgKg3GY8NuVWdiCf3cpFaTx
-         M7ww==
-X-Gm-Message-State: APjAAAUxjNwSbXOGJF7HZmxdolfXf54j5g8KneqUXUup+tt6nazOBNHN
-        71mgcvqdvhSufPsVzKkpQfm8aJ7s1TU=
-X-Google-Smtp-Source: APXvYqyVgzodVpkQoZfWKsHR6n19NZcAwX3aK1+mxFq1JsBD/k0LL87kiVMZ0tTHshCDkxYoswk+bw==
-X-Received: by 2002:aa7:9e88:: with SMTP id p8mr38091616pfq.10.1571122779560;
-        Mon, 14 Oct 2019 23:59:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=d6TuX5wbjT0cVL+CWwuFac6eFY+2DAq9db0NWeLvHfw=;
+        b=QBicPBtUbumNCmlcwIUmlq9GmY8BMsPBCXhyWTKeDdWf1It8H0DFv2rHQQhTs1aRs2
+         M1S08GVI6YOw0e5wqW0THiZqUrQVYHh0bUWIpRcM5TGeItL9rpONJXA7oKnwrSkMn9Q/
+         eJbPyLNtzo4VsOB7P3AdShnsm7aoiCuNOQs2ee2FwOue2c4Ifzv0Ld/dlIl0oGmWKkjr
+         3mJnul5dJVT8odTXRL8WG3n4ENAuCnuUATfLuGtFl4q1OePvdGDSsCKmUm4V6fREOXbp
+         V22aLqbN18q3DT8L6vxDfVyB2GLdTM8/pbFCsljomDMVmQ+rJnJ/8UKU+W/9FF0VQjMk
+         eH6Q==
+X-Gm-Message-State: APjAAAXYRjKnKgswNd6tflUnfriOdPzVsUyjimPw2JftxgCKg96n9LZk
+        NxZCtLmohYb0T70INkbT0EpTgg==
+X-Google-Smtp-Source: APXvYqy6bs2VA4ZtJFgvxKRN0L+Ft8psiktp6GA6jTulW2YhCe3WNJiVPW4r4+fnGDmoR0/4lfTFLw==
+X-Received: by 2002:a62:6247:: with SMTP id w68mr37823007pfb.11.1571122782444;
+        Mon, 14 Oct 2019 23:59:42 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id i16sm17952646pfa.184.2019.10.14.23.59.38
+        by smtp.gmail.com with ESMTPSA id i16sm17952646pfa.184.2019.10.14.23.59.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 23:59:38 -0700 (PDT)
+        Mon, 14 Oct 2019 23:59:40 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19][PATCH 1/4] ARM: dts: am4372: Set memory bandwidth limit for DISPC
-Date:   Tue, 15 Oct 2019 00:59:34 -0600
-Message-Id: <20191015065937.23169-1-mathieu.poirier@linaro.org>
+Subject: [stable 4.19][PATCH 3/4] arm64: dts: ti: k3-am65-main: Fix gic-its node unit-address
+Date:   Tue, 15 Oct 2019 00:59:36 -0600
+Message-Id: <20191015065937.23169-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191015065937.23169-1-mathieu.poirier@linaro.org>
+References: <20191015065937.23169-1-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Suman Anna <s-anna@ti.com>
 
-commit f90ec6cdf674248dcad85bf9af6e064bf472b841 upstream
+commit 389ce1a7c5279ebfb682fab220b4021b2bd49c8b upstream
 
-Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
-avoid underflow errors due to the bandwidth needs of higher resolutions.
+The gic-its node unit-address has an additional zero compared
+to the actual reg value. Fix it.
 
-am43xx can not provide enough bandwidth to DISPC to correctly handle
-'high' resolutions.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: ea47eed33a3f ("arm64: dts: ti: Add Support for AM654 SoC")
+Reported-by: Robert Tivy <rtivy@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 Cc: stable <stable@vger.kernel.org> # 4.19
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- arch/arm/boot/dts/am4372.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index d4b7c59eec68..cf1e4f747242 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -1142,6 +1142,8 @@
- 				ti,hwmods = "dss_dispc";
- 				clocks = <&disp_clk>;
- 				clock-names = "fck";
-+
-+				max-memory-bandwidth = <230000000>;
- 			};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 2409344df4fa..e23c5762355d 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -21,7 +21,7 @@
+ 		 */
+ 		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
  
- 			rfbi: rfbi@4832a800 {
+-		gic_its: gic-its@18200000 {
++		gic_its: gic-its@1820000 {
+ 			compatible = "arm,gic-v3-its";
+ 			reg = <0x01820000 0x10000>;
+ 			msi-controller;
 -- 
 2.17.1
 
