@@ -2,129 +2,85 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF96C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4282C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12FBD20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9982620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571168469;
+	bh=z1P4hhDL4+1VE6WqfcIYQq0WFMtwtAHaoatwohOpyaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d8s5Cwe0g87o+zAC0r1qDH9UbL/r2cKI3zaiXvypXNEptv0CRF8NTKmW3wJ1DVuhT
+	 tmjsUU1jFFw70aH7JeaX9OD9ql6Uhp5ZbMKo58nDyRZijPN3d+7ON6upP+cwDp0+p+
+	 AdDLlDsi8fwfNb9FRsOHrWzWQodpw4h2gBNb/hww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbfJOTkQ (ORCPT
+        id S1732462AbfJOTlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:40:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39076 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727856AbfJOTkQ (ORCPT
+        Tue, 15 Oct 2019 15:41:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42186 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbfJOTlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:40:16 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iKSg0-0002Pi-T2; Tue, 15 Oct 2019 19:40:12 +0000
-Date:   Tue, 15 Oct 2019 20:40:12 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
- unsafe_put_user()
-Message-ID: <20191015194012.GO26530@ZenIV.linux.org.uk>
-References: <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
- <20191013195949.GM26530@ZenIV.linux.org.uk>
- <20191015180846.GA31707@ZenIV.linux.org.uk>
- <CAHk-=wjyiiYhAbzVDUW1F3j9CAcu8+ugSvGYwUivdBfKoeU6yA@mail.gmail.com>
+        Tue, 15 Oct 2019 15:41:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i185so17860309oif.9;
+        Tue, 15 Oct 2019 12:41:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dYr5YHDW3PpOfxrfTITzHIyYd4WqoilUYd2hAnALyj4=;
+        b=LSZqEUWCFmaepVOFhBNPPE6MG7nAb5rAcPPSF3ZfroRIovkq2FfdRFq7OQW2/9UtaB
+         HpytoOT7x1ts79e779/Vqsp/TUz9XeRwCzl/B+iymSSuAjyK+tooID1+XMebEuiTEsRN
+         qGKaunqcBaTRi0hCWpdzz/r7nMO0X60EfwLIua5WnpECjIi4Pt/rbdwktFg85EchJBVb
+         OsthpsT8Zqt5uKwZ1c1q94r/7aSc7c20Y3nVoNj/q+5tGjJVp3QA5549gPgg34bFxZH5
+         6Lk2Ux3gZ5O/w7psHUf3zJtOwufBQyz/mCTLVkFS/5g6GtoYbGLVOpslLgFUIkaGqLju
+         SSqg==
+X-Gm-Message-State: APjAAAXQ5rzuYPeIS9Gr3P/6mWW/oJQapyCOb4ZUEIx9oeuRkeeBmsNb
+        21hNSBAZuR1tJcarcUOjo3rhiU8=
+X-Google-Smtp-Source: APXvYqx89oy1Ch87hKjVGrKdExTcjDGJBEM33RGUrBGSXq7zjricuAxlTAS2si4uuKG9LJragplpVA==
+X-Received: by 2002:a05:6808:689:: with SMTP id k9mr220151oig.58.1571168466497;
+        Tue, 15 Oct 2019 12:41:06 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t17sm6633499otk.14.2019.10.15.12.41.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 12:41:05 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 14:41:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: unittest: fix memory leak in unittest_data_add
+Message-ID: <20191015194105.GA24758@bogus>
+References: <20191004185847.14074-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjyiiYhAbzVDUW1F3j9CAcu8+ugSvGYwUivdBfKoeU6yA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191004185847.14074-1-navid.emamdoost@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 12:00:34PM -0700, Linus Torvalds wrote:
-> On Tue, Oct 15, 2019 at 11:08 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > Another question: right now we have
-> >         if (!access_ok(uaddr, sizeof(u32)))
-> >                 return -EFAULT;
-> >
-> >         ret = arch_futex_atomic_op_inuser(op, oparg, &oldval, uaddr);
-> >         if (ret)
-> >                 return ret;
-> > in kernel/futex.c.  Would there be any objections to moving access_ok()
-> > inside the instances and moving pagefault_disable()/pagefault_enable() outside?
+On Fri,  4 Oct 2019 13:58:43 -0500, Navid Emamdoost wrote:
+> In unittest_data_add, a copy buffer is created via kmemdup. This buffer
+> is leaked if of_fdt_unflatten_tree fails. The release for the
+> unittest_data buffer is added.
 > 
-> I think we should remove all the "atomic" versions, and just make the
-> rule be that if you want atomic, you surround it with
-> pagefault_disable()/pagefault_enable().
+> Fixes: b951f9dc7f25 ("Enabling OF selftest to run without machine's devicetree")
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/of/unittest.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Umm...  I thought about that, but ended up with "it documents the intent" -
-pagefault_disable() might be implicit (e.g. done by kmap_atomic()) or
-several levels up the call chain.  Not sure.
+Applied, thanks.
 
-> That covers not just the futex ops (where "atomic" is actually
-> somewhat ambiguous - the ops themselves are atomic too, so the naming
-> might stay, although arguably the "futex" part makes that pointless
-> too), but also copy_to_user_inatomic() and the powerpc version of
-> __get_user_inatomic().
-
-Eh?  copy_to_user_inatomic() doesn't exist; __copy_to_user_inatomic()
-does, but...
-
-arch/mips/kernel/unaligned.c:1307:                      res = __copy_to_user_inatomic(addr, fpr, sizeof(*fpr));
-drivers/gpu/drm/i915/i915_gem.c:313:    unwritten = __copy_to_user_inatomic(user_data,
-lib/test_kasan.c:510:   unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-mm/maccess.c:98:        ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
-
-these are all callers it has left anywhere and I'm certainly going to kill it.
-Now, __copy_from_user_inatomic() has a lot more callers left...  Frankly,
-the messier part of API is the nocache side of things.  Consider e.g. this:
-/* platform specific: cacheless copy */
-static void cacheless_memcpy(void *dst, void *src, size_t n)
-{
-        /* 
-         * Use the only available X64 cacheless copy.  Add a __user cast
-         * to quiet sparse.  The src agument is already in the kernel so
-         * there are no security issues.  The extra fault recovery machinery
-         * is not invoked.
-         */
-        __copy_user_nocache(dst, (void __user *)src, n, 0);
-}
-or this
-static void ntb_memcpy_tx(struct ntb_queue_entry *entry, void __iomem *offset)
-{
-#ifdef ARCH_HAS_NOCACHE_UACCESS
-        /*
-         * Using non-temporal mov to improve performance on non-cached
-         * writes, even though we aren't actually copying from user space.
-         */
-        __copy_from_user_inatomic_nocache(offset, entry->buf, entry->len);
-#else   
-        memcpy_toio(offset, entry->buf, entry->len);
-#endif
-
-        /* Ensure that the data is fully copied out before setting the flags */
-        wmb();
-
-        ntb_tx_copy_callback(entry, NULL);
-}
-"user" part is bollocks in both cases; moreover, I really wonder about that
-ifdef in ntb one - ARCH_HAS_NOCACHE_UACCESS is x86-only *at* *the* *moment*
-and it just so happens that ..._toio() doesn't require anything special on
-x86.  Have e.g. arm grow nocache stuff and the things will suddenly break,
-won't they?
+Rob
