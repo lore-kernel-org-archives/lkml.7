@@ -2,434 +2,159 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720BDECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89D7ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B38A20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B3F20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="k/h4bIm4"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="R6epf84E";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fcOlSbxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388703AbfJORZb (ORCPT
+        id S2388720AbfJORZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:25:31 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57326 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfJORZb (ORCPT
+        Tue, 15 Oct 2019 13:25:51 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:10272 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727242AbfJORZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:25:31 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 14D20324;
-        Tue, 15 Oct 2019 19:25:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1571160327;
-        bh=BI8OaXXBknVbUuVSFQ+3+rQhs0xihyr00Mcv1/eLEFo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/h4bIm4YKHnXi2rWm65TEAhHnVipNyFnTfqhoPtFXuJavMZPZn1q6Duan8Hrfyih
-         I/hoehoPbjSb2buKtIi8EI9P9JWz+FaaDK4EJitYOuEluD6Cs0mxGasmnZqh4mLrRR
-         IzninsOII5qMrvPTS+wokvGcL0bGL5djT7HMcoIs=
-Date:   Tue, 15 Oct 2019 20:25:24 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/8] drm: rcar-du: Add support for CMM
-Message-ID: <20191015172524.GM4875@pendragon.ideasonboard.com>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20191015104621.62514-4-jacopo+renesas@jmondi.org>
+        Tue, 15 Oct 2019 13:25:50 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9FHNp8s011838;
+        Tue, 15 Oct 2019 10:25:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=LKG6iNPY+gQ0bzHcnuka56MjystcRZbrHfaLuqpZDPc=;
+ b=R6epf84EpJ1YV2RNqPsL6N+596olhSBQoom3o9VdkR6LmBYlNlHWp3ccJ1OkMd4XwDhv
+ c7PpAf7inHdLXBv+gbq+VJCt6KANknKTLl+w4Qlpv2yzkGFyX35ZfHYr9k4Dqq890YkO
+ AjnKncGlpFxAVijAw9Lv7LPqy1OY6jWXYy4= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vky52k2ba-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 10:25:41 -0700
+Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 15 Oct 2019 10:25:41 -0700
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 15 Oct 2019 10:25:40 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 15 Oct 2019 10:25:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XgYzK2GL3EnbW86wyUSNXAk619WDaJBeKMEcsC1iMWZ/q+MAWpXTxipxMxx7BryrkInrio06/kWvcdj0678sqYBQMfUxcaMLAD4HDEaWLLqC0yjrSnncHLazC1lRYXfZnzdq3NatNrr2r+ftjTuq8NxanIAhlJWIoJJCE2tS7AS9q570y4kerETQd5CVSgsEO8s0i7H08EOMo368ft5y+MWLmaQZkISq/dFEDC1b8kfGDrbXIo/KesB2+FB1kW+FA2HIV8vZXwDSuSjhDtoumluqrSBt75iyqDsZDn7T2VKkX/8mdZ1ncvjQTznHAdYJI7jrwdsZeaFNPA/WB5sYoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LKG6iNPY+gQ0bzHcnuka56MjystcRZbrHfaLuqpZDPc=;
+ b=gZ9PeHVEGq5Pk7C5zQND/+4jQeoBxqVYVzhYOVNQhFDzQ3L3OQZk3xnrJNiGW4qNE8zWvttY76/d9eawffy3KQyYdzTmTu98v1bAbCcwAW7j6L6hjCWKcOJ4H/ij1AT4axnN4HwyCd0QKLILPcYe3b2/RKSTRh1igXBENjzRNqNVicnk7Vr/iy5g1QmQKd+q8DUW9NyJbkHbgbsQfmLbZLv2yhlxUOVsBNI4DrrK+jGCwqb259GjR7hqQVRSesJil2uyGCmbwmWAcmeY9kz9A7Fkdc1eKDPyo4nHZOWbECiuOwOi9VM4aVgkDg6Y0etTDFue9BV1ozE8DLkDe99+vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LKG6iNPY+gQ0bzHcnuka56MjystcRZbrHfaLuqpZDPc=;
+ b=fcOlSbxhx6bhJ12ar9w6lvW5t/p6vtGWwI7QI1CPePUCZlbGk1BG6Mt6o8S9C7k8nIHeFtU2Aw9DJUl6pv39YE3yyKQOM+8kGDVSEr2yDtrJeqy4+5vgv6OYVw94oTxAmHzqxQdskyo1sz9BnRQh80gspBF50eZ7VdK4hQ2sLfA=
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
+ MWHPR15MB1694.namprd15.prod.outlook.com (10.175.141.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Tue, 15 Oct 2019 17:25:40 +0000
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::24c9:a1ce:eeeb:9246]) by MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::24c9:a1ce:eeeb:9246%10]) with mapi id 15.20.2347.023; Tue, 15 Oct
+ 2019 17:25:40 +0000
+From:   Tao Ren <taoren@fb.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "arun.parameswaran@broadcom.com" <arun.parameswaran@broadcom.com>,
+        "justinpopo6@gmail.com" <justinpopo6@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH net-next v8 2/3] net: phy: add support for clause 37
+ auto-negotiation
+Thread-Topic: [PATCH net-next v8 2/3] net: phy: add support for clause 37
+ auto-negotiation
+Thread-Index: AQHVZ1Bi3JE3p3zeEkCydFApWQwsCKcrP8IAgDB0zoCAAHZqgIAAAMUAgAAAvoA=
+Date:   Tue, 15 Oct 2019 17:25:40 +0000
+Message-ID: <b6cc685b-cb20-1b6f-21b9-ae0a330a28a1@fb.com>
+References: <20190909204906.2191290-1-taoren@fb.com>
+ <20190914141752.GC27922@lunn.ch>
+ <61e33434-c315-b80a-68bc-f0fe8f5029e7@fb.com>
+ <20191015.132013.246221433893437093.davem@davemloft.net>
+ <a940d709-65ec-32c7-7181-83da0872acd1@gmail.com>
+In-Reply-To: <a940d709-65ec-32c7-7181-83da0872acd1@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR04CA0166.namprd04.prod.outlook.com
+ (2603:10b6:104:4::20) To MWHPR15MB1216.namprd15.prod.outlook.com
+ (2603:10b6:320:22::17)
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:5adb]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87689452-40c1-4ed7-0a61-08d75194b32d
+x-ms-traffictypediagnostic: MWHPR15MB1694:
+x-microsoft-antispam-prvs: <MWHPR15MB169439F6C5F4CD08CC2D2FBBB2930@MWHPR15MB1694.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01917B1794
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(136003)(376002)(346002)(39860400002)(189003)(199004)(65806001)(446003)(5660300002)(6486002)(65956001)(186003)(31696002)(2616005)(46003)(11346002)(486006)(76176011)(99286004)(229853002)(52116002)(102836004)(53546011)(6506007)(386003)(476003)(6116002)(478600001)(6246003)(86362001)(8936002)(14454004)(7416002)(4326008)(31686004)(2906002)(7736002)(305945005)(25786009)(6512007)(8676002)(54906003)(110136005)(58126008)(4744005)(6436002)(66556008)(316002)(71200400001)(36756003)(71190400001)(256004)(66946007)(81166006)(81156014)(64756008)(66476007)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1694;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zouiC3fXeHQXSQVMBgGyTff9/VFgssiaFAC5DHtgYJGnGhDT5HSx9G7qB29/oRioL2Qrwr53DI2pNshWpSUWQRsLZ2cODBCLI8GV6l5+bP+qgkr33bR5RLCgvAVabTSaa1Ay3prRvMc4KnXN4uk9DuIn4ylCVG9Yv0WAeAJw6n5uCbaagZqAx6ILt5Ub4U+FRmkKA9j26Nz1laIGaNoi4ZlVJUuoWTNCWxJ4OU3E8cKs9u9Ae66nLYLWAGrtsaKCFWmEvPolnNLN82w9wcitbPEw1c/CfUUZP7bBNiYH9nkBUfFDuAs+pZPNOinmEtJtxR4hHUR7MtabmyuStP1TmGVxFSIvwZ2ZFOF/6eCtDTBGyjFVxq5GKd/ewMq71J0hA2c3tqr9iBlkSEwzwklnl6ssptGF9JjbEe1ldRPyGi0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <69BBC53629E78544986562A2266D69D9@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191015104621.62514-4-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87689452-40c1-4ed7-0a61-08d75194b32d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 17:25:40.0906
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 46ZSihSKIkN1b6FCTCplO5IstII7o/gS/jrI3cQPWA6J70BTEec1B7tcTzMSCsSk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1694
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-15_06:2019-10-15,2019-10-15 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 suspectscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910150149
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Tue, Oct 15, 2019 at 12:46:16PM +0200, Jacopo Mondi wrote:
-> Add a driver for the R-Car Display Unit Color Correction Module.
-> 
-> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
-> to perform image enhancement and color correction.
-> 
-> Add support for CMM through a driver that supports configuration of
-> the 1-dimensional LUT table. More advanced CMM features will be
-> implemented on top of this initial one.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
->  drivers/gpu/drm/rcar-du/Makefile   |   1 +
->  drivers/gpu/drm/rcar-du/rcar_cmm.c | 198 +++++++++++++++++++++++++++++
->  drivers/gpu/drm/rcar-du/rcar_cmm.h |  60 +++++++++
->  4 files changed, 266 insertions(+)
->  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
->  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> index 1529849e217e..539d232790d1 100644
-> --- a/drivers/gpu/drm/rcar-du/Kconfig
-> +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
->  	  Choose this option if you have an R-Car chipset.
->  	  If M is selected the module will be called rcar-du-drm.
->  
-> +config DRM_RCAR_CMM
-> +	bool "R-Car DU Color Management Module (CMM) Support"
-> +	depends on DRM && OF
-> +	depends on DRM_RCAR_DU
-> +	help
-> +	  Enable support for R-Car Color Management Module (CMM).
-> +
->  config DRM_RCAR_DW_HDMI
->  	tristate "R-Car DU Gen3 HDMI Encoder Support"
->  	depends on DRM && OF
-> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
-> index 6c2ed9c46467..4d1187ccc3e5 100644
-> --- a/drivers/gpu/drm/rcar-du/Makefile
-> +++ b/drivers/gpu/drm/rcar-du/Makefile
-> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
->  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
->  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
->  
-> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
->  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
->  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
->  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> new file mode 100644
-> index 000000000000..9675a8587dee
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> @@ -0,0 +1,198 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> + *
-> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#include <drm/drm_color_mgmt.h>
-> +
-> +#include "rcar_cmm.h"
-> +
-> +#define CM2_LUT_CTRL		0x0000
-> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
-> +#define CM2_LUT_TBL_BASE	0x0600
-> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
-> +
-> +struct rcar_cmm {
-> +	void __iomem *base;
-> +
-> +	/*
-> +	 * @lut:		1D-LUT status
-
-s/status/state/ ?
-
-> +	 * @lut.enabled:	1D-LUT enabled flag
-> +	 */
-> +	struct {
-> +		bool enabled;
-> +	} lut;
-> +};
-> +
-> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> +{
-> +	return ioread32(rcmm->base + reg);
-> +}
-> +
-> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
-> +{
-> +	iowrite32(data, rcmm->base + reg);
-> +}
-> +
-> +/*
-> + * rcar_cmm_lut_write() - Scale the DRM LUT table entries to hardware precision
-> + *			  and write to the CMM registers.
-
-Some of you brief descriptions end with a period, some don't. I don't
-have a preference, but could you please pick one option and use it
-consistently ?
-
-> + * @rcmm: Pointer to the CMM device
-> + * @drm_lut: Pointer to the DRM LUT table
-> + */
-> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm,
-> +			       const struct drm_color_lut *drm_lut)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
-> +		u32 entry =  drm_color_lut_extract(drm_lut[i].red, 8) << 16
-
-As reported by Kieran, s/=  /= /
-
-> +			  | drm_color_lut_extract(drm_lut[i].green, 8) << 8
-> +			  | drm_color_lut_extract(drm_lut[i].blue, 8);
-> +
-> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), entry);
-> +	}
-> +}
-> +
-> +/*
-> + * rcar_cmm_setup() - Configure the CMM unit.
-> + * @pdev: The platform device associated with the CMM instance
-> + * @config: The CMM unit configuration
-> + *
-> + * Configure the CMM unit with the given configuration. Currently enabling,
-> + * disabling and programming of the 1-D LUT unit is supported.
-> + */
-> +int rcar_cmm_setup(struct platform_device *pdev,
-> +		   const struct rcar_cmm_config *config)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	/* Disable LUT if requested. */
-> +	if (!config->lut.enable) {
-> +		if (rcmm->lut.enabled) {
-> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> +			rcmm->lut.enabled = false;
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
-> +	/* Enable LUT and program the new gamma table values. */
-> +	if (!rcmm->lut.enabled) {
-> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> +		rcmm->lut.enabled = true;
-> +	}
-> +
-> +	rcar_cmm_lut_write(rcmm, config->lut.table);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
-> +
-> +/*
-> + * rcar_cmm_enable() - Enable the CMM unit.
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Enable the CMM unit by enabling the parent clock.
-
-It would be better to explain how the function should be used rather
-than what it does internally.
-
- * Enable the CMM unit. When the output of the corresponding DU channel is
- * routed to the CMM unit, the unit shall be enabled before the DU channel is
- * started, and remain enabled until the channel is stopped. The CMM unit shall
- * the be disabled with rcar_cmm_disable().
- *
- * Calls to rcar_cmm_enable() and rcar_cmm_disable() are not reference-counted.
- * It is an error to attempt to enable an already enabled CMM unit, or to
- * attempt to disable a disabled unit.
-
-The relationship with rcar_cmm_setup() should also be documented.
-Looking at the code, I believe rcar_cmm_enable() has to be called first,
-otherwise the CMM MSTP will be disabled, and registers can't be
-accessed. I would document this as part of the rcar_cmm_setup()
-function.
-
-> + */
-> +int rcar_cmm_enable(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	ret = pm_runtime_get_sync(&pdev->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
-> +
-> +/*
-> + * rcar_cmm_disable() - Disable the CMM unit.
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Disable the CMM unit by stopping the parent clock.
-
-Same here, but you can simply reference rcar_cmm_enable().
-
- * Disable the CMM unit. See rcar_cmm_enable() for usage information.
- *
- * Disabling the CMM unit disable all the internal processing blocks. The CMM
- * state shall thus be restored with rcar_cmm_setup() when re-enabling the CMM
- * unit after the next rcar_cmm_enable() call.
-
-> + */
-> +void rcar_cmm_disable(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> +	rcmm->lut.enabled = false;
-> +
-> +	pm_runtime_put(&pdev->dev);
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
-> +
-> +/*
-> + * rcar_cmm_init() - Initialize the CMM
-> + * @pdev: The platform device associated with the CMM instance
-> + *
-> + * Return: 0 on success, -EPROBE_DEFER if the CMM is not available yet,
-> + *         -ENODEV if the DRM_RCAR_CMM config option is disabled
-> + */
-> +int rcar_cmm_init(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
-> +
-> +	if (!rcmm)
-> +		return -EPROBE_DEFER;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
-> +
-> +static int rcar_cmm_probe(struct platform_device *pdev)
-> +{
-> +	struct rcar_cmm *rcmm;
-> +
-> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
-> +	if (!rcmm)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, rcmm);
-> +
-> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(rcmm->base))
-> +		return PTR_ERR(rcmm->base);
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_cmm_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rcar_cmm_of_table[] = {
-> +	{ .compatible = "renesas,rcar-gen3-cmm", },
-> +	{ .compatible = "renesas,rcar-gen2-cmm", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
-> +
-> +static struct platform_driver rcar_cmm_platform_driver = {
-> +	.probe		= rcar_cmm_probe,
-> +	.remove		= rcar_cmm_remove,
-> +	.driver		= {
-> +		.name	= "rcar-cmm",
-> +		.of_match_table = rcar_cmm_of_table,
-> +	},
-> +};
-> +
-> +module_platform_driver(rcar_cmm_platform_driver);
-> +
-> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
-> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> new file mode 100644
-> index 000000000000..358ec03cf48a
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> @@ -0,0 +1,60 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
-> + *
-> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +#ifndef __RCAR_CMM_H__
-> +#define __RCAR_CMM_H__
-> +
-> +#define CM2_LUT_SIZE		256
-> +
-> +struct drm_color_lut;
-> +struct platform_device;
-> +
-> +/**
-> + * struct rcar_cmm_config - CMM configuration
-> + *
-> + * @lut:	1D-LUT configuration
-> + * @lut.enable:	1D-LUT enable flag
-> + * @lut.table:	1D-LUT table entries
-> + */
-> +struct rcar_cmm_config {
-> +	struct {
-> +		bool enable;
-> +		struct drm_color_lut *table;
-
-As enable == true implies table != NULL, and enable == false implies
-table == NULL, could we drop the enable field ?
-
-With those small issues addressed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +	} lut;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
-> +int rcar_cmm_init(struct platform_device *pdev);
-> +
-> +int rcar_cmm_enable(struct platform_device *pdev);
-> +void rcar_cmm_disable(struct platform_device *pdev);
-> +
-> +int rcar_cmm_setup(struct platform_device *pdev,
-> +		   const struct rcar_cmm_config *config);
-> +#else
-> +static inline int rcar_cmm_init(struct platform_device *pdev)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline int rcar_cmm_enable(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void rcar_cmm_disable(struct platform_device *pdev)
-> +{
-> +}
-> +
-> +static inline int rcar_cmm_setup(struct platform_device *pdev,
-> +				 const struct rcar_cmm_config *config)
-> +{
-> +	return 0;
-> +}
-> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
-> +
-> +#endif /* __RCAR_CMM_H__ */
-
--- 
-Regards,
-
-Laurent Pinchart
+T24gMTAvMTUvMTkgMTA6MjIgQU0sIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6DQo+IE9uIDEwLzE1
+LzE5IDEwOjIwIEFNLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+PiBGcm9tOiBUYW8gUmVuIDx0YW9y
+ZW5AZmIuY29tPg0KPj4gRGF0ZTogVHVlLCAxNSBPY3QgMjAxOSAxNzoxNjoyNiArMDAwMA0KPj4N
+Cj4+PiBDYW4geW91IHBsZWFzZSBhcHBseSB0aGUgcGF0Y2ggc2VyaWVzIHRvIG5ldC1uZXh0IHRy
+ZWUgd2hlbiB5b3UgaGF2ZQ0KPj4+IGJhbmR3aWR0aD8gQWxsIHRoZSAzIHBhdGNoZXMgYXJlIHJl
+dmlld2VkLg0KPj4NCj4+IElmIGl0IGlzIG5vdCBhY3RpdmUgaW4gcGF0Y2h3b3JrIHlvdSBuZWVk
+IHRvIHJlcG9zdC4NCj4+DQo+IA0KPiBUYW8sIGNhbiB5b3UgcGljayB1cCB0aGlzIHNlcmllcyBh
+bmQgcHJvdmlkZSBhIHByb3BlciBjb3ZlciBsZXR0ZXIgZm9yDQo+IGl0IChnaXQgZm9ybWF0LXBh
+dGNoIC0tY292ZXItbGV0dGVyKSB0aGF0IHdheSBpdCBjYW4gYmUgcGlja2VkIHVwIGJ5IERhdmlk
+Pw0KDQpTdXJlLiBUaGFuayB5b3UgZm9yIHRoZSBzdWdnZXN0aW9uLiBXaWxsIGRvIGl0Lg0KDQoN
+ClRoYW5rcywNCg0KVGFvDQo=
