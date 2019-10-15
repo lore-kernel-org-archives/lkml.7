@@ -2,130 +2,151 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C47EECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD51217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC8217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eG2kFOCI"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="BrUhn4gp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfJOG1v (ORCPT
+        id S1727332AbfJOG2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 02:27:51 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40756 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfJOG1v (ORCPT
+        Tue, 15 Oct 2019 02:28:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35247 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfJOG2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 02:27:51 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e13so3281489pga.7
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 23:27:49 -0700 (PDT)
+        Tue, 15 Oct 2019 02:28:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so11805626pfw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 23:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k5eIEG1/gLx0erMcT6WJ5ct3wjvosArYgfGc6QVQQXM=;
-        b=eG2kFOCINOfTU7RMqrQbCJMdHPI7tVrQoMqDYn0Xa1y4JM0t36oUF+nwZk5e6GZ81y
-         ZkqaJh2iLwLueKtIwDgcBeOlp/bFIbT+XL30e+zNDUEIv/OL7U0BEV4IldDW/QL+CPBg
-         73Us+47xLzbK90seyxwYYCrSS6unCEdspkuAnVNihAqom7KsFr1Z1d9bihFskCDbEGwf
-         9l2WBdpxdnMFLc3ZOVVIZshDR59viVkRH8i0+874uWAC3ZQDfwlCQfFIsOmk0MP4UVvj
-         I/Lt+PmL3mXY3QI83Hk3+LLBgj9B8LgHE2NQA9Jtc9W67IE2pGSfWlz4nqh46cRY0xh1
-         g1NQ==
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=NXE3NjexAQXsjlqVk+3nF0FjJ7hypONs1Weo4aM4img=;
+        b=BrUhn4gpvpU5Z1D3BIYiGb5+BX15AlS0UBGrN2TfSOqnRdqvz5ESw5SxNRYtS6rfNu
+         yEEKByqH3yonfpP8XawOOPCfeNQSFnK5jX/7PnK2qG0KaOjg7QKYKECvhz/2DsUi6qL3
+         idKHz9QtT8s/JH4+qA0A7Xc0ogpK60OJ9OHFA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k5eIEG1/gLx0erMcT6WJ5ct3wjvosArYgfGc6QVQQXM=;
-        b=fxJUp31T8UcJrLVrrQ6wZS5Ig1AhPNN49m0DwAasz+xRdFSaE4TxylmYXR7W5lWamr
-         w3qPdQuSM7xjwnIWBtBsg8O59zgvkiv3y4WvLWE5n05rAvUr95N8rwwR8mIM2BNGUYzh
-         AdAz8NqQA1Qaf9ZATQsAKpfuqtli8rBAbnBZUvyziMR4egb5a/nblveIyXUZNXlQblL/
-         BunVngD6ZuSqCIK4Cf3Wx/NKSqBjAJhzoU9cjRpUcEp+Kov7XCCFnE/0bP0037tHB6JB
-         //4ny+DOKyUszY15npU8kW/w/KqazYSKBitrOnpNNWgvVUcZVMEXUmnb1JC9eu24FeZy
-         OtzA==
-X-Gm-Message-State: APjAAAXmxPRqDc7XnfjFpWjjnhb4yKbfjHLnOXIOwEEidPeKmDiTK7Zz
-        BgaI7P6FpdlSdfBrP/tr7WbimA==
-X-Google-Smtp-Source: APXvYqzhmwcv+fCSsN/FiQs4MRlCLKvFXHjqsRUklAlobdqcmo7w0pGtSLJtHkN+RYOtXpMTh0brfg==
-X-Received: by 2002:a63:2309:: with SMTP id j9mr35711070pgj.3.1571120868520;
-        Mon, 14 Oct 2019 23:27:48 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w12sm3333477pfq.138.2019.10.14.23.27.46
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=NXE3NjexAQXsjlqVk+3nF0FjJ7hypONs1Weo4aM4img=;
+        b=KUA9Lh8jk4eyp4AZ+l+E3+IOuuB493FZft8zd2GHl6ml/kyzqz3Dp4AjDrOqP3rhX0
+         APY4jLf+V55s5+nZPS3ZYVEzNJUTuJJLg8/ThhPeovXKhXg5DkBSDGGvVp6JunZOuLDG
+         mpE/QCIHRah06aZVf/jzTNwafN7eaRU2ZSfrM388SqcqCS9WmZaFJ4mPeMOfmHSt0pET
+         crLxvItwbHoIt0hAw3Vv6B4oWF5wQ9zaV1jBBNDx+58B5DjRn6wAtYs1ZKh+DS48zS7l
+         mKyOCI7fnUUl8nHEchPCpOqm+TSjrJ+kdib98bGHbzp+/3wiT38fEuIpJgmZ7/qY2OS+
+         insQ==
+X-Gm-Message-State: APjAAAVi3AQBitcOOcFwuxGcuUStBS9qBGivkS7TFujaxAmd2R5CL8um
+        3aKiNkL1cYwFu/XS+KpHdZi7e6XtVgw=
+X-Google-Smtp-Source: APXvYqx2YnPD7idhykG7qGhqI/5d0pFVNgvu+VZ7HdsMybk4ZNBm9CymFRlu6abFrzqOPws1e0wZyg==
+X-Received: by 2002:a17:90a:6302:: with SMTP id e2mr39528114pjj.20.1571120881762;
+        Mon, 14 Oct 2019 23:28:01 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id q76sm44206995pfc.86.2019.10.14.23.28.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 23:27:47 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 23:27:45 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     nikitos.tr@gmail.com
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stephan@gerhold.net
-Subject: Re: [PATCH 1/2] arm64: dts: msm8916-longcheer-l8150: Enable WCNSS
- for WiFi and BT
-Message-ID: <20191015062745.GA4731@tuxbook-pro>
-References: <20191012145821.20846-1-nikitos.tr@gmail.com>
+        Mon, 14 Oct 2019 23:28:00 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, dvyukov@google.com,
+        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
+        gor@linux.ibm.com
+Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real shadow memory
+In-Reply-To: <20191014154359.GC20438@lakrids.cambridge.arm.com>
+References: <20191001065834.8880-1-dja@axtens.net> <20191001065834.8880-2-dja@axtens.net> <20191014154359.GC20438@lakrids.cambridge.arm.com>
+Date:   Tue, 15 Oct 2019 17:27:57 +1100
+Message-ID: <87a7a2ttea.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191012145821.20846-1-nikitos.tr@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 12 Oct 07:58 PDT 2019, nikitos.tr@gmail.com wrote:
+Mark Rutland <mark.rutland@arm.com> writes:
 
-> From: Nikita Travkin <nikitos.tr@gmail.com>
-> 
-> WCNSS is used on L8150 for WiFi and BT.
-> Its firmware isn't relocatable and must be loaded at specific address.
-> 
-> Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
+> On Tue, Oct 01, 2019 at 04:58:30PM +1000, Daniel Axtens wrote:
+>> Hook into vmalloc and vmap, and dynamically allocate real shadow
+>> memory to back the mappings.
+>> 
+>> Most mappings in vmalloc space are small, requiring less than a full
+>> page of shadow space. Allocating a full shadow page per mapping would
+>> therefore be wasteful. Furthermore, to ensure that different mappings
+>> use different shadow pages, mappings would have to be aligned to
+>> KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+>> 
+>> Instead, share backing space across multiple mappings. Allocate a
+>> backing page when a mapping in vmalloc space uses a particular page of
+>> the shadow region. This page can be shared by other vmalloc mappings
+>> later on.
+>> 
+>> We hook in to the vmap infrastructure to lazily clean up unused shadow
+>> memory.
+>> 
+>> To avoid the difficulties around swapping mappings around, this code
+>> expects that the part of the shadow region that covers the vmalloc
+>> space will not be covered by the early shadow page, but will be left
+>> unmapped. This will require changes in arch-specific code.
+>> 
+>> This allows KASAN with VMAP_STACK, and may be helpful for architectures
+>> that do not have a separate module space (e.g. powerpc64, which I am
+>> currently working on). It also allows relaxing the module alignment
+>> back to PAGE_SIZE.
+>> 
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=202009
+>> Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+>> Signed-off-by: Daniel Axtens <dja@axtens.net>
+>> [Mark: rework shadow allocation]
+>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>
+> Sorry to point this out so late, but your S-o-B should come last in the
+> chain per Documentation/process/submitting-patches.rst. Judging by the
+> rest of that, I think you want something like:
+>
+> Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com> [shadow rework]
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
+>
+> ... leaving yourself as the Author in the headers.
 
-Both patches applied
+no worries, I wasn't really sure how best to arrange them, so thanks for
+clarifying!
 
-Thank you,
-Bjorn
+>
+> Sorry to have made that more complicated!
+>
+> [...]
+>
+>> +static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+>> +					void *unused)
+>> +{
+>> +	unsigned long page;
+>> +
+>> +	page = (unsigned long)__va(pte_pfn(*ptep) << PAGE_SHIFT);
+>> +
+>> +	spin_lock(&init_mm.page_table_lock);
+>> +
+>> +	if (likely(!pte_none(*ptep))) {
+>> +		pte_clear(&init_mm, addr, ptep);
+>> +		free_page(page);
+>> +	}
+>
+> There should be TLB maintenance between clearing the PTE and freeing the
+> page here.
 
-> ---
->  .../boot/dts/qcom/msm8916-longcheer-l8150.dts      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-> index 2b28e383fd0b..e4d467e7dedb 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-> @@ -18,6 +18,16 @@
->  		stdout-path = "serial0";
->  	};
->  
-> +	reserved-memory {
-> +		// wcnss.mdt is not relocatable, so it must be loaded at 0x8b600000
-> +		/delete-node/ wcnss@89300000;
-> +
-> +		wcnss_mem: wcnss@8b600000 {
-> +			reg = <0x0 0x8b600000 0x0 0x600000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	soc {
->  		sdhci@7824000 {
->  			status = "okay";
-> @@ -68,6 +78,10 @@
->  			};
->  		};
->  
-> +		wcnss@a21b000 {
-> +			status = "okay";
-> +		};
-> +
->  		/*
->  		 * Attempting to enable these devices causes a "synchronous
->  		 * external abort". Suspected cause is that the debug power
-> -- 
-> 2.19.1
-> 
+Fixed for v9.
+
+Regards,
+Daniel
+
+>
+> Thanks,
+> Mark.
