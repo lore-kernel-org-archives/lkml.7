@@ -2,141 +2,107 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDB4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9946BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41C220640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRXATf+I"
+	by mail.kernel.org (Postfix) with ESMTP id 72B7821D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbfJOOzr (ORCPT
+        id S1733136AbfJOO4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:55:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46524 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732567AbfJOOzq (ORCPT
+        Tue, 15 Oct 2019 10:56:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41284 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732567AbfJOO4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:55:46 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so12624656pfg.13;
-        Tue, 15 Oct 2019 07:55:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MoRLQz9qQnnVM1y2LSZvCw9MdLFXu/hnDRgkUKNBBAM=;
-        b=KRXATf+InZy/eTJ79BVO3AuOMNIRR9ivYDZCSXLPTJHC8PkUoymSBomp5F+30QsIeJ
-         5uADk1qDojD3CeFNgHP4uDnZvCRTR1ft4zYh5mfuKF6bnaSF34vWaNgg4tBvvP1TwH6F
-         +TOPa677gZ2o1S16WPdKqhpglnhQtjT3SGxfaIvHipYHISC7J0ixhFHwgeSOFZ0jqxzs
-         89y1/RjkRiAyrGuINClu04IIXEhFlfvnVdp1kH26aBIfePmGG4fcE02TurHrpbviZoti
-         GOYeULbCjGEIsYux0/FwNdkUzhdew/+E1MVfAABzRxmNKlFOjNAZ8wYIgrhVS1WiGh8O
-         Rf5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MoRLQz9qQnnVM1y2LSZvCw9MdLFXu/hnDRgkUKNBBAM=;
-        b=gg92unOTLeXiLlYQ0+EHwjc/pJXfR22fDMjDC9RUgPl8aKXU2hNej8rmP8sNoRVFhR
-         zew8o/wJjYs/xco2+2lXda5hBMQRz/PzohSLE6AL6ctERPq/CaYCFwbh2nrkQ2wODHWX
-         sSpQOuLkk4BBa+erGCIuXlYQTvK0pW1SLbeFyBWxXyAbSE4+1Ws4H5D7YnQHPgDmShjk
-         kBbGOpMBOshlOA2OQvHcbEQe0A7NVSP8bUXCxZfkTX6ePW8b2HM8AJgmc9ZxWIQWS35B
-         eTkDWj7aZlMUKdoEsJZzcDTsfCSMeZZuzXucawLZIUPnYJ+avYt9u6GMyQncfZqzpdGz
-         +0lA==
-X-Gm-Message-State: APjAAAUVKICMeHIZfbs6MGx7ivioNFPbbtmfa9veaoAy/nKHtEybVigd
-        cqterRaQ+oYnb2acCpg8lH8Xo5hw/qIdA/JA4pY=
-X-Google-Smtp-Source: APXvYqwWayIy4dorcceC8cFJAO2Cz1ku9tnUs2bwH8eIXgX2wsHGADypAxGKaidt82Vy4YqTRdm3kw0I6URbc2idDKU=
-X-Received: by 2002:a63:d0a:: with SMTP id c10mr37925179pgl.203.1571151344336;
- Tue, 15 Oct 2019 07:55:44 -0700 (PDT)
+        Tue, 15 Oct 2019 10:56:51 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iKOFk-0007df-Fh; Tue, 15 Oct 2019 14:56:48 +0000
+Date:   Tue, 15 Oct 2019 16:56:47 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Christian Kellner <christian@kellner.me>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        linux-kselftest@vger.kernel.org, Jann Horn <jannh@google.com>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 1/2] pidfd: verify task is alive when printing fdinfo
+Message-ID: <20191015145646.72eqrw6j52ehvfn2@wittgenstein>
+References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
+ <20191015144356.GA16978@redhat.com>
 MIME-Version: 1.0
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
- <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com> <20191015163055.0d8f44e5@xps13>
-In-Reply-To: <20191015163055.0d8f44e5@xps13>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Oct 2019 17:55:33 +0300
-Message-ID: <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191015144356.GA16978@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 5:30 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> Hi Andy,
->
-> Thanks for the feedback.
->
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Mon, 14 Oct 2019
-> 20:59:01 +0300:
->
-> > On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >
-> > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > > functions but can also manage the intensity on each of its ports with
-> > > PWM. Each output is independent and may be tuned with 16 values (4
-> > > bits per output). The period is always 32kHz, only the duty-cycle may
-> > > be changed. One can use any output as GPIO or PWM.
+On Tue, Oct 15, 2019 at 04:43:57PM +0200, Oleg Nesterov wrote:
+> On 10/15, Christian Brauner wrote:
 > >
-> > Can we rather not contaminate driver with this?
-> >
-> > Just register a separate PWM driver and export its functionality to
-> > GPIO, or other way around (in the latter case we actually have PCA8685
-> > which provides a GPIO fgunctionality).
-> >
->
-> I understand your concern but I am not sure to understand which
-> solution you have in mind. In the former case, could you explain a bit
-> more what you are thinking about? Would linking the PWM support with
-> the GPIO driver (code would be located in another .c file) work for
-> you? Or maybe you would prefer an MFD on top of the GPIO driver?
->
-> As for the later case, I am not willing to re-implement GPIO support in
-> an alternate driver for an already supported chip, it is too much work
-> for the time I can spend on it.
+> > +static inline bool task_alive(struct pid *pid)
+> > +{
+> > +	bool alive = true;
+> > +
+> > +	rcu_read_lock();
+> > +	if (!pid_task(pid, PIDTYPE_PID))
+> > +		alive = false;
+> > +	rcu_read_unlock();
+> > +
+> > +	return alive;
+> > +}
+> 
+> Well, the usage of rcu_read_lock/unlock looks confusing to me...
+> 
+> I mean, this helper does not need rcu lock at all. Except
+> rcu_dereference_check() will complain.
 
+Yep, I think we have another codepath were the rcu locks might be purely
+cosmetic so I thought it's not a big deal (see below).
 
-drivers/pwm/pwm-max7313.c:
+> 
+> 	static inline bool task_alive(struct pid *pid)
+> 	{
+> 		bool alive;
+> 
+> 		/* shut up rcu_dereference_check() */
+> 		rcu_lock_acquire(&rcu_lock_map);
+> 		alive = !!pid_task(pid, PIDTYPE_PID));
+> 		rcu_lock_release(&rcu_lock_map);
+> 
+> 		return alive;
+> 	}
+> 
+> looks more clear imo.
+> 
+> But in fact I'd suggest to simply use !hlist_empty(&pid->tasks[PIDTYPE_PID])
+> in pidfd_show_fdinfo() and do not add a new helper.
 
-probe(platform_device)
-{
-  struct regmap = pdata;
-  ...
-}
+Sounds good to me. But can't we then just do something similar just with
+!hlist_empty(&pid->tasks[PIDTYPE_TGID])
 
---- 8< --- 8< ---
-drivers/gpio/gpio-pca953x.c:
+in v5.4-rc3:kernel/pid.c:pidfd_open():514-517 ?
 
-probe()
-{
-  struct regmap rm;
-...
-  if (dev_has_pwm)
-   pca953x_register_pwm_driver(rm);
-...
-}
+or would this be problematic because of de_thread()?
 
-In the above regmap may be replaced with some (shared) container.
-
-Or other way around. PWM registers GPIO (which actually I prefer since
-we have PCA9685 case where PWM provides GPIO functionality, though via
-different means)
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
+Christian
