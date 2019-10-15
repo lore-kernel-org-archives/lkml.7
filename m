@@ -2,151 +2,139 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B3ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16C0ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBCA20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BA820854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfJOK0W (ORCPT
+        id S1730635AbfJOK01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:26:22 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:41113 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfJOK0W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:26:22 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKK1w-0006RM-62; Tue, 15 Oct 2019 11:26:16 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKK1v-0002zJ-OZ; Tue, 15 Oct 2019 11:26:15 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] percpu: add __percpu to SHIFT_PERCPU_PTR
-Date:   Tue, 15 Oct 2019 11:26:15 +0100
-Message-Id: <20191015102615.11430-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 15 Oct 2019 06:26:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50072 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726508AbfJOK00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:26:26 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C3DBA306F4AB;
+        Tue, 15 Oct 2019 10:26:22 +0000 (UTC)
+Received: from gondolin (dhcp-192-233.str.redhat.com [10.33.192.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ACB65DA8C;
+        Tue, 15 Oct 2019 10:26:09 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 12:26:07 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 1/7] mdev: class id support
+Message-ID: <20191015122607.126e3960.cohuck@redhat.com>
+In-Reply-To: <20191011081557.28302-2-jasowang@redhat.com>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+        <20191011081557.28302-2-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 15 Oct 2019 10:26:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SHIFT_PERCPU_PTR() returns a pointer used by a number
-of functions that expect the pointer to be __percpu annotated
-(sparse address space 3). Adding __percpu to this makes the
-following sparse warnings go away.
+On Fri, 11 Oct 2019 16:15:51 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Note, this then creates the problem the __percup is marked
-as noderef, which may need removing for some of the internal
-functions, or to remove other warnings.
+> Mdev bus only supports vfio driver right now, so it doesn't implement
+> match method. But in the future, we may add drivers other than vfio,
+> the first driver could be virtio-mdev. This means we need to add
+> device class id support in bus match method to pair the mdev device
+> and mdev driver correctly.
+> 
+> So this patch adds id_table to mdev_driver and class_id for mdev
+> device with the match method for mdev bus.
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  Documentation/driver-api/vfio-mediated-device.rst |  7 ++++++-
+>  drivers/gpu/drm/i915/gvt/kvmgt.c                  |  1 +
+>  drivers/s390/cio/vfio_ccw_ops.c                   |  1 +
+>  drivers/s390/crypto/vfio_ap_ops.c                 |  1 +
+>  drivers/vfio/mdev/mdev_core.c                     | 11 +++++++++++
+>  drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
+>  drivers/vfio/mdev/mdev_private.h                  |  1 +
+>  drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
+>  include/linux/mdev.h                              |  8 ++++++++
+>  include/linux/mod_devicetable.h                   |  8 ++++++++
+>  samples/vfio-mdev/mbochs.c                        |  1 +
+>  samples/vfio-mdev/mdpy.c                          |  1 +
+>  samples/vfio-mdev/mtty.c                          |  1 +
+>  13 files changed, 60 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+> index 25eb7d5b834b..2035e48da7b2 100644
+> --- a/Documentation/driver-api/vfio-mediated-device.rst
+> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
+>        * @probe: called when new device created
+>        * @remove: called when device removed
+>        * @driver: device driver structure
+> +      * @id_table: the ids serviced by this driver
+>        */
+>       struct mdev_driver {
+>  	     const char *name;
+>  	     int  (*probe)  (struct device *dev);
+>  	     void (*remove) (struct device *dev);
+>  	     struct device_driver    driver;
+> +	     const struct mdev_class_id *id_table;
+>       };
+>  
+>  A mediated bus driver for mdev should use this structure in the function calls
+> @@ -165,12 +167,15 @@ register itself with the mdev core driver::
+>  	extern int  mdev_register_device(struct device *dev,
+>  	                                 const struct mdev_parent_ops *ops);
+>  
+> +It is also required to specify the class_id through::
+> +
+> +	extern int mdev_set_class(struct device *dev, u16 id);
 
-mm/vmstat.c:385:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:385:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:385:13:    got signed char *
-mm/vmstat.c:385:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:385:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:385:13:    got signed char *
-mm/vmstat.c:385:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:385:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:385:13:    got signed char *
-mm/vmstat.c:385:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:385:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:385:13:    got signed char *
-mm/vmstat.c:401:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:401:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:401:13:    got signed char *
-mm/vmstat.c:401:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:401:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:401:13:    got signed char *
-mm/vmstat.c:401:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:401:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:401:13:    got signed char *
-mm/vmstat.c:401:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:401:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:401:13:    got signed char *
-mm/vmstat.c:429:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:429:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:429:13:    got signed char *
-mm/vmstat.c:429:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:429:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:429:13:    got signed char *
-mm/vmstat.c:429:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:429:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:429:13:    got signed char *
-mm/vmstat.c:429:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:429:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:429:13:    got signed char *
-mm/vmstat.c:445:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:445:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:445:13:    got signed char *
-mm/vmstat.c:445:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:445:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:445:13:    got signed char *
-mm/vmstat.c:445:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:445:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:445:13:    got signed char *
-mm/vmstat.c:445:13: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:445:13:    expected signed char [noderef] [usertype] <asn:3> *__p
-mm/vmstat.c:445:13:    got signed char *
-mm/vmstat.c:763:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:763:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:763:29:    got signed char *
-mm/vmstat.c:763:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:763:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:763:29:    got signed char *
-mm/vmstat.c:763:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:763:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:763:29:    got signed char *
-mm/vmstat.c:763:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:763:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:763:29:    got signed char *
-mm/vmstat.c:825:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:825:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:825:29:    got signed char *
-mm/vmstat.c:825:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:825:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:825:29:    got signed char *
-mm/vmstat.c:825:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:825:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:825:29:    got signed char *
-mm/vmstat.c:825:29: warning: incorrect type in initializer (different address spaces)
-mm/vmstat.c:825:29:    expected signed char [noderef] <asn:3> *__p
-mm/vmstat.c:825:29:    got signed char *
+Should the document state explicitly that this should be done in the
+->create() callback? Also, I think that the class_id might be different
+for different mdevs (even if the parent is the same) -- should that be
+mentioned explicitly?
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/percpu-defs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +
+>  However, the mdev_parent_ops structure is not required in the function call
+>  that a driver should use to unregister itself with the mdev core driver::
+>  
+>  	extern void mdev_unregister_device(struct device *dev);
+>  
+> -
+>  Mediated Device Management Interface Through sysfs
+>  ==================================================
+>  
+(...)
 
-diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
-index a6fabd865211..a49b6c702598 100644
---- a/include/linux/percpu-defs.h
-+++ b/include/linux/percpu-defs.h
-@@ -229,7 +229,7 @@ do {									\
-  * pointer value.  The weird cast keeps both GCC and sparse happy.
-  */
- #define SHIFT_PERCPU_PTR(__p, __offset)					\
--	RELOC_HIDE((typeof(*(__p)) __kernel __force *)(__p), (__offset))
-+	RELOC_HIDE((typeof(*(__p)) __kernel __percpu __force *)(__p), (__offset))
- 
- #define per_cpu_ptr(ptr, cpu)						\
- ({									\
--- 
-2.23.0
-
+Looks reasonable to me.
