@@ -2,93 +2,202 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38012C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297F3ECE596
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7202067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAA72086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571154513;
+	bh=JfsvFua5FyEIyFW8ezrzFQkkYQdxhQpb+BL72cPktkc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p0y0itwIyMHbkQNEMQMhov1b0mTL3D8xbDaZ5pgX2/lUEW8rQG+F1UpqeuWEiSWGp
+	 u+MYVsJU7MROv4G+8IjkuQdNS/i2wpwq0bv4bc+AcklyxDxNaxtHN/B7RdKpbo9wKJ
+	 9xjFpva5IgkdEBWknz9cfqNLSdSdimhZwHyrHGv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387571AbfJOPrH (ORCPT
+        id S2387542AbfJOPsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:47:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:41418 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732725AbfJOPrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:47:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98ACB1576;
-        Tue, 15 Oct 2019 08:47:05 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E80C93F68E;
-        Tue, 15 Oct 2019 08:47:03 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com, stable@vger.kernel.org
-Subject: [PATCH v3 2/2] sched/topology: Allow sched_asym_cpucapacity to be disabled
-Date:   Tue, 15 Oct 2019 16:42:50 +0100
-Message-Id: <20191015154250.12951-3-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191015154250.12951-1-valentin.schneider@arm.com>
-References: <20191015154250.12951-1-valentin.schneider@arm.com>
+        Tue, 15 Oct 2019 11:48:31 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34393 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfJOPsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:48:31 -0400
+Received: by mail-qk1-f196.google.com with SMTP id q203so19626475qke.1;
+        Tue, 15 Oct 2019 08:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4UV/vP6Ak7zlZSSUsFjQtQPToq6GnlOm1PHifs316U4=;
+        b=LsoAypu+QZFDZOOMgWj57DzO9NJX1FgAGXdYolZJAF3A/bnTKstO7wULawxUrkeLnF
+         LIZALF6eFW4JRe91stBT6ts8IaIkGyHBFFDmQnJfq2yT/aAqEAZSmvDelPxyuKUqHiRE
+         VEwh2YBOJgmKRUXKRKcELaCCvsJquUZJXkI3j2Lut0LhIZ6BmmRPQ0juk5aiZifh2sKB
+         BuM8uI/lEYzA7uFjLvNJU3wOK31R6M8dqKpmvI5hACGwcYhs7HzPViT4DiEGTY1DLndY
+         CGuRlYOGOjQ4Xosg93QM8Wpixg799Rm48Zf7pRmxjbeVnB5ewpnrDMl2kKbzbTbqENgt
+         RRYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4UV/vP6Ak7zlZSSUsFjQtQPToq6GnlOm1PHifs316U4=;
+        b=GrZalv11NN+/wA0njRs2vKNHTW1S/iJnkexzABWjDgaGK5/wpz8UAteCPPVdo5hwWs
+         sNmrGXFsZmuhi1Lav0ZwIIBLwOenUT/jMMosY7t1Kyx9KDT3H/1pcrkGbaE4FnfqFgnq
+         7pULvn10XYdvLvkqc+lTPiIxt/xKOciWM+3O1/wTKEu1owZOp1eKgV5BAF0eD2C1bsa0
+         /mG+nBTP5lOAVmlFRoFmWCKJWLlBu2i9r+lfggtDhVY9wXmJx2B6fwU8SsFIayOdknbl
+         C5L6ZFx8LOMGIaHJ+e6nHdFtmHGyjSQqjbmSCYFRZbUwBwg0XZ5sdNsUakJ176krKHkZ
+         38sw==
+X-Gm-Message-State: APjAAAW1QYFuk8MDjzbr3aYC5x8NjjKaLbU6D461vugrE7XmVEbXsZHW
+        +5rCuotivBBGHVebtEnIB/w=
+X-Google-Smtp-Source: APXvYqzK7AJnTuTyVvinEDnBafFaa0S4oM2gipW8LqP+1d6TT52IrNHq2jpxXWuOvsik/AY376SHyQ==
+X-Received: by 2002:a37:a50a:: with SMTP id o10mr35684316qke.115.1571154509896;
+        Tue, 15 Oct 2019 08:48:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:2a53])
+        by smtp.gmail.com with ESMTPSA id p77sm10954411qke.6.2019.10.15.08.48.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 08:48:29 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 08:48:27 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Jens Axboe <axboe@kernel.dk>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        linux-block@vger.kernel.org
+Subject: [PATCH block/for-linus] blkcg: fix botched pd_prealloc error
+ handling in blkcg_activate_policy()
+Message-ID: <20191015154827.GK18794@devbig004.ftw2.facebook.com>
+References: <alpine.DEB.2.21.1910151232480.2818@hadrien>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910151232480.2818@hadrien>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the static key is correctly initialized as being disabled, it will
-remain forever enabled once turned on. This means that if we start with an
-asymmetric system and hotplug out enough CPUs to end up with an SMP system,
-the static key will remain set - which is obviously wrong. We should detect
-this and turn off things like misfit migration and capacity aware wakeups.
+While fixing ->pd_alloc_fn() bug, ab94b0382d81 ("blkcg: Fix
+->pd_alloc_fn() being called with the wrong blkcg on policy
+activation") broke the pd_prealloc error handling.
 
-As Quentin pointed out, having separate root domains makes this slightly
-trickier. We could have exclusive cpusets that create an SMP island - IOW,
-the domains within this root domain will not see any asymmetry. This means
-we need to count how many asymmetric root domains we have.
+* pd's were freed using kfree().  They should be freed with
+  ->pd_free_fn().
 
-Change the simple key enablement to an increment, and decrement the key
-counter when destroying domains that cover asymmetric CPUs.
+* pd_prealloc could be kfree()'d and then ->pd_free_fn()'d again.
 
-Cc: <stable@vger.kernel.org>
-Fixes: df054e8445a4 ("sched/topology: Add static_key for asymmetric CPU capacity optimizations")
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+* When GFP_KERNEL allocation fails, pinned_blkg wasn't put.
+
+There are also a couple existing issues.
+
+* Each pd is initialized as they get allocated.  If alloc fails, the
+  policy will get freed with pd's initialized on it.
+
+* After the above partial failure, the partial pds are not freed.
+
+This patch fixes all of the above issues.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Fixes: ab94b0382d81 ("blkcg: Fix ->pd_alloc_fn() being called with the wrong blkcg on policy activation")
 ---
- kernel/sched/topology.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ block/blk-cgroup.c |   44 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 31 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 9318acf1d1fe..f0e730143380 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2029,7 +2029,7 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	rcu_read_unlock();
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1373,13 +1373,14 @@ int blkcg_activate_policy(struct request
+ retry:
+ 	spin_lock_irq(&q->queue_lock);
  
- 	if (has_asym)
--		static_branch_enable_cpuslocked(&sched_asym_cpucapacity);
-+		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
+-	/* blkg_list is pushed at the head, reverse walk to init parents first */
++	/* blkg_list is pushed at the head, reverse walk to allocate parents first */
+ 	list_for_each_entry_reverse(blkg, &q->blkg_list, q_node) {
+ 		struct blkg_policy_data *pd;
  
- 	if (rq && sched_debug_enabled) {
- 		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
-@@ -2125,7 +2125,10 @@ int sched_init_domains(const struct cpumask *cpu_map)
- static void detach_destroy_domains(const struct cpumask *cpu_map)
- {
- 	int i;
-+	unsigned int cpu = cpumask_any(cpu_map);
+ 		if (blkg->pd[pol->plid])
+ 			continue;
+ 
++		/* If prealloc matches, use it; otherwise try GFP_NOWAIT */
+ 		if (blkg == pinned_blkg) {
+ 			pd = pd_prealloc;
+ 			pd_prealloc = NULL;
+@@ -1389,6 +1390,10 @@ retry:
+ 		}
+ 
+ 		if (!pd) {
++			/*
++			 * GFP_NOWAIT failed.  Free the existing one and
++			 * prealloc for @blkg w/ GFP_KERNEL.
++			 */
+ 			if (pinned_blkg)
+ 				blkg_put(pinned_blkg);
+ 			blkg_get(blkg);
+@@ -1396,38 +1401,51 @@ retry:
+ 
+ 			spin_unlock_irq(&q->queue_lock);
+ 
+-			kfree(pd_prealloc);
++			if (pd_prealloc)
++				pol->pd_free_fn(pd_prealloc);
+ 			pd_prealloc = pol->pd_alloc_fn(GFP_KERNEL, q,
+ 						       blkg->blkcg);
+-			if (pd_prealloc) {
++			if (pd_prealloc)
+ 				goto retry;
+-			} else {
+-				ret = -ENOMEM;
+-				goto out_bypass_end;
+-			}
++			else
++				goto enomem;
+ 		}
+ 
+ 		blkg->pd[pol->plid] = pd;
+ 		pd->blkg = blkg;
+ 		pd->plid = pol->plid;
+-		if (pol->pd_init_fn)
+-			pol->pd_init_fn(pd);
+ 	}
+ 
+-	if (pinned_blkg)
+-		blkg_put(pinned_blkg);
+-	kfree(pd_prealloc);
++	/* all allocated, init in the same order */
++	if (pol->pd_init_fn)
++		list_for_each_entry_reverse(blkg, &q->blkg_list, q_node)
++			pol->pd_init_fn(blkg->pd[pol->plid]);
+ 
+ 	__set_bit(pol->plid, q->blkcg_pols);
+ 	ret = 0;
+ 
+ 	spin_unlock_irq(&q->queue_lock);
+-out_bypass_end:
++out:
+ 	if (queue_is_mq(q))
+ 		blk_mq_unfreeze_queue(q);
++	if (pinned_blkg)
++		blkg_put(pinned_blkg);
+ 	if (pd_prealloc)
+ 		pol->pd_free_fn(pd_prealloc);
+ 	return ret;
 +
-+	if (rcu_access_pointer(per_cpu(sd_asym_cpucapacity, cpu)))
-+		static_branch_dec_cpuslocked(&sched_asym_cpucapacity);
++enomem:
++	/* alloc failed, nothing's initialized yet, free everything */
++	spin_lock_irq(&q->queue_lock);
++	list_for_each_entry(blkg, &q->blkg_list, q_node) {
++		if (blkg->pd[pol->plid]) {
++			pol->pd_free_fn(blkg->pd[pol->plid]);
++			blkg->pd[pol->plid] = NULL;
++		}
++	}
++	spin_unlock_irq(&q->queue_lock);
++	ret = -ENOMEM;
++	goto out;
+ }
+ EXPORT_SYMBOL_GPL(blkcg_activate_policy);
  
- 	rcu_read_lock();
- 	for_each_cpu(i, cpu_map)
---
-2.22.0
-
