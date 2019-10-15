@@ -2,58 +2,114 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80EECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB505ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01022067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BC320854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387674AbfJOPuG (ORCPT
+        id S2387750AbfJOPvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:50:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40702 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730152AbfJOPuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:50:05 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7034018CB904;
-        Tue, 15 Oct 2019 15:50:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-84.rdu2.redhat.com [10.10.121.84])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 495BD5D6A9;
-        Tue, 15 Oct 2019 15:50:04 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <bf358fc5-c0e1-070f-b073-1675e3d13fd8@gmail.com>
-References: <bf358fc5-c0e1-070f-b073-1675e3d13fd8@gmail.com> <157071915431.29197.5055122258964729288.stgit@warthog.procyon.org.uk>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] rxrpc: Fix possible NULL pointer access in ICMP handling
+        Tue, 15 Oct 2019 11:51:02 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:53096 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfJOPvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:51:02 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKP63-00077G-SO; Tue, 15 Oct 2019 16:50:51 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKP63-000361-85; Tue, 15 Oct 2019 16:50:51 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: renesas_usbhs: fix __le16 warnings
+Date:   Tue, 15 Oct 2019 16:50:44 +0100
+Message-Id: <20191015155044.11858-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5907.1571154603.1@warthog.procyon.org.uk>
-Date:   Tue, 15 Oct 2019 16:50:03 +0100
-Message-ID: <5908.1571154603@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Tue, 15 Oct 2019 15:50:05 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Dumazet <eric.dumazet@gmail.com> wrote:
+Fix the warnings generated by casting to/from __le16 without
+using the correct functions.
 
->  void rxrpc_error_report(struct sock *sk)
->  {
-> +       struct rxrpc_local *local = rcu_dereference_sk_user_data(sk);
+Fixes the following sparse warnings:
 
-Acked-by: David Howells <dhowells@redhat.com>
+drivers/usb/renesas_usbhs/common.c:165:25: warning: incorrect type in assignment (different base types)
+drivers/usb/renesas_usbhs/common.c:165:25:    expected restricted __le16 [usertype] wValue
+drivers/usb/renesas_usbhs/common.c:165:25:    got unsigned short
+drivers/usb/renesas_usbhs/common.c:166:25: warning: incorrect type in assignment (different base types)
+drivers/usb/renesas_usbhs/common.c:166:25:    expected restricted __le16 [usertype] wIndex
+drivers/usb/renesas_usbhs/common.c:166:25:    got unsigned short
+drivers/usb/renesas_usbhs/common.c:167:25: warning: incorrect type in assignment (different base types)
+drivers/usb/renesas_usbhs/common.c:167:25:    expected restricted __le16 [usertype] wLength
+drivers/usb/renesas_usbhs/common.c:167:25:    got unsigned short
+drivers/usb/renesas_usbhs/common.c:173:39: warning: incorrect type in argument 3 (different base types)
+drivers/usb/renesas_usbhs/common.c:173:39:    expected unsigned short [usertype] data
+drivers/usb/renesas_usbhs/common.c:173:39:    got restricted __le16 [usertype] wValue
+drivers/usb/renesas_usbhs/common.c:174:39: warning: incorrect type in argument 3 (different base types)
+drivers/usb/renesas_usbhs/common.c:174:39:    expected unsigned short [usertype] data
+drivers/usb/renesas_usbhs/common.c:174:39:    got restricted __le16 [usertype] wIndex
+drivers/usb/renesas_usbhs/common.c:175:39: warning: incorrect type in argument 3 (different base types)
+drivers/usb/renesas_usbhs/common.c:175:39:    expected unsigned short [usertype] data
+
+Note. I belive this to be correct, and should be a no-op on arm.
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/usb/renesas_usbhs/common.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index 4c3de777ef6c..a3c30b609433 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -162,17 +162,17 @@ void usbhs_usbreq_get_val(struct usbhs_priv *priv, struct usb_ctrlrequest *req)
+ 	req->bRequest		= (val >> 8) & 0xFF;
+ 	req->bRequestType	= (val >> 0) & 0xFF;
+ 
+-	req->wValue	= usbhs_read(priv, USBVAL);
+-	req->wIndex	= usbhs_read(priv, USBINDX);
+-	req->wLength	= usbhs_read(priv, USBLENG);
++	req->wValue	= cpu_to_le16(usbhs_read(priv, USBVAL));
++	req->wIndex	= cpu_to_le16(usbhs_read(priv, USBINDX));
++	req->wLength	= cpu_to_le16(usbhs_read(priv, USBLENG));
+ }
+ 
+ void usbhs_usbreq_set_val(struct usbhs_priv *priv, struct usb_ctrlrequest *req)
+ {
+ 	usbhs_write(priv, USBREQ,  (req->bRequest << 8) | req->bRequestType);
+-	usbhs_write(priv, USBVAL,  req->wValue);
+-	usbhs_write(priv, USBINDX, req->wIndex);
+-	usbhs_write(priv, USBLENG, req->wLength);
++	usbhs_write(priv, USBVAL,  le16_to_cpu(req->wValue));
++	usbhs_write(priv, USBINDX, le16_to_cpu(req->wIndex));
++	usbhs_write(priv, USBLENG, le16_to_cpu(req->wLength));
+ 
+ 	usbhs_bset(priv, DCPCTR, SUREQ, SUREQ);
+ }
+-- 
+2.23.0
+
