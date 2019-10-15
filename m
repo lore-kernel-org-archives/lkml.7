@@ -2,53 +2,118 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6026DECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76221C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3960020650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E14220650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571157702;
+	bh=tRzSr9D7wq6z+hebwYsgqPVMbJW75tZmFtmWm+HmcRg=;
+	h=To:From:Cc:Subject:Date:List-ID:From;
+	b=eqiZUuioq0zVD4oZ9QzkDtfP9bG26Mi5QEIKhikU0Nu1x2GNdeNOBmR0FEbt6mb2f
+	 9Fl4wqsVitqxwpLq7GoNCJvqyncoOno5q+h9gpJ6AJVosuqQWRgpUmvIn3InWSvOo5
+	 I5L6jLjgA+nGFpVFNerJ0n2hI50C/Kg8LFLM43mM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfJOQlg (ORCPT
+        id S1728507AbfJOQll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:41:36 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36688 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfJOQlg (ORCPT
+        Tue, 15 Oct 2019 12:41:41 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34229 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbfJOQli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:41:36 -0400
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C3C3915035C82;
-        Tue, 15 Oct 2019 09:41:35 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:41:31 -0400 (EDT)
-Message-Id: <20191015.124131.1460380746118792831.davem@davemloft.net>
-To:     kvalo@codeaurora.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pull-request: wireless-drivers 2019-10-15
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <87eezexkak.fsf@kamboji.qca.qualcomm.com>
-References: <87eezexkak.fsf@kamboji.qca.qualcomm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 15 Oct 2019 12:41:38 -0400
+Received: by mail-io1-f65.google.com with SMTP id q1so47481584ion.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 09:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:from:cc:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=tRzSr9D7wq6z+hebwYsgqPVMbJW75tZmFtmWm+HmcRg=;
+        b=MSB81nUi5E4dUM7zV8rA6mfRRJbgHvySFiFsku1+kqg1dHP/zczas3djEbkwSZ+3Au
+         +p9nn7KVpOsEkgflSVCFoy9OY18rW/x3y965HrVkRFnlZc3qMhtKxHGeJQRYWLzBt/sn
+         ghb+wFWU9814QseWDGp9/tW+BNd6lRHwiPFbE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:cc:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=tRzSr9D7wq6z+hebwYsgqPVMbJW75tZmFtmWm+HmcRg=;
+        b=RIa+TzSYiZ0Mnz1JAbI4sJ7V2a7J02hMgekDz+K9oDvszgoIyBDZB0wr2RPD7AufGx
+         prRi7sezhrYJIdLP92ZxxbdZsxcFxdTnBf/1l7Gb0UZU+TyfMvuFn3lFaUfYT1pnTKru
+         FK9WZHFMEiObKmpGjMXYgvhm5Unz2DLtWRe9pXPik6mSWMoVHuYvOG4mU9iEKM3ZojQZ
+         JvQNNjHATszVZ+2P20sCUecytgKfiK6v8z1d5x71cs4u4J03XKcgQom7/StKK/W5mGFo
+         ze6nbcaZA3tBaukBGgFMJ4cbxPU+sGgI+ZjO+ppsyHik48cEvxHWdQInmanV4RW3X43a
+         Rv2w==
+X-Gm-Message-State: APjAAAUqQYTV75jK8yRxx402N6i+5BNgKRSYmy1ImqKNCsgC2ISC6U1x
+        4SMtnDuwbKubQhcBMmurbAT1dA==
+X-Google-Smtp-Source: APXvYqw6CUQBw83V8tWrlHbd72VWppzU9L3PITMpeFb5Lee1Y55NrGO+Qieaq5jMqOqctsz+OD/PVw==
+X-Received: by 2002:a6b:5814:: with SMTP id m20mr22851617iob.242.1571157697917;
+        Tue, 15 Oct 2019 09:41:37 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id 28sm3483829ilq.61.2019.10.15.09.41.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 09:41:37 -0700 (PDT)
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [ANN] New git repository for Autogenerated regression tests
+Message-ID: <190423b9-b363-a769-64b8-935b2632441e@linuxfoundation.org>
+Date:   Tue, 15 Oct 2019 10:41:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 09:41:36 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kalle Valo <kvalo@codeaurora.org>
-Date: Tue, 15 Oct 2019 15:30:59 +0300
+I created a new kernel.org repository for compiling and preserving
+Autogenerated regression tests. This is an outcome based on decision
+made at the Maintainer Summit to preserve and use the autogenerated
+reproducers for regression testing.
 
-> here's a pull request to net tree for v5.4, more info below. Please let
-> me know if there are any problems.
+Linux Kernel Autogenerated Regression Tests
+===========================================
 
-Pulled, thanks Kalle.
+linux-arts repository is dedicated to preserving the autogenerated
+regression tests for regression testing.
+
+Automates testing entities such as Syzbot generate reproducers to test
+the kernel. It is a manual process to download reproducers and once the
+bug is fixed, kernel developers loose track of these reproducers.
+
+As per the decision made at a session at the Maintainers Summit 2019,
+this git repository is created to preserve the reproducers.
+
+Please find the details on the discussion that lead to this decision
+at https://lwn.net/Articles/799162/
+
+Please find the new git repo at:
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-arts.git/
+
+The initial commit pulls in Syzkaller reproducers from Dmitry Vyukov.
+As per Dmitry's request, the run and build scripts have been updated
+to with just the syzbot link.
+
+Thanks Dmitry for compiling these reproducers and working on the
+framework of running and building them.
+
+As for reproducers, each .c is specific to syzbot report and named
+with the syzbot bug report ID.
+
+Please play with it and let me know if you have questions. README
+has the details on where to send patches and regressions tests.
+
+thanks,
+-- Shuah
