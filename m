@@ -2,210 +2,82 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7421C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDDECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82A220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PSKWNoiQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8087720873
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfJOD1x (ORCPT
+        id S1727793AbfJOD14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 23:27:53 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36945 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfJOD1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 23:27:53 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r4so16582267edy.4
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 20:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YVPytTWHt8mFoi/ykGbrP0trwQRYqXcPKOUsZYejpz0=;
-        b=PSKWNoiQI7P2JrAnmZCiTSgVzPC2o2fcfeEnYQfZvWpZFU9ynIIProhbzJ65NurZb8
-         GME6b6LCf/14PkTKQLv5zbnx2l7GuZfeYhdSFcnck6rLibElMKdgKq6zpn2TCXK7UvCh
-         uxEQcudhe2hEm3v0IPz3ZrfmlH4DSnEFTqZG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YVPytTWHt8mFoi/ykGbrP0trwQRYqXcPKOUsZYejpz0=;
-        b=Xq+FE5xoYGIxzr6APpOu83o2J6dqypZkAoOXlzwOGlGIeFWMfptzBjz13xTOkyzp7V
-         kkxUkNqF08vNT7fX5EGYAbUK0NQkM1vHocDbtL4j6d8UVHGbjxxyPsJ1RiU27Rll6Fd6
-         ktX3K18Lr/Bb2C5bdfBEv8R7A8/9iwQMWFPQ/lkyNZS0fD+1F/wVGS4eREfBxBu+yGOS
-         5rycIwb2OswkcakKsdQdsSh19xiDKW+eLIhh8+ZhdpyWzBcKjzq2j00AOwgejts2GdHn
-         fhs5lUYPlLA5tXdfY7jxKeLXfsev60nFETXrd0XMyRVy4psEeNpVguwQ1MCiUNRj9wBq
-         4SaA==
-X-Gm-Message-State: APjAAAU1phdzm0HNcqhv+scTxSPkXRh7zZc1S9OYkm5Z785ipLuTHGl5
-        6TVTbWZJWP/AU8JN/h55eonsCiZoRnOebw==
-X-Google-Smtp-Source: APXvYqyQeN5ZUsjM36H9vlRUEjj6JyyAMZSRXPaLP87i7YIQYp5bw7+3EwJ/DmaKkSuvcVlPRVHjAg==
-X-Received: by 2002:a17:906:c317:: with SMTP id s23mr33241021ejz.251.1571110068250;
-        Mon, 14 Oct 2019 20:27:48 -0700 (PDT)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id nk2sm2535759ejb.28.2019.10.14.20.27.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Oct 2019 20:27:46 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id i16so19097713wmd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 20:27:45 -0700 (PDT)
-X-Received: by 2002:a1c:dcd6:: with SMTP id t205mr17526191wmg.10.1571110064602;
- Mon, 14 Oct 2019 20:27:44 -0700 (PDT)
+        Mon, 14 Oct 2019 23:27:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49094 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727195AbfJOD1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 23:27:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C69085543;
+        Tue, 15 Oct 2019 03:27:55 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 79BB75C1D6;
+        Tue, 15 Oct 2019 03:27:34 +0000 (UTC)
+Subject: Re: [PATCH V3 5/7] mdev: introduce virtio device and its device ops
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-6-jasowang@redhat.com>
+ <20191014172301.GA5359@stefanha-x1.localdomain>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <97d93729-9bc2-4cb5-5e4f-678285044c7f@redhat.com>
+Date:   Tue, 15 Oct 2019 11:27:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191007174505.10681-1-ezequiel@collabora.com>
- <20191007174505.10681-3-ezequiel@collabora.com> <CAAFQd5BNu2ea3ei_imHmEwmdna0+iiSbQSv_SBsdHfP4Uh1h4Q@mail.gmail.com>
- <HE1PR06MB4011EC9E93ECBB6773252247AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <CAAFQd5CWoAP1psrEW6bVMkRmhFeTvFKtDSLjT7nefc2YiFovqQ@mail.gmail.com>
- <CAAFQd5AYCiKcA9pGc44L3gGHLPx6iMSb7KywkO8OqVv4gS8KvQ@mail.gmail.com>
- <CAAFQd5AQXGX_2gmKLfymH5mLG-uVh-v+XXtGXzbfzYzVVV42mA@mail.gmail.com>
- <HE1PR06MB4011B897EA5497659A19BCC6AC9A0@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <CAAFQd5DEhHF+_oO_0ZKS1mi26hJ-JueFxXfdpyQ3ATzMW5Czaw@mail.gmail.com> <0d40f89059cd5aba96adcdd24340636df3315592.camel@collabora.com>
-In-Reply-To: <0d40f89059cd5aba96adcdd24340636df3315592.camel@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 15 Oct 2019 12:27:32 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5Aj1fh5MbT1B8HZQmwYOSRr6C68uHmAPJ+5dec1K-szEA@mail.gmail.com>
-Message-ID: <CAAFQd5Aj1fh5MbT1B8HZQmwYOSRr6C68uHmAPJ+5dec1K-szEA@mail.gmail.com>
-Subject: Re: [PATCH v2 for 5.4 2/4] media: hantro: Fix H264 max frmsize
- supported on RK3288
-To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        "fbuergisser@chromium.org" <fbuergisser@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191014172301.GA5359@stefanha-x1.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 15 Oct 2019 03:27:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 7:10 AM Nicolas Dufresne
-<nicolas.dufresne@collabora.com> wrote:
->
-> Le jeudi 10 octobre 2019 =C3=A0 16:23 +0900, Tomasz Figa a =C3=A9crit :
-> > On Tue, Oct 8, 2019 at 11:12 PM Jonas Karlman <jonas@kwiboo.se> wrote:
-> > > On 2019-10-08 15:53, Tomasz Figa wrote:
-> > > > On Tue, Oct 8, 2019 at 10:35 PM Tomasz Figa <tfiga@chromium.org> wr=
-ote:
-> > > > > On Tue, Oct 8, 2019 at 7:42 PM Tomasz Figa <tfiga@chromium.org> w=
-rote:
-> > > > > > On Tue, Oct 8, 2019 at 3:31 PM Jonas Karlman <jonas@kwiboo.se> =
-wrote:
-> > > > > > > On 2019-10-08 07:27, Tomasz Figa wrote:
-> > > > > > > > Hi Ezequiel, Jonas,
-> > > > > > > >
-> > > > > > > > On Tue, Oct 8, 2019 at 2:46 AM Ezequiel Garcia <ezequiel@co=
-llabora.com> wrote:
-> > > > > > > > > From: Jonas Karlman <jonas@kwiboo.se>
-> > > > > > > > >
-> > > > > > > > > TRM specify supported image size 48x48 to 4096x2304 at st=
-ep size 16 pixels,
-> > > > > > > > > change frmsize max_width/max_height to match TRM.
-> > > > > > > > >
-> > > > > > > > > Fixes: 760327930e10 ("media: hantro: Enable H264 decoding=
- on rk3288")
-> > > > > > > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> > > > > > > > > ---
-> > > > > > > > > v2:
-> > > > > > > > > * No changes.
-> > > > > > > > >
-> > > > > > > > >  drivers/staging/media/hantro/rk3288_vpu_hw.c | 4 ++--
-> > > > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c=
- b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-> > > > > > > > > index 6bfcc47d1e58..ebb017b8a334 100644
-> > > > > > > > > --- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-> > > > > > > > > +++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-> > > > > > > > > @@ -67,10 +67,10 @@ static const struct hantro_fmt rk3288=
-_vpu_dec_fmts[] =3D {
-> > > > > > > > >                 .max_depth =3D 2,
-> > > > > > > > >                 .frmsize =3D {
-> > > > > > > > >                         .min_width =3D 48,
-> > > > > > > > > -                       .max_width =3D 3840,
-> > > > > > > > > +                       .max_width =3D 4096,
-> > > > > > > > >                         .step_width =3D H264_MB_DIM,
-> > > > > > > > >                         .min_height =3D 48,
-> > > > > > > > > -                       .max_height =3D 2160,
-> > > > > > > > > +                       .max_height =3D 2304,
-> > > > > > > > This doesn't match the datasheet I have, which is RK3288 Da=
-tasheet Rev
-> > > > > > > > 1.4 and which has the values as in current code. What's the=
- one you
-> > > > > > > > got the values from?
-> > > > > > > The RK3288 TRM vcodec chapter from [1], unknown revision and =
-date, lists 48x48 to 4096x2304 step size 16 pixels under 25.5.1 H.264 decod=
-er.
-> > > > > > >
-> > > > > > > I can also confirm that one of my test samples (PUPPIES BATH =
-IN 4K) is 4096x2304 and can be decoded after this patch.
-> > > > > > > However the decoding speed is not optimal at 400Mhz, if I rec=
-all correctly you need to set the VPU1 clock to 600Mhz for 4K decoding on R=
-K3288.
-> > > > > > >
-> > > > > > > I am not sure if I should include a v2 of this patch in my v2=
- series, as-is this patch do not apply on master (H264_MB_DIM has changed t=
-o MB_DIM in master).
-> > > > > > >
-> > > > > > > [1] http://www.t-firefly.com/download/firefly-rk3288/docs/TRM=
-/rk3288-chapter-25-video-encoder-decoder-unit-(vcodec).pdf
-> > > > > > I checked the RK3288 TRM V1.1 too and it refers to 3840x2160@24=
-fps as
-> > > > > > the maximum.
-> > > > > >
-> > > > > > As for performance, we've actually been getting around 33 fps a=
-t 400
-> > > > > > MHz with 3840x2160 on our devices (the old RK3288 Asus Chromebo=
-ok
-> > > > > > Flip).
-> > > > > >
-> > > > > > I guess we might want to check that with Hantro.
-> > > > > Could you check the value of bits 10:0 in register at 0x0c8? That
-> > > > > should be the maximum supported stream width in the units of 16
-> > > > > pixels.
-> > > > Correction: The unit is 1 pixel and there are additional 2 most
-> > > > significant bits at 0x0d8, 15:14.
-> > >
-> > > I will check this later tonight when I have access to my devices.
-> > > The PUPPIES BATH IN 4K (4096x2304) sample decoded without issue using=
- rockchip 4.4 BSP kernel and mpp last time I tested.
-> > >
-> > > The vcodec driver in 4.4 BSP kernel use 300/400 Mhz as default clock =
-rate and will change to 600 Mhz when width is over 2560, see [1]:
-> > >   raise frequency for resolution larger than 1440p avc
-> > >
-> > > [1] https://github.com/rockchip-linux/kernel/blob/develop-4.4/drivers=
-/video/rockchip/vcodec/vcodec_service.c#L2551-L2570
-> >
-> > How comes it works for us well at 400 MHz? Better DRAM? Differences in
-> > how Vcodec BSP handles the hardware that somehow make the decoding
-> > slower?
->
-> FWIW, here on the mainline driver, on RK3288, playing a 4K30 sample
-> (probably the max for this one) get stuck at 20fps with 400MHz. So
-> 600MHz would in theory be perfect to reach 30fps. That being said,
-> different stream yield different performance with H264 and other
-> CODECs, so doing a completely objective evaluation is hard.
 
-For a fair comparison, we're using the following stream in our 4K
-performance test:
-http://storage.googleapis.com/chromiumos-test-assets-public/tast/cros/video=
-/perf/h264/2160p_30fps_300frames_20190801.h264
+On 2019/10/15 上午1:23, Stefan Hajnoczi wrote:
+> On Fri, Oct 11, 2019 at 04:15:55PM +0800, Jason Wang wrote:
+>> + * @set_vq_cb:			Set the interrut calback function for
+> s/interrut/interrupt/
+>
+> s/calback/callback/
 
-Best regards,
-Tomasz
+
+Fixed.
+
+Thanks
+
