@@ -2,115 +2,223 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A46ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204EEECE595
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C692321835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03872089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:54:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jex/AY+8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FukvMCOk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Cts81DNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfJOIxL (ORCPT
+        id S1727806AbfJOIys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:53:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33898 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfJOIxL (ORCPT
+        Tue, 15 Oct 2019 04:54:48 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37480 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfJOIyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:53:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rjzfeDkzQ8oFBeoh7Q4dFwyvzdrmkuKDk9XLQ2RCZI0=; b=jex/AY+8LPcFbFDopQFRs728j
-        hbf53hXlnzhV5Tg5fBA1nC4sBisXRxJ26gVuLqpYyKHpHBUw4LedocCb8ui6WUgU01mWKnl7ugC8v
-        8mxBJlXHxLFML1/EMzFyyX3aBEpWOCcgyeewa8Xd8R11gXokjH8zd8Wl33oPlhDXGd7hEp8MQJyVp
-        bn/5+vldBedLJKPitHRSqe2GpZENcTZJdH4Q15qnbEUc6en55zoh+7huXS4HEU4jjxEPePxebk3Kd
-        ZGxWxQMdeW2uJZRrxYwR2uG8Cjtr0DO+cGy60qFx6QxSW5dvhqFCJfy54c4iuQD9vmAdgW7fwz/09
-        ZwChxmAMA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKIZg-0000hy-G3; Tue, 15 Oct 2019 08:53:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42F553032F8;
-        Tue, 15 Oct 2019 10:52:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9F35C28B550CD; Tue, 15 Oct 2019 10:52:57 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 10:52:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        bberg@redhat.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        ckellner@redhat.com
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191015085257.GE2311@hirez.programming.kicks-ass.net>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191014213618.GK4715@zn.tnic>
- <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
+        Tue, 15 Oct 2019 04:54:47 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 14A2060C04; Tue, 15 Oct 2019 08:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571129686;
+        bh=aEu5mpzn32x7rkyUlbfZ0xOhWov1nX00SdmGcW+iGoI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FukvMCOkMX0+h4rUDyGj+jeSj6Qgm7ZMj+Zjx49Tm+3ylBFf7z2ucK8iBv4YbD4Oj
+         YtShomCAE5yU4GNjqSV08wPw6F0WJnGxYp1qnB3FzEd+fLfh9kxnorxpSTCkPy23zy
+         tuL7R7svGNdKHlZol7FQhEjBsnT1v0x7IATuZe5w=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 3E70360907;
+        Tue, 15 Oct 2019 08:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571129681;
+        bh=aEu5mpzn32x7rkyUlbfZ0xOhWov1nX00SdmGcW+iGoI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Cts81DNd9f3YV99tFQWbWJR+ug5gXbEGlgczDEO504sISeM82eKMt7iwXN4v+Smvs
+         FB8SBdtw0smr+AFS6vahbYTpnEO3FrEEYFbmmiJhwRTEQdg3LZS0lRZi6f5PxuDyQz
+         OSbj3PXXw4CMu2OHsQPl0cuPeBrgC8Q3IowQjAZ8=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 15 Oct 2019 14:24:39 +0530
+From:   kgunda@codeaurora.org
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH V6 3/8] backlight: qcom-wled: Add new properties for
+ PMI8998
+In-Reply-To: <3836b382-a4e6-d6db-9667-1851a9cf0112@ti.com>
+References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
+ <1569825553-26039-4-git-send-email-kgunda@codeaurora.org>
+ <3836b382-a4e6-d6db-9667-1851a9cf0112@ti.com>
+Message-ID: <2500384590b9f01116fc8ddf8f1b20b9@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 03:27:35PM -0700, Luck, Tony wrote:
-> On Mon, Oct 14, 2019 at 11:36:18PM +0200, Borislav Petkov wrote:
-> > This description is already *begging* for this delay value to be
-> > automatically set by the kernel. Putting yet another knob in front of
-> > the user who doesn't have a clue most of the time shows one more time
-> > that we haven't done our job properly by asking her to know what we
-> > already do.
-> > 
-> > IOW, a simple history feedback mechanism which sets the timeout based on
-> > the last couple of values is much smarter. The thing would have a max
-> > value, of course, which, when exceeded should mean an anomaly, etc, but
-> > almost anything else is better than merely asking the user to make an
-> > educated guess.
+On 2019-10-01 20:42, Dan Murphy wrote:
+> Kiran
 > 
-> You need a plausible start point for the "when to worry the user"
-> message.  Maybe that is your "max value"?
+> On 9/30/19 1:39 AM, Kiran Gunda wrote:
+>> Update the bindings with the new properties used for
+>> PMI8998.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>> ---
+>>   .../bindings/leds/backlight/qcom-wled.txt          | 76 
+>> ++++++++++++++++++----
+>>   1 file changed, 62 insertions(+), 14 deletions(-)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt 
+>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> index 14f28f2..9d840d5 100644
+>> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> @@ -20,8 +20,7 @@ platforms. The PMIC is connected to the host 
+>> processor via SPMI bus.
+>>   - default-brightness
+>>   	Usage:        optional
+>>   	Value type:   <u32>
+>> -	Definition:   brightness value on boot, value from: 0-4095
+>> -		      Default: 2048
+>> +	Definition:   brightness value on boot, value from: 0-4095.
+>>     - label
+>>   	Usage:        required
+>> @@ -48,20 +47,24 @@ platforms. The PMIC is connected to the host 
+>> processor via SPMI bus.
+>>   - qcom,current-limit
+>>   	Usage:        optional
+>>   	Value type:   <u32>
+>> -	Definition:   mA; per-string current limit
+>> -		      value: For pm8941: from 0 to 25 with 5 mA step
+>> -			     Default 20 mA.
+>> -			     For pmi8998: from 0 to 30 with 5 mA step
+>> -			     Default 25 mA.
+>> +	Definition:   mA; per-string current limit; value from 0 to 25 with
+>> +		      1 mA step.
+>> +		      This property is supported only for pm8941.
+>> +
+>> +- qcom,current-limit-microamp
+>> +	Usage:        optional
+>> +	Value type:   <u32>
+>> +	Definition:   uA; per-string current limit; value from 0 to 30000 
+>> with
+>> +		      2500 uA step.
+>>     - qcom,current-boost-limit
+>>   	Usage:        optional
+>>   	Value type:   <u32>
+>>   	Definition:   mA; boost current limit.
+>>   		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
+>> -		      1680. Default: 805 mA
+>> +		      1680.
+>>   		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
+>> -		      1500. Default: 970 mA
+>> +		      1500.
+>>     - qcom,switching-freq
+>>   	Usage:        optional
+>> @@ -69,22 +72,66 @@ platforms. The PMIC is connected to the host 
+>> processor via SPMI bus.
+>>   	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 
+>> 738,
+>>   		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
+>>   		       4800, 9600.
+>> -		       Default: for pm8941: 1600 kHz
+>> -				for pmi8998: 800 kHz
+>>     - qcom,ovp
+>>   	Usage:        optional
+>>   	Value type:   <u32>
+>>   	Definition:   V; Over-voltage protection limit; one of:
+>> -		      27, 29, 32, 35. default: 29V
+>> +		      27, 29, 32, 35.
+>>   		      This property is supported only for PM8941.
+>>   +- qcom,ovp-millivolt
+>> +	Usage:        optional
+>> +	Value type:   <u32>
+>> +	Definition:   mV; Over-voltage protection limit;
+>> +		      For pmi8998: one of 18100, 19600, 29600, 31100
+>> +		      If this property is not specified for PM8941, it
+>> +		      falls back to "qcom,ovp" property.
+>> +
+>>   - qcom,num-strings
+>>   	Usage:        optional
+>>   	Value type:   <u32>
+>>   	Definition:   #; number of led strings attached;
+>> -		      value from 1 to 3. default: 2
+>> -		      This property is supported only for PM8941.
+>> +		      value: For PM8941 from 1 to 3.
+>> +			     For PMI8998 from 1 to 4.
 > 
-> So if the system has a couple of excursions above temperature lasting
-> 1 second and then 2 seconds ... would you like to see those ignored
-> (because they are below the initial max)? But now we have a couple
-> of data points pick some new value to be the threshold for reporting?
+> We probably don't need this since we define 1 led node per output. 
+> And if you need to define
 > 
-> What value should we pick (based on 1 sec, then 2 sec)?
+> multiple strings per node then you use led-sources.
 > 
-> I would be worried that it would self tune to the point where it
-> does report something that it really didn't need to (e.g. as a result
-> of a few consecutive very short excursions).
+> Then you will use fwnode_property_count_u32(child, "led-sources"); to
+> get the number of outputs
+> 
+> 
+I have kept this property as is to have the backward compatibility with 
+pm8941-wled.
+The backward compatibility is broken if this property is removed.
 
-I'm guessing Boris is thinking of a simple IIR like avg filter.
+>> +
+>> +- interrupts
+>> +	Usage:        optional
+>> +	Value type:   <prop encoded array>
+>> +	Definition:   Interrupts associated with WLED. This should be
+>> +		      "short" and "ovp" interrupts. Interrupts can be
+>> +		      specified as per the encoding listed under
+>> +		      Documentation/devicetree/bindings/spmi/
+>> +		      qcom,spmi-pmic-arb.txt.
+>> +
+>> +- interrupt-names
+>> +	Usage:        optional
+>> +	Value type:   <string>
+>> +	Definition:   Interrupt names associated with the interrupts.
+>> +		      Must be "short" and "ovp". The short circuit detection
+>> +		      is not supported for PM8941.
+>> +
+>> +- qcom,enabled-strings
+>> +	Usage:        optional
+>> +	Value tyoe:   <u32 array>
+>> +	Definition:   Array of the WLED strings numbered from 0 to 3. Each
+>> +		      string of leds are operated individually. Specify the
+>> +		      list of strings used by the device. Any combination of
+>> +		      led strings can be used.
+> 
+> We usually use the reg property per led node to denote what output is
+> associated with which
+> 
+> property node.  And if you want to define multiple outputs per node
+> then you need to use
+> 
+> led-sources
+> 
+> See leds-lm3697.txt for an example
+> 
+> Dan
+As per the Qualcomm hardware recommendation , all the strings (leds) 
+properties like
+OVP, FSC and brightness etc .. should have the same values. That's why 
+all the strings (leds)
+and it's properties are mentioned in a single node.
 
-	avg = avg + (sample-avg) / 4
 
-And then only print when sample > 2*avg. If you initialize that with
-some appropriately large value, it should settle down into what it
-'normal' for that particular piece of hardware.
-
-Still, I'm boggled by the whole idea that hitting critical hard throttle
-is considered 'normal' at all.
-
-> We also need to take into account the "typical sampling interval"
-> for user space thermal control software.
-
-Why is control of critical thermal crud in userspace? That seems like a
-massive design fail.
