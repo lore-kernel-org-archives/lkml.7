@@ -4,161 +4,291 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C0BECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6472C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C0520673
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9110120673
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 02:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfJOCft (ORCPT
+        id S1727311AbfJOCp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 22:35:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726430AbfJOCft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 22:35:49 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 12163C3C80012EDBF0CF;
-        Tue, 15 Oct 2019 10:35:48 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 10:35:40 +0800
-Subject: Re: [RFC PATCH 1/6] ACPI/IORT: Set PMCG device parent
-To:     John Garry <john.garry@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <sudeep.holla@arm.com>, <robin.murphy@arm.com>,
-        <mark.rutland@arm.com>, <will@kernel.org>
-CC:     <shameerali.kolothum.thodi@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <nleeder@codeaurora.org>,
-        <linuxarm@huawei.com>
-References: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
- <1569854031-237636-2-git-send-email-john.garry@huawei.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <ae9a1c8a-d84b-95ab-9a6b-87a7c89c68d9@huawei.com>
-Date:   Tue, 15 Oct 2019 10:35:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Mon, 14 Oct 2019 22:45:56 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:46659 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727243AbfJOCp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 22:45:56 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Tf5Xo3t_1571107548;
+Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tf5Xo3t_1571107548)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 15 Oct 2019 10:45:49 +0800
+Subject: Re: [PATCH] rcu: make PREEMPT_RCU to be a decoration of TREE_RCU
+To:     paulmck@kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Sterba <dsterba@suse.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20191013125959.3280-1-laijs@linux.alibaba.com>
+ <20191014184832.GA125935@google.com>
+ <20191015014650.GL2689@paulmck-ThinkPad-P72>
+ <CAJhGHyCMa7mU_K+-22MHGwJ+BfFun=2ndzehZCMoNrgYfBowaQ@mail.gmail.com>
+ <20191015020023.GO2689@paulmck-ThinkPad-P72>
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+Message-ID: <6bc1c7ef-5389-3a88-9ffe-c8c56e22a11a@linux.alibaba.com>
+Date:   Tue, 15 Oct 2019 10:45:48 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1569854031-237636-2-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191015020023.GO2689@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
 
-On 2019/9/30 22:33, John Garry wrote:
-> In the IORT, a PMCG node includes a node reference to its associated
-> device.
+
+On 2019/10/15 10:00 上午, Paul E. McKenney wrote:
+> On Tue, Oct 15, 2019 at 09:50:21AM +0800, Lai Jiangshan wrote:
+>> On Tue, Oct 15, 2019 at 9:46 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+>>>
+>>> On Mon, Oct 14, 2019 at 02:48:32PM -0400, Joel Fernandes wrote:
+>>>> On Sun, Oct 13, 2019 at 12:59:57PM +0000, Lai Jiangshan wrote:
+>>>>> Currently PREEMPT_RCU and TREE_RCU are "contrary" configs
+>>>>> when they can't be both on. But PREEMPT_RCU is actually a kind
+>>>>> of TREE_RCU in the implementation. It seams to be appropriate
+>>>>> to make PREEMPT_RCU to be a decorative option of TREE_RCU.
+>>>>>
+>>>>
+>>>> Looks like a nice simplification and so far I could not poke any holes in the
+>>>> code...
+>>>>
+>>>> I am in support of this patch for further review and testing. Thanks!
+>>>>
+>>>> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>>
+>>> Thank you both!
+>>>
+>>> Lai, what is this patch against?  It does not want to apply to the current
+>>> -rcu "dev" branch.
+>>
+>> Oh, sorry
+>>
+>> I wrongly made the change base on upstream.
+>> I will rebase later.
 > 
-> Set the PMCG platform device parent device for future referencing.
+> Very good, looking forward to this updated version.
 > 
-> For now, we only consider setting for when the associated component is an
-> SMMUv3.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  drivers/acpi/arm64/iort.c | 34 ++++++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 8569b79e8b58..0b687520c3e7 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1455,7 +1455,7 @@ static __init const struct iort_dev_config *iort_get_dev_cfg(
->   * Returns: 0 on success, <0 failure
+> 							Thanx, Paul
 
-...
 
->   */
->  static int __init iort_add_platform_device(struct acpi_iort_node *node,
-> -					   const struct iort_dev_config *ops)
-> +					   const struct iort_dev_config *ops, struct device *parent)
+In my box, the patch can be applied to the -rcu "dev" well.
+And there is nothing strange after boot.
 
-Since you added a input for this function, could you please update
-the comments of this function as well?
-
->  {
->  	struct fwnode_handle *fwnode;
->  	struct platform_device *pdev;
-> @@ -1466,6 +1466,8 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
->  	if (!pdev)
->  		return -ENOMEM;
->  
-> +	pdev->dev.parent = parent;
-> +
->  	if (ops->dev_set_proximity) {
->  		ret = ops->dev_set_proximity(&pdev->dev, node);
->  		if (ret)
-> @@ -1573,6 +1575,11 @@ static void __init iort_enable_acs(struct acpi_iort_node *iort_node)
->  static inline void iort_enable_acs(struct acpi_iort_node *iort_node) { }
->  #endif
->  
-> +static int iort_fwnode_match(struct device *dev, const void *fwnode)
-> +{
-> +	return dev->fwnode == fwnode;
-> +}
-> +
->  static void __init iort_init_platform_devices(void)
->  {
->  	struct acpi_iort_node *iort_node, *iort_end;
-> @@ -1594,11 +1601,34 @@ static void __init iort_init_platform_devices(void)
->  				iort_table->length);
->  
->  	for (i = 0; i < iort->node_count; i++) {
-> +		struct device *parent = NULL;
-> +
->  		if (iort_node >= iort_end) {
->  			pr_err("iort node pointer overflows, bad table\n");
->  			return;
->  		}
->  
-> +		/* Fixme: handle parent declared in IORT after PMCG */
-> +		if (iort_node->type == ACPI_IORT_NODE_PMCG) {
-> +			struct acpi_iort_node *iort_assoc_node;
-> +			struct acpi_iort_pmcg *pmcg;
-> +			u32 node_reference;
-> +
-> +			pmcg = (struct acpi_iort_pmcg *)iort_node->node_data;
-> +
-> +			node_reference = pmcg->node_reference;
-> +			iort_assoc_node = ACPI_ADD_PTR(struct acpi_iort_node, iort,
-> +				 node_reference);
-> +
-> +			if (iort_assoc_node->type == ACPI_IORT_NODE_SMMU_V3) {
-> +				struct fwnode_handle *assoc_fwnode;
-> +
-> +				assoc_fwnode = iort_get_fwnode(iort_assoc_node);
-> +
-> +				parent = bus_find_device(&platform_bus_type, NULL,
-> +				      assoc_fwnode, iort_fwnode_match);
-> +			}
-> +		}
-
-How about using a function to include those new added code to make this
-function (iort_init_platform_devices()) a bit cleaner?
-
->  		iort_enable_acs(iort_node);
->  
->  		ops = iort_get_dev_cfg(iort_node);
-> @@ -1609,7 +1639,7 @@ static void __init iort_init_platform_devices(void)
->  
->  			iort_set_fwnode(iort_node, fwnode);
->  
-> -			ret = iort_add_platform_device(iort_node, ops);
-> +			ret = iort_add_platform_device(iort_node, ops, parent);
-
-This function is called if ops is valid, so retrieve the parent
-can be done before this function I think.
+Have I just made a mistake a again? In my box, the HEAD
+of -rcu "dev" is 9725023b ("torture: Handle jitter for CPUs that cannot 
+be offlined")
 
 Thanks
-Hanjun
+Lai
 
+> 
+>> thanks
+>> Lai
+>>
+>>>
+>>>                                                          Thanx, Paul
+>>>
+>>>> thanks,
+>>>>
+>>>>   - Joel
+>>>>
+>>>>
+>>>>> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
+>>>>> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+>>>>> ---
+>>>>>   include/linux/rcupdate.h   |  4 ++--
+>>>>>   include/trace/events/rcu.h |  4 ++--
+>>>>>   kernel/rcu/Kconfig         | 13 +++++++------
+>>>>>   kernel/rcu/Makefile        |  1 -
+>>>>>   kernel/rcu/rcu.h           |  2 +-
+>>>>>   kernel/rcu/update.c        |  2 +-
+>>>>>   kernel/sysctl.c            |  2 +-
+>>>>>   7 files changed, 14 insertions(+), 14 deletions(-)
+>>>>>
+>>>>> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+>>>>> index 75a2eded7aa2..1eee9f6c27f9 100644
+>>>>> --- a/include/linux/rcupdate.h
+>>>>> +++ b/include/linux/rcupdate.h
+>>>>> @@ -167,7 +167,7 @@ do { \
+>>>>>    * TREE_RCU and rcu_barrier_() primitives in TINY_RCU.
+>>>>>    */
+>>>>>
+>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>   #include <linux/rcutree.h>
+>>>>>   #elif defined(CONFIG_TINY_RCU)
+>>>>>   #include <linux/rcutiny.h>
+>>>>> @@ -583,7 +583,7 @@ do {                                                                          \
+>>>>>    * read-side critical section that would block in a !PREEMPT kernel.
+>>>>>    * But if you want the full story, read on!
+>>>>>    *
+>>>>> - * In non-preemptible RCU implementations (TREE_RCU and TINY_RCU),
+>>>>> + * In non-preemptible RCU implementations (pure TREE_RCU and TINY_RCU),
+>>>>>    * it is illegal to block while in an RCU read-side critical section.
+>>>>>    * In preemptible RCU implementations (PREEMPT_RCU) in CONFIG_PREEMPTION
+>>>>>    * kernel builds, RCU read-side critical sections may be preempted,
+>>>>> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+>>>>> index 694bd040cf51..1ce15c5be4c8 100644
+>>>>> --- a/include/trace/events/rcu.h
+>>>>> +++ b/include/trace/events/rcu.h
+>>>>> @@ -41,7 +41,7 @@ TRACE_EVENT(rcu_utilization,
+>>>>>      TP_printk("%s", __entry->s)
+>>>>>   );
+>>>>>
+>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>
+>>>>>   /*
+>>>>>    * Tracepoint for grace-period events.  Takes a string identifying the
+>>>>> @@ -425,7 +425,7 @@ TRACE_EVENT_RCU(rcu_fqs,
+>>>>>                __entry->cpu, __entry->qsevent)
+>>>>>   );
+>>>>>
+>>>>> -#endif /* #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) */
+>>>>> +#endif /* #if defined(CONFIG_TREE_RCU) */
+>>>>>
+>>>>>   /*
+>>>>>    * Tracepoint for dyntick-idle entry/exit events.  These take a string
+>>>>> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+>>>>> index 7644eda17d62..0303934e6ef0 100644
+>>>>> --- a/kernel/rcu/Kconfig
+>>>>> +++ b/kernel/rcu/Kconfig
+>>>>> @@ -7,7 +7,7 @@ menu "RCU Subsystem"
+>>>>>
+>>>>>   config TREE_RCU
+>>>>>      bool
+>>>>> -   default y if !PREEMPTION && SMP
+>>>>> +   default y if SMP
+>>>>>      help
+>>>>>        This option selects the RCU implementation that is
+>>>>>        designed for very large SMP system with hundreds or
+>>>>> @@ -17,6 +17,7 @@ config TREE_RCU
+>>>>>   config PREEMPT_RCU
+>>>>>      bool
+>>>>>      default y if PREEMPTION
+>>>>> +   select TREE_RCU
+>>>>>      help
+>>>>>        This option selects the RCU implementation that is
+>>>>>        designed for very large SMP systems with hundreds or
+>>>>> @@ -78,7 +79,7 @@ config TASKS_RCU
+>>>>>        user-mode execution as quiescent states.
+>>>>>
+>>>>>   config RCU_STALL_COMMON
+>>>>> -   def_bool ( TREE_RCU || PREEMPT_RCU )
+>>>>> +   def_bool TREE_RCU
+>>>>>      help
+>>>>>        This option enables RCU CPU stall code that is common between
+>>>>>        the TINY and TREE variants of RCU.  The purpose is to allow
+>>>>> @@ -86,13 +87,13 @@ config RCU_STALL_COMMON
+>>>>>        making these warnings mandatory for the tree variants.
+>>>>>
+>>>>>   config RCU_NEED_SEGCBLIST
+>>>>> -   def_bool ( TREE_RCU || PREEMPT_RCU || TREE_SRCU )
+>>>>> +   def_bool ( TREE_RCU || TREE_SRCU )
+>>>>>
+>>>>>   config RCU_FANOUT
+>>>>>      int "Tree-based hierarchical RCU fanout value"
+>>>>>      range 2 64 if 64BIT
+>>>>>      range 2 32 if !64BIT
+>>>>> -   depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
+>>>>> +   depends on TREE_RCU && RCU_EXPERT
+>>>>>      default 64 if 64BIT
+>>>>>      default 32 if !64BIT
+>>>>>      help
+>>>>> @@ -112,7 +113,7 @@ config RCU_FANOUT_LEAF
+>>>>>      int "Tree-based hierarchical RCU leaf-level fanout value"
+>>>>>      range 2 64 if 64BIT
+>>>>>      range 2 32 if !64BIT
+>>>>> -   depends on (TREE_RCU || PREEMPT_RCU) && RCU_EXPERT
+>>>>> +   depends on TREE_RCU && RCU_EXPERT
+>>>>>      default 16
+>>>>>      help
+>>>>>        This option controls the leaf-level fanout of hierarchical
+>>>>> @@ -187,7 +188,7 @@ config RCU_BOOST_DELAY
+>>>>>
+>>>>>   config RCU_NOCB_CPU
+>>>>>      bool "Offload RCU callback processing from boot-selected CPUs"
+>>>>> -   depends on TREE_RCU || PREEMPT_RCU
+>>>>> +   depends on TREE_RCU
+>>>>>      depends on RCU_EXPERT || NO_HZ_FULL
+>>>>>      default n
+>>>>>      help
+>>>>> diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
+>>>>> index 020e8b6a644b..82d5fba48b2f 100644
+>>>>> --- a/kernel/rcu/Makefile
+>>>>> +++ b/kernel/rcu/Makefile
+>>>>> @@ -9,6 +9,5 @@ obj-$(CONFIG_TINY_SRCU) += srcutiny.o
+>>>>>   obj-$(CONFIG_RCU_TORTURE_TEST) += rcutorture.o
+>>>>>   obj-$(CONFIG_RCU_PERF_TEST) += rcuperf.o
+>>>>>   obj-$(CONFIG_TREE_RCU) += tree.o
+>>>>> -obj-$(CONFIG_PREEMPT_RCU) += tree.o
+>>>>>   obj-$(CONFIG_TINY_RCU) += tiny.o
+>>>>>   obj-$(CONFIG_RCU_NEED_SEGCBLIST) += rcu_segcblist.o
+>>>>> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+>>>>> index 8fd4f82c9b3d..4149ba76824f 100644
+>>>>> --- a/kernel/rcu/rcu.h
+>>>>> +++ b/kernel/rcu/rcu.h
+>>>>> @@ -452,7 +452,7 @@ enum rcutorture_type {
+>>>>>      INVALID_RCU_FLAVOR
+>>>>>   };
+>>>>>
+>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>   void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
+>>>>>                          unsigned long *gp_seq);
+>>>>>   void rcutorture_record_progress(unsigned long vernum);
+>>>>> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+>>>>> index 1861103662db..34a7452b25fd 100644
+>>>>> --- a/kernel/rcu/update.c
+>>>>> +++ b/kernel/rcu/update.c
+>>>>> @@ -435,7 +435,7 @@ struct debug_obj_descr rcuhead_debug_descr = {
+>>>>>   EXPORT_SYMBOL_GPL(rcuhead_debug_descr);
+>>>>>   #endif /* #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD */
+>>>>>
+>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU) || defined(CONFIG_RCU_TRACE)
+>>>>> +#if defined(CONFIG_TREE_RCU) || defined(CONFIG_RCU_TRACE)
+>>>>>   void do_trace_rcu_torture_read(const char *rcutorturename, struct rcu_head *rhp,
+>>>>>                             unsigned long secs,
+>>>>>                             unsigned long c_old, unsigned long c)
+>>>>> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+>>>>> index 00fcea236eba..2ace158a4d72 100644
+>>>>> --- a/kernel/sysctl.c
+>>>>> +++ b/kernel/sysctl.c
+>>>>> @@ -1268,7 +1268,7 @@ static struct ctl_table kern_table[] = {
+>>>>>              .proc_handler   = proc_do_static_key,
+>>>>>      },
+>>>>>   #endif
+>>>>> -#if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>>>>> +#if defined(CONFIG_TREE_RCU)
+>>>>>      {
+>>>>>              .procname       = "panic_on_rcu_stall",
+>>>>>              .data           = &sysctl_panic_on_rcu_stall,
+>>>>> --
+>>>>> 2.20.1
+>>>>>
