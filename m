@@ -2,136 +2,74 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71419ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A53DECE595
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473562064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571146618;
-	bh=Lh3gUOxuzxYIzfbryzFH5J8YBK8MTzOYjOrLSH1iECQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gmZjTJ/izSHEFAw0Luu4lmO9POa0cTQE6020yEsplIO6SYzOXhfZ/TxbvVSB7XTry
-	 zs1s0lSUCDPk267SGO8kvNMF1bHooUCelDnpMCIaJu0lG5qbisi/u9C6+PL2j6xtXo
-	 Wu7rHXRl9k1DXCXiHocpUY//OfYk9il7+yIopTjg=
+	by mail.kernel.org (Postfix) with ESMTP id 0B8BA2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbfJONgx (ORCPT
+        id S1732066AbfJONhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 09:37:52 -0400
+Received: from 8bytes.org ([81.169.241.247]:47568 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbfJONgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:36:53 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09CD321A49;
-        Tue, 15 Oct 2019 13:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571146612;
-        bh=Lh3gUOxuzxYIzfbryzFH5J8YBK8MTzOYjOrLSH1iECQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SVdKnnRtv6N+AuRGXmT+CvC20RbJvOKot2xgYuMq/RpeAQtfMWF0SDW5rI8S4oiyj
-         783MHOK0MeowEn1QmynwKJS5kH+7ig+RbSPpaQpU/Y1FYLuBNG32oEjt6FFGKkh+vC
-         qSMVGlxG7opZINeoK0zcStHvzDntbyrWMN08u5SU=
-Received: by mail-qk1-f170.google.com with SMTP id f16so19152385qkl.9;
-        Tue, 15 Oct 2019 06:36:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAWR7HJRWAg1v3seqP5GRVy7Z0mHyd1NOZ+8YJpAVY4ywnolD3mE
-        WcIO9ZeaJqkdLvCN0Kfc+pQv0sACCOJ7CS0s/A==
-X-Google-Smtp-Source: APXvYqypirVCKVCRTL7nRtAYwMId0v/R2tSXy313ZY3pYHRXJuh7KZFwlJGt2xV9T7SPrVcWBZmRcO4Mo8Wu7toa2tg=
-X-Received: by 2002:a05:620a:12f1:: with SMTP id f17mr4163163qkl.152.1571146611108;
- Tue, 15 Oct 2019 06:36:51 -0700 (PDT)
+        id S1728880AbfJONhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:37:51 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id CAC062DF; Tue, 15 Oct 2019 15:37:49 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 15:37:48 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Kit Chow <kchow@gigaio.com>
+Subject: Re: [PATCH 3/3] iommu/amd: Support multiple PCI DMA aliases in IRQ
+ Remapping
+Message-ID: <20191015133748.GC17570@8bytes.org>
+References: <20191008221837.13067-1-logang@deltatee.com>
+ <20191008221837.13067-4-logang@deltatee.com>
 MIME-Version: 1.0
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-2-srinivas.kandagatla@linaro.org> <20191014171241.GA24989@bogus>
- <76be1a0d-43ea-44c3-ef6c-9f9a2025c7a2@linaro.org> <CAL_Jsq+ZBhh2A3yLtOyReHHAET_bvM-ygBtRXeFihAxf0jvDKQ@mail.gmail.com>
- <f7977140-c103-7d0d-9523-2212e1029598@linaro.org>
-In-Reply-To: <f7977140-c103-7d0d-9523-2212e1029598@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 15 Oct 2019 08:36:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJLmPGBxEkmZMTBMpp5xsnHq0SYg8+RQPsjnUfbHrrf5Q@mail.gmail.com>
-Message-ID: <CAL_JsqJLmPGBxEkmZMTBMpp5xsnHq0SYg8+RQPsjnUfbHrrf5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: soundwire: add bindings for Qcom controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191008221837.13067-4-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 7:22 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 15/10/2019 12:35, Rob Herring wrote:
-> > On Mon, Oct 14, 2019 at 12:34 PM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >> Thanks Rob for taking time to review,
-> >>
-> >> On 14/10/2019 18:12, Rob Herring wrote:
-> >>> On Fri, Oct 11, 2019 at 04:44:22PM +0100, Srinivas Kandagatla wrote:
-> >>>> This patch adds bindings for Qualcomm soundwire controller.
-> >>>>
-> >>>> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
-> >>>> either integrated as part of WCD audio codecs via slimbus or
-> >>>> as part of SOC I/O.
-> >>>>
-> >>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >>>> ---
-> >>>>    .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
-> >>>>    1 file changed, 167 insertions(+)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
-> >>>
-> >>> Next time, do a DT schema.
-> >>>
-> >> Sure! I can do that in next version!
-> >
-> > I meant the next binding you write, not v4. However, ...
-> >
-> > [...]
-> >
-> >>>> += SoundWire devices
-> >>>> +Each subnode of the bus represents SoundWire device attached to it.
-> >>>> +The properties of these nodes are defined by the individual bindings.
-> >>>
-> >>> Is there some sort of addressing that needs to be defined?
-> >>>
-> >> Thanks, Looks like I missed that here.
-> >>
-> >> it should be something like this,
-> >>
-> >> #address-cells = <2>;
-> >> #size-cells = <0>;
-> >>
-> >> Will add the in next version.
-> >
-> > You need a common soundwire binding for this. You also need to define
-> > the format of 'reg' and unit addresses. And it needs to be a schema.
-> > So perhaps this binding too should be.
->
-> We already have a common SoundWire bindings in mainline for this
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml?h=v5.4-rc3
+On Tue, Oct 08, 2019 at 04:18:37PM -0600, Logan Gunthorpe wrote:
+> -static struct irq_remap_table *alloc_irq_table(u16 devid)
+> +static int set_remap_table_entry_alias(struct pci_dev *pdev, u16 alias,
+> +				       void *data)
+> +{
+> +	struct irq_remap_table *table = data;
+> +
+> +	irq_lookup_table[alias] = table;
+> +	set_dte_irq_entry(alias, table);
+> +
+> +	return 0;
+> +}
+> +
+> +static int iommu_flush_dte_alias(struct pci_dev *pdev, u16 alias, void *data)
+> +{
+> +	struct amd_iommu *iommu = data;
+> +
+> +	iommu_flush_dte(iommu, alias);
+> +
+> +	return 0;
+> +}
 
-Indeed... :)
+I think these two functions can be merged into one, saving one
+pci_for_each_dma_alias() call below. You can lookup the iommu using the
+amd_iommu_rlookup_table[alias] in the first function and issue the flush
+there.
 
-> Should this binding just make a reference to it instead of duplicating
-> this same info here?
 
-Yes, that should be sufficient.
+Regards,
 
-Rob
+	Joerg
+
