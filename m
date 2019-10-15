@@ -2,85 +2,98 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C68ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED65C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43F0205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4ED205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r+E134qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbfJOPnd (ORCPT
+        id S2387458AbfJOPn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:43:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52954 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731230AbfJOPnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:43:33 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AFE75A3CD81;
-        Tue, 15 Oct 2019 15:43:32 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 754425D9CD;
-        Tue, 15 Oct 2019 15:43:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 15 Oct 2019 17:43:31 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 17:43:27 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Christian Kellner <christian@kellner.me>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org, Jann Horn <jannh@google.com>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 1/2] pidfd: verify task is alive when printing fdinfo
-Message-ID: <20191015154327.GB16978@redhat.com>
-References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
- <20191015144356.GA16978@redhat.com>
- <20191015145646.72eqrw6j52ehvfn2@wittgenstein>
+        Tue, 15 Oct 2019 11:43:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47972 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731230AbfJOPnz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:43:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mF/08n2fAE+Cf0p2QEGUuW9hepiucEN9OJ/KULoXRyc=; b=r+E134qwyxU9UwZ8oO6v1JCkl
+        Tgw/yvyODHCVCX1f9MscjA9NAjC6p4MS8gLFLbmCqzpkc0gMBZPDqEjigumw2zUw3Ibi/18vCLHmC
+        cOmJEeCft0HVXR9ECaqL2n4OaVE7C+W+M0M8QmAYfM0fMktGNKRMuBBzEzSwZpuLOAqDiGORaNYoh
+        NJGaQ5F8iRE2WGVYnvi41guo2YNIIze+x+ihpqaoeBLihiaZOvRrKhVD93O+JSYFJoNH3HrTGm80f
+        qpmCK1Qwgo8/+L744celIBR2zbMZ4wAZUY0o8eHfOW9OCRDUh3PP9Snp5v/Y+XY56VW+V6R4Y0mog
+        CQtrQnLsw==;
+Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKOzG-0007u8-Gh; Tue, 15 Oct 2019 15:43:50 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: lift the xfs writepage code into iomap v7
+Date:   Tue, 15 Oct 2019 17:43:33 +0200
+Message-Id: <20191015154345.13052-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015145646.72eqrw6j52ehvfn2@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 15 Oct 2019 15:43:32 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15, Christian Brauner wrote:
->
-> On Tue, Oct 15, 2019 at 04:43:57PM +0200, Oleg Nesterov wrote:
-> > But in fact I'd suggest to simply use !hlist_empty(&pid->tasks[PIDTYPE_PID])
-> > in pidfd_show_fdinfo() and do not add a new helper.
->
-> Sounds good to me. But can't we then just do something similar just with
-> !hlist_empty(&pid->tasks[PIDTYPE_TGID])
->
-> in v5.4-rc3:kernel/pid.c:pidfd_open():514-517 ?
+Hi all,
 
-Agreed. Actually, it seems to me I suggested to use rcu_lock_acquire() rather
-than rcu_read_lock() in pidfd_open() too.
+this series cleans up the xfs writepage code and then lifts it to
+fs/iomap/ so that it could be use by other file system.
 
-But hlist_empty(pid->tasks[type]) looks even better.
+Note that in this version a lot of the reviewed-by tag got dropped
+as the patch organization changed quite a bit (the actual final
+result changes very little, though).
 
-If you decide to add a new helper, you can also change do_wait() which checks
-hlist_empty(&wo->wo_pid->tasks[wo->wo_type]). May be even __change_pid().
+Changes since v6:
+ - actually add trace.c to the patch
+ - move back to the old order that massages XFS into shape and then
+   lifts the code to iomap
+ - cleanup iomap_ioend_compare
+ - cleanup the add_to_ioend checks
 
-Oleg.
+Changes since v5:
+ - move the tracing code to fs/iomap/trace.[ch]
+ - fix a bisection issue with the tracing code
+ - add an assert that xfs_end_io now only gets "complicated" completions
+ - better document the iomap_writeback_ops methods in iomap.h
 
+Changes since v4:
+ - rebased on top 5.4-rc1
+ - drop the addition of list_pop / list_pop_entry
+ - re-split a few patches to better fit Darricks scheme of keeping the
+   iomap additions separate from the XFS switchover
+
+Changes since v3:
+ - re-split the pages to add new code to iomap and then switch xfs to
+   it later (Darrick)
+
+Changes since v2:
+ - rebased to v5.3-rc1
+ - folded in a few changes from the gfs2 enablement series
+
+Changes since v1:
+ - rebased to the latest xfs for-next tree
+ - keep the preallocated transactions for size updates
+ - rename list_pop to list_pop_entry and related cleanups
+ - better document the nofs context handling
+ - document that the iomap tracepoints are not a stable API
