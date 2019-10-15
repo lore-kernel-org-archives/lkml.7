@@ -2,165 +2,171 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12071ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BBCECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63C420854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1202920854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nlZUuFWk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5mFqjgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389072AbfJOWF1 (ORCPT
+        id S2387576AbfJOWGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:05:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60716 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727573AbfJOWF1 (ORCPT
+        Tue, 15 Oct 2019 18:06:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39606 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfJOWGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:05:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FLxjVb100533;
-        Tue, 15 Oct 2019 22:05:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=KPP03hfrrXQ4Nsszrtqc/SzL79QsW11j9w/mUGBt86s=;
- b=nlZUuFWkWk5gzDyq5PkBnONz9nPKO9+D+TgGNcvG57cq/bbMqFjC00IA90N3beSmu3VD
- vqfy159fIujtSNqe9JflwD9f7QgHZ9Iakqr+L9J72aKad82ofCsUmJg/cWF+JTeQoOE9
- MqNii6ia6cMozivw/VwmPV1VVCDedr64SwakwSmhf4MfFQGT5jOMJlML5yS5lSvli5Wz
- m7tzH2JYxgxo0lrQQrfieiejG6yYej92IG7zgtp1FHG8G39P7r1O1CExX9J0N+lFYP9z
- IecDZthsOOeNxEdWqe3cGfupUym4o565i3OGSQuLxdQklU3tO7VV5gLOGKYtKoDlKcAE 1w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7frawmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 22:05:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FM43P6119202;
-        Tue, 15 Oct 2019 22:05:06 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vn71987su-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 22:05:06 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9FM539h014007;
-        Tue, 15 Oct 2019 22:05:03 GMT
-Received: from dhcp-10-132-91-76.usdhcp.oraclecorp.com (/10.132.91.76)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 22:05:03 +0000
-Subject: Re: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup
- functions
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191015164033.87276-1-xiaoyao.li@intel.com>
- <20191015164033.87276-2-xiaoyao.li@intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <82a41967-98ca-1bc8-fce3-77aaf18b0c1a@oracle.com>
-Date:   Tue, 15 Oct 2019 15:05:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Tue, 15 Oct 2019 18:06:48 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p12so3640641pgn.6;
+        Tue, 15 Oct 2019 15:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dYO7GjWloOND6hSPOAQvEuLC+MRq67dhIYtSI7PDZqA=;
+        b=I5mFqjgmw/+rduOfSa7mdjY2+pVAum2a1hPeqtC+2baLDKGIK0Y9kG+jislEeUPrN0
+         6DV9KDhYW84DcD4ZOgqof0Ysz/9vf2FbIiivaqgAiZKAxe4MoAamj0nEb47//Jfba8aq
+         Lv550R4tE71yNe5+A0HCes9R/NvNAVKkr0bv6F18kU8HdY/9zGDiBSVqe+pQREv5OeAR
+         Hx6KWY8JqRZYxAStOvrG9CLt1mzoDHyE7/LFTW786gem9sk42Q+p9sHczjGy/HxahiX7
+         E3rpGfWcGXunrav4zcN4dI9ocfCE9TdunrQ2eKXi2VIbtDOfiP4G92GMIPPcraaI04S8
+         sXoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dYO7GjWloOND6hSPOAQvEuLC+MRq67dhIYtSI7PDZqA=;
+        b=k0j/zvRl10UFN9OESvKw94Z4pqOdUCg/+mMGJFf75bRfnTpxeH8xhESA7hUP1Pjh+w
+         XhIM6oMeSRcCJYZkvB4hmLu98vxmDs0MXiTjNEOoS4Ov1IkaPRb2K04RMgjICzg3KgLN
+         9G3Oc3EPj24r+YNlt/OumNwrRMiV6L9VvA0Ugd7ViLKGaEAyloXDP69N6n7VecTGRmnF
+         0P2ZcUfsO70dtcAeNl/ro7ra5gVGfi7hOe32WSec4HGG8ghzalTA06C9vpIhYTQuDq7s
+         z1NJuOl5yGtBoJvdZ51fiJLzC2WSSRS1NRxPEFBz5/2JFYYH2lp4Ag7q0Wh7v/ccnfMb
+         6L7A==
+X-Gm-Message-State: APjAAAWjlkvnF9kVWXOyNEprkC4NlukoaIa15q1GZbVcAvdfIVRba+5z
+        JxHo6KCSQU8jN3NyoT4WTyoA4GXPokgAkw==
+X-Google-Smtp-Source: APXvYqxrxRkxDS61JrACgr6FX1z8oQ+rjZqY8ssnNx1gZukRLOwK/xG0kqhV2cKTvjvrk7K9ZLC6NQ==
+X-Received: by 2002:a17:90a:6302:: with SMTP id e2mr878823pjj.20.1571177206148;
+        Tue, 15 Oct 2019 15:06:46 -0700 (PDT)
+Received: from [192.168.110.119] ([198.182.47.47])
+        by smtp.gmail.com with ESMTPSA id o60sm292236pje.21.2019.10.15.15.06.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 15:06:44 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] ARC: mm: remove __ARCH_USE_5LEVEL_HACK
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-snps-arc@lists.infradead.org, Will Deacon <will@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20191015191926.9281-1-vgupta@synopsys.com>
+ <20191015191926.9281-2-vgupta@synopsys.com>
+ <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
+From:   Vineet Gupta <vineetg76@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vineetg76@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ deE0Dvw98SWmZSNtdOPnJZ0D
+Message-ID: <a1aee16f-cde7-0bed-e1ab-f94b6268e4ff@gmail.com>
+Date:   Tue, 15 Oct 2019 15:06:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015164033.87276-2-xiaoyao.li@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wi3QC7tj3rmTPg5RmK_ugVKYs-jKqX=TaASWfd73Owaig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150189
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150189
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/15/19 2:48 PM, Linus Torvalds wrote:
+> On Tue, Oct 15, 2019 at 12:19 PM Vineet Gupta
+> <Vineet.Gupta1@synopsys.com> wrote:
+>> This is a non-functional change anyways since ARC has software page walker
+>> with 2 lookup levels (pgd -> pte)
+>
+> Could we encourage other architectures to do the same, and get rid of
+> all uses of __ARCH_USE_5LEVEL_HACK?
+
+IMHO this should have been done at the onset. The actual changes don't seem that
+difficult, just need to add the missing p4d calls although I can sympathize with
+hassles of coordinating/building/testing/yadi yada cross arch.
+
+OTOH, the [45]LEVEL_HACK seem like a nice way to "fold" the levels: the
+skipped/folded level vanishes completely. Among others it does things like
+
+     #define p4d_t	pgd_t	
+
+On ARC 2-level code:
+
+   free_pte_range
+	pmd_pgtable(*pmd);
+
+	    ((((((*pmd).pud).pgd))) & PAGE_MASK));	     <-- 5LEVEL_HACK
+			vs.
+	    ((((((((*pmd).pud).p4d).pgd)))) & PAGE_MASK ));  <-- w/o 5LEVEL_HACK
+	
+	pmd_clear(pmd);
+
+	    *(pmd)).pud).pgd)))) = 0
+			vs.
+	    *(pmd)).pud).p4d).pgd)))) = 0
 
 
-On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
-> Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
-> to match what they really do.
->
-> No functional change.
->
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->   arch/x86/kvm/vmx/nested.c | 2 +-
->   arch/x86/kvm/vmx/nested.h | 2 +-
->   arch/x86/kvm/vmx/vmx.c    | 9 +++------
->   3 files changed, 5 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 5e231da00310..7935422d311f 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
->   	return ret;
->   }
->   
-> -void nested_vmx_vcpu_setup(void)
-> +void nested_vmx_vmcs_setup(void)
->   {
->   	if (enable_shadow_vmcs) {
->   		vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
-> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-> index 187d39bf0bf1..2be1ba7482c9 100644
-> --- a/arch/x86/kvm/vmx/nested.h
-> +++ b/arch/x86/kvm/vmx/nested.h
-> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
->   				bool apicv);
->   void nested_vmx_hardware_unsetup(void);
->   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
-> -void nested_vmx_vcpu_setup(void);
-> +void nested_vmx_vmcs_setup(void);
->   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
->   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry);
->   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e660e28e9ae0..58b77a882426 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
->   
->   #define VMX_XSS_EXIT_BITMAP 0
->   
-> -/*
-> - * Sets up the vmcs for emulated real mode.
-> - */
-> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
-> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->   {
->   	int i;
->   
->   	if (nested)
-> -		nested_vmx_vcpu_setup();
-> +		nested_vmx_vmcs_setup();
->   
->   	if (cpu_has_vmx_msr_bitmap())
->   		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
-> @@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->   	cpu = get_cpu();
->   	vmx_vcpu_load(&vmx->vcpu, cpu);
->   	vmx->vcpu.cpu = cpu;
-> -	vmx_vcpu_setup(vmx);
-> +	vmx_vmcs_setup(vmx);
->   	vmx_vcpu_put(&vmx->vcpu);
->   	put_cpu();
->   	if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
+So we may not be able to fix all he historical misgivigs, but this might alleviate
+the pain a bit. I'll try to dabble a bit.
 
-May be we should rename vmx_vcpu_reset() to vmx_vmcs_reset()  as well  ?
+Thx for taking a look and te ACKs.
+-Vineet
