@@ -2,155 +2,82 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661A8ECE595
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C828ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FE4214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA4E2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfJOONo (ORCPT
+        id S1732594AbfJOONr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:13:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39662 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732547AbfJOONm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:13:42 -0400
-Received: from [213.220.153.21] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKNZy-0004YA-L2; Tue, 15 Oct 2019 14:13:38 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Christian Kellner <christian@kellner.me>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-api@vger.kernel.org
-Subject: [PATCH 1/2] pidfd: verify task is alive when printing fdinfo
-Date:   Tue, 15 Oct 2019 16:13:31 +0200
-Message-Id: <20191015141332.4055-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 15 Oct 2019 10:13:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44588 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732500AbfJOONq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:13:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 30A43B450;
+        Tue, 15 Oct 2019 14:13:44 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 16:13:41 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Jessica Yu <jeyu@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+In-Reply-To: <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+References: <20191007081945.10951536.8@infradead.org> <20191008104335.6fcd78c9@gandalf.local.home> <20191009224135.2dcf7767@oasis.local.home> <20191010092054.GR2311@hirez.programming.kicks-ass.net> <20191010091956.48fbcf42@gandalf.local.home>
+ <20191010140513.GT2311@hirez.programming.kicks-ass.net> <20191010115449.22044b53@gandalf.local.home> <20191010172819.GS2328@hirez.programming.kicks-ass.net> <20191011125903.GN2359@hirez.programming.kicks-ass.net> <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when a task is dead we still print the pid it used to use in
-the fdinfo files of its pidfds. This doesn't make much sense since the
-pid may have already been reused. So verify that the task is still
-alive. If the task is not alive anymore, we will print -1. This allows
-us to differentiate between a task not being present in a given pid
-namespace - in which case we already print 0 - and a task having been
-reaped.
+[ live-patching ML CCed ]
 
-Note that this uses PIDTYPE_PID for the check. Technically, we could've
-checked PIDTYPE_TGID since pidfds currently only refer to thread-group
-leaders but if they won't anymore in the future then this check becomes
-problematic without it being immediately obvious to non-experts imho. If
-a thread is created via clone(CLONE_THREAD) than struct pid has a single
-non-empty list pid->tasks[PIDTYPE_PID] and this pid can't be used as a
-PIDTYPE_TGID meaning pid->tasks[PIDTYPE_TGID] will return NULL even
-though the thread-group leader might still be very much alive. We could
-be more complicated and do something like:
+On Tue, 15 Oct 2019, Peter Zijlstra wrote:
 
-bool alive = false;
-rcu_read_lock();
-struct task_struct *tsk = pid_task(pid, PIDTYPE_PID);
-if (tsk && task_tgid(tsk))
-	alive = true;
-rcu_read_unlock();
+> On Tue, Oct 15, 2019 at 03:07:40PM +0200, Jessica Yu wrote:
+> 
+> > > The fact that it is executable; also the fact that you do it right after
+> > > we mark it ro. Flipping the memory protections back and forth is just
+> > > really poor everything.
+> > > 
+> > > Once this ftrace thing is sorted, we'll change x86 to _refuse_ to make
+> > > executable (kernel) memory writable.
+> > 
+> > Not sure if relevant, but just thought I'd clarify: IIRC,
+> > klp_module_coming() is not poking the coming module, but it calls
+> > module_enable_ro() on itself (the livepatch module) so it can apply
+> > relocations and such on the new code, which lives inside the livepatch
+> > module, and it needs to possibly do this numerous times over the
+> > lifetime of the patch module for any coming module it is responsible
+> > for patching (i.e., call module_enable_ro() on the patch module, not
+> > necessarily the coming module). So I am not be sure why
+> > klp_module_coming() should be moved before complete_formation(). I
+> > hope I'm remembering the details correctly, livepatch folks feel free
+> > to chime in if I'm incorrect here.
+> 
+> You mean it does module_disable_ro() ? That would be broken and it needs
+> to be fixed. Can some livepatch person explain what it does and why?
 
-but it's really not worth it. We already have created a pidfd and we
-thus know it refers to a thread-group leader. Checking PIDTYPE_PID is
-fine and is easier to maintain should we ever allow pidfds to refer to
-threads.
+Yes, it does. klp_module_coming() calls module_disable_ro() on all 
+patching modules which patch the coming module in order to call 
+apply_relocate_add(). New (patching) code for a module can be relocated 
+only when the relevant module is loaded.
 
-Cc: Jann Horn <jannh@google.com>
-Cc: Christian Kellner <christian@kellner.me>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-api@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- kernel/fork.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 782986962d47..a67944a5e542 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1695,6 +1695,18 @@ static int pidfd_release(struct inode *inode, struct file *file)
- }
- 
- #ifdef CONFIG_PROC_FS
-+static inline bool task_alive(struct pid *pid)
-+{
-+	bool alive = true;
-+
-+	rcu_read_lock();
-+	if (!pid_task(pid, PIDTYPE_PID))
-+		alive = false;
-+	rcu_read_unlock();
-+
-+	return alive;
-+}
-+
- /**
-  * pidfd_show_fdinfo - print information about a pidfd
-  * @m: proc fdinfo file
-@@ -1732,15 +1744,20 @@ static int pidfd_release(struct inode *inode, struct file *file)
-  */
- static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
- {
--	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
- 	struct pid *pid = f->private_data;
--	pid_t nr = pid_nr_ns(pid, ns);
-+	struct pid_namespace *ns;
-+	pid_t nr = -1;
-+
-+	if (likely(task_alive(pid))) {
-+		ns = proc_pid_ns(file_inode(m->file));
-+		nr = pid_nr_ns(pid, ns);
-+	}
- 
--	seq_put_decimal_ull(m, "Pid:\t", nr);
-+	seq_put_decimal_ll(m, "Pid:\t", nr);
- 
- #ifdef CONFIG_PID_NS
--	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
--	if (nr) {
-+	seq_put_decimal_ll(m, "\nNSpid:\t", nr);
-+	if (nr > 0) {
- 		int i;
- 
- 		/* If nr is non-zero it means that 'pid' is valid and that
-@@ -1749,7 +1766,7 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
- 		 * Start at one below the already printed level.
- 		 */
- 		for (i = ns->level + 1; i <= pid->level; i++)
--			seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
-+			seq_put_decimal_ll(m, "\t", pid->numbers[i].nr);
- 	}
- #endif
- 	seq_putc(m, '\n');
--- 
-2.23.0
-
+Miroslav
