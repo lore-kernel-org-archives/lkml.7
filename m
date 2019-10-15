@@ -2,96 +2,149 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659BCC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4697EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F942089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:30:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ng85Gh/P";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YKJ0erlu"
+	by mail.kernel.org (Postfix) with ESMTP id 1C34121835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfJOHaO (ORCPT
+        id S1727531AbfJOHaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 03:30:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51518 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfJOHaN (ORCPT
+        Tue, 15 Oct 2019 03:30:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49864 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725710AbfJOHaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 03:30:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1C57B607EF; Tue, 15 Oct 2019 07:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571124613;
-        bh=gWI5vS4LE2mM1KgFOZqFpR0hhNVS/xdT8FfifKIimMo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ng85Gh/PH2Amof+QeGPgy6g23SzlglLv12iiZwhPMS153MF9IKU6/M/ocUstx2kYh
-         V12q6RCYKjqO+bv4sdPNUiH8JIZFtLFBooQlsyZaoUY1cFftvLGspAGwUMED8XfjcN
-         PmMrFHo/2zo/8vX/W9s0crvCSK0tciAZe/9swwS4=
-Received: from mojha-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C326760A43;
-        Tue, 15 Oct 2019 07:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571124612;
-        bh=gWI5vS4LE2mM1KgFOZqFpR0hhNVS/xdT8FfifKIimMo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YKJ0erluDlold+ao0gXTJLwRHAygJPeCMBh40ytwx48uWpmjXIE2UZKE47tcSXFJz
-         p8B7I1WImtXcHpIYwNVOesOA10eKhqQkuqRHBYMOusej6uOZg2KAc32pey0zChkglt
-         GotwiPfpgTE02I62i+8w+bEyMhh2X2fiLCh/Kq/s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C326760A43
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     john.stultz@linaro.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH 1/3] time/jiffies: Fixes some typo
-Date:   Tue, 15 Oct 2019 13:00:03 +0530
-Message-Id: <1571124603-9334-1-git-send-email-mojha@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 15 Oct 2019 03:30:24 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9F7IZw9092904
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:30:23 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vn4yp8q9a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:30:22 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Tue, 15 Oct 2019 08:30:17 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 15 Oct 2019 08:30:13 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9F7UC1u11206828
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 07:30:12 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FBB9A4051;
+        Tue, 15 Oct 2019 07:30:11 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0DA4A405B;
+        Tue, 15 Oct 2019 07:30:06 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.211.120])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 15 Oct 2019 07:30:06 +0000 (GMT)
+Date:   Tue, 15 Oct 2019 00:30:03 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     David Gibson <david@gibson.dropbear.id.au>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org,
+        benh@kernel.crashing.org, mpe@ellerman.id.au, paulus@ozlabs.org,
+        mdroth@linux.vnet.ibm.com, aik@linux.ibm.com, paul.burton@mips.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com, hch@lst.de,
+        jasowang@redhat.com, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, bauerman@linux.ibm.com
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
+ <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
+ <20191014045139.GN4080@umbus.fritz.box>
+ <37609731-5539-b906-aa94-2ef0242795ac@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37609731-5539-b906-aa94-2ef0242795ac@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19101507-0008-0000-0000-000003222573
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101507-0009-0000-0000-00004A413A18
+Message-Id: <20191015073003.GA5355@oc0525413822.ibm.com>
+Subject: RE: [PATCH 1/2] dma-mapping: Add dma_addr_is_phys_addr()
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910150066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-accuratly => accurately
+On Mon, Oct 14, 2019 at 11:29:24AM +0100, Robin Murphy wrote:
+> On 14/10/2019 05:51, David Gibson wrote:
+> >On Fri, Oct 11, 2019 at 06:25:18PM -0700, Ram Pai wrote:
+> >>From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> >>
+> >>In order to safely use the DMA API, virtio needs to know whether DMA
+> >>addresses are in fact physical addresses and for that purpose,
+> >>dma_addr_is_phys_addr() is introduced.
+> >>
+> >>cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> >>cc: David Gibson <david@gibson.dropbear.id.au>
+> >>cc: Michael Ellerman <mpe@ellerman.id.au>
+> >>cc: Paul Mackerras <paulus@ozlabs.org>
+> >>cc: Michael Roth <mdroth@linux.vnet.ibm.com>
+> >>cc: Alexey Kardashevskiy <aik@linux.ibm.com>
+> >>cc: Paul Burton <paul.burton@mips.com>
+> >>cc: Robin Murphy <robin.murphy@arm.com>
+> >>cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> >>cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>cc: Christoph Hellwig <hch@lst.de>
+> >>Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> >>Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+> >>Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> >
+> >The change itself looks ok, so
+> >
+> >Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+> >
+> >However, I would like to see the commit message (and maybe the inline
+> >comments) expanded a bit on what the distinction here is about.  Some
+> >of the text from the next patch would be suitable, about DMA addresses
+> >usually being in a different address space but not in the case of
+> >bounce buffering.
+> 
+> Right, this needs a much tighter definition. "DMA address happens to
+> be a valid physical address" is true of various IOMMU setups too,
+> but I can't believe it's meaningful in such cases.
 
-while at it change `clock source` to clocksource to make
-it align with its usage at other places.
+The definition by itself is meaningful AFAICT. At its core its just
+indicating whether DMA addresses are physical addresses or not.
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
----
- kernel/time/jiffies.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+However its up to the caller to use it meaningfully. For non-virtio caller,
+dma_addr_is_phys_addr() by itself may or may not be meaningful.
 
-diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
-index d23b434..e7f08f2 100644
---- a/kernel/time/jiffies.c
-+++ b/kernel/time/jiffies.c
-@@ -39,12 +39,12 @@ static u64 jiffies_read(struct clocksource *cs)
- 
- /*
-  * The Jiffies based clocksource is the lowest common
-- * denominator clock source which should function on
-+ * denominator clocksource which should function on
-  * all systems. It has the same coarse resolution as
-  * the timer interrupt frequency HZ and it suffers
-  * inaccuracies caused by missed or lost timer
-  * interrupts and the inability for the timer
-- * interrupt hardware to accuratly tick at the
-+ * interrupt hardware to accurately tick at the
-  * requested HZ value. It is also not recommended
-  * for "tick-less" systems.
-  */
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+But for a virtio caller, this information when paired with
+mem_encrypt_active() is meaningful.
+
+For IOMMU setups DMA API will get used regardless of "DMA address
+happens to be a valid physical address"
+
+
+> 
+> If what you actually want is "DMA is direct or SWIOTLB" - i.e. "DMA
+> address is physical address of DMA data (not necessarily the
+> original buffer)" - wouldn't dma_is_direct() suffice?
+
+This may also work, I think.  MST: thoughts?
+
+RP
 
