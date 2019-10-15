@@ -2,169 +2,90 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB1BECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9740121A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="S1vggRK+"
+	by mail.kernel.org (Postfix) with ESMTP id AE5E52089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 01:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfJOBbc (ORCPT
+        id S1727332AbfJOBbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 21:31:32 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:49942 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfJOBbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 21:31:32 -0400
-Received: from [10.137.104.46] (unknown [131.107.174.174])
-        by linux.microsoft.com (Postfix) with ESMTPSA id DD1DC20B71C6;
-        Mon, 14 Oct 2019 18:31:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DD1DC20B71C6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1571103091;
-        bh=JyQth7Ct3RzPrDMGGVL/0UtrVuwcC4tEO3GTBka83Hc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S1vggRK+d0gb1x/O0Shq8BSQkFFU6Gm+V4FMb09ZP5prEtMCjhnrePJquxG2lyPit
-         s5Wz/IivDkfxFtgXl2mZGrsvgpoVwBB9NbU3CY737tNMV8d5SejQAbiXATG8MWV9dW
-         5JqQEz7TH3QBLqotT9rwGaQ2Mm9Ov8M13tLVOYuI=
-Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
-To:     James Morse <james.morse@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de,
-        takahiro.akashi@linaro.org, sboyd@kernel.org,
-        catalin.marinas@arm.com, zohar@linux.ibm.com,
-        yamada.masahiro@socionext.com, kristina.martsenko@arm.org,
-        duwe@lst.de, bauerman@linux.ibm.com, james.morse@arm.org,
-        tglx@linutronix.de, allison@lohutok.net
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
- <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
-From:   prsriva <prsriva@linux.microsoft.com>
-Message-ID: <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
-Date:   Mon, 14 Oct 2019 18:31:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 14 Oct 2019 21:31:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21652 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfJOBbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 21:31:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 18:31:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,297,1566889200"; 
+   d="scan'208";a="395378142"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Oct 2019 18:31:44 -0700
+Date:   Mon, 14 Oct 2019 18:31:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 01/14] KVM: monolithic: x86: remove kvm.ko
+Message-ID: <20191015013144.GC24895@linux.intel.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-2-aarcange@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190928172323.14663-2-aarcange@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Sep 28, 2019 at 01:23:10PM -0400, Andrea Arcangeli wrote:
+> This is the first commit of a patch series that aims to replace the
+> modular kvm.ko kernel module with a monolithic kvm-intel/kvm-amd
+> model. This change has the only possible cons of wasting some disk
+> space in /lib/modules/. The pros are that it saves CPUS and some minor
+> RAM which are more scarse resources than disk space.
+> 
+> The pointer to function virtual template model cannot provide any
+> runtime benefit because kvm-intel and kvm-amd can't be loaded at the
+> same time.
+> 
+> This removes kvm.ko and it links and duplicates all kvm.ko objects to
+> both kvm-amd and kvm-intel.
 
-
-On 10/14/19 11:02 AM, James Morse wrote:
-> Hi Prakhar,
-> 
-> (You've CC'd a few folk who work for 'arm.org'...)
-> 
-> On 11/10/2019 01:35, Prakhar Srivastava wrote:
->> Add support to carry ima measurement log
->> to the next kexec'ed session triggered via kexec_file_load.
-> 
-> I don't know much about 'ima', I'm assuming its the list of 'stuff' that has already been
-> fed into the TPM as part of SecureBoot. Please forgive the stupid questions,
-> 
-The IMA logs are event logs for module load time signature 
-validation(based on policies) which are backed by the TPM. No SecureBoot 
-information is present in the log other than the boot aggregate.
-
->> Currently during kexec the kernel file signatures are/can be validated
->> prior to actual load, the information(PE/ima signature) is not carried
->> to the next session. This lead to loss of information.
->>
->> Carrying forward the ima measurement log to the next kexec'ed session
->> allows a verifying party to get the entire runtime event log since the
->> last full reboot, since that is when PCRs were last reset.
-> 
-> Hmm, You're adding this as a linux-specific thing in the chosen node, which points at a
-> memreserve.
-> 
-> The question that normally needs answering when adding to the stuff we have to treat as
-> ABI over kexec is: how would this work from a bootloader that isn't kexec? Does it need to
-> work for non-linux OS?
-> 
-This change is only intended to be executed in the path of 
-kexec_file_load and not intended to be executed by any boot loader.(Not 
-very aware of boot loader calls.). The logs are non intended to be 
-injected by the boot loader at all.
-The change is configurable(CONFIG_IMA_KEXEC) under the IMA subsection 
-and can be disabled if not needed.
-
-> Changing anything other than the chosen node of the DT isn't something the kernel should
-> be doing. I suspect if you need reserved memory for this stuff, it should be carved out by
-> the bootloader, and like all other memreserves: should not be moved or deleted.
-> 
-> ('fdt_delete_mem_rsv()' is a terrifying idea, we depend on the memreserve nodes to tell
-> use which 'memory' we shouldn't touch!)
-> 
-fdt_delete_mem_rsv - is to cleanup any memory that's been mistakenly 
-still lying around in the same session while creating the fdt. 
-memblock_free is actually used to free up the reserved memory.
-
-Thiago may have more insight, This is primarily a code that's been 
-ported from existing kernel for PowerPC.
-https://github.com/torvalds/linux/blob/master/arch/powerpc/kernel/machine_kexec_file_64.c
+The KVM config option should be changed to a bool and its help text
+updated.  Maybe something similar to the help for VIRTUALIZATION to make
+it clear that enabling KVM on its own does nothing.
 
 > 
-> Sharing with powerpc is a great starting point ... but, how does this work for ACPI systems?
-> How does this work if I keep kexecing between ACPI and DT?
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> ---
+>  arch/x86/kvm/Makefile | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-
-I don't have an answer to this, just going through the call stack i dont 
-believe it depends on ACPI as such. I am not the expert here, but more 
-than willing to try out the scenario in question.(Can you point me to 
-some documentation to setup some environment to test this.) 
-Kexec_file_load call depends purely on DT implementation.
-
-
-> I'd prefer it we only had one way this works on arm64, so whatever we do has to cover both.
-I can move the code to be only part of arm64 arch if absolutely 
-necessary. Thiago do you have any concerns on going back the path of 
-multiple code paths?
-
->
-> Does ima work without UEFI secure-boot?
-Yes, IMA, the measurement is not dependent on any hardware capabilities.
-TPM is needed to back the measurements but the IMA module will not fail 
-if TPM is not available.
-In short Secure-boot has no impact on IMA.
-
-> If not, the Linux-specific UEFI 'memreserve' table might be a better fit, this would be
-> the same for both DT and ACPI systems. Given U-boot supports the UEFI API too, its
-> probably the right thing to do regardless of secure-boot.
-> 
-> It looks like x86 doesn't support this either yet. If we have to add something to support
-> ACPI, it would be good if it covers both firmware mechanisms for arm64, and works for x86
-> in the same way.
-> 
-> (How does this thing interact with EFI's existing efi_tpm_eventlog_init()?)
-> 
-IMA does not interact with the TPM event log.
-Only one of the PCR's is extended but not logged in the TPM logs. The 
-logging is done in IMA. The IMA measurement log in question is whats 
-needed to be carried over to via kexec_file_load call.
-
-I am not sure if i addressed all your concerns, please let me know
-if i missed anything. To me most concerns look to be towards the kexec 
-case and dependency on hardware(ACPI/TPM) during boot and early boot 
-services, where as carrying the logs is only during the kexec_file_load 
-sys call and does not interfere with that code path.
-IMA documentation: https://sourceforge.net/p/linux-ima/wiki/Home/
-
-Prakhar Srivastava
-> 
-> Thanks,
-> 
-> James
-> 
+> diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+> index 31ecf7a76d5a..68b81f381369 100644
+> --- a/arch/x86/kvm/Makefile
+> +++ b/arch/x86/kvm/Makefile
+> @@ -12,9 +12,8 @@ kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
+>  			   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
+>  			   hyperv.o page_track.o debugfs.o
+>  
+> -kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
+> -kvm-amd-y		+= svm.o pmu_amd.o
+> +kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o $(kvm-y)
+> +kvm-amd-y		+= svm.o pmu_amd.o $(kvm-y)
+>  
+> -obj-$(CONFIG_KVM)	+= kvm.o
+>  obj-$(CONFIG_KVM_INTEL)	+= kvm-intel.o
+>  obj-$(CONFIG_KVM_AMD)	+= kvm-amd.o
