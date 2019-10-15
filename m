@@ -2,141 +2,178 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3335DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BB4ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13684218DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78C1218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571139633;
+	bh=oGPUs6ScsKBWjiqXvGtsLhcAYD8CQlphpe25WiR9FGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GRJ70s2/y0HJLh83LaMi5aWaMjeaf30KjRHJPSJCztUTycdRpOeyHZN8mKgoS384Q
+	 RrEuWZs1iABi90BzITCmvF7lZGHnhDnpMfE3BpJekLOWeh39kQabuR78bnBcNer0Sr
+	 B3mAPQsb9Vfpf9H6e6bfCqyrEd23wj7RxWLweq38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfJOLk0 (ORCPT
+        id S1729055AbfJOLkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:40:26 -0400
-Received: from regular1.263xmail.com ([211.150.70.198]:34998 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfJOLkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:40:23 -0400
-Received: from localhost (unknown [192.168.167.190])
-        by regular1.263xmail.com (Postfix) with ESMTP id 6349F230;
-        Tue, 15 Oct 2019 19:40:17 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from localhost.localdomain (unknown [14.18.236.69])
-        by smtp.263.net (postfix) whith ESMTP id P7669T140716028237568S1571139613270818_;
-        Tue, 15 Oct 2019 19:40:17 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <9efec5f3268291a9d6bd43d68d75c39e>
-X-RL-SENDER: yili@winhong.com
-X-SENDER: yili@winhong.com
-X-LOGIN-NAME: yili@winhong.com
-X-FST-TO: joseph.qi@linux.alibaba.com
-X-SENDER-IP: 14.18.236.69
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Yi Li <yili@winhong.com>
-To:     joseph.qi@linux.alibaba.com
-Cc:     linux-kernel@vger.kernel.org, Yi Li <yilikernel@gmail.com>
-Subject: [PATCH v2] ocfs2: fix panic due to ocfs2_wq is null
-Date:   Tue, 15 Oct 2019 19:40:11 +0800
-Message-Id: <1571139611-24107-1-git-send-email-yili@winhong.com>
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1571130330-3944-1-git-send-email-yili@winhong.com>
-References: <1571130330-3944-1-git-send-email-yili@winhong.com>
+        Tue, 15 Oct 2019 07:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbfJOLkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:40:31 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A4821A49;
+        Tue, 15 Oct 2019 11:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571139631;
+        bh=oGPUs6ScsKBWjiqXvGtsLhcAYD8CQlphpe25WiR9FGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IuhXmlHj2PRLsBZj2269HsoFFYUJrFjAzqKrBXSsQ2lsXfxkAooLORx/ALjRhk/av
+         ERpKqQNIxKws3tEloX9E5mfprd62BzVlhogQ3aOrpQrb9cxxE3XPXOK00XeBGl973Y
+         lVbRtilHoNYYolWIarpI02u6whi0mzrqQRS4oax4=
+Received: by mail-qt1-f177.google.com with SMTP id m15so30074401qtq.2;
+        Tue, 15 Oct 2019 04:40:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAWhL/rI0qhYBfHM8DEWfMzO3/NGgv2BBnIN9oadhCsnWZsUElaV
+        kUZYni865pnk1Tn40DT44LkSodXNUr2N3MsQyg==
+X-Google-Smtp-Source: APXvYqwOmCf+8YOVZvLtKg632W0xW7C6kdgWWv1JJ/jsejb6F+m2ruoP20gZce1ZKtzSOkNUWHdYVGoH9vEkkWJApFc=
+X-Received: by 2002:ac8:44d9:: with SMTP id b25mr39160131qto.300.1571139630214;
+ Tue, 15 Oct 2019 04:40:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20191007175553.66940-1-john.stultz@linaro.org>
+ <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+ <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
+ <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
+ <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
+ <20191011155123.GA14272@bogus> <CALAqxLUbh7_PkOwh9NrS_+sgLDZMHndbp44jVQkB=WqOhKUotA@mail.gmail.com>
+In-Reply-To: <CALAqxLUbh7_PkOwh9NrS_+sgLDZMHndbp44jVQkB=WqOhKUotA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 15 Oct 2019 06:40:18 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLB_Pruk0n0jS0B-uB74R=pE7aOhoo5FU191Hg3wsd7XA@mail.gmail.com>
+Message-ID: <CAL_JsqLB_Pruk0n0jS0B-uB74R=pE7aOhoo5FU191Hg3wsd7XA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Li <yilikernel@gmail.com>
+On Mon, Oct 14, 2019 at 10:57 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Fri, Oct 11, 2019 at 8:51 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Oct 07, 2019 at 04:00:24PM -0700, John Stultz wrote:
+> > > On Mon, Oct 7, 2019 at 2:11 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > >
+> > > > On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > > >
+> > > > > On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > > > > >
+> > > > > > > Add necessary compatible flag for HiSi's DWC3 so
+> > > > > > > dwc3-of-simple will probe.
+> > > > > > >
+> > > > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > > > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > > > > Cc: Yu Chen <chenyu56@huawei.com>
+> > > > > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > > > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > > > > Cc: linux-usb@vger.kernel.org
+> > > > > > > Cc: devicetree@vger.kernel.org
+> > > > > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > > > > > ---
+> > > > > > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> > > > > > > ---
+> > > > > > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+> > > > > > >  1 file changed, 52 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > > > > >
+> > > > > > Can you make this a schema.
+> > > > >
+> > > > > Sorry, I'm not sure exactly what you're asking. I'm guessing from
+> > > > > grepping around you want the bindings in yaml instead (I see a few
+> > > > > examples)?
+> > > >
+> > > > Yes.
+> > > >
+> > > > > Is there some pointer to documentation? The
+> > > > > Documentation/devicetree/bindings/writing-bindings.txt file doesn't
+> > > > > seem to say much on it.
+> > > >
+> > > > You mean Documentation/devicetree/writing-schemas.rst? There's that
+> > > > and Documentation/devicetree/bindings/example-schema.yaml which has a
+> > > > bunch of annotations on what each part means.
+> > >
+> > > Ah! Sorry for missing that. Thanks for the pointer, though I may get
+> > > away with dropping this one.
+> > >
+> > > > > > If it's only clocks and resets for the wrapper node, just make this
+> > > > > > all one node.
+> > > > >
+> > > > > Just to make sure I'm following, you're suggesting I put all the
+> > > > > clocks/resets in the dwc3 node (renamed to usb for the node name) and
+> > > > > not add the wrapper?
+> > > >
+> > > > Yes.
+> > > >
+> > > > > I'll have to see if that's possible. The generic dwc3 binding wants 3
+> > > > > clocks, but I only have two in the code I've worked with (similarly it
+> > > > > seems to only want two resets, not 4) so I'll have to see if I can
+> > > > > figure out how to adapt that.
+> > > >
+> > > > Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
+> > > > resets for DWC3 core").
+> > >
+> > > Ok. It *seems* like I can get it working with the existing binding
+> > > then. There's a little funkiness with the core expecting three clocks
+> > > while I only have two (currently I'm duplicating the "bus_early" clk
+> > > for "suspend". Is there a preferred way to do this sort of hack?), and
+> > > I'm a little worried that only the first reset is being used (instead
+> > > of the 4 specified), but it seems to work so far.
+> >
+> > I would assume that you simply don't know how the 'suspend' clock is
+> > connected rather than you don't have one. But that's maybe not a
+> > problem you can fix.
+> >
+> > I would make dwc3 use devm_clk_bulk_get_all and allow for less than 3
+> > clocks. And do a similar change for resets.
+>
+> So got a chance to start implementing this and it seems like it will
+> work. That said, it feels like I'm duplicating logic already in the
+> dwc-of-simple.c implementation (which already handles arbitrary clks
+> and resets), particularly if I try to implement the device specific
+> need_reset quirk used by HiKey960 (and rk3399).
+>
+> Do you feel having that logic copied is worth avoiding the extra
+> bindings? Or is it too duplicative?
 
-mount.ocfs2 failed when read ocfs2 filesystem super error.
-the func ocfs2_initialize_super will return before allocate ocfs2_wq.
-ocfs2_dismount_volume will triggered the following panic.
+We already have reset and clock setup in 2 places, so it's already
+kind of duplicated.
 
-  Oct 15 16:09:27 cnwarekv-205120 kernel: On-disk corruption
-discovered.Please run fsck.ocfs2 once the filesystem is unmounted.
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44):
-ocfs2_read_locked_inode:537 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44):
-ocfs2_init_global_system_inodes:458 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44):
-ocfs2_init_global_system_inodes:491 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44):
-ocfs2_initialize_super:2313 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44):
-ocfs2_fill_super:1033 ERROR: status = -30
-  ------------[ cut here ]------------
-  Oops: 0002 [#1] SMP NOPTI
-  Modules linked in: ocfs2 rpcsec_gss_krb5 auth_rpcgss nfsv4 nfs fscache
-lockd grace ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager
-ocfs2_stackglue configfs sunrpc ipt_REJECT nf_reject_ipv4
-nf_conntrack_ipv4 nf_defrag_ipv4 iptable_filter ip_tables ip6t_REJECT
-nf_reject_ipv6 nf_conntrack_ipv6 nf_defrag_ipv6 xt_state nf_conntrack
-ip6table_filter ip6_tables ib_ipoib rdma_ucm ib_ucm ib_uverbs ib_umad
-rdma_cm ib_cm iw_cm ib_sa ib_mad ib_core ib_addr ipv6 ovmapi ppdev
-parport_pc parport fb_sys_fops sysimgblt sysfillrect syscopyarea
-acpi_cpufreq pcspkr i2c_piix4 i2c_core sg ext4 jbd2 mbcache2 sr_mod cdrom
-  CPU: 1 PID: 11753 Comm: mount.ocfs2 Tainted: G  E
-        4.14.148-200.ckv.x86_64 #1
-  Hardware name: Sugon H320-G30/35N16-US, BIOS 0SSDX017 12/21/2018
-  task: ffff967af0520000 task.stack: ffffa5f05484000
-  RIP: 0010:mutex_lock+0x19/0x20
-  Call Trace:
-    flush_workqueue+0x81/0x460
-    ocfs2_shutdown_local_alloc+0x47/0x440 [ocfs2]
-    ocfs2_dismount_volume+0x84/0x400 [ocfs2]
-    ocfs2_fill_super+0xa4/0x1270 [ocfs2]
-    ? ocfs2_initialize_super.isa.211+0xf20/0xf20 [ocfs2]
-    mount_bdev+0x17f/0x1c0
-    mount_fs+0x3a/0x160
+Why not refactor into a helper that both can use?
 
-Signed-off-by: Yi Li <yilikernel@gmail.com>
----
- fs/ocfs2/journal.c    | 3 ++-
- fs/ocfs2/localalloc.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-index 930e3d3..699a560 100644
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -217,7 +217,8 @@ void ocfs2_recovery_exit(struct ocfs2_super *osb)
- 	/* At this point, we know that no more recovery threads can be
- 	 * launched, so wait for any recovery completion work to
- 	 * complete. */
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
- 
- 	/*
- 	 * Now that recovery is shut down, and the osb is about to be
-diff --git a/fs/ocfs2/localalloc.c b/fs/ocfs2/localalloc.c
-index 158e5af..720e9f9 100644
---- a/fs/ocfs2/localalloc.c
-+++ b/fs/ocfs2/localalloc.c
-@@ -377,7 +377,8 @@ void ocfs2_shutdown_local_alloc(struct ocfs2_super *osb)
- 	struct ocfs2_dinode *alloc = NULL;
- 
- 	cancel_delayed_work(&osb->la_enable_wq);
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
- 
- 	if (osb->local_alloc_state == OCFS2_LA_UNUSED)
- 		goto out;
--- 
-2.7.5
-
-
-
+Rob
