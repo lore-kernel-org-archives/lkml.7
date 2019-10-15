@@ -2,199 +2,123 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA9DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EE8ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BB420854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC55B20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="TcD43VO/"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UcLs1Mq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733224AbfJOPMI (ORCPT
+        id S1733246AbfJOPMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:12:08 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:38110 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfJOPMH (ORCPT
+        Tue, 15 Oct 2019 11:12:54 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9818 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726523AbfJOPMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:12:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1571152327; x=1602688327;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=I1HQ40Yz5nhSZHj8Efhb8t+NSkA4Lqjdb0qM50SZFGE=;
-  b=TcD43VO/1iCB9ASKOj4EI8nJPi9aBpk6ktHfeH6Pu92UqpqeRGHWCdWm
-   7NICjH2wf4oV4IOd5uU70/a5QBUOGvqZ++6QuoxQcXCJYFh+SIizz3GjJ
-   wrBBGK8K3qgpwb954jOVvACxdo3Kcq02wzh3vhhkaveOtnuyotKQi5Z0N
-   8=;
-X-IronPort-AV: E=Sophos;i="5.67,300,1566864000"; 
-   d="scan'208";a="429292546"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 15 Oct 2019 15:12:05 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id D71E922186A;
-        Tue, 15 Oct 2019 15:12:04 +0000 (UTC)
-Received: from EX13D13EUA004.ant.amazon.com (10.43.165.22) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 15 Oct 2019 15:12:04 +0000
-Received: from localhost (10.43.161.223) by EX13D13EUA004.ant.amazon.com
- (10.43.165.22) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 15 Oct
- 2019 15:12:03 +0000
-From:   Yuri Volchkov <volchkov@amazon.de>
-To:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-CC:     <joro@8bytes.org>, <bhelgaas@google.com>, <dwmw2@infradead.org>,
-        <neugebar@amazon.co.uk>, Yuri Volchkov <volchkov@amazon.de>
-Subject: [PATCH 2/2] iommu/dmar: catch early fault occurrences
-Date:   Tue, 15 Oct 2019 17:11:12 +0200
-Message-ID: <20191015151112.17225-3-volchkov@amazon.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191015151112.17225-1-volchkov@amazon.de>
-References: <20191015151112.17225-1-volchkov@amazon.de>
+        Tue, 15 Oct 2019 11:12:54 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9FFAkqQ021745;
+        Tue, 15 Oct 2019 17:12:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=Dz/82zOXMhfMmklzqpL72vLdKWuedjy+hvTqhAoCBe0=;
+ b=UcLs1Mq9WYwpkYMT5Yq7HM/zidaf654mUbnTN7jf3CJG7H/Cmz5LpcYbevsCsbeeBcsx
+ Qs+BDE1EZtLgyPWPp97mYe1+/LnJQnw2yoVX/Lj7u3MMwDVX6/IYG88Y10Gl1Uzl/5N7
+ 7+jbqlFj0LlQRWUbgUiGv9mc60vO9yQx9gPuiy46/U5nlpVSTj/wXirwxZ4AWycOnxjw
+ 1tbqK4ysBLXKsH7s6j/Nbhi1JpPHTDM5HLvls1rbJnOj0kXQIxMU+2Nys3OAK84VkM6y
+ mPcMOMHN/78HMfD1hSVZDxOuoUIlxh2PAP73jH0uJKK0z7Iqn1iSYxz7nhfE9AY7nb93 TQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2vk4a18xk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 17:12:27 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9D19C100038;
+        Tue, 15 Oct 2019 17:12:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 83C452C0B1D;
+        Tue, 15 Oct 2019 17:12:26 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 15 Oct
+ 2019 17:12:26 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Tue, 15 Oct 2019 17:12:26 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        "linux-kernel@lists.codethink.co.uk" 
+        <linux-kernel@lists.codethink.co.uk>
+CC:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [Linux-stm32] [PATCH] thermal: stm32: make stm_thermal_pm_ops
+ static
+Thread-Topic: [Linux-stm32] [PATCH] thermal: stm32: make stm_thermal_pm_ops
+ static
+Thread-Index: AQHVg2LySKg+3iRMIESRd33erHyNMqdbrZeA
+Date:   Tue, 15 Oct 2019 15:12:26 +0000
+Message-ID: <b5e353bc-1171-1559-351f-2e54ef6749fe@st.com>
+References: <20191015141454.15402-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191015141454.15402-1-ben.dooks@codethink.co.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C885B1D9DAA4E145A7287A236169A642@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.223]
-X-ClientProxiedBy: EX13D10UWA002.ant.amazon.com (10.43.160.228) To
- EX13D13EUA004.ant.amazon.com (10.43.165.22)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-15_05:2019-10-15,2019-10-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First dmar faults can happen even before linux have scanned PCI
-bus. In such case worker will not have chance to lookup a
-corresponding 'struct pci_dev'.
-
-This commit defers processing of the fault until intel_iommu_init
-function has been called. At this point of time pci devices will be
-already initialized.
-
-Signed-off-by: Yuri Volchkov <volchkov@amazon.de>
----
- drivers/iommu/dmar.c        | 51 ++++++++++++++++++++++++++++++++++++-
- drivers/iommu/intel-iommu.c |  1 +
- include/linux/intel-iommu.h |  1 +
- 3 files changed, 52 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 0749873e3e41..8db2af3de29f 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -1674,7 +1674,10 @@ void dmar_msi_read(int irq, struct msi_msg *msg)
- }
- 
- struct dmar_fault_info {
--	struct work_struct work;
-+	union {
-+		struct work_struct work;
-+		struct list_head backlog_list;
-+	};
- 	struct intel_iommu *iommu;
- 	int type;
- 	int pasid;
-@@ -1757,12 +1760,58 @@ static int dmar_fault_handle_one(struct dmar_fault_info *info)
- 	return 0;
- }
- 
-+struct fault_backlog {
-+	struct list_head queue;
-+	struct mutex lock;
-+	bool is_active;
-+};
-+
-+static struct fault_backlog fault_backlog = {
-+	.queue = LIST_HEAD_INIT(fault_backlog.queue),
-+	.lock = __MUTEX_INITIALIZER(fault_backlog.lock),
-+	.is_active = true,
-+};
-+
-+void dmar_process_deferred_faults(void)
-+{
-+	struct dmar_fault_info *info, *tmp;
-+
-+	mutex_lock(&fault_backlog.lock);
-+	WARN_ON(!fault_backlog.is_active);
-+
-+	list_for_each_entry_safe(info, tmp, &fault_backlog.queue,
-+				 backlog_list) {
-+		dmar_fault_handle_one(info);
-+		list_del(&info->backlog_list);
-+		free_dmar_fault_info(info);
-+	}
-+	fault_backlog.is_active = false;
-+	mutex_unlock(&fault_backlog.lock);
-+}
-+
- static void dmar_fault_handle_work(struct work_struct *work)
- {
- 	struct dmar_fault_info *info;
- 
- 	info = container_of(work, struct dmar_fault_info, work);
- 
-+	if (fault_backlog.is_active) {
-+		/* Postpone handling until PCI devices will be
-+		 * initialized
-+		 */
-+
-+		mutex_lock(&fault_backlog.lock);
-+		if (!fault_backlog.is_active) {
-+			mutex_unlock(&fault_backlog.lock);
-+			goto process;
-+		}
-+
-+		list_add(&info->backlog_list, &fault_backlog.queue);
-+		mutex_unlock(&fault_backlog.lock);
-+		return;
-+	}
-+
-+process:
- 	dmar_fault_handle_one(info);
- 	free_dmar_fault_info(info);
- }
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 3f974919d3bd..a97c05fac5e9 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5041,6 +5041,7 @@ int __init intel_iommu_init(void)
- 		iommu_disable_protect_mem_regions(iommu);
- 	}
- 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
-+	dmar_process_deferred_faults();
- 
- 	intel_iommu_enabled = 1;
- 	intel_iommu_debugfs_init();
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index f8963c833fb0..480a31b41263 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -649,6 +649,7 @@ extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
- extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
- 
- extern int dmar_ir_support(void);
-+extern void dmar_process_deferred_faults(void);
- 
- void *alloc_pgtable_page(int node);
- void free_pgtable_page(void *vaddr);
--- 
-2.23.0
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+DQpPbiAxMC8xNS8xOSA0OjE0IFBNLCBCZW4gRG9va3Mgd3JvdGU6DQo+IFRoZSBzdG1fdGhlcm1h
+bF9wbV9vcHMgc3RydWN0IGlzIG5vdCBleHBvcnRlZCB0byBhbnkNCj4gb3RoZXIgdW5pdHMsIHNv
+IG1ha2UgaXQgc3RhdGljIHRvIGF2b2lkIHRoZSBmb2xsb3dpbmcNCj4gc3BhcnNlIHdhcm5pbmc6
+DQo+DQo+IGRyaXZlcnMvdGhlcm1hbC9zdC9zdG1fdGhlcm1hbC5jOjU5OToxOiB3YXJuaW5nOiBz
+eW1ib2wgJ3N0bV90aGVybWFsX3BtX29wcycgd2FzIG5vdCBkZWNsYXJlZC4gU2hvdWxkIGl0IGJl
+IHN0YXRpYz8NCg0KUmV2aWV3ZWQtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWln
+bmFyZEBzdC5jb20+DQoNClRoYW5rcywNCg0KQmVuamFtaW4NCg0KPg0KPiBTaWduZWQtb2ZmLWJ5
+OiBCZW4gRG9va3MgPGJlbi5kb29rc0Bjb2RldGhpbmsuY28udWs+DQo+IC0tLQ0KPiBDYzogWmhh
+bmcgUnVpIDxydWkuemhhbmdAaW50ZWwuY29tPg0KPiBDYzogRGFuaWVsIExlemNhbm8gPGRhbmll
+bC5sZXpjYW5vQGxpbmFyby5vcmc+DQo+IENjOiBBbWl0IEt1Y2hlcmlhIDxhbWl0Lmt1Y2hlcmlh
+QHZlcmR1cmVudC5jb20+DQo+IENjOiBNYXhpbWUgQ29xdWVsaW4gPG1jb3F1ZWxpbi5zdG0zMkBn
+bWFpbC5jb20+DQo+IENjOiBBbGV4YW5kcmUgVG9yZ3VlIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNv
+bT4NCj4gQ2M6IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZw0KPiBDYzogbGludXgtc3RtMzJAc3Qt
+bWQtbWFpbG1hbi5zdG9ybXJlcGx5LmNvbQ0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnDQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IC0tLQ0K
+PiAgIGRyaXZlcnMvdGhlcm1hbC9zdC9zdG1fdGhlcm1hbC5jIHwgMiArLQ0KPiAgIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy90aGVybWFsL3N0L3N0bV90aGVybWFsLmMgYi9kcml2ZXJzL3RoZXJtYWwvc3Qvc3Rt
+X3RoZXJtYWwuYw0KPiBpbmRleCBjZjlkZGM1MmYzMGUuLjQwYmMxM2M2OGZiYSAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy90aGVybWFsL3N0L3N0bV90aGVybWFsLmMNCj4gKysrIGIvZHJpdmVycy90
+aGVybWFsL3N0L3N0bV90aGVybWFsLmMNCj4gQEAgLTU5Niw3ICs1OTYsNyBAQCBzdGF0aWMgaW50
+IHN0bV90aGVybWFsX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICAgfQ0KPiAgICNlbmRp
+ZiAvKiBDT05GSUdfUE1fU0xFRVAgKi8NCj4gICANCj4gLVNJTVBMRV9ERVZfUE1fT1BTKHN0bV90
+aGVybWFsX3BtX29wcywgc3RtX3RoZXJtYWxfc3VzcGVuZCwgc3RtX3RoZXJtYWxfcmVzdW1lKTsN
+Cj4gK3N0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhzdG1fdGhlcm1hbF9wbV9vcHMsIHN0bV90aGVy
+bWFsX3N1c3BlbmQsIHN0bV90aGVybWFsX3Jlc3VtZSk7DQo+ICAgDQo+ICAgc3RhdGljIGNvbnN0
+IHN0cnVjdCB0aGVybWFsX3pvbmVfb2ZfZGV2aWNlX29wcyBzdG1fdHpfb3BzID0gew0KPiAgIAku
+Z2V0X3RlbXAJPSBzdG1fdGhlcm1hbF9nZXRfdGVtcCw=
