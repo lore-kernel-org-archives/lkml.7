@@ -2,162 +2,200 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B8ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC83CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829B720854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99004217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofZhNagG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X6E930ot";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XHBG5puf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfJOGNy (ORCPT
+        id S1727171AbfJOGRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 02:13:54 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:49660 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfJOGNy (ORCPT
+        Tue, 15 Oct 2019 02:17:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41548 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfJOGRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 02:13:54 -0400
-Received: by mail-pg1-f201.google.com with SMTP id l6so14355010pgq.16
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 23:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=DFJlUv3R2tvxSh8wj2z2rPk5wlDmklaGa42vbJhXkJA=;
-        b=ofZhNagGO/RutpOWP60t/B7g/QAUMiKkkistW5ofAZdYiEZRlBEruprFDM6I6PxLZy
-         8KTprRzP9E4b8XM3NWG4eUc6A0T18xd40aGxpktcC8PMv7IX1puYOtclbr9YnAIKijke
-         YyEfNr6s+ibNpfJBNLEbptgb5d0Z8Y67rS7J4YwgG5V1C5lVsD/z2MQpR7mQcld3XHEy
-         XKqFMzbwFNQhMKlULVjexe8PC/eyFB1ke3rf3Aq7aarPxCdwkp3mSbUQ1jI1wr7wqert
-         eaF6sAroReMPMLc+tOANlAHFAKZKqA6whVoZN9CEh9a0n2zF5Yd+hO5HldJqER92ZVxK
-         w87A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=DFJlUv3R2tvxSh8wj2z2rPk5wlDmklaGa42vbJhXkJA=;
-        b=CXPWIN0hW8Uvy2kQMMrebeD3rZhi7Iy0hZuLLeZSj7i9vILxASGeheDGQk+3IWXDci
-         RfRMnelRhDILUjjpV4yDTF+nKpE3/Ey7JZfCeDW+H47DBhZ5+MYAqz0ATG+a6gMMSJYJ
-         5K9zAwGDuQ6w9ndTEDo2BcgacmRjUbTpva8m4oZ5eKsPGf4bnQeUKNKdl6su9SbsabhB
-         dLr1q7PXSZGWL5v/mwU6M0dNehcJMNIkzuJ5Mpt9NIFH/fiV8LChrkC6xBCKpW/uBibD
-         FHH81IwmrvAtXBDeihDpBKkVmxwcUeXKTwCZBz8e6QSzcnit8YmeN3M2Zt37zaTILIWq
-         g15g==
-X-Gm-Message-State: APjAAAWBqswhdvgokFy8r02Hmy0kLLgeJZpptAHVy5irHUCdn96lnw6F
-        wJqq3mANEz4TkghbudqzP+AYw9s=
-X-Google-Smtp-Source: APXvYqx8PE/ef+PfXpxjA+3FMGl7Rmrnp8UmCkFbl/oqJ1a6GNCs4DWzHk7Uqy5wEBKktQfolcUBGCA=
-X-Received: by 2002:a63:3003:: with SMTP id w3mr34876350pgw.364.1571120033122;
- Mon, 14 Oct 2019 23:13:53 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 23:13:49 -0700
-Message-Id: <20191015061349.141448-1-wvw@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
-From:   Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 15 Oct 2019 02:17:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AD60C60907; Tue, 15 Oct 2019 06:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571120260;
+        bh=nh6Hu+eyt5jL/ceEK128KwBXAqUtFIn8LM1k3NDK07I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=X6E930otBl5oOT+dOBHYQqK2sUH2CqQ8E9j1TLRruoZdf7ZbhZjsXQlYGZIs45184
+         JgeLYlxI3MOKrAPMURUKKtcQ1hxEo08gw9gZ811j97Tyspbm8nb0teEcZwVqMvifI3
+         2PUSr/YmGNIF+R241eJz0hUD66DrsBEOZ2r6+R0Y=
+Received: from prsood-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: prsood@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7E5360A43;
+        Tue, 15 Oct 2019 06:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571120259;
+        bh=nh6Hu+eyt5jL/ceEK128KwBXAqUtFIn8LM1k3NDK07I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XHBG5pufxoVnNckW5hndEwneiCcNJNTEmeXrRRxIdOsSngBWpKTOyu7V0mmAlBEdR
+         UtlEEJXPzuw2S8MdQ2rTZzPH9N1+A5duLVkV0yeTt+i8BYi1hhaPGS1tTRPJ7oYSIa
+         I467hNAHu6lj3y/aq7hurHWuuLypxbLBGFvwH45I=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B7E5360A43
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+From:   Prateek Sood <prsood@codeaurora.org>
+To:     rostedt@goodmis.org, mingo@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kaushalk@codeaurora.org,
+        Prateek Sood <prsood@codeaurora.org>
+Subject: [PATCH] trace: fix race in perf_trace_buf initialization
+Date:   Tue, 15 Oct 2019 11:47:25 +0530
+Message-Id: <1571120245-4186-1-git-send-email-prsood@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The paths thermal_zone%d and cooling_device%d are not intuitive and the
-numbers are subject to change due to device tree change. This usually
-leads to tree traversal in userspace code.
-The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-cooling_device respectively.
 
-Signed-off-by: Wei Wang <wvw@google.com>
+[  943.034988] Unable to handle kernel paging request at virtual address 0000003106f2003c
+[  943.043653] Mem abort info:
+[  943.046679]   ESR = 0x96000045
+[  943.050428]   Exception class = DABT (current EL), IL = 32 bits
+[  943.056643]   SET = 0, FnV = 0
+[  943.060168]   EA = 0, S1PTW = 0
+[  943.063449] Data abort info:
+[  943.066474]   ISV = 0, ISS = 0x00000045
+[  943.070856]   CM = 0, WnR = 1
+[  943.074016] user pgtable: 4k pages, 39-bit VAs, pgdp = ffffffc034b9b000
+[  943.081446] [0000003106f2003c] pgd=0000000000000000, pud=0000000000000000
+[  943.088862] Internal error: Oops: 96000045 [#1] PREEMPT SMP
+[  943.141700] Process syz-executor (pid: 18393, stack limit = 0xffffffc093190000)
+[  943.164146] pstate: 80400005 (Nzcv daif +PAN -UAO)
+[  943.169119] pc : __memset+0x20/0x1ac
+[  943.172831] lr : memset+0x3c/0x50
+[  943.176269] sp : ffffffc09319fc50
+
+[  943.557593]  __memset+0x20/0x1ac
+[  943.560953]  perf_trace_buf_alloc+0x140/0x1a0
+[  943.565472]  perf_trace_sys_enter+0x158/0x310
+[  943.569985]  syscall_trace_enter+0x348/0x7c0
+[  943.574413]  el0_svc_common+0x11c/0x368
+[  943.578394]  el0_svc_handler+0x12c/0x198
+[  943.582459]  el0_svc+0x8/0xc
+
+In Ramdumps:
+total_ref_count = 3
+perf_trace_buf = (
+    0x0 -> NULL,
+    0x0 -> NULL,
+    0x0 -> NULL,
+    0x0 -> NULL)
+
+event_call in perf_trace_sys_enter()
+event_call = 0xFFFFFF900CB511D8 -> (
+    list = (next = 0xFFFFFF900CB4E2E0, prev = 0xFFFFFF900CB512B0),
+    class = 0xFFFFFF900CDC8308,
+    name = 0xFFFFFF900CDDA1D8,
+    tp = 0xFFFFFF900CDDA1D8,
+    event = (
+      node = (next = 0x0, pprev = 0xFFFFFF900CB80210),
+      list = (next = 0xFFFFFF900CB512E0, prev = 0xFFFFFF900CB4E310),
+      type = 21,
+      funcs = 0xFFFFFF900CB51130),
+    print_fmt = 0xFFFFFF900CB51150,
+    filter = 0x0,
+    mod = 0x0,
+    data = 0x0,
+    flags = 18,
+    perf_refcount = 1,
+    perf_events = 0xFFFFFF8DB8E54158,
+    prog_array = 0x0,
+    perf_perm = 0x0)
+
+perf_events added on CPU0
+(struct hlist_head *)(0xFFFFFF8DB8E54158+__per_cpu_offset[0]) -> (
+    first = 0xFFFFFFC0980FD0E0 -> (
+      next = 0x0,
+      pprev = 0xFFFFFFBEBFD74158))
+
+Could you please confirm:
+1) the race mentioned below exists or not.
+2) if following patch fixes it.
+
+
+>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8
+
+A race condition exists while initialiazing perf_trace_buf from
+perf_trace_init() and perf_kprobe_init().
+
+      CPU0                                        CPU1
+perf_trace_init()
+  mutex_lock(&event_mutex)
+    perf_trace_event_init()
+      perf_trace_event_reg()
+        total_ref_count == 0
+	buf = alloc_percpu()
+        perf_trace_buf[i] = buf
+        tp_event->class->reg() //fails       perf_kprobe_init()
+	goto fail                              perf_trace_event_init()
+                                                 perf_trace_event_reg()
+        fail:
+	  total_ref_count == 0
+
+                                                   total_ref_count == 0
+                                                   buf = alloc_percpu()
+                                                   perf_trace_buf[i] = buf
+                                                   tp_event->class->reg()
+                                                   total_ref_count++
+
+          free_percpu(perf_trace_buf[i])
+          perf_trace_buf[i] = NULL
+
+Any subsequent call to perf_trace_event_reg() will observe total_ref_count > 0,
+causing the perf_trace_buf to be NULL always. This can result in perf_trace_buf
+getting accessed from perf_trace_buf_alloc() without being initialized. Acquiring
+event_mutex in perf_kprobe_init() before calling perf_trace_event_init() should
+fix this race.
+
+Signed-off-by: Prateek Sood <prsood@codeaurora.org>
 ---
- drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ kernel/trace/trace_event_perf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index d4481cc8958f..0ff8fb1d7b0a 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -22,6 +22,7 @@
- #include <net/netlink.h>
- #include <net/genetlink.h>
- #include <linux/suspend.h>
-+#include <linux/kobject.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/thermal.h>
-@@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
- 
- static atomic_t in_suspend;
- static bool power_off_triggered;
-+static struct kobject *cdev_link_kobj;
-+static struct kobject *tz_link_kobj;
- 
- static struct thermal_governor *def_governor;
- 
-@@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
- 	struct thermal_zone_device *pos = NULL;
- 	int result;
- 
--	if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-+	if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
- 		return ERR_PTR(-EINVAL);
- 
- 	if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-@@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
- 		return ERR_PTR(result);
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index 4629a61..48ee92c 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -272,9 +272,11 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
+ 		goto out;
  	}
  
--	/* Add 'this' new cdev to the global cdev list */
-+	/* Add 'this' new cdev to the global cdev list and create link*/
- 	mutex_lock(&thermal_list_lock);
- 	list_add(&cdev->node, &thermal_cdev_list);
-+	if (!cdev_link_kobj)
-+		cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-+						cdev->device.kobj.parent);
-+	if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-+						&cdev->device.kobj, cdev->type))
-+		dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
- 	mutex_unlock(&thermal_list_lock);
++	mutex_lock(&event_mutex);
+ 	ret = perf_trace_event_init(tp_event, p_event);
+ 	if (ret)
+ 		destroy_local_trace_kprobe(tp_event);
++	mutex_unlock(&event_mutex);
+ out:
+ 	kfree(func);
+ 	return ret;
+@@ -282,8 +284,10 @@ int perf_kprobe_init(struct perf_event *p_event, bool is_retprobe)
  
- 	/* Update binding information for 'this' new cdev */
-@@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
- 			}
- 		}
- 	}
-+	if (cdev_link_kobj)
-+		sysfs_remove_link(cdev_link_kobj, cdev->type);
+ void perf_kprobe_destroy(struct perf_event *p_event)
+ {
++	mutex_lock(&event_mutex);
+ 	perf_trace_event_close(p_event);
+ 	perf_trace_event_unreg(p_event);
++	mutex_unlock(&event_mutex);
  
- 	mutex_unlock(&thermal_list_lock);
- 
-@@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
- 
- 	mutex_lock(&thermal_list_lock);
- 	list_add_tail(&tz->node, &thermal_tz_list);
-+	if (!tz_link_kobj)
-+		tz_link_kobj = kobject_create_and_add("tz-by-name",
-+						tz->device.kobj.parent);
-+	if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-+						&tz->device.kobj, tz->type))
-+		dev_err(&tz->device, "Failed to create tz-by-name link\n");
- 	mutex_unlock(&thermal_list_lock);
- 
- 	/* Bind cooling devices for this zone */
-@@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
- 			}
- 		}
- 	}
-+	if (tz_link_kobj)
-+		sysfs_remove_link(tz_link_kobj, tz->type);
- 
- 	mutex_unlock(&thermal_list_lock);
- 
+ 	destroy_local_trace_kprobe(p_event->tp_event);
+ }
 -- 
-2.23.0.700.g56cf767bdb-goog
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
