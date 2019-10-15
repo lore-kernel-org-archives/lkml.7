@@ -2,156 +2,284 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05221ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9C5ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C0120854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23D320854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AtgdjehM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732786AbfJOOkr (ORCPT
+        id S1732816AbfJOOlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:40:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44549 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732448AbfJOOkr (ORCPT
+        Tue, 15 Oct 2019 10:41:50 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46664 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732645AbfJOOlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:40:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 21so17104269otj.11;
-        Tue, 15 Oct 2019 07:40:46 -0700 (PDT)
+        Tue, 15 Oct 2019 10:41:50 -0400
+Received: by mail-qt1-f193.google.com with SMTP id u22so30875903qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 07:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KOthtKc750ha5x4f9O1nDtFHxGzvuirdOiPTMzSqTsk=;
+        b=AtgdjehMIW2BLhP3jeK/qmKXq2+AXxzyWeIH6bKw4O3o0bC6XJQt+cAWIC0yMh6wiP
+         SupmvGOupyWxPBHXOSFIRoapYlzZ1hYO8VI7pDOCxTY/Dx1Dgrvi2XOEp2yl+LhIOEHT
+         u2tYUEb7UC7Y+OmoO377QG3dWxUE+13skl13Dwf1FBQ4rIPA/dbKnr+HRCDUS7FZtcdV
+         L3b45BZgHc50mOaywiqTTOXCkKt7paRreX5ny4ScY/osK3vBY9jN0JO82EN8FpMzG1Nn
+         DuZelOJa5PuYyzq9v5gfHBe8i4OKeqTjui1sMrU6aselqYDmxj1po/GPeKBXBAMZGEJa
+         1g3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iSVmDwkzhMmxJvflSTSRbJh/RaZxJFQK4nfYknfaXn8=;
-        b=s6No45VSjGRujH3w9trnFa+E11TciHfw9bxA+jnoGL8mZ7WTcew1vFqKNHjFbmVC02
-         ZRpto3WyNVA6rVOdkOPT8wilg/iHzz0yf4Ad1eNXVMyqlWTyQ/S7P/vud0u+78YdWkro
-         +Dpn+LcLRTgrLYa6W2OEVo0D1LHoxjVoD3n14qHCMlyGxS27bHLTG9WnnRjjRL3xLuRC
-         3HFcD14KiOjKAG0S4gHCJzOvjJKsvgeEVGdImANrzs531XP2P9PUWz0uwpWk/7sblvf/
-         k6fqvwqo5av4SqKGjpQvs83NLMCoVKta3z/0MriMtJEL+k55XehesaWT8qx3VYyBgAot
-         pqnA==
-X-Gm-Message-State: APjAAAX2koly0gRPv6KTGMKIYEwjPY2n9Ntb10FAYHiAxQpfmf8P1UXK
-        +Mr1XDZoTBdcCPB1Q9y5bTWQeMVMiuuVkbainCM=
-X-Google-Smtp-Source: APXvYqzUYsrKQvnknIQF48f5xX0ZOC6hV5QY+ILJX2/wvHL6m5jiAI8K1yx8jv0LqGZTy0VKNoxTSHVCbeILg5a1DZs=
-X-Received: by 2002:a9d:7345:: with SMTP id l5mr19910943otk.39.1571150446346;
- Tue, 15 Oct 2019 07:40:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <4a877f1c7189a7c45b59a6ebfc3de607e8758949.1567434470.git.michal.simek@xilinx.com>
- <CAMuHMdWY2VsY-CyAxSvpm1XYicAWqU7NORSQofQ+T195DwyLUg@mail.gmail.com>
- <7284590f-2b74-1b47-2d61-783ad8d5f46f@monstr.eu> <CAMuHMdWZYALZB1bP5Mtoq4Nj5iubzdWBf1vRY9Mh5QvjCDhBgA@mail.gmail.com>
- <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
-In-Reply-To: <622f4c5e-e3ed-3f91-254d-78d905de79c9@xilinx.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 15 Oct 2019 16:40:35 +0200
-Message-ID: <CAMuHMdXq1XkQKTeA0XOhk6QzoyK0DUMiesVwXkBwWQbunWH+Fg@mail.gmail.com>
-Subject: Re: [PATCH] serial: core: Use cons->index for preferred console registration
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KOthtKc750ha5x4f9O1nDtFHxGzvuirdOiPTMzSqTsk=;
+        b=ojJutSw+O9W0RQp629kPwoyj4O5WOS9XwzEl8/qgyx2KqKEHOblbu5grxQo+tOPApk
+         mn4hjZcgTjrYAxGMIBvJIqEf+TGVsIhq+oAF7XkGnYDwfhlLEaNsGXSfVxy8PMe1qDpV
+         4uec5XYG1oQ8OFzqP2X9kvhcTZYBEJZLEBUE+VyNrnYbmt6n2ffGRVBK+ZnfuR44b6xx
+         w5PLLJFxH6l7gLR81A/aOeYoKhF4jeA01JHHQVqGMS/fAQNgF+YORAPM25O+/PnooNBo
+         XD8dlW4C21vRmSWUAKL+wEZ3QAp/wpE2nJ/uJHJBuiEA0xbHzudi389jUIMQMQjxfytW
+         nvlw==
+X-Gm-Message-State: APjAAAVsErkpfNgI1CyZXAwMylXjjxBv6tJT7y2VDUsECewFUK/mzXX4
+        xCEFiwkr7VE8qelY4oEwM7vjOQ==
+X-Google-Smtp-Source: APXvYqz1jaDLsZXCujEQqKw2NmGGpxtStBi3XubJKmoqx4STHaHJWThY1IvGZuOPXBVemA+XaCvAzg==
+X-Received: by 2002:ac8:6ede:: with SMTP id f30mr38381128qtv.205.1571150507816;
+        Tue, 15 Oct 2019 07:41:47 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id z200sm10605390qkb.5.2019.10.15.07.41.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 07:41:47 -0700 (PDT)
+Message-ID: <1571150502.5937.39.camel@lca.pw>
+Subject: Re: [PATCH V6 0/2] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 15 Oct 2019 10:41:42 -0400
+In-Reply-To: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
+References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+The x86 will crash with linux-next during boot due to this series (v5) with the
+config below plus CONFIG_DEBUG_VM_PGTABLE=y. I am not sure if v6 would address
+it.
 
-On Tue, Oct 15, 2019 at 4:37 PM Michal Simek <michal.simek@xilinx.com> wrote:
-> On 15. 10. 19 11:51, Geert Uytterhoeven wrote:
-> > On Tue, Oct 15, 2019 at 11:22 AM Michal Simek <monstr@monstr.eu> wrote:
-> >> On 15. 10. 19 11:19, Geert Uytterhoeven wrote:
-> >>> On Mon, Sep 2, 2019 at 4:29 PM Michal Simek <michal.simek@xilinx.com> wrote:
-> >>>> The reason for this patch is xilinx_uartps driver which create one dynamic
-> >>>> instance per IP with unique major and minor combinations. drv->nr is in
-> >>>> this case all the time setup to 1. That means that uport->line is all the
-> >>>> time setup to 0 and drv->tty_driver->name_base is doing shift in name to
-> >>>> for example ttyPS3.
-> >>>>
-> >>>> register_console() is looping over console_cmdline array and looking for
-> >>>> proper name/index combination which is in our case ttyPS/3.
-> >>>> That's why every instance of driver needs to be registered with proper
-> >>>> combination of name/number (ttyPS/3). Using uport->line is doing
-> >>>> registration with ttyPS/0 which is wrong that's why proper console index
-> >>>> should be used which is in cons->index field.
-> >>>>
-> >>>> Also it is visible that recording console should be done based on
-> >>>> information about console not about the port but in most cases numbers are
-> >>>> the same and xilinx_uartps is only one exception now.
-> >>>>
-> >>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >>>
-> >>> This is now commit 91daae03188e0dd1 ("serial: core: Use cons->index
-> >>> for preferred console registration") in tty-next.
-> >>>
-> >>> This has been bisected to break the serial console on (at least)
-> >>> r8a7791/koelsch and r8a7795/h3-salvator-xs.
-> >>>
-> >>> The line "printk: console [ttySC0] enabled" is no longer printed.
-> >>> The system continues booting without any serial console output, and the
-> >>> login prompt never appears on the serial console.
-> >>>
-> >>> Reverting this commit fixes the issue.
-> >>
-> >> Sorry for trouble with this patch. Can you please point me to dts files
-> >> for these boards and also what's the value you have in uport->line and
-> >
-> > arch/arm/boot/dts/r8a7791-koelsch.dts
-> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-> >
-> >> uport->cons->index?
-> >
-> > On r8a7791/koelsch:
-> >
-> >     Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
-> >     platform serial8250: uport->line = 0, uport->cons->index = -1
-> >     platform serial8250: uport->line = 1, uport->cons->index = -1
-> >     platform serial8250: uport->line = 2, uport->cons->index = -1
-> >     platform serial8250: uport->line = 3, uport->cons->index = -1
-> >     SuperH (H)SCI(F) driver initialized
-> >   * sh-sci e6e60000.serial: uport->line = 0, uport->cons->index = -1
-> >   * e6e60000.serial: ttySC0 at MMIO 0xe6e60000 (irq = 79, base_baud =
-> > 0) is a scif
-> >     printk: console [ttySC0] enabled
-> >     sh-sci e6e68000.serial: uport->line = 1, uport->cons->index = 0
-> >     e6e68000.serial: ttySC1 at MMIO 0xe6e68000 (irq = 80, base_baud =
-> > 0) is a scif
-> >
-> > On r8a7795/salvator-xs:
-> >
-> >     sh-sci e6550000.serial: uport->line = 1, uport->cons->index = -1
-> >     e6550000.serial: ttySC1 at MMIO 0xe6550000 (irq = 34, base_baud =
-> > 0) is a hscif
-> >   * sh-sci e6e88000.serial: uport->line = 0, uport->cons->index = -1
-> >   * e6e88000.serial: ttySC0 at MMIO 0xe6e88000 (irq = 120, base_baud =
-> > 0) is a scif
-> >     printk: console [ttySC0] enabled
-> >
-> > Actual serial consoles marked with *.
-> >
-> > There are no 8250 serial ports in the system, shmobile_defconfig just includes
-> > driver support for it.
->
-> ok. I will take a look at why it is not initialized in this case. Do you
-> have any qemu available for these boards?
+https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
 
-Not me.  But Marek (CC) may have something.
+[   33.862600][    T1] page:ffffea0009000000 is uninitialized and poisoned
+[   33.862608][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff
+ffffff871140][    T1]  ? _raw_spin_unlock_irq+0x27/0x40
+[   33.871140][    T1]  ? rest_init+0x307/0x307
+[   33.871140][    T1]  kernel_init+0x11/0x139
+[   33.871140][    T1]  ? rest_init+0x307/0x307
+[   33.871140][    T1]  ret_from_fork+0x27/0x50
+[   33.871140][    T1] Modules linked in:
+[   33.871140][    T1] ---[ end trace e99d392b0f7befbd ]---
+[   33.871140][    T1] RIP: 0010:alloc_gigantic_page_order+0x3fe/0x490
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On Tue, 2019-10-15 at 14:51 +0530, Anshuman Khandual wrote:
+> This series adds a test validation for architecture exported page table
+> helpers. Patch in the series adds basic transformation tests at various
+> levels of the page table. Before that it exports gigantic page allocation
+> function from HugeTLB.
+> 
+> This test was originally suggested by Catalin during arm64 THP migration
+> RFC discussion earlier. Going forward it can include more specific tests
+> with respect to various generic MM functions like THP, HugeTLB etc and
+> platform specific tests.
+> 
+> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+> 
+> Changes in V6:
+> 
+> - Moved alloc_gigantic_page_order() into mm/page_alloc.c per Michal
+> - Moved alloc_gigantic_page_order() within CONFIG_CONTIG_ALLOC in the test
+> - Folded Andrew's include/asm-generic/pgtable.h fix into the test patch 2/2
+> 
+> Changes in V5: (https://patchwork.kernel.org/project/linux-mm/list/?series=185991)
+> 
+> - Redefined and moved X86 mm_p4d_folded() into a different header per Kirill/Ingo
+> - Updated the config option comment per Ingo and dropped 'kernel module' reference
+> - Updated the commit message and dropped 'kernel module' reference
+> - Changed DEBUG_ARCH_PGTABLE_TEST into DEBUG_VM_PGTABLE per Ingo
+> - Moved config option from mm/Kconfig.debug into lib/Kconfig.debug
+> - Renamed core test function arch_pgtable_tests() as debug_vm_pgtable()
+> - Renamed mm/arch_pgtable_test.c as mm/debug_vm_pgtable.c
+> - debug_vm_pgtable() gets called from kernel_init_freeable() after init_mm_internals()
+> - Added an entry in Documentation/features/debug/ per Ingo
+> - Enabled the test on arm64 and x86 platforms for now
+> 
+> Changes in V4: (https://patchwork.kernel.org/project/linux-mm/list/?series=183465)
+> 
+> - Disable DEBUG_ARCH_PGTABLE_TEST for ARM and IA64 platforms
+> 
+> Changes in V3: (https://lore.kernel.org/patchwork/project/lkml/list/?series=411216)
+> 
+> - Changed test trigger from module format into late_initcall()
+> - Marked all functions with __init to be freed after completion
+> - Changed all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded()
+> - Folded in PPC32 fixes from Christophe
+> 
+> Changes in V2:
+> 
+> https://lore.kernel.org/linux-mm/1568268173-31302-1-git-send-email-anshuman.khandual@arm.com/T/#t
+> 
+> - Fixed small typo error in MODULE_DESCRIPTION()
+> - Fixed m64k build problems for lvalue concerns in pmd_xxx_tests()
+> - Fixed dynamic page table level folding problems on x86 as per Kirril
+> - Fixed second pointers during pxx_populate_tests() per Kirill and Gerald
+> - Allocate and free pte table with pte_alloc_one/pte_free per Kirill
+> - Modified pxx_clear_tests() to accommodate s390 lower 12 bits situation
+> - Changed RANDOM_NZVALUE value from 0xbe to 0xff
+> - Changed allocation, usage, free sequence for saved_ptep
+> - Renamed VMA_FLAGS as VMFLAGS
+> - Implemented a new method for random vaddr generation
+> - Implemented some other cleanups
+> - Dropped extern reference to mm_alloc()
+> - Created and exported new alloc_gigantic_page_order()
+> - Dropped the custom allocator and used new alloc_gigantic_page_order()
+> 
+> Changes in V1:
+> 
+> https://lore.kernel.org/linux-mm/1567497706-8649-1-git-send-email-anshuman.khandual@arm.com/
+> 
+> - Added fallback mechanism for PMD aligned memory allocation failure
+> 
+> Changes in RFC V2:
+> 
+> https://lore.kernel.org/linux-mm/1565335998-22553-1-git-send-email-anshuman.khandual@arm.com/T/#u
+> 
+> - Moved test module and it's config from lib/ to mm/
+> - Renamed config TEST_ARCH_PGTABLE as DEBUG_ARCH_PGTABLE_TEST
+> - Renamed file from test_arch_pgtable.c to arch_pgtable_test.c
+> - Added relevant MODULE_DESCRIPTION() and MODULE_AUTHOR() details
+> - Dropped loadable module config option
+> - Basic tests now use memory blocks with required size and alignment
+> - PUD aligned memory block gets allocated with alloc_contig_range()
+> - If PUD aligned memory could not be allocated it falls back on PMD aligned
+>   memory block from page allocator and pud_* tests are skipped
+> - Clear and populate tests now operate on real in memory page table entries
+> - Dummy mm_struct gets allocated with mm_alloc()
+> - Dummy page table entries get allocated with [pud|pmd|pte]_alloc_[map]()
+> - Simplified [p4d|pgd]_basic_tests(), now has random values in the entries
+> 
+> Original RFC V1:
+> 
+> https://lore.kernel.org/linux-mm/1564037723-26676-1-git-send-email-anshuman.khandual@arm.com/
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Steven Price <Steven.Price@arm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Sri Krishna chowdary <schowdary@nvidia.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-ia64@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+> Cc: sparclinux@vger.kernel.org
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> 
+> Anshuman Khandual (2):
+>   mm/page_alloc: Make alloc_gigantic_page() available for general use
+>   mm/debug: Add tests validating architecture page table helpers
+> 
+>  .../debug/debug-vm-pgtable/arch-support.txt   |  34 ++
+>  arch/arm64/Kconfig                            |   1 +
+>  arch/x86/Kconfig                              |   1 +
+>  arch/x86/include/asm/pgtable_64.h             |   6 +
+>  include/asm-generic/pgtable.h                 |   6 +
+>  include/linux/gfp.h                           |   3 +
+>  init/main.c                                   |   1 +
+>  lib/Kconfig.debug                             |  21 +
+>  mm/Makefile                                   |   1 +
+>  mm/debug_vm_pgtable.c                         | 450 ++++++++++++++++++
+>  mm/hugetlb.c                                  |  76 +--
+>  mm/page_alloc.c                               |  98 ++++
+>  12 files changed, 623 insertions(+), 75 deletions(-)
+>  create mode 100644 Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+>  create mode 100644 mm/debug_vm_pgtable.c
+> 
