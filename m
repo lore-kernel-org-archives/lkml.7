@@ -2,68 +2,143 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AC4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41A5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFEE2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571159109;
-	bh=pxUwNPGigamTymvVuZ+SrGQ+bIMYIt+shIcP+UO78ao=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KLT8+lHhqDNs/2uWKthWJ0KZJEtkkx+fKWl7utWfl8/UflrQO4S8EmoeiC2ufyiZV
-	 A0vS/2DvJZpkx7ZdsW9zerQQ7forewWKWHUMOYqxfxv0Dzt8uQ29uKnV9cjZGKLDoM
-	 6PW0blyBuezzsw+UeXt76qbm4xMhHkfw7VfhJsiw=
+	by mail.kernel.org (Postfix) with ESMTP id B460C20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfJORFI (ORCPT
+        id S1729661AbfJORFj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40622 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 13:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfJORFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:05:07 -0400
-Subject: Re: [GIT PULL] dmi fix for v5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571159107;
-        bh=pxUwNPGigamTymvVuZ+SrGQ+bIMYIt+shIcP+UO78ao=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=fsPtKs68SdxBZG/KYnpvfVW5bh3QCZykh8b1fPzrx/Gf+qbFFzknK8PjoDSylGsWn
-         hPutFodLFakoQc0J7pdwW1YnnRa2j+7GpIeTJNt4bmz42XH6mjBhUn00u+NbPnUlvS
-         +8iOlK05nLHXRgJl5+g7eU4et3I0zzHMIGLI3Y0k=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191015101534.278375b9@endymion>
-References: <20191015101534.278375b9@endymion>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191015101534.278375b9@endymion>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git
- dmi-for-linus
-X-PR-Tracked-Commit-Id: 81dde26de9c08bb04c4962a15608778aaffb3cf9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 37b238da15a87a0be1cdda09e4aa8a5bc2b4d759
-Message-Id: <157115910711.6841.17095554620947522714.pr-tracker-bot@kernel.org>
-Date:   Tue, 15 Oct 2019 17:05:07 +0000
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
+        id S1726360AbfJORFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 13:05:39 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2975E2084B;
+        Tue, 15 Oct 2019 17:05:38 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 13:05:36 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+        Manjunath Patil <manjunath.b.patil@oracle.com>
+Subject: Re: [PATCH] tracing: Sample module to demonstrate kernel access to
+ Ftrace instances.
+Message-ID: <20191015130536.3b1f5bf6@gandalf.local.home>
+In-Reply-To: <1569023966-23004-2-git-send-email-divya.indi@oracle.com>
+References: <1569023966-23004-1-git-send-email-divya.indi@oracle.com>
+        <1569023966-23004-2-git-send-email-divya.indi@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 15 Oct 2019 10:15:34 +0200:
+On Fri, 20 Sep 2019 16:59:26 -0700
+Divya Indi <divya.indi@oracle.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git dmi-for-linus
+> This is a sample module to demostrate the use of the newly introduced and
+> exported APIs to access Ftrace instances from within the kernel.
+> 
+> Newly introduced APIs used here -
+> 
+> 1. Create a new trace array if it does not exist.
+> struct trace_array *trace_array_create(const char *name)
+> 
+> 2. Destroy/Remove a trace array.
+> int trace_array_destroy(struct trace_array *tr)
+> 
+> 3. Lookup a trace array, given its name.
+> struct trace_array *trace_array_lookup(const char *name)
+> 
+> 4. Enable/Disable trace events:
+> int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+>         const char *event, int set);
+> 
+> Exported APIs -
+> 1. trace_printk equivalent for instances.
+> int trace_array_printk(struct trace_array *tr,
+>                unsigned long ip, const char *fmt, ...);
+> 
+> 2. Helper function.
+> void trace_printk_init_buffers(void);
+> 
+> 3. To decrement the reference counter.
+> void trace_array_put(struct trace_array *tr)
+> 
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> Reviewed-by: Manjunath Patil <manjunath.b.patil@oracle.com>
+> Reviewed-by: Joe Jin <joe.jin@oracle.com>
+> ---
+>  samples/Kconfig                              |   7 ++
+>  samples/Makefile                             |   1 +
+>  samples/ftrace_instance/Makefile             |   6 ++
+>  samples/ftrace_instance/sample-trace-array.c | 134 +++++++++++++++++++++++++++
+>  samples/ftrace_instance/sample-trace-array.h |  84 +++++++++++++++++
+>  5 files changed, 232 insertions(+)
+>  create mode 100644 samples/ftrace_instance/Makefile
+>  create mode 100644 samples/ftrace_instance/sample-trace-array.c
+>  create mode 100644 samples/ftrace_instance/sample-trace-array.h
+>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/37b238da15a87a0be1cdda09e4aa8a5bc2b4d759
+I applied this patch but get this:
 
-Thank you!
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c: In function ‘mytimer_handler’:
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:35:2: error: implicit declaration of function ‘trace_array_set_clr_event’; did you mean ‘trace_set_clr_event’? [-Werror=implicit-function-declaration]
+  trace_array_set_clr_event(tr, "sample-subsystem", "sample_event", 0);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~
+  trace_set_clr_event
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c: In function ‘simple_thread_func’:
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:47:2: error: implicit declaration of function ‘trace_array_printk’; did you mean ‘trace_seq_printf’? [-Werror=implicit-function-declaration]
+  trace_array_printk(tr, _THIS_IP_, "trace_array_printk: count=%d\n",
+  ^~~~~~~~~~~~~~~~~~
+  trace_seq_printf
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c: In function ‘simple_thread’:
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:85:2: error: implicit declaration of function ‘trace_array_put’; did you mean ‘trace_seq_putc’? [-Werror=implicit-function-declaration]
+  trace_array_put(tr);
+  ^~~~~~~~~~~~~~~
+  trace_seq_putc
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c: In function ‘sample_trace_array_init’:
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:100:7: error: implicit declaration of function ‘trace_array_lookup’; did you mean ‘radix_tree_lookup’? [-Werror=implicit-function-declaration]
+  tr = trace_array_lookup("sample-instance");
+       ^~~~~~~~~~~~~~~~~~
+       radix_tree_lookup
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:100:5: warning: assignment to ‘struct trace_array *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  tr = trace_array_lookup("sample-instance");
+     ^
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:102:8: error: implicit declaration of function ‘trace_array_create’; did you mean ‘ftrace_force_update’? [-Werror=implicit-function-declaration]
+   tr = trace_array_create("sample-instance");
+        ^~~~~~~~~~~~~~~~~~
+        ftrace_force_update
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:102:6: warning: assignment to ‘struct trace_array *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+   tr = trace_array_create("sample-instance");
+      ^
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:110:2: error: implicit declaration of function ‘trace_printk_init_buffers’; did you mean ‘trace_event_get_offsets’? [-Werror=implicit-function-declaration]
+  trace_printk_init_buffers();
+  ^~~~~~~~~~~~~~~~~~~~~~~~~
+  trace_event_get_offsets
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c: In function ‘sample_trace_array_exit’:
+/work/git/linux-trace.git/samples/ftrace_instance/sample-trace-array.c:126:2: error: implicit declaration of function ‘trace_array_destroy’; did you mean ‘assoc_array_destroy’? [-Werror=implicit-function-declaration]
+  trace_array_destroy(tr);
+  ^~~~~~~~~~~~~~~~~~~
+  assoc_array_destroy
+cc1: some warnings being treated as errors
+make[3]: *** [/work/git/linux-trace.git/scripts/Makefile.build:266: samples/ftrace_instance/sample-trace-array.o] Error 1
+make[2]: *** [/work/git/linux-trace.git/scripts/Makefile.build:509: samples/ftrace_instance] Error 2
+make[1]: *** [/work/git/linux-trace.git/Makefile:1650: samples] Error 2
+make[1]: *** Waiting for unfinished jobs....
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+-- Steve
