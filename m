@@ -2,108 +2,129 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E45ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C06C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AEF2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ExujiklK"
+	by mail.kernel.org (Postfix) with ESMTP id 31F292064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732106AbfJONmq (ORCPT
+        id S1732125AbfJONnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:42:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbfJONmq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:42:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AKETJ2nfkH7uXxWCCj7sIia2rz/qZRIp9whr7XMbtYg=; b=ExujiklKpYGQs5qRdMBD1a134
-        Io09hhIpCZcfSrkebxinrJhEMRP+SHPdb0jWNRW6sGNTbTfztGeppICDkSMA4E5R1LlggR9VAic45
-        DJg+Vw/PUMqHiIPnlVsCFqgYBXHhGrjeFGRaTcYLKBhPP11NcAkuMyveJjpmdN47pSlu89YKdkd4f
-        rDRMNWT4q8U/o0P/Gi6FRxGqpFDLihfrJXyLSNEwy8YPsTFVTFT0r6j/cOju27NlcVrLk8JXiJvwc
-        /kGAS1QjBKxvOZMc6Dyj3Y88fGeMwU+o8pE4pGgqS0ELEDycU/nlAFAMziEwerHdUdKkWvMDZWk+/
-        i+ntNiW7w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKN5r-0006TP-Lk; Tue, 15 Oct 2019 13:42:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 28005300B8D;
-        Tue, 15 Oct 2019 15:41:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 870A720B972E4; Tue, 15 Oct 2019 15:42:28 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 15:42:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191015134228.GJ2328@hirez.programming.kicks-ass.net>
-References: <20191007081945.10951536.8@infradead.org>
- <20191008104335.6fcd78c9@gandalf.local.home>
- <20191009224135.2dcf7767@oasis.local.home>
- <20191010092054.GR2311@hirez.programming.kicks-ass.net>
- <20191010091956.48fbcf42@gandalf.local.home>
- <20191010140513.GT2311@hirez.programming.kicks-ass.net>
- <20191010115449.22044b53@gandalf.local.home>
- <20191010172819.GS2328@hirez.programming.kicks-ass.net>
- <20191011125903.GN2359@hirez.programming.kicks-ass.net>
- <20191015092802.5c9aea5e@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015092802.5c9aea5e@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 15 Oct 2019 09:43:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31338 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732096AbfJONnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:43:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 06:43:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
+   d="scan'208";a="194519177"
+Received: from spandruv-mobl3.jf.intel.com ([10.254.34.58])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Oct 2019 06:43:08 -0700
+Message-ID: <9d1ab837e757375374f2a45655dbe8aba42aeee5.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
+ throttle messages
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hdegoede@redhat.com, ckellner@redhat.com
+Date:   Tue, 15 Oct 2019 06:43:07 -0700
+In-Reply-To: <20191015085257.GE2311@hirez.programming.kicks-ass.net>
+References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
+         <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
+         <20191014213618.GK4715@zn.tnic>
+         <20191014222735.GA25203@agluck-desk2.amr.corp.intel.com>
+         <20191015085257.GE2311@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:28:02AM -0400, Steven Rostedt wrote:
-> On Fri, 11 Oct 2019 14:59:03 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, 2019-10-15 at 10:52 +0200, Peter Zijlstra wrote:
+> On Mon, Oct 14, 2019 at 03:27:35PM -0700, Luck, Tony wrote:
+> > On Mon, Oct 14, 2019 at 11:36:18PM +0200, Borislav Petkov wrote:
+> > > This description is already *begging* for this delay value to be
+> > > automatically set by the kernel. Putting yet another knob in
+> > > front of
+> > > the user who doesn't have a clue most of the time shows one more
+> > > time
+> > > that we haven't done our job properly by asking her to know what
+> > > we
+> > > already do.
+> > > 
+> > > IOW, a simple history feedback mechanism which sets the timeout
+> > > based on
+> > > the last couple of values is much smarter. The thing would have a
+> > > max
+> > > value, of course, which, when exceeded should mean an anomaly,
+> > > etc, but
+> > > almost anything else is better than merely asking the user to
+> > > make an
+> > > educated guess.
+> > 
+> > You need a plausible start point for the "when to worry the user"
+> > message.  Maybe that is your "max value"?
+> > 
+> > So if the system has a couple of excursions above temperature
+> > lasting
+> > 1 second and then 2 seconds ... would you like to see those ignored
+> > (because they are below the initial max)? But now we have a couple
+> > of data points pick some new value to be the threshold for
+> > reporting?
+> > 
+> > What value should we pick (based on 1 sec, then 2 sec)?
+> > 
+> > I would be worried that it would self tune to the point where it
+> > does report something that it really didn't need to (e.g. as a
+> > result
+> > of a few consecutive very short excursions).
 > 
-> > On Thu, Oct 10, 2019 at 07:28:19PM +0200, Peter Zijlstra wrote:
-> > 
-> > > Really the best solution is to move all the poking into
-> > > ftrace_module_init(), before we mark it RO+X. That's what I'm going to
-> > > do for jump_label and static_call as well, I just need to add that extra
-> > > notifier callback.  
-> > 
-> > OK, so I started writing that patch... or rather, I wrote the patch and
-> > started on the Changelog when I ran into trouble describing why we need
-> > it.
-> > 
-> > That is, I'm struggling to explain why we cannot flip
-> > prepare_coming_module() and complete_formation().
-> > 
-> > Yes, it breaks ftrace, but I'm thinking that is all it breaks. So let me
-> > see if we can cure that.
+> I'm guessing Boris is thinking of a simple IIR like avg filter.
 > 
-> You are mainly worried about making text that is executable into
-> read-write again. What if we kept my one patch that just changed the
-> module in ftrace_module_enable() from read-only to read-write, but
-> before we ever set it executable.
+> 	avg = avg + (sample-avg) / 4
+> 
+> And then only print when sample > 2*avg. If you initialize that with
+> some appropriately large value, it should settle down into what it
+> 'normal' for that particular piece of hardware.
+I will take a shot with some IIR implementation.
 
-This still flips the protections back and forth, which is still really
-ugly. And afaict the only reason this is required is that
-set_all_modules_text_*() stuff.
+> 
+> Still, I'm boggled by the whole idea that hitting critical hard
+> throttle
+> is considered 'normal' at all.
+As explained in my previous email, this is not so called TJMax, where
+it will shutdown. If you keep this temperature for longer time, cooling
+needs be adjusted.
 
-So please, instead of tinkering around, lets just kill that horrible
-interface and be done with it. There's only 2 users left, fixing those
-can't be too hard.
+> 
+> > We also need to take into account the "typical sampling interval"
+> > for user space thermal control software.
+> 
+> Why is control of critical thermal crud in userspace? That seems like
+> a
+> massive design fail.
+The TjMax is taken care by the embedded firmware or kernel depending on
+how OEM wants it to be controlled. User space is for mostly balancing
+non CPU parts, which are not urgent. For example you run CPU at high
+temperature for long duration, the skin will heat up, which takes much
+longer time to cool than CPU itself.
+
+Thanks,
+Srinivas 
+
+
+
