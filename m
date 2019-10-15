@@ -2,74 +2,76 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBBFECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C32C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B40218DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01878218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfJOMsm (ORCPT
+        id S1728467AbfJOMtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:48:42 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37685 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfJOMsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:48:42 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u184so19026905qkd.4;
-        Tue, 15 Oct 2019 05:48:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7LnCAgtzSVxjK8NjcXy6tgIzMWWpUK6SaYtzp2QjSDM=;
-        b=nZq3Zum0QEm1jjAcBlHv79DmGxf+oCa3/809b+qlYBtVr1d1hO3CtDySrU+AMiMmB+
-         Ec5VjBcZhYsOBxip875W5gNoyjoQT6o4v+EUmrLPeREVvhIi3HWsD1chcgoToR2eN0Ow
-         reLCpYcKXD7NLMkESjxwAnp2e58pzJv5ekRlyFz+bjNab7uXYREqRqGJgWdTPF/DHJH1
-         AAn+uo8dXYwBTE8vbQKcfd+yMMO3IGs5Esoc5IcT4hqdR4ZztFWfCTV6GyD0aPL7eQ9K
-         zB/ZhwDNvD2I2pL9O1LR800CaQIKSyFSmX4oPAKObxnOcOXzV9XuzRkY9YytpFwRoSL0
-         A0+g==
-X-Gm-Message-State: APjAAAV5DutuqaHRWOp+Xsd0njw18Z5pgsSH+MBVIFQl8aq5LUZ1Hl+Y
-        7CSg0yN0/sHtr//Ebv17Yf9I7YT8z1jkoG/55W0=
-X-Google-Smtp-Source: APXvYqxvczERSc/QdTVw6XtrArG/ved1ElaY1gnQxojDC7n+dRbqekh+y6GhSVolCfEI9PxFVG0gsLhVmsIVP35SbWM=
-X-Received: by 2002:a37:9442:: with SMTP id w63mr34470183qkd.138.1571143721176;
- Tue, 15 Oct 2019 05:48:41 -0700 (PDT)
+        Tue, 15 Oct 2019 08:49:05 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3768 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726534AbfJOMtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:49:05 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 471D16BF59E3EF2A8247;
+        Tue, 15 Oct 2019 20:49:02 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 20:48:53 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <matthias.bgg@gmail.com>, <kstewart@linuxfoundation.org>,
+        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <jasu@njomotys.info>
+CC:     <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] clk: mediatek: mt6797: use devm_platform_ioremap_resource() to simplify code
+Date:   Tue, 15 Oct 2019 20:47:28 +0800
+Message-ID: <20191015124728.25072-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20191015122754.14721-1-ben.dooks@codethink.co.uk>
-In-Reply-To: <20191015122754.14721-1-ben.dooks@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 15 Oct 2019 14:48:25 +0200
-Message-ID: <CAK8P3a3CEcAJnTk7ThYcM6Adm09Xvue9-C3jw4ph2fGeOvpu1A@mail.gmail.com>
-Subject: Re: [PATCH] hwrng: omap3-rom fix pointer warning for omap3_rom_rng_idle
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 2:27 PM Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->
-> The omap3_rom_rng_idle function takes a pointer, so give
-> it a pointer instead of a plain 0. This fixes the following
-> sparse warning:
->
-> drivers/char/hw_random/omap3-rom-rng.c:115:28: warning: Using plain integer as NULL pointer
->
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/clk/mediatek/clk-mt6797.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clk/mediatek/clk-mt6797.c b/drivers/clk/mediatek/clk-mt6797.c
+index f62b042..f35389a 100644
+--- a/drivers/clk/mediatek/clk-mt6797.c
++++ b/drivers/clk/mediatek/clk-mt6797.c
+@@ -385,9 +385,8 @@ static int mtk_topckgen_init(struct platform_device *pdev)
+ 	struct clk_onecell_data *clk_data;
+ 	void __iomem *base;
+ 	struct device_node *node = pdev->dev.of_node;
+-	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+-- 
+2.7.4
+
+
