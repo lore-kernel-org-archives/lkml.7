@@ -4,38 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00438ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1556C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9A220854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDF720854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbfJOTTO (ORCPT
+        id S1729122AbfJOTSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:19:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45725 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389486AbfJOTSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 15:18:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45694 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389440AbfJOTSs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 15:18:48 -0400
 Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1iKSLD-00067i-7g; Tue, 15 Oct 2019 21:18:43 +0200
+        id 1iKSLA-00067i-1z; Tue, 15 Oct 2019 21:18:40 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 28/34] drm/i810: Refer to `PREEMPTION' in comment
-Date:   Tue, 15 Oct 2019 21:18:15 +0200
-Message-Id: <20191015191821.11479-29-bigeasy@linutronix.de>
+Cc:     tglx@linutronix.de, "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 21/34] net: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:18:08 +0200
+Message-Id: <20191015191821.11479-22-bigeasy@linutronix.de>
 In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
 References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -45,35 +41,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dependency has been changed from `PREEMPT' to `PREEMPTION'. Reflect
-this change in the comment.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Use `PREEMPTION' in the comment.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
+Update the comment to use CONFIG_PREEMPTION.
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/gpu/drm/Kconfig | 2 +-
+ net/core/dev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index e67c194c2acad..5f6dcbbeb0c1b 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -397,7 +397,7 @@ config DRM_R128
-=20
- config DRM_I810
- 	tristate "Intel I810"
--	# !PREEMPT because of missing ioctl locking
-+	# !PREEMPTION because of missing ioctl locking
- 	depends on DRM && AGP && AGP_INTEL && (!PREEMPTION || BROKEN)
- 	help
- 	  Choose this option if you have an Intel I810 graphics card.  If M is
+diff --git a/net/core/dev.c b/net/core/dev.c
+index bf3ed413abafe..11a60d69434bc 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -901,7 +901,7 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
+  *
+  *	The use of raw_seqcount_begin() and cond_resched() before
+  *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPT is not set.
++ *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
+ {
 --=20
 2.23.0
 
