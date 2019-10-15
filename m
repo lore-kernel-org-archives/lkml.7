@@ -2,96 +2,85 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0DDECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CB2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C83721848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:36:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Us3gxveS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qeo9I8PL"
+	by mail.kernel.org (Postfix) with ESMTP id 960E921848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbfJOLgt (ORCPT
+        id S1728807AbfJOLgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:36:49 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55954 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfJOLgs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:36:48 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E956C60DA7; Tue, 15 Oct 2019 11:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571139408;
-        bh=ovkt4b2nKzMchB9ZgtQWzeYw6k1PJKUjpwtIZzO24Mc=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Us3gxveSa+uHoCXf77KwRimlDca9sam72HCL1c5NuUiD+9Nn/z1Ma5tVBqgA45tOe
-         pjpZwD9AVkVOOlsNzlazbkBlJq5dDG5NeZWA5UQd1EdXhWlzSXHSRAAqIN7qZIlg6A
-         Sz43FdW37JmUiBoKIbILCsqCuToy1ORroFawcuNU=
-Received: from x230.qca.qualcomm.com (176-93-78-119.bb.dnainternet.fi [176.93.78.119])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 19E6760D80;
-        Tue, 15 Oct 2019 11:36:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571139406;
-        bh=ovkt4b2nKzMchB9ZgtQWzeYw6k1PJKUjpwtIZzO24Mc=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Qeo9I8PLZsA311E0L8wsSnMmwlaCDk/23SZZipiccN6Usk65XBM4XNss+gMJBmRHv
-         umFfG+lEAOr2jOeOZUmiGA+KRe9YWex6yOojDRaB38k/2/dbGcxsL5AD1OSuAj8RwU
-         h6BSEKzfYJ4rgJqhpw3MbzQDQjE0OUMa3oMlxd+0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 19E6760D80
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Jes.Sorensen@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-Subject: Re: [PATCH] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
-References: <20191015102109.4701-1-chiu@endlessm.com>
-Date:   Tue, 15 Oct 2019 14:36:41 +0300
-In-Reply-To: <20191015102109.4701-1-chiu@endlessm.com> (Chris Chiu's message
-        of "Tue, 15 Oct 2019 18:21:09 +0800")
-Message-ID: <874l0ansty.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 15 Oct 2019 07:36:51 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35198 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728061AbfJOLgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:36:50 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0CEA856F593A920B9B6C;
+        Tue, 15 Oct 2019 19:36:47 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
+ 19:36:36 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <matthias.bgg@gmail.com>, <kstewart@linuxfoundation.org>,
+        <allison@lohutok.net>, <yuehaibing@huawei.com>,
+        <tglx@linutronix.de>, <weiyi.lu@mediatek.com>
+CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH -next] clk: mediatek: mt2712: use devm_platform_ioremap_resource() to simplify code
+Date:   Tue, 15 Oct 2019 19:26:44 +0800
+Message-ID: <20191015112644.19816-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Chiu <chiu@endlessm.com> writes:
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-> The RTL8723BU has problems connecting to AP after each warm reboot.
-> Sometimes it returns no scan result, and in most cases, it fails
-> the authentication for unknown reason. However, it works totally
-> fine after cold reboot.
->
-> Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-> for cold reboot and warm reboot, the registers imply that the MAC
-> is already powered and thus some procedures are skipped during
-> driver initialization. Double checked the vendor driver, it reads
-> the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-> during initialization based on them. This commit only tells the
-> RTL8723BU to do full initialization without checking MAC status.
->
-> https://phabricator.endlessm.com/T28000
->
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/clk/mediatek/clk-mt2712.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-If you send a new version of patch mark it as v2 and include a
-changelog:
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#patch_version_missing
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#changelog_missing
-
+diff --git a/drivers/clk/mediatek/clk-mt2712.c b/drivers/clk/mediatek/clk-mt2712.c
+index 354c26f..a3bd9a1 100644
+--- a/drivers/clk/mediatek/clk-mt2712.c
++++ b/drivers/clk/mediatek/clk-mt2712.c
+@@ -1306,9 +1306,8 @@ static int clk_mt2712_top_probe(struct platform_device *pdev)
+ 	int r, i;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	void __iomem *base;
+-	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base)) {
+ 		pr_err("%s(): ioremap failed\n", __func__);
+ 		return PTR_ERR(base);
+@@ -1394,9 +1393,8 @@ static int clk_mt2712_mcu_probe(struct platform_device *pdev)
+ 	int r;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	void __iomem *base;
+-	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base)) {
+ 		pr_err("%s(): ioremap failed\n", __func__);
+ 		return PTR_ERR(base);
 -- 
-Kalle Valo
+2.7.4
+
+
