@@ -2,71 +2,99 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DD5ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C16ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733B52064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822182064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbfJOLsO (ORCPT
+        id S1729579AbfJOLsV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:48:14 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3763 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728386AbfJOLsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:48:13 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8A3E82110A68FC938004;
-        Tue, 15 Oct 2019 19:48:10 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 15 Oct 2019
- 19:48:02 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <santosh.shilimkar@oracle.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <rds-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net/rds: Remove unnecessary null check
-Date:   Tue, 15 Oct 2019 19:47:36 +0800
-Message-ID: <20191015114736.16928-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 15 Oct 2019 07:48:21 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:51364 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728386AbfJOLsT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:48:19 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-235-E9r2Iy20MAWay1Auj4hFhA-1; Tue, 15 Oct 2019 12:48:16 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 15 Oct 2019 12:48:16 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 15 Oct 2019 12:48:16 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Yin Fengwei' <fengwei.yin@intel.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] ACPI / processor_idle: use ndelay instead of io port
+ access for wait
+Thread-Topic: [PATCH v2] ACPI / processor_idle: use ndelay instead of io port
+ access for wait
+Thread-Index: AQHVgy8hI4gW7D6kAEmU4JIecWCIJ6dblHkg
+Date:   Tue, 15 Oct 2019 11:48:15 +0000
+Message-ID: <c9f3f4f93bb946f790fce4709253b359@AcuMS.aculab.com>
+References: <20191015080404.6013-1-fengwei.yin@intel.com>
+In-Reply-To: <20191015080404.6013-1-fengwei.yin@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-MC-Unique: E9r2Iy20MAWay1Auj4hFhA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Null check before dma_pool_destroy is redundant, so remove it.
-This is detected by coccinelle.
+From: Yin Fengwei
+> Sent: 15 October 2019 09:04
+> In function acpi_idle_do_entry(), an ioport access is used for dummy
+> wait to guarantee hardware behavior. But it could trigger unnecessary
+> vmexit in virtualization environment.
+> 
+> If we run linux as guest and export all available native C state to
+> guest, we did see many PM timer access triggered VMexit when guest
+> enter deeper C state in our environment (We used ACRN hypervisor
+> instead of kvm or xen which has PM timer emulated and exports all
+> native C state to guest).
+> 
+> According to the original comments of this part of code, io port
+> access is only for dummy wait. We could use busy wait instead of io
+> port access to guarantee hardware behavior and avoid unnecessary
+> VMexit.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/rds/ib.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+You need some hard synchronisation instruction(s) after the inb()
+and before any kind of delay to ensure your delay code is executed
+after the inb() completes.
 
-diff --git a/net/rds/ib.c b/net/rds/ib.c
-index 62d4ebe..3fd5f40 100644
---- a/net/rds/ib.c
-+++ b/net/rds/ib.c
-@@ -108,8 +108,7 @@ static void rds_ib_dev_free(struct work_struct *work)
- 		rds_ib_destroy_mr_pool(rds_ibdev->mr_1m_pool);
- 	if (rds_ibdev->pd)
- 		ib_dealloc_pd(rds_ibdev->pd);
--	if (rds_ibdev->rid_hdrs_pool)
--		dma_pool_destroy(rds_ibdev->rid_hdrs_pool);
-+	dma_pool_destroy(rds_ibdev->rid_hdrs_pool);
- 
- 	list_for_each_entry_safe(i_ipaddr, i_next, &rds_ibdev->ipaddr_list, list) {
- 		list_del(&i_ipaddr->list);
--- 
-2.7.4
+I'm pretty sure that inb() is only synchronised with memory reads.
 
+...
+> +	/* profiling the time used for dummy wait op */
+> +	ktime_get_real_ts64(&ts0);
+> +	inl(acpi_gbl_FADT.xpm_timer_block.address);
+> +	ktime_get_real_ts64(&ts1);
+
+That could be dominated by the cost of ktime_get_real_ts64().
+It also need synchronising instructions.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
