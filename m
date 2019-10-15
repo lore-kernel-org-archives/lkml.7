@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED597ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6626EECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CE621848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF48218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571138013;
-	bh=k0VZtIG1G4MMzABWNwo/ptJOC0ykwyI9Xc8DGDiQEEU=;
+	s=default; t=1571138017;
+	bh=RMP6Tmax7xHojvM87tWwgpfP0mAAoqsXE205AzgZ1mQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UJ6js1nfA337EKcWIruF3e3/Vy99YLy4IPYHBmljTXHey0odlVLqjdo0S4TIZboay
-	 LNhBEXFoUV5GQ1Aq5QY/xx7tW1oLuhmQbOd35m0OqoM/aKliOngib2IgCq+nfafvXt
-	 036+JwKIJp7D1Oj70Jz5oFwQW0XD+8zGEsOcFLGk=
+	b=e4lcHTpyjLcRiUSLYrYUvhNMXllzAaEmFGfYwnIUa63YZE+QB04EUIeYkQXHzAiLI
+	 E2lYqq6+0//kVBb7GuFHZppgN2HVwHGLdglx2ZqE4C0p46psY+mN77MtSPRUKYLcBx
+	 3Mi3eSzbDPwwa+r1m5YGXM8gswgATd7Z8+/T2U7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbfJOLNc (ORCPT
+        id S1731784AbfJOLM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:13:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50450 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbfJOLM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 07:12:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50322 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730448AbfJOLM1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:12:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=MgY4bxFY17PHIsD8EZBTx9xqaC4wci+W07NNCCTrDxg=; b=VwP6mNLys83T
-        EwBLJHsdCOVbIVn37RACoo2clg2uiG8A75BZCWyB8SkdNmik8S3qKBqyu9p3lifRyVwlk5El3NuqH
-        j7ZLSxWvsmkOvsrkqJClQ25fp6J8yTQ43dk/RHxMcwvzByv3WmEbGcMZky64KIeD/4jvJUw83VMXe
-        RJgEI=;
+        List-Archive; bh=ozxjDEuvmCR1qhM0gekOKO4P+Dq1BuOBLJHr+rFe3bo=; b=jAHArkMX56x3
+        waR4ugKQSl7AkAoqMMpLWUyQAeT4xd7/v2/mR28vE8nRu2otWEzHDlUi1Q+ZqnZspDBKggEcOkVO4
+        Q48Po77NVRnCTefr0vDAdnyDf3zt0BGsJoDgjNEzbsrxkwBqL15B9HpkxC6THCTNDs2oPOkmHq2X2
+        1HR3k=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iKKka-00021B-7B; Tue, 15 Oct 2019 11:12:24 +0000
+        id 1iKKkY-00020e-Ix; Tue, 15 Oct 2019 11:12:22 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id A18602741CD7; Tue, 15 Oct 2019 12:12:23 +0100 (BST)
+        id 140C02741DCA; Tue, 15 Oct 2019 12:12:22 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc:     baolin.wang@linaro.org, bcm-kernel-feedback-list@broadcom.com,
@@ -54,11 +54,11 @@ Cc:     baolin.wang@linaro.org, bcm-kernel-feedback-list@broadcom.com,
         linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, orsonzhai@gmail.com,
         zhang.lyra@gmail.com
-Subject: Applied "spi: spidev: use new `delay` field for spi transfers" to the spi tree
-In-Reply-To: <20190926105147.7839-14-alexandru.ardelean@analog.com>
+Subject: Applied "spi: bcm63xx: extend error condition to `delay` as well" to the spi tree
+In-Reply-To: <20190926105147.7839-19-alexandru.ardelean@analog.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191015111223.A18602741CD7@ypsilon.sirena.org.uk>
-Date:   Tue, 15 Oct 2019 12:12:23 +0100 (BST)
+Message-Id: <20191015111222.140C02741DCA@ypsilon.sirena.org.uk>
+Date:   Tue, 15 Oct 2019 12:12:22 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spidev: use new `delay` field for spi transfers
+   spi: bcm63xx: extend error condition to `delay` as well
 
 has been applied to the spi tree at
 
@@ -91,42 +91,35 @@ to this mail.
 Thanks,
 Mark
 
-From 8e319dd5f1ebbc1fffa9e550b2a643cbce7515b1 Mon Sep 17 00:00:00 2001
+From c5751ba0f71e3afe62000a9505915093efa31bd6 Mon Sep 17 00:00:00 2001
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Date: Thu, 26 Sep 2019 13:51:41 +0300
-Subject: [PATCH] spi: spidev: use new `delay` field for spi transfers
+Date: Thu, 26 Sep 2019 13:51:46 +0300
+Subject: [PATCH] spi: bcm63xx: extend error condition to `delay` as well
 
-The `delay` field has type `struct spi_delay`.
-This allows users to specify nano-second or clock-cycle delays (if needed).
-
-Converting to use `delay` is straightforward: it's just assigning the
-value to `delay.value` and hard-coding the `delay.unit` to
-`SPI_DELAY_UNIT_USECS`.
-
-This keeps the uapi for spidev un-changed. Changing it can be part of
-another changeset and discussion.
+The driver errors out if `delay_usecs` is non-zero. This error condition
+should be extended to the new `delay` field, to account for when it will be
+used.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lore.kernel.org/r/20190926105147.7839-14-alexandru.ardelean@analog.com
+Link: https://lore.kernel.org/r/20190926105147.7839-19-alexandru.ardelean@analog.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spidev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-bcm63xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index d63235dcb231..1e217e3e9486 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -265,7 +265,8 @@ static int spidev_message(struct spidev_data *spidev,
- 		k_tmp->tx_nbits = u_tmp->tx_nbits;
- 		k_tmp->rx_nbits = u_tmp->rx_nbits;
- 		k_tmp->bits_per_word = u_tmp->bits_per_word;
--		k_tmp->delay_usecs = u_tmp->delay_usecs;
-+		k_tmp->delay.value = u_tmp->delay_usecs;
-+		k_tmp->delay.unit = SPI_DELAY_UNIT_USECS;
- 		k_tmp->speed_hz = u_tmp->speed_hz;
- 		k_tmp->word_delay.value = u_tmp->word_delay_usecs;
- 		k_tmp->word_delay.unit = SPI_DELAY_UNIT_USECS;
+diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
+index fdd7eaa0b8ed..0f1b10a4ef0c 100644
+--- a/drivers/spi/spi-bcm63xx.c
++++ b/drivers/spi/spi-bcm63xx.c
+@@ -368,7 +368,7 @@ static int bcm63xx_spi_transfer_one(struct spi_master *master,
+ 		}
+ 
+ 		/* CS will be deasserted directly after transfer */
+-		if (t->delay_usecs) {
++		if (t->delay_usecs || t->delay.value) {
+ 			dev_err(&spi->dev, "unable to keep CS asserted after transfer\n");
+ 			status = -EINVAL;
+ 			goto exit;
 -- 
 2.20.1
 
