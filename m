@@ -2,109 +2,52 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA39AECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED1EECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B42621835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C02821835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfJOLQb (ORCPT
+        id S1727898AbfJOLQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:16:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:36032 "EHLO foss.arm.com"
+        Tue, 15 Oct 2019 07:16:42 -0400
+Received: from 8bytes.org ([81.169.241.247]:47442 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfJOLQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:16:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E40F337;
-        Tue, 15 Oct 2019 04:16:30 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 262F63F68E;
-        Tue, 15 Oct 2019 04:16:29 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:16:24 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Don't rely on jiffies while holding
- spinlock
-Message-ID: <20191015111623.GA7193@e121166-lin.cambridge.arm.com>
-References: <20190927085502.1758-1-repk@triplefau.lt>
+        id S1725812AbfJOLQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:16:41 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4E61B2D9; Tue, 15 Oct 2019 13:16:40 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 13:16:38 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, iommu@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH] iommu: rockchip: Free domain on .domain_free
+Message-ID: <20191015111638.GH14518@8bytes.org>
+References: <20191002172923.22430-1-ezequiel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190927085502.1758-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191002172923.22430-1-ezequiel@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 10:55:02AM +0200, Remi Pommarel wrote:
-> advk_pcie_wait_pio() can be called while holding a spinlock (from
-> pci_bus_read_config_dword()), then depends on jiffies in order to
-> timeout while polling on PIO state registers. In the case the PIO
-> transaction failed, the timeout will never happen and will also cause
-> the cpu to stall.
+On Wed, Oct 02, 2019 at 02:29:23PM -0300, Ezequiel Garcia wrote:
+> IOMMU domain resource life is well-defined, managed
+> by .domain_alloc and .domain_free.
 > 
-> This decrements a variable and wait instead of using jiffies.
+> Therefore, domain-specific resources shouldn't be tied to
+> the device life, but instead to its domain.
 > 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->   - Reduce polling delay
->   - Change size_t into int for loop counter
-> Changes since v2:
->   - Keep timeout to 1ms by increasing retry counter
-> ---
->  drivers/pci/controller/pci-aardvark.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Applied to pci/aardvark, thanks.
+Looks good to me, if Heiko Acks it I apply it for v5.5.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index fc0fe4d4de49..7b5c9d6c8706 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -175,7 +175,8 @@
->  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
->  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
->  
-> -#define PIO_TIMEOUT_MS			1
-> +#define PIO_RETRY_CNT			500
-> +#define PIO_RETRY_DELAY			2 /* 2 us*/
->  
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
-> @@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
->  static int advk_pcie_wait_pio(struct advk_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
-> -	unsigned long timeout;
-> +	int i;
->  
-> -	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
-> -
-> -	while (time_before(jiffies, timeout)) {
-> +	for (i = 0; i < PIO_RETRY_CNT; i++) {
->  		u32 start, isr;
->  
->  		start = advk_readl(pcie, PIO_START);
->  		isr = advk_readl(pcie, PIO_ISR);
->  		if (!start && isr)
->  			return 0;
-> +		udelay(PIO_RETRY_DELAY);
->  	}
->  
->  	dev_err(dev, "config read/write timed out\n");
-> -- 
-> 2.20.1
-> 
