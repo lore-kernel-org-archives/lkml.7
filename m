@@ -2,143 +2,122 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383A1ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDC4ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1660721925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1FE218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfJOL4n (ORCPT
+        id S1729774AbfJOMBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:56:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33600 "EHLO mx1.redhat.com"
+        Tue, 15 Oct 2019 08:01:52 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7898 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729411AbfJOL4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:56:42 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E1225308FBB4;
-        Tue, 15 Oct 2019 11:56:41 +0000 (UTC)
-Received: from localhost (ovpn-116-252.ams2.redhat.com [10.36.116.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 52C175D9E2;
-        Tue, 15 Oct 2019 11:56:38 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 12:56:37 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Jorgen Hansen <jhansen@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Adit Ranadive <aditr@vmware.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/2] vsock: don't allow half-closed socket in the
- host transports
-Message-ID: <20191015115637.GA1346@stefanha-x1.localdomain>
-References: <20191011130758.22134-1-sgarzare@redhat.com>
- <20191011101408-mutt-send-email-mst@kernel.org>
- <20191011143457.4ujt3gg7oxco6gld@steredhat>
- <20191012183838-mutt-send-email-mst@kernel.org>
+        id S1726540AbfJOMBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:01:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 05:01:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,299,1566889200"; 
+   d="scan'208";a="195261519"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Oct 2019 05:01:49 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iKLWP-0007QW-3v; Tue, 15 Oct 2019 15:01:49 +0300
+Date:   Tue, 15 Oct 2019 15:01:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 03/14] efi/apple-properties: use
+ PROPERTY_ENTRY_U8_ARRAY_LEN
+Message-ID: <20191015120149.GD32742@smile.fi.intel.com>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-4-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191012183838-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 15 Oct 2019 11:56:42 +0000 (UTC)
+In-Reply-To: <20191011230721.206646-4-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 11, 2019 at 04:07:10PM -0700, Dmitry Torokhov wrote:
+> Let's switch to using PROPERTY_ENTRY_U8_ARRAY_LEN() to initialize
+> property entries. Also, when dumping data, rely on local variables
+> instead of poking into the property entry structure directly.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/firmware/efi/apple-properties.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
+> index 0e206c9e0d7a..5ccf39986a14 100644
+> --- a/drivers/firmware/efi/apple-properties.c
+> +++ b/drivers/firmware/efi/apple-properties.c
+> @@ -53,7 +53,8 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+>  
+>  	for (i = 0; i < dev_header->prop_count; i++) {
+>  		int remaining = dev_header->len - (ptr - (void *)dev_header);
+> -		u32 key_len, val_len;
+> +		u32 key_len, val_len, entry_len;
+> +		const u8 *entry_data;
+>  		char *key;
+>  
+>  		if (sizeof(key_len) > remaining)
+> @@ -85,17 +86,14 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+>  		ucs2_as_utf8(key, ptr + sizeof(key_len),
+>  			     key_len - sizeof(key_len));
+>  
+> -		entry[i].name = key;
+> -		entry[i].length = val_len - sizeof(val_len);
+> -		entry[i].is_array = !!entry[i].length;
+> -		entry[i].type = DEV_PROP_U8;
+> -		entry[i].pointer.u8_data = ptr + key_len + sizeof(val_len);
+> -
+> +		entry_data = ptr + key_len + sizeof(val_len);
+> +		entry_len = val_len - sizeof(val_len);
+> +		entry[i] = PROPERTY_ENTRY_U8_ARRAY_LEN(key, entry_data,
+> +						       entry_len);
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I would rather leave on one line.
+Nevertheless,
 
-On Sat, Oct 12, 2019 at 06:38:46PM -0400, Michael S. Tsirkin wrote:
-> On Fri, Oct 11, 2019 at 04:34:57PM +0200, Stefano Garzarella wrote:
-> > On Fri, Oct 11, 2019 at 10:19:13AM -0400, Michael S. Tsirkin wrote:
-> > > On Fri, Oct 11, 2019 at 03:07:56PM +0200, Stefano Garzarella wrote:
-> > > > We are implementing a test suite for the VSOCK sockets and we disco=
-vered
-> > > > that vmci_transport never allowed half-closed socket on the host si=
-de.
-> > > >=20
-> > > > As Jorgen explained [1] this is due to the implementation of VMCI.
-> > > >=20
-> > > > Since we want to have the same behaviour across all transports, this
-> > > > series adds a section in the "Implementation notes" to exaplain this
-> > > > behaviour, and changes the vhost_transport to behave the same way.
-> > > >=20
-> > > > [1] https://patchwork.ozlabs.org/cover/847998/#1831400
-> > >=20
-> > > Half closed sockets are very useful, and lots of
-> > > applications use tricks to swap a vsock for a tcp socket,
-> > > which might as a result break.
-> >=20
-> > Got it!
-> >=20
-> > >=20
-> > > If VMCI really cares it can implement an ioctl to
-> > > allow applications to detect that half closed sockets aren't supporte=
-d.
-> > >=20
-> > > It does not look like VMCI wants to bother (users do not read
-> > > kernel implementation notes) so it does not really care.
-> > > So why do we want to cripple other transports intentionally?
-> >=20
-> > The main reason is that we are developing the test suite and we noticed
-> > the miss match. Since we want to make sure that applications behave in
-> > the same way on different transports, we thought we would solve it that
-> > way.
-> >=20
-> > But what you are saying (also in the reply of the patches) is actually
-> > quite right. Not being publicized, applications do not expect this beha=
-vior,
-> > so please discard this series.
-> >=20
-> > My problem during the tests, was trying to figure out if half-closed
-> > sockets were supported or not, so as you say adding an IOCTL or maybe
-> > better a getsockopt() could solve the problem.
-> >=20
-> > What do you think?
-> >=20
-> > Thanks,
-> > Stefano
->=20
-> Sure, why not.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The aim is for applications using AF_VSOCK sockets to run on any
-transport.  When the semantics differ between transports it creates a
-compatibility problem.
+>  		if (dump_properties) {
+> -			dev_info(dev, "property: %s\n", entry[i].name);
+> +			dev_info(dev, "property: %s\n", key);
+>  			print_hex_dump(KERN_INFO, pr_fmt(), DUMP_PREFIX_OFFSET,
+> -				16, 1, entry[i].pointer.u8_data,
+> -				entry[i].length, true);
+> +				16, 1, entry_data, entry_len, true);
+>  		}
+>  
+>  		ptr += key_len + val_len;
+> -- 
+> 2.23.0.700.g56cf767bdb-goog
+> 
 
-That said, I do think keeping the standard sockets behavior is
-reasonable.  If applications have problems on VMCI a sockopt may be
-necessary :(.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Stefan
 
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2ls/UACgkQnKSrs4Gr
-c8hXfQf8DmC3BVfNYClaxCwUaQbqYFilievM4mTXLUF9Hf5yhcrEeaXDL3MDuzba
-vCMXFtTonmxmoMMRYtU+HmWKQP/02aBLgym3JOuiedb8QADkYIhPo1xtppIeC43U
-D9G+/UzHiVKOfHm2XmVpjdOGbY4xmD/J6qAOPKlFdju2ateq5Bj8AawcuuXmMewK
-ZuwZiIDK3GditH12SUl2PA9u10321wXpIhjZ5MeydxSviL91A0HN5xfwJxwxZmlR
-ddc+4gBPdGWmz5XpDutchJ4mQbcc4NA6nUvzBG43+0JhhQiAR8nvzPlTcN4mTQmw
-oGdDYLLcMdYh3HG0E6UrCOwaRlB0DQ==
-=2zm7
------END PGP SIGNATURE-----
-
---CE+1k2dSO48ffgeK--
