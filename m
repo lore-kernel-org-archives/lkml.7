@@ -2,114 +2,68 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AB9ECE596
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D562CECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD7020650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80DB20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388248AbfJORYW (ORCPT
+        id S2388591AbfJORYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:24:22 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51917 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfJORYW (ORCPT
+        Tue, 15 Oct 2019 13:24:36 -0400
+Received: from smtprelay0040.hostedemail.com ([216.40.44.40]:54325 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727242AbfJORYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:24:22 -0400
-Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 01cfd58c3730d6c7; Tue, 15 Oct 2019 19:24:19 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
-        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com, jackm@mellanox.com,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        driverdev-devel@linuxdriverproject.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 7/7] PCI/MSI: Move power state check out of pci_msi_supported()
-Date:   Tue, 15 Oct 2019 19:24:19 +0200
-Message-ID: <12092576.0PD7RdXzXY@kreacher>
-In-Reply-To: <20191014230016.240912-8-helgaas@kernel.org>
-References: <20191014230016.240912-1-helgaas@kernel.org> <20191014230016.240912-8-helgaas@kernel.org>
+        Tue, 15 Oct 2019 13:24:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id D243918070EDC;
+        Tue, 15 Oct 2019 17:24:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: touch42_27b1af360ab2d
+X-Filterd-Recvd-Size: 1865
+Received: from XPS-9350 (unknown [172.58.27.13])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 15 Oct 2019 17:24:32 +0000 (UTC)
+Message-ID: <70c9eaac3510bf8857338d82e14c7e3eded9faa9.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
+From:   Joe Perches <joe@perches.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 15 Oct 2019 10:24:02 -0700
+In-Reply-To: <CAMuHMdUvoQz7a7NmLHdpNjRnAUMdbqxFRvB2vdLhHj8pw4Z9Rw@mail.gmail.com>
+References: <20191008094006.8251-1-geert+renesas@glider.be>
+         <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
+         <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com>
+         <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
+         <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
+         <CAMuHMdWZYOsJv1uQkOFRK2tZO+E8sSHEneUM-p+q5FyAmYZ9Fw@mail.gmail.com>
+         <fa4ce46605a81d660be73361a4fdd30240a6348e.camel@perches.com>
+         <CAMuHMdWSGzs7BHqeHC0W5qUEpYqJ8B3Os4wdY11JNzt5+xEaiQ@mail.gmail.com>
+         <e09057e0eefb221549ef9686826e2d190ef36a9c.camel@perches.com>
+         <CAMuHMdUvoQz7a7NmLHdpNjRnAUMdbqxFRvB2vdLhHj8pw4Z9Rw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, October 15, 2019 1:00:16 AM CEST Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> 27e20603c54b ("PCI/MSI: Move D0 check into pci_msi_check_device()")
-> moved the power state check into pci_msi_check_device(), which was
-> subsequently renamed to pci_msi_supported().  This didn't change the
-> behavior, since both callers checked the power state.
-> 
-> However, it doesn't fit the current "pci_msi_supported()" name, which
-> should return what the device is capable of, independent of the power
-> state.
-> 
-> Move the power state check back into the callers for readability.  No
-> functional change intended.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, 2019-10-15 at 18:40 +0200, Geert Uytterhoeven wrote:
+> The advantage of formail over git-mailsplit is that the former doesn't
+> create a bunch of files that need to be stored in a temporary place,
+> and cleant up afterwards.
+> But hey, that can be handled in yet-another-script...
 
-No issues found, so
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
->  drivers/pci/msi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 0884bedcfc7a..20e9c729617c 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -861,7 +861,7 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
->  	if (!pci_msi_enable)
->  		return 0;
->  
-> -	if (!dev || dev->no_msi || dev->current_state != PCI_D0)
-> +	if (!dev || dev->no_msi)
->  		return 0;
->  
->  	/*
-> @@ -972,7 +972,7 @@ static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
->  	int nr_entries;
->  	int i, j;
->  
-> -	if (!pci_msi_supported(dev, nvec))
-> +	if (!pci_msi_supported(dev, nvec) || dev->current_state != PCI_D0)
->  		return -EINVAL;
->  
->  	nr_entries = pci_msix_vec_count(dev);
-> @@ -1058,7 +1058,7 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
->  	int nvec;
->  	int rc;
->  
-> -	if (!pci_msi_supported(dev, minvec))
-> +	if (!pci_msi_supported(dev, minvec) || dev->current_state != PCI_D0)
->  		return -EINVAL;
->  
->  	/* Check whether driver already requested MSI-X IRQs */
-> 
-
-
-
+Or yet-another-git-hook.
 
