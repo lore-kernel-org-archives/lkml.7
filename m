@@ -2,167 +2,79 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B177ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C262083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C4A2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfJOJks (ORCPT
+        id S1727235AbfJOJl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:40:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33342 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfJOJks (ORCPT
+        Tue, 15 Oct 2019 05:41:57 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41319 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfJOJl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:40:48 -0400
-Received: from [185.81.136.22] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKJJr-0003Ir-Nx; Tue, 15 Oct 2019 09:40:43 +0000
-Date:   Tue, 15 Oct 2019 11:40:41 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christian Kellner <ckellner@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Jann Horn <jannh@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Christian Brauner <christian@brauner.io>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH v4 1/2] pidfd: add NSpid entries to fdinfo
-Message-ID: <20191015094039.gtc637trfxmnjzw7@wittgenstein>
-References: <20191011122323.7770-1-ckellner@redhat.com>
- <20191014162034.2185-1-ckellner@redhat.com>
+        Tue, 15 Oct 2019 05:41:56 -0400
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id e98463beea6c6ad3; Tue, 15 Oct 2019 11:41:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: linux-next: build warning after merge of the pm tree
+Date:   Tue, 15 Oct 2019 11:41:54 +0200
+Message-ID: <12090193.Ojpx7YaiiM@kreacher>
+In-Reply-To: <20191015082333.GV32742@smile.fi.intel.com>
+References: <20191015100855.31b8a3d5@canb.auug.org.au> <20191015082333.GV32742@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191014162034.2185-1-ckellner@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:20:32PM +0200, Christian Kellner wrote:
-> From: Christian Kellner <christian@kellner.me>
+On Tuesday, October 15, 2019 10:23:33 AM CEST Andy Shevchenko wrote:
+> On Tue, Oct 15, 2019 at 10:08:55AM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the pm tree, today's linux-next build (arm
+> > multi_v7_defconfig) produced this warning:
+> > 
+> > In file included from include/linux/irqchip.h:14,
+> >                  from arch/arm/kernel/irq.c:26:
+> > include/linux/acpi.h:682:31: warning: 'struct acpi_device' declared inside parameter list will not be visible outside of this definition or declaration
+> >   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2)
+> >       |                               ^~~~~~~~~~~
+> > 
+> > and many more.
+> > 
+> > Introduced by commit
+> > 
+> >   d1748b57dc88 ("ACPI / utils: Introduce acpi_dev_hid_uid_match() helper")
+> > 
+> > CONFIG_ACPI is not set for this build.
 > 
-> Currently, the fdinfo file contains the Pid field which shows the
-> pid a given pidfd refers to in the pid namespace of the procfs
-> instance. If pid namespaces are configured, also show an NSpid field
-> for easy retrieval of the pid in all descendant pid namespaces. If
-> the pid namespace of the process is not a descendant of the pid
-> namespace of the procfs instance 0 will be shown as its first NSpid
-> entry and no other entries will be shown. Add a block comment to
-> pidfd_show_fdinfo with a detailed explanation of Pid and NSpid fields.
+> I'm puzzled. Why it builds before?
 > 
-> Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Christian Kellner <christian@kellner.me>
+> Another function has struct acpi_device *adev in its prototype and it was
+> before above mentioned commit.
 
-Thanks!
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Right.
 
-> ---
-> Changes in v4:
-> - Reworked to properly handle the case where the pidfd is from a
->   different branch in the pid namespace hierarchy; also add block
->   comment with an in-depth explanation (Christian Brauner)
-> 
->  kernel/fork.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 52 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index bcdf53125210..782986962d47 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1695,12 +1695,63 @@ static int pidfd_release(struct inode *inode, struct file *file)
->  }
->  
->  #ifdef CONFIG_PROC_FS
-> +/**
-> + * pidfd_show_fdinfo - print information about a pidfd
-> + * @m: proc fdinfo file
-> + * @f: file referencing a pidfd
-> + *
-> + * Pid:
-> + * This function will print the pid that a given pidfd refers to in the
-> + * pid namespace of the procfs instance.
-> + * If the pid namespace of the process is not a descendant of the pid
-> + * namespace of the procfs instance 0 will be shown as its pid. This is
-> + * similar to calling getppid() on a process whose parent is outside of
-> + * its pid namespace.
-> + *
-> + * NSpid:
-> + * If pid namespaces are supported then this function will also print
-> + * the pid of a given pidfd refers to for all descendant pid namespaces
-> + * starting from the current pid namespace of the instance, i.e. the
-> + * Pid field and the first entry in the NSpid field will be identical.
-> + * If the pid namespace of the process is not a descendant of the pid
-> + * namespace of the procfs instance 0 will be shown as its first NSpid
-> + * entry and no others will be shown.
-> + * Note that this differs from the Pid and NSpid fields in
-> + * /proc/<pid>/status where Pid and NSpid are always shown relative to
-> + * the  pid namespace of the procfs instance. The difference becomes
-> + * obvious when sending around a pidfd between pid namespaces from a
-> + * different branch of the tree, i.e. where no ancestoral relation is
-> + * present between the pid namespaces:
-> + * - create two new pid namespaces ns1 and ns2 in the initial pid
-> + *   namespace (also take care to create new mount namespaces in the
-> + *   new pid namespace and mount procfs)
-> + * - create a process with a pidfd in ns1
-> + * - send pidfd from ns1 to ns2
-> + * - read /proc/self/fdinfo/<pidfd> and observe that both Pid and NSpid
-> + *   have exactly one entry, which is 0
-> + */
->  static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
->  {
->  	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
->  	struct pid *pid = f->private_data;
-> +	pid_t nr = pid_nr_ns(pid, ns);
-> +
-> +	seq_put_decimal_ull(m, "Pid:\t", nr);
->  
-> -	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
-> +#ifdef CONFIG_PID_NS
-> +	seq_put_decimal_ull(m, "\nNSpid:\t", nr);
-> +	if (nr) {
-> +		int i;
-> +
-> +		/* If nr is non-zero it means that 'pid' is valid and that
+The very next acpi_dev_get_first_match_dev() returns a pointer to
+struct acpi_device too and it is not modified by the commit in question.
 
-Nit: multiline kernel comment style is usually
+There may be a bug in there, but commit d1748b57dc88 doesn't look like the
+source of it.
 
-/* 
- * bla
- * bla
- */
 
-but I'll just fix this up when applying. No need to resend.
 
-> +		 * ns, i.e. the pid namespace associated with the procfs
-> +		 * instance, is in the pid namespace hierarchy of pid.
-> +		 * Start at one below the already printed level.
-> +		 */
-> +		for (i = ns->level + 1; i <= pid->level; i++)
-> +			seq_put_decimal_ull(m, "\t", pid->numbers[i].nr);
-> +	}
-> +#endif
->  	seq_putc(m, '\n');
->  }
->  #endif
-> -- 
-> 2.21.0
-> 
