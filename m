@@ -2,131 +2,69 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ABEECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C998CECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D317021848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z5GmOLq/"
+	by mail.kernel.org (Postfix) with ESMTP id A8073218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbfJONUM (ORCPT
+        id S1731893AbfJONUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:20:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34448 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729551AbfJONUM (ORCPT
+        Tue, 15 Oct 2019 09:20:37 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:47663 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbfJONUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:20:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FDDloE033460;
-        Tue, 15 Oct 2019 13:20:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=XydGK+DnXk+HJwtjcNs2n1Ce29OSzKN9TF1Ft61aa2s=;
- b=Z5GmOLq/mRJgLZh6Hg95jHqOKzywJChEbilo19CWRjZJEb1zN1F8qHK/RDSK/UxJoNAJ
- uuzPtP5T6H+QjbQK+BAmw1b+4boHC9g9VVQgzxRxJF18MJ8ijaBx0yBKnXOyu6ctj5Zg
- yyilFbWT704s4AaBXg7dMVpWKY3+vsv8heJ2m58Ci9rpePN/g1WUQPYmSAsX21AvSTiS
- IUs02776R9zU4YuqR8FQMG5o0+/e0xThxcd98k06rhpox5Cbz4//Mo+CDjN1pAIMTGU2
- zvI8OyE3OpKceDeqiEP9DQRTFI64JdGufloVhcwoOl6l149evvIZEmfcEsGEFr5KHHJI 6A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2vk68ufxmt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 13:20:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9FDDHOt018164;
-        Tue, 15 Oct 2019 13:20:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vks08ukt2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 13:20:06 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9FDK3Re005456;
-        Tue, 15 Oct 2019 13:20:03 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 13:20:03 +0000
-Date:   Tue, 15 Oct 2019 16:19:55 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Michael Chen <micchen@altera.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191015131955.GH4774@kadam>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
- <20191009121441.GM25098@kadam>
- <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
- <20191009185323.GG13286@kadam>
- <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
- <20191010113034.GN13286@kadam>
- <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+        Tue, 15 Oct 2019 09:20:37 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKMkd-0002yw-J3; Tue, 15 Oct 2019 14:20:35 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKMkd-00024u-4e; Tue, 15 Oct 2019 14:20:35 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@vger.kernel.org
+Subject: [PATCH] userns: do not export uidhash_table
+Date:   Tue, 15 Oct 2019 14:20:32 +0100
+Message-Id: <20191015132032.7943-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910150121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9410 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910150121
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:24:50PM +0200, Alexander Gordeev wrote:
-> On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
-> > On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
-> > > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
-> > > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> > > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-> > > > > > > +	struct avalon_dma_desc *desc;
-> > > > > > > +	struct virt_dma_desc *vdesc;
-> > > > > > > +	bool rd_done;
-> > > > > > > +	bool wr_done;
-> > > > > > > +
-> > > > > > > +	spin_lock(lock);
-> 
-> [*]
-> 
-> > > > > > > +
-> > > > > > > +	rd_done = (hw->h2d_last_id < 0);
-> > > > > > > +	wr_done = (hw->d2h_last_id < 0);
-> > > > > > > +
-> > > > > > > +	if (rd_done && wr_done) {
-> > > > > > > +		spin_unlock(lock);
-> > > > > > > +		return IRQ_NONE;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	do {
-> > > > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
-> > > > > > > +			rd_done = true;
-> > > > > > > +
-> > > > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
-> > > > > > > +			wr_done = true;
-> > > > > > > +	} while (!rd_done || !wr_done);
+The uidhash_table is not exported from this file, so
+make it static to avoid the following sparse warning:
 
+kernel/user.c:85:19: warning: symbol 'uidhash_table' was not declared. Should it be static?
 
-Thinking about this some more, my initial instinct was still correct
-actually.  If we're holding the lock to prevent the CPU from writing
-to it then how is hw->d2h_last_id updated in the other thread?  Either
-it must deadlock or it must be a race condition.
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-regards,
-dan carpenter
+diff --git a/kernel/user.c b/kernel/user.c
+index 5235d7f49982..b1635d94a1f2 100644
+--- a/kernel/user.c
++++ b/kernel/user.c
+@@ -82,7 +82,7 @@ EXPORT_SYMBOL_GPL(init_user_ns);
+ #define uidhashentry(uid)	(uidhash_table + __uidhashfn((__kuid_val(uid))))
+ 
+ static struct kmem_cache *uid_cachep;
+-struct hlist_head uidhash_table[UIDHASH_SZ];
++static struct hlist_head uidhash_table[UIDHASH_SZ];
+ 
+ /*
+  * The uidhash_lock is mostly taken from process context, but it is
+-- 
+2.23.0
 
