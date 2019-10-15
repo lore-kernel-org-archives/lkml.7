@@ -2,112 +2,108 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51AAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CB2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27F1205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC09205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EGLVMC2u"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kwKKa1eb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfJOMiU (ORCPT
+        id S1728386AbfJOMiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:38:20 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:35194 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfJOMiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:38:20 -0400
-Received: by mail-ua1-f65.google.com with SMTP id n41so1560258uae.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 05:38:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W5+80JllQIHYBJVJxyld1KsO5osXtXEIMZK7m9b3OxE=;
-        b=EGLVMC2uAKsATxkZ7/Rd3icpohfPzU52QMFO+FeHFm8RwSaoC8PnfrGvRnufPHLvBl
-         mBg8PS19zpO6b3v1jI1a2953+UBNli6Vv0U5eb93wzfdzglaZEA+9bwiUWFjbROxOPMt
-         L+BV+77dabMeg5YIVKpyvWX+8hiW1VSyJa5KP07OgbUF8yuFiGfezvoMSM75dnpbtpSZ
-         Dot38wCqpaS+uhE7uuRgkDNBLAZNLcd6lCRIGb8K/L4bDVcJe91vlrnYYOMsyFMPDGE3
-         O630z//LEnf6Pcs8z3YT45xE2ccMPGqtVqDvxCtS6oA2c0spDcnuDWizKYm+fvur5wWW
-         AU2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W5+80JllQIHYBJVJxyld1KsO5osXtXEIMZK7m9b3OxE=;
-        b=q+ySa1EopKGxSKehAGydnbfNZmFZwm1trxTTwszeZHjzZA2w+nybusebeNM+p+EAJr
-         +mdbOGkWpvqJD+EEvjzTuEiGqwc9Ip3dnx562whSDAGhRcPgT5Zon9QA7xr9Kyfpyn/S
-         8ssKppD5U47KcvpupGvsgeueBULxNEbqBTZ909eY3ecKy+cSIzmXjpBABvT6nkU5Cqxk
-         g9sWYT30jAt2w/GBw3Zh+oGpRMoHPMcw0z0N8WfCBdeKb36ayedsLUM1BjdBTL2MsjnS
-         5cQgeZdhOt7qcIQA0txse34Eb3DSdFK3ayWCk+LpB6ae85amvCKTLEQcgGZNg8K5IWHn
-         KUBA==
-X-Gm-Message-State: APjAAAXHh/QuNCJZHAKXop87AzP8cZ7bqpkgiSnmxbxq+ka+DICQ93fq
-        XOMvxhsKI7HpfKB3vbLbq+3lJ1A57JmobYVeFu2GYw==
-X-Google-Smtp-Source: APXvYqwEaaI7MrIcRxJjxz6+ok5wSSBBW/qpYDP66EMmyfv6XXKBrQNlxdE8x1TFkmyt+CAJSD0nkB6XYgtVE3Qgeao=
-X-Received: by 2002:ab0:348c:: with SMTP id c12mr18268025uar.100.1571143098752;
- Tue, 15 Oct 2019 05:38:18 -0700 (PDT)
+        Tue, 15 Oct 2019 08:38:46 -0400
+Received: from mout.gmx.net ([212.227.17.20]:59815 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727722AbfJOMip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:38:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1571143113;
+        bh=vuznGR+7EAZBra/dwVLbt6VUA/Wj14MKPyeyloZDGww=;
+        h=X-UI-Sender-Class:Date:From:To:Subject;
+        b=kwKKa1ebAZlTNwIELcLTR+NqSYf3kbJWr1bQA2X6fbYSemwdZ5Vv2HpozehB2kcyD
+         b1eRJLHBLgUe7ivVgBb+4iyclBy/Kd9d7+fW0c0dM+KdmBMB6WCJe3oRiqnNLEGxe6
+         VeO1xmHMFhP+t238Gs7nDhS/vz230rfE3uJHMx68=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.139.68]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mk0NU-1heNRh1Dxo-00kNJj; Tue, 15
+ Oct 2019 14:38:33 +0200
+Date:   Tue, 15 Oct 2019 14:38:30 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Subject: [GIT PULL] parisc architecture fixes for kernel v5.4-rc4
+Message-ID: <20191015123830.GA1797@ls3530.fritz.box>
 MIME-Version: 1.0
-References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
- <20190927044239.589e7c4c@oasis.local.home> <20191001163542.GB87296@google.com>
-In-Reply-To: <20191001163542.GB87296@google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 15 Oct 2019 14:37:42 +0200
-Message-ID: <CAPDyKFrYqeoiSG5-KaBDt_G4kPtCxRO7+5fRa-HSWjuPPmAheQ@mail.gmail.com>
-Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:YvwKaTYQ3PifiFidqbpLwsEvkUw/oC/ojVLEExDf8lTG5TFvyoS
+ zqA9HB4CM+gsZjq6ZSFJlJKnxX3HDgGmURaE/HtJbr13980yJg/Hn0DwBwm0VpALIQR0/qJ
+ iZfIfgG9FyKonVWid4RskYMFFWM2dG/fLsS7JnK6RtBO9Od952rHNPrSoqV4XJm/lDxvRso
+ 22wrF4mff6c78c3z1eQtg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NF/IkInm9MA=:NACbM9xkPInxB++g7YjgND
+ ns1TvFU+v9pYTXJ71751nVEq60I+80wYK5RT6I7YXqBUOnI1praKbPCWYxPRAeYrPLPXcuXnQ
+ C6g1NTgq6j7yTYqCluClI63gDY3+qV5GQ8JQjgQmRBM+XM57B1fBVWKOxtFT1zHXqJsGvsGdX
+ avsuRH3bvvcqxxwkWoIvdphEKwtc+weKijPZdaDu5ncXfFazaKjUrhtRIjVgCQCeBJs0a9T2T
+ s0rmgDv0m6Vg9GTOMftueiAl3TauGhHOdUvz7iVi/6r3uvZAFxTuYDv8/BWLSSBMzLuixQOnA
+ pcP8uzR8C1UNviqpvv0WgKaIw0CN5GmHO7RX/mVi/zg7JMK75JEebG8dEQ0S83vUeVgw4mukB
+ Fbjphs4PAr7vUwG5wPpOYfxUxoQrpsRFdTzAo6/PWLmNz7tGUIjV3STDKCQyg11AlBFXM6qO5
+ FMqRgxwH/JtT1pC4Nbqnfh0XV3VdzqjxRe0R2VuSF34K49iYYWuudDk+tRvj3TiFREbJfpUGa
+ 6pnsETWDusXTRphcNmByFP74d6zA+bCDBKhn6+hDuRG1u4MF/Fxzyn/cqaEg5/jtqM6hVg4t1
+ YsEFyyUABd3OEHe2GG4qyaYeLtXJFMSZ8rhemaB4o8EYQH8zarnKdIEHFrX7Zuo3uSyZfb9FY
+ FNgXadaBHdZhOJQZPtWF0Z8E6EzRvsvbVRvwHMNEAPuDdXatwRbgxj6N3gLaSEfiEfQ0/Vbbx
+ AooSyp2JdSwK4rpnrs+Z+uhD/aDDcwTMyGkW/k5GRicmpjqea1hFUS7EhJqow6+lktkBZneHw
+ iF8iHLTMafl5hPeBu656gkfF5Rz78Nnj9YsGyJCBVspmIYSxWJ9FxzfFLXS8SL99ynAOF/BKk
+ mWCP7yr5Is5RR0RX+PTt0pA1FwuLI+CLfQ6wWZAsC01E1YP3M/tuROo1CS0HSGkR6PMHo5zs3
+ TPAZbehZL0phlKdmXi2SgV+p1jj/61IMwwzSBVCau6loRA5gn4JoIePT8LnM+rzKEBYFyIDpg
+ 7zHmuaTnpQRqnTtzcITZ/4sluBxDV/K1NSfxpB+4Kr2tK07aHatJLQpqWuyUUPhEXPM8laVPw
+ nNiPxaB2GSnTuXKJe/LlfrnrYQo/fxtvwyX/LNk4CMYV5mcllyAnPlIskY4FEPIt4D+Ywbad0
+ tRUyfLKfTsFidiEGBxoeQzveZ5NM0Xj4Extp+u2ojK3Ld3/NfPGIsI/HZF+bCXC/L7BNMya/f
+ /avIkmeseiCy8ATSiN4NS6hXyALKEFQxRT7oXlg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Oct 2019 at 18:35, Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Fri, Sep 27, 2019 at 04:42:39AM -0400, Steven Rostedt wrote:
-> > On Thu, 26 Sep 2019 15:04:38 -0700
-> > Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > > Define genpd_power_on/off and genpd_set_performance_state
-> > > tracepoints and use them.
-> >
-> > I agree with Greg about adding a "why" you need this. But, in case
-> > there's a good reason to have this, I have comments about the code
-> > below.
->
-> Thanks Greg and Steven for your comments.
->
-> How about this instead:
->
->   Add tracepoints for genpd_power_on, genpd_power_off and
->   genpd_set_performance_state. The tracepoints can help with
->   understanding power domain behavior of a given device, which
->   may be particularly interesting for battery powered devices
->   and suspend/resume.
+Hi Linus,
 
-Apologize for the delay, no excuse!
+please pull some fixes for the parisc architecture for kernel 5.4-rc4 from:
 
-I don't mind adding trace events, as long as it's for good reasons -
-and to me, that seems a bit questionable here.
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.4-2
 
-According to the above, I believe the information you need is already
-available via genpd's debugfs interface, no?
+Changes:
+* Fix a parisc-specific fallout of Christoph's dma_set_mask_and_coherent() patches (Sven)
+* Fix a vmap memory leak in ioremap()/ioremap() (Helge)
+* Some minor cleanups and documentation updates (Nick, Helge)
 
-[...]
+Thanks,
+Helge
 
-Kind regards
-Uffe
+----------------------------------------------------------------
+Helge Deller (3):
+      MAINTAINERS: Add hp_sdc drivers to parisc arch
+      parisc: sysctl.c: Use CONFIG_PARISC instead of __hppa_ define
+      parisc: Fix vmap memory leak in ioremap()/iounmap()
+
+Nick Desaulniers (1):
+      parisc: prefer __section from compiler_attributes.h
+
+Sven Schnelle (1):
+      parisc: Remove 32-bit DMA enforcement from sba_iommu
+
+ MAINTAINERS                     |  3 +++
+ arch/parisc/include/asm/cache.h |  2 +-
+ arch/parisc/include/asm/ldcw.h  |  2 +-
+ arch/parisc/mm/ioremap.c        | 12 +++++++-----
+ drivers/parisc/sba_iommu.c      |  8 --------
+ kernel/sysctl.c                 |  4 ++--
+ 6 files changed, 14 insertions(+), 17 deletions(-)
