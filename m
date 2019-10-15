@@ -2,133 +2,190 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38201ECE58F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEA6FA3721
 	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBFE2083B
+	by mail.kernel.org (Postfix) with ESMTP id 8D95C21D7B
 	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="snJV5CCh"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="nx4CISjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390242AbfJOX2B (ORCPT
+        id S2390253AbfJOX2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 15 Oct 2019 19:28:05 -0400
+Received: from mail-eopbgr810115.outbound.protection.outlook.com ([40.107.81.115]:10608
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726974AbfJOX2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 15 Oct 2019 19:28:01 -0400
-Received: from ozlabs.org ([203.11.71.1]:53323 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388009AbfJOX2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 19:28:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tBRx4smMz9sPJ;
-        Wed, 16 Oct 2019 10:27:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571182078;
-        bh=G80iYNZ+w7OwrZvrZ0J+yxERwvHUoMHMkoRk5dYyW7s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=snJV5CChUB77EcaqFOnEpbDDcF8IzCfjhIDo/A3jcNRxJLFmo0TfVNciLt8iqL1I3
-         QktWoGfbFsF0tLd00YKxbh9eeWazfKmDh4T6vATWdNpMj/VyOV3fQTj2vMOh6FxJAw
-         YylKep4uG5TYpCFUhyfV/nLNFtLg4PK4IX5kIyZv4uNmYM6R1MzYHBwFekw1GAoXD+
-         AoyFWM5JkI7GW8uu+8LSD015pOi9ouJkvAOll86pGZFC2OfIN61qzRvGa5ZAgJevFq
-         0rNTFq590UhPFTsbICQHLVDU/nd01LmbhxY6VPn/vzbs+5OY5UlBu8E+gLizsM6U4b
-         Aq8xM38rjOi9A==
-Date:   Wed, 16 Oct 2019 10:27:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the bpf tree
-Message-ID: <20191016102751.02c30ed0@canb.auug.org.au>
-In-Reply-To: <20191008094840.1553ff38@canb.auug.org.au>
-References: <20191008094840.1553ff38@canb.auug.org.au>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DUQrR8DOSNf3FrsKXoXjamJstrLGrRXIXkYCMfK3q7JRLnoeBun36D22WQm2Xa3N50mY5en17tpBAAiooHbmekRtakkChbEsfOcYQfIzHnS5QFa61Tltn1zDKyvt5smoKlCLva0swlJBSYfbKscTC/knq0XrpRmo7DqSvd2OP56cpTtm07f3W+zy7548u3l6RnMlk/T3MEzG9fps48WnNBy2zWbPcKkTXn9+I25aq1H3uKq+jW3no0L63VJ44xHSaKQgUBiC9MZAX82UaEUQ+bTv4z9SiXDkeq7jTbKmbtg86BVKJYv0Q0EFQPoh+xydA+8ZFio3dsZqXfwoCjrNIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3AzObqYewUfQRyGjstQ09tuSOqGehvu/CiWWnJKCek=;
+ b=abjQeeaxYrycYimYYL+VRJKLdqUQAZo9mosCpLCvLyRh93I0h9zMoMSeqcDYBJwW3wg4Wh5NW/5+kifBPc+4c16vb9fwa6UmXQkWLoYzea77KjgRnkC/jncowSpDauk8dgMuSnyQ6azWWOwY1Enpdin3CDz0f1GZjzAob1QzRE9mxUTq30KVs3oAnGOrSxi0ZTfGB6eKr8QGeDKr8Y7A7DmLYXWYoAdw2SoXQBj21MhL8bu2rrPzhQJLDR5ABS37zUb9hhflHDRVr/Ms7gdbjzKnsaCAYbU0lhzLXtJTnSXLIoh1yDkj3Pim+bNQrKoa+bTUcNhco23/QcAWcAqWOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 160.33.194.228) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=sony.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A3AzObqYewUfQRyGjstQ09tuSOqGehvu/CiWWnJKCek=;
+ b=nx4CISjRvFkh9HMN11LAIxfTwx327pYPdNe8EviNg5/ADEj/D78+YajD9q70OOBG389l0RiXSue6DYHt/kFabKZH5Z9KRdZmv5DIldrtQqUil5hahgcIL6wzUOpJcj6BV1SdnoBxrxq2tO/1GKBBMkoPTWYdsJYirvF8wffMLlk=
+Received: from CY4PR13CA0024.namprd13.prod.outlook.com (2603:10b6:903:32::34)
+ by DM5PR13MB1657.namprd13.prod.outlook.com (2603:10b6:3:13c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.13; Tue, 15 Oct
+ 2019 23:27:55 +0000
+Received: from BL2NAM02FT057.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::203) by CY4PR13CA0024.outlook.office365.com
+ (2603:10b6:903:32::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.5 via Frontend
+ Transport; Tue, 15 Oct 2019 23:27:55 +0000
+Authentication-Results: spf=pass (sender IP is 160.33.194.228)
+ smtp.mailfrom=sony.com; linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=pass action=none
+ header.from=sony.com;
+Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
+ 160.33.194.228 as permitted sender) receiver=protection.outlook.com;
+ client-ip=160.33.194.228; helo=usculsndmail01v.am.sony.com;
+Received: from usculsndmail01v.am.sony.com (160.33.194.228) by
+ BL2NAM02FT057.mail.protection.outlook.com (10.152.77.36) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2347.16 via Frontend Transport; Tue, 15 Oct 2019 23:27:55 +0000
+Received: from usculsndmail12v.am.sony.com (usculsndmail12v.am.sony.com [146.215.230.103])
+        by usculsndmail01v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x9FNRs6c009590;
+        Tue, 15 Oct 2019 23:27:54 GMT
+Received: from USCULXHUB04V.am.sony.com (hubs.sonyusa.com [146.215.231.18])
+        by usculsndmail12v.am.sony.com (Sentrion-MTA-4.3.2/Sentrion-MTA-4.3.2) with ESMTP id x9FNRsvY021747;
+        Tue, 15 Oct 2019 23:27:54 GMT
+Received: from USCULXMSG01.am.sony.com ([fe80::b09d:6cb6:665e:d1b5]) by
+ USCULXHUB04V.am.sony.com ([146.215.231.18]) with mapi id 14.03.0439.000; Tue,
+ 15 Oct 2019 19:27:54 -0400
+From:   <Tim.Bird@sony.com>
+To:     <skhan@linuxfoundation.org>, <shuah@kernel.org>
+CC:     <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] selftests: Fix O= and KBUILD_OUTPUT handling for
+ relative paths
+Thread-Topic: [PATCH] selftests: Fix O= and KBUILD_OUTPUT handling for
+ relative paths
+Thread-Index: AQHVgvpKf3dnntyBoEuzaoa6lbCUbKdcV3zg
+Date:   Tue, 15 Oct 2019 23:27:51 +0000
+Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF977CC2AB@USCULXMSG01.am.sony.com>
+References: <20191015014505.14259-1-skhan@linuxfoundation.org>
+In-Reply-To: <20191015014505.14259-1-skhan@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [146.215.228.6]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Lom=PRLybBS7MXrH_xQq8ep";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:160.33.194.228;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(136003)(396003)(13464003)(199004)(189003)(186003)(11346002)(5660300002)(316002)(54906003)(50466002)(229853002)(70206006)(66066001)(37786003)(55846006)(47776003)(476003)(70586007)(110136005)(336012)(126002)(426003)(486006)(446003)(97756001)(356004)(7736002)(4326008)(305945005)(6666004)(26005)(76176011)(86362001)(6246003)(102836004)(2876002)(33656002)(7696005)(478600001)(55016002)(3846002)(6116002)(23726003)(106002)(46406003)(2906002)(8936002)(8746002)(8676002)(246002)(2101003)(5001870100001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1657;H:usculsndmail01v.am.sony.com;FPR:;SPF:Pass;LANG:en;PTR:mail.sonyusa.com,mail01.sonyusa.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e090cddc-76f4-40cc-7f06-08d751c74e72
+X-MS-TrafficTypeDiagnostic: DM5PR13MB1657:
+X-Microsoft-Antispam-PRVS: <DM5PR13MB165753E09C3EFF709B0B0B3DFD930@DM5PR13MB1657.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 01917B1794
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 47w08ft96K7yVP2RhEdaudp7vtdK/mDSCGDmhOuzOPcxmOTUws6Ti/CwDA3moHdnl4ZYBRi09icBdNqwQzcCp7XoJuLK1Rk8mJDB4N3ZUiwLG7HzYMy2lqdle20MB5B6NCHVDXCBmUp+ds2y2BRQro+E+/ypSXCOn9ZSw74Nkbc81K9WJJkOe8fX6YW+YSRy+4nwnkMzN66lCiplJOC7RvF7VeUoG5RD4FseMrXKZcNk/CNxfef00KBUCi1b3R15WCP5DclnjPUKdaS4jy4dwPHfiMvODh7ka/6uP6toRqEa8xEyw2hw4LQjKD8F9+UWaFELHr7HiUeyCAlWR+pEcXWufMJUcJnSwgiSb+11t7xmcL+j8F1Pvh9gZPioY1bjUkVBUjYGOd+qqw6YbkbKRAiqsp/0XjWvhlIIadYNgAs=
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2019 23:27:55.2462
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e090cddc-76f4-40cc-7f06-08d751c74e72
+X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[160.33.194.228];Helo=[usculsndmail01v.am.sony.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1657
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Lom=PRLybBS7MXrH_xQq8ep
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Shuah Khan on  Monday, October 14, 2019 3:45 PM
+>=20
+> Fix O=3D and KBUILD_OUTPUT handling for relative paths.
+>=20
+> export KBUILD_OUTPUT=3D../kselftest_size
+> make TARGETS=3Dsize kselftest-all
+>=20
+> or
+>=20
+> make O=3D../kselftest_size TARGETS=3Dsize kselftest-all
+>=20
+> In both of these cases, targets get built in ../kselftest_size which is
+> a one level up from the size test directory.
+>=20
+> make[1]: Entering directory '/mnt/data/lkml/kselftest_size'
+> make --no-builtin-rules INSTALL_HDR_PATH=3D$BUILD/usr \
+>         ARCH=3Dx86 -C ../../.. headers_install
+>   INSTALL ../kselftest_size/usr/include
+> gcc -static -ffreestanding -nostartfiles -s    get_size.c  -o
+> ../kselftest_size/size/get_size
+> /usr/bin/ld: cannot open output file ../kselftest_size/size/get_size: No =
+such
+> file or directory
+> collect2: error: ld returned 1 exit status
+> make[3]: *** [../lib.mk:138: ../kselftest_size/size/get_size] Error 1
+> make[2]: *** [Makefile:143: all] Error 2
+> make[1]: *** [/mnt/data/lkml/linux_5.4/Makefile:1221: kselftest-all] Erro=
+r 2
+> make[1]: Leaving directory '/mnt/data/lkml/kselftest_size'
+> make: *** [Makefile:179: sub-make] Error 2
+>=20
+> Use abs_objtree exported by the main Makefile.
+>=20
+> Reported-by: Tim Bird <Tim.Bird@sony.com>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  tools/testing/selftests/Makefile | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/tools/testing/selftests/Makefile
+> b/tools/testing/selftests/Makefile
+> index 4cdbae6f4e61..3405aa26a655 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -86,10 +86,10 @@ override LDFLAGS =3D
+>  endif
+>=20
+>  ifneq ($(O),)
+> -	BUILD :=3D $(O)
+> +	BUILD :=3D $(abs_objtree)
+>  else
+>  	ifneq ($(KBUILD_OUTPUT),)
+> -		BUILD :=3D $(KBUILD_OUTPUT)/kselftest
+> +		BUILD :=3D $(abs_objtree)/kselftest
+>  	else
+>  		BUILD :=3D $(shell pwd)
+>  		DEFAULT_INSTALL_HDR_PATH :=3D 1
+> @@ -102,6 +102,7 @@ include $(top_srcdir)/scripts/subarch.include
+>  ARCH           ?=3D $(SUBARCH)
+>  export KSFT_KHDR_INSTALL_DONE :=3D 1
+>  export BUILD
+> +#$(info abd_objtree =3D $(abs_objtree) BUILD =3D $(BUILD))
+>=20
+>  # build and run gpio when output directory is the src dir.
+>  # gpio has dependency on tools/gpio and builds tools/gpio
+> --
 
-Hi all,
+ This works great.  Thanks very much.
 
-This is now a conflict between the net and net-next trees.
+Tested-by: Tim Bird <tim.bird@sony.com>
+Acked-by: Tim Bird <tim.bird@sony.com>
 
-On Tue, 8 Oct 2019 09:48:40 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Today's linux-next merge of the bpf-next tree got a conflict in:
->=20
->   tools/lib/bpf/Makefile
->=20
-> between commit:
->=20
->   1bd63524593b ("libbpf: handle symbol versioning properly for libbpf.a")
->=20
-> from the bpf tree and commit:
->=20
->   a9eb048d5615 ("libbpf: Add cscope and tags targets to Makefile")
->=20
-> from the bpf-next tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc tools/lib/bpf/Makefile
-> index 56ce6292071b,10b77644a17c..000000000000
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@@ -143,7 -133,9 +143,9 @@@ LIB_TARGET	:=3D $(addprefix $(OUTPUT),$(L
->   LIB_FILE	:=3D $(addprefix $(OUTPUT),$(LIB_FILE))
->   PC_FILE		:=3D $(addprefix $(OUTPUT),$(PC_FILE))
->  =20
-> + TAGS_PROG :=3D $(if $(shell which etags 2>/dev/null),etags,ctags)
-> +=20
->  -GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN) | \
->  +GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN_SHARED) | \
->   			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
->   			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
->   			   sort -u | wc -l)
+ -- Tim
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Lom=PRLybBS7MXrH_xQq8ep
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2mVfcACgkQAVBC80lX
-0Gz1ogf+PuhLQyiM/Fcr7XdWrOaOmdPHxVJzy2wejPRc1csiaa7LMxYuV470n38O
-xUXHSchUrvOEEwJM3+VLMH+sCsMAnFnxTn2uNYNZIGlajLHJHiM8fAScHxve1eMV
-4iKtOcuZVrbULbbeFteDUJ554N7NcsHMntBf9lA6iEju3HdRQLmOsPuLKayuT9qD
-an2Av+3LO6k3nOZgR0RwMDO8xxQPf4Dpjle+Kx5RJktWcM7GP2zVhy1wHaKTKWKX
-xSfx028lD+e6nXRN0QsYUE3yYEPXVuQodRj0fvRREAOmXuUnCHASpkNuwj31amtO
-ZsWt+80J291g0Cj8LS9XPC84HpafZg==
-=2xFl
------END PGP SIGNATURE-----
-
---Sig_/Lom=PRLybBS7MXrH_xQq8ep--
