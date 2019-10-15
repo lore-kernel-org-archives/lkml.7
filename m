@@ -2,172 +2,105 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486AAECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE08C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2188420872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0F12084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ql+EZ+qs"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="keQCmIX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbfJORBs (ORCPT
+        id S1727388AbfJOREF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:01:48 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42130 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388377AbfJORBp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:01:45 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c195so15062017lfg.9;
-        Tue, 15 Oct 2019 10:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5moJgPZ2Xa4K5tgWm4Nx1p1i/obHq7JljyrRhB5JMRE=;
-        b=ql+EZ+qsgNkTj1l6uuRBk+HDu7XEubMfue2+p4/Rh98xlRRW78lzDTEz2PPRzTMCQT
-         Nr4TimyF7bV2AuR2ulo+H+XbXH2szOfq7qWu5geaJuWtgr4WlkCIjLe84Mthud+GF2B9
-         F7dyUkMR0DVPiVI4aB/rCYvsahJzCEtyMklv4eFddBS2RQHVpqqgyk9DsaRieTw7GqAw
-         re/W1bEMuX1gfk0N73HiqMUmTBaIzaW85AvMTUzF2Wr9PXZ4Yjx8v5JsYuqJn3hahmHm
-         BiRzQTwrYjR4MThNOBBm+vW03p/9jrZpL7RxACCuDFSVh9/kiyK3CpYPm5nrSFeQiqv9
-         cJAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5moJgPZ2Xa4K5tgWm4Nx1p1i/obHq7JljyrRhB5JMRE=;
-        b=aDF9nMk9DNM4fpSgb4ycELOFnLpF2kZ5jFyQAryIE6oYT+SKyCxiVc5hOLHJ1s1Qwd
-         kVJVTwC0vZjPOaeMsHnwgu4pMy2+xtmqw1h7+St+Gzz0oyg/HCzeKUYOQQjc84Msr3gw
-         pckkc2rBlCz+F+lq2XGPIGtgHuzfCbkCt46q5EhRBG6+PNpq1fKDdl8fJOmLYUyTutio
-         ftRe+gAInTeVDlobH13yXQUE8Q40L+zbSYnuCZfLStNckd8kGlf6Np5EEtyiX2XwYtK1
-         yrMVGaPThRP0PJvJxVdKqmpjnU22Hdrg9/AX4r4h9M/wlqm2piiSEHd9a7RmXWBLzNVJ
-         ig1A==
-X-Gm-Message-State: APjAAAVlziFuKAn7KN/3mAFZyTM4wpjird9JD/CZvXRmZb92bAyz9mFt
-        gVc+OHRmieKpQqHL9Da9K7Q=
-X-Google-Smtp-Source: APXvYqz0N13dp4HmI2iWqx0gr7F7VoN8nEQp2x/hUAylnur/3lhCKlEWxfmQYlsIE6m16rfoWjbfGw==
-X-Received: by 2002:ac2:44c3:: with SMTP id d3mr20793012lfm.109.1571158902982;
-        Tue, 15 Oct 2019 10:01:42 -0700 (PDT)
-Received: from localhost.localdomain ([94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:01:42 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 15 Oct 2019 13:04:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57978 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfJOREE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 13:04:04 -0400
+Received: from zn.tnic (p200300EC2F157800C5C9C957E5FD72EA.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:7800:c5c9:c957:e5fd:72ea])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2DDD1EC0C9F;
+        Tue, 15 Oct 2019 19:04:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571159043;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=qR2t1iMXW4bUkgiQHzxnZJRfCBt9ULeZhd361Oh91pM=;
+        b=keQCmIX4iS+qq8uKycuIVqAST76xg3kWFU4/8cCFLfflrjthTRHzcbl9pfV2yUY3Z+g+me
+        2dqXPBoTwBHVrtlH8YYs2M0+UuiweCN6CoRMXkOZBL/9A7TaZgFfNaRJKqF4udkGSRC0IC
+        4tmbiZB6VrAtSi09rCTx5wQd17tivWI=
+Date:   Tue, 15 Oct 2019 19:03:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 04/18] ARM: tegra: Change tegra_set_cpu_in_lp2() type to void
-Date:   Tue, 15 Oct 2019 20:00:01 +0300
-Message-Id: <20191015170015.1135-5-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191015170015.1135-1-digetx@gmail.com>
-References: <20191015170015.1135-1-digetx@gmail.com>
+Subject: Re: [PATCH v9 15/28] x86/asm/purgatory: Start using annotations
+Message-ID: <20191015170358.GE596@zn.tnic>
+References: <20191011115108.12392-1-jslaby@suse.cz>
+ <20191011115108.12392-16-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191011115108.12392-16-jslaby@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Tegra30 CPUIDLE driver has intention to check whether primary CPU was
-the last CPU that entered LP2 (CC6) idle-state, but that functionality
-never got utilized because driver never supported the CC6 state for the
-case where any secondary CPU is online. The new cpuidle driver will
-properly support CC6 on Tegra30, including the case where secondary CPUs
-are online, and that knowledge about what CPUs entered into CC6 won't be
-needed at all because new driver will use different approach by making use
-of the coupled idle-state and explicitly parking secondary CPUs before
-entering into CC6. Thus this patch is just a minor cleanup change.
+On Fri, Oct 11, 2019 at 01:50:55PM +0200, Jiri Slaby wrote:
+> Purgatory used no annotations at all. So include linux/linkage.h and
+> annotate everything:
+> * code by SYM_CODE_*
+> * data by SYM_DATA_*
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> ---
+>  arch/x86/purgatory/entry64.S      | 21 ++++++++++++---------
+>  arch/x86/purgatory/setup-x86_64.S | 14 ++++++++------
+>  arch/x86/purgatory/stack.S        |  7 ++++---
+>  3 files changed, 24 insertions(+), 18 deletions(-)
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/mach-tegra/cpuidle-tegra30.c | 14 ++++----------
- arch/arm/mach-tegra/pm.c              |  8 +-------
- arch/arm/mach-tegra/pm.h              |  2 +-
- 3 files changed, 6 insertions(+), 18 deletions(-)
+...
 
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index c6128526877d..a3ce8dabfe18 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -98,22 +98,16 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
- 			    int index)
- {
- 	bool entered_lp2 = false;
--	bool last_cpu;
- 
- 	local_fiq_disable();
- 
--	last_cpu = tegra_set_cpu_in_lp2();
-+	tegra_set_cpu_in_lp2();
- 	cpu_pm_enter();
- 
--	if (dev->cpu == 0) {
--		if (last_cpu)
--			entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv,
--								     index);
--		else
--			cpu_do_idle();
--	} else {
-+	if (dev->cpu == 0)
-+		entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv, index);
-+	else
- 		entered_lp2 = tegra30_cpu_core_power_down(dev, drv, index);
--	}
- 
- 	cpu_pm_exit();
- 	tegra_clear_cpu_in_lp2();
-diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
-index 1ff499068bb1..a72f9a2d3cb7 100644
---- a/arch/arm/mach-tegra/pm.c
-+++ b/arch/arm/mach-tegra/pm.c
-@@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
- 	spin_unlock(&tegra_lp2_lock);
- }
- 
--bool tegra_set_cpu_in_lp2(void)
-+void tegra_set_cpu_in_lp2(void)
- {
- 	int phy_cpu_id = cpu_logical_map(smp_processor_id());
--	bool last_cpu = false;
--	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
- 	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
- 
- 	spin_lock(&tegra_lp2_lock);
-@@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
- 	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
- 	*cpu_in_lp2 |= BIT(phy_cpu_id);
- 
--	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
--		last_cpu = true;
--
- 	spin_unlock(&tegra_lp2_lock);
--	return last_cpu;
- }
- 
- static int tegra_sleep_cpu(unsigned long v2p)
-diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
-index b9cc12222bb1..2c294f6365c0 100644
---- a/arch/arm/mach-tegra/pm.h
-+++ b/arch/arm/mach-tegra/pm.h
-@@ -24,7 +24,7 @@ void tegra30_lp1_iram_hook(void);
- void tegra30_sleep_core_init(void);
- 
- void tegra_clear_cpu_in_lp2(void);
--bool tegra_set_cpu_in_lp2(void);
-+void tegra_set_cpu_in_lp2(void);
- void tegra_idle_lp2_last(void);
- extern void (*tegra_tear_down_cpu)(void);
- 
+> @@ -75,12 +76,12 @@ r13:	.quad 0x0
+>  r14:	.quad 0x0
+>  r15:	.quad 0x0
+>  rip:	.quad 0x0
+> -	.size entry64_regs, . - entry64_regs
+> +SYM_DATA_END(entry64_regs)
+>  
+>  	/* GDT */
+>  	.section ".rodata"
+>  	.balign 16
+> -gdt:
+> +SYM_DATA_START_LOCAL(gdt)
+>  	/* 0x00 unusable segment
+
+Note for the applier: Fixup that comment:
+
+	/*
+	 * 0x00 ...
+	 * ...
+
+>  	 * 0x08 unused
+>  	 * so use them as gdt ptr
+
 -- 
-2.23.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
