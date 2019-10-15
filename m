@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FE0ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C81ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A952168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FEC9214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2VM4SqY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iORu0Coa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389634AbfJOVRR (ORCPT
+        id S2389703AbfJOVRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:17:17 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42891 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388655AbfJOVRJ (ORCPT
+        Tue, 15 Oct 2019 17:17:22 -0400
+Received: from mail-lf1-f42.google.com ([209.85.167.42]:42201 "EHLO
+        mail-lf1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389542AbfJOVRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:17:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y23so21723682lje.9;
-        Tue, 15 Oct 2019 14:17:05 -0700 (PDT)
+        Tue, 15 Oct 2019 17:17:15 -0400
+Received: by mail-lf1-f42.google.com with SMTP id c195so15614016lfg.9;
+        Tue, 15 Oct 2019 14:17:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AaxOcHNCQgBOcrm4biyt/yiqExX0IF895chwfdoXUTo=;
-        b=V2VM4SqY7RgcY6We78OfYm81HgBDfTjrRsWNAfdkuHXgCWmNC1pUDCWaYGvlFYV7es
-         r/IsNHJnhtqIL3b6xMuDOxlaJf++g6ELXC4DxTJ5jE+PefeFTLYc6LfdpkDN7E9iwxUO
-         JZdahwxTCgoRD91Goa/5+MKV+KYfSyVRl8lAc+8V9JRgyIgZ2BURLq/mUiiiu5hHv9qR
-         xxsOyk7tsLMV0j27MgoRy4Hwq4nyz1P6LvfoPt0aR+FDhOmVSL6l853aDk3dq5jaGdBk
-         stV9NaOBKxCKCsj6xaOEyLgvQV6M4Aosrsyohdf75gUdAHOPwQ98MKqUlBmAz7IBqcz5
-         8rzw==
+        bh=x3W7MvB6E6Ny/9ddBeJGfjcJec5eVg0QAvTdQSwxlb8=;
+        b=iORu0CoauOA1cYo/cz3PxpeNuzgDBOdtd7JSjxfseD0Y4UZbT0+nDYsofgVQ542Wxo
+         vIxy/LHqam0b14L30Io1J55OCLl/UeEEj0VK+SAEr/A2XyBFtnpLpWjB0x04YIe8Hexo
+         tbL6zG8L2jFVkFS5PDlpestwIUDISMI3ZQbSmHeIrA+cGGT0sMIYvsYNPWJ59lJDItU0
+         WXdatpAFjR4VpFIewIrLYYo3+SeWGSEAoHgzTRK8/8Oji/4pmI8mSeOUIgrZheBkZUOG
+         2/iWzLERYc54UdCqkeOGdPQT/Wm6/FZwEtxDHaQ/hRepnx/2TXm8rUI8EzUtVvgIHtRP
+         ha2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AaxOcHNCQgBOcrm4biyt/yiqExX0IF895chwfdoXUTo=;
-        b=RYsAn4NKYhilRcT03PLJDZubMYyKcWN2BaTDDuZq/7kPQJuZJmBJCEp/3zckVG+/sR
-         saLaYtGbOA9eJnvJYLnElq84HJWcA0EZh46gyozE2fsrdJPSRcWDSclnwBPFmYCilQ60
-         4PRxMITpLPijPIDfCi9dz/OJ8kKYlWnPUAl8SjKW6d1nOo+DVDPcc5KRJdurkysRc94/
-         UoiyHq2lK9iOt+8fY0c7mtVh0gJMpOfVSjW3wjNt98nn46w3Cz9FKaodXRy3oFuhD9w5
-         I+G98lUzox3iBrE4d+77nj1bk11Twn/LpQmB7JjQR+YKXX54Gj01PPjxRS2n2Xp9s6hS
-         jrCw==
-X-Gm-Message-State: APjAAAVIf2SdhVUm4edNApOWgvL0RtcDrusBMNVsfTL7MItYgn4eEBJj
-        pIKqLvDRLXxPyFy3I9VjO3g=
-X-Google-Smtp-Source: APXvYqzV+EsRixS1BoknqxIzc/TDegZGH4tQ4ybkn7q80zhNSsYYo7kTqqdwCD7pHHj2v67UvRdY7A==
-X-Received: by 2002:a2e:9848:: with SMTP id e8mr17279325ljj.148.1571174224563;
-        Tue, 15 Oct 2019 14:17:04 -0700 (PDT)
+        bh=x3W7MvB6E6Ny/9ddBeJGfjcJec5eVg0QAvTdQSwxlb8=;
+        b=WsyFd/S10v8phNENQi70tyJr49Z9eXa9KkY9sk36sgUnss5gYPcaI4Y77FL6dGaS0o
+         7K1N/c58R53B0lrTxZC+CphPU5FjcU90ilnWdHSZXNIWGK6kKRXTFEojNvhp4+FlMu6w
+         S4rs/V+0A+jEcDJDN9Kieg0ERpmoQbRpudp1YcoHQ95yliBLqrtj82aewaYvcoRxlUkf
+         R0wuBQLjS4IETGwjm2wwnLZR6UWr3wk9Qh2DaK6PPX6lJACoSbwloxoYOEi2ovEVNeRC
+         tuaDY86lOPQfKWMX7NloCZdLgFMAFhMJLEzpJ8zUs4ZFOJIhts2zP65oXSInTNFdIBIz
+         FKLA==
+X-Gm-Message-State: APjAAAUjbgLPVdrInltFl5MKr/xorgBuYyIV0vmFpKwhHSPVd8MBfSsV
+        LcJa6L4wciv5o1QE3BseTbA395x9
+X-Google-Smtp-Source: APXvYqxeqBhzZcZxqS5Eu03lHq6hP5IwAeffxXBZghJxlLPEoiArLYvXb7JjBhjCJUU+GV3Fgoqm2Q==
+X-Received: by 2002:a19:641b:: with SMTP id y27mr19621349lfb.3.1571174231458;
+        Tue, 15 Oct 2019 14:17:11 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id t16sm5269186ljj.29.2019.10.15.14.17.03
+        by smtp.gmail.com with ESMTPSA id t16sm5269186ljj.29.2019.10.15.14.17.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 14:17:04 -0700 (PDT)
+        Tue, 15 Oct 2019 14:17:10 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -73,9 +73,9 @@ Cc:     Peter Geis <pgwipeout@gmail.com>,
         linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 05/17] clk: tegra30: Support custom CCLK implementation
-Date:   Wed, 16 Oct 2019 00:16:06 +0300
-Message-Id: <20191015211618.20758-6-digetx@gmail.com>
+Subject: [PATCH v1 11/17] ARM: dts: tegra20: Add CPU Operating Performance Points
+Date:   Wed, 16 Oct 2019 00:16:12 +0300
+Message-Id: <20191015211618.20758-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191015211618.20758-1-digetx@gmail.com>
 References: <20191015211618.20758-1-digetx@gmail.com>
@@ -86,43 +86,534 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're going to switch to the generic cpufreq-dt driver on Tegra30 and
-thus CCLK intermediate re-parenting will be performed by the clock driver.
-There is now special CCLK implementation that supports all CCLK quirks,
-this patch makes Tegra30 SoCs to use that implementation.
+Operating Point are specified per HW version. The OPP voltages are kept
+in a separate DTSI file because some boards may not define CPU regulator
+in their device-tree if voltage scaling isn't necessary, like for example
+in a case of tegra20-trimslice which is outlet-powered device.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clk/tegra/clk-tegra30.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../boot/dts/tegra20-cpu-opp-microvolt.dtsi   | 201 ++++++++++++
+ arch/arm/boot/dts/tegra20-cpu-opp.dtsi        | 302 ++++++++++++++++++
+ 2 files changed, 503 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra20-cpu-opp.dtsi
 
-diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
-index 95b0e4a16dd5..ad545803af42 100644
---- a/drivers/clk/tegra/clk-tegra30.c
-+++ b/drivers/clk/tegra/clk-tegra30.c
-@@ -499,6 +499,8 @@ static struct tegra_clk_pll_params pll_x_params __ro_after_init = {
- 	.freq_table = pll_x_freq_table,
- 	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_SET_DCCON |
- 		 TEGRA_PLL_USE_LOCK | TEGRA_PLL_HAS_LOCK_ENABLE,
-+	.pre_rate_change = tegra_cclk_pre_pllx_rate_change,
-+	.post_rate_change = tegra_cclk_post_pllx_rate_change,
- };
- 
- static struct tegra_clk_pll_params pll_e_params __ro_after_init = {
-@@ -932,11 +934,11 @@ static void __init tegra30_super_clk_init(void)
- 	clk_register_clkdev(clk, "pll_p_out4_cclkg", NULL);
- 
- 	/* CCLKG */
--	clk = tegra_clk_register_super_mux("cclk_g", cclk_g_parents,
-+	clk = tegra_clk_register_super_cclk("cclk_g", cclk_g_parents,
- 				  ARRAY_SIZE(cclk_g_parents),
- 				  CLK_SET_RATE_PARENT,
- 				  clk_base + CCLKG_BURST_POLICY,
--				  0, 4, 0, 0, NULL);
-+				  0, NULL);
- 	clks[TEGRA30_CLK_CCLK_G] = clk;
- 
- 	/*
+diff --git a/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi b/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
+new file mode 100644
+index 000000000000..e85ffdbef876
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
+@@ -0,0 +1,201 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/ {
++	cpu0_opp_table: cpu_opp_table0 {
++		opp@216000000_750 {
++			opp-microvolt = <750000 750000 1125000>;
++		};
++
++		opp@216000000_800 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@312000000_750 {
++			opp-microvolt = <750000 750000 1125000>;
++		};
++
++		opp@312000000_800 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@456000000_750 {
++			opp-microvolt = <750000 750000 1125000>;
++		};
++
++		opp@456000000_800 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@456000000_800_2_2 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@456000000_800_3_2 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@456000000_825 {
++			opp-microvolt = <825000 825000 1125000>;
++		};
++
++		opp@608000000_750 {
++			opp-microvolt = <750000 750000 1125000>;
++		};
++
++		opp@608000000_800 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@608000000_800_3_2 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@608000000_825 {
++			opp-microvolt = <825000 825000 1125000>;
++		};
++
++		opp@608000000_850 {
++			opp-microvolt = <850000 850000 1125000>;
++		};
++
++		opp@608000000_900 {
++			opp-microvolt = <900000 900000 1125000>;
++		};
++
++		opp@760000000_775 {
++			opp-microvolt = <775000 775000 1125000>;
++		};
++
++		opp@760000000_800 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@760000000_850 {
++			opp-microvolt = <850000 850000 1125000>;
++		};
++
++		opp@760000000_875 {
++			opp-microvolt = <875000 875000 1125000>;
++		};
++
++		opp@760000000_875_1_1 {
++			opp-microvolt = <875000 875000 1125000>;
++		};
++
++		opp@760000000_875_0_2 {
++			opp-microvolt = <875000 875000 1125000>;
++		};
++
++		opp@760000000_875_1_2 {
++			opp-microvolt = <875000 875000 1125000>;
++		};
++
++		opp@760000000_900 {
++			opp-microvolt = <900000 900000 1125000>;
++		};
++
++		opp@760000000_975 {
++			opp-microvolt = <975000 975000 1125000>;
++		};
++
++		opp@816000000_800 {
++			opp-microvolt = <800000 800000 1125000>;
++		};
++
++		opp@816000000_850 {
++			opp-microvolt = <850000 850000 1125000>;
++		};
++
++		opp@816000000_875 {
++			opp-microvolt = <875000 875000 1125000>;
++		};
++
++		opp@816000000_950 {
++			opp-microvolt = <950000 950000 1125000>;
++		};
++
++		opp@816000000_1000 {
++			opp-microvolt = <1000000 1000000 1125000>;
++		};
++
++		opp@912000000_850 {
++			opp-microvolt = <850000 850000 1125000>;
++		};
++
++		opp@912000000_900 {
++			opp-microvolt = <900000 900000 1125000>;
++		};
++
++		opp@912000000_925 {
++			opp-microvolt = <925000 925000 1125000>;
++		};
++
++		opp@912000000_950 {
++			opp-microvolt = <950000 950000 1125000>;
++		};
++
++		opp@912000000_950_0_2 {
++			opp-microvolt = <950000 950000 1125000>;
++		};
++
++		opp@912000000_950_2_2 {
++			opp-microvolt = <950000 950000 1125000>;
++		};
++
++		opp@912000000_1000 {
++			opp-microvolt = <1000000 1000000 1125000>;
++		};
++
++		opp@912000000_1050 {
++			opp-microvolt = <1050000 1050000 1125000>;
++		};
++
++		opp@1000000000_875 {
++			opp-microvolt = <875000 875000 1125000>;
++		};
++
++		opp@1000000000_900 {
++			opp-microvolt = <900000 900000 1125000>;
++		};
++
++		opp@1000000000_950 {
++			opp-microvolt = <950000 950000 1125000>;
++		};
++
++		opp@1000000000_975 {
++			opp-microvolt = <975000 975000 1125000>;
++		};
++
++		opp@1000000000_1000 {
++			opp-microvolt = <1000000 1000000 1125000>;
++		};
++
++		opp@1000000000_1000_0_2 {
++			opp-microvolt = <1000000 1000000 1125000>;
++		};
++
++		opp@1000000000_1025 {
++			opp-microvolt = <1025000 1025000 1125000>;
++		};
++
++		opp@1000000000_1100 {
++			opp-microvolt = <1100000 1100000 1125000>;
++		};
++
++		opp@1200000000_1000 {
++			opp-microvolt = <1000000 1000000 1125000>;
++		};
++
++		opp@1200000000_1050 {
++			opp-microvolt = <1050000 1050000 1125000>;
++		};
++
++		opp@1200000000_1100 {
++			opp-microvolt = <1100000 1100000 1125000>;
++		};
++
++		opp@1200000000_1125 {
++			opp-microvolt = <1125000 1125000 1125000>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/tegra20-cpu-opp.dtsi b/arch/arm/boot/dts/tegra20-cpu-opp.dtsi
+new file mode 100644
+index 000000000000..c878f4231791
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra20-cpu-opp.dtsi
+@@ -0,0 +1,302 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/ {
++	cpu0_opp_table: cpu_opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@216000000_750 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x0F 0x0003>;
++			opp-hz = /bits/ 64 <216000000>;
++		};
++
++		opp@216000000_800 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x0F 0x0004>;
++			opp-hz = /bits/ 64 <216000000>;
++		};
++
++		opp@312000000_750 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x0F 0x0003>;
++			opp-hz = /bits/ 64 <312000000>;
++		};
++
++		opp@312000000_800 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x0F 0x0004>;
++			opp-hz = /bits/ 64 <312000000>;
++		};
++
++		opp@456000000_750 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x0C 0x0003>;
++			opp-hz = /bits/ 64 <456000000>;
++		};
++
++		opp@456000000_800 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0006>;
++			opp-hz = /bits/ 64 <456000000>;
++		};
++
++		opp@456000000_800_2_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0004>;
++			opp-hz = /bits/ 64 <456000000>;
++		};
++
++		opp@456000000_800_3_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0004>;
++			opp-hz = /bits/ 64 <456000000>;
++		};
++
++		opp@456000000_825 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <456000000>;
++		};
++
++		opp@608000000_750 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0003>;
++			opp-hz = /bits/ 64 <608000000>;
++		};
++
++		opp@608000000_800 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0006>;
++			opp-hz = /bits/ 64 <608000000>;
++		};
++
++		opp@608000000_800_3_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0004>;
++			opp-hz = /bits/ 64 <608000000>;
++		};
++
++		opp@608000000_825 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0001>;
++			opp-hz = /bits/ 64 <608000000>;
++		};
++
++		opp@608000000_850 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0006>;
++			opp-hz = /bits/ 64 <608000000>;
++		};
++
++		opp@608000000_900 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <608000000>;
++		};
++
++		opp@760000000_775 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0003>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_800 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0004>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_850 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0006>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_875 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0001>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_875_1_1 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x02 0x0002>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_875_0_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0004>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_875_1_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x02 0x0004>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_900 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0002>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@760000000_975 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <760000000>;
++		};
++
++		opp@816000000_800 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0007>;
++			opp-hz = /bits/ 64 <816000000>;
++		};
++
++		opp@816000000_850 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0002>;
++			opp-hz = /bits/ 64 <816000000>;
++		};
++
++		opp@816000000_875 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0005>;
++			opp-hz = /bits/ 64 <816000000>;
++		};
++
++		opp@816000000_950 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0006>;
++			opp-hz = /bits/ 64 <816000000>;
++		};
++
++		opp@816000000_1000 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <816000000>;
++		};
++
++		opp@912000000_850 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0007>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_900 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0002>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_925 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0001>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_950 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x02 0x0006>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_950_0_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0004>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_950_2_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0004>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_1000 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0002>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@912000000_1050 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <912000000>;
++		};
++
++		opp@1000000000_875 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0007>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_900 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0002>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_950 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0004>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_975 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0001>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_1000 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x02 0x0006>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_1000_0_2 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0004>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_1025 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0002>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1000000000_1100 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <1000000000>;
++		};
++
++		opp@1200000000_1000 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x08 0x0004>;
++			opp-hz = /bits/ 64 <1200000000>;
++		};
++
++		opp@1200000000_1050 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x04 0x0004>;
++			opp-hz = /bits/ 64 <1200000000>;
++		};
++
++		opp@1200000000_1100 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x02 0x0004>;
++			opp-hz = /bits/ 64 <1200000000>;
++		};
++
++		opp@1200000000_1125 {
++			clock-latency-ns = <400000>;
++			opp-supported-hw = <0x01 0x0004>;
++			opp-hz = /bits/ 64 <1200000000>;
++		};
++	};
++};
 -- 
 2.23.0
 
