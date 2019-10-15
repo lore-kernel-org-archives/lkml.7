@@ -2,76 +2,81 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921F3ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069E4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F60021925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571148312;
-	bh=iNdFITxGoV/+QqRd9iQcdX3LKbCrRpdY6xzLl71y/EI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zVXfJwt036Fd2QbaSLXHYMIF9A7N3Scd/XhOTfjbamWl5nsVQ4h50L9I9EpLCpy/O
-	 9CH7rWqfyAeoLtf9pnm2HYfipucjeHFwXDXl+0t6NdCjAOAH1V5wpxqhky4TNXnWE1
-	 jLmI4xjjI8tPqnishuJAKYfDaFRGBJLOj04OWBVk=
+	by mail.kernel.org (Postfix) with ESMTP id D9288218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732431AbfJOOFL (ORCPT
+        id S1732454AbfJOOFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:05:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38310 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732292AbfJOOFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:05:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 88132AFBB;
-        Tue, 15 Oct 2019 14:05:09 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 16:05:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Guilherme G. Piccoli" <guilherme@gpiccoli.net>
-Cc:     Guilherme Piccoli <gpiccoli@canonical.com>, Qian Cai <cai@lca.pw>,
-        linux-mm@kvack.org, mike.kravetz@oracle.com,
-        linux-kernel@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>
-Subject: Re: [PATCH] hugetlb: Add nohugepages parameter to prevent hugepages
- creation
-Message-ID: <20191015140508.GJ317@dhcp22.suse.cz>
-References: <CAHD1Q_ynd6f2Jc54k1D9JjmtD6tGhkDcAHRzd5nZt5LUdQTvaw@mail.gmail.com>
- <4641B95A-6DD8-4E8A-AD53-06E7B72D956C@lca.pw>
- <CAHD1Q_x+m0ZT_xfLV3j6ma3Cc88fk9KnoS4yytS=PHBvJN7nnQ@mail.gmail.com>
- <20191015121803.GB24932@dhcp22.suse.cz>
- <b6617b4b-bcab-3b40-7d46-46a5d9682856@gpiccoli.net>
+        Tue, 15 Oct 2019 10:05:33 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:49166 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732329AbfJOOFd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:05:33 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKNRx-00048s-07; Tue, 15 Oct 2019 15:05:21 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKNRw-00052K-IV; Tue, 15 Oct 2019 15:05:20 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: include <drm/drm_fb_cma_helper.h> for missing declarations
+Date:   Tue, 15 Oct 2019 15:05:19 +0100
+Message-Id: <20191015140519.19317-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6617b4b-bcab-3b40-7d46-46a5d9682856@gpiccoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 15-10-19 10:58:36, Guilherme G. Piccoli wrote:
-> On 10/15/19 9:18 AM, Michal Hocko wrote:
-> > I do agree with Qian Cai here. Kdump kernel requires a very tailored
-> > environment considering it is running in a very restricted
-> > configuration. The hugetlb pre-allocation sounds like a tooling problem
-> > and should be fixed at that layer.
-> > 
-> 
-> Hi Michal, thanks for your response. Can you suggest me a current way of
-> preventing hugepages for being created, using userspace? The goal for this
-> patch is exactly this, introduce such a way.
+Include <drm/drm_fb_cma_helper.h> to get the definitions of
+drm_fb_cma_get_gem_{addr,obj} functions to fix the following
+sparse warnings:
 
-Simply restrict the environment to not allocate any hugepages? Kdump
-already controls the kernel command line and it also starts only a very
-minimal subset of services. So who is allocating those hugepages?
-sysctls should be already excluded by default as Qian mentioned.
+drivers/gpu/drm/drm_fb_cma_helper.c:38:27: warning: symbol 'drm_fb_cma_get_gem_obj' was not declared. Should it be static?
+drivers/gpu/drm/drm_fb_cma_helper.c:62:12: warning: symbol 'drm_fb_cma_get_gem_addr' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/gpu/drm/drm_fb_cma_helper.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_fb_cma_helper.c
+index c0b0f603af63..f4967cf14f99 100644
+--- a/drivers/gpu/drm/drm_fb_cma_helper.c
++++ b/drivers/gpu/drm/drm_fb_cma_helper.c
+@@ -11,6 +11,7 @@
+ 
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_framebuffer.h>
++#include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_gem_cma_helper.h>
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_plane.h>
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
