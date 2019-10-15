@@ -2,232 +2,98 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD0CECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1096FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D044420854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571135608;
-	bh=qdJqoueENd5lpExCSVcONA4BLf3Zb7UaD0+DUUd/++Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0PC6Mk3qszqdgDS0SRPrD8nFF5sblmn/3dgIcqFZJ0RYbOtG2P3oLnqhyvu6aIn3r
-	 mF1Yr1WPQa8TmumUgjKH+UJaobYh9oXAtTwXZyCC6DfPxIHBIMHXLage4QgssaK8Vt
-	 RyYEiwOyJh7A/EtWdK9YnNAKoz8M5BH/Jr+yOk10=
+	by mail.kernel.org (Postfix) with ESMTP id DA5C72067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nN69mRPu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IluT4+IB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfJOKd1 (ORCPT
+        id S1730733AbfJOKeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbfJOKd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:33:27 -0400
-Received: from localhost (unknown [171.76.96.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 15 Oct 2019 06:34:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59952 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfJOKeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:34:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9CAAC609DD; Tue, 15 Oct 2019 10:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571135663;
+        bh=ipx93KNUsWLuK5QhXOH6UsF1jjlvnu3cf5ewEtkc8xE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nN69mRPuvU6MwjqRENm+BfpiUu2wf49z/z7/YxTKYZwuZK4y7BdsVr63UjPf2azxj
+         KKBPHIdvCAqNccRHeBK1Cke7LP1Ug+MIEeUwFZ+dlsgncO31GsmcIZ7FkMC6gqNTEn
+         ecujUqRAAhixLhbW6dSParVfyBJ5Ymko1hj54eKw=
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C663B2067B;
-        Tue, 15 Oct 2019 10:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571135605;
-        bh=qdJqoueENd5lpExCSVcONA4BLf3Zb7UaD0+DUUd/++Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gK7UgJFmceZgTPx4I+tLtHrDLCPmbnV4ISo/4t+tuzZlarENQ9Hn3u/pLBMW9RkKC
-         XY89fqsWlc/fksWPAxvcml+BBE2S7iXxAud8prR3dbrK0wpAz8xK0skEI4+wzYRdDS
-         HFtH6LIw1yak/acts4U3bbRx8fbwZq5dNexldduQ=
-Date:   Tue, 15 Oct 2019 16:03:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Michael Chen <micchen@altera.com>,
-        devel@driverdev.osuosl.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191015103321.GU2654@vkoul-mobl>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B99860790;
+        Tue, 15 Oct 2019 10:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571135662;
+        bh=ipx93KNUsWLuK5QhXOH6UsF1jjlvnu3cf5ewEtkc8xE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IluT4+IBEYEQYauz2yp0XVRapDqKPd6AtkhqvVKIg05mWqQuruW1IoluwH10rXEKm
+         vXEVwFhkSL/4SxD0jwlp/xzrDHtIHFmdHeH0LTaO8Ar6htl4e/YMj4KFsPmEB7RN8I
+         x9oK+tUVqFU7uiha9C5G0X+zX5zoW6PRhzZMDulM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B99860790
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 1/2] dt-bindings: qcom: Add SC7180 bindings
+Date:   Tue, 15 Oct 2019 16:03:57 +0530
+Message-Id: <20191015103358.17550-1-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-10-19, 12:12, Alexander Gordeev wrote:
+Add a SoC string 'sc7180' for the qualcomm SC7180 SoC.
+Also add a new board type 'idp'
 
-> +config AVALON_DMA_CTRL_BASE
-> +	hex "Avalon DMA controllers base"
-> +	default "0x00000000"
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-what kind of device is this? I dont think we want these and the ones
-coming below as part of kernel kconfig!
-
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Avalon DMA engine
-> + *
-> + * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
-
-No copyright notices?
-
-> +static int setup_dma_descs(struct dma_desc *dma_descs,
-> +			   struct avalon_dma_desc *desc)
-> +{
-> +	struct scatterlist *sg_stop;
-> +	unsigned int sg_set;
-> +	int ret;
-> +
-> +	ret = setup_descs_sg(dma_descs, 0,
-> +			     desc->direction,
-> +			     desc->dev_addr,
-> +			     desc->sg, desc->sg_len,
-> +			     desc->sg_curr, desc->sg_offset,
-> +			     &sg_stop, &sg_set);
-> +	BUG_ON(!ret);
-
-Please remove this and others
-
-> +static int start_dma_xfer(struct avalon_dma_hw *hw,
-> +			  struct avalon_dma_desc *desc)
-> +{
-> +	size_t ctrl_off;
-> +	struct __dma_desc_table *__table;
-> +	struct dma_desc_table *table;
-> +	u32 rc_src_hi, rc_src_lo;
-> +	u32 ep_dst_lo, ep_dst_hi;
-> +	int last_id, *__last_id;
-> +	int nr_descs;
-> +
-> +	if (desc->direction == DMA_TO_DEVICE) {
-> +		__table = &hw->dma_desc_table_rd;
-> +
-> +		ctrl_off = AVALON_DMA_RD_CTRL_OFFSET;
-> +
-> +		ep_dst_hi = AVALON_DMA_RD_EP_DST_HI;
-> +		ep_dst_lo = AVALON_DMA_RD_EP_DST_LO;
-> +
-> +		__last_id = &hw->h2d_last_id;
-> +	} else if (desc->direction == DMA_FROM_DEVICE) {
-> +		__table = &hw->dma_desc_table_wr;
-> +
-> +		ctrl_off = AVALON_DMA_WR_CTRL_OFFSET;
-> +
-> +		ep_dst_hi = AVALON_DMA_WR_EP_DST_HI;
-> +		ep_dst_lo = AVALON_DMA_WR_EP_DST_LO;
-> +
-> +		__last_id = &hw->d2h_last_id;
-> +	} else {
-> +		BUG();
-> +	}
-> +
-> +	table = __table->cpu_addr;
-> +	memset(&table->flags, 0, sizeof(table->flags));
-> +
-> +	nr_descs = setup_dma_descs(table->descs, desc);
-> +	if (WARN_ON(nr_descs < 1))
-> +		return nr_descs;
-> +
-> +	last_id = nr_descs - 1;
-> +	*__last_id = last_id;
-> +
-> +	rc_src_hi = __table->dma_addr >> 32;
-> +	rc_src_lo = (u32)__table->dma_addr;
-> +
-> +	start_xfer(hw->regs, ctrl_off,
-> +		   rc_src_hi, rc_src_lo,
-> +		   ep_dst_hi, ep_dst_lo,
-> +		   last_id);
-> +
-> +	return 0;
-
-why have a return when you always return 0?
-
-> +static irqreturn_t avalon_dma_interrupt(int irq, void *dev_id)
-> +{
-> +	struct avalon_dma *adma = (struct avalon_dma *)dev_id;
-> +	struct avalon_dma_chan *chan = &adma->chan;
-> +	struct avalon_dma_hw *hw = &chan->hw;
-> +	spinlock_t *lock = &chan->vchan.lock;
-> +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-> +	struct avalon_dma_desc *desc;
-> +	struct virt_dma_desc *vdesc;
-> +	bool rd_done;
-> +	bool wr_done;
-> +
-> +	spin_lock(lock);
-> +
-> +	rd_done = (hw->h2d_last_id < 0);
-> +	wr_done = (hw->d2h_last_id < 0);
-> +
-> +	if (rd_done && wr_done) {
-> +		spin_unlock(lock);
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	do {
-> +		if (!rd_done && rd_flags[hw->h2d_last_id])
-> +			rd_done = true;
-> +
-> +		if (!wr_done && wr_flags[hw->d2h_last_id])
-> +			wr_done = true;
-> +	} while (!rd_done || !wr_done);
-
-Can you explain this logic. I dont like busy loop in isr and who updates
-rd_done and rd_flags etc..?
-
-> +static struct dma_async_tx_descriptor *
-> +avalon_dma_prep_slave_sg(struct dma_chan *dma_chan,
-> +			 struct scatterlist *sg, unsigned int sg_len,
-> +			 enum dma_transfer_direction direction,
-> +			 unsigned long flags, void *context)
-> +{
-> +	struct avalon_dma_chan *chan = to_avalon_dma_chan(dma_chan);
-> +	struct avalon_dma_desc *desc;
-> +	gfp_t gfp_flags = in_interrupt() ? GFP_NOWAIT : GFP_KERNEL;
-
-We use GFP_NOWAIT in prep calls. They can be called from atomic context
-
-> +static int __init avalon_pci_probe(struct pci_dev *pci_dev,
-> +				   const struct pci_device_id *id)
-> +{
-> +	void *adma;
-> +	void __iomem *regs;
-> +	int ret;
-> +
-> +	ret = pci_enable_device(pci_dev);
-> +	if (ret)
-> +		goto enable_err;
-> +
-> +	ret = pci_request_regions(pci_dev, DRIVER_NAME);
-> +	if (ret)
-> +		goto reg_err;
-> +
-> +	regs = pci_ioremap_bar(pci_dev, PCI_BAR);
-
-This is a pci device, so we should really be using the PCI way of
-setting and querying the resources. Doing this thru kernel config
-options is not correct!
-
-> +static int __init avalon_drv_init(void)
-> +{
-> +	return pci_register_driver(&dma_driver_ops);
-> +}
-> +
-> +static void __exit avalon_drv_exit(void)
-> +{
-> +	pci_unregister_driver(&dma_driver_ops);
-> +}
-> +
-> +module_init(avalon_drv_init);
-> +module_exit(avalon_drv_exit);
-
-pls use module_pci_driver.
-
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index e39d8f02e33c..0a60ea051541 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -36,6 +36,7 @@ description: |
+   	mdm9615
+   	ipq8074
+   	sdm845
++  	sc7180
+ 
+   The 'board' element must be one of the following strings:
+ 
+@@ -46,6 +47,7 @@ description: |
+   	sbc
+   	hk01
+   	qrd
++  	idp
+ 
+   The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
+   where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
