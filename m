@@ -2,119 +2,124 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E277CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D28C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF582086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wobk7zeU"
+	by mail.kernel.org (Postfix) with ESMTP id 94A2B217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfJOFkI (ORCPT
+        id S1726482AbfJOFnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:40:08 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39466 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfJOFkH (ORCPT
+        Tue, 15 Oct 2019 01:43:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54418 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfJOFnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:40:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r3so22145438wrj.6
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 22:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cgXIwZUEBFUFxozlcJa8pF4R5hS6O4lvi7YgXVTtNrg=;
-        b=wobk7zeU2Qq4Iw4VYGauePPRVllk+oX4BOTXW4dqIuZOU65i669vY0sI98tfrYcOZ5
-         SshO5hlj9xhcyL22b4GpHbRJWWe/55C0R23E2Q4WjVy/Td59knbs3xvJ4MPctCSIG7Jw
-         f2yddxGid5Qylc/tlOo6/r7RWlnkAq64dhtH9MlpO1G1QqQNndYMQLGyhR9QBN6Qi90W
-         JeURaeQ+4gEghE38gdiQujzUV1xWBCPxHAWgFJJpCzDWm2Dcm1rIU0OWeVsPemcPcJrL
-         TU5gIu9NjSC9kgfQ0mht0q61rqiJQtnsqYYzrKuJVWnvcXb8qz2NhTj1DOCbX5ewie5Y
-         QpAQ==
+        Tue, 15 Oct 2019 01:43:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p7so19328601wmp.4;
+        Mon, 14 Oct 2019 22:43:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cgXIwZUEBFUFxozlcJa8pF4R5hS6O4lvi7YgXVTtNrg=;
-        b=Tf0E8JC7YfOBoH3RgUOOxULI9AbXMyLIYHv7wZ02u7YIxAkyL4L4nIvthbonidbK0o
-         mN2b43WRHT1zEivFqEYIlH90+6Ga9jhX268lP78RzU9wKp+r/niKXIoniMGxFs6tUxeX
-         m7paRoEzebQ2dKwfL6R81gCb2ndcb54Rz7azWb4IZLGT7MbVVwtBX36Jx1PNl6n44SEk
-         UvX5EMsAkFFsfwPVkKPTTroCv/ZEuHxSJ68SzcFwoflrdF1+r/ltE1FIB0bk28oMJ9rh
-         OtWgd+tOrgXtdUXdsEireg9ZHR4UBXwqdVBwuuFapRr/Fj05J4Uuy2zD1bMQR2MQGUws
-         1LQg==
-X-Gm-Message-State: APjAAAUkb0jDTNzxUtxuHT3/9M/Ms9yiM3l6bkMd4EQ3rsyJwW/iPV4Z
-        W9ouIMVD3UQi2dSDd59LejC+Ea2x/UWjGIVuPEpB0g==
-X-Google-Smtp-Source: APXvYqw22c6HVZZ+Kpi/RqnTBbP1ROHewS5lJFHx9CR+JR4q2hJYAD5M98Q9ue9e4uA7Wv2AfuCyqpA1kNE9d99rEbk=
-X-Received: by 2002:a5d:50c9:: with SMTP id f9mr27636293wrt.36.1571118003994;
- Mon, 14 Oct 2019 22:40:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=h6+FbFERAiDwYRmtKkhZlybAkdQXDS/yFTNI2czScgY=;
+        b=cPCoqTnKmgRjjXN2Z89RtekM+OjBFtCtlxufRH0nFEIu8PnzX/mKY14+kfO06aiT3J
+         l1OgjxkeXCBmZ6IMoeu2C0+VnKdTtYI5Xn/Vfl1IzBk1hqf/uWUcE4l/1gYaK2/6k+2W
+         8YAvaLccbp2UmHBeorISeykbMRirX+enMjz/J9sGWIOMxUKICw0JQwcwm/5mOu1OxG+M
+         34idq8Rf83a68qsdfxIrivNc7S0tbze5cHTFGjzM4JnRLB7/qn8u27wO8qlxjKHJeTe8
+         0vnhnL8gYY3tBYafBoLd0GaBDlNR/HzH6LT7t77msDpK75PbnR/yP6IYr7xptqbFsxhd
+         BWzA==
+X-Gm-Message-State: APjAAAXnNkzDTMbuo/+sE99nHkM/o+1FkRrH+8dIKANYCSK8KUaCHKPe
+        MhgFpguGXtoM4IRyJ5ba3feBgIEHx9I=
+X-Google-Smtp-Source: APXvYqzO3gGhjF5GMy01r+Jy7XJ3/eq4XMmVGBdKIHAN968fB4ht+pJj2SD6QGWmdxd+bzT8Lp5v4g==
+X-Received: by 2002:a05:600c:20ca:: with SMTP id y10mr17428245wmm.82.1571118184329;
+        Mon, 14 Oct 2019 22:43:04 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id o18sm50791755wrw.90.2019.10.14.22.43.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Oct 2019 22:43:03 -0700 (PDT)
+Subject: Re: [PATCH v9 07/28] x86/boot: Annotate local functions
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191011115108.12392-1-jslaby@suse.cz>
+ <20191011115108.12392-8-jslaby@suse.cz> <20191014142742.GD4715@zn.tnic>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0ece05d0-1942-4b9e-f6be-7a726961a471@suse.cz>
+Date:   Tue, 15 Oct 2019 07:43:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
- <2e369349-41f6-bd15-2829-fa886f209b39@redhat.com> <CALAqxLVcQ7yZuJCUEqGmvqcz5u0Gd=xJzqLbmiXKR+LJrOhvMQ@mail.gmail.com>
- <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com>
-In-Reply-To: <b8695418-9d3a-96a6-9587-c9a790f49740@redhat.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 14 Oct 2019 22:39:51 -0700
-Message-ID: <CALAqxLVh6GbiKmuK60e6f+_dWh-TS2ZLrwx0WsSo5bKp-F3iLA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191014142742.GD4715@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 1:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 03-10-2019 22:37, John Stultz wrote:
-> > Fair point. I'm sort of taking a larger patchset and trying to break
-> > it up into more easily reviewable chunks, but I guess here I mis-cut.
-> >
-> > The user is the hikey960 gpio hub driver here:
-> >    https://git.linaro.org/people/john.stultz/android-dev.git/commit/?id=b06158a2d3eb00c914f12c76c93695e92d9af00f
->
-> Hmm, that seems to tie the TypeC data-role to the power-role, which
-> is not going to work with role swapping.
+On 14. 10. 19, 16:27, Borislav Petkov wrote:
+> On Fri, Oct 11, 2019 at 01:50:47PM +0200, Jiri Slaby wrote:
+>> .Lrelocated, .Lpaging_enabled, .Lno_longmode, and .Lin_pm32 are
+>> self-standing local functions, annotate them as such and preserve "no
+>> alignment".
+>>
+>> The annotations do not generate anything yet.
+> 
+> So the annotation is only documentational, right?
 
-Thanks again for the feedback here. Sorry for the slow response. Been
-reworking some of the easier changes but am starting to look at how to
-address your feedback here.
+Right.
 
-> What is controlling the usb-role-switch, and thus ultimately
-> causing the notifier you are suggesting to get called ?
-
-The tcpm_mux_set() call via tcpm_state_machine_work()
-
-> Things like TYPEC_VBUS_POWER_OFF and TYPEC_VBUS_POWER_ON
-> really beg to be modeled as a regulator and then the
-> Type-C controller (using e.g. the drivers/usb/typec/tcpm/tcpm.c
-> framework) can use that regulator to control things.
-> in case of the tcpm.c framework it can then use that
-> regulator to implement the set_vbus callback.
-
-So I'm looking at the bindings and I'm not sure exactly how to tie a
-regulator style driver into the tcpm for this?
-Looking at the driver I just see this commented out bit:
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/typec/tcpm/tcpm.c#n3075
-
-Do you happen to have a pointer to something closer to what you are describing?
-
-thanks
--john
+thanks,
+-- 
+js
+suse labs
