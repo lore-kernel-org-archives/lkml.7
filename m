@@ -2,52 +2,45 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3927C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DBE20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D640F20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732608AbfJOONy (ORCPT
+        id S1732593AbfJOOPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:13:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39661 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732546AbfJOONl (ORCPT
+        Tue, 15 Oct 2019 10:15:04 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:49733 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732252AbfJOOPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:13:41 -0400
-Received: from [213.220.153.21] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKNZz-0004YA-8W; Tue, 15 Oct 2019 14:13:39 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Christian Kellner <christian@kellner.me>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 2/2] test: verify fdinfo for pidfd of reaped process
-Date:   Tue, 15 Oct 2019 16:13:32 +0200
-Message-Id: <20191015141332.4055-2-christian.brauner@ubuntu.com>
+        Tue, 15 Oct 2019 10:15:04 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKNbD-0004US-5j; Tue, 15 Oct 2019 15:14:55 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKNbC-00041B-O8; Tue, 15 Oct 2019 15:14:54 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: stm32: make stm_thermal_pm_ops static
+Date:   Tue, 15 Oct 2019 15:14:54 +0100
+Message-Id: <20191015141454.15402-1-ben.dooks@codethink.co.uk>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191015141332.4055-1-christian.brauner@ubuntu.com>
-References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,152 +48,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test that the fdinfo field of a pidfd referring to a dead process
-correctly shows Pid: -1 and NSpid: -1.
+The stm_thermal_pm_ops struct is not exported to any
+other units, so make it static to avoid the following
+sparse warning:
 
-Cc: Christian Kellner <christian@kellner.me>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+drivers/thermal/st/stm_thermal.c:599:1: warning: symbol 'stm_thermal_pm_ops' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- .../selftests/pidfd/pidfd_fdinfo_test.c       | 59 ++++++++++++++-----
- 1 file changed, 45 insertions(+), 14 deletions(-)
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/thermal/st/stm_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
-index 3721be994abd..22558524f71c 100644
---- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
-+++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
-@@ -113,11 +113,15 @@ static struct child clone_newns(int (*fn)(void *), void *args,
- 	return ret;
+diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
+index cf9ddc52f30e..40bc13c68fba 100644
+--- a/drivers/thermal/st/stm_thermal.c
++++ b/drivers/thermal/st/stm_thermal.c
+@@ -596,7 +596,7 @@ static int stm_thermal_resume(struct device *dev)
  }
+ #endif /* CONFIG_PM_SLEEP */
  
-+static inline void child_close(struct child *child)
-+{
-+	close(child->fd);
-+}
-+
- static inline int child_join(struct child *child, struct error *err)
- {
- 	int r;
+-SIMPLE_DEV_PM_OPS(stm_thermal_pm_ops, stm_thermal_suspend, stm_thermal_resume);
++static SIMPLE_DEV_PM_OPS(stm_thermal_pm_ops, stm_thermal_suspend, stm_thermal_resume);
  
--	(void)close(child->fd);
- 	r = wait_for_pid(child->pid);
- 	if (r < 0)
- 		error_set(err, PIDFD_ERROR, "waitpid failed (ret %d, errno %d)",
-@@ -128,6 +132,12 @@ static inline int child_join(struct child *child, struct error *err)
- 	return r;
- }
- 
-+static inline int child_join_close(struct child *child, struct error *err)
-+{
-+	child_close(child);
-+	return child_join(child, err);
-+}
-+
- static inline void trim_newline(char *str)
- {
- 	char *pos = strrchr(str, '\n');
-@@ -136,8 +146,8 @@ static inline void trim_newline(char *str)
- 		*pos = '\0';
- }
- 
--static int verify_fdinfo_nspid(int pidfd, struct error *err,
--			       const char *expect, ...)
-+static int verify_fdinfo(int pidfd, struct error *err, const char *prefix,
-+			 size_t prefix_len, const char *expect, ...)
- {
- 	char buffer[512] = {0, };
- 	char path[512] = {0, };
-@@ -160,17 +170,20 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
- 				 pidfd);
- 
- 	while (getline(&line, &n, f) != -1) {
--		if (strncmp(line, "NSpid:", 6))
-+		char *val;
-+
-+		if (strncmp(line, prefix, prefix_len))
- 			continue;
- 
- 		found = 1;
- 
--		r = strcmp(line + 6, buffer);
-+		val = line + prefix_len;
-+		r = strcmp(val, buffer);
- 		if (r != 0) {
- 			trim_newline(line);
- 			trim_newline(buffer);
--			error_set(err, PIDFD_FAIL, "NSpid: '%s' != '%s'",
--				  line + 6, buffer);
-+			error_set(err, PIDFD_FAIL, "%s '%s' != '%s'",
-+				  prefix, val, buffer);
- 		}
- 		break;
- 	}
-@@ -179,8 +192,8 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
- 	fclose(f);
- 
- 	if (found == 0)
--		return error_set(err, PIDFD_FAIL, "NSpid not found for fd %d",
--				 pidfd);
-+		return error_set(err, PIDFD_FAIL, "%s not found for fd %d",
-+				 prefix, pidfd);
- 
- 	return PIDFD_PASS;
- }
-@@ -213,7 +226,7 @@ static int child_fdinfo_nspid_test(void *args)
- 	}
- 
- 	pidfd = *(int *)args;
--	r = verify_fdinfo_nspid(pidfd, &err, "\t0\n");
-+	r = verify_fdinfo(pidfd, &err, "NSpid:", 6, "\t0\n");
- 
- 	if (r != PIDFD_PASS)
- 		ksft_print_msg("NSpid fdinfo check failed: %s\n", err.msg);
-@@ -242,24 +255,42 @@ static void test_pidfd_fdinfo_nspid(void)
- 	/* The children will have pid 1 in the new pid namespace,
- 	 * so the line must be 'NSPid:\t<pid>\t1'.
- 	 */
--	verify_fdinfo_nspid(a.fd, &err, "\t%d\t%d\n", a.pid, 1);
--	verify_fdinfo_nspid(b.fd, &err, "\t%d\t%d\n", b.pid, 1);
-+	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t%d\t%d\n", a.pid, 1);
-+	verify_fdinfo(b.fd, &err, "NSpid:", 6, "\t%d\t%d\n", b.pid, 1);
- 
- 	/* wait for the process, check the exit status and set
- 	 * 'err' accordingly, if it is not already set.
- 	 */
-+	child_join_close(&a, &err);
-+	child_join_close(&b, &err);
-+
-+	error_report(&err, test_name);
-+}
-+
-+static void test_pidfd_dead_fdinfo(void)
-+{
-+	struct child a;
-+	struct error err = {0, };
-+	const char *test_name = "pidfd check fdinfo for dead process";
-+
-+	/* Create a new child in a new pid and mount namespace */
-+	a = clone_newns(child_fdinfo_nspid_test, NULL, &err);
-+	error_check(&err, test_name);
- 	child_join(&a, &err);
--	child_join(&b, &err);
- 
-+	verify_fdinfo(a.fd, &err, "Pid:", 4, "\t-1\n");
-+	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t-1\n");
-+	child_close(&a);
- 	error_report(&err, test_name);
- }
- 
- int main(int argc, char **argv)
- {
- 	ksft_print_header();
--	ksft_set_plan(1);
-+	ksft_set_plan(2);
- 
- 	test_pidfd_fdinfo_nspid();
-+	test_pidfd_dead_fdinfo();
- 
- 	return ksft_exit_pass();
- }
+ static const struct thermal_zone_of_device_ops stm_tz_ops = {
+ 	.get_temp	= stm_thermal_get_temp,
 -- 
 2.23.0
 
