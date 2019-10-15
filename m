@@ -2,216 +2,180 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDF2ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF75ECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FC920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F47B20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eDOzDhVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbfJOXTY (ORCPT
+        id S2390216AbfJOXUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 19:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfJOXTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 19:19:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D0B20663;
-        Tue, 15 Oct 2019 23:19:20 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 19:19:17 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Subject: Re: [PATCH 5/5] tracing: New functions for kernel access to Ftrace
- instances
-Message-ID: <20191015191917.6287ba10@gandalf.local.home>
-In-Reply-To: <1565805327-579-6-git-send-email-divya.indi@oracle.com>
-References: <1565805327-579-1-git-send-email-divya.indi@oracle.com>
-        <1565805327-579-6-git-send-email-divya.indi@oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 15 Oct 2019 19:20:46 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33562 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbfJOXUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 19:20:45 -0400
+Received: by mail-vs1-f68.google.com with SMTP id p13so14372728vso.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 16:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Luzeu61JUpCQk5lttonbL70KSFby5OvdNNxzg/MFQ8=;
+        b=eDOzDhVMybk0i/+feqo0X+49gsS5JqJW8Ry8hE/JpXVc3WdVLD8WqJn9dDxRuwCehy
+         QvBk66yW4mH2kDlYuzMBwPUkP7IEFj9ZOCyD/4jTGGzyqm14Z6beV+SiRvogqh3bul4S
+         iB5C2XFuK7HRXnTP1fLCtCvORAdxwIVNNPgEfK7/yPQBrFJLj5U8IlVLAnGbma2My+bA
+         WBSOGcGHMJNm8DROoKh3HDAVOdcniv422vxJwA1eHO+j7o/CCl3KJUcbsWYelqWlID+T
+         ADHbasV+eQpUbByIGOW8dLaZ/+35eAnKAiGRw80ERMmbEtCmUY0OfB7tcC1PPQ9bI1JZ
+         KYPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Luzeu61JUpCQk5lttonbL70KSFby5OvdNNxzg/MFQ8=;
+        b=t7Sh6JY/50jSrVXgpykYV3OxjNryN45tKBZRw7jFv7BciD3G7s7EJKGpUPCdxs3TLg
+         Ywzu9t9p0s1zth4gzgvloVENhLODR97IHWnFoOI5TrDeCQZm4kBlsXbY7kPwWlt8ZThp
+         vR/OMgHs1ETFNvC669Wc3k5B+gy5V+YmDXWj03UVYMYI4yNy8WXuvgMyg9afsWD1uPq+
+         e+tUUPcQrqPaM0ZYXll+Hw3+rP/1lR0KZWoTe9IGrQ/MyrVMP3qAbY3N2QGH2ipJ0Iq6
+         I0d2uHh8iwCR4vbFxHbc+o3Uf9kGE5Cfwcs04SomwcRkjaJ8TujMsquEokfKI8s6Ond6
+         gAAA==
+X-Gm-Message-State: APjAAAXEDKdnPoCU1eABYcntsDvQowHytls6eEeoWDuDyXgb4hNPfJ23
+        qq9ea5DLF6nhDW/nZUeoxOdsb7W07+1/SE8NXxndiw==
+X-Google-Smtp-Source: APXvYqygrun7u9zevVDKfu0sa7amxsriNbVYF4wbVRpuSP6Re4yc+jB0Mmyyr6iQQ2WpPrkisEClAIRglX6AbvGsZDk=
+X-Received: by 2002:a67:dc16:: with SMTP id x22mr1767729vsj.159.1571181642542;
+ Tue, 15 Oct 2019 16:20:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191004090114.30694-1-glaroque@baylibre.com> <20191004090114.30694-5-glaroque@baylibre.com>
+In-Reply-To: <20191004090114.30694-5-glaroque@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 16 Oct 2019 04:50:31 +0530
+Message-ID: <CAHLCerOzZ6kc0nrGL+XMi37WuBKUv6E0yzE26wUZ5XoRMS8q6w@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] arm64: dts: meson: g12: Add minimal thermal zone
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 10:55:27 -0700
-Divya Indi <divya.indi@oracle.com> wrote:
-
-> Adding 2 new functions -
-> 1) trace_array_lookup : Look up and return a trace array, given its
-> name.
-> 2) trace_array_set_clr_event : Enable/disable event recording to the
-> given trace array.
-> 
-> NOTE: trace_array_lookup returns a trace array and also increments the
-> reference counter associated with the returned trace array. Make sure to
-> call trace_array_put() once the use is done so that the instance can be
-> removed at a later time.
-> 
-> Example use:
-> 
-> tr = trace_array_lookup("foo-bar");
-
-Should probably be renamed to: trace_array_get_by_name("foo-bar")
-
-As the name should show that it adds a ref count.
-
-But if we make the change I suggested before, where we do not need to
-do the put before calling the destroy, we should have:
-
-
-> if (!tr)
-{
-> 	tr = trace_array_create("foo-bar");
-	trace_array_get(tr);
-}
-
-
-> // Log to tr
-> // Enable/disable events to tr
-> trace_array_set_clr_event(tr, _THIS_IP,"system","event",1);
-
-What's with the __THIS_IP?
-
-
-> 
-> // Done using tr
-> trace_array_put(tr);
-> ..
-> 
-> Also, use trace_array_set_clr_event to enable/disable events to a trace array.
-> So now we no longer need to have ftrace_set_clr_event as an exported
-> API.
-> 
-> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+On Fri, Oct 4, 2019 at 2:31 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> Add minimal thermal zone for two temperature sensor
+> One is located close to the DDR and the other one is
+> located close to the PLLs (between the CPU and GPU)
+>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  include/linux/trace.h        |  2 ++
->  include/linux/trace_events.h |  3 ++-
->  kernel/trace/trace.c         | 28 ++++++++++++++++++++++++++++
->  kernel/trace/trace_events.c  | 23 ++++++++++++++++++++++-
->  4 files changed, 54 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/trace.h b/include/linux/trace.h
-> index 2c782d5..05164bb 100644
-> --- a/include/linux/trace.h
-> +++ b/include/linux/trace.h
-> @@ -32,6 +32,8 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
->  struct trace_array *trace_array_create(const char *name);
->  int trace_array_destroy(struct trace_array *tr);
->  void trace_array_put(struct trace_array *tr);
-> +struct trace_array *trace_array_lookup(const char *name);
-> +
->  #endif	/* CONFIG_TRACING */
->  
->  #endif	/* _LINUX_TRACE_H */
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 8a62731..05a7514 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -540,7 +540,8 @@ extern int trace_define_field(struct trace_event_call *call, const char *type,
->  #define is_signed_type(type)	(((type)(-1)) < (type)1)
->  
->  int trace_set_clr_event(const char *system, const char *event, int set);
-> -
-> +int trace_array_set_clr_event(struct trace_array *tr, const char *system,
-> +		const char *event, int set);
->  /*
->   * The double __builtin_constant_p is because gcc will give us an error
->   * if we try to allocate the static variable to fmt if it is not a
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 7b6a37a..e394d55 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -8514,6 +8514,34 @@ static int instance_rmdir(const char *name)
->  	return ret;
->  }
->  
-> +/**
-> + * trace_array_lookup - Lookup the trace array, given its name.
-> + * @name: The name of the trace array to be looked up.
-> + *
-> + * Lookup and return the trace array associated with @name.
-> + *
-> + * NOTE: The reference counter associated with the returned trace array is
-> + * incremented to ensure it is not freed when in use. Make sure to call
-> + * "trace_array_put" for this trace array when its use is done.
-> + */
-> +struct trace_array *trace_array_lookup(const char *name)
-> +{
-> +	struct trace_array *tr;
-> +
-> +	mutex_lock(&trace_types_lock);
-> +
-> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> +		if (tr->name && strcmp(tr->name, name) == 0) {
-> +			tr->ref++;
-> +			mutex_unlock(&trace_types_lock);
-> +			return tr;
-> +		}
-> +	}
-> +	mutex_unlock(&trace_types_lock);
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(trace_array_lookup);
-> +
->  static __init void create_trace_instances(struct dentry *d_tracer)
->  {
->  	trace_instance_dir = tracefs_create_instance_dir("instances", d_tracer,
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 2621995..96dd997 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -834,7 +834,6 @@ static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(ftrace_set_clr_event);
->  
->  /**
->   * trace_set_clr_event - enable or disable an event
-> @@ -859,6 +858,28 @@ int trace_set_clr_event(const char *system, const char *event, int set)
->  }
->  EXPORT_SYMBOL_GPL(trace_set_clr_event);
->  
-> +/**
-> + * trace_array_set_clr_event - enable or disable an event for a trace array
-> + * @system: system name to match (NULL for any system)
-> + * @event: event name to match (NULL for all events, within system)
-> + * @set: 1 to enable, 0 to disable
+>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> index 0660d9ef6a86..a98c16e163c2 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+>  #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>
+>  / {
+>         interrupt-parent = <&gic>;
+> @@ -94,6 +95,61 @@
+>                 #size-cells = <2>;
+>                 ranges;
+>
+> +               thermal-zones {
+> +                       cpu_thermal: cpu-thermal {
+> +                               polling-delay = <1000>;
+> +                               polling-delay-passive = <100>;
 
-We probably should make this a boolean.
+Ordinarily, you would need to set these delays to 0 in interrupt mode
+to prevent polling overhead. I've just submitted a patch to of-thermal
+that should fix this requirement. Could you check if it works for you?
 
--- Steve
-
-> + *
-> + * This is a way for other parts of the kernel to enable or disable
-> + * event recording to instances.
-> + *
-> + * Returns 0 on success, -EINVAL if the parameters do not match any
-> + * registered events.
-> + */
-> +int trace_array_set_clr_event(struct trace_array *tr, const char *system,
-> +		const char *event, int set)
-> +{
-> +	if (!tr)
-> +		return -ENOENT;
+> +                               thermal-sensors = <&cpu_temp>;
 > +
-> +	return __ftrace_set_clr_event(tr, NULL, system, event, set);
-> +}
-> +EXPORT_SYMBOL_GPL(trace_array_set_clr_event);
+> +                               trips {
+> +                                       cpu_passive: cpu-passive {
+> +                                               temperature = <85000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "passive";
+> +                                       };
 > +
->  /* 128 should be much more than enough */
->  #define EVENT_BUF_SIZE		127
->  
-
+> +                                       cpu_hot: cpu-hot {
+> +                                               temperature = <95000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "hot";
+> +                                       };
+> +
+> +                                       cpu_critical: cpu-critical {
+> +                                               temperature = <110000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "critical";
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       ddr_thermal: ddr-thermal {
+> +                               polling-delay = <1000>;
+> +                               polling-delay-passive = <100>;
+> +                               thermal-sensors = <&ddr_temp>;
+> +
+> +                               trips {
+> +                                       ddr_passive: ddr-passive {
+> +                                               temperature = <85000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "passive";
+> +                                       };
+> +
+> +                                       ddr_critical: ddr-critical {
+> +                                               temperature = <110000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "critical";
+> +                                       };
+> +                               };
+> +
+> +                               cooling-maps {
+> +                                       map {
+> +                                               trip = <&ddr_passive>;
+> +                                               cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+>                 ethmac: ethernet@ff3f0000 {
+>                         compatible = "amlogic,meson-axg-dwmac",
+>                                      "snps,dwmac-3.70a",
+> @@ -2412,6 +2468,7 @@
+>                         assigned-clock-rates = <0>, /* Do Nothing */
+>                                                <800000000>,
+>                                                <0>; /* Do Nothing */
+> +                       #cooling-cells = <2>;
+>                 };
+>         };
+>
+> --
+> 2.17.1
+>
