@@ -2,180 +2,133 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF75ECE59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38201ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F47B20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DBFE2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eDOzDhVM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="snJV5CCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390216AbfJOXUq (ORCPT
+        id S2390242AbfJOX2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 19:20:46 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:33562 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbfJOXUp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 19:20:45 -0400
-Received: by mail-vs1-f68.google.com with SMTP id p13so14372728vso.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 16:20:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7Luzeu61JUpCQk5lttonbL70KSFby5OvdNNxzg/MFQ8=;
-        b=eDOzDhVMybk0i/+feqo0X+49gsS5JqJW8Ry8hE/JpXVc3WdVLD8WqJn9dDxRuwCehy
-         QvBk66yW4mH2kDlYuzMBwPUkP7IEFj9ZOCyD/4jTGGzyqm14Z6beV+SiRvogqh3bul4S
-         iB5C2XFuK7HRXnTP1fLCtCvORAdxwIVNNPgEfK7/yPQBrFJLj5U8IlVLAnGbma2My+bA
-         WBSOGcGHMJNm8DROoKh3HDAVOdcniv422vxJwA1eHO+j7o/CCl3KJUcbsWYelqWlID+T
-         ADHbasV+eQpUbByIGOW8dLaZ/+35eAnKAiGRw80ERMmbEtCmUY0OfB7tcC1PPQ9bI1JZ
-         KYPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7Luzeu61JUpCQk5lttonbL70KSFby5OvdNNxzg/MFQ8=;
-        b=t7Sh6JY/50jSrVXgpykYV3OxjNryN45tKBZRw7jFv7BciD3G7s7EJKGpUPCdxs3TLg
-         Ywzu9t9p0s1zth4gzgvloVENhLODR97IHWnFoOI5TrDeCQZm4kBlsXbY7kPwWlt8ZThp
-         vR/OMgHs1ETFNvC669Wc3k5B+gy5V+YmDXWj03UVYMYI4yNy8WXuvgMyg9afsWD1uPq+
-         e+tUUPcQrqPaM0ZYXll+Hw3+rP/1lR0KZWoTe9IGrQ/MyrVMP3qAbY3N2QGH2ipJ0Iq6
-         I0d2uHh8iwCR4vbFxHbc+o3Uf9kGE5Cfwcs04SomwcRkjaJ8TujMsquEokfKI8s6Ond6
-         gAAA==
-X-Gm-Message-State: APjAAAXEDKdnPoCU1eABYcntsDvQowHytls6eEeoWDuDyXgb4hNPfJ23
-        qq9ea5DLF6nhDW/nZUeoxOdsb7W07+1/SE8NXxndiw==
-X-Google-Smtp-Source: APXvYqygrun7u9zevVDKfu0sa7amxsriNbVYF4wbVRpuSP6Re4yc+jB0Mmyyr6iQQ2WpPrkisEClAIRglX6AbvGsZDk=
-X-Received: by 2002:a67:dc16:: with SMTP id x22mr1767729vsj.159.1571181642542;
- Tue, 15 Oct 2019 16:20:42 -0700 (PDT)
+        Tue, 15 Oct 2019 19:28:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:53323 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388009AbfJOX2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 19:28:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tBRx4smMz9sPJ;
+        Wed, 16 Oct 2019 10:27:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571182078;
+        bh=G80iYNZ+w7OwrZvrZ0J+yxERwvHUoMHMkoRk5dYyW7s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=snJV5CChUB77EcaqFOnEpbDDcF8IzCfjhIDo/A3jcNRxJLFmo0TfVNciLt8iqL1I3
+         QktWoGfbFsF0tLd00YKxbh9eeWazfKmDh4T6vATWdNpMj/VyOV3fQTj2vMOh6FxJAw
+         YylKep4uG5TYpCFUhyfV/nLNFtLg4PK4IX5kIyZv4uNmYM6R1MzYHBwFekw1GAoXD+
+         AoyFWM5JkI7GW8uu+8LSD015pOi9ouJkvAOll86pGZFC2OfIN61qzRvGa5ZAgJevFq
+         0rNTFq590UhPFTsbICQHLVDU/nd01LmbhxY6VPn/vzbs+5OY5UlBu8E+gLizsM6U4b
+         Aq8xM38rjOi9A==
+Date:   Wed, 16 Oct 2019 10:27:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Subject: Re: linux-next: manual merge of the bpf-next tree with the bpf tree
+Message-ID: <20191016102751.02c30ed0@canb.auug.org.au>
+In-Reply-To: <20191008094840.1553ff38@canb.auug.org.au>
+References: <20191008094840.1553ff38@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191004090114.30694-1-glaroque@baylibre.com> <20191004090114.30694-5-glaroque@baylibre.com>
-In-Reply-To: <20191004090114.30694-5-glaroque@baylibre.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 16 Oct 2019 04:50:31 +0530
-Message-ID: <CAHLCerOzZ6kc0nrGL+XMi37WuBKUv6E0yzE26wUZ5XoRMS8q6w@mail.gmail.com>
-Subject: Re: [PATCH v7 4/7] arm64: dts: meson: g12: Add minimal thermal zone
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Lom=PRLybBS7MXrH_xQq8ep";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:31 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> Add minimal thermal zone for two temperature sensor
-> One is located close to the DDR and the other one is
-> located close to the PLLs (between the CPU and GPU)
->
-> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  .../boot/dts/amlogic/meson-g12-common.dtsi    | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> index 0660d9ef6a86..a98c16e163c2 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
->  #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
-> +#include <dt-bindings/thermal/thermal.h>
->
->  / {
->         interrupt-parent = <&gic>;
-> @@ -94,6 +95,61 @@
->                 #size-cells = <2>;
->                 ranges;
->
-> +               thermal-zones {
-> +                       cpu_thermal: cpu-thermal {
-> +                               polling-delay = <1000>;
-> +                               polling-delay-passive = <100>;
+--Sig_/Lom=PRLybBS7MXrH_xQq8ep
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ordinarily, you would need to set these delays to 0 in interrupt mode
-to prevent polling overhead. I've just submitted a patch to of-thermal
-that should fix this requirement. Could you check if it works for you?
+Hi all,
 
-> +                               thermal-sensors = <&cpu_temp>;
-> +
-> +                               trips {
-> +                                       cpu_passive: cpu-passive {
-> +                                               temperature = <85000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "passive";
-> +                                       };
-> +
-> +                                       cpu_hot: cpu-hot {
-> +                                               temperature = <95000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "hot";
-> +                                       };
-> +
-> +                                       cpu_critical: cpu-critical {
-> +                                               temperature = <110000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "critical";
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       ddr_thermal: ddr-thermal {
-> +                               polling-delay = <1000>;
-> +                               polling-delay-passive = <100>;
-> +                               thermal-sensors = <&ddr_temp>;
-> +
-> +                               trips {
-> +                                       ddr_passive: ddr-passive {
-> +                                               temperature = <85000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "passive";
-> +                                       };
-> +
-> +                                       ddr_critical: ddr-critical {
-> +                                               temperature = <110000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "critical";
-> +                                       };
-> +                               };
-> +
-> +                               cooling-maps {
-> +                                       map {
-> +                                               trip = <&ddr_passive>;
-> +                                               cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +
->                 ethmac: ethernet@ff3f0000 {
->                         compatible = "amlogic,meson-axg-dwmac",
->                                      "snps,dwmac-3.70a",
-> @@ -2412,6 +2468,7 @@
->                         assigned-clock-rates = <0>, /* Do Nothing */
->                                                <800000000>,
->                                                <0>; /* Do Nothing */
-> +                       #cooling-cells = <2>;
->                 };
->         };
+This is now a conflict between the net and net-next trees.
+
+On Tue, 8 Oct 2019 09:48:40 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
 >
-> --
-> 2.17.1
->
+> Today's linux-next merge of the bpf-next tree got a conflict in:
+>=20
+>   tools/lib/bpf/Makefile
+>=20
+> between commit:
+>=20
+>   1bd63524593b ("libbpf: handle symbol versioning properly for libbpf.a")
+>=20
+> from the bpf tree and commit:
+>=20
+>   a9eb048d5615 ("libbpf: Add cscope and tags targets to Makefile")
+>=20
+> from the bpf-next tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc tools/lib/bpf/Makefile
+> index 56ce6292071b,10b77644a17c..000000000000
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@@ -143,7 -133,9 +143,9 @@@ LIB_TARGET	:=3D $(addprefix $(OUTPUT),$(L
+>   LIB_FILE	:=3D $(addprefix $(OUTPUT),$(LIB_FILE))
+>   PC_FILE		:=3D $(addprefix $(OUTPUT),$(PC_FILE))
+>  =20
+> + TAGS_PROG :=3D $(if $(shell which etags 2>/dev/null),etags,ctags)
+> +=20
+>  -GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN) | \
+>  +GLOBAL_SYM_COUNT =3D $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+>   			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+>   			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
+>   			   sort -u | wc -l)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Lom=PRLybBS7MXrH_xQq8ep
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2mVfcACgkQAVBC80lX
+0Gz1ogf+PuhLQyiM/Fcr7XdWrOaOmdPHxVJzy2wejPRc1csiaa7LMxYuV470n38O
+xUXHSchUrvOEEwJM3+VLMH+sCsMAnFnxTn2uNYNZIGlajLHJHiM8fAScHxve1eMV
+4iKtOcuZVrbULbbeFteDUJ554N7NcsHMntBf9lA6iEju3HdRQLmOsPuLKayuT9qD
+an2Av+3LO6k3nOZgR0RwMDO8xxQPf4Dpjle+Kx5RJktWcM7GP2zVhy1wHaKTKWKX
+xSfx028lD+e6nXRN0QsYUE3yYEPXVuQodRj0fvRREAOmXuUnCHASpkNuwj31amtO
+ZsWt+80J291g0Cj8LS9XPC84HpafZg==
+=2xFl
+-----END PGP SIGNATURE-----
+
+--Sig_/Lom=PRLybBS7MXrH_xQq8ep--
