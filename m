@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E21ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5368C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E2C2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BB520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0uSfxw7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHRbHEAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388635AbfJORCK (ORCPT
+        id S2388592AbfJORCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:02:10 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40181 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388553AbfJORCA (ORCPT
+        Tue, 15 Oct 2019 13:02:02 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35588 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388540AbfJORB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:02:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d17so15077526lfa.7;
-        Tue, 15 Oct 2019 10:01:59 -0700 (PDT)
+        Tue, 15 Oct 2019 13:01:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m7so21041738lji.2;
+        Tue, 15 Oct 2019 10:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0lHQRX/0nej0WuuBggHgivhPJMPJeSRnbCLnwWmZEkg=;
-        b=I0uSfxw7E6O85wleD5CO8/aLWXAEpIhpGNZ4IdvldsuHrbgDFfGSzoJek714RHNVNA
-         qDeHjnKxKWfm60TcwVnlqhLaxutweNOskPuxwG2FlJAzGZ+0PylA4s7xK98x/tbWKIc3
-         LULTwzyrdRbP/r5yZiL27fEAlNzeObyJsOvDiXpKXsUom/ZmAgar/JG0hTairjr+NBU0
-         ZfnFnSfqHsfYKws1oGO7TWpo/iz6zFKCP3v4bBQZ3OTEk+y4YckpL4DsifNEWRwjLKrP
-         JyP9DCSrTX5Dp/l4dnotzvm1sqMuAqTgLhGqMl0hY3TJuLtfTJv+mAuVMOaQF0tOMXEp
-         bZvA==
+        bh=OMLeb4rCRknKwJs2ldIvPlE4Vxnf8XUAiOeAjO+3B/E=;
+        b=qHRbHEAHSKjIsdIVNhFyZ8C9xJli6HjJrmNPlxXNgIudVULdjbjEIMpb4W6Lwyv3OV
+         ASpbuRqSx9yxiybq/Sx3AD3761Pgdf4VR/6X6AZvNLqcfx1om9owTpFkOjqcGXhxdHQ9
+         56F3yPgl2ydfJzyTVEDkqO5PUAl6m2QQnpLXLg8ipnI+WPwr8hFTXxT9FuKxOWfuLmC6
+         2mwtY6WtLYnbMNx3iW1fea/+zFdv8oiB9KsbwE2/n1o8pxfCgfy+KtGMVzd2Q+TbakAt
+         CbTRgur0cb1/VP9xpuv6Fjr9oncFCZPMu5fzo5l8FZEyVYH/+aPMCYi683syF1qpGYa9
+         8J7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0lHQRX/0nej0WuuBggHgivhPJMPJeSRnbCLnwWmZEkg=;
-        b=m5dCwSqGXfvb/7KqdOqQsDTHu6/l21wIbNg9z6F+qa7w3ioC1PP9iwNlA5SnGWbd0B
-         mxo1u0W8UXUFFB34b4za+v7bnYHpBy4WHcWAKQkYDZrSezPLAM8F32lt1jTuMpT5MI+R
-         18QuoigwiRKzeRgUHCD6f0YtjDOucCVZZAOVVE+J0pSByvwwcrIj9O4xuXY5H8XDhgtQ
-         py8YVB2/Tp5YWXOjnRLnwuXXlPMW7crIQ1m2Y1R21OcrzDQWu7hjw2p6M/G1cm0UQJH9
-         1v0+gjtAdLq24YNFB7fXdB3DTM12LvEFJhaoUxLkFdy0d7AUIQ3knYnuB/OxD2vHkr1f
-         hSeQ==
-X-Gm-Message-State: APjAAAWrSNAJZg2j3yyxvFp1tvxvXVhKPaSuS9aSgmHV5eRB1I5/inDl
-        Q1xYRWsB2sIGxzaTQ18tC/s=
-X-Google-Smtp-Source: APXvYqznpEti9qfmzCeGOL24bxtmbcLEOCVrfTdn3PE4L4pNOoxytWOTRLVSglovOOV/v40G2x1D0w==
-X-Received: by 2002:a19:6f0e:: with SMTP id k14mr22038282lfc.79.1571158918342;
-        Tue, 15 Oct 2019 10:01:58 -0700 (PDT)
+        bh=OMLeb4rCRknKwJs2ldIvPlE4Vxnf8XUAiOeAjO+3B/E=;
+        b=DrZD3oSful6wycVDxzzd7LcoMl0r8Ish7BMXNMlrCFw7IYv3kgogZcqP7qY3LbbLKg
+         OxKmvaD9kDGumBqfdZLo28HOHQ1yXv5p0DvDsWtCMFIgUwYNIR4DFnhD2ohjOCL5bgU7
+         z4exh+BVTwR3aOCdKUxbiQV92DzZyDR9NEyg3tXzwHtd6khGHMjmlNqm1KIcgUsprvbG
+         zJCZVJN+XofA8BTw4cnVZKuzP6gNiPrfDx4PzHkaUdjqcmS8skQeV3FAMSjJyKgeo3Go
+         AeRGlPvBsNOyaStFdhvF3eI5X22a/DhB+kKD7U9Q4EhuKCvaxo162CFncz7a6Zq8KdJ1
+         9f4A==
+X-Gm-Message-State: APjAAAU+3BEUML3vhWRJrwU2xJQ3KKppD9jF52hDzJSDs//G8cPYEFpP
+        ShIVIcuARb8WzPX7+vVRtkc=
+X-Google-Smtp-Source: APXvYqxPQFCF9LkpmQlTPq4C97WzGBzvjuaDG0tT65ZcTvYvFaKaYV9TlLRRD8DYZ0fQq31FiyQqxg==
+X-Received: by 2002:a2e:a41a:: with SMTP id p26mr206241ljn.49.1571158914703;
+        Tue, 15 Oct 2019 10:01:54 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.56
+        by smtp.gmail.com with ESMTPSA id t6sm5144992ljd.102.2019.10.15.10.01.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:01:57 -0700 (PDT)
+        Tue, 15 Oct 2019 10:01:54 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 18/18] ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-Date:   Tue, 15 Oct 2019 20:00:15 +0300
-Message-Id: <20191015170015.1135-19-digetx@gmail.com>
+Subject: [PATCH v6 15/18] cpuidle: tegra: Support CPU cluster power-down state on Tegra30
+Date:   Tue, 15 Oct 2019 20:00:12 +0300
+Message-Id: <20191015170015.1135-16-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191015170015.1135-1-digetx@gmail.com>
 References: <20191015170015.1135-1-digetx@gmail.com>
@@ -78,26 +78,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Tegra CPU Idle driver was moved out into driver/cpuidle/ directory and
-it is now a proper platform driver.
+The new Tegra CPU Idle driver now has a unified code path for the coupled
+CC6 (LP2) state, this allows to enable the deepest idling state on Tegra30
+SoC where the whole CPU cluster is power-gated.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/configs/tegra_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpuidle/cpuidle-tegra.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index 8f5c6a5b444c..9a2f11a780a8 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -25,6 +25,7 @@ CONFIG_CPU_FREQ=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
- CONFIG_CPUFREQ_DT=y
- CONFIG_CPU_IDLE=y
-+CONFIG_ARM_TEGRA_CPUIDLE=y
- CONFIG_VFP=y
- CONFIG_NEON=y
- CONFIG_TRUSTED_FOUNDATIONS=y
+diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+index 1a2cff5d4ff3..e38a2f6c11e1 100644
+--- a/drivers/cpuidle/cpuidle-tegra.c
++++ b/drivers/cpuidle/cpuidle-tegra.c
+@@ -298,7 +298,6 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
+ 		tegra_idle_driver.states[TEGRA_C7].disabled = true;
+ 		break;
+ 	case TEGRA30:
+-		tegra_idle_driver.states[TEGRA_CC6].disabled = true;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.23.0
 
