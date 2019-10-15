@@ -2,278 +2,142 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF11C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E91FECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287782064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BvbzvMdu"
+	by mail.kernel.org (Postfix) with ESMTP id 4EC0E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfJOIZt (ORCPT
+        id S1728807AbfJOI1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:25:49 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42868 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfJOIZs (ORCPT
+        Tue, 15 Oct 2019 04:27:25 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58715 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbfJOI1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:25:48 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9F8PThH074238;
-        Tue, 15 Oct 2019 03:25:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571127929;
-        bh=811Z+jePVaI7WCbmvOozaNOkvGJ9LwbS2ApKdtJxa2Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BvbzvMduajncyRfkXtqenraA/fjfMNIw6lqsMrXxODmyuH0D+bNv5yGnVxaKitJPY
-         V9C+Q/bm/91I7lANWuxmCs2LpY4D4BUH1KWeTLiB4CSzmiCIkDG5uxNvr+HzbhyV/O
-         FE/EJD3qSdWk3X1nxMgXpSmNSF87Z5ek4DMbx8Ws=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9F8PTX3025533
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Oct 2019 03:25:29 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
- Oct 2019 03:25:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 15 Oct 2019 03:25:27 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9F8POaM030610;
-        Tue, 15 Oct 2019 03:25:24 -0500
-Subject: Re: [RFC][PATCH 3/3] usb: dwc3: Registering a role switch in the DRD
- code.
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191002231617.3670-1-john.stultz@linaro.org>
- <20191002231617.3670-4-john.stultz@linaro.org>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <9e86bb7b-5dd2-760e-c324-fe1c1ee41868@ti.com>
-Date:   Tue, 15 Oct 2019 11:25:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 15 Oct 2019 04:27:24 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 56596FF811;
+        Tue, 15 Oct 2019 08:27:20 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 10:27:20 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jinke Fan <fanjinke@hygon.cn>
+Cc:     a.zummo@towertech.it, puwen@hygon.cn, thomas.lendacky@amd.com,
+        kim.phillips@amd.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v3] rtc: Fix the AltCentury value on AMD/Hygon
+ platform
+Message-ID: <20191015082720.GW3125@piout.net>
+References: <20191015080827.11589-1-fanjinke@hygon.cn>
 MIME-Version: 1.0
-In-Reply-To: <20191002231617.3670-4-john.stultz@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015080827.11589-1-fanjinke@hygon.cn>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Oh come on, you sent that patch only a week ago and v2 had a so obvious
+mistake that my trust in your code quality is now very low.
 
-On 03/10/2019 02:16, John Stultz wrote:
-> From: Yu Chen <chenyu56@huawei.com>
+On 15/10/2019 16:08:27+0800, Jinke Fan wrote:
+> When using following operations:
+> date -s "21190910 19:20:00"
+> hwclock -w
+> to change date from 2019 to 2119 for test, it will fail on Hygon
+> Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
+> platform.
 > 
-> The Type-C drivers use USB role switch API to inform the
-> system about the negotiated data role, so registering a role
-> switch in the DRD code in order to support platforms with
-> USB Type-C connectors.
+> MC146818 driver use function mc146818_set_time() to set register
+> RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
+> reset value on Intel platform to 0x7.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Jun Li <lijun.kernel@gmail.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
+> DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
+> as reserved.
+> 
+> DV0 is set to 1, it will select Bank 1, which will disable AltCentury
+> register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
+> (AltCentury), the CMOS write will be failed on code:
+> CMOS_WRITE(century, acpi_gbl_FADT.century).
+> 
+> Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
+> enable AltCentury(0x32) register writing and finally setup century as
+> expected.
+> 
+> Test results on AMD/Hygon machine show that it works as expected.
+> 
+> Reference:
+> https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
+> section: 3.13 Real Time Clock (RTC)
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
 > ---
->   drivers/usb/dwc3/Kconfig |  1 +
->   drivers/usb/dwc3/core.h  |  6 ++++
->   drivers/usb/dwc3/drd.c   | 78 +++++++++++++++++++++++++++++++++++++++-
->   3 files changed, 84 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index 89abc6078703..1104745c41a9 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -44,6 +44,7 @@ config USB_DWC3_DUAL_ROLE
->   	bool "Dual Role mode"
->   	depends on ((USB=y || USB=USB_DWC3) && (USB_GADGET=y || USB_GADGET=USB_DWC3))
->   	depends on (EXTCON=y || EXTCON=USB_DWC3)
-> +	select USB_ROLE_SWITCH
->   	help
->   	  This is the default mode of working of DWC3 controller where
->   	  both host and gadget features are enabled.
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index b3cb6eec3f8f..83728157b3e9 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -25,6 +25,7 @@
->   #include <linux/usb/ch9.h>
->   #include <linux/usb/gadget.h>
->   #include <linux/usb/otg.h>
-> +#include <linux/usb/role.h>
->   #include <linux/ulpi/interface.h>
->   
->   #include <linux/phy/phy.h>
-> @@ -951,6 +952,9 @@ struct dwc3_scratchpad_array {
->    * @hsphy_mode: UTMI phy mode, one of following:
->    *		- USBPHY_INTERFACE_MODE_UTMI
->    *		- USBPHY_INTERFACE_MODE_UTMIW
-> + * role_sw: usb_role_switch handle
-> + * role_switch_default_mode: default operation mode of controller while
-> + *			usb role is USB_ROLE_NONE.
->    * @usb2_phy: pointer to USB2 PHY
->    * @usb3_phy: pointer to USB3 PHY
->    * @usb2_generic_phy: pointer to USB2 PHY
-> @@ -1085,6 +1089,8 @@ struct dwc3 {
->   	struct extcon_dev	*edev;
->   	struct notifier_block	edev_nb;
->   	enum usb_phy_interface	hsphy_mode;
-> +	struct usb_role_switch	*role_sw;
-> +	enum usb_dr_mode	role_switch_default_mode;
->   
->   	u32			fladj;
->   	u32			irq_gadget;
-> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> index 726100d1ac0d..95b466a7faa0 100644
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -479,6 +479,58 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
->   	return edev;
->   }
->   
-> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> +{
-> +	struct dwc3 *dwc = dev_get_drvdata(dev);
-> +	u32 mode;
+> v2->v3:
+>   - Make the changes only relevant to AMD/Hygon.
+> 
+> v1->v2:
+>   - Fix the compile errors on sparc64/alpha platform.
+> 
+>  drivers/rtc/rtc-mc146818-lib.c | 11 ++++++++++-
+>  include/linux/mc146818rtc.h    |  6 ++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
+> index 2ecd8752b088..70502881785d 100644
+> --- a/drivers/rtc/rtc-mc146818-lib.c
+> +++ b/drivers/rtc/rtc-mc146818-lib.c
+> @@ -172,7 +172,16 @@ int mc146818_set_time(struct rtc_time *time)
+>  	save_control = CMOS_READ(RTC_CONTROL);
+>  	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
+>  	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
+> -	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
 > +
-> +	switch (role) {
-> +	case USB_ROLE_HOST:
-> +		mode = DWC3_GCTL_PRTCAP_HOST;
-> +		break;
-> +	case USB_ROLE_DEVICE:
-> +		mode = DWC3_GCTL_PRTCAP_DEVICE;
-> +		break;
-> +	default:
-> +		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
-> +			mode = DWC3_GCTL_PRTCAP_HOST;
-> +		else
-> +			mode = DWC3_GCTL_PRTCAP_DEVICE;
-> +		break;
-> +	}
+> +#ifdef CONFIG_X86
+> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+> +	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+> +		CMOS_WRITE((save_freq_select & (~RTC_DV0)), RTC_FREQ_SELECT);
+> +	else
+> +		CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
+> +#else
+> +	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
+> +#endif
+>  
+>  #ifdef CONFIG_MACH_DECSTATION
+>  	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
+> diff --git a/include/linux/mc146818rtc.h b/include/linux/mc146818rtc.h
+> index 0661af17a758..7066a7bced61 100644
+> --- a/include/linux/mc146818rtc.h
+> +++ b/include/linux/mc146818rtc.h
+> @@ -86,6 +86,12 @@ struct cmos_rtc_board_info {
+>     /* 2 values for divider stage reset, others for "testing purposes only" */
+>  #  define RTC_DIV_RESET1	0x60
+>  #  define RTC_DIV_RESET2	0x70
 > +
-> +	dwc3_set_mode(dwc, mode);
-> +	return 0;
-> +}
+> +#ifdef CONFIG_X86
+> +   /* DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1 on AMD/Hygon platform */
+> +#  define RTC_DV0		0x10
+> +#endif
 > +
-> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-> +{
-> +	struct dwc3 *dwc = dev_get_drvdata(dev);
-> +	unsigned long flags;
-> +	enum usb_role role;
-> +
-> +	spin_lock_irqsave(&dwc->lock, flags);
-> +	switch (dwc->current_dr_role) {
-> +	case DWC3_GCTL_PRTCAP_HOST:
-> +		role = USB_ROLE_HOST;
-> +		break;
-> +	case DWC3_GCTL_PRTCAP_DEVICE:
-> +		role = USB_ROLE_DEVICE;
-> +		break;
-> +	case DWC3_GCTL_PRTCAP_OTG:
-> +		role = dwc->current_otg_role;
-> +		break;
-> +	default:
-> +		if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
-> +			role = USB_ROLE_HOST;
-> +		else
-> +			role = USB_ROLE_DEVICE;
-> +		break;
-> +	}
-> +	spin_unlock_irqrestore(&dwc->lock, flags);
-> +	return role;
-> +}
-> +
->   int dwc3_drd_init(struct dwc3 *dwc)
->   {
->   	int ret, irq;
-> @@ -487,7 +539,28 @@ int dwc3_drd_init(struct dwc3 *dwc)
->   	if (IS_ERR(dwc->edev))
->   		return PTR_ERR(dwc->edev);
->   
-> -	if (dwc->edev) {
-> +	if (device_property_read_bool(dwc->dev, "usb-role-switch")) {
-
-I think we should use role switch unconditionally and get rid of the
-debugfs role status/change mechanism.
-
-> +		struct usb_role_switch_desc dwc3_role_switch = {0};
-> +		u32 mode;
-> +
-> +		if (device_property_read_bool(dwc->dev,
-> +					      "role-switch-default-host")) {
-> +			dwc->role_switch_default_mode = USB_DR_MODE_HOST;
-> +			mode = DWC3_GCTL_PRTCAP_HOST;
-> +		} else {
-> +			dwc->role_switch_default_mode = USB_DR_MODE_PERIPHERAL;
-> +			mode = DWC3_GCTL_PRTCAP_DEVICE;
-> +		}
-> +		dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
-> +		dwc3_role_switch.set = dwc3_usb_role_switch_set;
-> +		dwc3_role_switch.get = dwc3_usb_role_switch_get;
-> +		dwc->role_sw = usb_role_switch_register(dwc->dev,
-> +							&dwc3_role_switch);
-> +		if (IS_ERR(dwc->role_sw))
-> +			return PTR_ERR(dwc->role_sw);
-> +
-> +		dwc3_set_mode(dwc, mode);
-> +	} else if (dwc->edev) {
-
-Role switch should exist regardless if dwc->edev is present or not.
-
->   		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
->   		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
->   					       &dwc->edev_nb);
-> @@ -534,6 +607,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
->   {
->   	unsigned long flags;
->   
-> +	if (dwc->role_sw)
-> +		usb_role_switch_unregister(dwc->role_sw);
-> +
->   	if (dwc->edev)
->   		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
->   					   &dwc->edev_nb);
+>    /* Periodic intr. / Square wave rate select. 0=none, 1=32.8kHz,... 15=2Hz */
+>  # define RTC_RATE_SELECT 	0x0F
+>  
+> -- 
+> 2.17.1
 > 
 
 -- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
