@@ -2,125 +2,140 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B565AECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21547ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875412064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBE22064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPC6BuNV"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="DM3eoiiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfJOImY (ORCPT
+        id S1728896AbfJOIo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:42:24 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36774 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbfJOImX (ORCPT
+        Tue, 15 Oct 2019 04:44:27 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60640 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726430AbfJOIo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:42:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y19so22768314wrd.3;
-        Tue, 15 Oct 2019 01:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Alk2iYvP1zhS1Vsxyz1ENDltR7DNnK/DdAFNKV0PUVw=;
-        b=HPC6BuNV8j9u4GZjxKCxoY5RREbeSrCviqnJSe7bX9+Mz4/Ou/Y9YJfCz9D6x5YDJN
-         FPfze7R3WjjunFuZ7BTxjlj9zeZRJzIv5QwElj6bGpHm80r1uAkybYsje5HSVM+2NFwg
-         okWGBK3N+IHtYpPvyQqh8PWgleHiWLfaTVIU08wX80EZFskkvb87rkGeRvnDWfk89KCu
-         IgJWRobMxvlThOjJFQ8cTYimw/cyOOpegxEHHwfkSkuivf2kzEL9dFf5lp0/093hBmrI
-         I+I7fkoLrJo0gxg6wqlRIw4tvg+AF768tPLChUkL43L+S3EzP1I5VV2vB2RtSVkqAj5v
-         MBHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Alk2iYvP1zhS1Vsxyz1ENDltR7DNnK/DdAFNKV0PUVw=;
-        b=ps/EiD5Oidh1J1DYTls4Dg/ok70CqpyMgwosf4Ev8vje3zAAcWFGSFUQKcDMMCuOZ2
-         E4gOzmaMS57165hpzIyMDLXg0JHYK/XlnAKxew8Y1/Z+LB02iJkowftxzRjs+3jrYQkj
-         my57eYoD3x/cU/UvP33m1i60NCxyJnfano/A9PvQ9kJIgFRZDOzy+a6RdSkhC6po6WEW
-         YP0Y46s4MU2HOTim2r0flgrYTSvQdr+T9D77v9EoWY5Gsg01OPfFb5CdMP4WYnP9SMPU
-         ANPXSa14Sc3P/46O98BqxI+iXvVsFLRbiuQ+vKLlmq75k5xGwsQQC86TGgIKfJnswkJj
-         ipaA==
-X-Gm-Message-State: APjAAAUf9stWBnSgpXNiEHurro8O/Zvfhrtu0flPLWO6R+Eg1PbitrvP
-        MkEXm6TkLqXDIxODwoOseu6jojrj
-X-Google-Smtp-Source: APXvYqx2bycIPnDtHKFh/xJsJXsS+Tg6XyXhmAOeu2Ar9KLDQ3WxO6d6EJTK67tMcZ2zx3XYKeedhw==
-X-Received: by 2002:adf:e40c:: with SMTP id g12mr30931259wrm.216.1571128939235;
-        Tue, 15 Oct 2019 01:42:19 -0700 (PDT)
-Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
-        by smtp.gmail.com with ESMTPSA id u10sm19454220wmm.0.2019.10.15.01.42.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 01:42:17 -0700 (PDT)
-References: <20191014020847.9203-1-hslester96@gmail.com>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: imx7-mipi-csis: Add a check for devm_regulator_get
-In-reply-to: <20191014020847.9203-1-hslester96@gmail.com>
-Date:   Tue, 15 Oct 2019 09:42:16 +0100
-Message-ID: <m3sgnuv1qv.fsf@gmail.com>
+        Tue, 15 Oct 2019 04:44:27 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id B5BBB2E149C;
+        Tue, 15 Oct 2019 11:44:23 +0300 (MSK)
+Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id OxwQY6knWm-iNfC0WqM;
+        Tue, 15 Oct 2019 11:44:23 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1571129063; bh=lnvoJc4lckZwUKOSXQNoEHjcOj06ik4igfQkAd2qz8g=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=DM3eoiiMqJcpuZ+y4jQPKbbWGJ9bGSQ5DKMEDttIg8NHnKpADIHKjCcaNVo3tc4vl
+         fMZMkPmweNVaA9QfJewcGe59pbXRA0Y4jNOn5H62Vy09VOozpZJ+PqjZ8hH8IgZwKB
+         ftB3I3bMA1k1ijGsKBlDfouKloTp0/8ShoJxOKr4=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
+        by iva4-c987840161f8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id xZbxjK3pt4-iNNeGGMI;
+        Tue, 15 Oct 2019 11:44:23 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
+ mem_cgroup_move_account
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <157112699975.7360.1062614888388489788.stgit@buzz>
+ <20191015082048.GU317@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <3b73e301-ea4a-5edb-9360-2ae9b4ad9f69@yandex-team.ru>
+Date:   Tue, 15 Oct 2019 11:44:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191015082048.GU317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chuhong,
-Thanks for the patch.
+On 15/10/2019 11.20, Michal Hocko wrote:
+> On Tue 15-10-19 11:09:59, Konstantin Khlebnikov wrote:
+>> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
+>> These counters needs update when page is moved between cgroups.
+> 
+> Please describe the user visible effect.
 
-On Mon 14 Oct 2019 at 03:08, Chuhong Yuan wrote:
-> devm_regulator_get may return an error but mipi_csis_phy_init misses
-> a check for it.
-> This may lead to problems when regulator_set_voltage uses the unchecked
-> pointer.
-> This patch adds a check for devm_regulator_get to avoid potential risk.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/staging/media/imx/imx7-mipi-csis.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 73d8354e618c..9a07b54c4ab1 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
->  static int mipi_csis_phy_init(struct csi_state *state)
->  {
->  	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
-> +	if (IS_ERR(state->mipi_phy_regulator))
-> +		return PTR_ERR(state->mipi_phy_regulator);
+Surprisingly I don't see any users at this moment.
+So, there is no effect in mainline kernel.
 
-This regulator is marked as mandatory in the device tree entry,
-however it looks good to me to have this check, even because it
-can return -EPROBE_DEFER and we need to retry.
-
-But for that we may need to extend this patch to make the caller
-of this (mipi_csis_probe), to also really care about the returned
-code.
-
-Cheers,
-   Rui
-
->
->  	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
->  				     1000000);
-
+>> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> 
+> We want Cc: stable I suspect because broken stats might be really
+> misleading.
+> 
+> The patch looks ok to me otherwise
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> 
+>> ---
+>>   mm/memcontrol.c |   18 ++++++++++++------
+>>   1 file changed, 12 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> index bdac56009a38..363106578876 100644
+>> --- a/mm/memcontrol.c
+>> +++ b/mm/memcontrol.c
+>> @@ -5420,6 +5420,8 @@ static int mem_cgroup_move_account(struct page *page,
+>>   				   struct mem_cgroup *from,
+>>   				   struct mem_cgroup *to)
+>>   {
+>> +	struct lruvec *from_vec, *to_vec;
+>> +	struct pglist_data *pgdat;
+>>   	unsigned long flags;
+>>   	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+>>   	int ret;
+>> @@ -5443,11 +5445,15 @@ static int mem_cgroup_move_account(struct page *page,
+>>   
+>>   	anon = PageAnon(page);
+>>   
+>> +	pgdat = page_pgdat(page);
+>> +	from_vec = mem_cgroup_lruvec(pgdat, from);
+>> +	to_vec = mem_cgroup_lruvec(pgdat, to);
+>> +
+>>   	spin_lock_irqsave(&from->move_lock, flags);
+>>   
+>>   	if (!anon && page_mapped(page)) {
+>> -		__mod_memcg_state(from, NR_FILE_MAPPED, -nr_pages);
+>> -		__mod_memcg_state(to, NR_FILE_MAPPED, nr_pages);
+>> +		__mod_lruvec_state(from_vec, NR_FILE_MAPPED, -nr_pages);
+>> +		__mod_lruvec_state(to_vec, NR_FILE_MAPPED, nr_pages);
+>>   	}
+>>   
+>>   	/*
+>> @@ -5459,14 +5465,14 @@ static int mem_cgroup_move_account(struct page *page,
+>>   		struct address_space *mapping = page_mapping(page);
+>>   
+>>   		if (mapping_cap_account_dirty(mapping)) {
+>> -			__mod_memcg_state(from, NR_FILE_DIRTY, -nr_pages);
+>> -			__mod_memcg_state(to, NR_FILE_DIRTY, nr_pages);
+>> +			__mod_lruvec_state(from_vec, NR_FILE_DIRTY, -nr_pages);
+>> +			__mod_lruvec_state(to_vec, NR_FILE_DIRTY, nr_pages);
+>>   		}
+>>   	}
+>>   
+>>   	if (PageWriteback(page)) {
+>> -		__mod_memcg_state(from, NR_WRITEBACK, -nr_pages);
+>> -		__mod_memcg_state(to, NR_WRITEBACK, nr_pages);
+>> +		__mod_lruvec_state(from_vec, NR_WRITEBACK, -nr_pages);
+>> +		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+>>   	}
+>>   
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> 
