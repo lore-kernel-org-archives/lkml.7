@@ -7,33 +7,34 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4BAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074CBECE58C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF9D217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58AB21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfJOFdi convert rfc822-to-8bit (ORCPT
+        id S1729052AbfJOFdu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:33:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42224 "EHLO
+        Tue, 15 Oct 2019 01:33:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42225 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbfJOFcT (ORCPT
+        with ESMTP id S1728644AbfJOFcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:32:19 -0400
+        Tue, 15 Oct 2019 01:32:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKFRN-0000Vh-BY; Tue, 15 Oct 2019 07:32:13 +0200
+        id 1iKFRM-0000VF-SF; Tue, 15 Oct 2019 07:32:13 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BFE581C06F3;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 768881C06DF;
         Tue, 15 Oct 2019 07:31:51 +0200 (CEST)
 Date:   Tue, 15 Oct 2019 05:31:51 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf trace: Generalize the syscall_fmt find routines
+Subject: [tip: perf/core] perf trace: Postpone parsing .perfconfig
+ trace.add_events to after --verbose is processed
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
@@ -41,10 +42,10 @@ Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-od3gzg77ppqgnnrxqv40fvgx@git.kernel.org>
-References: <tip-od3gzg77ppqgnnrxqv40fvgx@git.kernel.org>
+In-Reply-To: <tip-d6wbnz85ftqljdll6ynjyjd8@git.kernel.org>
+References: <tip-d6wbnz85ftqljdll6ynjyjd8@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157111751164.12254.11846258019782661773.tip-bot2@tip-bot2>
+Message-ID: <157111751133.12254.14364169350677000203.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,69 +61,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     bcddbfc5c8c952175e9a5f1a4186685fa0338a14
-Gitweb:        https://git.kernel.org/tip/bcddbfc5c8c952175e9a5f1a4186685fa0338a14
+Commit-ID:     7e035929f3fec70d411fb660c434f4a7f8ca386d
+Gitweb:        https://git.kernel.org/tip/7e035929f3fec70d411fb660c434f4a7f8ca386d
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Tue, 01 Oct 2019 15:27:55 -03:00
+AuthorDate:    Tue, 01 Oct 2019 15:44:44 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 07 Oct 2019 12:22:17 -03:00
 
-perf trace: Generalize the syscall_fmt find routines
+perf trace: Postpone parsing .perfconfig trace.add_events to after --verbose is processed
 
-To allow them to be used with other stuff, such as tracepoints.
+When we add events via the '[trace]' section in perfconfig the command
+line options are not yet processed, so when something goes wrong with
+parsing those events and using --verbose is advised, we end up not
+getting any more verbosity by doing so.
+
+So just copy the trace.add_events string for later processing, after we
+processed --verbose and the other command line options.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-od3gzg77ppqgnnrxqv40fvgx@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-d6wbnz85ftqljdll6ynjyjd8@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ tools/perf/builtin-trace.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index cb85343..313dfc1 100644
+index 313dfc1..3d54316 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -966,24 +966,35 @@ static int syscall_fmt__cmp(const void *name, const void *fmtp)
- 	return strcmp(name, fmt->name);
- }
+@@ -162,6 +162,7 @@ struct trace {
+ 	bool			force;
+ 	bool			vfs_getname;
+ 	int			trace_pgfaults;
++	char			*perfconfig_events;
+ 	struct {
+ 		struct ordered_events	data;
+ 		u64			last;
+@@ -4044,15 +4045,11 @@ static int trace__config(const char *var, const char *value, void *arg)
+ 	int err = 0;
  
-+static struct syscall_fmt *__syscall_fmt__find(struct syscall_fmt *fmts, const int nmemb, const char *name)
-+{
-+	return bsearch(name, fmts, nmemb, sizeof(struct syscall_fmt), syscall_fmt__cmp);
-+}
+ 	if (!strcmp(var, "trace.add_events")) {
+-		struct option o = OPT_CALLBACK('e', "event", &trace->evlist, "event",
+-					       "event selector. use 'perf list' to list available events",
+-					       parse_events_option);
+-		/*
+-		 * We can't propagate parse_event_option() return, as it is 1
+-		 * for failure while perf_config() expects -1.
+-		 */
+-		if (parse_events_option(&o, value, 0))
+-			err = -1;
++		trace->perfconfig_events = strdup(value);
++		if (trace->perfconfig_events == NULL) {
++			pr_err("Not enough memory for %s\n", "trace.add_events");
++			return -1;
++		}
+ 	} else if (!strcmp(var, "trace.show_timestamp")) {
+ 		trace->show_tstamp = perf_config_bool(var, value);
+ 	} else if (!strcmp(var, "trace.show_duration")) {
+@@ -4224,6 +4221,21 @@ int cmd_trace(int argc, const char **argv)
+ 
+ 	argc = parse_options_subcommand(argc, argv, trace_options, trace_subcommands,
+ 				 trace_usage, PARSE_OPT_STOP_AT_NON_OPTION);
++	/*
++	 * Now that we have --verbose figured out, lets see if we need to parse
++	 * events from .perfconfig, so that if those events fail parsing, say some
++	 * BPF program fails, then we'll be able to use --verbose to see what went
++	 * wrong in more detail.
++	 */
++	if (trace.perfconfig_events != NULL) {
++		struct parse_events_error parse_err = { .idx = 0, };
 +
- static struct syscall_fmt *syscall_fmt__find(const char *name)
- {
- 	const int nmemb = ARRAY_SIZE(syscall_fmts);
--	return bsearch(name, syscall_fmts, nmemb, sizeof(struct syscall_fmt), syscall_fmt__cmp);
-+	return __syscall_fmt__find(syscall_fmts, nmemb, name);
++		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
++		if (err) {
++			parse_events_print_error(&parse_err, trace.perfconfig_events);
++			goto out;
++		}
++	}
+ 
+ 	if ((nr_cgroups || trace.cgroup) && !trace.opts.target.system_wide) {
+ 		usage_with_options_msg(trace_usage, trace_options,
+@@ -4441,5 +4453,6 @@ out_close:
+ 	if (output_name != NULL)
+ 		fclose(trace.output);
+ out:
++	zfree(&trace.perfconfig_events);
+ 	return err;
  }
- 
--static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
-+static struct syscall_fmt *__syscall_fmt__find_by_alias(struct syscall_fmt *fmts, const int nmemb, const char *alias)
- {
--	int i, nmemb = ARRAY_SIZE(syscall_fmts);
-+	int i;
- 
- 	for (i = 0; i < nmemb; ++i) {
--		if (syscall_fmts[i].alias && strcmp(syscall_fmts[i].alias, alias) == 0)
--			return &syscall_fmts[i];
-+		if (fmts[i].alias && strcmp(fmts[i].alias, alias) == 0)
-+			return &fmts[i];
- 	}
- 
- 	return NULL;
- }
- 
-+static struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
-+{
-+	const int nmemb = ARRAY_SIZE(syscall_fmts);
-+	return __syscall_fmt__find_by_alias(syscall_fmts, nmemb, alias);
-+}
-+
- /*
-  * is_exit: is this "exit" or "exit_group"?
-  * is_open: is this "open" or "openat"? To associate the fd returned in sys_exit with the pathname in sys_enter.
