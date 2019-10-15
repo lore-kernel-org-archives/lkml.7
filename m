@@ -2,32 +2,33 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8902CECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C86C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68252214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11336214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388315AbfJOQz3 (ORCPT
+        id S2388343AbfJOQzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:55:29 -0400
-Received: from mga11.intel.com ([192.55.52.93]:46844 "EHLO mga11.intel.com"
+        Tue, 15 Oct 2019 12:55:33 -0400
+Received: from mga11.intel.com ([192.55.52.93]:46851 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfJOQz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:55:28 -0400
+        id S2388317AbfJOQzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:55:32 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 09:55:28 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 09:55:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
-   d="scan'208";a="201811346"
+   d="scan'208";a="201811359"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.57])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Oct 2019 09:55:26 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Oct 2019 09:55:30 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
@@ -37,10 +38,12 @@ To:     Paolo Bonzini <pbonzini@redhat.com>,
         Joerg Roedel <joro@8bytes.org>
 Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] Refactor vcpu creation flow of x86 arch
-Date:   Wed, 16 Oct 2019 00:40:29 +0800
-Message-Id: <20191015164033.87276-1-xiaoyao.li@intel.com>
+Subject: [PATCH 2/4] KVM: VMX: Setup MSR bitmap only when has msr_bitmap capability
+Date:   Wed, 16 Oct 2019 00:40:31 +0800
+Message-Id: <20191015164033.87276-3-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20191015164033.87276-1-xiaoyao.li@intel.com>
+References: <20191015164033.87276-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,30 +51,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When reading the vcpu creationg flow of vmx, I find it hard to follow since it
-mixes the data structure allocation and initilization together.
+Move the MSR bitmap setup codes to vmx_vmcs_setup() and only setup them
+when hardware has msr_bitmap capability.
 
-This series tries to make the vcpu creation flow more clear that first
-allocating data structure and then initializing them. In this way, it helps
-move FPU allocation to generic x86 code (Patch 4).
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
-This series intends to do no functional change. I just tested it with
-kvm_unit_tests for vmx since I have no AMD machine at hand.
-
-Xiaoyao Li (4):
-  KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup functions
-  KVM: VMX: Setup MSR bitmap only when has msr_bitmap capability
-  KVM: X86: Refactor kvm_arch_vcpu_create
-  KVM: X86: Make vcpu's FPU allocation a common function
-
- arch/x86/include/asm/kvm_host.h |   1 +
- arch/x86/kvm/svm.c              |  81 ++++++---------
- arch/x86/kvm/vmx/nested.c       |   2 +-
- arch/x86/kvm/vmx/nested.h       |   2 +-
- arch/x86/kvm/vmx/vmx.c          | 173 ++++++++++++++------------------
- arch/x86/kvm/x86.c              |  40 ++++++++
- 6 files changed, 150 insertions(+), 149 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 58b77a882426..7051511c27c2 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4164,12 +4164,30 @@ static void ept_set_mmio_spte_mask(void)
+ static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+ {
+ 	int i;
++	unsigned long *msr_bitmap;
+ 
+ 	if (nested)
+ 		nested_vmx_vmcs_setup();
+ 
+-	if (cpu_has_vmx_msr_bitmap())
+-		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
++	if (cpu_has_vmx_msr_bitmap()) {
++		msr_bitmap = vmx->vmcs01.msr_bitmap;
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
++		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
++		if (kvm_cstate_in_guest(vmx->vcpu.kvm)) {
++			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
++			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
++			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
++			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
++		}
++
++		vmcs_write64(MSR_BITMAP, __pa(msr_bitmap));
++	}
++	vmx->msr_bitmap_mode = 0;
+ 
+ 	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
+ 
+@@ -6697,7 +6715,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ {
+ 	int err;
+ 	struct vcpu_vmx *vmx;
+-	unsigned long *msr_bitmap;
+ 	int cpu;
+ 
+ 	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
+@@ -6754,22 +6771,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	if (err < 0)
+ 		goto free_msrs;
+ 
+-	msr_bitmap = vmx->vmcs01.msr_bitmap;
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+-	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+-	if (kvm_cstate_in_guest(kvm)) {
+-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
+-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+-		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+-	}
+-	vmx->msr_bitmap_mode = 0;
+-
+ 	vmx->loaded_vmcs = &vmx->vmcs01;
+ 	cpu = get_cpu();
+ 	vmx_vcpu_load(&vmx->vcpu, cpu);
 -- 
 2.19.1
 
