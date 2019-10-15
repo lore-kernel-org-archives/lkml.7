@@ -2,92 +2,100 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8419ECE59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527F1ECE59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DD72064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5562064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571178260;
-	bh=JmfnoG9R1K7s/CQvGw9D6jzDc7qrS4Im2mKuSheg4NY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S/0s4MxLWVObGFDNdCSUth/HzQXfEooqGJtuFTbR/Wfy80Jhw//fgMa9WETBNO6Pr
-	 UFlTCZ/Lg5LWQkF3OdNM81WnTULlfrwwDLZXRxNWlwr4JMw+dNhWSL/M55Eg5f1aQu
-	 iTWnPovKiGdrqSiH1YIlmTrL77rlzQv6QTibMIjI=
+	s=default; t=1571178268;
+	bh=7wD/sv1cp59b0s917sG2wb/i73fxap9yaREzOUv1GHk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=u3xeD0W5jUeOt+77PBmsCiIebcOEVAwc9L/EG+fEUZpW02Pce7UajyllWrHyMUNE6
+	 2YdngXtGzKToEEHdAllg5FhGFGROeL/tA8ohFrtlbnAQiLrve9i8abqHoPKvXrHomB
+	 r/DIiGik6pRteoCyjrwddN9A9otHmEy0p3Y1JMNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389793AbfJOWYT (ORCPT
+        id S2389841AbfJOWY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:24:19 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34090 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732312AbfJOWYT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:24:19 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 83so18306904oii.1;
-        Tue, 15 Oct 2019 15:24:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nK0aavkV2vBesQcv0AgqoDNcvg469f2OzuJk5GeXGKE=;
-        b=tm3NVTLbuROFoKpV12NBTzuQkEpufJ6jXkk/a0zACWGzx2a2sXFydOMMhcIYAwqfW9
-         1mcYcarXVSubjdSwL5FUt+/rX5iqTjB6ycXPVdaUGTqLrJhrrtEZe2iHL4uR3B/5SltF
-         W7wOkq3EkYmW38uh6PhjvRbsvZImP7dvUdrF2WAzW/UskQ4hiIIlm//KkmBQ5uzSAODJ
-         vCA3TjGg/KP65cPs5iIYKyLqCRz5IxQ+sxGT32XDUqWAJ9hwjNiWBHsM5g9vp5eJY8/6
-         TnAkbkDs+7cKRXRVP1KDswCdvDBcHem2ivB6ighRO6jVjhBqXt2ffOK3eWgtFxqO3GvZ
-         l/tg==
-X-Gm-Message-State: APjAAAWtVvZyt7/m+oxfW/CBag/ABH1kLt748S2T4ykwTNMap0y0OBXj
-        r+uJ6u4+g7+2re4Wdnmekw==
-X-Google-Smtp-Source: APXvYqw2zlzetx+asQEISLHCoq9N6nsXVVk1APE2KhuoS0Weh/DxpADYhOg0xmTVQQw+4Z3eMZTbng==
-X-Received: by 2002:aca:3b84:: with SMTP id i126mr785946oia.28.1571178256967;
-        Tue, 15 Oct 2019 15:24:16 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m20sm6622503oih.43.2019.10.15.15.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 15:24:16 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:24:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        johnny_huang@aspeedtech.com, ryanchen.aspeed@gmail.com
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: aspeed-g6: Rework SD3 function
- and groups
-Message-ID: <20191015222415.GA10977@bogus>
-References: <20191008044153.12734-1-andrew@aj.id.au>
- <20191008044153.12734-2-andrew@aj.id.au>
+        Tue, 15 Oct 2019 18:24:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389809AbfJOWY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 18:24:26 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E622064A;
+        Tue, 15 Oct 2019 22:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571178266;
+        bh=7wD/sv1cp59b0s917sG2wb/i73fxap9yaREzOUv1GHk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Qa8FOoODC83mp3W205B7mOZ3mQ2bwlNINhhmwHUDDwntGVXNfzz/AN5WbUDcCC4Ss
+         K7ureGdXByoli4H0GCReDKB63KkS8Gb6p7soa3E1+BxpwUAvrZ6zXEHlEFnm34z5Oz
+         GjQ6H5CK2MmV/SZK0hMThsATz+SIX5hfTCeG9CWU=
+Date:   Tue, 15 Oct 2019 17:24:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     gregkh@linuxfoundation.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rajatxjain@gmail.com
+Subject: Re: [PATCH v3 1/2] PCI/AER: Add PoisonTLPBlocked to Uncorrectable
+ errors
+Message-ID: <20191015222421.GA184682@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191008044153.12734-2-andrew@aj.id.au>
+In-Reply-To: <20190827222145.32642-1-rajatja@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  8 Oct 2019 15:11:47 +1030, Andrew Jeffery wrote:
-> Rename SD3 functions and groups to EMMC to better reflect their intended
-> use before the binding escapes too far into the wild. Also clean up the
-> SD3 pin groups to eliminate some silliness that slipped through the
-> cracks (SD3DAT[4-7]) by unifying them into three new groups: EMMCG1,
-> EMMCG4 and EMMCG8 for 1, 4 and 8-bit data buses respectively.
+On Tue, Aug 27, 2019 at 03:21:44PM -0700, Rajat Jain wrote:
+> The elements in the aer_uncorrectable_error_string[] refer to
+> the bit names in Uncorrectable Error status Register in the PCIe spec
+> (Sec 7.8.4.2 in PCIe 4.0)
 > 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> Unfortunately reflowing the list creates a lot of noise in this change. As
-> mentioned the SD3DAT[4-7] groups are renamed, as is the SD3 function. There
-> should be no functional changes beyond that.
+> Add the last error bit in the strings array that was missing.
 > 
->  .../pinctrl/aspeed,ast2600-pinctrl.yaml       | 86 +++++++++----------
->  1 file changed, 42 insertions(+), 44 deletions(-)
-> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I applied this to pci/aer for v5.5, thanks, Rajat!
+
+> ---
+> v3: same as v2
+> v2: same as v1
+> 
+>  drivers/pci/pcie/aer.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index b45bc47d04fe..68060a290291 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -36,7 +36,7 @@
+>  #define AER_ERROR_SOURCES_MAX		128
+>  
+>  #define AER_MAX_TYPEOF_COR_ERRS		16	/* as per PCI_ERR_COR_STATUS */
+> -#define AER_MAX_TYPEOF_UNCOR_ERRS	26	/* as per PCI_ERR_UNCOR_STATUS*/
+> +#define AER_MAX_TYPEOF_UNCOR_ERRS	27	/* as per PCI_ERR_UNCOR_STATUS*/
+>  
+>  struct aer_err_source {
+>  	unsigned int status;
+> @@ -560,6 +560,7 @@ static const char *aer_uncorrectable_error_string[AER_MAX_TYPEOF_UNCOR_ERRS] = {
+>  	"BlockedTLP",			/* Bit Position 23	*/
+>  	"AtomicOpBlocked",		/* Bit Position 24	*/
+>  	"TLPBlockedErr",		/* Bit Position 25	*/
+> +	"PoisonTLPBlocked",		/* Bit Position 26	*/
+>  };
+>  
+>  static const char *aer_agent_string[] = {
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
