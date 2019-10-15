@@ -2,160 +2,106 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1024C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70462ECE58E
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E21B2089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m7diCTvn"
+	by mail.kernel.org (Postfix) with ESMTP id 4E9A92089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfJOI6J (ORCPT
+        id S1728072AbfJOI7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:58:09 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:29992 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfJOI6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:58:09 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191015085805epoutp03c937bc0c21e04d1a173031da9866f802~Nxk5u0XGI2953729537epoutp03b
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 08:58:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191015085805epoutp03c937bc0c21e04d1a173031da9866f802~Nxk5u0XGI2953729537epoutp03b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571129885;
-        bh=/SFjdGEguceZTF7NEb52JQoFAQABsBxr02etVYuqG90=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=m7diCTvn5nehpv+jSdDNgmh53XYU/2S8CnKWUX83OKh2bQYmi+7pXM2sIgdV5M40u
-         lSDBb4iCg1yN2gbjS0KK09q4ImHZNJ/0pmmtvwyQI9apXIS8swBddODGL2WMRM3NB0
-         3ANTJyQBs/v76VmAh0Q5o5PYZktE7N8TlVJlE3eQ=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20191015085804epcas5p3e68e5a44a0db35daded764030b19c280~Nxk5PGJ8L2155121551epcas5p3m;
-        Tue, 15 Oct 2019 08:58:04 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        93.CE.04660.C1A85AD5; Tue, 15 Oct 2019 17:58:04 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191015085803epcas5p1cb269eaa0e9d130983c4eff8966dc505~Nxk4foDqi3031830318epcas5p1-;
-        Tue, 15 Oct 2019 08:58:03 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191015085803epsmtrp23f6f2eb594212cb425064e54893e50eb~Nxk4e076B0871908719epsmtrp2F;
-        Tue, 15 Oct 2019 08:58:03 +0000 (GMT)
-X-AuditID: b6c32a4a-60fff70000001234-93-5da58a1c749b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        07.2C.03889.B1A85AD5; Tue, 15 Oct 2019 17:58:03 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.111.85.21]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191015085801epsmtip2f5b8fabf4e76f52fa5875ad052c174e3~Nxk2o1f3g0476004760epsmtip2P;
-        Tue, 15 Oct 2019 08:58:01 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Christoph Hellwig'" <hch@infradead.org>
-Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>, <andrew.murray@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <gustavo.pimentel@synopsys.com>,
-        <jingoohan1@gmail.com>, <vidyas@nvidia.com>,
-        "'Anvesh Salveru'" <anvesh.s@samsung.com>
-In-Reply-To: <20191015081620.GA28204@infradead.org>
-Subject: RE: [PATCH v3] PCI: dwc: Add support to add GEN3 related
- equalization quirks
-Date:   Tue, 15 Oct 2019 14:28:00 +0530
-Message-ID: <068001d58336$a76ed970$f64c8c50$@samsung.com>
+        Tue, 15 Oct 2019 04:59:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60480 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727922AbfJOI7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:59:07 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 37D174E93D
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 08:59:07 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id v18so9778681wro.16
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 01:59:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MOmAFdPDWrDEa5AvaNMUKf7NziX00yqzV1UZ/AfIuGk=;
+        b=c64Cqx65MzTDq6S+Lm0GzKkco2D1orRLrtdoEuPGanDBwEhDx0IJ6dutmU8fwmHX7f
+         jrYU/7SzydHW2cR0X713LtS9Ckz/Fyf7xASqkli1+HxQcZtDIhuYORDd/uFYHeuYksdo
+         s9TSe0QSrohw5BP5bSXbsIat9/fNXSWBpTvF+8Kzz8+B52WFcelYF0fA5kIVoZn6YW/K
+         Tr8o5Rp8ndfomVd2fbzPHXpSaytowgSwWztCdwkw9YwhUgBzkMaGVfB4iOePWoSKGnhe
+         FnUuyHLHvlbTrTNTlgEWvmbgIpyHViXMPPg+pgEpj3r6rZRLYx0LmS6U6s8bGxbAyStK
+         L+uw==
+X-Gm-Message-State: APjAAAUGZlxrH8NLcVKyJhZHNDLvFvyOKDK03e+X9EwqAagcVrfQmpor
+        df/KZGPvE10p7YaPEe5g3mwI+iF/Rd25WciMfZ/N3hTGWclcn9MEA/pFII0fo9zklw3tmVoWmp4
+        6aaAI+FYKk1XNyKJZyWwGhPuV
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr18946723wml.169.1571129945824;
+        Tue, 15 Oct 2019 01:59:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyRgJTYqmv94g8xe+OJCo1AUwh7aXyZIoNlBixvs7ZRNcsijmTRxDzwTcNbJ60P+WUjyGjxfA==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr18946700wml.169.1571129945485;
+        Tue, 15 Oct 2019 01:59:05 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d001:591b:c73b:6c41? ([2001:b07:6468:f312:d001:591b:c73b:6c41])
+        by smtp.gmail.com with ESMTPSA id r13sm30920817wrn.0.2019.10.15.01.59.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 01:59:05 -0700 (PDT)
+Subject: Re: [RFC v2 2/2] x86/kvmclock: Introduce kvm-hostclock clocksource.
+To:     Suleiman Souhlal <suleiman@google.com>
+Cc:     rkrcmar@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        kvm@vger.kernel.org, Suleiman Souhlal <ssouhlal@freebsd.org>,
+        tfiga@chromium.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191010073055.183635-1-suleiman@google.com>
+ <20191010073055.183635-3-suleiman@google.com>
+ <2e6e5b14-fa68-67bd-1436-293659c8d92c@redhat.com>
+ <CABCjUKAsO9bOW9-VW1gk0O_U=9V6Zhft8LjpcqXVbDVTvWJ5Hw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <b98fcfc6-2759-7293-b3b5-0282830c9379@redhat.com>
+Date:   Tue, 15 Oct 2019 10:59:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CABCjUKAsO9bOW9-VW1gk0O_U=9V6Zhft8LjpcqXVbDVTvWJ5Hw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI32j4iOCLbX1pxMrCw4/raoiQM8gHGBYnvAqR4VLGmc18X0A==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeyyVcRjH+53b+zocvQ7l6WSps2LO5lbMa0Oty3rXtMw/SoxT3iGOY+dF
-        qbbckkvMqC0nHeQaWoW5HJEdcaawNbc/TK3RkmuLomHyeln+++x5vt99v8/24HypUSjDI2Pi
-        aE2MMlouEguauhwUjjZZFcEu+blyMnWjWUj260uFZHlKBKkfz8DIj3nPeWT1UiFGDuqLRGS/
-        zigiZ1enMHKkWXJKTNXp6hDVqh3HqJL6eKqhWkHlpM6LqNzGGkQ1vltE1GL9IT88UOwVRkdH
-        JtAaZ59QccRosUEQ+8H81rQumZ+E1kyzkAkOhBtkJz0WZSExLiXaELzoq0PsQkr8QlA4J+P4
-        D4Kudt8dw6O33RhnaEdQ9nJ62z2DQN+9JmRVIsIZBlZ0W2xFOEJ/6RRiRXwimwevJx6I2IUJ
-        cQLepCzwWLYkAkBbO4uxLCCOQU326JZGQnjC2EIr4tgCegsnBSzzCVtonivic5UOw99vldth
-        p2Ei3yjkNNbwo/v9VlUgCjDoqWrAOMNZSO7IQxxbwrSxcXsug8X5dhHHalgpy+dz5jQEBcZn
-        Qm5xEjqHijZb4JsJDvBK78yFmUPO6iSPHQMhgYx0Kae2g+Xvfds9beBragWPYwrahgsFeeiI
-        dtdp2l2naXedoP0fVoIENegAHcuowmnGPfZ4DH3TiVGqmPiYcKfralU92novxYUWVDnga0AE
-        juRmEiKtPFgqVCYwiSoDApwvt5IUsyNJmDLxNq1Rh2jio2nGgA7iArm1JF84HCQlwpVxdBRN
-        x9KanS0PN5ElIbn9kKN+xbUz0GwQQq/6Mb/triTv6elwur//YhlELd3pD3jyU3NDtu/cZ/UT
-        C8cRei88vfYlM8291tLbWWy4G221jqmW7TwuuzQ2tSRWae29PNdNfc70efuP54TkLI0F2SkW
-        z881VF5S+0sL4o9u3JtJL3/Y+cmtqddDIrfNrF6XC5gIpauCr2GU/wAWvDMyWgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsWy7bCSvK5019JYg6N3DCya/29ntTi7ayGr
-        xZKmDItddzvYLU5PWMRkseLLTHaLy7vmsFmcnXeczeLN7xfsFte28zpweayZt4bRY+esu+we
-        CzaVemxeoeXR2/yOzaNvyypGjy37PzN6fN4kF8ARxWWTkpqTWZZapG+XwJVxff4hloJTfBWv
-        5jUyNzD+4e5i5OSQEDCRmLLnKHsXIxeHkMBuRokpfzYxQiRkJCavXsEKYQtLrPz3HKroJaPE
-        5Qlb2UESbAL6Eud+zAMrEhHQlTi78AUjSBGzwFQmiZWrvzGDJIQEDjJK3J0oAWJzChhLbGx6
-        zwRiCwuEStyePB1sG4uAqsSq7utsIDavgKXE7fc7GSFsQYmTM5+wdDFyAA3Vk2jbCBZmFpCX
-        2P52DjPEcQoSP58ug7rBSeLxpOOsEDXiEi+PHmGfwCg8C8mkWQiTZiGZNAtJxwJGllWMkqkF
-        xbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMERqKW1g/HEifhDjAIcjEo8vBltS2KFWBPLiitz
-        DzFKcDArifDObwEK8aYkVlalFuXHF5XmpBYfYpTmYFES55XPPxYpJJCeWJKanZpakFoEk2Xi
-        4JRqYJzvkM6rdviC0Ab5yCmPNE/sT3mnNP3asbr4z5wh/lkqs78EWwcqNl6Y01Hd6Ny40MBu
-        s5D9xjBrRpErmq0PmZkNbHff+npjOdtC10T/N69FopMMgjJWb7v1/rB6oNS24sUBC2c+8dC9
-        27zC9UTR6WKOoF2Vfp4RZ/8dyC1J2+VZFTqvjKVwrRJLcUaioRZzUXEiACqDA+C8AgAA
-X-CMS-MailID: 20191015085803epcas5p1cb269eaa0e9d130983c4eff8966dc505
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1
-References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
-        <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
-        <20191015081620.GA28204@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15/10/19 10:39, Suleiman Souhlal wrote:
+> I think we have that already (pvtk->flags).
+> I'll change the if statement above to use pvtk instead of pv_timekeeper.
 
+Of course, thanks.
 
-> -----Original Message-----
-> From: Christoph Hellwig <hch@infradead.org>
-> Sent: Tuesday, October 15, 2019 1:46 PM
-> To: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
-> bhelgaas@google.com; andrew.murray@arm.com; lorenzo.pieralisi@arm.com;
-> gustavo.pimentel@synopsys.com; jingoohan1@gmail.com; vidyas@nvidia.com;
-> Anvesh Salveru <anvesh.s@samsung.com>
-> Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related
-equalization
-> quirks
+>>> +kvm_hostclock_init(void)
+>>> +{
+>>> +     unsigned long pa;
+>>> +
+>>> +     pa = __pa(&pv_timekeeper);
+>>> +     wrmsrl(MSR_KVM_TIMEKEEPER_EN, pa);
+>>
+>>
+>> As Vitaly said, a new CPUID bit must be defined in
+>> Documentation/virt/kvm/cpuid.txt, and used here.  Also please make bit 0
+>> an enable bit.
 > 
-> On Tue, Oct 15, 2019 at 08:29:22AM +0530, Pankaj Dubey wrote:
-> > From: Anvesh Salveru <anvesh.s@samsung.com>
-> >
-> > In some platforms, PCIe PHY may have issues which will prevent linkup
-> > to happen in GEN3 or higher speed. In case equalization fails, link
-> > will fallback to GEN1.
-> >
-> > DesignWare controller gives flexibility to disable GEN3 equalization
-> > completely or only phase 2 and 3 of equalization.
-> >
-> > This patch enables the DesignWare driver to disable the PCIe GEN3
-> > equalization by enabling one of the following quirks:
-> >  - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all phases
-> >  - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization phase 2 & 3
-> >
-> > Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
-> > struct.
-> 
-> Please submit this together with the changes to the dwc frontend driver
-that
-> actually wants to set these quirks.
+> I think I might not be able to move the enable bit to 0 because we
+> need the generation count (pvclock_timekeeper.gen) to be the first
+> word of the struct due to the way we copy the data to userspace,
+> similarly to how kvm_setup_pvclock_page() does it.
 
-Is this something mandatory?
+I mean bit 0 of the MSR.
 
-As we discussed during first patch-set here [1] with Andrew, we have need of
-this patch (along with some other stuffs, which will be sent soon), to clean
-up our internal driver and make it ready for upstream. As of today we have
-some internal restrictions where we can't make it to upstream along with
-this patch. 
+Thanks,
 
-[1]: https://patchwork.ozlabs.org/patch/1160310/#2258262
-
+Paolo
