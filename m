@@ -2,105 +2,150 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08CAECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373CAECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825F02086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RQsjMM+K"
+	by mail.kernel.org (Postfix) with ESMTP id 056FE20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571154799;
+	bh=ndsQ6Ikc/QDxKZLu10azrdO/DgewWAXoQmG+ed0ffAo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qqGgnbp4yjHseE01nosx7jG8E+m+zjX/ixG083dVOhc+0LznaE9ef9k8qDvIwdEvV
+	 CdRQCOLIVFmscumK22xo+rNqG0QQ2/gEitwWkeO3/FodtCNntHSjhdMWJlnWkbtYK0
+	 ubSUDJmvLFRcoeJr5M7ywrWobD7znloD+LLNFvIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387514AbfJOPwP (ORCPT
+        id S2387624AbfJOPxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:52:15 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39211 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727478AbfJOPwO (ORCPT
+        Tue, 15 Oct 2019 11:53:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36774 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbfJOPxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:52:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so47078316ioc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 08:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=klz9XF0n5Dx23te5u1HbHnrUpRLcGEesCFK6Z+SLWew=;
-        b=RQsjMM+K2avoCN2xnMldLxkHX7TbdffiFc5gI1gcqH/ZDCgLqQOzoCqBXsrSLn0ccs
-         kzpIPB6AKSN2uKUfLsDq6nqdtkmRf9sTTYDkN4Kv8noVSsSqKTlUysCm3pzpugnWV+aV
-         Ky2t7co7bQCPAnDE+zzzPIxTdO2v2aq4gSU4jC3XbF49DXa+Rt9d4L8w9ob2qYicTgOI
-         J4j59x2+VIQUq1pmXulJOS0pcZgSNXG7MXqipG48Yuvs9okrOepGruMX1A5nLnpU9OOO
-         Z35ZlxRdOs2IHy0stMoExM2RMUnLjXoaXc4tRmbqxoSWK+SrBUyDQPLxCes+Kzhou6ac
-         zIWg==
+        Tue, 15 Oct 2019 11:53:17 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k20so17249017oih.3;
+        Tue, 15 Oct 2019 08:53:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=klz9XF0n5Dx23te5u1HbHnrUpRLcGEesCFK6Z+SLWew=;
-        b=OGaMLQEj0MshE8HZarCeP9HRPUs0s9wT1osN+lY3U8Yjp7iDaKKCNaiBtpGtXQHsZb
-         MLQu/iuhkaTPof48Dc34JJnZ4wKTp24mdCOZwwGT+M97q9zQRL8K9dFNYShftfBw/He7
-         WX+qcLMy2QCXxZUV6hdh9VwJT4AhxM2i3QUTTyQBlEUXLgH60y5gDGxFgf26jtdwVCBC
-         pxqrD59DAureQwhFAGlGc7Y96UCCpWEX/L5QGmnKXQWP0JwfAZuUdmKQRpszxzj+ByA8
-         gN84Jv3FpWaBe+Ou7HYrc47pZtzv1ZkcS4WBYZolRjEBoHHe2iCpKOFoIJAJd4OGmPt2
-         l6Pg==
-X-Gm-Message-State: APjAAAXgOb3x65FzgXcgiyJUkE6N4mXYQugz+tH+wrp2T1oQxEeai3Un
-        hlypYTcvFiA+T23PR/qAtrWlpw==
-X-Google-Smtp-Source: APXvYqzr4ZyFt9+diFgQyl7KaG1y/10oIRx/Zzw9ZodclIRdwn1K+mHttkhdigmTK4CUNdhHRLP+xQ==
-X-Received: by 2002:a92:5f4c:: with SMTP id t73mr6801457ilb.220.1571154733938;
-        Tue, 15 Oct 2019 08:52:13 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id q17sm2582994ile.5.2019.10.15.08.52.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 08:52:13 -0700 (PDT)
-Subject: Re: [PATCH block/for-linus] blkcg: fix botched pd_prealloc error
- handling in blkcg_activate_policy()
-To:     Tejun Heo <tj@kernel.org>, Julia Lawall <julia.lawall@lip6.fr>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, linux-block@vger.kernel.org
-References: <alpine.DEB.2.21.1910151232480.2818@hadrien>
- <20191015154827.GK18794@devbig004.ftw2.facebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <07cbc404-65db-b236-9ae2-558197b8cdb6@kernel.dk>
-Date:   Tue, 15 Oct 2019 09:52:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HQGfwuekQUm5qu2Iq5zcCEmyQysEr3kA0t1xqwqEraM=;
+        b=TlepmLlpM9Jd3ffyLx3CPA/GO9JoEmyxX0GIDdm1gB2ydxrrr0fG4jPyniogEnl5MC
+         zg/P04LLFvLDP2vE+MRaCdMTTeaFHhzt3jFF+Zw9H5/9iJ64EGTo4nHbwJDgfx77pb4X
+         1PzIsMhUOjSlkg7Y6m500OiWW0gSWcxKg/MDZiqlMvNyWwmpdTL73wI5iz8ptCB0hexw
+         c4EyWDOVDPtrrHpmreKMuQjhPV69Pc5im4KptcZt8HZkDMHAQONUYm1UEmqnEcm82lFC
+         G/lkXWp0v0oFF8QfyO2Yv4CNcuCzS07ZKROD12qzmE3k9duo5Otf8We8GRVj0mhZHHVo
+         Nbag==
+X-Gm-Message-State: APjAAAW2G6GxFaeY4XdOwy1MAF0QUmrc4JHsZ2UNCvvYu194d5yQsTNV
+        AMTjQqc9Dg9rZfYQBuTzH26r6VpPdFICdj1xy8k=
+X-Google-Smtp-Source: APXvYqwAPAiLrrKrG6De9PVsPAtUAe4bcIZK4gviFL4DMJU9g/dW9moQ62OyjRXSXxzs+9Wl5yiAOzBEW4Req4f92vA=
+X-Received: by 2002:a05:6808:917:: with SMTP id w23mr28492241oih.68.1571154796338;
+ Tue, 15 Oct 2019 08:53:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191015154827.GK18794@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com> <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+In-Reply-To: <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 15 Oct 2019 17:53:04 +0200
+Message-ID: <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS framework
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 9:48 AM, Tejun Heo wrote:
-> While fixing ->pd_alloc_fn() bug, ab94b0382d81 ("blkcg: Fix
-> ->pd_alloc_fn() being called with the wrong blkcg on policy
-> activation") broke the pd_prealloc error handling.
-> 
-> * pd's were freed using kfree().  They should be freed with
->    ->pd_free_fn().
-> 
-> * pd_prealloc could be kfree()'d and then ->pd_free_fn()'d again.
-> 
-> * When GFP_KERNEL allocation fails, pinned_blkg wasn't put.
-> 
-> There are also a couple existing issues.
-> 
-> * Each pd is initialized as they get allocated.  If alloc fails, the
->    policy will get freed with pd's initialized on it.
-> 
-> * After the above partial failure, the partial pds are not freed.
-> 
-> This patch fixes all of the above issues.
+On Tue, Oct 15, 2019 at 1:46 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 22-09-19, 23:12, Dmitry Osipenko wrote:
+> > Hello Viresh,
+> >
+> > This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
+> >
+> >
+> > [   87.952369] ==================================================================
+> > [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
+> > [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
+> >
+> > [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
+> > 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
+> > [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> > [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
+> > [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
+> > [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
+> > (print_address_description.constprop.0+0x3d/0x340)
+> > [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
+> > (__kasan_report+0xe3/0x12c)
+> > [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
+> > [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
+> > (blocking_notifier_chain_register+0x29/0x3c)
+> > [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
+> > (dev_pm_qos_add_notifier+0x79/0xf8)
+> > [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+> > [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
+> > [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
+> > [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
+> > (cpufreq_register_driver+0x13b/0x1ec)
+> > [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
+> > (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
+>
+> Hi Dmitry,
+>
+> Thanks for the bug report and I was finally able to reproduce it at my end and
+> this was quite an interesting debugging exercise :)
+>
+> When a cpufreq driver gets registered, we register with the subsys interface and
+> it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
+> notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
+>
+> When the cpufreq driver gets unregistered, we unregister with the subsys
+> interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
+> (should have been in reverse order I feel). We remove the QoS notifier only when
+> cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
+> CPUx. Now this has a different notifier list as compared to CPU0.
 
-I dropped the other one, do you mind sending a folded patch?
+The same problem will appear if the original policy CPU goes offline, won't it?
 
--- 
-Jens Axboe
+> In short, we are adding the cpufreq notifiers to CPU0 and removing them from
+> CPUx. When we try to add it again by inserting the module for second time, we
+> find a node in the notifier list which is already freed but still in the list as
+> we removed it from CPUx's list (which doesn't do anything as the node wasn't
+> there in the first place).
+>
+> @Rafael: How do you see we solve this problem ? Here are the options I could
+> think of:
+>
+> - Update subsys layer to reverse the order of devices while unregistering (this
+>   will fix the current problem, but we will still have corner cases hanging
+>   around, like if the CPU0 is hotplugged out, etc).
 
+This isn't sufficient for the offline case.
+
+> - Update QoS framework with the knowledge of related CPUs, this has been pending
+>   until now from my side. And this is the thing we really need to do. Eventually
+>   we shall have only a single notifier list for all CPUs of a policy, at least
+>   for MIN/MAX frequencies.
+
+- Move the PM QoS requests and notifiers to the new policy CPU on all
+changes of that.  That is, when cpufreq_offline() nominates the new
+"leader", all of the QoS stuff for the policy needs to go to this one.
+
+Of course, the reverse order of unregistration in the subsys layer
+would help to avoid some useless churn related to that.
