@@ -2,106 +2,155 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80316ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A671C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625EF2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712052064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:45:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnNiPZHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbfJONoe convert rfc822-to-8bit (ORCPT
+        id S1732152AbfJONpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:44:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:52636 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728880AbfJONod (ORCPT
+        Tue, 15 Oct 2019 09:45:52 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43916 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728880AbfJONpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:44:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-191-VZdTs2gWNsGAxBzQDtU9Qw-1; Tue, 15 Oct 2019 14:44:30 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 15 Oct 2019 14:44:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 15 Oct 2019 14:44:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Petr Mladek' <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-CC:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Joe Perches <joe@perches.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 1/1] printf: add support for printing symbolic error
- names
-Thread-Topic: [PATCH v4 1/1] printf: add support for printing symbolic error
- names
-Thread-Index: AQHVgo+xcgMsYRXixUil6/wftqCdMKdbtuyw
-Date:   Tue, 15 Oct 2019 13:44:30 +0000
-Message-ID: <904b85b3c32d448abc6b4e58b6c4dc35@AcuMS.aculab.com>
-References: <20190917065959.5560-1-linux@rasmusvillemoes.dk>
- <20191011133617.9963-1-linux@rasmusvillemoes.dk>
- <20191011133617.9963-2-linux@rasmusvillemoes.dk>
- <20191014130247.rag2g7qz54uiw54z@pathway.suse.cz>
-In-Reply-To: <20191014130247.rag2g7qz54uiw54z@pathway.suse.cz>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 15 Oct 2019 09:45:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n14so20296002ljj.10;
+        Tue, 15 Oct 2019 06:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XhBJozkHE/xedpBrZ0VCd5Q5zH6PXHTbsKH5oegYHnQ=;
+        b=bnNiPZHWndkW6jXXwA3cbLqWpwLIc5FZqIHyNeFd1K8SfL0US0DoBSGO8+LByTR/8a
+         uuUPtym+3M0sirpu0GPLRbmG4olfMmVVhgsdCa/jSPC2AQya1FHmp2bFaF2BVfI60QSp
+         IwigxDJhtvFyV6E5pJW6qu0covk8D5NwhkOhWXyq9gSufBBOibPvY9TCfIOBczQmqBkF
+         bEd88lQfgPGs6f4akbTkXlMgPP6M/ZUYI/M1bqiia2X6YLCfNMtjKMypDgWExF4tkZd7
+         73M7NRIFgLREwM2WCOx7usgaCh7eGt49tuxnbAMoY1D1a0tqrYF5d5dSNPUH+ILJHaE2
+         jlLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XhBJozkHE/xedpBrZ0VCd5Q5zH6PXHTbsKH5oegYHnQ=;
+        b=dBjjt1kXxJcCRIqau5BW38sxtS0jWkNIJ3tuThf5TY1GDtOOxkcHTF//XvNSdt00t4
+         6IAZBiFhVCqa334kV1sPJzALlA+E0FV2h3ZnsMIx0ZILqyh7bngJguuzuiNUM+T4tQBA
+         cNH4/KYmWO+OlEUIIHDK0ugB1vrV92nrKmmtbdZLRiPT/fKUhhxq2a/e3OuAV/LcZFmJ
+         3V8oCzFBJzj2Mx19fPVMpLMcWwmc5e6WzTt3fSgWyFob6bT5NcgXtfZVaJOUD+f38zey
+         detO3TQP4vIHMUV9l6jHFRauEp0hSYkTLBS55IoHi8zDlC1xya4zkwpjvwL6VpZAwL0n
+         lJMQ==
+X-Gm-Message-State: APjAAAWoleCAlUumUuKYjN+mUh2dNyRBieeOmJXp42oaucUVBdb3p6Y4
+        LvyoyfYXl5w9pkiCbCGNkO1YGTrR
+X-Google-Smtp-Source: APXvYqxDA51lkLWNTaf8bBq//P4W4VfYR0u+eBP4O+satZqN4rgC0XPhHwULT0gp3lRytqRDKtnXSw==
+X-Received: by 2002:a2e:8593:: with SMTP id b19mr22488107lji.34.1571147148483;
+        Tue, 15 Oct 2019 06:45:48 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id c3sm4909990lfi.32.2019.10.15.06.45.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 06:45:47 -0700 (PDT)
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
+ framework
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
+        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
+ <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0d0b050a-4d79-2e65-5d71-dfd662310e1f@gmail.com>
+Date:   Tue, 15 Oct 2019 16:45:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-MC-Unique: VZdTs2gWNsGAxBzQDtU9Qw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek
-> Sent: 14 October 2019 14:03
-> On Fri 2019-10-11 15:36:17, Rasmus Villemoes wrote:
-> > It has been suggested several times to extend vsnprintf() to be able
-> > to convert the numeric value of ENOSPC to print "ENOSPC". This
-> > implements that as a %p extension: With %pe, one can do
+15.10.2019 14:46, Viresh Kumar пишет:
+> On 22-09-19, 23:12, Dmitry Osipenko wrote:
+>> Hello Viresh,
+>>
+>> This patch causes use-after-free on a cpufreq driver module reload. Please take a look, thanks in advance.
+>>
+>>
+>> [   87.952369] ==================================================================
+>> [   87.953259] BUG: KASAN: use-after-free in notifier_chain_register+0x4f/0x9c
+>> [   87.954031] Read of size 4 at addr e6abbd0c by task modprobe/243
+>>
+>> [   87.954901] CPU: 1 PID: 243 Comm: modprobe Tainted: G        W
+>> 5.3.0-next-20190920-00185-gf61698eab956-dirty #2408
+>> [   87.956077] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>> [   87.956807] [<c0110aad>] (unwind_backtrace) from [<c010bb71>] (show_stack+0x11/0x14)
+>> [   87.957709] [<c010bb71>] (show_stack) from [<c0d37b25>] (dump_stack+0x89/0x98)
+>> [   87.958616] [<c0d37b25>] (dump_stack) from [<c02937e1>]
+>> (print_address_description.constprop.0+0x3d/0x340)
+>> [   87.959785] [<c02937e1>] (print_address_description.constprop.0) from [<c0293c6b>]
+>> (__kasan_report+0xe3/0x12c)
+>> [   87.960907] [<c0293c6b>] (__kasan_report) from [<c014988f>] (notifier_chain_register+0x4f/0x9c)
+>> [   87.962001] [<c014988f>] (notifier_chain_register) from [<c01499b5>]
+>> (blocking_notifier_chain_register+0x29/0x3c)
+>> [   87.963180] [<c01499b5>] (blocking_notifier_chain_register) from [<c06f7ee9>]
+>> (dev_pm_qos_add_notifier+0x79/0xf8)
+>> [   87.964339] [<c06f7ee9>] (dev_pm_qos_add_notifier) from [<c092927d>] (cpufreq_online+0x5e1/0x8a4)
+>> [   87.965351] [<c092927d>] (cpufreq_online) from [<c09295c9>] (cpufreq_add_dev+0x79/0x80)
+>> [   87.966247] [<c09295c9>] (cpufreq_add_dev) from [<c06eb9d3>] (subsys_interface_register+0xc3/0x100)
+>> [   87.967297] [<c06eb9d3>] (subsys_interface_register) from [<c0926e53>]
+>> (cpufreq_register_driver+0x13b/0x1ec)
+>> [   87.968476] [<c0926e53>] (cpufreq_register_driver) from [<bf800435>]
+>> (tegra20_cpufreq_probe+0x165/0x1a8 [tegra20_cpufreq])
 > 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Hi Dmitry,
 > 
-> I like the patch. There are only two rather cosmetic things.
+> Thanks for the bug report and I was finally able to reproduce it at my end and
+> this was quite an interesting debugging exercise :)
 > 
-> > diff --git a/lib/errname.c b/lib/errname.c
-> > new file mode 100644
-> > index 000000000000..30d3bab99477
-> > --- /dev/null
-> > +++ b/lib/errname.c
-> > +const char *errname(int err)
-> > +{
-> > +	bool pos = err > 0;
-> > +	const char *name = __errname(err > 0 ? err : -err);
-> > +
-> > +	return name ? name + pos : NULL;
+> When a cpufreq driver gets registered, we register with the subsys interface and
+> it calls cpufreq_add_dev() for each CPU, starting from CPU0. And so the QoS
+> notifiers get added to the first CPU of the policy, i.e. CPU0 in common cases.
 > 
-> This made me to check C standard. It seems that "true" really has
-> to be "1".
+> When the cpufreq driver gets unregistered, we unregister with the subsys
+> interface and it calls cpufreq_remove_dev() for each CPU, starting from CPU0
+> (should have been in reverse order I feel). We remove the QoS notifier only when
+> cpufreq_remove_dev() gets called for the last CPU of the policy, lets call it
+> CPUx. Now this has a different notifier list as compared to CPU0.
+> 
+> In short, we are adding the cpufreq notifiers to CPU0 and removing them from
+> CPUx. When we try to add it again by inserting the module for second time, we
+> find a node in the notifier list which is already freed but still in the list as
+> we removed it from CPUx's list (which doesn't do anything as the node wasn't
+> there in the first place).
+> 
+> @Rafael: How do you see we solve this problem ? Here are the options I could
+> think of:
+> 
+> - Update subsys layer to reverse the order of devices while unregistering (this
+>   will fix the current problem, but we will still have corner cases hanging
+>   around, like if the CPU0 is hotplugged out, etc).
+> 
+> - Update QoS framework with the knowledge of related CPUs, this has been pending
+>   until now from my side. And this is the thing we really need to do. Eventually
+>   we shall have only a single notifier list for all CPUs of a policy, at least
+>   for MIN/MAX frequencies.
+> 
+> - ??
+> 
 
-What is thus "true" symbol you are talking about?
-Actually you could get rid of the "bool" as well.
-	unsigned int pos = err > 0;
-	const char *name = __errname(pos ? err : -err);
-	return name ? &pos[name] : NULL;
-then it is all well defined.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Viresh, thank you very much! Looking forward to a fix :)
