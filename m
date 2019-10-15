@@ -2,171 +2,106 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D9AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9A0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB3E20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E01218DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkgWOtem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfJOKZD (ORCPT
+        id S1730494AbfJOKZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:25:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:34562 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728185AbfJOKZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:25:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 630E428;
-        Tue, 15 Oct 2019 03:25:02 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F1AA3F68E;
-        Tue, 15 Oct 2019 03:25:01 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 11:24:59 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD
- capability
-Message-ID: <20191015102459.GV27757@arm.com>
-References: <20191010171517.28782-1-suzuki.poulose@arm.com>
- <20191010171517.28782-2-suzuki.poulose@arm.com>
- <20191011113620.GG27757@arm.com>
- <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com>
- <20191011142137.GH27757@arm.com>
- <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com>
- <20191014145204.GS27757@arm.com>
- <12e002e7-42e8-c205-e42c-3348359d2f98@arm.com>
- <20191014155009.GM24047@e103592.cambridge.arm.com>
- <CAKv+Gu83oa3+DKNFowVkE=mZfLorAvGQ3GVPiZtsXzQBcsMCWg@mail.gmail.com>
+        Tue, 15 Oct 2019 06:25:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46869 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfJOKZg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:25:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o18so23104170wrv.13;
+        Tue, 15 Oct 2019 03:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hs18HuLQlgBABYesmo7IPm5KuxOAJYfK6ga//A893aY=;
+        b=OkgWOtemW9nA/ZipwE4kOKLVI4eGEGdocKmL4HLlgOULjPLJIUK5OJfZyJWNEl5c8v
+         qmSd+yrQm2a9vQNujY32vp3w4ZCWdXdGBHJpI+o0IXJjJS8bVtIrM9ehDwfB6ZD6lbTX
+         sHKgiMQfS+Q6yB5VOvrGmtc54YveKPHy6qee3HB43Mu3Tsiq+Jn2dmhHDDLwbFJMojhT
+         XZMgEFxG4AiJIfb0VwJ5+z9fuf0NbjAea2piH63VJm38SZpSZrYiBVHrmEkv54PV2pen
+         yrB+OLcLMIE8UiVPoubhjXW0vSSRogWRjPLsyi8GYWHDXHZMazQAoUv5h8tyE5VFjv+i
+         +rjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hs18HuLQlgBABYesmo7IPm5KuxOAJYfK6ga//A893aY=;
+        b=MDrs9uEPp0kiXydnIjACKitKGUEp7RRcIAaY2lv5+77HBg/mjjWIp0vKxGZGm9r9nd
+         W7UC/6h6NRW+D+sI1l7gtSaCkvIlnrHjy3cXVOQIhL1YC+9THWj9ZaCHYpuRJWCxCIfG
+         lVyPzKCkzjsgv7BCUN1kXksfrgKTYL/+X3LWsxPScJgipT2BC4Nmhlz4sPGdp6gMQqdl
+         f6hhXtCx5Y5ST3txoa+6FZS9a0tr8vpPZuyMsGg7BAcBJGUigWfcIK/kBYW82v3uVE5x
+         irKD1efc2IBEOQ52aSM37MkUQuo6qvo8Tq7TCCKggPRq2yBnQJ8gXL+C7029CLqs0oHr
+         Q1mg==
+X-Gm-Message-State: APjAAAWlLpvpFMmALEMaJ7UGdgjh0jZ4puYQtunv2Ti1sDljM0vgPyQr
+        XATFaSj2MzLF/zZ6h3brOnE=
+X-Google-Smtp-Source: APXvYqxL0dyh9xwdUkfgUwlxcAfzfOeWzotdyra9eCE+RCoTeujCdgXqU2QpDj6SRa9lEBtldGJdBQ==
+X-Received: by 2002:a5d:518f:: with SMTP id k15mr28782850wrv.328.1571135134302;
+        Tue, 15 Oct 2019 03:25:34 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:8d40:cc61:bfff:65c2])
+        by smtp.gmail.com with ESMTPSA id o18sm1779059wrm.11.2019.10.15.03.25.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 03:25:33 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 12:25:27 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        x86@kernel.org, "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH] x86/hyperv: Set pv_info.name to "Hyper-V"
+Message-ID: <20191015102527.GA12412@andrea.guest.corp.microsoft.com>
+References: <20191015092937.11244-1-parri.andrea@gmail.com>
+ <CAHd7Wqxn3sQQWkzOBrJ1KYm8eUpwa_9dcSYRDfPGAMWm=qvbag@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu83oa3+DKNFowVkE=mZfLorAvGQ3GVPiZtsXzQBcsMCWg@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHd7Wqxn3sQQWkzOBrJ1KYm8eUpwa_9dcSYRDfPGAMWm=qvbag@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:57:30PM +0200, Ard Biesheuvel wrote:
-> On Mon, 14 Oct 2019 at 17:50, Dave P Martin <Dave.Martin@arm.com> wrote:
-> >
-> > On Mon, Oct 14, 2019 at 04:45:40PM +0100, Suzuki K Poulose wrote:
-> > >
-> > >
-> > > On 14/10/2019 15:52, Dave Martin wrote:
-> > > > On Fri, Oct 11, 2019 at 06:28:43PM +0100, Suzuki K Poulose wrote:
-> > > >>
-> > > >>
-> > > >> On 11/10/2019 15:21, Dave Martin wrote:
-> > > >>> On Fri, Oct 11, 2019 at 01:13:18PM +0100, Suzuki K Poulose wrote: > Hi Dave
-> > > >>>>
-> > > >>>> On 11/10/2019 12:36, Dave Martin wrote:
-> > > >>>>> On Thu, Oct 10, 2019 at 06:15:15PM +0100, Suzuki K Poulose wrote:
-> > > >>>>>> The NO_FPSIMD capability is defined with scope SYSTEM, which implies
-> > > >>>>>> that the "absence" of FP/SIMD on at least one CPU is detected only
-> > > >>>>>> after all the SMP CPUs are brought up. However, we use the status
-> > > >>>>>> of this capability for every context switch. So, let us change
-> > > >>>>>> the scop to LOCAL_CPU to allow the detection of this capability
-> > > >>>>>> as and when the first CPU without FP is brought up.
-> > > >>>>>>
-> > > >>>>>> Also, the current type allows hotplugged CPU to be brought up without
-> > > >>>>>> FP/SIMD when all the current CPUs have FP/SIMD and we have the userspace
-> > > >>>>>> up. Fix both of these issues by changing the capability to
-> > > >>>>>> BOOT_RESTRICTED_LOCAL_CPU_FEATURE.
-> > > >>>>>>
-> > > >>>>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-> > > >>>>>> Cc: Will Deacon <will@kernel.org>
-> > > >>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
-> > > >>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > >>>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > >>>>>> ---
-> > > >>>>>>   arch/arm64/kernel/cpufeature.c | 2 +-
-> > > >>>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >>>>>>
-> > > >>>>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> > > >>>>>> index 9323bcc40a58..0f9eace6c64b 100644
-> > > >>>>>> --- a/arch/arm64/kernel/cpufeature.c
-> > > >>>>>> +++ b/arch/arm64/kernel/cpufeature.c
-> > > >>>>>> @@ -1361,7 +1361,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
-> > > >>>>>>        {
-> > > >>>>>>                /* FP/SIMD is not implemented */
-> > > >>>>>>                .capability = ARM64_HAS_NO_FPSIMD,
-> > > >>>>>> -              .type = ARM64_CPUCAP_SYSTEM_FEATURE,
-> > > >>>>>> +              .type = ARM64_CPUCAP_BOOT_RESTRICTED_CPU_LOCAL_FEATURE,
-> > > >>>>>
-> > > >>>>> ARM64_HAS_NO_FPSIMD is really a disability, not a capability.
-> > > >>>>>
-> > > >>>>> Although we have other things that smell like this (CPU errata for
-> > > >>>>> example), I wonder whether inverting the meaning in the case would
-> > > >>>>> make the situation easier to understand.
-> > > >>>>
-> > > >>>> Yes, it is indeed a disability, more on that below.
-> > > >>>>
-> > > >>>>>
-> > > >>>>> So, we'd have ARM64_HAS_FPSIMD, with a minimum (signed) feature field
-> > > >>>>> value of 0.  Then this just looks like an ARM64_CPUCAP_SYSTEM_FEATURE
-> > > >>>>> IIUC.  We'd just need to invert the sense of the check in
-> > > >>>>> system_supports_fpsimd().
-> > > >>>>
-> > > >>>> This is particularly something we want to avoid with this patch. We want
-> > > >>>> to make sure that we have the up-to-date status of the disability right
-> > > >>>> when it happens. i.e, a CPU without FP/SIMD is brought up. With SYSTEM_FEATURE
-> > > >>>> you have to wait until we bring all the CPUs up. Also, for HAS_FPSIMD,
-> > > >>>> you must wait until all the CPUs are up, unlike the negated capability.
-> > > >>>
-> > > >>> I don't see why waiting for the random defective early CPU to come up is
-> > > >>> better than waiting for all the early CPUs to come up and then deciding.
-> > > >>>
-> > > >>> Kernel-mode NEON aside, the status of this cap should not matter until
-> > > >>> we enter userspace for the first time.
-> > > >>>
-> > > >>> The only issue is if e.g., crypto drivers that can use kernel-mode NEON
-> > > >>> probe for it before all early CPUs are up, and so cache the wrong
-> > > >>> decision.  The current approach doesn't cope with that anyway AFAICT.
-> > > >>
-> > > >> This approach does in fact. With LOCAL_CPU scope, the moment a defective
-> > > >> CPU turns up, we mark the "capability" and thus the kernel cannot use
-> > > >> the neon then onwards, unlike the existing case where we have time till
-> > > >> we boot all the CPUs (even when the boot CPU may be defective).
-> > > >
-> > > > I guess that makes sense.
-> > > >
-> > > > I'm now wondering what happens if anything tries to use kernel-mode NEON
-> > > > before SVE is initialised -- which doesn't happen until cpufeatures
-> > > > configures the system features.
-> > > >
-> > > > I don't think your proposed change makes anything worse here, but it may
-> > > > need looking into.
-> > >
-> > > We could throw in a WARN_ON() in kernel_neon() to make sure that the SVE
-> > > is initialised ?
-> >
-> > Could do, at least as an experiment.
-> >
-> > Ard, do you have any thoughts on this?
-> >
+> > @@ -154,6 +154,8 @@ static uint32_t  __init ms_hyperv_platform(void)
 > 
-> All in-kernel NEON code checks whether the NEON is usable, so I'd
-> expect that check to return 'false' if it is too early in the boot for
-> the NEON to be used at all.
+> This function is for platform detection only.
+> 
+> >         if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> >                 return 0;
+> >
+> > +       pv_info.name = "Hyper-V";
+> > +
+> 
+> At this point we're not sure if Linux is really running on Hyper-V yet.
+> 
+> Setting pv_info.name should be moved to the init_platform hook, i.e.
+> ms_hyperv_init_platform.
 
-My concern is that the check may be done once, at probe time, for crypto
-drivers.  If probing happens before system_supports_fpsimd() has
-stabilised, we may be stuck with the wrong probe decision.
+Thank you for the review, Wei.  I'll move this to the init_platform hook
+and re-submit shortly.
 
-So: are crypto drivers and kernel_mode_neon() users definitely only
-probed _after_ all early CPUs are up?
-
-Cheers
----Dave
+Thanks,
+  Andrea
