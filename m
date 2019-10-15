@@ -2,99 +2,131 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90783ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8D8ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A13214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44CE214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z45Fjj80"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XDVJJIBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388823AbfJORbC (ORCPT
+        id S2388827AbfJORbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:31:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36754 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388811AbfJORbB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:31:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so12923881pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7S85Z16eqmxjvMi+R450sz/jCD08hapdQq20bxkJhIQ=;
-        b=Z45Fjj80aeFnBh15QFiiV4ZDqGyQ5HJDbtqHNzqjgPSNVNPjO/x2poJPEIrrZSFwpm
-         OCMem9CGwlp78RO8LfSd5G8mEF3Nyd2RFh624FvFc7lp5QpQOk+J9/X7AA1OJVuLBMVn
-         1RleaZa0ecrjs9JrXlD4ReELJMFxpSUi0gdkDJiF4FnLpedmmsdC1A8CxoITnMEEOsTF
-         TD0hM4gvbo4PJAMPxwFtNUirCtNcVbcD6tilIdvWAwLG73xWJC9hLBQGmXaWwpXZ1WS4
-         AShMtc0G+WfW6FxqQSAnVlM55aI6K6lK4t8Fct+uwbgtxpNTlvASSWpOURuotpOnAcSK
-         /kZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7S85Z16eqmxjvMi+R450sz/jCD08hapdQq20bxkJhIQ=;
-        b=oUt29fJl4jaLRHrPxNSM8dK9MPJ6tt5MCqrlPa7m+WvG8NldL7527umOorwubMskZ+
-         fP9LOawxAVT2g6erCBp2ST5SUqYAhoaogXWpCh5GZaeRJONtfDasmMLDx2INNWYJ55dF
-         Z7Zn6TSoxyO6sP1MCof3nFRcpq8JzJUNJ930K7V9GsaDz7MiaaGFn9/oqz5AHnvaFlLc
-         dLGBN2zg6p6CgHdzDE2BD8IgkRReSBJawvitpgc7l4ocIkuz1BAZB1rg5mUGEOyEBzqg
-         UYus7dHMRK1NKjKybtpLPhmzbHPMK1HXixYqWqb8IeAl7lQR82+ZktjR9Uhah/xeXm6w
-         563g==
-X-Gm-Message-State: APjAAAXG4ch5g8siVH7yR60iKeHzj2YjKiU4L9VFE919n8encPKOgA+3
-        MuQEItTBvoe+27Ed4nBAlsgu
-X-Google-Smtp-Source: APXvYqzn4VlP4VPtakQV7y7Ju7xhPBj3ik8f7rFsUS7D6t1HhoQXFgGOrSFOlZClkEbJG1rQSgbgGA==
-X-Received: by 2002:a17:90a:9f42:: with SMTP id q2mr43885643pjv.95.1571160659982;
-        Tue, 15 Oct 2019 10:30:59 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:6003:7cb8:25e8:2c45:fab2:b0c7])
-        by smtp.gmail.com with ESMTPSA id w11sm28033563pfd.116.2019.10.15.10.30.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:30:59 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 4/4] MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
-Date:   Tue, 15 Oct 2019 23:00:26 +0530
-Message-Id: <20191015173026.9962-5-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
-References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
+        Tue, 15 Oct 2019 13:31:35 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34076 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727096AbfJORbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 13:31:35 -0400
+Received: from zn.tnic (p200300EC2F15780025EDCDA5BE6BD269.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:7800:25ed:cda5:be6b:d269])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9C6251EC0C9F;
+        Tue, 15 Oct 2019 19:31:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571160693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=cFw5Due+VSFCyYkmIjMbJP3VojTnvQLW8Rym4nhL1EE=;
+        b=XDVJJIBJ/ZL1XC+z8ExW3BsGImQQoJDtqsoq93W1VtJAlOusLYUjpFDKUJduHc8FA+Jhpz
+        c18/qEIgoYBcvQ1EPyi4jp00mfJs3Uwjn03bsoHFf58xy+0zsABkr/Efn0UKPHHCVVaENg
+        5SjiwseSDFyywMPyhd36nrxgA2ONguQ=
+Date:   Tue, 15 Oct 2019 19:31:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v9 17/28] x86/asm: Use SYM_INNER_LABEL instead of GLOBAL
+Message-ID: <20191015173124.GF596@zn.tnic>
+References: <20191011115108.12392-1-jslaby@suse.cz>
+ <20191011115108.12392-18-jslaby@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191011115108.12392-18-jslaby@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for RDA Micro GPIO driver and devicetree binding.
+On Fri, Oct 11, 2019 at 01:50:57PM +0200, Jiri Slaby wrote:
+> The GLOBAL macro had several meanings and is going away. In this patch,
+> convert all the inner function labels marked with GLOBAL to use
+> SYM_INNER_LABEL instead.
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> ---
+>  arch/x86/entry/entry_64.S                |  6 +++---
+>  arch/x86/entry/entry_64_compat.S         |  4 ++--
+>  arch/x86/entry/vdso/vdso32/system_call.S |  2 +-
+>  arch/x86/kernel/ftrace_32.S              |  2 +-
+>  arch/x86/kernel/ftrace_64.S              | 16 ++++++++--------
+>  arch/x86/realmode/rm/reboot.S            |  2 +-
+>  6 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index 607e25f54ff4..57d246048ac6 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -162,7 +162,7 @@ ENTRY(entry_SYSCALL_64)
+>  	pushq	%r11					/* pt_regs->flags */
+>  	pushq	$__USER_CS				/* pt_regs->cs */
+>  	pushq	%rcx					/* pt_regs->ip */
+> -GLOBAL(entry_SYSCALL_64_after_hwframe)
+> +SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
+>  	pushq	%rax					/* pt_regs->orig_ax */
+>  
+>  	PUSH_AND_CLEAR_REGS rax=$-ENOSYS
+> @@ -621,7 +621,7 @@ ret_from_intr:
+>  	call	prepare_exit_to_usermode
+>  	TRACE_IRQS_IRETQ
+>  
+> -GLOBAL(swapgs_restore_regs_and_return_to_usermode)
+> +SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+>  #ifdef CONFIG_DEBUG_ENTRY
+>  	/* Assert that pt_regs indicates user mode. */
+>  	testb	$3, CS(%rsp)
+> @@ -679,7 +679,7 @@ retint_kernel:
+>  	 */
+>  	TRACE_IRQS_IRETQ
+>  
+> -GLOBAL(restore_regs_and_return_to_kernel)
+> +SYM_INNER_LABEL(restore_regs_and_return_to_kernel, SYM_L_GLOBAL)
+>  #ifdef CONFIG_DEBUG_ENTRY
+>  	/* Assert that pt_regs indicates kernel mode. */
+>  	testb	$3, CS(%rsp)
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Do this too, while at it?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a69e6db80c79..0303502cd146 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2150,9 +2150,11 @@ L:	linux-unisoc@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/boot/dts/rda8810pl-*
- F:	drivers/clocksource/timer-rda.c
-+F:	drivers/gpio/gpio-rda.c
- F:	drivers/irqchip/irq-rda-intc.c
- F:	drivers/tty/serial/rda-uart.c
- F:	Documentation/devicetree/bindings/arm/rda.yaml
-+F:	Documentation/devicetree/bindings/gpio/gpio-rda.yaml
- F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
- F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
- F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 57d246048ac6..e73369858556 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -247,7 +247,7 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
+ 	 * We win! This label is here just for ease of understanding
+ 	 * perf profiles. Nothing jumps here.
+ 	 */
+-syscall_return_via_sysret:
++SYM_INNER_LABEL(syscall_return_via_sysret, SYM_L_GLOBAL)
+ 	/* rcx and r11 are already restored (see code above) */
+ 	UNWIND_HINT_EMPTY
+ 	POP_REGS pop_rdi=0 skip_r11rcx=1
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
