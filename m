@@ -2,98 +2,101 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2182EECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC00DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C5E20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C084421835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u6MRhQIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfJODSa (ORCPT
+        id S1727732AbfJODUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 23:18:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:38579 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727195AbfJODSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 23:18:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 20:18:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,297,1566889200"; 
-   d="scan'208";a="225283908"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Oct 2019 20:18:29 -0700
-Date:   Mon, 14 Oct 2019 20:18:28 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 01/14] KVM: monolithic: x86: remove kvm.ko
-Message-ID: <20191015031828.GE24895@linux.intel.com>
-References: <20190928172323.14663-1-aarcange@redhat.com>
- <20190928172323.14663-2-aarcange@redhat.com>
- <20191015013144.GC24895@linux.intel.com>
+        Mon, 14 Oct 2019 23:20:49 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38169 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbfJODUt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 23:20:49 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so28518286qta.5
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 20:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+a62DdmduxnuPn8gfinhXIl/fI174vfUQzT+Rlsfq90=;
+        b=u6MRhQIWLKqRNJUSQur+JB3dwFxavoa402DUjy/BWkWh5ofauj0kuzK+EGHte94+od
+         NlGd/8HFOGL2MrO6Hm3Uby891BjI6UV5JhtYPQcV8/5IL9RFUky5euB400vJba244ucC
+         +QBicP0y/IeHmdzPFgu5AfU4dGa3RIIYN8B+UwhZj5Yh/tE2LN/iREe1DvyoJ7mHoj5D
+         swDdlB7pYjxHURvNDOFxozl5zQiV+ofC8obFbEltdsjKvfbwwJbQl7olZdYeoGbby2r3
+         1Jim2+hIzPJVPl8/eFYs3vCHaLg2EWvXtEtKcVqQLkT+8VHRt6DCDLpp/T5Ec7GVpb/h
+         6vrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+a62DdmduxnuPn8gfinhXIl/fI174vfUQzT+Rlsfq90=;
+        b=Y2+aGFtjhTDiwrAR6kjarJ7XMa9w55aWDUIRQWeeq5GJRQMFeQKbDHJPoE45Qn5qCi
+         lNEJ4YFhsFUR+H+CO69v/jdxu47W2BHHTEt/l/+CoAf50OjynDlAt+x7tjUoMHOTDNml
+         1UZ1n+T7Ge/KYk9yNwyIAajlNVeOas/cgtcoZsISQQ9nW1RoLk6TfBaBZ7EHKHRgbj2k
+         DvZ5wTqFqTUqpxz+oZt5EvYBO/fgn0UkZ3MBVHA24lnw0GQeNmaHdSgcPnGsIbXzPv78
+         VZuMbnDNRtmjcTRv9k70nKt48QtsD/MR3EGpPUU1OZp0KM83F5NOGA7a7IVICxc7RTDi
+         YiXw==
+X-Gm-Message-State: APjAAAUytPPwioBUZGN6+a2AqnV0Caae2reWOLVcs3kNb3omlPpNJmD+
+        z0+WZnwxPyialla9pHRUjLBz+A==
+X-Google-Smtp-Source: APXvYqz1imHgeqaddA3di71uJl0NpcZoPv6YENI6GPW3vEFz0irmOXt9Qo3eu8CdPF0/qxjJOYLM6g==
+X-Received: by 2002:aed:2796:: with SMTP id a22mr35631096qtd.324.1571109646445;
+        Mon, 14 Oct 2019 20:20:46 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li937-157.members.linode.com. [45.56.119.157])
+        by smtp.gmail.com with ESMTPSA id d40sm11954014qtk.6.2019.10.14.20.20.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 14 Oct 2019 20:20:45 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 11:20:38 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] perf test: Avoid infinite loop for task exit case
+Message-ID: <20191015032038.GA6336@leoy-ThinkPad-X240s>
+References: <20191011091942.29841-1-leo.yan@linaro.org>
+ <20191011091942.29841-2-leo.yan@linaro.org>
+ <20191014141136.GD19627@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015013144.GC24895@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191014141136.GD19627@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:31:44PM -0700, Sean Christopherson wrote:
-> On Sat, Sep 28, 2019 at 01:23:10PM -0400, Andrea Arcangeli wrote:
-> > This is the first commit of a patch series that aims to replace the
-> > modular kvm.ko kernel module with a monolithic kvm-intel/kvm-amd
-> > model. This change has the only possible cons of wasting some disk
-> > space in /lib/modules/. The pros are that it saves CPUS and some minor
-> > RAM which are more scarse resources than disk space.
+On Mon, Oct 14, 2019 at 11:11:36AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Oct 11, 2019 at 05:19:42PM +0800, Leo Yan escreveu:
+> > When execute task exit testing case, Perf tool stucks in this case and
+> > doesn't return back on Arm64 Juno board.
 > > 
-> > The pointer to function virtual template model cannot provide any
-> > runtime benefit because kvm-intel and kvm-amd can't be loaded at the
-> > same time.
+> > After dig into this issue, since Juno board has Arm's big.LITTLE CPUs,
+> > thus the PMUs are not compatible between the big CPUs and little CPUs.
+> > This leads to PMU event cannot be enabled properly when the traced task
+> > is migrated from one variant's CPU to another variant.  Finally, the
+> > test case runs into infinite loop for cannot read out any event data
+> > after return from polling.
 > > 
-> > This removes kvm.ko and it links and duplicates all kvm.ko objects to
-> > both kvm-amd and kvm-intel.
+> > Eventually, we need to work out formal solution to allow PMU events can
+> > be freely migrated from one CPU variant to another, but this is a
+> > difficult task and a different topic.  This patch tries to fix the Perf
+> > test case to avoid infinite loop, when the testing detects 1000 times
+> > retrying for reading empty events, it will directly bail out and return
+> > failure.  This allows the Perf tool can continue its other test cases.
 > 
-> The KVM config option should be changed to a bool and its help text
-> updated.  Maybe something similar to the help for VIRTUALIZATION to make
-> it clear that enabling KVM on its own does nothing.
+> Thanks, applied.
 
-Making KVM a bool doesn't work well, keeping it a tristate and keying off
-KVM=y to force Intel or AMD (as done in the next patch) looks like the
-cleanest implementation.
-
-The help text should still be updated though.
-
-> > 
-> > Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-> > ---
-> >  arch/x86/kvm/Makefile | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-> > index 31ecf7a76d5a..68b81f381369 100644
-> > --- a/arch/x86/kvm/Makefile
-> > +++ b/arch/x86/kvm/Makefile
-> > @@ -12,9 +12,8 @@ kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
-> >  			   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
-> >  			   hyperv.o page_track.o debugfs.o
-> >  
-> > -kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
-> > -kvm-amd-y		+= svm.o pmu_amd.o
-> > +kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o $(kvm-y)
-> > +kvm-amd-y		+= svm.o pmu_amd.o $(kvm-y)
-> >  
-> > -obj-$(CONFIG_KVM)	+= kvm.o
-> >  obj-$(CONFIG_KVM_INTEL)	+= kvm-intel.o
-> >  obj-$(CONFIG_KVM_AMD)	+= kvm-amd.o
+Thanks a lot, Arnaldo.
