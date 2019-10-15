@@ -2,89 +2,114 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF25C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AB9ECE596
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A706C20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571160244;
-	bh=+7lu7SwpkDSu7gCXDXfUFrC2mJO93AUBBNIc/Uluqvo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EBnGcIay0+AaDcABnevk5fEipGaJRBxuePsTU0ImGp4os/8T+CXAJbJL27dA1nYr5
-	 DXghcYmRBnsUAtnmaZq5JGlQBIIaHJPxzHw8aao/EeK+A+XTy6ybxvPyBAGAxbSVFV
-	 1U1t0U7BdtXCrsUgdoEVG+hT1eoYuvxXpSsO9DAM=
+	by mail.kernel.org (Postfix) with ESMTP id BDD7020650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388505AbfJORYD (ORCPT
+        id S2388248AbfJORYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:24:03 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41346 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfJORYD (ORCPT
+        Tue, 15 Oct 2019 13:24:22 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51917 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfJORYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:24:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so17625721otp.8;
-        Tue, 15 Oct 2019 10:24:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AMnuJgHGU6R0IzytORO8cFlW8ykU5YUSocCPPL5eBC4=;
-        b=UEiJXYbXmrIOZRPiKZBaVt+kyPYDy/vH44IePvqy+WVoUHfMvdBLwewfDrU+AXGbHE
-         HZMSpz5R6JKF+dm7tDI+Ndb1dfJXp/pvyua/GsbHHvCIcW6lBm69Dx7xDI0JMzK3is/c
-         Ssza4d3tM6KkMgDHcsEMMquLa9Ohi1qDbvFeC0cLPqD0P4t0rlYAx9moGLkpO2IrK2yL
-         Xsnw36SjMUdcfZ0mbjJr7OdUQ+fQIQbbZ6Xz7uk2k+dpMhwHjB/th0vLgC0Sby8wvWCe
-         83dqm79YKPYEJY1k3EBM3tUG3wQjhd1Atow79jcDilPXXI9Il9mXlfVIe4oWFZIS0wrY
-         GSrQ==
-X-Gm-Message-State: APjAAAWK+pLUUAUEF8UGmGyhLy08rzhj5kn8AXMlWWsWzE97lpoQgw9N
-        XS48O1KcJ9uqhV6RUgpARA==
-X-Google-Smtp-Source: APXvYqxeAQyn2woHyJsNz/1A9Qqotnbqgu/lYixgaEz9AtYG4uiKdx1AbMY3H/CJDkTrB7+S/N/KHQ==
-X-Received: by 2002:a05:6830:22ce:: with SMTP id q14mr3987927otc.115.1571160242078;
-        Tue, 15 Oct 2019 10:24:02 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d194sm6658461oib.47.2019.10.15.10.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:24:01 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:24:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Tue, 15 Oct 2019 13:24:22 -0400
+Received: from 79.184.254.38.ipv4.supernova.orange.pl (79.184.254.38) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 01cfd58c3730d6c7; Tue, 15 Oct 2019 19:24:19 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
+        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
+        marcelo.cerri@canonical.com, jackm@mellanox.com,
+        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: usb: generic-ehci: Add "companion" entry
-Message-ID: <20191015172400.GA724@bogus>
-References: <20191007134410.10337-1-alexandre.torgue@st.com>
- <20191007134410.10337-4-alexandre.torgue@st.com>
+        driverdev-devel@linuxdriverproject.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 7/7] PCI/MSI: Move power state check out of pci_msi_supported()
+Date:   Tue, 15 Oct 2019 19:24:19 +0200
+Message-ID: <12092576.0PD7RdXzXY@kreacher>
+In-Reply-To: <20191014230016.240912-8-helgaas@kernel.org>
+References: <20191014230016.240912-1-helgaas@kernel.org> <20191014230016.240912-8-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191007134410.10337-4-alexandre.torgue@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Oct 2019 15:44:10 +0200, Alexandre Torgue wrote:
-> "companion" entry is present in "generic.txt" usb binding file. This commit
-> adds it also in generic-ehci yaml binding.
+On Tuesday, October 15, 2019 1:00:16 AM CEST Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 27e20603c54b ("PCI/MSI: Move D0 check into pci_msi_check_device()")
+> moved the power state check into pci_msi_check_device(), which was
+> subsequently renamed to pci_msi_supported().  This didn't change the
+> behavior, since both callers checked the power state.
+> 
+> However, it doesn't fit the current "pci_msi_supported()" name, which
+> should return what the device is capable of, independent of the power
+> state.
+> 
+> Move the power state check back into the callers for readability.  No
+> functional change intended.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+No issues found, so
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  drivers/pci/msi.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 0884bedcfc7a..20e9c729617c 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -861,7 +861,7 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
+>  	if (!pci_msi_enable)
+>  		return 0;
+>  
+> -	if (!dev || dev->no_msi || dev->current_state != PCI_D0)
+> +	if (!dev || dev->no_msi)
+>  		return 0;
+>  
+>  	/*
+> @@ -972,7 +972,7 @@ static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
+>  	int nr_entries;
+>  	int i, j;
+>  
+> -	if (!pci_msi_supported(dev, nvec))
+> +	if (!pci_msi_supported(dev, nvec) || dev->current_state != PCI_D0)
+>  		return -EINVAL;
+>  
+>  	nr_entries = pci_msix_vec_count(dev);
+> @@ -1058,7 +1058,7 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+>  	int nvec;
+>  	int rc;
+>  
+> -	if (!pci_msi_supported(dev, minvec))
+> +	if (!pci_msi_supported(dev, minvec) || dev->current_state != PCI_D0)
+>  		return -EINVAL;
+>  
+>  	/* Check whether driver already requested MSI-X IRQs */
 > 
 
-Applied, thanks.
 
-Rob
+
+
