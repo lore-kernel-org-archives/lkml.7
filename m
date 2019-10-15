@@ -2,131 +2,117 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7932ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F92BECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B8621848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ii1WetGV"
+	by mail.kernel.org (Postfix) with ESMTP id 30D5321848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbfJONMt (ORCPT
+        id S1731638AbfJONO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:12:49 -0400
-Received: from mail-eopbgr730105.outbound.protection.outlook.com ([40.107.73.105]:14467
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730853AbfJONMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:12:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I7GvJZD2MJ6gFdkYAxjVKUm12czh461wuUYOrp6xaQ5XQ95RY012mT+d1UAl4C0PXUxzfbQF1tmSBwta9uIet4JkkI5+yDlARGENnE08jCLOARV2OIMm0YG+32WJVGHeCxAuizd7bh/c2+JcI6Xxm8DXzIhuCqM59UDwlQdq6EgHV0QsgP+2/D83Fik38b2s8cFyL956D+wDjAYFZ+EVBA1qQFIIVYEP9M+HGT1uNBP9LrRi5N/rkgN97G8vZ1P3ZKOZncDLIXbRbVYIADNo5LcD7GdYGuXfeHBZOV3WUqxTyW6lzhjrtgarZ69jOPZET+gz8XrpDy4qJLL4eykz1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qkut6Lfyjm+88/F3mY1snyHLb35WdTiNeM+aw81//Z4=;
- b=KO8gzkD1nRUayNd0Ae/gHvNyZEujE6jtOW6zrwPpPjWouEZLJdVolbM4YMwoFeZ26uTpfCloqfwXFOIBz1p9thAsJFLL5B5umX8jP4pUAtbMtc1fGikzSowLwTwPy8hqCOb9tKFMKyPwhiA8/zRNABgg+3MTPzMi0APcqvrAyCOzBzyFRY8tMRm3FopAZYCpod8MpsjeBybHd23pdyVZTDP1E4ghpXmPIJRxQqs0C0AwHBG3iZpPIgQYxcZ0YFgVbOEC+7FagfztTqo1OREb/eV1Qvpf7EbcPOa9uV0e8Ty3PzBsui43xAxBkDzTR65ap9vN1pbmNqgn4piKMbDbmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qkut6Lfyjm+88/F3mY1snyHLb35WdTiNeM+aw81//Z4=;
- b=Ii1WetGV2D7TITJ9Qpc7Qd45D+BZvhRQ00gBuaiKuXtZz4ETeoL9GsGluzACZhOylH9ARnCiRJEBsmFwaD/5xFnF1m4YpW4HY2v94goshuowUpXleSzuKOnUQGLQTSzYAkoKx0v2e5mL1sAigbYDFqeTST2zgEN5xg40acInF0w=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0188.namprd21.prod.outlook.com (10.173.173.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.4; Tue, 15 Oct 2019 13:12:43 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::a50f:aa3c:c7d6:f05e%11]) with mapi id 15.20.2347.023; Tue, 15 Oct
- 2019 13:12:43 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: RE: [PATCH v3 2/3] Drivers: hv: vmbus: Enable VMBus protocol versions
- 4.1, 5.1 and 5.2
-Thread-Topic: [PATCH v3 2/3] Drivers: hv: vmbus: Enable VMBus protocol
- versions 4.1, 5.1 and 5.2
-Thread-Index: AQHVg05QNZzTb6chqEyqiLj5ZV36XqdbrMiQ
-Date:   Tue, 15 Oct 2019 13:12:43 +0000
-Message-ID: <DM5PR21MB0137C98FEEAA15CB5B3485D8D7930@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <20191015114646.15354-1-parri.andrea@gmail.com>
- <20191015114646.15354-3-parri.andrea@gmail.com>
-In-Reply-To: <20191015114646.15354-3-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-15T13:12:41.4926141Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=759b8823-5f17-471b-96bc-e901e67c9ad8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5e57091-527f-4244-619b-08d751715d5a
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR21MB0188:|DM5PR21MB0188:|DM5PR21MB0188:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB01888006B0F548497B818A04D7930@DM5PR21MB0188.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 01917B1794
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(199004)(189003)(9686003)(14454004)(66446008)(33656002)(2201001)(66476007)(76116006)(66066001)(2906002)(11346002)(7696005)(6246003)(74316002)(99286004)(446003)(186003)(66556008)(66946007)(64756008)(76176011)(10090500001)(6436002)(256004)(55016002)(25786009)(71200400001)(26005)(4326008)(8676002)(102836004)(81156014)(81166006)(229853002)(6506007)(5660300002)(4744005)(6116002)(8990500004)(86362001)(71190400001)(8936002)(478600001)(486006)(316002)(22452003)(10290500003)(2501003)(110136005)(54906003)(7736002)(476003)(305945005)(3846002)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0188;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W7iGmWZHH8TTc4dFmKf+WmMmBbc/MUkHMq5hwMNIpiL4CsMnB55kHhDKdp7aZVXSJp6TqV65nL5SyQKUAaVpttNVzhSi/ZeLXclGtVHdhOdfxduF2djrLqOtZ0bcEtHqu8Kq7p/fuNO7j7Bdm+FdxaKjO2A7dpjIwFb1iyo/Uw9vXkWBQAR4VyU3IWrcGro2R3a/c1FFCfPA7DWAYYWG1towPNSC5mwcZI8tOHIKvaZGDaX7NI+lwAvaGtWyM/D5+85nuiK7h0RBjImQXC412LAoyEs5FztoRQB0WI4Eel3//gvzsY335Nlibw70rWo8O7OtXEvNMIi40sl6/MquSPOePxk+LX9CDT6bu4q5I/yNJiJLWCQvLMy7onWnTXdhgOEIXt9BnVavwgT1PYQWul7VJ9rId2IG1KEWz5ZrOtI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 15 Oct 2019 09:14:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729551AbfJONO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:14:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E359337;
+        Tue, 15 Oct 2019 06:14:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1A333F718;
+        Tue, 15 Oct 2019 06:14:24 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 14:14:19 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, kishon@ti.com, bhelgaas@google.com,
+        andrew.murray@arm.com, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org,
+        repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com
+Subject: Re: [PATCH v2 0/6] arm64: dts: meson-g12: add support for PCIe
+Message-ID: <20191015131419.GA12343@e121166-lin.cambridge.arm.com>
+References: <20190916125022.10754-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5e57091-527f-4244-619b-08d751715d5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 13:12:43.4873
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D/dLAr5q1oOoVlJCbuwHcu/2pOhu2tlk/SifT9bV7fJiKIOc0Ls7P3WpzbXg5h58qsUXXmRQNlK0Txm3rVzIYP0sWoJOK1UY7MSxKc0N4+g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0188
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916125022.10754-1-narmstrong@baylibre.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com> Sent: Tuesday, October 15, 2019=
- 4:47 AM
->=20
-> Hyper-V has added VMBus protocol versions 5.1 and 5.2 in recent release
-> versions.  Allow Linux guests to negotiate these new protocol versions
-> on versions of Hyper-V that support them.  While on this, also allow
-> guests to negotiate the VMBus protocol version 4.1 (which was missing).
->=20
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-> ---
->  drivers/hv/connection.c | 13 ++++++++-----
->  include/linux/hyperv.h  |  8 +++++++-
->  2 files changed, 15 insertions(+), 6 deletions(-)
->=20
+On Mon, Sep 16, 2019 at 02:50:16PM +0200, Neil Armstrong wrote:
+> This patchset :
+> - updates the Amlogic PCI bindings for G12A
+> - reworks the Amlogic PCIe driver to make use of the
+> G12a USB3+PCIe Combo PHY instead of directly writing in
+> the PHY register
+> - adds the necessary operations to the G12a USB3+PCIe Combo PHY driver
+> - adds the PCIe Node for G12A, G12B and SM1 SoCs
+> - adds the commented support for the S922X, A311D and S905D3 based
+> VIM3 boards.
+> 
+> The VIM3 schematic can be found at [1].
+> 
+> This patchset is dependent on Remi's "Fix reset assertion via gpio descriptor"
+> patch at [2].
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Merged in pci/meson; however, I am not sure what should be done on
+Remi's patch, I would like to queue it up too otherwise it looks
+to me that merging this series is not right.
+
+Lorenzo
+
+> This patchset has been tested in a A311D VIM3 and S905D3 VIM3L using a
+> 128Go TS128GMTE110S NVMe PCIe module.
+> 
+> For indication, here is a bonnie++ run as ext4 formatted on the VIM3:
+>      ------Sequential Output------ --Sequential Input- --Random-
+>      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+> Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP /sec %CP
+>   4G 93865  99 312837  96 194487  23 102808  97 415501 21 +++++ +++
+> 
+> and the S905D3 VIM3L version:
+>      ------Sequential Output------ --Sequential Input- --Random-
+>      -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+> Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+>   4G 52144  95 71766  21 47302  10 57078  98 415469  44 +++++ +++
+> 
+> Changes since v1 at [3]:
+>  - Collected Andrew's and Rob's Reviewed-by tags
+>  - Added missing calls to phy_init/phy_exit
+>  - Fixes has_shared_phy handling for MIPI clock
+>  - Add comment in the DT concerning firmware setting the right properties
+>  - Added SM1 Power Domain to PCIe node
+> 
+> [1] https://docs.khadas.com/vim3/HardwareDocs.html
+> [2] https://patchwork.kernel.org/patch/11125261/
+> [3] https://patchwork.kernel.org/cover/11136927/
+> 
+> Neil Armstrong (6):
+>   dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
+>   PCI: amlogic: Fix probed clock names
+>   PCI: amlogic: meson: Add support for G12A
+>   phy: meson-g12a-usb3-pcie: Add support for PCIe mode
+>   arm64: dts: meson-g12a: Add PCIe node
+>   arm64: dts: khadas-vim3: add commented support for PCIe
+> 
+>  .../bindings/pci/amlogic,meson-pcie.txt       |  12 +-
+>  .../boot/dts/amlogic/meson-g12-common.dtsi    |  33 +++++
+>  .../amlogic/meson-g12b-a311d-khadas-vim3.dts  |  25 ++++
+>  .../amlogic/meson-g12b-s922x-khadas-vim3.dts  |  25 ++++
+>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |   4 +
+>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  25 ++++
+>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |   4 +
+>  drivers/pci/controller/dwc/pci-meson.c        | 132 ++++++++++++++----
+>  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    |  70 ++++++++--
+>  9 files changed, 292 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.22.0
+> 
