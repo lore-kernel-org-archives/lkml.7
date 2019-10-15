@@ -2,170 +2,158 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C23ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EFCECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33EB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ih4zeCbn"
+	by mail.kernel.org (Postfix) with ESMTP id 1D6BF2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571164969;
+	bh=xA7M4xKrDcIj7Q4160pIk7VH812AB/o4NQBHKX/DWjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KJB6Egs9f1gKEm6317X+LmMv/xU0jHJhPBEQZiORp0R/dJbD/nlzS2FLeHBfm64FH
+	 GHlb21bbk3JG5z0D01NiyXOu6pTiB2JVyJcFEWj2okpK3jO4Ihhbn5+DLGYQIsxLQy
+	 zUfgqJx8FPik3WWhbc2os13WfEk+anjV0+5w+0FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389219AbfJOSmI (ORCPT
+        id S2389230AbfJOSmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:42:08 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42362 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389210AbfJOSmH (ORCPT
+        Tue, 15 Oct 2019 14:42:47 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33399 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfJOSmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:42:07 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w14so32037114qto.9
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 11:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YXiUOqo8ETclVClbFsr4YOWOeJ7XlxA5Qh2JOUOHtn0=;
-        b=ih4zeCbnEW9LSQmgDID0erLrP4wKSRd4quPFdjB7jDfMBRahOCBa+C67Dy1NqHkrCv
-         VJSNTqSrY43O2EJhupvXVshQ0BC82dIhxESVHTwLHkCEPN42OBS3yBTYdKusIr1FPyqX
-         wpUPZ/cGTRy5YK2T6ObGKxHp1+6vi2CjoWlyTCo/dPXrhBn0tNseTwJyJuKrduDqfttY
-         fd4SW/I4j0BpnaIdz6zO9hqQf6+agjiuheLCXQaQrYEDCeHJq0DF3gEtcT6Uvp1RF+B9
-         gDgx+ctEQBhsj7GuizlLnNWuM5pbIfjPRVvTdcRA7Ese4V0mQHl7lb1qg7KFEBXx5acS
-         G4wg==
+        Tue, 15 Oct 2019 14:42:47 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a15so17765334oic.0;
+        Tue, 15 Oct 2019 11:42:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YXiUOqo8ETclVClbFsr4YOWOeJ7XlxA5Qh2JOUOHtn0=;
-        b=QJJh15E+zPotrL1jB+wroxZZDfbSyh26c8/JwbQJtQFJ8ujPUWstcmPoMS+FgnCteN
-         NptirmuG9xI2LlVleQEc6looXysLeiUtoGUDwo9AKha9FNlGMhbUkj6yfD+2XsiaF90P
-         zr8G3bNVtyQS6ustFQGa/o0SdHP342RHmcY07ddswwxmPl6pxz1dXt5Rax78FcvU2vN6
-         lMq0RLATYJ7Oomfu6mLNox94lGGzbEfzrpJQdlqQwaUocb52/Avuv9nzWS4rq+45tTsK
-         M6BU/JbGbOs2Ne/D2X8L7GO49t67WP4DZc9FlY/u78aAyj5iKpv6SQLcL/3BVC4BwW7J
-         MOOA==
-X-Gm-Message-State: APjAAAW0/e4UNNdvPyPzS+tINDKinO3ohaJRoGR0XwL0dVz1IG+986kR
-        XRpOxt42mXT+OtICcR8L+YK91g==
-X-Google-Smtp-Source: APXvYqwar5I/V60pS57/UcDUw1cogFuq6+7hHVlNRpscniqz5EATufxt8kONpUilAAyTNCHiUcXZ9w==
-X-Received: by 2002:ac8:1c49:: with SMTP id j9mr41218038qtk.364.1571164924491;
-        Tue, 15 Oct 2019 11:42:04 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id o28sm9204198qkk.106.2019.10.15.11.42.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 11:42:03 -0700 (PDT)
-Message-ID: <1571164920.5937.45.camel@lca.pw>
-Subject: Re: [PATCH V6 0/2] mm/debug: Add tests validating architecture page
- table helpers
-From:   Qian Cai <cai@lca.pw>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 15 Oct 2019 14:42:00 -0400
-In-Reply-To: <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
-References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
-         <1571150502.5937.39.camel@lca.pw>
-         <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GAHrLiAFlazwlF31Anvci8d6QY+LhAJg86S630nwFns=;
+        b=hL/tauRjah5rVImtp8vS/9VeejEN8woHZBR1hPjhrKQ7TwzXztTrmmEVVKlknoNf/i
+         kvPVPD3gaHqG1flXSvriGWutrhu/ERuOVLohVtHNgrev3J3/kc34Tr6t2/c+sotV6ere
+         bEVpCowUoHcNZxd6mtgaVRMb1D/c3kpNt7P4CbtoG2qsF8XvJMR6Z77W45oQ/C8rO4ex
+         DeIUnrb7WxbiPSvUVOlHWn/QI0wmUka4S6i6ueKFzxRPD5RDWqinZ18ecct/NuWeWoUD
+         LxUKqMK6c6410By2aO4zQm4t2BGahgf6xgEPc90jWqlrSUcVXR66LxHiG158FV/3S6VP
+         eM4w==
+X-Gm-Message-State: APjAAAXcIsazgYCnw4QNhQ/Nfy6uYfvpCX746PmGfDnzFN2LJ2bvbitR
+        Hwi9bSQQgEhVzPpSBt4k4Q==
+X-Google-Smtp-Source: APXvYqwfHoEV7ttuKqHdAbUE09Jpc6mRk4X+QQqULjfnpK4q+69BAnmHmrAl97D3fg6fznbpbVrX0Q==
+X-Received: by 2002:aca:d19:: with SMTP id 25mr15150oin.64.1571164964933;
+        Tue, 15 Oct 2019 11:42:44 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l19sm6293550oie.22.2019.10.15.11.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 11:42:44 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 13:42:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: Re: [RFC PATCH 02/21] dt-bindings: PCI: Endpoint: Add DT bindings
+ for PCI EPF Device
+Message-ID: <20191015184243.GA10228@bogus>
+References: <20190926112933.8922-1-kishon@ti.com>
+ <20190926112933.8922-3-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926112933.8922-3-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-15 at 20:51 +0530, Anshuman Khandual wrote:
+On Thu, Sep 26, 2019 at 04:59:14PM +0530, Kishon Vijay Abraham I wrote:
+> Add device tree bindings for PCI endpoint function device. The
+> nodes for PCI endpoint function device should be attached to
+> PCI endpoint function bus.
 > 
-> On 10/15/2019 08:11 PM, Qian Cai wrote:
-> > The x86 will crash with linux-next during boot due to this series (v5) with the
-> > config below plus CONFIG_DEBUG_VM_PGTABLE=y. I am not sure if v6 would address
-> > it.
-> > 
-> > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
-> > 
-> > [   33.862600][    T1] page:ffffea0009000000 is uninitialized and poisoned
-> > [   33.862608][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff
-> > ffffff871140][    T1]  ? _raw_spin_unlock_irq+0x27/0x40
-> > [   33.871140][    T1]  ? rest_init+0x307/0x307
-> > [   33.871140][    T1]  kernel_init+0x11/0x139
-> > [   33.871140][    T1]  ? rest_init+0x307/0x307
-> > [   33.871140][    T1]  ret_from_fork+0x27/0x50
-> > [   33.871140][    T1] Modules linked in:
-> > [   33.871140][    T1] ---[ end trace e99d392b0f7befbd ]---
-> > [   33.871140][    T1] RIP: 0010:alloc_gigantic_page_order+0x3fe/0x490
-> 
-> Hmm, with defconfig (DEBUG_VM=y and DEBUG_VM_PGTABLE=y) it does not crash but
-> with the config above, it does. Just wondering if it is possible that these
-> pages might not been initialized yet because DEFERRED_STRUCT_PAGE_INIT=y ?
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../bindings/pci/endpoint/pci-epf.txt         | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
 
-Yes, this patch works fine.
-
-diff --git a/init/main.c b/init/main.c
-index 676d8020dd29..591be8f9e8e0 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1177,7 +1177,6 @@ static noinline void __init kernel_init_freeable(void)
-        workqueue_init();
- 
-        init_mm_internals();
--       debug_vm_pgtable();
- 
-        do_pre_smp_initcalls();
-        lockup_detector_init();
-@@ -1186,6 +1185,8 @@ static noinline void __init kernel_init_freeable(void)
-        sched_init_smp();
- 
-        page_alloc_init_late();
-+       debug_vm_pgtable();
-+
-        /* Initialize page ext after all struct pages are initialized. */
-        page_ext_init();
+This and the previous patch for the bus should be combined and please 
+convert to a schema.
 
 > 
-> [   13.898549][    T1] page:ffffea0005000000 is uninitialized and poisoned
-> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-> [   13.898549][    T1] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-> [   13.898549][    T1] ------------[ cut here ]------------
-> [   13.898549][    T1] kernel BUG at ./include/linux/mm.h:1107!
-> [   13.898549][    T1] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-> [   13.898549][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-next-20191015+ #
+> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+> new file mode 100644
+> index 000000000000..f006395fd526
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+> @@ -0,0 +1,28 @@
+> +PCI Endpoint Function Device
+> +
+> +This describes the generic bindings to be used when a device has to be
+> +exposed to the remote host over PCIe. The device could be an actual
+> +peripheral in the platform or a virtual device created by the software.
+> +
+> +epcs : phandle to the endpoint controller device
+> +epc-names : the names of the endpoint controller device corresponding
+> +	    to the EPCs present in the *epcs* phandle
+
+Other than the NTB case, I'd expect the parent device to be the 
+controller. Let's make NTB the exception...
+
+
+> +vendor-id: used to identify device manufacturer
+> +device-id: used to identify a particular device
+> +baseclass-code: used to classify the type of function the device performs
+> +subclass-code: used to identify more specifically the function of the device
+
+Are these codes standard?
+
+Powerpc has "class-code" already...
+
+> +subsys-vendor-id: used to identify vendor of the add-in card or subsystem
+
+Powerpc has "subsystem-vendor-id" already...
+
+> +subsys-id: used to specify an id that is specific to a vendor
+> +
+> +Example:
+> +Following is an example of NTB device exposed to the remote host.
+> +
+> +ntb {
+
+This is going to need some sort of addressing (which implies 'reg')? If 
+not, I don't understand why you have 2 levels.
+
+> +	compatible = "pci-epf-ntb";
+> +	epcs = <&pcie0_ep>, <&pcie1_ep>;
+> +	epc-names = "primary", "secondary";
+> +	vendor-id = /bits/ 16 <0x104c>;
+> +	device-id = /bits/ 16 <0xb00d>;
+
+These have a long history in OF and should be 32-bits (yes, we've let 
+some cases of 16-bit creep in).
+
+> +	num-mws = <4>;
+
+Doesn't this apply to more than NTB?
+
+Can't you just get the length of 'mws-size'?
+
+> +	mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
+
+Need to support 64-bit sizes?
+
+> +};
+> -- 
+> 2.17.1
+> 
