@@ -2,166 +2,133 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BCFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70684C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8FF217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F28221835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfJOFfH (ORCPT
+        id S1726860AbfJOFfB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:35:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50347 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfJOFfC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:35:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Oct 2019 22:35:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,298,1566889200"; 
-   d="scan'208";a="198507573"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2019 22:34:58 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 4/5] perf report: Support --percent-limit for total_cycles
-Date:   Tue, 15 Oct 2019 13:33:49 +0800
-Message-Id: <20191015053350.13909-5-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015053350.13909-1-yao.jin@linux.intel.com>
-References: <20191015053350.13909-1-yao.jin@linux.intel.com>
+        Tue, 15 Oct 2019 01:35:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42043 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbfJOFcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 01:32:02 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iKFR5-0000G9-Nu; Tue, 15 Oct 2019 07:31:55 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3665C1C04DF;
+        Tue, 15 Oct 2019 07:31:44 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 05:31:44 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf evlist: Introduce append_tp_filter() method
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Luis =?utf-8?q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-h9rot08qmxlnfmte0holt68x@git.kernel.org>
+References: <tip-h9rot08qmxlnfmte0holt68x@git.kernel.org>
+MIME-Version: 1.0
+Message-ID: <157111750408.12254.10823049937651993535.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have already supported the 'total_cycles' option in previous
-patch. It's also useful to show entries only above a threshold
-percent.
+The following commit has been merged into the perf/core branch of tip:
 
-This patch enables '--percent-limit' for not showing entries
-under that percent.
+Commit-ID:     53c92f73389d049d72b2e1d1cbc81c007241d422
+Gitweb:        https://git.kernel.org/tip/53c92f73389d049d72b2e1d1cbc81c007241d422
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 07 Oct 2019 16:52:17 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Wed, 09 Oct 2019 11:23:52 -03:00
 
-For example,
+perf evlist: Introduce append_tp_filter() method
 
- perf report -s total_cycles --stdio --percent-limit 1
+Will be used by 'perf trace' to support 'perf trace --filter', we need
+to append to any pre-existing filter.
 
- # To display the perf.data header info, please use --header/--header-only options.
- #
- #
- # Total Lost Samples: 0
- #
- # Samples: 2M of event 'cycles'
- # Event count (approx.): 2753248
- #
- # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
- # ...............  ..............  ...........  ..........  .................................................................  ....................
- #
-            26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
-            15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
-             5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
-             4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
-             4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
-             3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
-             3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
-             3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
-             2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
-             2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
-             2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
-             2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-             2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-             2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
-             1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
-             1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
-             1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+When parse_filter() gets invoked to process --filter, it'll set the
+filter to that specified on the command line, later on, when we filter
+out 'perf trace' own pid to avoid an event feedback loop, we need to
+preserve the command line filter put in place by parse_filter().
 
-It only shows the entries which 'Sampled Cycles%' > 1%.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-h9rot08qmxlnfmte0holt68x@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c |  2 +-
- tools/perf/ui/stdio/hist.c  |  7 ++++++-
- tools/perf/util/block.c     | 10 ++++++++++
- tools/perf/util/block.h     |  2 ++
- 4 files changed, 19 insertions(+), 2 deletions(-)
+ tools/perf/util/evlist.c | 20 ++++++++++++++++++++
+ tools/perf/util/evlist.h |  2 ++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index f04a7b225a81..5dbde541b797 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -874,7 +874,7 @@ static int hists__fprintf_all_blocks(struct hists *hists, struct report *rep)
- 
- 	get_block_hists(hists, bh, rep);
- 	symbol_conf.report_individual_block = true;
--	hists__fprintf(&bh->block_hists, true, 0, 0, 0,
-+	hists__fprintf(&bh->block_hists, true, 0, 0, rep->min_percent,
- 		       stdout, true);
- 	hists__delete_entries(&bh->block_hists);
- 	return 0;
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 655ef7708cd0..d6991fc1d54e 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -15,6 +15,7 @@
- #include "../../util/srcline.h"
- #include "../../util/string2.h"
- #include "../../util/thread.h"
-+#include "../../util/block.h"
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
- 
-@@ -856,7 +857,11 @@ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
- 		if (h->filtered)
- 			continue;
- 
--		percent = hist_entry__get_percent_limit(h);
-+		if (symbol_conf.report_individual_block)
-+			percent = block_total_cycles_percent(h);
-+		else
-+			percent = hist_entry__get_percent_limit(h);
-+
- 		if (percent < min_pcnt)
- 			continue;
- 
-diff --git a/tools/perf/util/block.c b/tools/perf/util/block.c
-index e5e6f941f040..791a16da2102 100644
---- a/tools/perf/util/block.c
-+++ b/tools/perf/util/block.c
-@@ -61,3 +61,13 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 
- 	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c1b4608..1650d24 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1068,6 +1068,26 @@ int perf_evlist__set_tp_filter(struct evlist *evlist, const char *filter)
+ 	return err;
  }
-+
-+float block_total_cycles_percent(struct hist_entry *he)
-+{
-+	struct block_info *bi = he->block_info;
-+
-+	if (bi->total_cycles)
-+		return bi->cycles * 100.0 / bi->total_cycles;
-+
-+	return 0.0;
-+}
-diff --git a/tools/perf/util/block.h b/tools/perf/util/block.h
-index bdd21354d26e..4c2101b1d114 100644
---- a/tools/perf/util/block.h
-+++ b/tools/perf/util/block.h
-@@ -35,4 +35,6 @@ static inline void __block_info__zput(struct block_info **bi)
- int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 			struct hist_entry *left, struct hist_entry *right);
  
-+float block_total_cycles_percent(struct hist_entry *he);
++int perf_evlist__append_tp_filter(struct evlist *evlist, const char *filter)
++{
++	struct evsel *evsel;
++	int err = 0;
 +
- #endif /* __PERF_BLOCK_H */
--- 
-2.17.1
-
++	if (filter == NULL)
++		return -1;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
++			continue;
++
++		err = perf_evsel__append_tp_filter(evsel, filter);
++		if (err)
++			break;
++	}
++
++	return err;
++}
++
+ static char *asprintf__tp_filter_pids(size_t npids, pid_t *pids)
+ {
+ 	char *filter;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 00eab94..c58fd19 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -140,6 +140,8 @@ int perf_evlist__set_tp_filter(struct evlist *evlist, const char *filter);
+ int perf_evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid);
+ int perf_evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids);
+ 
++int perf_evlist__append_tp_filter(struct evlist *evlist, const char *filter);
++
+ struct evsel *
+ perf_evlist__find_tracepoint_by_id(struct evlist *evlist, int id);
+ 
