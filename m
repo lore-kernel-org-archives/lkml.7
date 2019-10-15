@@ -2,135 +2,213 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0ADC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E53DECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A05D20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="tOogVHkf"
+	by mail.kernel.org (Postfix) with ESMTP id 3C37E21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbfJOKVP (ORCPT
+        id S1730367AbfJOKWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:21:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40479 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727810AbfJOKVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:21:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so12170968pfb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 03:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZjSUyyFcE4OzpFsuD5QbPfEEJTeG0kXm3yEnzXaAd7g=;
-        b=tOogVHkfeRdcF8NN8t2A3kIiU62I+r1F4VR1UkcTkugAUka3Cs04268T/43pgZ7D7S
-         PQepFz1DsCHvu4q+AqW+6APMO13npmM5QAaMHIFdmpb4tZlNFWSJjHywwIQe7dtep+g9
-         jZGzS6u3jpp8IxG4C2RQioL/fxKA7UqCQPrwiO87oXtZJe3r3N/3YiHjB7/ULauaBqI+
-         s6oGLzElmnWljNA3WE67kbKWb+lyEtxOSN3YQCq/iLbT74sNcY5lMOajRVOEJ/wbngAc
-         nFRLY8uq/99/8D9VZN2e4jgsJfro17aeGSaPTIJAgqLLLzhJgPNqZTsMasBz5hNiYlMI
-         /IJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZjSUyyFcE4OzpFsuD5QbPfEEJTeG0kXm3yEnzXaAd7g=;
-        b=tn6VJ/aMAslL6g7zUnR+Oka1y/M85hW57XRH43Kc64gNX1/13AU3D1Efqh02yBpg2v
-         do1iuQpKTJGYd+PILBZ7G0DHxa3d6fRpoFiXPXFO6QqwVu+yesf+F+6TZrUSyd6ziYEC
-         OPdc5+gIgXAeUWvJh0ZME4IVIsk7K4mAEWR3X+NDrpgvQsUsvBmY7dBLw1hCZq2RVQkj
-         XO+5rkYdQdqP9POu8qQrChZ5qB1GaJu4SD2lb0wbscBBat3UqtJNQ1QG+54vTzUOjbKy
-         8aYfXoDZQItMn015f42fOrYpRGC3qQfVV1CQ9BN+0A/R8LAabVnGnpUoqHpGPdverAuF
-         0q0g==
-X-Gm-Message-State: APjAAAUEjttaTzC+q//7B0wBpDnBvuK9xmhIrDUQS1wH4tnzineRMDwM
-        Tjwlgl48TgCln/3IMT5fQaw50g==
-X-Google-Smtp-Source: APXvYqwSAxzEMOHC8QTx9yFJObxsJCQpENWGTP5uv8UvWH5ruPNpBvxi4RQ7TOGrHCws2VAlWYHJNA==
-X-Received: by 2002:a63:1511:: with SMTP id v17mr37218393pgl.34.1571134874188;
-        Tue, 15 Oct 2019 03:21:14 -0700 (PDT)
-Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
-        by smtp.gmail.com with ESMTPSA id z21sm19704595pfa.119.2019.10.15.03.21.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 15 Oct 2019 03:21:13 -0700 (PDT)
-From:   Chris Chiu <chiu@endlessm.com>
-To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-Subject: [PATCH] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
-Date:   Tue, 15 Oct 2019 18:21:09 +0800
-Message-Id: <20191015102109.4701-1-chiu@endlessm.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Tue, 15 Oct 2019 06:22:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54028 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727810AbfJOKWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:22:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5BE50B2D2;
+        Tue, 15 Oct 2019 10:22:11 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5A2961E485F; Tue, 15 Oct 2019 12:22:10 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 12:22:10 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     mm <linux-mm@kvack.org>, fsdev <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [RFC] writeback: add elastic bdi in cgwb bdp
+Message-ID: <20191015102210.GA29554@quack2.suse.cz>
+References: <20191012132740.12968-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191012132740.12968-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RTL8723BU has problems connecting to AP after each warm reboot.
-Sometimes it returns no scan result, and in most cases, it fails
-the authentication for unknown reason. However, it works totally
-fine after cold reboot.
+Hello,
 
-Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-for cold reboot and warm reboot, the registers imply that the MAC
-is already powered and thus some procedures are skipped during
-driver initialization. Double checked the vendor driver, it reads
-the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-during initialization based on them. This commit only tells the
-RTL8723BU to do full initialization without checking MAC status.
+On Sat 12-10-19 21:27:40, Hillf Danton wrote:
+> The behaviors of the elastic bdi (ebdi) observed in the current cgwb
+> bandwidth measurement include
+> 
+> 1, like spinning disks on market ebdi can do ~128MB/s IOs in consective
+> minutes in few scenarios, or higher like SSD, or lower like USB key.
+> 
+> 2, with ebdi a bdi_writeback, wb-A, is able to do 80MB/s writeouts in the
+> current time window of 200ms, while it was 16M/s in the previous one.
+> 
+> 3, it will be either 100MB/s in the next time window if wb-B joins wb-A
+> writing pages out or 18MB/s if wb-C also decides to chime in.
+> 
+> With the help of bandwidth gauged above, what is left in balancing dirty
+> pages, bdp, is try to make wb-A's laundry speed catch up dirty speed in
+> every 200ms interval without knowing what wb-B is doing.
+> 
+> No heuristic is added in this work because ebdi does bdp without it.
 
-https://phabricator.endlessm.com/T28000
+Thanks for the patch but honestly, I have hard time understanding what is
+the purpose of this patch from the changelog. Some kind of writeback
+throttling? And why is this needed? Also some highlevel description of what
+your solution is would be good...
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
- 3 files changed, 5 insertions(+)
-
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index 22e95b11bfbb..6598c8d786ea 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -1425,6 +1425,7 @@ struct rtl8xxxu_fileops {
- 	u8 has_s0s1:1;
- 	u8 has_tx_report:1;
- 	u8 gen2_thermal_meter:1;
-+	u8 needs_full_init:1;
- 	u32 adda_1t_init;
- 	u32 adda_1t_path_on;
- 	u32 adda_2t_path_on_a;
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-index 9ba661b3d767..a1c3787abe2e 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-@@ -1668,6 +1668,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
- 	.has_s0s1 = 1,
- 	.has_tx_report = 1,
- 	.gen2_thermal_meter = 1,
-+	.needs_full_init = 1,
- 	.adda_1t_init = 0x01c00014,
- 	.adda_1t_path_on = 0x01c00014,
- 	.adda_2t_path_on_a = 0x01c00014,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index e4c1b08c8070..8420cb269b8d 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -3900,6 +3900,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
- 	else
- 		macpower = true;
+								Honza
  
-+	if (fops->needs_full_init)
-+		macpower = false;
-+
- 	ret = fops->power_on(priv);
- 	if (ret < 0) {
- 		dev_warn(dev, "%s: Failed power on\n", __func__);
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+> 
+> --- a/include/linux/backing-dev-defs.h
+> +++ b/include/linux/backing-dev-defs.h
+> @@ -157,6 +157,9 @@ struct bdi_writeback {
+>  	struct list_head memcg_node;	/* anchored at memcg->cgwb_list */
+>  	struct list_head blkcg_node;	/* anchored at blkcg->cgwb_list */
+>  
+> +#ifdef CONFIG_CGWB_BDP_WITH_EBDI
+> +	struct wait_queue_head bdp_waitq;
+> +#endif
+>  	union {
+>  		struct work_struct release_work;
+>  		struct rcu_head rcu;
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+> @@ -324,6 +324,10 @@ static int wb_init(struct bdi_writeback
+>  			goto out_destroy_stat;
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
+> +	    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
+> +		init_waitqueue_head(&wb->bdp_waitq);
+> +
+>  	return 0;
+>  
+>  out_destroy_stat:
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -1551,6 +1551,45 @@ static inline void wb_dirty_limits(struc
+>  	}
+>  }
+>  
+> +#if defined(CONFIG_CGROUP_WRITEBACK) && defined(CONFIG_CGWB_BDP_WITH_EBDI)
+> +static bool cgwb_bdp_should_throttle(struct bdi_writeback *wb)
+> +{
+> +	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
+> +
+> +	if (fatal_signal_pending(current))
+> +		return false;
+> +
+> +	gdtc.avail = global_dirtyable_memory();
+> +
+> +	domain_dirty_limits(&gdtc);
+> +
+> +	gdtc.dirty = global_node_page_state(NR_FILE_DIRTY) +
+> +			global_node_page_state(NR_UNSTABLE_NFS) +
+> +			global_node_page_state(NR_WRITEBACK);
+> +
+> +	if (gdtc.dirty < gdtc.bg_thresh)
+> +		return false;
+> +
+> +	if (!writeback_in_progress(wb))
+> +		wb_start_background_writeback(wb);
+> +
+> +	/*
+> +	 * throttle if laundry speed remarkably falls behind dirty speed
+> +	 * in the current time window of 200ms
+> +	 */
+> +	return gdtc.dirty > gdtc.thresh &&
+> +		wb_stat(wb, WB_DIRTIED) >
+> +		wb_stat(wb, WB_WRITTEN) +
+> +		wb_stat_error();
+> +}
+> +
+> +static inline void cgwb_bdp(struct bdi_writeback *wb)
+> +{
+> +	wait_event_interruptible_timeout(wb->bdp_waitq,
+> +			!cgwb_bdp_should_throttle(wb), HZ);
+> +}
+> +#endif
+> +
+>  /*
+>   * balance_dirty_pages() must be called by processes which are generating dirty
+>   * data.  It looks at the number of dirty pages in the machine and will force
+> @@ -1910,7 +1949,11 @@ void balance_dirty_pages_ratelimited(str
+>  	preempt_enable();
+>  
+>  	if (unlikely(current->nr_dirtied >= ratelimit))
+> -		balance_dirty_pages(wb, current->nr_dirtied);
+> +		if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
+> +		    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
+> +			cgwb_bdp(wb);
+> +		else
+> +			balance_dirty_pages(wb, current->nr_dirtied);
+>  
+>  	wb_put(wb);
+>  }
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -632,6 +632,11 @@ void wbc_detach_inode(struct writeback_c
+>  	if (!wb)
+>  		return;
+>  
+> +	if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
+> +	    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
+> +		if (waitqueue_active(&wb->bdp_waitq))
+> +			wake_up_all(&wb->bdp_waitq);
+> +
+>  	history = inode->i_wb_frn_history;
+>  	avg_time = inode->i_wb_frn_avg_time;
+>  
+> @@ -811,6 +816,9 @@ static long wb_split_bdi_pages(struct bd
+>  	if (nr_pages == LONG_MAX)
+>  		return LONG_MAX;
+>  
+> +	if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
+> +	    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
+> +		return nr_pages;
+>  	/*
+>  	 * This may be called on clean wb's and proportional distribution
+>  	 * may not make sense, just use the original @nr_pages in those
+> @@ -1599,6 +1607,10 @@ static long writeback_chunk_size(struct
+>  	if (work->sync_mode == WB_SYNC_ALL || work->tagged_writepages)
+>  		pages = LONG_MAX;
+>  	else {
+> +		if (IS_ENABLED(CONFIG_CGROUP_WRITEBACK) &&
+> +		    IS_ENABLED(CONFIG_CGWB_BDP_WITH_EBDI))
+> +			return work->nr_pages;
+> +
+>  		pages = min(wb->avg_write_bandwidth / 2,
+>  			    global_wb_domain.dirty_limit / DIRTY_SCOPE);
+>  		pages = min(pages, work->nr_pages);
+> --
+> 
 -- 
-2.23.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
