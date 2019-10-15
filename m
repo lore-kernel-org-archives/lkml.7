@@ -2,106 +2,71 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9A0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542B1ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E01218DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkgWOtem"
+	by mail.kernel.org (Postfix) with ESMTP id 336A8217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 10:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbfJOKZh (ORCPT
+        id S1730525AbfJOKZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 06:25:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46869 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfJOKZg (ORCPT
+        Tue, 15 Oct 2019 06:25:38 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:56402 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728459AbfJOKZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:25:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so23104170wrv.13;
-        Tue, 15 Oct 2019 03:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Hs18HuLQlgBABYesmo7IPm5KuxOAJYfK6ga//A893aY=;
-        b=OkgWOtemW9nA/ZipwE4kOKLVI4eGEGdocKmL4HLlgOULjPLJIUK5OJfZyJWNEl5c8v
-         qmSd+yrQm2a9vQNujY32vp3w4ZCWdXdGBHJpI+o0IXJjJS8bVtIrM9ehDwfB6ZD6lbTX
-         sHKgiMQfS+Q6yB5VOvrGmtc54YveKPHy6qee3HB43Mu3Tsiq+Jn2dmhHDDLwbFJMojhT
-         XZMgEFxG4AiJIfb0VwJ5+z9fuf0NbjAea2piH63VJm38SZpSZrYiBVHrmEkv54PV2pen
-         yrB+OLcLMIE8UiVPoubhjXW0vSSRogWRjPLsyi8GYWHDXHZMazQAoUv5h8tyE5VFjv+i
-         +rjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hs18HuLQlgBABYesmo7IPm5KuxOAJYfK6ga//A893aY=;
-        b=MDrs9uEPp0kiXydnIjACKitKGUEp7RRcIAaY2lv5+77HBg/mjjWIp0vKxGZGm9r9nd
-         W7UC/6h6NRW+D+sI1l7gtSaCkvIlnrHjy3cXVOQIhL1YC+9THWj9ZaCHYpuRJWCxCIfG
-         lVyPzKCkzjsgv7BCUN1kXksfrgKTYL/+X3LWsxPScJgipT2BC4Nmhlz4sPGdp6gMQqdl
-         f6hhXtCx5Y5ST3txoa+6FZS9a0tr8vpPZuyMsGg7BAcBJGUigWfcIK/kBYW82v3uVE5x
-         irKD1efc2IBEOQ52aSM37MkUQuo6qvo8Tq7TCCKggPRq2yBnQJ8gXL+C7029CLqs0oHr
-         Q1mg==
-X-Gm-Message-State: APjAAAWlLpvpFMmALEMaJ7UGdgjh0jZ4puYQtunv2Ti1sDljM0vgPyQr
-        XATFaSj2MzLF/zZ6h3brOnE=
-X-Google-Smtp-Source: APXvYqxL0dyh9xwdUkfgUwlxcAfzfOeWzotdyra9eCE+RCoTeujCdgXqU2QpDj6SRa9lEBtldGJdBQ==
-X-Received: by 2002:a5d:518f:: with SMTP id k15mr28782850wrv.328.1571135134302;
-        Tue, 15 Oct 2019 03:25:34 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:8d40:cc61:bfff:65c2])
-        by smtp.gmail.com with ESMTPSA id o18sm1779059wrm.11.2019.10.15.03.25.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 03:25:33 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:25:27 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        x86@kernel.org, "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] x86/hyperv: Set pv_info.name to "Hyper-V"
-Message-ID: <20191015102527.GA12412@andrea.guest.corp.microsoft.com>
-References: <20191015092937.11244-1-parri.andrea@gmail.com>
- <CAHd7Wqxn3sQQWkzOBrJ1KYm8eUpwa_9dcSYRDfPGAMWm=qvbag@mail.gmail.com>
+        Tue, 15 Oct 2019 06:25:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tf7BXHR_1571135103;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Tf7BXHR_1571135103)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 15 Oct 2019 18:25:35 +0800
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: [PATCH 0/7] rcu: cleanups
+Date:   Tue, 15 Oct 2019 10:23:55 +0000
+Message-Id: <20191015102402.1978-1-laijs@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHd7Wqxn3sQQWkzOBrJ1KYm8eUpwa_9dcSYRDfPGAMWm=qvbag@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > @@ -154,6 +154,8 @@ static uint32_t  __init ms_hyperv_platform(void)
-> 
-> This function is for platform detection only.
-> 
-> >         if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
-> >                 return 0;
-> >
-> > +       pv_info.name = "Hyper-V";
-> > +
-> 
-> At this point we're not sure if Linux is really running on Hyper-V yet.
-> 
-> Setting pv_info.name should be moved to the init_platform hook, i.e.
-> ms_hyperv_init_platform.
+All are minimal independent cleanups, expect that patch 3 depends
+on patch 2.
 
-Thank you for the review, Wei.  I'll move this to the init_platform hook
-and re-submit shortly.
+Lai Jiangshan (7):
+  rcu: fix incorrect conditional compilation
+  rcu: fix tracepoint string when RCU CPU kthread runs
+  rcu: trace_rcu_utilization() paired
+  rcu: remove the declaration of call_rcu() in tree.h
+  rcu: move gp_state_names[] and gp_state_getname() to tree_stall.h
+  rcu: rename some CONFIG_PREEMPTION to CONFIG_PREEMPT_RCU
+  rcu: splite tasks_rcu to tasks.c
 
-Thanks,
-  Andrea
+ kernel/rcu/Makefile      |   1 +
+ kernel/rcu/rcu.h         |   4 +-
+ kernel/rcu/tasks.c       | 395 +++++++++++++++++++++++++++++++++++++++
+ kernel/rcu/tree.c        |  19 +-
+ kernel/rcu/tree.h        |  15 +-
+ kernel/rcu/tree_plugin.h |   1 +
+ kernel/rcu/tree_stall.h  |  28 ++-
+ kernel/rcu/update.c      | 365 ------------------------------------
+ 8 files changed, 431 insertions(+), 397 deletions(-)
+ create mode 100644 kernel/rcu/tasks.c
+
+-- 
+2.20.1
+
