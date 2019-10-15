@@ -2,130 +2,99 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C4FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514C5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3D72064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YbFbFpEk"
+	by mail.kernel.org (Postfix) with ESMTP id 2EA612064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfJOIaq (ORCPT
+        id S1726539AbfJOIcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:30:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42826 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfJOIap (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:30:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nde+rVxrbKGORynbc7srtKQrRn/wfiVC6y4tD1FT7B0=; b=YbFbFpEk4DpWY6RLhaLCvmJiX
-        Aux8/sNbH48tsLFO5JH6caRTG0co+m0pmYYidLAW8/Lla9Ygzk0kpPQr9UvMWWAxylSf9bNlQB9BW
-        7w7HkmmJ6GBaPp0Om+i17i7ed9q7icxuLV9zpcLLmRNv/5VspmqDE7gMu22tjcHUnmeDpU8VNDHjY
-        KO+y7VmPxVO1I1MlZjm9p4Idv0lnNtxhNH/mOmvzD45K44F/RuNRVgko6j6rkccPhgot44PNlvIwB
-        jocNU+1j2OpQHEWDy5tT9leSUdXiNvXaQpdagTRQ9Ssnk3I5RvxVJ8xgt0vpvqoInIiFI4AmF1BOC
-        Ked5/SBpw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKIDe-0005F7-3A; Tue, 15 Oct 2019 08:30:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A4E8A303807;
-        Tue, 15 Oct 2019 10:29:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F3CD0284DE58D; Tue, 15 Oct 2019 10:30:08 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 10:30:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, James Morris <jmorris@namei.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v2] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191015083008.GC2311@hirez.programming.kicks-ass.net>
-References: <20191014170308.70668-1-joel@joelfernandes.org>
+        Tue, 15 Oct 2019 04:32:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40844 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbfJOIcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:32:15 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0F1EE5945B
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 08:32:15 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id f3so9731597wrr.23
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 01:32:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P5PIeo7F8BONUmbx5z3F8WKmU2e7zzUSE3SYwbN/HB8=;
+        b=d3AOzIBD451fs2SQ8hBugBOFoy2DlN9bbGWYwcEz6+Lk2CVT6i+Bu7bad9+aIyHa7A
+         2PZXw5XibI4oGXhf455w2VxNgyZA2aa5NAlpl0wgT0oh7MveNFG/JEZ+8DnlrgueJtKM
+         WZ985S4uAWsx0GnLz7JvHrNvnFc+Ne9jsYHtMp8/A5jiOsDFVx0+4QCMbV0q8o2F7TPd
+         H2tEJOxu/rTN7yxscPHBNqVOkBQaETXHf6E6PJDyU4IfDLsTOj6Q3JKMhDYX8OSHEWMz
+         qaq6uQx5ttN3RRZQXJS79F4zUwVAh4lDNk+ub9/xugpAoTnHE9y2Q48R6CmpxwEu7KHX
+         kJ+g==
+X-Gm-Message-State: APjAAAUBy5AMEpQ2qHjr/vloWo6nVlaXg34KkXm2qnvPpT/HJBF7tz2U
+        KKnY1RCOvyBtNkIoOBEB9h4xF1eHSCtYU8kX1z6KW1eQSdJ3ySiFOdpjNkzs265Zns/+LsyLmE1
+        k/CUkQXpIQzfhf4Tt9nqZ/X5P
+X-Received: by 2002:adf:fd0a:: with SMTP id e10mr27570509wrr.55.1571128333665;
+        Tue, 15 Oct 2019 01:32:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxrwQzt+PWn32MNk4JHIoXCkTdb8YUH7EkIrAtHisFtFyFyrwBRV58d5gOa3puF11f2x3ROYw==
+X-Received: by 2002:adf:fd0a:: with SMTP id e10mr27570487wrr.55.1571128333388;
+        Tue, 15 Oct 2019 01:32:13 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d001:591b:c73b:6c41? ([2001:b07:6468:f312:d001:591b:c73b:6c41])
+        by smtp.gmail.com with ESMTPSA id a4sm17420727wmm.10.2019.10.15.01.32.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 01:32:12 -0700 (PDT)
+Subject: Re: [PATCH 01/14] KVM: monolithic: x86: remove kvm.ko
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-2-aarcange@redhat.com>
+ <20191015013144.GC24895@linux.intel.com>
+ <20191015031828.GE24895@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <259674b0-85e3-5266-4eaa-6314e8156f77@redhat.com>
+Date:   Tue, 15 Oct 2019 10:32:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014170308.70668-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015031828.GE24895@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 01:03:08PM -0400, Joel Fernandes (Google) wrote:
-> In current mainline, the degree of access to perf_event_open(2) system
-> call depends on the perf_event_paranoid sysctl.  This has a number of
-> limitations:
-> 
-> 1. The sysctl is only a single value. Many types of accesses are controlled
->    based on the single value thus making the control very limited and
->    coarse grained.
-> 2. The sysctl is global, so if the sysctl is changed, then that means
->    all processes get access to perf_event_open(2) opening the door to
->    security issues.
-> 
-> This patch adds LSM and SELinux access checking which will be used in
-> Android to access perf_event_open(2) for the purposes of attaching BPF
-> programs to tracepoints, perf profiling and other operations from
-> userspace. These operations are intended for production systems.
-> 
-> 5 new LSM hooks are added:
-> 1. perf_event_open: This controls access during the perf_event_open(2)
->    syscall itself. The hook is called from all the places that the
->    perf_event_paranoid sysctl is checked to keep it consistent with the
->    systctl. The hook gets passed a 'type' argument which controls CPU,
->    kernel and tracepoint accesses (in this context, CPU, kernel and
->    tracepoint have the same semantics as the perf_event_paranoid sysctl).
->    Additionally, I added an 'open' type which is similar to
->    perf_event_paranoid sysctl == 3 patch carried in Android and several other
->    distros but was rejected in mainline [1] in 2016.
-> 
-> 2. perf_event_alloc: This allocates a new security object for the event
->    which stores the current SID within the event. It will be useful when
->    the perf event's FD is passed through IPC to another process which may
->    try to read the FD. Appropriate security checks will limit access.
-> 
-> 3. perf_event_free: Called when the event is closed.
-> 
-> 4. perf_event_read: Called from the read(2) and mmap(2) syscalls for the event.
-> 
-> 5. perf_event_write: Called from the ioctl(2) syscalls for the event.
-> 
-> [1] https://lwn.net/Articles/696240/
-> 
-> Since Peter had suggest LSM hooks in 2016 [1], I am adding his
-> Suggested-by tag below.
+On 15/10/19 05:18, Sean Christopherson wrote:
+>> The KVM config option should be changed to a bool and its help text
+>> updated.  Maybe something similar to the help for VIRTUALIZATION to make
+>> it clear that enabling KVM on its own does nothing.
+> Making KVM a bool doesn't work well, keeping it a tristate and keying off
+> KVM=y to force Intel or AMD (as done in the next patch) looks like the
+> cleanest implementation.
 
-Thanks, I've queued the patch!
+Indeed, keeping the KVM option as tristate helps showing the right
+suboptions, similar to what Andrea did in patch 2.  However, this patch
+already breaks the CONFIG_KVM_INTEL=y && CONFIG_KVM_AMD=y case I think,
+so it should be squashed with "KVM: monolithic: x86: disable linking vmx
+and svm at the same time into the kernel".
 
-> To use this patch, we set the perf_event_paranoid sysctl to -1 and then
-> apply selinux checking as appropriate (default deny everything, and then
-> add policy rules to give access to domains that need it). In the future
-> we can remove the perf_event_paranoid sysctl altogether.
+> The help text should still be updated though.
 
-This I'm not sure about; the sysctl is only redundant when you actually
-use a security thingy, not everyone is. I always find them things to be
-mightily unfriendly.
+The patch doesn't change the fact that enabling KVM on its own does
+nothing, so the help text can be updated independently (patch welcome :)).
+
+Thanks,
+
+Paolo
 
