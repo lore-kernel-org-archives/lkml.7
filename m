@@ -2,224 +2,189 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CEEC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA49C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F0D20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A19220854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="g7s4CzNH";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="yAYQpXW4"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vtdo8zeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfJOTPe (ORCPT
+        id S1730782AbfJOTPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:15:34 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38936 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726568AbfJOTPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:15:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 723258EE0F8;
-        Tue, 15 Oct 2019 12:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571166932;
-        bh=ekKBMp3tpyAWg5rfsviy9FuTKahW6ZlqxYecz+Svcjw=;
-        h=Subject:From:To:Cc:Date:From;
-        b=g7s4CzNHiEzzbwf+fCfcKukaO1siEgKZeu+JrSuGCPGDzJSsu3sXf1oR5tPAMUwW2
-         i/EBzH12Io7/FY+rH189xF3clSkMjupGGEnk/96MlEv8ihKVjWJIV5FXr8rN5MLiO1
-         88YnBEP236MQ9JjuPvJmSsG94zDwJkOerBapGhZE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Td6vMj5bSHRi; Tue, 15 Oct 2019 12:15:30 -0700 (PDT)
-Received: from [9.232.197.57] (unknown [129.33.253.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id BD2CE8EE0CF;
-        Tue, 15 Oct 2019 12:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571166929;
-        bh=ekKBMp3tpyAWg5rfsviy9FuTKahW6ZlqxYecz+Svcjw=;
-        h=Subject:From:To:Cc:Date:From;
-        b=yAYQpXW4oU11SYwoJ/2RxuhGghBh3pYNphmY7KlTKG4yGA3xnYIOBNSGmynWxkT0O
-         RKtE02pl40bW4v/aRrmdWeI1aAyneTAoGA0DJI23uYvrfscXRdMocQBxnuYagS81ya
-         Zgos+Bh7ywl/KTd02HKdFFtcP0okqTkGWviCvqDY=
-Message-ID: <1571166922.15362.19.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.4-rc3
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 15 Oct 2019 15:15:22 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 15 Oct 2019 15:15:47 -0400
+Received: from mail-eopbgr820055.outbound.protection.outlook.com ([40.107.82.55]:29120
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726399AbfJOTPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 15:15:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KH4YaEMpmaoA+Phz51tHS6hO1BJJvORX5YtyRelPgOOa7uV7lpGgfYIjXdrgmIzLAaskzl4ScS8pcIrUwQUhS+7CkCmuSaOO9Hj3w9aUWW/SNFvHYWxua33NVJrk9oj6B8d4Xfa0oYdHuTjU0l1rkGR1Pzxu+/3a8eMVGSk8mG5Ez8QsU61nbws8QTk46hT9h/v6g4Dq9W7JT1rRaPPyXwTURrVisgzpDoJXIfZtl8d9ZjYB7oIcnmCotv6BeXjeE1GfnplVdPRXFepBXhbvdvCJ780cdv1bFMx4zaQttGfK/9kAnGkqIJjx7U6xsWy8P+TRtjgTM/k+DPyRwNBxMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=seI6TbLbW8Se7sKaud8olhdkBZJ6KoGqXBHfj9FmowI=;
+ b=FBgi5pITFTIG3SDBxVEdMrdTwfy6+QxLBnqKLeHb/sUvtR7veK/LYmDgHUAbCO0gB8lHQ9Wk6nIUXsvfnbadAjZRP8H+G3o0P1Hiqn3fqKq0sEYA4k93d41iDbegHqiALZdyhCoXJEGc2ETFA3Dq9zbxt9cUcsKknXGYU/lAWZmQL/U/58YtbnxPALQBCfxWvcUBD03LCfGWul31x8U45ugbGzeNQhcL5x8f6w5wG9SYA2wUVXVgIgFPnsTHMe7avSnsFL0FvGN7JeyorR8BZNGL+4y+6c9Y94KSiF+w61/c8/0g8rilWDVrecHmRmGlNHiwkg/mrOVSJLKF5WzzSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=seI6TbLbW8Se7sKaud8olhdkBZJ6KoGqXBHfj9FmowI=;
+ b=vtdo8zeLAGcGDWPEftfy1EPRdgSQgoZQxwie18anpcmRENQn1JvhG4izkWc7+MU/af2B+oex3AfrWjXopm2FocG0LpQ86kMAw3WPC5gNZgggvyaF+Vn3YRu0sNwJ7SY2N+cKggbiAb5L6KOb6gryAnbL8f9kMDPQ8mTaVDIBdl0=
+Received: from DM6PR12MB3370.namprd12.prod.outlook.com (20.178.198.25) by
+ DM6PR12MB3497.namprd12.prod.outlook.com (20.178.199.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Tue, 15 Oct 2019 19:15:05 +0000
+Received: from DM6PR12MB3370.namprd12.prod.outlook.com
+ ([fe80::88a6:9681:d4cd:51d2]) by DM6PR12MB3370.namprd12.prod.outlook.com
+ ([fe80::88a6:9681:d4cd:51d2%6]) with mapi id 15.20.2347.023; Tue, 15 Oct 2019
+ 19:15:05 +0000
+From:   "Siqueira, Rodrigo" <Rodrigo.Siqueira@amd.com>
+To:     =?iso-8859-1?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+CC:     "Berthe, Abdoulaye" <Abdoulaye.Berthe@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm: Add LT-tunable PHY repeater mode operations
+Thread-Topic: [PATCH] drm: Add LT-tunable PHY repeater mode operations
+Thread-Index: AQHVg14R21/cmlYs3kCpQ3lK2eqOFKdbuQoAgABZ6QA=
+Date:   Tue, 15 Oct 2019 19:15:04 +0000
+Message-ID: <20191015191502.zrngl6arydwazwr5@outlook.office365.com>
+References: <20191015134010.26zwopwnrbsmz5az@outlook.office365.com>
+ <20191015135314.GE1208@intel.com>
+In-Reply-To: <20191015135314.GE1208@intel.com>
+Accept-Language: en-CA, en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTXPR0101CA0046.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:1::23) To DM6PR12MB3370.namprd12.prod.outlook.com
+ (2603:10b6:5:38::25)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rodrigo.Siqueira@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.55.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ac1f49db-b617-45d8-adf1-08d751a3fc0e
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB3497:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB34972B29E7E957AA8A84DCD798930@DM6PR12MB3497.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1443;
+x-forefront-prvs: 01917B1794
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(39860400002)(136003)(346002)(189003)(199004)(66556008)(66946007)(64756008)(66616009)(66476007)(66066001)(2906002)(11346002)(52116002)(6246003)(99286004)(966005)(446003)(186003)(66446008)(76176011)(6916009)(6512007)(9686003)(14454004)(6486002)(6436002)(256004)(26005)(25786009)(71200400001)(6306002)(8676002)(102836004)(81166006)(229853002)(81156014)(86362001)(5660300002)(1076003)(486006)(4326008)(316002)(8936002)(6116002)(478600001)(6506007)(71190400001)(386003)(54906003)(305945005)(476003)(3846002)(99936001)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3497;H:DM6PR12MB3370.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hFdR+riYSceEf+mPBDoedb0Fy0Ro9KLejZ3/qwM5dshKGVvJECGyEpKlESFscJhRaBaUjKlSaKFK6ZyiE1F5l9RJFlYbJ0iSl5pPMZrARqi85/OatlWMkOrTXVvGpMhs7Z3IFVVr1r97P2aQquzy4+fgNNtTY/l8WTkTDqFPglSSjMwPP+9ykXS/JmtVKNWlCNkI11qpgcO8YmKgr8Yg6/MqNWxtR2sQyhLfHtXHRTMPsYhBHBYoUqO2ApXX+HVMOxVt3kSF7OY9MziE4j05YQXizQtS/ipVlwCT10ArEQLB0AMRQ4oNKuP4U872dHOdM7eT8zMTJAJX83/CclBvLMQwcDclHZlqCaNkmj3wkyaPyx0uvY3QxBrJZTShGSXhmlomoLjRr9+yErrcb4OGxI+CHuSoA1A3rnY5rge8DG0=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="udp5nohy3qs232fn"
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac1f49db-b617-45d8-adf1-08d751a3fc0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2019 19:15:04.9132
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TZ+bRyM1bB5rm1AwFJ0N4C5ozV/IAGYLnhzCau9CxTW5Fis1a27OkX95HMqIr1XMjLD8LiFYD6JgXjLtPdErTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3497
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Five changes, two in drivers (qla2xxx, zfcp), one to MAINTAINERS
-(qla2xxx) and two in the core.  The last two are mostly about removing
-incorrect messages from the kernel log: the resid message is definitely
-wrong and the sync cache on protected drive problem is arguably wrong.
+--udp5nohy3qs232fn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The patch is available here:
+Applied to drm-misc-next.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+Thanks
 
-The short changelog is:
+On 10/15, Ville Syrj=E4l=E4 wrote:
+> On Tue, Oct 15, 2019 at 01:40:12PM +0000, Siqueira, Rodrigo wrote:
+> > LT-tunable PHY Repeaters can operate in two different modes: transparent
+> > (default) and non-transparent. The value 0x55 specifies the transparent
+> > mode, and 0xaa represents the non-transparent; this commit adds these
+> > two values as definitions.
+> >=20
+> > Cc: Abdoulaye Berthe <Abdoulaye.Berthe@amd.com>
+> > Cc: Harry Wentland <harry.wentland@amd.com>
+> > Cc: Leo Li <sunpeng.li@amd.com>
+> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> > Cc: Manasi Navare <manasi.d.navare@intel.com>
+> > Cc: Ville Syrj=E4l=E4 <ville.syrjala@linux.intel.com>
+> > Signed-off-by: Abdoulaye Berthe <Abdoulaye.Berthe@amd.com>
+> > Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+>=20
+> Reviewed-by: Ville Syrj=E4l=E4 <ville.syrjala@linux.intel.com>
+>=20
+> > ---
+> >  include/drm/drm_dp_helper.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >=20
+> > diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> > index bf62b43aaf2b..cfadeeef8492 100644
+> > --- a/include/drm/drm_dp_helper.h
+> > +++ b/include/drm/drm_dp_helper.h
+> > @@ -1034,6 +1034,10 @@
+> >  #define DP_SYMBOL_ERROR_COUNT_LANE3_PHY_REPEATER1	    0xf003b /* 1.3 */
+> >  #define DP_FEC_STATUS_PHY_REPEATER1			    0xf0290 /* 1.4 */
+> > =20
+> > +/* Repeater modes */
+> > +#define DP_PHY_REPEATER_MODE_TRANSPARENT		    0x55    /* 1.3 */
+> > +#define DP_PHY_REPEATER_MODE_NON_TRANSPARENT		    0xaa    /* 1.3 */
+> > +
+> >  /* DP HDCP message start offsets in DPCD address space */
+> >  #define DP_HDCP_2_2_AKE_INIT_OFFSET		DP_HDCP_2_2_REG_RTX_OFFSET
+> >  #define DP_HDCP_2_2_AKE_SEND_CERT_OFFSET	DP_HDCP_2_2_REG_CERT_RX_OFFSET
+> > --=20
+> > 2.23.0
+>=20
+>=20
+>=20
+> --=20
+> Ville Syrj=E4l=E4
+> Intel
 
-Damien Le Moal (1):
-      scsi: core: save/restore command resid for error handling
+--=20
+Rodrigo Siqueira
+Software Engineer, Advanced Micro Devices (AMD)
+https://siqueira.tech
 
-Daniel Wagner (1):
-      scsi: qla2xxx: Remove WARN_ON_ONCE in qla2x00_status_cont_entry()
+--udp5nohy3qs232fn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Himanshu Madhani (1):
-      scsi: MAINTAINERS: Update qla2xxx driver
+-----BEGIN PGP SIGNATURE-----
 
-Oliver Neukum (1):
-      scsi: sd: Ignore a failure to sync cache due to lack of authorization
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl2mGrUACgkQWJzP/com
+vP9E+A//UaVzf/8YhouHYfbmraLJHyggL0dmRR9dfGUUUNBF94Nzpv0PCs08h5k0
+KWc/OwKJQq8pLkEqxw8w3AHIjfxJ9ElyTQAUEs4hR23egw8m3h+zCsO5y+TO6NU3
+SrZc2tQiX+7d5njYJXSzfVoZIiozl4ttsdA8uOXMNPSWAkk7aobgfTIxL2q0dvxq
+n3FtCFipfmtKJFTRKueZqfNfgQw4t9EPUsEYAmOmPTUlQd1l4dh1nL2+RkSTT8xs
+pEiVl+14aRU4yTmqQJbWQ10GBWBjs7pPw8/lJ0WUTy1ZMyZayOcjwwgrEWGCadfo
+JHLaqi2kyDCfDDGGUPAj94J/C4cc96fpiqyNlOKJdRHHPPelpJZ2kTvu6bkvSdhw
+FgPh1kapeKCP20sCeyGEBnuasMqyMoJGnZIMovsV5u8WbALUTzawGk/Zl8LxW06I
+Eod0t795DE3vOhTa8ip1lUi5rZigP2B7LmZ8/e0TtoiGbjgl9anqFVLuecwszaHm
+hXk1KuqQ0Ozlx7Q7DgFy5CnUPTovvT/i44TbG1+uWwGrWLGCcW8DnTpbjm5/WIkr
+QAN3PjBwkhWV+FQGlozYl4zc7WiQ7WqG168lUfcsFKTLyJpPyEAFudaTLazuJzq7
+0i3KKiCfVV5nxbfC+yVadM6wEkAqJiEr0dgiBTJuwI5yJ1wiuao=
+=OsbP
+-----END PGP SIGNATURE-----
 
-Steffen Maier (1):
-      scsi: zfcp: fix reaction on bit error threshold notification
-
-And the diffstat:
-
- MAINTAINERS                    |  2 +-
- drivers/s390/scsi/zfcp_fsf.c   | 16 +++++++++++++---
- drivers/scsi/qla2xxx/qla_isr.c |  2 --
- drivers/scsi/scsi_error.c      |  3 +++
- drivers/scsi/sd.c              |  3 ++-
- include/scsi/scsi_eh.h         |  1 +
- 6 files changed, 20 insertions(+), 7 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 783569e3c4b4..91f33522393a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13184,7 +13184,7 @@ S:	Maintained
- F:	drivers/scsi/qla1280.[ch]
- 
- QLOGIC QLA2XXX FC-SCSI DRIVER
--M:	qla2xxx-upstream@qlogic.com
-+M:	hmadhani@marvell.com
- L:	linux-scsi@vger.kernel.org
- S:	Supported
- F:	Documentation/scsi/LICENSE.qla2xxx
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index 296bbc3c4606..cf63916814cc 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -27,6 +27,11 @@
- 
- struct kmem_cache *zfcp_fsf_qtcb_cache;
- 
-+static bool ber_stop = true;
-+module_param(ber_stop, bool, 0600);
-+MODULE_PARM_DESC(ber_stop,
-+		 "Shuts down FCP devices for FCP channels that report a bit-error count in excess of its threshold (default on)");
-+
- static void zfcp_fsf_request_timeout_handler(struct timer_list *t)
- {
- 	struct zfcp_fsf_req *fsf_req = from_timer(fsf_req, t, timer);
-@@ -236,10 +241,15 @@ static void zfcp_fsf_status_read_handler(struct zfcp_fsf_req *req)
- 	case FSF_STATUS_READ_SENSE_DATA_AVAIL:
- 		break;
- 	case FSF_STATUS_READ_BIT_ERROR_THRESHOLD:
--		dev_warn(&adapter->ccw_device->dev,
--			 "The error threshold for checksum statistics "
--			 "has been exceeded\n");
- 		zfcp_dbf_hba_bit_err("fssrh_3", req);
-+		if (ber_stop) {
-+			dev_warn(&adapter->ccw_device->dev,
-+				 "All paths over this FCP device are disused because of excessive bit errors\n");
-+			zfcp_erp_adapter_shutdown(adapter, 0, "fssrh_b");
-+		} else {
-+			dev_warn(&adapter->ccw_device->dev,
-+				 "The error threshold for checksum statistics has been exceeded\n");
-+		}
- 		break;
- 	case FSF_STATUS_READ_LINK_DOWN:
- 		zfcp_fsf_status_read_link_down(req);
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 4c26630c1c3e..009fd5a33fcd 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -2837,8 +2837,6 @@ qla2x00_status_cont_entry(struct rsp_que *rsp, sts_cont_entry_t *pkt)
- 	if (sense_len == 0) {
- 		rsp->status_srb = NULL;
- 		sp->done(sp, cp->result);
--	} else {
--		WARN_ON_ONCE(true);
- 	}
- }
- 
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index 1c470e31ae81..ae2fa170f6ad 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -967,6 +967,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd *scmd, struct scsi_eh_save *ses,
- 	ses->data_direction = scmd->sc_data_direction;
- 	ses->sdb = scmd->sdb;
- 	ses->result = scmd->result;
-+	ses->resid_len = scmd->req.resid_len;
- 	ses->underflow = scmd->underflow;
- 	ses->prot_op = scmd->prot_op;
- 	ses->eh_eflags = scmd->eh_eflags;
-@@ -977,6 +978,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd *scmd, struct scsi_eh_save *ses,
- 	memset(scmd->cmnd, 0, BLK_MAX_CDB);
- 	memset(&scmd->sdb, 0, sizeof(scmd->sdb));
- 	scmd->result = 0;
-+	scmd->req.resid_len = 0;
- 
- 	if (sense_bytes) {
- 		scmd->sdb.length = min_t(unsigned, SCSI_SENSE_BUFFERSIZE,
-@@ -1029,6 +1031,7 @@ void scsi_eh_restore_cmnd(struct scsi_cmnd* scmd, struct scsi_eh_save *ses)
- 	scmd->sc_data_direction = ses->data_direction;
- 	scmd->sdb = ses->sdb;
- 	scmd->result = ses->result;
-+	scmd->req.resid_len = ses->resid_len;
- 	scmd->underflow = ses->underflow;
- 	scmd->prot_op = ses->prot_op;
- 	scmd->eh_eflags = ses->eh_eflags;
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 91af598f2f53..0f96eb0ddbfa 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1655,7 +1655,8 @@ static int sd_sync_cache(struct scsi_disk *sdkp, struct scsi_sense_hdr *sshdr)
- 		/* we need to evaluate the error return  */
- 		if (scsi_sense_valid(sshdr) &&
- 			(sshdr->asc == 0x3a ||	/* medium not present */
--			 sshdr->asc == 0x20))	/* invalid command */
-+			 sshdr->asc == 0x20 ||	/* invalid command */
-+			 (sshdr->asc == 0x74 && sshdr->ascq == 0x71)))	/* drive is password locked */
- 				/* this is no error here */
- 				return 0;
- 
-diff --git a/include/scsi/scsi_eh.h b/include/scsi/scsi_eh.h
-index 3810b340551c..6bd5ed695a5e 100644
---- a/include/scsi/scsi_eh.h
-+++ b/include/scsi/scsi_eh.h
-@@ -32,6 +32,7 @@ extern int scsi_ioctl_reset(struct scsi_device *, int __user *);
- struct scsi_eh_save {
- 	/* saved state */
- 	int result;
-+	unsigned int resid_len;
- 	int eh_eflags;
- 	enum dma_data_direction data_direction;
- 	unsigned underflow;
+--udp5nohy3qs232fn--
