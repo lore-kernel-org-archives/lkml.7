@@ -2,92 +2,115 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E683C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C193C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42DB2089C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pRUkZIQu"
+	by mail.kernel.org (Postfix) with ESMTP id 42B482089C
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 03:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfJODqy (ORCPT
+        id S1728000AbfJODsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 14 Oct 2019 23:46:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:39561 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbfJODqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 14 Oct 2019 23:46:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46shDz4GQVz9sPF;
-        Tue, 15 Oct 2019 14:46:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1571111212;
-        bh=q/PUoHpaGQ1aMJQT/dQFNLxJ+BV9cLJUddGSgSiLYaM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pRUkZIQuGKR4qqpg2naFZb9pf1kDpAldmuXM90b+cG9Xxuuz9KQmmkaXNfdQwHCKb
-         dLk4krTPcyOj2QOqgd6em4j7kKBe0iegPbx6DIGkLvMcoolk8xlSrGVf7Dtfjh7iVm
-         F0PNDcF3F/LfRN+VyQP2lhfylNRN6nSDJHNyTvcjrFP21TRSsTJlnkvBvCenxPY2Mv
-         BPYd76Jv+RfChdkqucu4/wSad89kYsCJz9UnRLJ+MjCTGiy3k8mwFUAnn3vx5tEM/n
-         52WSRet7RK0j48h9JP8baM5Zc08KopPvcVbTtA8IU/xtq6iFyMVcTjnykDp8OcRB1h
-         oOWDHbwR8Gojg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to unsafe_put_user()
-In-Reply-To: <CAHk-=wgO1EW5qVuy7=sc9Kua98-afMx75gaeX4FHKf3+wPLmkw@mail.gmail.com>
-References: <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com> <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com> <20191010195504.GI26530@ZenIV.linux.org.uk> <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com> <20191011001104.GJ26530@ZenIV.linux.org.uk> <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com> <20191013181333.GK26530@ZenIV.linux.org.uk> <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com> <20191013191050.GL26530@ZenIV.linux.org.uk> <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com> <20191013195949.GM26530@ZenIV.linux.org.uk> <CAHk-=wgO1EW5qVuy7=sc9Kua98-afMx75gaeX4FHKf3+wPLmkw@mail.gmail.com>
-Date:   Tue, 15 Oct 2019 14:46:41 +1100
-Message-ID: <87h84avffi.fsf@mpe.ellerman.id.au>
+        Mon, 14 Oct 2019 23:48:50 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:43599 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbfJODsu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 14 Oct 2019 23:48:50 -0400
+Received: by mail-vk1-f196.google.com with SMTP id p189so4001838vkf.10
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 20:48:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ShNj6dpdoV3qxQt4i9xwFO5EQ7UppT+qckLzoe6/RVM=;
+        b=Xqn0PRGUh7L6FR68qPPZhSaHWTgxs3gG3efnhpBjDp5HpDpb1zAWTXNG2MyS5OtFSY
+         RDNQ7wyXmXiRxsqKMgfAq/iE+PaMMzLT1aJUNTTUOv70VroV6mQkXgMVhDytqVXjK6tE
+         7GVWv63nVx3XdJMHmbIBQ199uw9zyfOMn0/hpbIJU4aK8S2I+lT2bKEvLRe9u02w3c5e
+         8MO+bPz4E4242c6iCZNFBycDYRW33vP1aKm7jbw6rsZYaX4VbfUzYLSmnp6Vagi8bJtJ
+         kRjnGsOSOOK7Pem1iDTt2h2VtZYGdWC+rrJpJFyohxLsVJf0llCauYg3hbxVeRyPdekN
+         je7g==
+X-Gm-Message-State: APjAAAUwSVuL/bmoz1rhhIqoZgMKkcqW7TkrOY/fyZ9er0VyqA7XgSu3
+        oPu68N0Xh9HsJ7Z2Yemw9tu4oIwiWxainJbw3U4=
+X-Google-Smtp-Source: APXvYqxH5f7OmvnZ/VqNozEqskHJCWXLm5Yf1SmDDoJ889PXslulCrMngbZQcWghJZlRkZDfRWKDbqse5aSs/aSpn7Y=
+X-Received: by 2002:a1f:1d15:: with SMTP id d21mr17456229vkd.55.1571111329347;
+ Mon, 14 Oct 2019 20:48:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191011054240.17782-1-james.qian.wang@arm.com>
+ <20191011054240.17782-2-james.qian.wang@arm.com> <CAKb7Uvik6MZSwCQ4QF7ed1wttfufbR-J4vNdOtYzM+1tqPE_vw@mail.gmail.com>
+ <20191015011604.GA26941@jamwan02-TSP300>
+In-Reply-To: <20191015011604.GA26941@jamwan02-TSP300>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Mon, 14 Oct 2019 23:48:38 -0400
+Message-ID: <CAKb7Uvh7y20oikYR+UpabgXLHJM2i+2DPVyYSwE37d=NpheUGg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] drm/komeda: Add a new helper drm_color_ctm_s31_32_to_qm_n()
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> On Sun, Oct 13, 2019 at 12:59 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->> Re plotting: how strongly would you object against passing the range to
->> user_access_end()?  Powerpc folks have a very close analogue of stac/clac,
->> currently buried inside their __get_user()/__put_user()/etc. - the same
->> places where x86 does, including futex.h and friends.
->>
->> And there it's even costlier than on x86.  It would obviously be nice
->> to lift it at least out of unsafe_get_user()/unsafe_put_user() and
->> move into user_access_begin()/user_access_end(); unfortunately, in
->> one subarchitecture they really want it the range on the user_access_end()
->> side as well.
+On Mon, Oct 14, 2019 at 9:16 PM james qian wang (Arm Technology China)
+<james.qian.wang@arm.com> wrote:
+> On Mon, Oct 14, 2019 at 11:58:48AM -0400, Ilia Mirkin wrote:
+> > On Fri, Oct 11, 2019 at 1:43 AM james qian wang (Arm Technology China)
+> > <james.qian.wang@arm.com> wrote:
+> > > + *
+> > > + * Convert and clamp S31.32 sign-magnitude to Qm.n 2's complement.
+> > > + */
+> > > +uint64_t drm_color_ctm_s31_32_to_qm_n(uint64_t user_input,
+> > > +                                     uint32_t m, uint32_t n)
+> > > +{
+> > > +       u64 mag = (user_input & ~BIT_ULL(63)) >> (32 - n);
+> > > +       bool negative = !!(user_input & BIT_ULL(63));
+> > > +       s64 val;
+> > > +
+> > > +       /* the range of signed 2s complement is [-2^n+m, 2^n+m - 1] */
+> >
+> > This implies that n = 32, m = 0 would actually yield a 33-bit 2's
+> > complement number. Is that what you meant?
 >
-> Hmm. I'm ok with that.
->
-> Do they want the actual range, or would it prefer some kind of opaque
-> cookie that user_access_begin() returns (where 0 would mean "failure"
-> of course)?
+> Yes, since m doesn't include sign-bit So a Q0.32 is a 33bit value.
 
-The code does want the actual range, or at least the range rounded to a
-segment boundary (256MB).
+This goes counter to what the wikipedia page says [
+https://en.wikipedia.org/wiki/Q_(number_format) ]:
 
-But it can get that already from a value it stashes in current->thread,
-it was just more natural to pass the addr/size with the way the code is
-currently structured.
+(reformatted slightly for text-only consumption):
 
-It seems to generate slightly better code to pass addr/size vs loading
-it from current->thread, but it's probably in the noise vs everything
-else that's going on.
+"""
+For example, a Q15.1 format number:
 
-So a cookie would work fine, we could return the encoded addr/size in
-the cookie and that might generate better code than loading it back from
-current->thread. Equally we could just use the value in current->thread
-and not have any cookie at all.
+- requires 15+1 = 16 bits
+- its range is [-2^14, 2^14 - 2^-1] = [-16384.0, +16383.5] = [0x8000,
+0x8001 ... 0xFFFF, 0x0000, 0x0001 ... 0x7FFE, 0x7FFF]
+- its resolution is 2^-1 = 0.5
+"""
 
-cheers
+This suggests that the proper way to represent a standard 32-bit 2's
+complement integer would be Q32.0.
+
+  -ilia
