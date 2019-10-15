@@ -2,109 +2,341 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E1ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A021A2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FF32067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnGiE4qm"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="d/idhbsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfJORrf (ORCPT
+        id S1731430AbfJORy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:47:35 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45761 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfJORrf (ORCPT
+        Tue, 15 Oct 2019 13:54:29 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57490 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbfJORy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:47:35 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z67so19966201qkb.12;
-        Tue, 15 Oct 2019 10:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jnflpavPjf+Ft2Pf7r24Ekpvxd/hEtSiZphraBwK8G4=;
-        b=hnGiE4qmcddwCKP25rnEIQGmKrSuCVKoZRxrhUxgLRKUrb5MVZcLlsr3L9/qKCzaGf
-         P+g5fb6ReBfuv4KKPj3X1mFmaBG1xwwz3FTUyzHRFOtF7z2rEbVAP4mwolzpFMDx83zd
-         1k4pIk8dmYpuXWJZEJBWc8y44gFFvgmtVVS7PuiCKqhB8kDcH1bTIUFR+nUeWFRt9eQr
-         oORXFN7mDDB55uMIeIPLhQvAfWlMsfY/Sz14ZGYUoCUV14hNI5GLO0BzzeoKiVi+bsBZ
-         b5dCx/S9CJingFjwUj42LyMwdGv5RvcPu3J8i/RZRFBElDG9q3iuXAKhb3EVbrFEGjuF
-         f5dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jnflpavPjf+Ft2Pf7r24Ekpvxd/hEtSiZphraBwK8G4=;
-        b=l/rYtMT014KmEFPOudp9BMyHnToqUGCGCbAJ4KEOcGeSiEHOkg1f6VH47RfVcvQNvt
-         tEV/WZFCm7tSlj73RkKkN6e8WIt4KvMC70xcR43HVdWqnyaJ5DSB4sBTiU1Uh5JV0/ts
-         tRqeePUesh97BH+uxzylgERKciZCptE5med9SHHuqVzOeyTABuN6kCJgH+Hyl0u64u6e
-         6Rk/1gQfaxU/qBswOhJOtRJ8e3JkOl6WEcRyGqbP46COgGWU62DzNrbg1/zKtgbD6yz5
-         tduqj1TQkeVAM/w341drPLebJMAmSlyAxUedH2WQV+5TWQdFj0MQQV+u7nF6G3Pzgrdd
-         s9TA==
-X-Gm-Message-State: APjAAAVAk+h5xrlyfQOJb2wOmlDexUCTaHfoo63Yidjbnam/IFmvt2yK
-        3/E7C2iFC1tulznbAlEX9QY=
-X-Google-Smtp-Source: APXvYqzcNDloZ57H2ek7q2C8DW1bg1ahgqE5n9y84l475SysQqninUVaRAjLcEaDs8rZ49WaFsWl6Q==
-X-Received: by 2002:a37:6789:: with SMTP id b131mr37687223qkc.358.1571161653540;
-        Tue, 15 Oct 2019 10:47:33 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a3:10e0:57dd:4e1:54d8:dfbe? ([2620:10d:c091:500::2:5709])
-        by smtp.gmail.com with ESMTPSA id q44sm13884054qtk.16.2019.10.15.10.47.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2019 10:47:32 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: fix RTL8723BU connection failure issue after
- warm reboot
-To:     Chris Chiu <chiu@endlessm.com>, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-References: <20191015101909.4640-1-chiu@endlessm.com>
-Message-ID: <30809d50-a9ba-881b-1d3b-f3582c14cf79@gmail.com>
-Date:   Tue, 15 Oct 2019 13:47:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 15 Oct 2019 13:54:29 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D5C13324;
+        Tue, 15 Oct 2019 19:54:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571162066;
+        bh=AohTNOIEwTNYMgzz86ZFKd5AE2bQ0nD5VETR3pM8Cfw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d/idhbsadmYlwv/lKU7+VfCrQAKIT487BUQw47A+CXYLGRpuClPzNlROXw4SIP1QH
+         jxzrp3gf6tvFD2YFWSqKvXgqDJsqWZ4GaCPash6Qt3QAmyy/aklEyhhrK3gKDQd2b8
+         X0TXLkH2QP34FKadoLOMlCzGyHkCfNNEKQMkViYI=
+Date:   Tue, 15 Oct 2019 20:54:22 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/8] drm: rcar-du: crtc: Control CMM operations
+Message-ID: <20191015175422.GN4875@pendragon.ideasonboard.com>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20191015104621.62514-6-jacopo+renesas@jmondi.org>
+ <42ae76b8-c65f-8c5e-e83a-fc6a422d2624@ideasonboard.com>
+ <20191015133752.oyb3p6iyr3ekjxic@uno.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20191015101909.4640-1-chiu@endlessm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191015133752.oyb3p6iyr3ekjxic@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 6:19 AM, Chris Chiu wrote:
-> The RTL8723BU has problems connecting to AP after each warm reboot.
-> Sometimes it returns no scan result, and in most cases, it fails
-> the authentication for unknown reason. However, it works totally
-> fine after cold reboot.
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Tue, Oct 15, 2019 at 03:37:52PM +0200, Jacopo Mondi wrote:
+> On Tue, Oct 15, 2019 at 02:15:35PM +0100, Kieran Bingham wrote:
+> > On 15/10/2019 11:46, Jacopo Mondi wrote:
+> > > Implement CMM handling in the crtc begin and enable atomic callbacks,
+> > > and enable CMM unit through the Display Extensional Functions
+> >
+> > Extensional ?
+> >
+> > Perhaps this should just be Display Extension Functions?
+> > Wow - that's actually what they call it in the data-sheet.
+> >
+> > > register at group setup time.
+> >
+> > Only a trivial extra blank line below that I can find... so
+> >
+> > Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 79 +++++++++++++++++++++++++
+> > >  drivers/gpu/drm/rcar-du/rcar_du_group.c |  5 ++
+> > >  drivers/gpu/drm/rcar-du/rcar_du_regs.h  |  5 ++
+> > >  3 files changed, 89 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > index 23f1d6cc1719..4bc50a3f4a00 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > @@ -21,6 +21,7 @@
+> > >  #include <drm/drm_plane_helper.h>
+> > >  #include <drm/drm_vblank.h>
+> > >
+> > > +#include "rcar_cmm.h"
+> > >  #include "rcar_du_crtc.h"
+> > >  #include "rcar_du_drv.h"
+> > >  #include "rcar_du_encoder.h"
+> > > @@ -474,6 +475,70 @@ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
+> > >  	rcar_du_crtc_finish_page_flip(rcrtc);
+> > >  }
+> > >
+> > > +/* -----------------------------------------------------------------------------
+> > > + * Color Management Module (CMM)
+> > > + */
+
+Missing blank line.
+
+> > > +static int rcar_du_cmm_enable(struct drm_crtc *crtc)
+> > > +{
+> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > > +
+> > > +	if (!rcrtc->cmm)
+> > > +		return 0;
+> > > +
+> > > +	return rcar_cmm_enable(rcrtc->cmm);
+> > > +}
+> > > +
+> > > +static void rcar_du_cmm_disable(struct drm_crtc *crtc)
+> > > +{
+> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > > +
+> > > +	if (!rcrtc->cmm)
+> > > +		return;
+> > > +
+> > > +	rcar_cmm_disable(rcrtc->cmm);
+> > > +}
+
+I think I would have inlined those two functions in their only call site
+as
+
+	if (rcrtc->cmm)
+		rcar_cmm_enable(rcrtc->cmm);
+
+but that's up to you.
+
+> > > +
+> > > +static int rcar_du_cmm_check(struct drm_crtc *crtc,
+> > > +			     struct drm_crtc_state *state)
+> > > +{
+> > > +	struct drm_property_blob *drm_lut = state->gamma_lut;
+> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > > +	struct device *dev = rcrtc->dev->dev;
+> > > +
+> > > +	if (!rcrtc->cmm || !drm_lut)
+> > > +		return 0;
+> > > +
+> > > +	/* We only accept fully populated LUT tables. */
+> > > +	if (CM2_LUT_SIZE * sizeof(struct drm_color_lut) !=
+> > > +	    drm_lut->length) {
+
+How about
+
+	if (drm_color_lut_size(drm_lut) != CM2_LUT_SIZE)
+
+?
+
+> > > +		dev_err(dev, "invalid gamma lut size: %lu bytes\n",
+> > > +			drm_lut->length);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void rcar_du_cmm_setup(struct drm_crtc *crtc)
+> > > +{
+> > > +	struct drm_property_blob *drm_lut = crtc->state->gamma_lut;
+> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > > +	struct rcar_cmm_config cmm_config = {};
+> > > +
+> > > +	if (!rcrtc->cmm)
+> > > +		return;
+> > > +
+> > > +	if (drm_lut) {
+> > > +		cmm_config.lut.enable = true;
+> > > +		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
+> > > +
+> > > +	} else {
+> > > +		cmm_config.lut.enable = false;
+> > > +	}
+
+This could be changed to
+
+	if (drm_lut)
+		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
+
+if we dropped the enable field.
+
+> > > +
+> > > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > > +}
+> > > +
+> > >  /* -----------------------------------------------------------------------------
+> > >   * Start/Stop and Suspend/Resume
+> > >   */
+> > > @@ -619,6 +684,8 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+> > >  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> > >  		rcar_du_vsp_disable(rcrtc);
+> > >
+> > > +	rcar_du_cmm_disable(crtc);
+> > > +
+> > >  	/*
+> > >  	 * Select switch sync mode. This stops display operation and configures
+> > >  	 * the HSYNC and VSYNC signals as inputs.
+> > > @@ -631,6 +698,7 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+> > >  					   DSYSR_TVM_SWITCH);
+> > >
+> > >  	rcar_du_group_start_stop(rcrtc->group, false);
+> > > +
+> >
+> > Extra blank line...
 > 
-> Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-> for cold reboot and warm reboot, the registers imply that the MAC
-> is already powered and thus some procedures are skipped during
-> driver initialization. Double checked the vendor driver, it reads
-> the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-> during initialization based on them. This commit only tells the
-> RTL8723BU to do full initilization without checking MAC status.
+> Thanks for spotting this. I'm quite sure I run checkpatch (I just
+> re-did) and not warnings for the extra white space in the previous
+> patch, or this extra blank line o_0
 > 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> ---
->   drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
->   drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
->   drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
->   3 files changed, 5 insertions(+)
+> > >  }
+> > >
+> > >  /* -----------------------------------------------------------------------------
+> > > @@ -642,6 +710,11 @@ static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
+> > >  {
+> > >  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(state);
+> > >  	struct drm_encoder *encoder;
+> > > +	int ret;
+> > > +
+> > > +	ret = rcar_du_cmm_check(crtc, state);
+> > > +	if (ret)
+> > > +		return ret;
+> > >
+> > >  	/* Store the routes from the CRTC output to the DU outputs. */
+> > >  	rstate->outputs = 0;
+> > > @@ -667,6 +740,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+> > >  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
+> > >  	struct rcar_du_device *rcdu = rcrtc->dev;
+> > >
+> > > +	rcar_du_cmm_enable(crtc);
+> > >  	rcar_du_crtc_get(rcrtc);
+> > >
+> > >  	/*
+> > > @@ -686,6 +760,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+> > >  	}
+> > >
+> > >  	rcar_du_crtc_start(rcrtc);
+> > > +	rcar_du_cmm_setup(crtc);
 
-Looks good to me! If this takes care of the warm boot problem, that's 
-pretty awesome.
+This is the only part that really bothers me, we setup the LUT after
+starting the CRTC, so the first frame will be output with a disabled
+LUT, or possibly even with the LUT enabled in the middle of the frame.
+Do I recall correctly that moving setup before start causes issues ?
+Could you explain what happens ?
 
-Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+> > >  }
+> > >
+> > >  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> > > @@ -739,6 +814,10 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
+> > >  	 */
+> > >  	rcar_du_crtc_get(rcrtc);
+> > >
+> > > +	/* If the active state changed, we let .atomic_enable handle CMM. */
+> > > +	if (crtc->state->color_mgmt_changed && !crtc->state->active_changed)
+> > > +		rcar_du_cmm_setup(crtc);
+> >
+> > Aha, this is quite neat for handling the timings.
+> 
+> Yes, much more streamlined than what we had. Thanks Sean and Ezequiel :)
 
-Jes
+Yes, it guarantees that the CRTC is enabled, so we should be safe with
+the assumption from patch 3/8 that rcar_du_cmm_setup() is always called
+with the CMM enabled.
 
+Interestingly though, this doesn't implement atomicity. That will be a
+very interesting challenge. We should use double buffering of the LUT in
+the CMM to avoid it being modified in the middle of the frame, but how
+to update it in sync with the commit, and thus the VSP, remains to be
+researched.
+
+Could you maybe add a TODO comment in patch 3/8 to mention that we
+should use double buffering ?
+
+> > > +
+> > >  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+> > >  		rcar_du_vsp_atomic_begin(rcrtc);
+> > >  }
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> > > index 9eee47969e77..583de800a66d 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> > > @@ -135,6 +135,7 @@ static void rcar_du_group_setup_didsr(struct rcar_du_group *rgrp)
+> > >  static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+> > >  {
+> > >  	struct rcar_du_device *rcdu = rgrp->dev;
+> > > +	u32 defr7 = DEFR7_CODE;
+> > >
+> > >  	/* Enable extended features */
+> > >  	rcar_du_group_write(rgrp, DEFR, DEFR_CODE | DEFR_DEFE);
+> > > @@ -147,6 +148,10 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+> > >
+> > >  	rcar_du_group_setup_pins(rgrp);
+> > >
+
+Could you please add a comment here to mention that we shouldn't route
+through CMM if no color management feature is used ?
+
+	/*
+	 * TODO: Handling routing the DU output to CMM dynamically, as we should
+	 * bypass CMM completely when no color management feature is used.
+	 */
+
+> > > +	defr7 |= (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> > > +		 (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> > > +	rcar_du_group_write(rgrp, DEFR7, defr7);
+> > > +
+> > >  	if (rcdu->info->gen >= 2) {
+> > >  		rcar_du_group_setup_defr8(rgrp);
+> > >  		rcar_du_group_setup_didsr(rgrp);
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> > > index bc87f080b170..fb9964949368 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> > > @@ -197,6 +197,11 @@
+> > >  #define DEFR6_MLOS1		(1 << 2)
+> > >  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+> > >
+> > > +#define DEFR7			0x000ec
+> > > +#define DEFR7_CODE		(0x7779 << 16)
+> > > +#define DEFR7_CMME1		BIT(6)
+> > > +#define DEFR7_CMME0		BIT(4)
+> > > +
+> > >  /* -----------------------------------------------------------------------------
+> > >   * R8A7790-only Control Registers
+> > >   */
+> > >
+
+-- 
+Regards,
+
+Laurent Pinchart
