@@ -2,44 +2,61 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB6EECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C4D20854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE1620854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571154877;
+	bh=gDTvos0aqFdBzACKLmdE89v1DSOVUHxp4OvrkcN9IM4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZYK8/7xu5B6+Kr3IPuyDQ/kapqx1yQO7x0pFPIJRabRLhn75UkX9IrHC6NGsBw3k/
+	 s07Zz0Em6tWoccDd89oGUhh9CBDYGtvH9+qC0uQVxJ65FDIVkoUSQH6mlxHRujwSlA
+	 92XcAlP1fUaajMXapdort00jXwhdlHdYk35nU/zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387679AbfJOPyZ (ORCPT
+        id S2387703AbfJOPyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:54:25 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:53411 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbfJOPyZ (ORCPT
+        Tue, 15 Oct 2019 11:54:36 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42729 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbfJOPyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:54:25 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKP9M-0007JU-6w; Tue, 15 Oct 2019 16:54:16 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKP9L-0006aI-I0; Tue, 15 Oct 2019 16:54:15 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Sebastian Reichel <sre@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] power: reset: fix __le32 cast in reset code
-Date:   Tue, 15 Oct 2019 16:54:14 +0100
-Message-Id: <20191015155414.25267-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 15 Oct 2019 11:54:36 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c10so17371548otd.9;
+        Tue, 15 Oct 2019 08:54:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+qhKK3H7JHx9Pg9rqpVbjQ8Fqzdg622NRYKtEz3pOpY=;
+        b=UM+NOX/2ooHc5rvjlcwZPc5pvWMlxN2Vl0/JHZ8Xua+GefiYLwD/2a10/81nuKFQ/L
+         8rGMhMnaWmHeS2vBJujMfbwJ0AtLBMim7MI5Vz63Jn+C4HM2NeYVPgnRjrWmaUMy0zYW
+         nbIiH72KmM86XKZgh/yKKsbo1nJwk6C/pzgG43u9UimqstpgniCLyer1YYRYiKjM9icI
+         HtwtgcwHfK2EWeneuKB/JfdP7WDKeVB+GiMZugtBPy6HKrvqK6UaMQUv4Tirn/w8oPZu
+         VZ/BUCMqtL+QbnKCAboua2bttpO/WKPMxp3RITHvC37qegqt8QaK2qKzFhRvVJqgbhDi
+         NmRQ==
+X-Gm-Message-State: APjAAAUoWR20xcNVsYCTYewcmEzA4lIH9RWWPkknCZZaA4taMjplDPQr
+        UOpna3AO2Ml+94P7Llf3K6/5C5o=
+X-Google-Smtp-Source: APXvYqzl97gscGI19gtvshAXHiRZe7RDUF1en6rFopsA1RXXpXv4IuPAtA5BF/7n06btN4F5+XXLDg==
+X-Received: by 2002:a9d:7d16:: with SMTP id v22mr1008454otn.331.1571154874589;
+        Tue, 15 Oct 2019 08:54:34 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id y137sm6633719oie.53.2019.10.15.08.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 08:54:34 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Robert Jones <rjones@gateworks.com>
+Subject: [PATCH 1/2] dt: writing-schema: Add a note about tools PATH setup
+Date:   Tue, 15 Oct 2019 10:54:32 -0500
+Message-Id: <20191015155433.25359-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,54 +64,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The writel() takes standard integers, not __le32 so
-fix the following sparse warnings by removing the
-cpu_to_le32() calls.
+Users without an existing python install may not have their PATH setup
+for pip installed python programs already. Add a note about having the
+DT validation programs in the PATH.
 
-drivers/power/reset/at91-reset.c:134:9: warning: cast from restricted __le32
-drivers/power/reset/at91-reset.c:143:9: warning: cast from restricted __le32
-
-This has made no code changes, the md5sums pre and post applying
-this patch are the same. The at91 should be natively little endian
-anyway.
-
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reported-by: Robert Jones <rjones@gateworks.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/power/reset/at91-reset.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/writing-schema.rst | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/power/reset/at91-reset.c b/drivers/power/reset/at91-reset.c
-index 44ca983a49a1..d94e3267c3b6 100644
---- a/drivers/power/reset/at91-reset.c
-+++ b/drivers/power/reset/at91-reset.c
-@@ -131,7 +131,7 @@ static int at91sam9g45_restart(struct notifier_block *this, unsigned long mode,
- static int sama5d3_restart(struct notifier_block *this, unsigned long mode,
- 			   void *cmd)
- {
--	writel(cpu_to_le32(AT91_RSTC_KEY | AT91_RSTC_PERRST | AT91_RSTC_PROCRST),
-+	writel(AT91_RSTC_KEY | AT91_RSTC_PERRST | AT91_RSTC_PROCRST,
- 	       at91_rstc_base);
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index f4a638072262..3fce61cfd649 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -117,6 +117,9 @@ project can be installed with pip::
  
- 	return NOTIFY_DONE;
-@@ -140,9 +140,7 @@ static int sama5d3_restart(struct notifier_block *this, unsigned long mode,
- static int samx7_restart(struct notifier_block *this, unsigned long mode,
- 			 void *cmd)
- {
--	writel(cpu_to_le32(AT91_RSTC_KEY | AT91_RSTC_PROCRST),
--	       at91_rstc_base);
--
-+	writel(AT91_RSTC_KEY | AT91_RSTC_PROCRST, at91_rstc_base);
- 	return NOTIFY_DONE;
- }
+     pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
+ 
++Several executables (dt-doc-validate, dt-mk-schema, dt-validate) will be
++installed. Ensure they are in your PATH (~/.local/bin by default).
++
+ dtc must also be built with YAML output support enabled. This requires that
+ libyaml and its headers be installed on the host system.
  
 -- 
-2.23.0
+2.20.1
 
