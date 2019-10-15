@@ -2,81 +2,109 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2554CECE587
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10689C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69ED21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:20:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NoT3fPLB"
+	by mail.kernel.org (Postfix) with ESMTP id D8C5821835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfJOHUJ (ORCPT
+        id S1727446AbfJOHWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 03:20:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52116 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfJOHUI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 03:20:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5tEG2p45gNP9BNrX79XMg7gvZhBjEXN9OW2kdIAxYUw=; b=NoT3fPLBTYLgapmnDFexbw5kz
-        K1tHzkT3H0luJRy4GZ6vgQAkALQf6vMqgJw1fNfxII8cyxfCQGTNV1ASKjih0Ly1wCEdyrofTyYD3
-        5xGbm4hieaoiHECWQlSirdGgxdXeyzseuqjM+6NkFx3uM6eGu5gCWLaBNnLIXVspBzzNnVQk6ViQ1
-        vnweuSRWt95iHKK06uVbMnEi2u8UC/4VkdbBmkuzhA2ABPIV0GNcZlcVGSWrO2sOxk68PDeioeqHZ
-        SHODzkccs5FCDB6XVvUSsIRQl6WvG8hKkhBm0hymsu5P1IL60P/83kBFSau33GxGZnfE+87B59+8h
-        M7xdnUOWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKH7i-0002kX-IL; Tue, 15 Oct 2019 07:20:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 48AC930018A;
-        Tue, 15 Oct 2019 09:19:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8A4E220238A89; Tue, 15 Oct 2019 09:19:59 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 09:19:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Manfred Spraul <manfred@colorfullife.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, parri.andrea@gmail.com
-Subject: Re: [PATCH 6/6] Documentation/memory-barriers.txt: Clarify cmpxchg()
-Message-ID: <20191015071959.GA2311@hirez.programming.kicks-ass.net>
-References: <20191012054958.3624-1-manfred@colorfullife.com>
- <20191012054958.3624-7-manfred@colorfullife.com>
- <20191015012604.eonteqarhvgmrzuc@linux-p48b>
+        Tue, 15 Oct 2019 03:22:20 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3757 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725802AbfJOHWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 03:22:20 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9F6AA85273C0512E6435;
+        Tue, 15 Oct 2019 15:22:17 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 15 Oct
+ 2019 15:22:14 +0800
+Subject: Re: [PATCH] f2fs: fix to avoid memory leakage in f2fs_listxattr
+To:     Randall Huang <huangrandall@google.com>, <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <20191009032019.6954-1-huangrandall@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <efddfbc3-bd31-b9fb-48de-decb01d01001@huawei.com>
+Date:   Tue, 15 Oct 2019 15:22:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015012604.eonteqarhvgmrzuc@linux-p48b>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191009032019.6954-1-huangrandall@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:26:04PM -0700, Davidlohr Bueso wrote:
-> On Sat, 12 Oct 2019, Manfred Spraul wrote:
-> > Invalid would be:
-> > 	smp_mb__before_atomic();
-> > 	atomic_set();
-> 
-> fyi I've caught a couple of naughty users:
-> 
->   drivers/crypto/cavium/nitrox/nitrox_main.c
->   drivers/gpu/drm/msm/adreno/a5xx_preempt.c
+Hi Randall,
 
-Yes, there's still some of that. Andrea went and killed a buch a while
-ago I think.
+On 2019/10/9 11:20, Randall Huang wrote:
+> In f2fs_listxattr, there is no boundary check before
+> memcpy e_name to buffer.
+> If the e_name_len is corrupted,
+> unexpected memory contents may be returned to the buffer.
+> 
+> Signed-off-by: Randall Huang <huangrandall@google.com>
+> ---
+>  fs/f2fs/xattr.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+> index b32c45621679..acc3663970cd 100644
+> --- a/fs/f2fs/xattr.c
+> +++ b/fs/f2fs/xattr.c
+> @@ -538,8 +538,9 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+>  ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
+>  {
+>  	struct inode *inode = d_inode(dentry);
+> +	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+>  	struct f2fs_xattr_entry *entry;
+> -	void *base_addr;
+> +	void *base_addr, *last_base_addr;
+>  	int error = 0;
+>  	size_t rest = buffer_size;
+>  
+> @@ -549,6 +550,8 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
+>  	if (error)
+>  		return error;
+>  
+> +	last_base_addr = (void *)base_addr + XATTR_SIZE(xnid, inode);
+> +
+>  	list_for_each_xattr(entry, base_addr) {
+>  		const struct xattr_handler *handler =
+>  			f2fs_xattr_handler(entry->e_name_index);
+> @@ -559,6 +562,15 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
+>  		if (!handler || (handler->list && !handler->list(dentry)))
+>  			continue;
+>  
+> +		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
+> +			(void *)XATTR_NEXT_ENTRY(entry) > last_base_addr) {
+> +			f2fs_err(F2FS_I_SB(inode), "inode (%lu) has corrupted xattr",
+> +						inode->i_ino);
+> +			set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
+> +			error = -EFSCORRUPTED;
+> +			goto cleanup;
+> +		}
+
+Could you relocate sanity check to the place before we check handler? As I'm
+thinking we should always check validation of current entry before using its
+field (entry->index).
+
+Thanks,
+
+> +
+>  		prefix = xattr_prefix(handler);
+>  		prefix_len = strlen(prefix);
+>  		size = prefix_len + entry->e_name_len + 1;
+> 
