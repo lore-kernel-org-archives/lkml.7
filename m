@@ -2,552 +2,125 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0B4ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A2DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE95220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B293D20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="R+qTya5e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKdKio74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389266AbfJOTHO (ORCPT
+        id S2389283AbfJOTI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:07:14 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38246 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730723AbfJOTHO (ORCPT
+        Tue, 15 Oct 2019 15:08:59 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:46596 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfJOTI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:07:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l21so19094738edr.5
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 12:07:11 -0700 (PDT)
+        Tue, 15 Oct 2019 15:08:59 -0400
+Received: by mail-yw1-f67.google.com with SMTP id l64so7622826ywe.13;
+        Tue, 15 Oct 2019 12:08:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=I4IK030oFmsCmygErTaT3MgQ9pOoIszRkO6VB4j4UOY=;
-        b=R+qTya5eG5tiSbZCsUVN6ZqoRR0qGQSr8Sge+JOl3WzHcv1StJ/UeYrR2bcppYZxU+
-         CFg9vDTb+OKho9vnUt0a9dvw6yeOm3EovhyiACBm8QoKKzOb6AXjiMaBXht+0e3GIE/Y
-         tllDnXi5MqNdzc8dxcEZH7NVLyY3+vLBKxOGA=
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=vwcalfo0nj8jqf6x0P9ha0tnIv3sLojEIn4D2EyQfQA=;
+        b=PKdKio749L09WSgW3MVYy+qidUxNVF63exMQyMYgFaPmXoymBwDF2QKwjg3mt5G1Eb
+         pLVHKbQ9L4+0rKrw9ootuTTr3bhwwWgG0vS2PnDA1cUYEUqtMY7gHLNyCT+XCyfwwjpB
+         zzi66QIz44iVXLqQAAuOKSWkZbXJWzLxyJD7FUrM62REFQJnDaWDaReE4OXP9KwZnp/7
+         kCJrCfkobRAv+gcJv48BTrcN6oRShMEu+aVDg1Zqhq99Ypb41twtmUpYJo2Ae82XIxEp
+         kCf5HdOgjy5MjRX1rr+NM9JQ4KbldMuPUE3ugZ1hq3Ai1KhpXBh1RaZW6GCkweQaikFr
+         2MAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I4IK030oFmsCmygErTaT3MgQ9pOoIszRkO6VB4j4UOY=;
-        b=g1PAOrX0TwLyX1pM7GWLAREDsy3ctPw1zsparR3Rzf+jVUeAdWbFD3nkXyJ+eUVBCv
-         aUqxCCgVNLEKCWgzDwD3V0/7jke9uAHiFKf+u9BkVfAOg6q8t9Drm1a9WjJWPvXyV5W5
-         BaX7b7ItRc5cuWq2L2CInFzxxGQowXFwgYqoz8x/lBFGtlSr8LWIhtVJD3Si9i4plaHg
-         1GfvnH85fmrhPeux6uJEs9b4sbM66zLtixjGwQmQtzDYBU1yH0Nt5mDCvQ22tZ+CUpXQ
-         ICZu5LZ4oZsT76MvfYRRxNXML7i0LzjZyvliIq76SQsaPhjo6yusk60FK7kK1SmzRlYs
-         aQHA==
-X-Gm-Message-State: APjAAAXMm2ZWfmpNOJmYxMVXwBKGX4aLAbI1aZhGrzKD+NuAFUIlAkRV
-        DVNSpZ3KztgiRnOEk7C1wUt9NHffOFpkZ+dj
-X-Google-Smtp-Source: APXvYqzbADk1moMAsP6esHu4N/sWpehIxcS92mBrGTVhPTH5gRxXi4mJrKZnzOJJgA/Jo2m4QiOS3A==
-X-Received: by 2002:aa7:cd43:: with SMTP id v3mr34519514edw.235.1571166430028;
-        Tue, 15 Oct 2019 12:07:10 -0700 (PDT)
-Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id dt4sm2836888ejb.45.2019.10.15.12.07.08
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=vwcalfo0nj8jqf6x0P9ha0tnIv3sLojEIn4D2EyQfQA=;
+        b=SJSGuZeXCzP2QD/FPKFhft91xKHE8cB+wcLt3NL0BkH9HlW0WEdsisp7OO56LZF4WD
+         W5Oz9GcJ5jmmx77K6SnkQN2cCHuKSP2HKxs37pepHoqSxBNEaaS8QYD7tTdMrX9+pGLl
+         Ke07wgZNW/nhq9ZCWuxo/+HmcC9POvceacptcwaRFgrq0JMPFvqNF0+gHU9j7eJFJtCk
+         eLchlNS0Ou3A9/W6RVg18GdJZo401/TPzP7GFgO4gswDHWZB+/v9vO/1dYIyIGkQwppO
+         2SJ2LyyZGddLGrlXEtSfPe3UAxBeVMgh9eB7rWeTLmsM3e/VVJlPzRHKo5zGP+1E0sjK
+         YG6A==
+X-Gm-Message-State: APjAAAXRoyPgIlQxbEQNi+gj3LAu2S3i5a6k15ERHWh0bJtwIFIgqcBu
+        RlutBEDb7Sy66c95Y3AZvg==
+X-Google-Smtp-Source: APXvYqyBFRC7bbBOnpMBP0iijziJzkCnwBfMmkTyrvGtTOZ5MxkMdLyJozDW4iaZpvwCIKnY68puQg==
+X-Received: by 2002:a81:2396:: with SMTP id j144mr17565583ywj.219.1571166538119;
+        Tue, 15 Oct 2019 12:08:58 -0700 (PDT)
+Received: from 960 ([12.156.111.130])
+        by smtp.gmail.com with ESMTPSA id 137sm5466855ywp.64.2019.10.15.12.08.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 12:07:09 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Cc:     Joe Perches <joe@perches.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Petr Mladek <pmladek@suse.com>, linux-doc@vger.kernel.org
-Subject: [PATCH v5] printf: add support for printing symbolic error names
-Date:   Tue, 15 Oct 2019 21:07:05 +0200
-Message-Id: <20191015190706.15989-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191011133617.9963-1-linux@rasmusvillemoes.dk>
-References: <20191011133617.9963-1-linux@rasmusvillemoes.dk>
+        Tue, 15 Oct 2019 12:08:57 -0700 (PDT)
+Message-ID: <336c7fa6eebdbada759c9ad30a0a6b85af6f6c58.camel@gmail.com>
+Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix misuse of strcmp()
+ function
+From:   ayman.bagabas@gmail.com
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 15 Oct 2019 15:08:57 -0400
+In-Reply-To: <20191015182549.GA13772@embeddedor>
+References: <20191015182549.GA13772@embeddedor>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been suggested several times to extend vsnprintf() to be able
-to convert the numeric value of ENOSPC to print "ENOSPC". This
-implements that as a %p extension: With %pe, one can do
+Hi Gustavo,
 
-  if (IS_ERR(foo)) {
-    pr_err("Sorry, can't do that: %pe\n", foo);
-    return PTR_ERR(foo);
-  }
+On Tue, 2019-10-15 at 13:25 -0500, Gustavo A. R. Silva wrote:
+> Comparing the result of strcmp directly with 1 may cause it to be
+> misinterpreted. Note that strcmp may return an integer besides -1,
+> 0, or 1.
+> 
+> Fix this by returning -ENODEV only when strcmp() returns a value
+> other than 0.
+> 
+> Addresses-Coverity-ID: 1487035 ("Misuse of memcmp-style function")
+> Fixes: b7527d0f4502 ("platform/x86: huawei-wmi: Add battery charging
+> thresholds")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/platform/x86/huawei-wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/huawei-wmi.c
+> b/drivers/platform/x86/huawei-wmi.c
+> index 6720f78c60c2..b43f76acbfea 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -470,7 +470,7 @@ static DEVICE_ATTR_RW(charge_control_thresholds);
+>  static int huawei_wmi_battery_add(struct power_supply *battery)
+>  {
+>  	/* Huawei laptops come with one battery only */
+> -	if (strcmp(battery->desc->name, "BAT") != 1)
 
-instead of what is seen in quite a few places in the kernel:
+Note we don't have a battery number in BATx, strcmp would return 1 if
+battery->desc->name is "BAT0" or any one digit. This is a desired
+behavior where some Huawei laptops identify the first battery as "BAT1"
+and this would match if name is greater than "BAT" by one digit.
 
-  if (IS_ERR(foo)) {
-    pr_err("Sorry, can't do that: %ld\n", PTR_ERR(foo));
-    return PTR_ERR(foo);
-  }
+Maybe strcmp(battery->desc->name, "BAT") < 0 is a better way to go.
 
-If the value passed to %pe is an ERR_PTR, but the library function
-errname() added here doesn't know about the value, the value is simply
-printed in decimal. If the value passed to %pe is not an ERR_PTR, we
-treat it as an ordinary %p and thus print the hashed value (passing
-non-ERR_PTR values to %pe indicates a bug in the caller, but we can't
-do much about that).
+> +	if (strcmp(battery->desc->name, "BAT"))
+>  		return -ENODEV;
 
-With my embedded hat on, and because it's not very invasive to do,
-I've made it possible to remove this. The errname() function and
-associated lookup tables take up about 3K. For most, that's probably
-quite acceptable and a price worth paying for more readable
-dmesg (once this starts getting used), while for those that disable
-printk() it's of very little use - I don't see a
-procfs/sysfs/seq_printf() file reasonably making use of this - and
-they clearly want to squeeze vmlinux as much as possible. Hence the
-default y if PRINTK.
+Now this would always return ENODEV.
 
-The symbols to include have been found by massaging the output of
+Thank you,
+Ayman
 
-  find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
-
-In the cases where some common aliasing exists
-(e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
-I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
-to the bottom so that one takes precedence.
-
-Acked-by: Uwe Kleine-König <uwe@kleine-koenig.org>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
-Found a few more things, so sending new revision anyway.
-
-v5: Fix cosmetic issues per Petr. Fix missing "-" in "EDQUOT". Fix a
-few comments on at the end of the names_0 array. Add A-b Uwe, R-b Petr.
-
- Documentation/core-api/printk-formats.rst |  12 ++
- include/linux/errname.h                   |  16 ++
- lib/Kconfig.debug                         |   9 +
- lib/Makefile                              |   1 +
- lib/errname.c                             | 223 ++++++++++++++++++++++
- lib/test_printf.c                         |  21 ++
- lib/vsprintf.c                            |  27 +++
- 7 files changed, 309 insertions(+)
- create mode 100644 include/linux/errname.h
- create mode 100644 lib/errname.c
-
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index ecbebf4ca8e7..050f34f3a70f 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -79,6 +79,18 @@ has the added benefit of providing a unique identifier. On 64-bit machines
- the first 32 bits are zeroed. The kernel will print ``(ptrval)`` until it
- gathers enough entropy. If you *really* want the address see %px below.
- 
-+Error Pointers
-+--------------
-+
-+::
-+
-+	%pe	-ENOSPC
-+
-+For printing error pointers (i.e. a pointer for which IS_ERR() is true)
-+as a symbolic error name. Error values for which no symbolic name is
-+known are printed in decimal, while a non-ERR_PTR passed as the
-+argument to %pe gets treated as ordinary %p.
-+
- Symbols/Function Pointers
- -------------------------
- 
-diff --git a/include/linux/errname.h b/include/linux/errname.h
-new file mode 100644
-index 000000000000..e8576ad90cb7
---- /dev/null
-+++ b/include/linux/errname.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_ERRNAME_H
-+#define _LINUX_ERRNAME_H
-+
-+#include <linux/stddef.h>
-+
-+#ifdef CONFIG_SYMBOLIC_ERRNAME
-+const char *errname(int err);
-+#else
-+static inline const char *errname(int err)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+#endif /* _LINUX_ERRNAME_H */
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 93d97f9b0157..99a6cf677140 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -164,6 +164,15 @@ config DYNAMIC_DEBUG
- 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
- 	  information.
- 
-+config SYMBOLIC_ERRNAME
-+	bool "Support symbolic error names in printf"
-+	default y if PRINTK
-+	help
-+	  If you say Y here, the kernel's printf implementation will
-+	  be able to print symbolic error names such as ENOSPC instead
-+	  of the number 28. It makes the kernel image slightly larger
-+	  (about 3KB), but can make the kernel logs easier to read.
-+
- endmenu # "printk and dmesg options"
- 
- menu "Compile-time checks and compiler options"
-diff --git a/lib/Makefile b/lib/Makefile
-index c5892807e06f..d740534057ed 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -181,6 +181,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
- obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
- 
- obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
-+obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
- 
- obj-$(CONFIG_NLATTR) += nlattr.o
- 
-diff --git a/lib/errname.c b/lib/errname.c
-new file mode 100644
-index 000000000000..b67f58e29729
---- /dev/null
-+++ b/lib/errname.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/build_bug.h>
-+#include <linux/errno.h>
-+#include <linux/errname.h>
-+#include <linux/kernel.h>
-+
-+/*
-+ * Ensure these tables do not accidentally become gigantic if some
-+ * huge errno makes it in. On most architectures, the first table will
-+ * only have about 140 entries, but mips and parisc have more sparsely
-+ * allocated errnos (with EHWPOISON = 257 on parisc, and EDQUOT = 1133
-+ * on mips), so this wastes a bit of space on those - though we
-+ * special case the EDQUOT case.
-+ */
-+#define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = "-" #err
-+static const char *names_0[] = {
-+	E(E2BIG),
-+	E(EACCES),
-+	E(EADDRINUSE),
-+	E(EADDRNOTAVAIL),
-+	E(EADV),
-+	E(EAFNOSUPPORT),
-+	E(EALREADY),
-+	E(EBADE),
-+	E(EBADF),
-+	E(EBADFD),
-+	E(EBADMSG),
-+	E(EBADR),
-+	E(EBADRQC),
-+	E(EBADSLT),
-+	E(EBFONT),
-+	E(EBUSY),
-+#ifdef ECANCELLED
-+	E(ECANCELLED),
-+#endif
-+	E(ECHILD),
-+	E(ECHRNG),
-+	E(ECOMM),
-+	E(ECONNABORTED),
-+	E(ECONNRESET),
-+	E(EDEADLOCK),
-+	E(EDESTADDRREQ),
-+	E(EDOM),
-+	E(EDOTDOT),
-+#ifndef CONFIG_MIPS
-+	E(EDQUOT),
-+#endif
-+	E(EEXIST),
-+	E(EFAULT),
-+	E(EFBIG),
-+	E(EHOSTDOWN),
-+	E(EHOSTUNREACH),
-+	E(EHWPOISON),
-+	E(EIDRM),
-+	E(EILSEQ),
-+#ifdef EINIT
-+	E(EINIT),
-+#endif
-+	E(EINPROGRESS),
-+	E(EINTR),
-+	E(EINVAL),
-+	E(EIO),
-+	E(EISCONN),
-+	E(EISDIR),
-+	E(EISNAM),
-+	E(EKEYEXPIRED),
-+	E(EKEYREJECTED),
-+	E(EKEYREVOKED),
-+	E(EL2HLT),
-+	E(EL2NSYNC),
-+	E(EL3HLT),
-+	E(EL3RST),
-+	E(ELIBACC),
-+	E(ELIBBAD),
-+	E(ELIBEXEC),
-+	E(ELIBMAX),
-+	E(ELIBSCN),
-+	E(ELNRNG),
-+	E(ELOOP),
-+	E(EMEDIUMTYPE),
-+	E(EMFILE),
-+	E(EMLINK),
-+	E(EMSGSIZE),
-+	E(EMULTIHOP),
-+	E(ENAMETOOLONG),
-+	E(ENAVAIL),
-+	E(ENETDOWN),
-+	E(ENETRESET),
-+	E(ENETUNREACH),
-+	E(ENFILE),
-+	E(ENOANO),
-+	E(ENOBUFS),
-+	E(ENOCSI),
-+	E(ENODATA),
-+	E(ENODEV),
-+	E(ENOENT),
-+	E(ENOEXEC),
-+	E(ENOKEY),
-+	E(ENOLCK),
-+	E(ENOLINK),
-+	E(ENOMEDIUM),
-+	E(ENOMEM),
-+	E(ENOMSG),
-+	E(ENONET),
-+	E(ENOPKG),
-+	E(ENOPROTOOPT),
-+	E(ENOSPC),
-+	E(ENOSR),
-+	E(ENOSTR),
-+#ifdef ENOSYM
-+	E(ENOSYM),
-+#endif
-+	E(ENOSYS),
-+	E(ENOTBLK),
-+	E(ENOTCONN),
-+	E(ENOTDIR),
-+	E(ENOTEMPTY),
-+	E(ENOTNAM),
-+	E(ENOTRECOVERABLE),
-+	E(ENOTSOCK),
-+	E(ENOTTY),
-+	E(ENOTUNIQ),
-+	E(ENXIO),
-+	E(EOPNOTSUPP),
-+	E(EOVERFLOW),
-+	E(EOWNERDEAD),
-+	E(EPERM),
-+	E(EPFNOSUPPORT),
-+	E(EPIPE),
-+#ifdef EPROCLIM
-+	E(EPROCLIM),
-+#endif
-+	E(EPROTO),
-+	E(EPROTONOSUPPORT),
-+	E(EPROTOTYPE),
-+	E(ERANGE),
-+	E(EREMCHG),
-+#ifdef EREMDEV
-+	E(EREMDEV),
-+#endif
-+	E(EREMOTE),
-+	E(EREMOTEIO),
-+#ifdef EREMOTERELEASE
-+	E(EREMOTERELEASE),
-+#endif
-+	E(ERESTART),
-+	E(ERFKILL),
-+	E(EROFS),
-+#ifdef ERREMOTE
-+	E(ERREMOTE),
-+#endif
-+	E(ESHUTDOWN),
-+	E(ESOCKTNOSUPPORT),
-+	E(ESPIPE),
-+	E(ESRCH),
-+	E(ESRMNT),
-+	E(ESTALE),
-+	E(ESTRPIPE),
-+	E(ETIME),
-+	E(ETIMEDOUT),
-+	E(ETOOMANYREFS),
-+	E(ETXTBSY),
-+	E(EUCLEAN),
-+	E(EUNATCH),
-+	E(EUSERS),
-+	E(EXDEV),
-+	E(EXFULL),
-+
-+	E(ECANCELED), /* ECANCELLED */
-+	E(EAGAIN), /* EWOULDBLOCK */
-+	E(ECONNREFUSED), /* EREFUSED */
-+	E(EDEADLK), /* EDEADLOCK */
-+};
-+#undef E
-+
-+#define E(err) [err - 512 + BUILD_BUG_ON_ZERO(err < 512 || err > 550)] = "-" #err
-+static const char *names_512[] = {
-+	E(ERESTARTSYS),
-+	E(ERESTARTNOINTR),
-+	E(ERESTARTNOHAND),
-+	E(ENOIOCTLCMD),
-+	E(ERESTART_RESTARTBLOCK),
-+	E(EPROBE_DEFER),
-+	E(EOPENSTALE),
-+	E(ENOPARAM),
-+
-+	E(EBADHANDLE),
-+	E(ENOTSYNC),
-+	E(EBADCOOKIE),
-+	E(ENOTSUPP),
-+	E(ETOOSMALL),
-+	E(ESERVERFAULT),
-+	E(EBADTYPE),
-+	E(EJUKEBOX),
-+	E(EIOCBQUEUED),
-+	E(ERECALLCONFLICT),
-+};
-+#undef E
-+
-+static const char *__errname(unsigned err)
-+{
-+	if (err < ARRAY_SIZE(names_0))
-+		return names_0[err];
-+	if (err >= 512 && err - 512 < ARRAY_SIZE(names_512))
-+		return names_512[err - 512];
-+	/* But why? */
-+	if (IS_ENABLED(CONFIG_MIPS) && err == EDQUOT) /* 1133 */
-+		return "-EDQUOT";
-+	return NULL;
-+}
-+
-+/*
-+ * errname(EIO) -> "EIO"
-+ * errname(-EIO) -> "-EIO"
-+ */
-+const char *errname(int err)
-+{
-+	const char *name = __errname(err > 0 ? err : -err);
-+	if (!name)
-+		return NULL;
-+
-+	return err > 0 ? name + 1 : name;
-+}
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 5d94cbff2120..030daeb4fe21 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -593,6 +593,26 @@ flags(void)
- 	kfree(cmp_buffer);
- }
- 
-+static void __init
-+errptr(void)
-+{
-+	test("-1234", "%pe", ERR_PTR(-1234));
-+
-+	/* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
-+	BUILD_BUG_ON(IS_ERR(PTR));
-+	test_hashed("%pe", PTR);
-+
-+#ifdef CONFIG_SYMBOLIC_ERRNAME
-+	test("(-ENOTSOCK)", "(%pe)", ERR_PTR(-ENOTSOCK));
-+	test("(-EAGAIN)", "(%pe)", ERR_PTR(-EAGAIN));
-+	BUILD_BUG_ON(EAGAIN != EWOULDBLOCK);
-+	test("(-EAGAIN)", "(%pe)", ERR_PTR(-EWOULDBLOCK));
-+	test("[-EIO    ]", "[%-8pe]", ERR_PTR(-EIO));
-+	test("[    -EIO]", "[%8pe]", ERR_PTR(-EIO));
-+	test("-EPROBE_DEFER", "%pe", ERR_PTR(-EPROBE_DEFER));
-+#endif
-+}
-+
- static void __init
- test_pointer(void)
- {
-@@ -615,6 +635,7 @@ test_pointer(void)
- 	bitmap();
- 	netdev_features();
- 	flags();
-+	errptr();
- }
- 
- static void __init selftest(void)
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index e78017a3e1bd..b54d252b398e 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -21,6 +21,7 @@
- #include <linux/build_bug.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/errname.h>
- #include <linux/module.h>	/* for KSYM_SYMBOL_LEN */
- #include <linux/types.h>
- #include <linux/string.h>
-@@ -613,6 +614,25 @@ static char *string_nocheck(char *buf, char *end, const char *s,
- 	return widen_string(buf, len, end, spec);
- }
- 
-+static char *err_ptr(char *buf, char *end, void *ptr,
-+		     struct printf_spec spec)
-+{
-+	int err = PTR_ERR(ptr);
-+	const char *sym = errname(err);
-+
-+	if (sym)
-+		return string_nocheck(buf, end, sym, spec);
-+
-+	/*
-+	 * Somebody passed ERR_PTR(-1234) or some other non-existing
-+	 * Efoo - or perhaps CONFIG_SYMBOLIC_ERRNAME=n. Fall back to
-+	 * printing it as its decimal representation.
-+	 */
-+	spec.flags |= SIGN;
-+	spec.base = 10;
-+	return number(buf, end, err, spec);
-+}
-+
- /* Be careful: error messages must fit into the given buffer. */
- static char *error_string(char *buf, char *end, const char *s,
- 			  struct printf_spec spec)
-@@ -2187,6 +2207,11 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 		return kobject_string(buf, end, ptr, spec, fmt);
- 	case 'x':
- 		return pointer_string(buf, end, ptr, spec);
-+	case 'e':
-+		/* %pe with a non-ERR_PTR gets treated as plain %p */
-+		if (!IS_ERR(ptr))
-+			break;
-+		return err_ptr(buf, end, ptr, spec);
- 	}
- 
- 	/* default is to _not_ leak addresses, hash before printing */
-@@ -2823,6 +2848,7 @@ int vbin_printf(u32 *bin_buf, size_t size, const char *fmt, va_list args)
- 			case 'f':
- 			case 'x':
- 			case 'K':
-+			case 'e':
- 				save_arg(void *);
- 				break;
- 			default:
-@@ -2999,6 +3025,7 @@ int bstr_printf(char *buf, size_t size, const char *fmt, const u32 *bin_buf)
- 			case 'f':
- 			case 'x':
- 			case 'K':
-+			case 'e':
- 				process = true;
- 				break;
- 			default:
--- 
-2.20.1
+>  
+>  	device_create_file(&battery->dev,
+> &dev_attr_charge_control_start_threshold);
 
