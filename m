@@ -2,62 +2,109 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B89ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C509C2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A021A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnGiE4qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388873AbfJORqV (ORCPT
+        id S1731226AbfJORrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:46:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:44586 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfJORqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:46:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72400337;
-        Tue, 15 Oct 2019 10:46:20 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C13993F6C4;
-        Tue, 15 Oct 2019 10:46:18 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 18:46:16 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-s390@vger.kernel.org, f.fainelli@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org, iommu@lists.linux-foundation.org,
-        mbrugger@suse.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
-Subject: Re: [PATCH RFC 0/5] ARM: Raspberry Pi 4 DMA support
-Message-ID: <20191015174616.GO13874@arrakis.emea.arm.com>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
- <20191014205859.GA7634@iMac-3.local>
- <384b42df01c0af973002fba0d5f02068e7f2e7b3.camel@suse.de>
+        Tue, 15 Oct 2019 13:47:35 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45761 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfJORrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 13:47:35 -0400
+Received: by mail-qk1-f193.google.com with SMTP id z67so19966201qkb.12;
+        Tue, 15 Oct 2019 10:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jnflpavPjf+Ft2Pf7r24Ekpvxd/hEtSiZphraBwK8G4=;
+        b=hnGiE4qmcddwCKP25rnEIQGmKrSuCVKoZRxrhUxgLRKUrb5MVZcLlsr3L9/qKCzaGf
+         P+g5fb6ReBfuv4KKPj3X1mFmaBG1xwwz3FTUyzHRFOtF7z2rEbVAP4mwolzpFMDx83zd
+         1k4pIk8dmYpuXWJZEJBWc8y44gFFvgmtVVS7PuiCKqhB8kDcH1bTIUFR+nUeWFRt9eQr
+         oORXFN7mDDB55uMIeIPLhQvAfWlMsfY/Sz14ZGYUoCUV14hNI5GLO0BzzeoKiVi+bsBZ
+         b5dCx/S9CJingFjwUj42LyMwdGv5RvcPu3J8i/RZRFBElDG9q3iuXAKhb3EVbrFEGjuF
+         f5dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jnflpavPjf+Ft2Pf7r24Ekpvxd/hEtSiZphraBwK8G4=;
+        b=l/rYtMT014KmEFPOudp9BMyHnToqUGCGCbAJ4KEOcGeSiEHOkg1f6VH47RfVcvQNvt
+         tEV/WZFCm7tSlj73RkKkN6e8WIt4KvMC70xcR43HVdWqnyaJ5DSB4sBTiU1Uh5JV0/ts
+         tRqeePUesh97BH+uxzylgERKciZCptE5med9SHHuqVzOeyTABuN6kCJgH+Hyl0u64u6e
+         6Rk/1gQfaxU/qBswOhJOtRJ8e3JkOl6WEcRyGqbP46COgGWU62DzNrbg1/zKtgbD6yz5
+         tduqj1TQkeVAM/w341drPLebJMAmSlyAxUedH2WQV+5TWQdFj0MQQV+u7nF6G3Pzgrdd
+         s9TA==
+X-Gm-Message-State: APjAAAVAk+h5xrlyfQOJb2wOmlDexUCTaHfoo63Yidjbnam/IFmvt2yK
+        3/E7C2iFC1tulznbAlEX9QY=
+X-Google-Smtp-Source: APXvYqzcNDloZ57H2ek7q2C8DW1bg1ahgqE5n9y84l475SysQqninUVaRAjLcEaDs8rZ49WaFsWl6Q==
+X-Received: by 2002:a37:6789:: with SMTP id b131mr37687223qkc.358.1571161653540;
+        Tue, 15 Oct 2019 10:47:33 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a3:10e0:57dd:4e1:54d8:dfbe? ([2620:10d:c091:500::2:5709])
+        by smtp.gmail.com with ESMTPSA id q44sm13884054qtk.16.2019.10.15.10.47.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 10:47:32 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH] rtl8xxxu: fix RTL8723BU connection failure issue after
+ warm reboot
+To:     Chris Chiu <chiu@endlessm.com>, kvalo@codeaurora.org,
+        davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+References: <20191015101909.4640-1-chiu@endlessm.com>
+Message-ID: <30809d50-a9ba-881b-1d3b-f3582c14cf79@gmail.com>
+Date:   Tue, 15 Oct 2019 13:47:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <384b42df01c0af973002fba0d5f02068e7f2e7b3.camel@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015101909.4640-1-chiu@endlessm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:48:22AM +0200, Nicolas Saenz Julienne wrote:
-> A little off topic but I was wondering if you have a preferred way to refer to
-> the arm architecture in a way that it unambiguously excludes arm64 (for example
-> arm32 would work).
+On 10/15/19 6:19 AM, Chris Chiu wrote:
+> The RTL8723BU has problems connecting to AP after each warm reboot.
+> Sometimes it returns no scan result, and in most cases, it fails
+> the authentication for unknown reason. However, it works totally
+> fine after cold reboot.
+> 
+> Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+> for cold reboot and warm reboot, the registers imply that the MAC
+> is already powered and thus some procedures are skipped during
+> driver initialization. Double checked the vendor driver, it reads
+> the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+> during initialization based on them. This commit only tells the
+> RTL8723BU to do full initilization without checking MAC status.
+> 
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> ---
+>   drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
+>   drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
+>   drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
+>   3 files changed, 5 insertions(+)
 
-arm32 should be fine. Neither arm64 nor arm32 are officially endorsed
-ARM Ltd names (officially the exception model is AArch32 while the
-instruction set is one of A32/T32/T16).
+Looks good to me! If this takes care of the warm boot problem, that's 
+pretty awesome.
 
--- 
-Catalin
+Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+
+Jes
+
