@@ -2,130 +2,73 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BDEECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADF1ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AD321835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCC920659
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:05:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DeXj4qBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfJOJC1 (ORCPT
+        id S1728545AbfJOJFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:02:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43057 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729455AbfJOJCT (ORCPT
+        Tue, 15 Oct 2019 05:05:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35650 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfJOJFs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:02:19 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iKIib-0004U2-Rz; Tue, 15 Oct 2019 11:02:14 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 85A7F1C03AB;
-        Tue, 15 Oct 2019 11:02:13 +0200 (CEST)
-Date:   Tue, 15 Oct 2019 09:02:13 -0000
-From:   "tip-bot2 for Roman Kagan" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/hyperv: Make vapic support x2apic mode
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, stable@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191010123258.16919-1-rkagan@virtuozzo.com>
-References: <20191010123258.16919-1-rkagan@virtuozzo.com>
+        Tue, 15 Oct 2019 05:05:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sPDsJgYn2fHJq7hV1mzBz8upI2uH4JqPspr1DdlpSq0=; b=DeXj4qBDY4EvUiALUiS6E4Ilg
+        hHbLc5dvUAeFYf2dcVY5Pf9sZqPwxG9f7DudCgAjx+CDWYdOwMcyO5YxO0Ut77sujzLrANQOEukJY
+        bXAkPDCNVeGhyryk9qwJQ0Eq6XzKJBPlIPUVAi6RAq28JHxRiVKCmbnw9e1qVMWDzB4vlW1lEvn3W
+        9Fue0CWMygNgQSzTC8japrmDMwzooizIXixq9c+fivBEqXGaJ3EH4a2YMS7sU8cAlh5vUi06nMZsK
+        BRymXjTyI8HlrnKqB/KJ/NbFTeh2fN9hC61J9VbFzdEXT83gwR0Emg4UvPhQJWP6y99T2oNX1PoZM
+        gKREe7R1g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKIm3-0003Bd-6O; Tue, 15 Oct 2019 09:05:47 +0000
+Date:   Tue, 15 Oct 2019 02:05:47 -0700
+From:   'Christoph Hellwig' <hch@infradead.org>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     'Christoph Hellwig' <hch@infradead.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        andrew.murray@arm.com, lorenzo.pieralisi@arm.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        vidyas@nvidia.com, 'Anvesh Salveru' <anvesh.s@samsung.com>
+Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related
+ equalization quirks
+Message-ID: <20191015090547.GA7199@infradead.org>
+References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
+ <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
+ <20191015081620.GA28204@infradead.org>
+ <068001d58336$a76ed970$f64c8c50$@samsung.com>
 MIME-Version: 1.0
-Message-ID: <157113013342.12254.11286176752899066675.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <068001d58336$a76ed970$f64c8c50$@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tue, Oct 15, 2019 at 02:28:00PM +0530, Pankaj Dubey wrote:
+> Is this something mandatory?
+> 
+> As we discussed during first patch-set here [1] with Andrew, we have need of
+> this patch (along with some other stuffs, which will be sent soon), to clean
+> up our internal driver and make it ready for upstream. As of today we have
+> some internal restrictions where we can't make it to upstream along with
+> this patch. 
 
-Commit-ID:     e211288b72f15259da86eed6eca680758dbe9e74
-Gitweb:        https://git.kernel.org/tip/e211288b72f15259da86eed6eca680758dbe9e74
-Author:        Roman Kagan <rkagan@virtuozzo.com>
-AuthorDate:    Thu, 10 Oct 2019 12:33:05 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 15 Oct 2019 10:57:09 +02:00
-
-x86/hyperv: Make vapic support x2apic mode
-
-Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
-when supported by the vcpus.
-
-However, the apic access functions for Hyper-V enlightened apic assume
-xapic mode only.
-
-As a result, Linux fails to bring up secondary cpus when run as a guest
-in QEMU/KVM with both hv_apic and x2apic enabled.
-
-According to Michael Kelley, when in x2apic mode, the Hyper-V synthetic
-apic MSRs behave exactly the same as the corresponding architectural
-x2apic MSRs, so there's no need to override the apic accessors.  The
-only exception is hv_apic_eoi_write, which benefits from lazy EOI when
-available; however, its implementation works for both xapic and x2apic
-modes.
-
-Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
-Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191010123258.16919-1-rkagan@virtuozzo.com
-
----
- arch/x86/hyperv/hv_apic.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index 5c056b8..e01078e 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -260,11 +260,21 @@ void __init hv_apic_init(void)
- 	}
- 
- 	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
--		pr_info("Hyper-V: Using MSR based APIC access\n");
-+		pr_info("Hyper-V: Using enlightened APIC (%s mode)",
-+			x2apic_enabled() ? "x2apic" : "xapic");
-+		/*
-+		 * With x2apic, architectural x2apic MSRs are equivalent to the
-+		 * respective synthetic MSRs, so there's no need to override
-+		 * the apic accessors.  The only exception is
-+		 * hv_apic_eoi_write, because it benefits from lazy EOI when
-+		 * available, but it works for both xapic and x2apic modes.
-+		 */
- 		apic_set_eoi_write(hv_apic_eoi_write);
--		apic->read      = hv_apic_read;
--		apic->write     = hv_apic_write;
--		apic->icr_write = hv_apic_icr_write;
--		apic->icr_read  = hv_apic_icr_read;
-+		if (!x2apic_enabled()) {
-+			apic->read      = hv_apic_read;
-+			apic->write     = hv_apic_write;
-+			apic->icr_write = hv_apic_icr_write;
-+			apic->icr_read  = hv_apic_icr_read;
-+		}
- 	}
- }
+We don't add code to the kernel without actual users.
