@@ -2,149 +2,119 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0796AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D721BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B5420640
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17FE20640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 15:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbfJOPV7 (ORCPT
+        id S2387437AbfJOPXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 11:21:59 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:52000 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732659AbfJOPV7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:21:59 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKOe0-0006E0-Nb; Tue, 15 Oct 2019 16:21:52 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKOe0-0000UU-9v; Tue, 15 Oct 2019 16:21:52 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: xhci: fix __le32/__le64 accessors in debugfs code
-Date:   Tue, 15 Oct 2019 16:21:50 +0100
-Message-Id: <20191015152150.1840-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 15 Oct 2019 11:23:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:37513 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfJOPXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 11:23:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 08:23:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,300,1566889200"; 
+   d="scan'208";a="220454839"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Oct 2019 08:23:05 -0700
+Date:   Tue, 15 Oct 2019 08:23:05 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 02/14] KVM: monolithic: x86: disable linking vmx and svm
+ at the same time into the kernel
+Message-ID: <20191015152305.GB15015@linux.intel.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-3-aarcange@redhat.com>
+ <20191015031619.GD24895@linux.intel.com>
+ <94f1e36e-90b8-8b7d-57a5-031c65e415c4@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94f1e36e-90b8-8b7d-57a5-031c65e415c4@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like some of the xhci debug code is passing
-u32 to functions directly from __le32/__le64 fields. Fix
-this by using le{32,64}_to_cpu() on these to fix the
-following sparse warnings;
+On Tue, Oct 15, 2019 at 10:21:59AM +0200, Paolo Bonzini wrote:
+> On 15/10/19 05:16, Sean Christopherson wrote:
+> > I think short and sweet is enough for the prompt, with the details of how
+> > build both buried in the help text.
+> > 
+> > choice
+> > 	prompt "KVM built-in support"
+> > 	help
+> > 	  Here be a long and detailed help text.
+> > 
+> > config KVM_AMD_STATIC
+> > 	select KVM_AMD
+> > 	bool "KVM AMD"
+> > 
+> > config KVM_INTEL_STATIC
+> > 	select KVM_INTEL
+> > 	bool "KVM Intel"
+> 
+> Or even just
+> 
+> 	bool "AMD"
+> 	...
+> 	bool "Intel"
 
-drivers/usb/host/xhci-debugfs.c:205:62: warning: incorrect type in argument 1 (different base types)
-drivers/usb/host/xhci-debugfs.c:205:62:    expected unsigned int [usertype] field0
-drivers/usb/host/xhci-debugfs.c:205:62:    got restricted __le32
-drivers/usb/host/xhci-debugfs.c:206:62: warning: incorrect type in argument 2 (different base types)
-drivers/usb/host/xhci-debugfs.c:206:62:    expected unsigned int [usertype] field1
-drivers/usb/host/xhci-debugfs.c:206:62:    got restricted __le32
-drivers/usb/host/xhci-debugfs.c:207:62: warning: incorrect type in argument 3 (different base types)
-drivers/usb/host/xhci-debugfs.c:207:62:    expected unsigned int [usertype] field2
-drivers/usb/host/xhci-debugfs.c:207:62:    got restricted __le32
-drivers/usb/host/xhci-debugfs.c:208:62: warning: incorrect type in argument 4 (different base types)
-drivers/usb/host/xhci-debugfs.c:208:62:    expected unsigned int [usertype] field3
-drivers/usb/host/xhci-debugfs.c:208:62:    got restricted __le32
-drivers/usb/host/xhci-debugfs.c:266:53: warning: incorrect type in argument 1 (different base types)
-drivers/usb/host/xhci-debugfs.c:266:53:    expected unsigned int [usertype] info
-drivers/usb/host/xhci-debugfs.c:266:53:    got restricted __le32 [usertype] dev_info
-drivers/usb/host/xhci-debugfs.c:267:53: warning: incorrect type in argument 2 (different base types)
-drivers/usb/host/xhci-debugfs.c:267:53:    expected unsigned int [usertype] info2
-drivers/usb/host/xhci-debugfs.c:267:53:    got restricted __le32 [usertype] dev_info2
-drivers/usb/host/xhci-debugfs.c:268:53: warning: incorrect type in argument 3 (different base types)
-drivers/usb/host/xhci-debugfs.c:268:53:    expected unsigned int [usertype] tt_info
-drivers/usb/host/xhci-debugfs.c:268:53:    got restricted __le32 [usertype] tt_info
-drivers/usb/host/xhci-debugfs.c:269:53: warning: incorrect type in argument 4 (different base types)
-drivers/usb/host/xhci-debugfs.c:269:53:    expected unsigned int [usertype] state
-drivers/usb/host/xhci-debugfs.c:269:53:    got restricted __le32 [usertype] dev_state
-drivers/usb/host/xhci-debugfs.c:289:57: warning: incorrect type in argument 1 (different base types)
-drivers/usb/host/xhci-debugfs.c:289:57:    expected unsigned int [usertype] info
-drivers/usb/host/xhci-debugfs.c:289:57:    got restricted __le32 [usertype] ep_info
-drivers/usb/host/xhci-debugfs.c:290:57: warning: incorrect type in argument 2 (different base types)
-drivers/usb/host/xhci-debugfs.c:290:57:    expected unsigned int [usertype] info2
-drivers/usb/host/xhci-debugfs.c:290:57:    got restricted __le32 [usertype] ep_info2
-drivers/usb/host/xhci-debugfs.c:291:57: warning: incorrect type in argument 3 (different base types)
-drivers/usb/host/xhci-debugfs.c:291:57:    expected unsigned long long [usertype] deq
-drivers/usb/host/xhci-debugfs.c:291:57:    got restricted __le64 [usertype] deq
-drivers/usb/host/xhci-debugfs.c:292:57: warning: incorrect type in argument 4 (different base types)
-drivers/usb/host/xhci-debugfs.c:292:57:    expected unsigned int [usertype] tx_info
-drivers/usb/host/xhci-debugfs.c:292:57:    got restricted __le32 [usertype] tx_info
+Ya.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-.. (open list)
----
- drivers/usb/host/xhci-debugfs.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+> > endchoice
+> > 
+> > The ends up looking like:
+> > 
+> >    <*>   Kernel-based Virtual Machine (KVM) support
+> >            KVM built-in support (KVM Intel)  --->
+> >    -*-   KVM for Intel processors support
+> 
+> On top of this, it's also nice to hide the KVM_INTEL/KVM_AMD prompts if
+> linking statically.  You can achieve that with
+> 
+> config KVM_INTEL
+>     tristate
+>     prompt "KVM for Intel processors support" if KVM=m
 
-diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
-index 7ba6afc7ef23..76c3f29562d2 100644
---- a/drivers/usb/host/xhci-debugfs.c
-+++ b/drivers/usb/host/xhci-debugfs.c
-@@ -202,10 +202,10 @@ static void xhci_ring_dump_segment(struct seq_file *s,
- 		trb = &seg->trbs[i];
- 		dma = seg->dma + i * sizeof(*trb);
- 		seq_printf(s, "%pad: %s\n", &dma,
--			   xhci_decode_trb(trb->generic.field[0],
--					   trb->generic.field[1],
--					   trb->generic.field[2],
--					   trb->generic.field[3]));
-+			   xhci_decode_trb(le32_to_cpu(trb->generic.field[0]),
-+					   le32_to_cpu(trb->generic.field[1]),
-+					   le32_to_cpu(trb->generic.field[2]),
-+					   le32_to_cpu(trb->generic.field[3])));
- 	}
- }
- 
-@@ -263,10 +263,10 @@ static int xhci_slot_context_show(struct seq_file *s, void *unused)
- 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
- 	slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
- 	seq_printf(s, "%pad: %s\n", &dev->out_ctx->dma,
--		   xhci_decode_slot_context(slot_ctx->dev_info,
--					    slot_ctx->dev_info2,
--					    slot_ctx->tt_info,
--					    slot_ctx->dev_state));
-+		   xhci_decode_slot_context(le32_to_cpu(slot_ctx->dev_info),
-+					    le32_to_cpu(slot_ctx->dev_info2),
-+					    le32_to_cpu(slot_ctx->tt_info),
-+					    le32_to_cpu(slot_ctx->dev_state)));
- 
- 	return 0;
- }
-@@ -286,10 +286,10 @@ static int xhci_endpoint_context_show(struct seq_file *s, void *unused)
- 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
- 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
- 		seq_printf(s, "%pad: %s\n", &dma,
--			   xhci_decode_ep_context(ep_ctx->ep_info,
--						  ep_ctx->ep_info2,
--						  ep_ctx->deq,
--						  ep_ctx->tx_info));
-+			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
-+						  le32_to_cpu(ep_ctx->ep_info2),
-+						  le64_to_cpu(ep_ctx->deq),
-+						  le32_to_cpu(ep_ctx->tx_info)));
- 	}
- 
- 	return 0;
--- 
-2.23.0
+That's painfully obvious now that I see it.  I always forget about putting
+conditionals at the end...
 
+>     depends on (KVM=m && m) || KVM_INTEL_STATIC
+> 
+> config KVM_AMD
+>     tristate
+>     prompt "KVM for AMD processors support" if KVM=m
+>     depends on (KVM=m && m) || KVM_AMD_STATIC
+> 
+> The left side of the "||" ensures that, if KVM=m, you can only choose
+> module build for both KVM_INTEL and KVM_AMD.  Having just "depends on
+> KVM" would allow a pre-existing .config to choose the now-invalid
+> combination
+> 
+> 	CONFIG_KVM=y
+> 	CONFIG_KVM_INTEL=y
+> 	CONFIG_KVM_AMD=y
+> 
+> The right side of the "||" part is just for documentation, to avoid that
+> a selected symbol does not satisfy its dependencies.
+> 
+> Thanks,
+> 
+> Paolo
