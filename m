@@ -4,35 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165B4ECE595
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CA9ECE596
 	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05DE2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1695A20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 19:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389424AbfJOTSq (ORCPT
+        id S1731154AbfJOTUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 15:18:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45653 "EHLO
+        Tue, 15 Oct 2019 15:20:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45679 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389386AbfJOTSm (ORCPT
+        with ESMTP id S2389418AbfJOTSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 15:18:42 -0400
+        Tue, 15 Oct 2019 15:18:46 -0400
 Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1iKSL9-00067i-MN; Tue, 15 Oct 2019 21:18:39 +0200
+        id 1iKSLB-00067i-FL; Tue, 15 Oct 2019 21:18:41 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org,
+Cc:     tglx@linutronix.de, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 20/34] xtensa: Use CONFIG_PREEMPTION
-Date:   Tue, 15 Oct 2019 21:18:07 +0200
-Message-Id: <20191015191821.11479-21-bigeasy@linutronix.de>
+Subject: [PATCH 25/34] mm: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:18:12 +0200
+Message-Id: <20191015191821.11479-26-bigeasy@linutronix.de>
 In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
 References: <20191015191821.11479-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -48,55 +50,95 @@ CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
 Both PREEMPT and PREEMPT_RT require the same functionality which today
 depends on CONFIG_PREEMPT.
 
-Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
-output to die().
+Switch the pte_unmap_same() and SLUB code over to use CONFIG_PREEMPTION.
 
-Cc: Chris Zankel <chris@zankel.net>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
-Cc: linux-xtensa@linux-xtensa.org
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-[bigeasy: +traps.c]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/xtensa/kernel/entry.S | 2 +-
- arch/xtensa/kernel/traps.c | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ mm/memory.c |  2 +-
+ mm/slub.c   | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/xtensa/kernel/entry.S b/arch/xtensa/kernel/entry.S
-index 9e3676879168a..a6434813df6c8 100644
---- a/arch/xtensa/kernel/entry.S
-+++ b/arch/xtensa/kernel/entry.S
-@@ -520,7 +520,7 @@ ENTRY(kernel_exception)
- 	call4	schedule	# void schedule (void)
- 	j	1b
+diff --git a/mm/memory.c b/mm/memory.c
+index b1ca51a079f27..fd2cede4a84f0 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2133,7 +2133,7 @@ static inline int pte_unmap_same(struct mm_struct *mm=
+, pmd_t *pmd,
+ 				pte_t *page_table, pte_t orig_pte)
+ {
+ 	int same =3D 1;
+-#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT)
++#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPTION)
+ 	if (sizeof(pte_t) > sizeof(unsigned long)) {
+ 		spinlock_t *ptl =3D pte_lockptr(mm, pmd);
+ 		spin_lock(ptl);
+diff --git a/mm/slub.c b/mm/slub.c
+index 3d63ae320d31b..23fa669934829 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1984,7 +1984,7 @@ static void *get_partial(struct kmem_cache *s, gfp_t =
+flags, int node,
+ 	return get_any_partial(s, flags, c);
+ }
 =20
 -#ifdef CONFIG_PREEMPT
 +#ifdef CONFIG_PREEMPTION
- 6:
- 	_bbci.l	a4, TIF_NEED_RESCHED, 4f
+ /*
+  * Calculate the next globally unique transaction for disambiguiation
+  * during cmpxchg. The transactions start with the cpu number and are then
+@@ -2029,7 +2029,7 @@ static inline void note_cmpxchg_failure(const char *n,
 =20
-diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
-index 4a6c495ce9b6d..2e7cf56412a05 100644
---- a/arch/xtensa/kernel/traps.c
-+++ b/arch/xtensa/kernel/traps.c
-@@ -524,12 +524,15 @@ DEFINE_SPINLOCK(die_lock);
- void die(const char * str, struct pt_regs * regs, long err)
- {
- 	static int die_counter;
-+	const char *pr =3D "";
-+
-+	if (IS_ENABLED(CONFIG_PREEMPTION))
-+		pr =3D IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
+ 	pr_info("%s %s: cmpxchg redo ", n, s->name);
 =20
- 	console_verbose();
- 	spin_lock_irq(&die_lock);
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	if (tid_to_cpu(tid) !=3D tid_to_cpu(actual_tid))
+ 		pr_warn("due to cpu change %d -> %d\n",
+ 			tid_to_cpu(tid), tid_to_cpu(actual_tid));
+@@ -2657,7 +2657,7 @@ static void *__slab_alloc(struct kmem_cache *s, gfp_t=
+ gfpflags, int node,
+ 	unsigned long flags;
 =20
--	pr_info("%s: sig: %ld [#%d]%s\n", str, err, ++die_counter,
--		IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "");
-+	pr_info("%s: sig: %ld [#%d]%s\n", str, err, ++die_counter, pr);
- 	show_regs(regs);
- 	if (!user_mode(regs))
- 		show_stack(NULL, (unsigned long*)regs->areg[1]);
+ 	local_irq_save(flags);
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	/*
+ 	 * We may have been preempted and rescheduled on a different
+ 	 * cpu before disabling interrupts. Need to reload cpu area
+@@ -2700,13 +2700,13 @@ static __always_inline void *slab_alloc_node(struct=
+ kmem_cache *s,
+ 	 * as we end up on the original cpu again when doing the cmpxchg.
+ 	 *
+ 	 * We should guarantee that tid and kmem_cache are retrieved on
+-	 * the same cpu. It could be different if CONFIG_PREEMPT so we need
++	 * the same cpu. It could be different if CONFIG_PREEMPTION so we need
+ 	 * to check if it is matched or not.
+ 	 */
+ 	do {
+ 		tid =3D this_cpu_read(s->cpu_slab->tid);
+ 		c =3D raw_cpu_ptr(s->cpu_slab);
+-	} while (IS_ENABLED(CONFIG_PREEMPT) &&
++	} while (IS_ENABLED(CONFIG_PREEMPTION) &&
+ 		 unlikely(tid !=3D READ_ONCE(c->tid)));
+=20
+ 	/*
+@@ -2984,7 +2984,7 @@ static __always_inline void do_slab_free(struct kmem_=
+cache *s,
+ 	do {
+ 		tid =3D this_cpu_read(s->cpu_slab->tid);
+ 		c =3D raw_cpu_ptr(s->cpu_slab);
+-	} while (IS_ENABLED(CONFIG_PREEMPT) &&
++	} while (IS_ENABLED(CONFIG_PREEMPTION) &&
+ 		 unlikely(tid !=3D READ_ONCE(c->tid)));
+=20
+ 	/* Same with comment on barrier() in slab_alloc_node() */
 --=20
 2.23.0
 
