@@ -2,110 +2,140 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD432ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01E7ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28D320650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B8C20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DONTslug"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpDLdyz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbfJORam (ORCPT
+        id S1731279AbfJORar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:30:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38216 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729710AbfJORak (ORCPT
+        Tue, 15 Oct 2019 13:30:47 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37806 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729710AbfJORaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:30:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w3so5639633pgt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:30:40 -0700 (PDT)
+        Tue, 15 Oct 2019 13:30:46 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p1so12554541pgi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=qGTmzDxe583R/v3aUC27S2QW45EmLA5xRgdHBmdZQi8=;
-        b=DONTslugMGlqg9iBy9hmK9+7DEX/oNOpdshb8MJixifpM3883pIwAXkZJP1899eOOe
-         csSfbo+FfCUiV+kVq7hiQ6pfbD6C87oLMXyDBdhV1/GSBdsQlOFUXMCGmLBgSxaz8gVO
-         aq5UY0uVYcnU2VSFQ6oY4dt8Tp8J1z42id9np5S3hIk0vE1uwM3DsdKmQW1R/7aLH8jG
-         q0S2ackCH3BX/uK8e8Yuc1GGllaGYLaTzYn9Koq29PK7q2/q3L2zUh7SxdkvQU/6ZEXI
-         I6iu/jFbMxnwHYX1qP1OeSzoTYe0Sdg3Dnx8IWPp3RvJj1kQ4gTKKM6YsmrjLX56IHwk
-         PeAA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=P585Wb4GdNSdANLbtZBTejDHy0hzt6pLG6Y0SHAZ9bU=;
+        b=lpDLdyz6gnJaWTKjbVWSVfNBu6KMNSTe2jzE7hfZCBE/yhgGo3bcfsuo4VE0UxQoWT
+         H75k5eMOlfLtO8A5ocoGCBC7WwIrGu5NhtVp7sU2OSO24qCzmwJDv9mjbf2XfFIjl7AP
+         o0S59xqf2//C6qUa9OfgSXewKWN/9kN7P7YL82zLiYeepojPRIAT70xwjfgaY7nVRaaq
+         MD5K5/WkIIMWT6vpdY5VfZPa9lGszMYcM9U188QDbEmSIifvhXo6ozxs2zk6P00wavPd
+         x2Mtub+9nA8TRjOg44JFhRheRbLuOWlMlpV1hlNq3nE6bqeO8B0DoDLFYO+gjSMX4vyS
+         W9qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qGTmzDxe583R/v3aUC27S2QW45EmLA5xRgdHBmdZQi8=;
-        b=DRMp6pm07Xx8+erNry2o2Zf6KCq9w4EVYg6xrKYtZqoZgZ3jfp2VSIPhfYg++OO1mF
-         QVgdcWElSop0vBxeslR6KjsxJV8cqIlCNa1MMetBiPM7TzoTCw0lfoxY/S2wdqw+2MLa
-         +pk9ktZrOhMEaGwquwOc+QSWnnnicD9NkHKBhgKTwxjyXxqTdYs46fo/ZQmlP2wLx1yf
-         Cr5GDRAXFbDJJFddmhl7YWzjZ57N1ocUyVbl8oAHjNqfFvb/ujsvBChA9i0OWqdZa7fz
-         x035AcwLSY+ERRPrfEzkCdoymcanXXYZxD+fkRnTfyyyYBxWXLxd4rStsoVlfC3pg+9i
-         Vz8A==
-X-Gm-Message-State: APjAAAXUjprsDtWoje7mOArQkFLXAB1VIJAv9S6CBMUrVrQkMzw4pUvJ
-        tknHnbIZmzkbHFyzviA/n5Wina/tvw==
-X-Google-Smtp-Source: APXvYqwu/2hvE2QpunG0Cb+S5rWtvqa1YDgqbHA1dUUgRwBSbSv1CfKKSL1Lqvwq3gQUc0UEbDlZjw==
-X-Received: by 2002:a63:1f52:: with SMTP id q18mr40306261pgm.35.1571160639901;
-        Tue, 15 Oct 2019 10:30:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=P585Wb4GdNSdANLbtZBTejDHy0hzt6pLG6Y0SHAZ9bU=;
+        b=XmID0SyIwjgSw8dx9cyY+6EN71MH51Jg6hUDWPBaLUlL4ziMQ/CShktcOfeA99eVYq
+         Q/kzAvRGD9ostBZzCHTBGyo3Y/wQihbV0UEJhPbxBIqxWuyESWk1qdmXaHlMTasa2fZM
+         XmHQwLeU6DQJF6r6xwpWbQUGAC050AYAj7+xGutbZOJCUrLGJ9gI3g2zuyRbl806Ff+I
+         5KHseqZ9kAwUY8Vq9c29yQa0DG+QxDaZ0E7l3XKN7GQ263ICisXazM1/Vpo68poYPheG
+         JRNwdsJu5CCPDYgNvy5ye2K/xWZ33L6EJzflm7OCMa+DXZ2swqXHfzocFck8XSktDFwh
+         hJcQ==
+X-Gm-Message-State: APjAAAWO3AUSOWDH3hhrxOJwhjWUzx7eCOuk2pMmppji6opuAKu5OGpB
+        qE5fv7YiRQSWIIb12wX8WbpI
+X-Google-Smtp-Source: APXvYqwbCLpdmWKTZmSl1oTdfCb2flyajMLs6QMZwE38ftfHAg1sNcGjH12xadW0vkB52MaxPKYLhA==
+X-Received: by 2002:aa7:8249:: with SMTP id e9mr38929777pfn.46.1571160645036;
+        Tue, 15 Oct 2019 10:30:45 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:6003:7cb8:25e8:2c45:fab2:b0c7])
-        by smtp.gmail.com with ESMTPSA id w11sm28033563pfd.116.2019.10.15.10.30.34
+        by smtp.gmail.com with ESMTPSA id w11sm28033563pfd.116.2019.10.15.10.30.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:30:39 -0700 (PDT)
+        Tue, 15 Oct 2019 10:30:44 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 0/4] Add GPIO support for RDA8810PL SoC
-Date:   Tue, 15 Oct 2019 23:00:22 +0530
-Message-Id: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 1/4] dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO controller
+Date:   Tue, 15 Oct 2019 23:00:23 +0530
+Message-Id: <20191015173026.9962-2-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
+References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add YAML devicetree binding for RDA Micro GPIO controller.
 
-This patchset adds GPIO controller support for RDA Micro RDA8810PL
-SoC. This SoC has 4 GPIO controllers and each handles 32 GPIOs. Except
-GPIOC, all controllers are capable of generating edge/level interrupts
-from first 8 GPIO lines. The pinctrl part for this SoC will be added
-later.
-
-This driver has been validated on 96Boards OrangePi i96 board from
-Shenzhen Xunlong Software Co.,Limited with libgpiod.
-
-Thanks,
-Mani
-
-Changes in v2:
-
-As per the review by Bartosz:
-
-* Dropped the not implemented gpio_request/free callbacks.
-* Used device_* helper to fetch ngpios.
-
-Manivannan Sadhasivam (4):
-  dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO
-    controller
-  ARM: dts: Add RDA8810PL GPIO controllers
-  gpio: Add RDA Micro GPIO controller support
-  MAINTAINERS: Add entry for RDA Micro GPIO driver and binding
-
- .../devicetree/bindings/gpio/gpio-rda.yaml    |  50 +++
- MAINTAINERS                                   |   2 +
- arch/arm/boot/dts/rda8810pl.dtsi              |  48 +++
- drivers/gpio/Kconfig                          |   8 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-rda.c                       | 315 ++++++++++++++++++
- 6 files changed, 424 insertions(+)
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ .../devicetree/bindings/gpio/gpio-rda.yaml    | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
- create mode 100644 drivers/gpio/gpio-rda.c
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+new file mode 100644
+index 000000000000..6ece555f074f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-rda.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RDA Micro GPIO controller
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++properties:
++  compatible:
++    const: rda,8810pl-gpio
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++  ngpios:
++    description:
++      Number of available gpios in a bank.
++    minimum: 1
++    maximum: 32
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++  - ngpios
++  - interrupt-controller
++  - "#interrupt-cells"
++  - interrupts
++
++additionalProperties: false
++
++...
 -- 
 2.17.1
 
