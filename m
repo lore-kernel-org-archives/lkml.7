@@ -2,130 +2,113 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD4DECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14471C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07A221835
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:02:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoCuT2+l"
+	by mail.kernel.org (Postfix) with ESMTP id E598621835
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 09:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfJOJCQ (ORCPT
+        id S1729592AbfJOJCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 05:02:16 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37882 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfJOJCO (ORCPT
+        Tue, 15 Oct 2019 05:02:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43044 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbfJOJCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:02:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u20so9280321plq.4;
-        Tue, 15 Oct 2019 02:02:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y/FDmIN7D8CAH00XLKSbXEilWCinqJP7n+EcoU7otuk=;
-        b=HoCuT2+lllpMGI7rxiT0hR8SrLG0PxTVSag1/oMBtvUyOxazz+MUgiI1f8MRbx46ej
-         GOavSu+uhk8b6OY/Z4K8ksOea6AVOo8YvnixA0pmAn8Mj43ZoY4HXbCK5fX9F657AIpm
-         Iq4zItG0MZtz4yqXJx1lRI03gq7wX7c2zG9nq9luguy0oKWRsBC89Uf2XwMAa1e0Zzgc
-         h5kIKDSpesNdliArJBfcRHOcLLZERWLYirCf6ScpT36OkkoWyWhkh6eDDAYLxQ/fnYR6
-         4r6LXRWVC+f7kDgeGRRcu7pFWdZ6JI5CZAipJ7DMvBp8pV14/qNA9T0F8LAIPtFD5imQ
-         CQYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y/FDmIN7D8CAH00XLKSbXEilWCinqJP7n+EcoU7otuk=;
-        b=gg7oh5ZjQGjulF3Z2xTfieQDXc84zKmcMo35UuBk5nfnSAmC4JYT5rxPQDgWxciDvd
-         hERTfEdJ9DfLImmNEGGd53klHCz66hxh6G32lV9FFFnUwsgsKIuRgE1wfEkHKaI9vCdf
-         YcGwxfhF5lPgkEolBj40eG/ZVaXXE/54BYwkpdY5vCwdGEpQJUZnzHBQk5W0OY21RrmO
-         iHFlBKPZke4xg3ibefT9gG7Mjv1XYMatWSktp7r8P+7SaCjFnbZpHWiIL+CkeO4Ay1L+
-         UeDPFGMMoqRDL4GzGNtF1gmz7UZQwta7cdt4a7klPIzsI5WYA03t/oifUbrTaIA62nH6
-         j4lw==
-X-Gm-Message-State: APjAAAUd2c8aQoDPpv3ILU9u3RRcreu/QZM3bMI0QUYYhcL/8KXe38gO
-        SMWUrml5FmR8vibqqREqXyWqlEbAVVKZZVg1vwI=
-X-Google-Smtp-Source: APXvYqwO/5hFqux5frYOwevy/NieZz1EIdQe655HuLE5hkKwfQJ49zRK0A/Mgoun/IUJoY/i+vhv9Ba0Waay4XJ8WXM=
-X-Received: by 2002:a17:902:9881:: with SMTP id s1mr35148119plp.18.1571130132022;
- Tue, 15 Oct 2019 02:02:12 -0700 (PDT)
+        Tue, 15 Oct 2019 05:02:13 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iKIiU-0004Sd-G1; Tue, 15 Oct 2019 11:02:06 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1F3961C0105;
+        Tue, 15 Oct 2019 11:02:06 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 09:02:05 -0000
+From:   "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/apic/x2apic: Fix a NULL pointer deref when
+ handling a dying cpu
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191001205019.5789-1-sean.j.christopherson@intel.com>
+References: <20191001205019.5789-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20191004214334.149976-1-swboyd@chromium.org> <20191004214334.149976-2-swboyd@chromium.org>
- <CAHp75Vebn48hbzqKWzV3aj4NEBCta_Fn7zOQHzsznW4=6cXLsQ@mail.gmail.com> <5da4e084.1c69fb81.567f9.4b9c@mx.google.com>
-In-Reply-To: <5da4e084.1c69fb81.567f9.4b9c@mx.google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Oct 2019 12:02:01 +0300
-Message-ID: <CAHp75Vcht2S7j64vUGw+DQdSEAyxuyBJ9oVwHyXxnL9bM1-wFA@mail.gmail.com>
-Subject: Re: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Riku Voipio <riku.voipio@iki.fi>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157113012595.12254.4819420610843563041.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 11:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> Quoting Andy Shevchenko (2019-10-14 10:50:06)
-> > On Sat, Oct 5, 2019 at 12:47 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > This driver can use the of_device_get_match_data() API to simplify the
-> > > code. Replace calls to of_match_device() with this newer API under the
-> > > assumption that where it is called will be when we know the device is
-> > > backed by a DT node. This nicely avoids referencing the match table when
-> > > it is undefined with configurations where CONFIG_OF=n.
-> >
-> > > +       devid = (int)(uintptr_t)of_device_get_match_data(dev);
-> >
-> > > +               devid = (int)(uintptr_t)of_device_get_match_data(&client->dev);
-> >
-> > This still leaves it OF-centric.
-> > Better to use device_get_match_data().
-> >
-> > Also, I'm thinking that following may help to clean a lot of the i2c
-> > client drivers
-> >
-> > static inline // perhaps no
-> > const void *i2c_device_get_match_data(struct i2c_client *client, const
-> > struct i2c_device_id *id)
-> > {
-> >   if (id)
-> >     return (const void *)id->driver_data;
-> >   return device_get_match_data(&client->dev);
-> > }
-> >
->
-> Looks alright to me. Maybe device_get_match_data() can look at the bus
-> and call some bus op if the firmware match isn't present? Then we can
-> replace a bunch of these calls with device_get_match_data() and it will
-> "do the right thing" regardless of what bus or firmware the device is
-> running on.
+The following commit has been merged into the x86/urgent branch of tip:
 
-It will be something ugly like
+Commit-ID:     7a22e03b0c02988e91003c505b34d752a51de344
+Gitweb:        https://git.kernel.org/tip/7a22e03b0c02988e91003c505b34d752a51de344
+Author:        Sean Christopherson <sean.j.christopherson@intel.com>
+AuthorDate:    Tue, 01 Oct 2019 13:50:19 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 15 Oct 2019 10:57:09 +02:00
 
-buses {
-#ifdef I2C
-&i2c_bus_type,
-#endif
-...
-}
+x86/apic/x2apic: Fix a NULL pointer deref when handling a dying cpu
 
-in the code. I won't do this.
+Check that the per-cpu cluster mask pointer has been set prior to
+clearing a dying cpu's bit.  The per-cpu pointer is not set until the
+target cpu reaches smp_callin() during CPUHP_BRINGUP_CPU, whereas the
+teardown function, x2apic_dead_cpu(), is associated with the earlier
+CPUHP_X2APIC_PREPARE.  If an error occurs before the cpu is awakened,
+e.g. if do_boot_cpu() itself fails, x2apic_dead_cpu() will dereference
+the NULL pointer and cause a panic.
 
-See generic_match_buses[] for example.
+  smpboot: do_boot_cpu failed(-22) to wakeup CPU#1
+  BUG: kernel NULL pointer dereference, address: 0000000000000008
+  RIP: 0010:x2apic_dead_cpu+0x1a/0x30
+  Call Trace:
+   cpuhp_invoke_callback+0x9a/0x580
+   _cpu_up+0x10d/0x140
+   do_cpu_up+0x69/0xb0
+   smp_init+0x63/0xa9
+   kernel_init_freeable+0xd7/0x229
+   ? rest_init+0xa0/0xa0
+   kernel_init+0xa/0x100
+   ret_from_fork+0x35/0x40
 
--- 
-With Best Regards,
-Andy Shevchenko
+Fixes: 023a611748fd5 ("x86/apic/x2apic: Simplify cluster management")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191001205019.5789-1-sean.j.christopherson@intel.com
+
+---
+ arch/x86/kernel/apic/x2apic_cluster.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
+index 45e92cb..b0889c4 100644
+--- a/arch/x86/kernel/apic/x2apic_cluster.c
++++ b/arch/x86/kernel/apic/x2apic_cluster.c
+@@ -156,7 +156,8 @@ static int x2apic_dead_cpu(unsigned int dead_cpu)
+ {
+ 	struct cluster_mask *cmsk = per_cpu(cluster_masks, dead_cpu);
+ 
+-	cpumask_clear_cpu(dead_cpu, &cmsk->mask);
++	if (cmsk)
++		cpumask_clear_cpu(dead_cpu, &cmsk->mask);
+ 	free_cpumask_var(per_cpu(ipi_mask, dead_cpu));
+ 	return 0;
+ }
