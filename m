@@ -2,140 +2,114 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21547ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298A5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBE22064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="DM3eoiiM"
+	by mail.kernel.org (Postfix) with ESMTP id 042372064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 08:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfJOIo1 (ORCPT
+        id S1729307AbfJOIo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 04:44:27 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60640 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726430AbfJOIo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 04:44:27 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id B5BBB2E149C;
-        Tue, 15 Oct 2019 11:44:23 +0300 (MSK)
-Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id OxwQY6knWm-iNfC0WqM;
-        Tue, 15 Oct 2019 11:44:23 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1571129063; bh=lnvoJc4lckZwUKOSXQNoEHjcOj06ik4igfQkAd2qz8g=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=DM3eoiiMqJcpuZ+y4jQPKbbWGJ9bGSQ5DKMEDttIg8NHnKpADIHKjCcaNVo3tc4vl
-         fMZMkPmweNVaA9QfJewcGe59pbXRA0Y4jNOn5H62Vy09VOozpZJ+PqjZ8hH8IgZwKB
-         ftB3I3bMA1k1ijGsKBlDfouKloTp0/8ShoJxOKr4=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d4d:a9cb:ef29:4bb1])
-        by iva4-c987840161f8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id xZbxjK3pt4-iNNeGGMI;
-        Tue, 15 Oct 2019 11:44:23 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/memcontrol: update lruvec counters in
- mem_cgroup_move_account
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <157112699975.7360.1062614888388489788.stgit@buzz>
- <20191015082048.GU317@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <3b73e301-ea4a-5edb-9360-2ae9b4ad9f69@yandex-team.ru>
-Date:   Tue, 15 Oct 2019 11:44:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 04:44:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33504 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfJOIo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 04:44:57 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5625F10CC1F8;
+        Tue, 15 Oct 2019 08:44:56 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 65A125C1D4;
+        Tue, 15 Oct 2019 08:44:51 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 10:44:51 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        ilubashe@akamai.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, hushiyuan@huawei.com,
+        linfeilong@huawei.com
+Subject: Re: [PATCH] perf tools: fix resource leak of closedir() on the error
+ paths
+Message-ID: <20191015084451.GB10951@krava>
+References: <cd5f7cd2-b80d-6add-20a1-32f4f43e0744@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191015082048.GU317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd5f7cd2-b80d-6add-20a1-32f4f43e0744@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 15 Oct 2019 08:44:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 11.20, Michal Hocko wrote:
-> On Tue 15-10-19 11:09:59, Konstantin Khlebnikov wrote:
->> Mapped, dirty and writeback pages are also counted in per-lruvec stats.
->> These counters needs update when page is moved between cgroups.
+On Tue, Oct 15, 2019 at 04:30:08PM +0800, Yunfeng Ye wrote:
+> Both build_mem_topology() and rm_rf_depth_pat() have resource leak of
+> closedir() on the error paths.
 > 
-> Please describe the user visible effect.
+> Fix this by calling closedir() before function returns.
+> 
+> Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
+> Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
 
-Surprisingly I don't see any users at this moment.
-So, there is no effect in mainline kernel.
+guilty as charged ;-)
 
->> Fixes: 00f3ca2c2d66 ("mm: memcontrol: per-lruvec stats infrastructure")
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+>  tools/perf/util/header.c | 4 +++-
+>  tools/perf/util/util.c   | 6 ++++--
+>  2 files changed, 7 insertions(+), 3 deletions(-)
 > 
-> We want Cc: stable I suspect because broken stats might be really
-> misleading.
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 86d9396..becc2d1 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1296,8 +1296,10 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+>  			continue;
 > 
-> The patch looks ok to me otherwise
-> Acked-by: Michal Hocko <mhocko@suse.com>
+>  		if (WARN_ONCE(cnt >= size,
+> -			      "failed to write MEM_TOPOLOGY, way too many nodes\n"))
+> +			"failed to write MEM_TOPOLOGY, way too many nodes\n")) {
+> +			closedir(dir);
+>  			return -1;
+> +		}
 > 
->> ---
->>   mm/memcontrol.c |   18 ++++++++++++------
->>   1 file changed, 12 insertions(+), 6 deletions(-)
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index bdac56009a38..363106578876 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -5420,6 +5420,8 @@ static int mem_cgroup_move_account(struct page *page,
->>   				   struct mem_cgroup *from,
->>   				   struct mem_cgroup *to)
->>   {
->> +	struct lruvec *from_vec, *to_vec;
->> +	struct pglist_data *pgdat;
->>   	unsigned long flags;
->>   	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
->>   	int ret;
->> @@ -5443,11 +5445,15 @@ static int mem_cgroup_move_account(struct page *page,
->>   
->>   	anon = PageAnon(page);
->>   
->> +	pgdat = page_pgdat(page);
->> +	from_vec = mem_cgroup_lruvec(pgdat, from);
->> +	to_vec = mem_cgroup_lruvec(pgdat, to);
->> +
->>   	spin_lock_irqsave(&from->move_lock, flags);
->>   
->>   	if (!anon && page_mapped(page)) {
->> -		__mod_memcg_state(from, NR_FILE_MAPPED, -nr_pages);
->> -		__mod_memcg_state(to, NR_FILE_MAPPED, nr_pages);
->> +		__mod_lruvec_state(from_vec, NR_FILE_MAPPED, -nr_pages);
->> +		__mod_lruvec_state(to_vec, NR_FILE_MAPPED, nr_pages);
->>   	}
->>   
->>   	/*
->> @@ -5459,14 +5465,14 @@ static int mem_cgroup_move_account(struct page *page,
->>   		struct address_space *mapping = page_mapping(page);
->>   
->>   		if (mapping_cap_account_dirty(mapping)) {
->> -			__mod_memcg_state(from, NR_FILE_DIRTY, -nr_pages);
->> -			__mod_memcg_state(to, NR_FILE_DIRTY, nr_pages);
->> +			__mod_lruvec_state(from_vec, NR_FILE_DIRTY, -nr_pages);
->> +			__mod_lruvec_state(to_vec, NR_FILE_DIRTY, nr_pages);
->>   		}
->>   	}
->>   
->>   	if (PageWriteback(page)) {
->> -		__mod_memcg_state(from, NR_WRITEBACK, -nr_pages);
->> -		__mod_memcg_state(to, NR_WRITEBACK, nr_pages);
->> +		__mod_lruvec_state(from_vec, NR_WRITEBACK, -nr_pages);
->> +		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
->>   	}
->>   
->>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  		ret = memory_node__read(&nodes[cnt++], idx);
+>  	}
+> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+> index 5eda6e1..ae56c76 100644
+> --- a/tools/perf/util/util.c
+> +++ b/tools/perf/util/util.c
+> @@ -154,8 +154,10 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
+>  		if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
+>  			continue;
+> 
+> -		if (!match_pat(d->d_name, pat))
+> -			return -2;
+> +		if (!match_pat(d->d_name, pat)) {
+> +			ret =  -2;
+> +			break;
+> +		}
+> 
+>  		scnprintf(namebuf, sizeof(namebuf), "%s/%s",
+>  			  path, d->d_name);
+> -- 
+> 2.7.4.huawei.3
 > 
