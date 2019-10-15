@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01E7ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77823ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B8C20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A3820650
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpDLdyz6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZ82Yhwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfJORar (ORCPT
+        id S2388794AbfJORaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:30:47 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37806 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729710AbfJORaq (ORCPT
+        Tue, 15 Oct 2019 13:30:52 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33533 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729632AbfJORau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:30:46 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p1so12554541pgi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:30:45 -0700 (PDT)
+        Tue, 15 Oct 2019 13:30:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d22so9928973pls.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=P585Wb4GdNSdANLbtZBTejDHy0hzt6pLG6Y0SHAZ9bU=;
-        b=lpDLdyz6gnJaWTKjbVWSVfNBu6KMNSTe2jzE7hfZCBE/yhgGo3bcfsuo4VE0UxQoWT
-         H75k5eMOlfLtO8A5ocoGCBC7WwIrGu5NhtVp7sU2OSO24qCzmwJDv9mjbf2XfFIjl7AP
-         o0S59xqf2//C6qUa9OfgSXewKWN/9kN7P7YL82zLiYeepojPRIAT70xwjfgaY7nVRaaq
-         MD5K5/WkIIMWT6vpdY5VfZPa9lGszMYcM9U188QDbEmSIifvhXo6ozxs2zk6P00wavPd
-         x2Mtub+9nA8TRjOg44JFhRheRbLuOWlMlpV1hlNq3nE6bqeO8B0DoDLFYO+gjSMX4vyS
-         W9qQ==
+        bh=y09+A5UHDqq1M123Rs3HINM2fRslFLIQNP0UXzIqt20=;
+        b=eZ82YhwtUAOVg9G2zs0bTyLwRz0ch+7l+1a7/7Qr+2qWB2PvexBHVq2rpE2mMUHlE8
+         69cksLWwsICq8VYOOQVEcdkVSUZEj4lz/IJvdKN457KBXh3QXdfO3GrvWb1TJLALJOr7
+         Ti6ewei0hf0hy8j0YxESEUn/79rKNQhTOW3CIQqgecONAFnQi8Ca93kMujRzNa5FRabu
+         VmGvXYPdukV8FLvCNlhMf6xWyncyMH3VzgfomB4vjvpoljfVhoaKenw9WH6NVry7t6gv
+         11DUYl30BqMBJnyqE933rTCr2o40uTZdERufP80A3wjxXssozn3ngkvUuHnXlmWDteTd
+         bqcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=P585Wb4GdNSdANLbtZBTejDHy0hzt6pLG6Y0SHAZ9bU=;
-        b=XmID0SyIwjgSw8dx9cyY+6EN71MH51Jg6hUDWPBaLUlL4ziMQ/CShktcOfeA99eVYq
-         Q/kzAvRGD9ostBZzCHTBGyo3Y/wQihbV0UEJhPbxBIqxWuyESWk1qdmXaHlMTasa2fZM
-         XmHQwLeU6DQJF6r6xwpWbQUGAC050AYAj7+xGutbZOJCUrLGJ9gI3g2zuyRbl806Ff+I
-         5KHseqZ9kAwUY8Vq9c29yQa0DG+QxDaZ0E7l3XKN7GQ263ICisXazM1/Vpo68poYPheG
-         JRNwdsJu5CCPDYgNvy5ye2K/xWZ33L6EJzflm7OCMa+DXZ2swqXHfzocFck8XSktDFwh
-         hJcQ==
-X-Gm-Message-State: APjAAAWO3AUSOWDH3hhrxOJwhjWUzx7eCOuk2pMmppji6opuAKu5OGpB
-        qE5fv7YiRQSWIIb12wX8WbpI
-X-Google-Smtp-Source: APXvYqwbCLpdmWKTZmSl1oTdfCb2flyajMLs6QMZwE38ftfHAg1sNcGjH12xadW0vkB52MaxPKYLhA==
-X-Received: by 2002:aa7:8249:: with SMTP id e9mr38929777pfn.46.1571160645036;
-        Tue, 15 Oct 2019 10:30:45 -0700 (PDT)
+        bh=y09+A5UHDqq1M123Rs3HINM2fRslFLIQNP0UXzIqt20=;
+        b=tYOKxeeDiucmr9+sb27loYOLuIOIYwvJ6Yworqxksdm255fMqveCkxwzSvxMYqQmyc
+         Af0xNdbQyvLgH21JtfTTn8Epxy66QU7AsaHpOpA42ijZMA4EayL1gGqqe5EumuIN88t6
+         CdveAweRIuAQqqZQdiHxCWcDtx2N5bendjX9/hyT0dHYa1PeXRVuv3zuzj0+5umBNuP4
+         XJWOHCvWkm+UvIpZ1JOIOPP1599yNQVTtVvixGBiGmsqV5bBNWk6Z0LAaRtZFFfuwm9E
+         Zz0PrIlafiI/Bc36AlORx4OU7eLPJwZWGKXGawbJn6xrHFcAN5vB0s20oF/oZ0f2qM6O
+         5eaw==
+X-Gm-Message-State: APjAAAXcj92Qw6PJzlIo52qpIaHAFaoq01qhmsmEbjlUf9QZ9sxnwHtz
+        wuLDjB0GauWbMCn4gg/FQnAv
+X-Google-Smtp-Source: APXvYqyj7mfRTh0xkfAngm7OG4b0vGrpS0e0L3DDC4u4rStgGqFdkBEqt48b4cgFsQSkTewOxbjULA==
+X-Received: by 2002:a17:902:d698:: with SMTP id v24mr36554507ply.89.1571160649769;
+        Tue, 15 Oct 2019 10:30:49 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:6003:7cb8:25e8:2c45:fab2:b0c7])
-        by smtp.gmail.com with ESMTPSA id w11sm28033563pfd.116.2019.10.15.10.30.40
+        by smtp.gmail.com with ESMTPSA id w11sm28033563pfd.116.2019.10.15.10.30.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:30:44 -0700 (PDT)
+        Tue, 15 Oct 2019 10:30:49 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 1/4] dt-bindings: gpio: Add devicetree binding for RDA Micro GPIO controller
-Date:   Tue, 15 Oct 2019 23:00:23 +0530
-Message-Id: <20191015173026.9962-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/4] ARM: dts: Add RDA8810PL GPIO controllers
+Date:   Tue, 15 Oct 2019 23:00:24 +0530
+Message-Id: <20191015173026.9962-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
 References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org>
@@ -72,70 +72,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add YAML devicetree binding for RDA Micro GPIO controller.
+Add GPIO controllers for RDA8810PL SoC. There are 4 GPIO controllers
+in this SoC with maximum of 32 gpios. Except GPIOC, all controllers
+are capable of generating edge/level interrupts from first 8 lines.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../devicetree/bindings/gpio/gpio-rda.yaml    | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rda.yaml
+ arch/arm/boot/dts/rda8810pl.dtsi | 48 ++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
-new file mode 100644
-index 000000000000..6ece555f074f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-rda.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
+index 19cde895bf65..f30d6ece49fb 100644
+--- a/arch/arm/boot/dts/rda8810pl.dtsi
++++ b/arch/arm/boot/dts/rda8810pl.dtsi
+@@ -33,6 +33,21 @@
+ 		ranges;
+ 	};
+ 
++	modem@10000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10000000 0xfffffff>;
 +
-+title: RDA Micro GPIO controller
++		gpioc@1a08000 {
++			compatible = "rda,8810pl-gpio";
++			reg = <0x1a08000 0x1000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			ngpios = <32>;
++		};
++	};
 +
-+maintainers:
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ 	apb@20800000 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -60,6 +75,39 @@
+ 				     <17 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "hwtimer", "ostimer";
+ 		};
 +
-+properties:
-+  compatible:
-+    const: rda,8810pl-gpio
++		gpioa@30000 {
++			compatible = "rda,8810pl-gpio";
++			reg = <0x30000 0x1000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			ngpios = <32>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
++		};
 +
-+  reg:
-+    maxItems: 1
++		gpiob@31000 {
++			compatible = "rda,8810pl-gpio";
++			reg = <0x31000 0x1000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			ngpios = <32>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
++		};
 +
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  ngpios:
-+    description:
-+      Number of available gpios in a bank.
-+    minimum: 1
-+    maximum: 32
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - ngpios
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - interrupts
-+
-+additionalProperties: false
-+
-+...
++		gpiod@32000 {
++			compatible = "rda,8810pl-gpio";
++			reg = <0x32000 0x1000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			ngpios = <32>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
+ 
+ 	apb@20a00000 {
 -- 
 2.17.1
 
