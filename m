@@ -2,99 +2,172 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B61ECE58C
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D70C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07E42064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XDxj/4ye";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VuLGlA8l"
+	by mail.kernel.org (Postfix) with ESMTP id 05B8A21A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 05:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfJOF2G (ORCPT
+        id S1728365AbfJOFbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 01:28:06 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52888 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfJOF2F (ORCPT
+        Tue, 15 Oct 2019 01:31:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41880 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfJOFbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 01:28:05 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0C01F60BDD; Tue, 15 Oct 2019 05:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571117285;
-        bh=8FGb2J/wiGU3r55lQEJRsCKstDbZ2Qwho5EqzVqSYf8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=XDxj/4yehBuLdsC/ns/oMKGiMiMhU9FqRl/df2/ElHY8In2y0B4qdlMdfl0nZe12u
-         jNTT3iDhaCkGDtTSbkPfoJ2R9P870Z2bXkYn6EqN6XpwNmjgR0hcwWQDST6CZ2H1Dq
-         sk6m3z6g1G08NfQFaUlyBYCLdmt9+gSsdDoyo1bw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD25E60610;
-        Tue, 15 Oct 2019 05:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571117283;
-        bh=8FGb2J/wiGU3r55lQEJRsCKstDbZ2Qwho5EqzVqSYf8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=VuLGlA8lk9NyjZcl8MpkH9/FQvmn9bmr9SU1UhdN/yFzeLu4OBTAyX7nXo9qB8+Y0
-         17PxNEnrlPmE62lGxKz2TQB0gDq8+ioS2p81qCejvHX+tWMxAiSBP5ZddMUUTutCaI
-         RXiTXq/az4elXX5fFhUe6TrTRvkz/b9OkPmdvU/g=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD25E60610
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 15 Oct 2019 01:31:49 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iKFQm-0008SG-W9; Tue, 15 Oct 2019 07:31:37 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 78AC71C0105;
+        Tue, 15 Oct 2019 07:31:36 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 05:31:36 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] libperf: Centralize map refcnt setting
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191007125344.14268-23-jolsa@kernel.org>
+References: <20191007125344.14268-23-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: =?utf-8?q?=5BPATCH=5D_net/wireless=3A_Delete_unnecessary_checks_bef?==?utf-8?q?ore_the_macro_call_=E2=80=9Cdev=5Fkfree=5Fskb=E2=80=9D?=
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <ea6c6fef-9868-196b-d914-23faf12d7f5c@web.de>
-References: <ea6c6fef-9868-196b-d914-23faf12d7f5c@web.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-wireless@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, ath10k@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roy Luo <royluo@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191015052805.0C01F60BDD@smtp.codeaurora.org>
-Date:   Tue, 15 Oct 2019 05:28:04 +0000 (UTC)
+Message-ID: <157111749642.12254.5807565002595821879.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Markus Elfring <Markus.Elfring@web.de> wrote:
+The following commit has been merged into the perf/core branch of tip:
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Thu, 22 Aug 2019 10:20:10 +0200
-> 
-> The dev_kfree_skb() function performs also input parameter validation.
-> Thus the test around the shown calls is not needed.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Commit-ID:     285aaeac8c5d537b56b70169e21ac29ae5caa8e1
+Gitweb:        https://git.kernel.org/tip/285aaeac8c5d537b56b70169e21ac29ae5caa8e1
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Mon, 07 Oct 2019 14:53:30 +02:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Thu, 10 Oct 2019 12:52:41 -03:00
 
-Patch applied to wireless-drivers-next.git, thanks.
+libperf: Centralize map refcnt setting
 
-868ad2149602 net/wireless: Delete unnecessary checks before the macro call “dev_kfree_skb”
+Currently when a new map is mmapped we set its refcnt to 2 in the
+perf_evlist_mmap_ops::mmap callback.
 
--- 
-https://patchwork.kernel.org/patch/11108741/
+Every mmap gets its refcnt set to 2 when it's first mmaped:
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+  - 1 for the current user, which will be taken out by a call to
+    perf_evlist__munmap_filtered(), where we find out there's
+    no more data comming from kernel to this mmap.
 
+  - 1 for the drain code where in perf_mmap__consume() the mmap
+    is released if it is empty.
+
+Move this common setup into libperf's generic code before the mmap
+callback is called.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191007125344.14268-23-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/lib/evlist.c | 30 +++++++++++++++---------------
+ tools/perf/util/mmap.c  | 15 ---------------
+ 2 files changed, 15 insertions(+), 30 deletions(-)
+
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index b697226..f9a802d 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -362,21 +362,6 @@ static int
+ perf_evlist__mmap_cb_mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
+ 			  int output, int cpu)
+ {
+-	/*
+-	 * The last one will be done at perf_mmap__consume(), so that we
+-	 * make sure we don't prevent tools from consuming every last event in
+-	 * the ring buffer.
+-	 *
+-	 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
+-	 * anymore, but the last events for it are still in the ring buffer,
+-	 * waiting to be consumed.
+-	 *
+-	 * Tools can chose to ignore this at their own discretion, but the
+-	 * evlist layer can't just drop it when filtering events in
+-	 * perf_evlist__filter_pollfd().
+-	 */
+-	refcount_set(&map->refcnt, 2);
+-
+ 	return perf_mmap__mmap(map, mp, output, cpu);
+ }
+ 
+@@ -418,6 +403,21 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 		if (*output == -1) {
+ 			*output = fd;
+ 
++			/*
++			 * The last one will be done at perf_mmap__consume(), so that we
++			 * make sure we don't prevent tools from consuming every last event in
++			 * the ring buffer.
++			 *
++			 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
++			 * anymore, but the last events for it are still in the ring buffer,
++			 * waiting to be consumed.
++			 *
++			 * Tools can chose to ignore this at their own discretion, but the
++			 * evlist layer can't just drop it when filtering events in
++			 * perf_evlist__filter_pollfd().
++			 */
++			refcount_set(&map->refcnt, 2);
++
+ 			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
+ 				return -1;
+ 		} else {
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 2a8bf0a..063d1b9 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -243,21 +243,6 @@ static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params 
+ 
+ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+ {
+-	/*
+-	 * The last one will be done at perf_mmap__consume(), so that we
+-	 * make sure we don't prevent tools from consuming every last event in
+-	 * the ring buffer.
+-	 *
+-	 * I.e. we can get the POLLHUP meaning that the fd doesn't exist
+-	 * anymore, but the last events for it are still in the ring buffer,
+-	 * waiting to be consumed.
+-	 *
+-	 * Tools can chose to ignore this at their own discretion, but the
+-	 * evlist layer can't just drop it when filtering events in
+-	 * perf_evlist__filter_pollfd().
+-	 */
+-	refcount_set(&map->core.refcnt, 2);
+-
+ 	if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
+ 		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
+ 			  errno);
