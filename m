@@ -2,239 +2,161 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C594BECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42626ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A9A21848
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE3721848
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 13:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeQBr6AX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pG5zZ5p9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbfJONLn (ORCPT
+        id S1730972AbfJONLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 09:11:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42990 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729567AbfJONLm (ORCPT
+        Tue, 15 Oct 2019 09:11:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55131 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbfJONLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 09:11:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n14so23764224wrw.9;
-        Tue, 15 Oct 2019 06:11:40 -0700 (PDT)
+        Tue, 15 Oct 2019 09:11:48 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p7so20831828wmp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 06:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kcfG1me/BhzZqP8wY4GRgJComN93ShbPrifsGzk/CNU=;
-        b=ZeQBr6AXbyROsqlVpC1AMM/ElLjEl6hOjiNo8COcBS8BAC+T9BWNcf+5gdJObVshdx
-         xrwa+bh+8i9vi6isYZJCqoQjdtp8NNZoH/HGqbJeTJtV8o62OLpuy0Z901j3LhmvWLLx
-         XXfLeuUFkElSAiFTfxufegJKJnkS7THZfthN8t78iXIlSbmPO5G3DSFpZqS3jPdT1YX9
-         fmeduzZIV9OjoJH6fBGUM4B2DSczPvMUiTQ5Ir42YUqGqqsxdfqO9MCYWsKsM36SzLbT
-         6yNUjDcXnA7e81I6IsrGZGryxZVG4LoUnB0cMsSd3wL4k8GipmrRLWl40mGwqofqpqzG
-         S+pw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=junNhP9gCsnSqnPVo5u2+J+8221y/y9z+WspBQGN5dY=;
+        b=pG5zZ5p9vGBVNimp3UOKKkr+buBHVDRbo7psOns0H0BZx0rA6cm1ItierlcQWa7O4Z
+         UcZ7G4/y0n8i6P63dyPYBdqFZae02DUyDeU6BvDdVXkv5uOz6PMK4uTcSe/dc0PiNIds
+         h6APE3FhTxy6jKTDs7mSdBO+HWrgbC3SJLNp3heKWTj9bba8i9Cotb63aX7J9i05gkj9
+         n/S8R5zkMumtkuJuQ0aIg4eEebB2n8kHGyqthshfhV6aEtElpVA8QQUB8MSQXiv+b1F8
+         ukozvwqx7Jp7HHOEP/rNVKCGflICt5eIK8JNQ/dhr2AWf85xdT1Qsd73OFgN5g9C8GnD
+         YvyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kcfG1me/BhzZqP8wY4GRgJComN93ShbPrifsGzk/CNU=;
-        b=AxLI68QXPpbInK9IbqkY+A3yLZSJT+fXPh+oRgJBlu1KDJvZPR9UkJ0OwNzz++NVC5
-         1d9iaPI6T7ho1dbzQ8C4IrngBGQ8ktT9d3T/XHuflsLWlXV6sDMLTjEevgjfo0uCQGWj
-         zqxWrkevrkfbxb4T9sXKxvsHwi+/6+XBSVfsD0yXbaabhXj/mQlwyZTfvmYUOZVA/SQB
-         6WottgkRrs6oc6ep3NC5gbAHI9SE2lJhLtYB7Yv4M3DuRvsdzjQqvUzPu7SwU+gT2KGj
-         BGD/U6sEjDgJCOnRqMyyQrqzQlwk0nzZUUro1ydjoCGmJp2bx++LSyGh/t/ulYAleYXD
-         PtjA==
-X-Gm-Message-State: APjAAAVPa6ZaWL0fels3HtODPtQgbtbrvHxZUVrXt+9fv0i8AUJQCgzr
-        UMvGDQUAMR4QT5xdhP9evgM=
-X-Google-Smtp-Source: APXvYqyOjxZa8qxqj8xJ/KYmyr1KjwzRqtGZ/50JoH5gH6Ebz98OxPn/rI4Ne0jQxh0zYMYtPjMHFA==
-X-Received: by 2002:adf:f606:: with SMTP id t6mr3313449wrp.196.1571145099647;
-        Tue, 15 Oct 2019 06:11:39 -0700 (PDT)
-Received: from AlexGordeev-DPT-VI0092 ([213.86.25.14])
-        by smtp.gmail.com with ESMTPSA id r2sm47452450wma.1.2019.10.15.06.11.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 15 Oct 2019 06:11:39 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 15:11:37 +0200
-From:   Alexander Gordeev <a.gordeev.box@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Michael Chen <micchen@altera.com>,
-        devel@driverdev.osuosl.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <20191015131136.GA20789@AlexGordeev-DPT-VI0092>
-References: <cover.1570558807.git.a.gordeev.box@gmail.com>
- <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
- <20191015103321.GU2654@vkoul-mobl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=junNhP9gCsnSqnPVo5u2+J+8221y/y9z+WspBQGN5dY=;
+        b=Oon/to+K0GVoToam2oO2RT3x51Qqx++P3pJd51IXR3JRviPVMir1PgFSrKzSwGbh60
+         TXfZUlGLuIOXWZgAoy2wbPwaVdmHj0J7o575vnE+JXcMVduCxtQ+s5RLgF0QcID80jxQ
+         C/cRTgsNaRsxQB8PdZ4KyLV6p9w2XwkkzSP5Uu61x5v1Jb/oOdndf63xxjb71sTWBw3b
+         +xHZqraEgXGiY4k7wHpbSUcGmXwNLw8QlpTx86oPsoTn9AoIC6WTHiTGm9FfIEHeSsUK
+         6dvdID+UUKggYJNSlTDxp0irCqwRLq3rtPP6jxVAQ1R6oEelrTlCWgOVh6qoBcew9fb5
+         lnKA==
+X-Gm-Message-State: APjAAAXHJE8AjV3VyA0TQEkiHbl+CE1OryZpudLb9a3WbXj4dQqJn9gH
+        H5lP1AOOQkk2B6pGd2mRIApJkCvwYZOGC86xJ2pXhQ==
+X-Google-Smtp-Source: APXvYqwNBwSOny55XqPPDJh10sin1sP5dhZyd1o+28Lx1d871n7oMCHkaC0P9Wg0nb9ScRHgvH3htMiZX+D9L6iU4Ww=
+X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr19886226wml.10.1571145106093;
+ Tue, 15 Oct 2019 06:11:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015103321.GU2654@vkoul-mobl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191010171517.28782-1-suzuki.poulose@arm.com>
+ <20191010171517.28782-2-suzuki.poulose@arm.com> <20191011113620.GG27757@arm.com>
+ <4ba5c423-4e2a-d810-cd36-32a16ad42c91@arm.com> <20191011142137.GH27757@arm.com>
+ <418b0c4b-cbcd-4263-276d-1e9edc5eee0b@arm.com> <20191014145204.GS27757@arm.com>
+ <12e002e7-42e8-c205-e42c-3348359d2f98@arm.com> <20191014155009.GM24047@e103592.cambridge.arm.com>
+ <CAKv+Gu83oa3+DKNFowVkE=mZfLorAvGQ3GVPiZtsXzQBcsMCWg@mail.gmail.com>
+ <20191015102459.GV27757@arm.com> <CAKv+Gu_=jw94Hj5Vo=5w+hb5RcPR4SQvxOM02WQr9hDhyzE67g@mail.gmail.com>
+ <4b4ead8e-383e-67ee-672d-247a52f6c7f3@arm.com>
+In-Reply-To: <4b4ead8e-383e-67ee-672d-247a52f6c7f3@arm.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 15 Oct 2019 15:11:34 +0200
+Message-ID: <CAKv+Gu-4uVXXj+gbiWhQqsdnoJsYnPfZ38CLUR-zWys4mG3N4A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: cpufeature: Fix the type of no FP/SIMD capability
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 04:03:21PM +0530, Vinod Koul wrote:
-> what kind of device is this? I dont think we want these and the ones
-> coming below as part of kernel kconfig!
+On Tue, 15 Oct 2019 at 15:03, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+>
+>
+> On 15/10/2019 11:30, Ard Biesheuvel wrote:
+> > On Tue, 15 Oct 2019 at 12:25, Dave Martin <Dave.Martin@arm.com> wrote:
+> >>
+> >> On Mon, Oct 14, 2019 at 06:57:30PM +0200, Ard Biesheuvel wrote:
+> >>> On Mon, 14 Oct 2019 at 17:50, Dave P Martin <Dave.Martin@arm.com> wrote:
+> >>>>
+> >>>> On Mon, Oct 14, 2019 at 04:45:40PM +0100, Suzuki K Poulose wrote:
+> >>>>>
+> >>>>>
+> >>>>> On 14/10/2019 15:52, Dave Martin wrote:
+> >>>>>>
+...
+> >>>>>> I'm now wondering what happens if anything tries to use kernel-mode NEON
+> >>>>>> before SVE is initialised -- which doesn't happen until cpufeatures
+> >>>>>> configures the system features.
+> >>>>>>
+> >>>>>> I don't think your proposed change makes anything worse here, but it may
+> >>>>>> need looking into.
+> >>>>>
+> >>>>> We could throw in a WARN_ON() in kernel_neon() to make sure that the SVE
+> >>>>> is initialised ?
+> >>>>
+> >>>> Could do, at least as an experiment.
+> >>>>
+> >>>> Ard, do you have any thoughts on this?
+> >>>>
+> >>>
+> >>> All in-kernel NEON code checks whether the NEON is usable, so I'd
+> >>> expect that check to return 'false' if it is too early in the boot for
+> >>> the NEON to be used at all.
+> >>
+> >> My concern is that the check may be done once, at probe time, for crypto
+> >> drivers.  If probing happens before system_supports_fpsimd() has
+> >> stabilised, we may be stuck with the wrong probe decision.
+> >>
+> >> So: are crypto drivers and kernel_mode_neon() users definitely only
+> >> probed _after_ all early CPUs are up?
+> >>
+> >
+> > Isn't SMP already up when initcalls are processed?
+>
+> Not all of them. Booting with initcall_debug=1 shows the following :
+>
+> --
+>
+>   // trimmed //
+>
+...
+> [    0.027033] initcall dummy_timer_register+0x0/0x54 returned 0 after 0 usecs
+>
+>
+> [    0.035949] Detected PIPT I-cache on CPU1
+>
+> [    0.036049] CPU1: found redistributor 1 region 0:0x000000002f120000
+> [    0.036082] CPU1: Booted secondary processor [410fd0f0]
+> [    0.048049] Detected PIPT I-cache on CPU2
+>
+> [    0.048149] CPU2: found redistributor 2 region 0:0x000000002f140000
+> [    0.048168] CPU2: Booted secondary processor [410fd0f0]
+> [    0.060249] Detected PIPT I-cache on CPU3
+>
+> [    0.060349] CPU3: found redistributor 3 region 0:0x000000002f160000
+> [    0.060402] CPU3: Booted secondary processor [410fd0f0]
+> [    0.060620] Brought up 4 CPUs
+> [    0.060949] SMP: Total of 4 processors activated.
+>
+>
 
-Yes, I have already been pointed out on this and will put those as
-kernel module parameters in the next version. The device is an IP
-block for Intel FPGAs.
+These are all early initcalls, which are actually documented as
+running before SMP, and before 'pure' initcalls, which should only be
+used to initialize global variables that cannot be initialized
+statically. So I think we can safely disregard these as uses of kernel
+mode NEON we should care about.
 
-> > +static int start_dma_xfer(struct avalon_dma_hw *hw,
-> > +			  struct avalon_dma_desc *desc)
-> > +{
-> > +	size_t ctrl_off;
-> > +	struct __dma_desc_table *__table;
-> > +	struct dma_desc_table *table;
-> > +	u32 rc_src_hi, rc_src_lo;
-> > +	u32 ep_dst_lo, ep_dst_hi;
-> > +	int last_id, *__last_id;
-> > +	int nr_descs;
-> > +
-> > +	if (desc->direction == DMA_TO_DEVICE) {
-> > +		__table = &hw->dma_desc_table_rd;
-> > +
-> > +		ctrl_off = AVALON_DMA_RD_CTRL_OFFSET;
-> > +
-> > +		ep_dst_hi = AVALON_DMA_RD_EP_DST_HI;
-> > +		ep_dst_lo = AVALON_DMA_RD_EP_DST_LO;
-> > +
-> > +		__last_id = &hw->h2d_last_id;
-> > +	} else if (desc->direction == DMA_FROM_DEVICE) {
-> > +		__table = &hw->dma_desc_table_wr;
-> > +
-> > +		ctrl_off = AVALON_DMA_WR_CTRL_OFFSET;
-> > +
-> > +		ep_dst_hi = AVALON_DMA_WR_EP_DST_HI;
-> > +		ep_dst_lo = AVALON_DMA_WR_EP_DST_LO;
-> > +
-> > +		__last_id = &hw->d2h_last_id;
-> > +	} else {
-> > +		BUG();
-> > +	}
-> > +
-> > +	table = __table->cpu_addr;
-> > +	memset(&table->flags, 0, sizeof(table->flags));
-> > +
-> > +	nr_descs = setup_dma_descs(table->descs, desc);
-> > +	if (WARN_ON(nr_descs < 1))
-> > +		return nr_descs;
-
-(1) Here it may fail.
-
-> > +	last_id = nr_descs - 1;
-> > +	*__last_id = last_id;
-> > +
-> > +	rc_src_hi = __table->dma_addr >> 32;
-> > +	rc_src_lo = (u32)__table->dma_addr;
-> > +
-> > +	start_xfer(hw->regs, ctrl_off,
-> > +		   rc_src_hi, rc_src_lo,
-> > +		   ep_dst_hi, ep_dst_lo,
-> > +		   last_id);
-> > +
-> > +	return 0;
-> 
-> why have a return when you always return 0?
-
-Please see (1) above.
-
-> > +static irqreturn_t avalon_dma_interrupt(int irq, void *dev_id)
-> > +{
-> > +	struct avalon_dma *adma = (struct avalon_dma *)dev_id;
-> > +	struct avalon_dma_chan *chan = &adma->chan;
-> > +	struct avalon_dma_hw *hw = &chan->hw;
-> > +	spinlock_t *lock = &chan->vchan.lock;
-> > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
-> > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
-
-(2)
-
-> > +	struct avalon_dma_desc *desc;
-> > +	struct virt_dma_desc *vdesc;
-> > +	bool rd_done;
-> > +	bool wr_done;
-> > +
-> > +	spin_lock(lock);
-> > +
-> > +	rd_done = (hw->h2d_last_id < 0);
-> > +	wr_done = (hw->d2h_last_id < 0);
-
-(3)
-
-> > +
-> > +	if (rd_done && wr_done) {
-> > +		spin_unlock(lock);
-> > +		return IRQ_NONE;
-> > +	}
-> > +
-> > +	do {
-> > +		if (!rd_done && rd_flags[hw->h2d_last_id])
-> > +			rd_done = true;
-> > +
-> > +		if (!wr_done && wr_flags[hw->d2h_last_id])
-> > +			wr_done = true;
-> > +	} while (!rd_done || !wr_done);
-> 
-> Can you explain this logic. I dont like busy loop in isr and who updates
-
-Here is the comment in the next version of the patch:
-
-The Intel documentation claims "The Descriptor Controller
-writes a 1 to the done bit of the status DWORD to indicate
-successful completion. The Descriptor Controller also sends
-an MSI interrupt for the final descriptor. After receiving
-this MSI, host software can poll the done bit to determine
-status."
-
-The above could be read like MSI interrupt might be delivered
-before the corresponding done bit is set. But in reality it
-does not happen at all (or happens really rare). So put here
-the done bit polling, just in case.
-
-> rd_done and rd_flags etc..?
-
-rd_flags/wr_flags are updated by the hardware (2) and mapped in as
-coherent DMA memory.
-
-rd_done/wr_done are just local variables (3)
-
-> > +static int __init avalon_pci_probe(struct pci_dev *pci_dev,
-> > +				   const struct pci_device_id *id)
-> > +{
-> > +	void *adma;
-> > +	void __iomem *regs;
-> > +	int ret;
-> > +
-> > +	ret = pci_enable_device(pci_dev);
-> > +	if (ret)
-> > +		goto enable_err;
-> > +
-> > +	ret = pci_request_regions(pci_dev, DRIVER_NAME);
-> > +	if (ret)
-> > +		goto reg_err;
-> > +
-> > +	regs = pci_ioremap_bar(pci_dev, PCI_BAR);
-> 
-> This is a pci device, so we should really be using the PCI way of
-> setting and querying the resources. Doing this thru kernel config
-> options is not correct!
-
-I assume you are referring to PCI_BAR in this particular case, right?
-If so, this is an excerpt from the documentation that I read like a
-BAR the DMA controller is mapped to needs to be configurable:
-
-"When the DMA Descriptor Controller is externally instantiated, these
-registers are accessed through a BAR. The offsets must be added to the
-base address for the read controller. When the Descriptor Controller
-is internally instantiated these registers are accessed through BAR0."
-
-Thank you, Vinod!
-
-> -- 
-> ~Vinod
+But I would still expect may_use_simd() to return the right value
+here, independently of the logic that reasons about whether we have a
+NEON in the first place.
