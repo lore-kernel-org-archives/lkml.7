@@ -2,162 +2,120 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4809CECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6C9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137B42086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6209F20640
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 14:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ii5E+uQ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpChALqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733050AbfJOOtb (ORCPT
+        id S1733070AbfJOOtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 10:49:31 -0400
-Received: from mail-eopbgr790077.outbound.protection.outlook.com ([40.107.79.77]:36000
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732907AbfJOOtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:49:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lpj/06Br/5kXDGOyNyL6F6C5rOuJrFlWVMxXNraf97k5fP4IpOL0pjQ9hMJ1uGGphqDMeAemyX+B3/N7t1zYjhLbCAcuvxAZ5Utiagb20AaCuNb651ktpI77y5NbCiUOhKO029swEzCwKvrr+3df3zXP/pJADJffEnqtTWSYtIm99i5SumuM4bCOIZRQEe0SsaqhSqBWLOQwrOXb6CUgLvBuyL1g6BoGtbxZskApizT1ilyV3XfCNp24jJnxkT2Iixlg4LJVnr1YqQzaXLgG6qxblVmYwiP7uwW4XE5e+boMDie3DtTv6O6rNx084l7mTCXzNYPq5YOw2qMJwFbsdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=879x4uIEcFfpbOIYUNwQp4I3jzO6zD3qihzm+cqn7t8=;
- b=OS0HGELj3x2Ckm6JEG6u0d4obk6fsE3dsvqe/23XjXAnYHUqVwReDPF4eGtKmyNqE9gYeuwUHE3WWj4Mg5tr+QnI/NX4elIb4tcJFF8a4Wp1FyMbBYEIitsT8Kt5G5Gh4m6BZ6HV10T+vftdGL5XBjNgl7c6SOvTUyXvML0mVJ2bG66p2Y2rne05EhyIr6+gy5vJtSrqbem3wjWM3bMtL9LKvc5dExZ60y00vTZU9maVdNDHllSPYbMF/RsGtyjs8EQh5pSJxYpvr4COt28qutGhWL7fK3nBDHmSAmGqTSO9zJhVscnJjpgKwINERKeLIKW5WaXMO5T6N1gFE820dQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Tue, 15 Oct 2019 10:49:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46769 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732949AbfJOOtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 10:49:50 -0400
+Received: by mail-io1-f68.google.com with SMTP id c6so46371101ioo.13;
+        Tue, 15 Oct 2019 07:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=879x4uIEcFfpbOIYUNwQp4I3jzO6zD3qihzm+cqn7t8=;
- b=ii5E+uQ7QxQUjtOQ2CD4w06Es3fiCNru25FyxpsVayGZqrOkfFHh/fzyWEAyyOlGJl26E+Pf5ScnS6dlwn/ng/wsBgIssr9b2JLhNxpvrZe25Fhdre7REqcqk7k6YJsc/QU4WZJdeBVHB/MLU4CghKJADvZFrGr1Ke+pzu87vD0=
-Received: from BL0PR02CA0093.namprd02.prod.outlook.com (2603:10b6:208:51::34)
- by CH2PR02MB6475.namprd02.prod.outlook.com (2603:10b6:610:35::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Tue, 15 Oct
- 2019 14:48:48 +0000
-Received: from CY1NAM02FT063.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by BL0PR02CA0093.outlook.office365.com
- (2603:10b6:208:51::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.18 via Frontend
- Transport; Tue, 15 Oct 2019 14:48:48 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT063.mail.protection.outlook.com (10.152.75.161) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2347.16
- via Frontend Transport; Tue, 15 Oct 2019 14:48:47 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iKO7z-0006Ft-6W; Tue, 15 Oct 2019 07:48:47 -0700
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iKO7u-0002AP-20; Tue, 15 Oct 2019 07:48:42 -0700
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9FEmfft019620;
-        Tue, 15 Oct 2019 07:48:41 -0700
-Received: from [10.140.184.180] (helo=ubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@ubuntu>)
-        id 1iKO7s-00029Q-Nu; Tue, 15 Oct 2019 07:48:40 -0700
-Received: by ubuntu (Postfix, from userid 13245)
-        id F07A7101128; Tue, 15 Oct 2019 20:18:39 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        michal.simek@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH v2 -next 1/7] dmaengine: xilinx_dma: Remove desc_callback_valid check
-Date:   Tue, 15 Oct 2019 20:18:18 +0530
-Message-Id: <1571150904-3988-2-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571150904-3988-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1571150904-3988-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--3.874-7.0-31-1
-X-imss-scan-details: No--3.874-7.0-31-1;No--3.874-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(376002)(396003)(189003)(199004)(81166006)(81156014)(36756003)(50226002)(336012)(8676002)(486006)(186003)(47776003)(76176011)(70206006)(70586007)(51416003)(50466002)(107886003)(6266002)(126002)(2616005)(11346002)(446003)(426003)(476003)(8936002)(103686004)(478600001)(14444005)(4326008)(42186006)(16586007)(316002)(305945005)(26005)(48376002)(106002)(5660300002)(2906002)(356004)(6666004)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6475;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MnfGhBwoMQVplo0Mxn7uRwpUlFBd/nvB/PMi8g7Xh1U=;
+        b=HpChALqW5ydj92GSRYuzlp/a2ptuL2yYJa9gu43hB86GrFD2wsntp8ZwrGiipcl4Io
+         1+Jp8HIXVFih7E4dj18vLN2+zF7PktHbNlCWjgUVqLzofRBzEg5UyGO8Ytvk9VI8D+Rb
+         ixa92S1aqah9LEEOfHVsw2rfoIUvuyFFFyENM98IzYOT3NeRZEjBSZ5kvrHCpqZsQK8d
+         pkVkSYaflHnt0uHjPTtSvChOsK6mlx/tla+N6pBcZmdk1DYhNGzPtrwwEyYUTnmZ4ARc
+         KhvCYtl3MJ/HznGBMkU+jGXry/UWXhsE2hF8k+vzbIAsl5FI0/DfEoGTENgs1ff8g9q/
+         DXpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MnfGhBwoMQVplo0Mxn7uRwpUlFBd/nvB/PMi8g7Xh1U=;
+        b=ALnBrhIEsSo45W0YNxWQGRDpGq20UGLIgL51jH/IxWxdib7we+Nbx/urudcz3o/3mN
+         gvGtaWYBgfn/82bPhSydz+RP0x+KwvcJuTtwFNj4+JYe7YBdeDJB5ar6nvm4X5Jx5ZsW
+         G6hEHTMimFrmqfhnmlZ54+6FtsXErpO8OoQLXFE8ZrD8yPm/5WGolj8UbYKalBd4T59D
+         bRHqi594gvT8wORtOWGZo9p6rNyQ25d0mgHnAPgkaQ09APoGyUO/lbWfZ1gtPdGvULgK
+         Qkzf0WvFjWcip94s56wZ4J/1arMPtqxQaDP6p8qnQ2s8b+YRcWPgsy+UMVRV3fC13p7d
+         vZPQ==
+X-Gm-Message-State: APjAAAWTTAW5UlWQHVFm4b1nfkQGN06FF/2f4EROGzJqZA+CmxVd0kQS
+        1CaGN+O5+iCIv5P7rH0hvsq4UEDCWK/loDgFwDo=
+X-Google-Smtp-Source: APXvYqxTZYfSAInwbYJYC/2UZ9Wkj95sKUVbKbOdag8+jQHHQ0zR2edcTXeR50zAV5DWbzbCGXPPiw6GtJnoneBkA98=
+X-Received: by 2002:a92:9ecd:: with SMTP id s74mr2230665ilk.145.1571150989602;
+ Tue, 15 Oct 2019 07:49:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 700cfc63-dba1-41cd-fe26-08d7517ec91d
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6475:
-X-Microsoft-Antispam-PRVS: <CH2PR02MB6475677B9EF8EE90F18A34B9C7930@CH2PR02MB6475.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 01917B1794
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dvJFY/SJHq8IsFpKcFAwNoMxtoAKPT2bE2vZSODM+4l5tA/iQ4rTYENBbsiiyE5gJGTGro+ZcIHnNBJNtvDsoASc87okYD9NzJ4kui0S0Yyvzzmzkhxpn3N+ucba9Gxnb91OP+Vgcp2xBzwE5ff5GOccMwJKXIoNM7C1WKz4dPbfXhIYwmib31g/cgjRSWJalupnVLi5EnMJ3hvesvmLKvr9Lr5KKnNtwHW0prfEIZ29VXlmIGivCyHf0y9+/1htBrQaDj/1ScESJKxoCZrJwM0/UE1tc/jXGxohrCJXSHN1VbZ/+oe0ueCJETHM9CVtXC37PzNtwqiqWIfzkJu/Tir+aRoM2WEjiz48JRC+265+jIqC+NsbITIX+baSjt5zJar59zDQ/ujgmeXjC0ctINloACOK6O2YusKuOjF34N8=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2019 14:48:47.6718
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 700cfc63-dba1-41cd-fe26-08d7517ec91d
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6475
+References: <7933ce8f-ca1b-6ed8-14b9-59679130dc47@web.de>
+In-Reply-To: <7933ce8f-ca1b-6ed8-14b9-59679130dc47@web.de>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Tue, 15 Oct 2019 23:49:39 +0900
+Message-ID: <CA+Ln22GpcMF5e8wjwoRH0wExyoGfta4n3YuaOBNDE+rfqhSZjg@mail.gmail.com>
+Subject: Re: clk: samsung: Checking a kmemdup() call in _samsung_clk_register_pll()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In descriptor cleanup the call to desc_callback_valid can be safely
-removed as both callback pointers i.e callback_result and callback
-are anyway checked in invoke(). There is no much benefit in having
-redundant checks.
+Hi Markus,
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-Reviewed-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
----
-Changes for v2:
-None
----
- drivers/dma/xilinx/xilinx_dma.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+2019=E5=B9=B410=E6=9C=8812=E6=97=A5(=E5=9C=9F) 23:17 Markus Elfring <Markus=
+.Elfring@web.de>:
+>
+> Hello,
+>
+> I tried another script for the semantic patch language out.
+> This source code analysis approach points out that the implementation
+> of the function =E2=80=9C_samsung_clk_register_pll=E2=80=9D contains also=
+ a call
+> of the function =E2=80=9Ckmemdup=E2=80=9D.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/clk/samsung/clk-pll.c?id=3D1c0cc5f1ae5ee5a6913704c0d75a6e99604ee30a#=
+n1275
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/clk/samsung/clk-=
+pll.c#L1275
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 440f2ce..a3f8a2c 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -835,11 +835,9 @@ static void xilinx_dma_chan_desc_cleanup(struct xilinx_dma_chan *chan)
- 
- 		/* Run the link descriptor callback function */
- 		dmaengine_desc_get_callback(&desc->async_tx, &cb);
--		if (dmaengine_desc_callback_valid(&cb)) {
--			spin_unlock_irqrestore(&chan->lock, flags);
--			dmaengine_desc_callback_invoke(&cb, NULL);
--			spin_lock_irqsave(&chan->lock, flags);
--		}
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		dmaengine_desc_callback_invoke(&cb, NULL);
-+		spin_lock_irqsave(&chan->lock, flags);
- 
- 		/* Run any dependencies, then free the descriptor */
- 		dma_run_dependencies(&desc->async_tx);
--- 
-2.7.4
+Thanks for the report.
 
+>
+> * Do you find the usage of the format string =E2=80=9C%s: could not alloc=
+ate
+>   rate table for %s\n=E2=80=9D still appropriate at this place?
+
+Yes, AFAICT there is nothing wrong with that format string.
+
+>
+> * Is there a need to adjust the error handling here?
+
+No, there isn't much that can be done if we fail the allocation at
+such an early stage.
+
+That said, there is no need to print any warnings or error messages on
+allocation failure, so technically they could be removed. It doesn't
+really give us anything in case of existing code, though, and only
+makes a potential for merge conflicts, so I'd just leave it alone.
+
+Best regards,
+Tomasz
