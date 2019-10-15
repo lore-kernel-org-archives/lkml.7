@@ -2,105 +2,170 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B88EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C23ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4561820872
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571164924;
-	bh=UfbMo4srtplXckwhdvkQ1pijpD6lZtwmuZ5zBKMFFKw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=bCvaBP3qQ9eEcT1fegr1hiZxkOyMNPYEKsLTRwDHirgYrmWGRbsEoALZauDfGEXJV
-	 2LtIfLEmWhIq3rTvR0qHIujordIkZWN8YiXFjvWEAJ0+LzypzGQZQ49cIsiECzEhPN
-	 rbRJa/tYoUlpQukQI/2u/AXgMLFA1Di1Glr54dhQ=
+	by mail.kernel.org (Postfix) with ESMTP id F33EB2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ih4zeCbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389202AbfJOSmD (ORCPT
+        id S2389219AbfJOSmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:42:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfJOSmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:42:02 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9620E2086A;
-        Tue, 15 Oct 2019 18:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571164921;
-        bh=UfbMo4srtplXckwhdvkQ1pijpD6lZtwmuZ5zBKMFFKw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nJ9DD3sUsyARGvqPq1H2cPbcDGJHZ7alSYJwFlR3EEF0BOMEFY5WUnx2gWM5+guO5
-         dVPuLUppTj4aOI7zl5QnGZLJt//Vlq2Y/G4pNywqeSV78YSzzjJVTOjdYlHWujkYDf
-         tNhi/odRrJqWcoAI9LsWa1RDXDXk1bo0DDIxE0Nw=
-Date:   Tue, 15 Oct 2019 13:42:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, olaf@aepfle.de,
-        apw@canonical.com, jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com, jackm@mellanox.com,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        driverdev-devel@linuxdriverproject.org
-Subject: Re: [PATCH v3 0/7] PCI: PM: Move to D0 before calling
- pci_legacy_resume_early()
-Message-ID: <20191015184200.GA114979@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014230016.240912-1-helgaas@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 15 Oct 2019 14:42:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42362 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389210AbfJOSmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 14:42:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w14so32037114qto.9
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 11:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YXiUOqo8ETclVClbFsr4YOWOeJ7XlxA5Qh2JOUOHtn0=;
+        b=ih4zeCbnEW9LSQmgDID0erLrP4wKSRd4quPFdjB7jDfMBRahOCBa+C67Dy1NqHkrCv
+         VJSNTqSrY43O2EJhupvXVshQ0BC82dIhxESVHTwLHkCEPN42OBS3yBTYdKusIr1FPyqX
+         wpUPZ/cGTRy5YK2T6ObGKxHp1+6vi2CjoWlyTCo/dPXrhBn0tNseTwJyJuKrduDqfttY
+         fd4SW/I4j0BpnaIdz6zO9hqQf6+agjiuheLCXQaQrYEDCeHJq0DF3gEtcT6Uvp1RF+B9
+         gDgx+ctEQBhsj7GuizlLnNWuM5pbIfjPRVvTdcRA7Ese4V0mQHl7lb1qg7KFEBXx5acS
+         G4wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YXiUOqo8ETclVClbFsr4YOWOeJ7XlxA5Qh2JOUOHtn0=;
+        b=QJJh15E+zPotrL1jB+wroxZZDfbSyh26c8/JwbQJtQFJ8ujPUWstcmPoMS+FgnCteN
+         NptirmuG9xI2LlVleQEc6looXysLeiUtoGUDwo9AKha9FNlGMhbUkj6yfD+2XsiaF90P
+         zr8G3bNVtyQS6ustFQGa/o0SdHP342RHmcY07ddswwxmPl6pxz1dXt5Rax78FcvU2vN6
+         lMq0RLATYJ7Oomfu6mLNox94lGGzbEfzrpJQdlqQwaUocb52/Avuv9nzWS4rq+45tTsK
+         M6BU/JbGbOs2Ne/D2X8L7GO49t67WP4DZc9FlY/u78aAyj5iKpv6SQLcL/3BVC4BwW7J
+         MOOA==
+X-Gm-Message-State: APjAAAW0/e4UNNdvPyPzS+tINDKinO3ohaJRoGR0XwL0dVz1IG+986kR
+        XRpOxt42mXT+OtICcR8L+YK91g==
+X-Google-Smtp-Source: APXvYqwar5I/V60pS57/UcDUw1cogFuq6+7hHVlNRpscniqz5EATufxt8kONpUilAAyTNCHiUcXZ9w==
+X-Received: by 2002:ac8:1c49:: with SMTP id j9mr41218038qtk.364.1571164924491;
+        Tue, 15 Oct 2019 11:42:04 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o28sm9204198qkk.106.2019.10.15.11.42.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 11:42:03 -0700 (PDT)
+Message-ID: <1571164920.5937.45.camel@lca.pw>
+Subject: Re: [PATCH V6 0/2] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 15 Oct 2019 14:42:00 -0400
+In-Reply-To: <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
+References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
+         <1571150502.5937.39.camel@lca.pw>
+         <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:00:09PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, 2019-10-15 at 20:51 +0530, Anshuman Khandual wrote:
 > 
-> Dexuan, the important thing here is the first patch, which is your [1],
-> which I modified by doing pci_restore_state() as well as setting to D0:
+> On 10/15/2019 08:11 PM, Qian Cai wrote:
+> > The x86 will crash with linux-next during boot due to this series (v5) with the
+> > config below plus CONFIG_DEBUG_VM_PGTABLE=y. I am not sure if v6 would address
+> > it.
+> > 
+> > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+> > 
+> > [   33.862600][    T1] page:ffffea0009000000 is uninitialized and poisoned
+> > [   33.862608][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> > ffffff871140][    T1]  ? _raw_spin_unlock_irq+0x27/0x40
+> > [   33.871140][    T1]  ? rest_init+0x307/0x307
+> > [   33.871140][    T1]  kernel_init+0x11/0x139
+> > [   33.871140][    T1]  ? rest_init+0x307/0x307
+> > [   33.871140][    T1]  ret_from_fork+0x27/0x50
+> > [   33.871140][    T1] Modules linked in:
+> > [   33.871140][    T1] ---[ end trace e99d392b0f7befbd ]---
+> > [   33.871140][    T1] RIP: 0010:alloc_gigantic_page_order+0x3fe/0x490
 > 
->   pci_set_power_state(pci_dev, PCI_D0);
->   pci_restore_state(pci_dev);
-> 
-> I'm proposing some more patches on top.  None are relevant to the problem
-> you're solving; they're just minor doc and other updates in the same area.
-> 
-> Rafael, if you have a chance to look at these, I'd appreciate it.  I tried
-> to make the doc match the code, but I'm no PM expert.
-> 
-> [1] https://lore.kernel.org/r/KU1P153MB016637CAEAD346F0AA8E3801BFAD0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
-> 
-> 
-> Dexuan Cui (1):
->   PCI/PM: Always return devices to D0 when thawing
-> 
-> Bjorn Helgaas (6):
->   PCI/PM: Correct pci_pm_thaw_noirq() documentation
->   PCI/PM: Clear PCIe PME Status even for legacy power management
->   PCI/PM: Run resume fixups before disabling wakeup events
->   PCI/PM: Make power management op coding style consistent
->   PCI/PM: Wrap long lines in documentation
->   PCI/MSI: Move power state check out of pci_msi_supported()
-> 
->  Documentation/power/pci.rst | 38 +++++++-------
->  drivers/pci/msi.c           |  6 +--
->  drivers/pci/pci-driver.c    | 99 ++++++++++++++++++-------------------
->  3 files changed, 71 insertions(+), 72 deletions(-)
+> Hmm, with defconfig (DEBUG_VM=y and DEBUG_VM_PGTABLE=y) it does not crash but
+> with the config above, it does. Just wondering if it is possible that these
+> pages might not been initialized yet because DEFERRED_STRUCT_PAGE_INIT=y ?
 
-Thanks Dexuan and Rafael for taking a look at these!
+Yes, this patch works fine.
 
-I applied the first six to pci/pm and the last to pci/msi, all for
-v5.5.
+diff --git a/init/main.c b/init/main.c
+index 676d8020dd29..591be8f9e8e0 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1177,7 +1177,6 @@ static noinline void __init kernel_init_freeable(void)
+        workqueue_init();
+ 
+        init_mm_internals();
+-       debug_vm_pgtable();
+ 
+        do_pre_smp_initcalls();
+        lockup_detector_init();
+@@ -1186,6 +1185,8 @@ static noinline void __init kernel_init_freeable(void)
+        sched_init_smp();
+ 
+        page_alloc_init_late();
++       debug_vm_pgtable();
++
+        /* Initialize page ext after all struct pages are initialized. */
+        page_ext_init();
+
+> 
+> [   13.898549][    T1] page:ffffea0005000000 is uninitialized and poisoned
+> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> [   13.898549][    T1] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+> [   13.898549][    T1] ------------[ cut here ]------------
+> [   13.898549][    T1] kernel BUG at ./include/linux/mm.h:1107!
+> [   13.898549][    T1] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+> [   13.898549][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-next-20191015+ #
