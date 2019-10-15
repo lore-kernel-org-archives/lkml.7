@@ -2,111 +2,70 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEA9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A3BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A968205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E9C21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfJOMNy (ORCPT
+        id S1731802AbfJOMO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:13:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53128 "EHLO mx1.redhat.com"
+        Tue, 15 Oct 2019 08:14:29 -0400
+Received: from 8bytes.org ([81.169.241.247]:47516 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfJOMNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:13:53 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C5E2306F4AE;
-        Tue, 15 Oct 2019 12:13:53 +0000 (UTC)
-Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B70B608C0;
-        Tue, 15 Oct 2019 12:13:31 +0000 (UTC)
-Subject: Re: [PATCH V3 2/7] mdev: bus uevent support
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-3-jasowang@redhat.com>
- <20191015122707.1fd52240.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <515d31c5-a7d9-5a22-b570-2035ecf03c09@redhat.com>
-Date:   Tue, 15 Oct 2019 20:13:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726939AbfJOMO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:14:28 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 445092D9; Tue, 15 Oct 2019 14:14:26 +0200 (CEST)
+Date:   Tue, 15 Oct 2019 14:14:24 +0200
+From:   "joro@8bytes.org" <joro@8bytes.org>
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        "Hook, Gary" <Gary.Hook@amd.com>
+Subject: Re: iommu: amd: Fix incorrect PASID decoding from event log
+Message-ID: <20191015121424.GM14518@8bytes.org>
+References: <1571083556-105953-1-git-send-email-suravee.suthikulpanit@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20191015122707.1fd52240.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 15 Oct 2019 12:13:53 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571083556-105953-1-git-send-email-suravee.suthikulpanit@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 14, 2019 at 08:06:05PM +0000, Suthikulpanit, Suravee wrote:
+> IOMMU Event Log encodes 20-bit PASID for events:
+>     ILLEGAL_DEV_TABLE_ENTRY
+>     IO_PAGE_FAULT
+>     PAGE_TAB_HARDWARE_ERROR
+>     INVALID_DEVICE_REQUEST
+> as:
+>     PASID[15:0]  = bit 47:32
+>     PASID[19:16] = bit 19:16
+> 
+> Note that INVALID_PPR_REQUEST event has different encoding
+> from the rest of the events as the following:
+>     PASID[15:0]  = bit 31:16
+>     PASID[19:16] = bit 45:42
+> 
+> So, fixes the decoding logic.
+> 
+> Fixes: d64c0486ed50 ("iommu/amd: Update the PASID information printed to the system log")
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Gary R Hook <gary.hook@amd.com>
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> ---
+>  drivers/iommu/amd_iommu.c       | 5 +++--
+>  drivers/iommu/amd_iommu_types.h | 4 ++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
 
-On 2019/10/15 下午6:27, Cornelia Huck wrote:
-> On Fri, 11 Oct 2019 16:15:52 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> This patch adds bus uevent support for mdev bus in order to allow
->> cooperation with userspace.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/vfio/mdev/mdev_driver.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_driver.c
->> index b7c40ce86ee3..319d886ffaf7 100644
->> --- a/drivers/vfio/mdev/mdev_driver.c
->> +++ b/drivers/vfio/mdev/mdev_driver.c
->> @@ -82,9 +82,17 @@ static int mdev_match(struct device *dev, struct device_driver *drv)
->>   	return 0;
->>   }
->>   
->> +static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
->> +{
->> +	struct mdev_device *mdev = to_mdev_device(dev);
->> +
->> +	return add_uevent_var(env, "MODALIAS=mdev:c%02X", mdev->class_id);
->> +}
->> +
->>   struct bus_type mdev_bus_type = {
->>   	.name		= "mdev",
->>   	.match		= mdev_match,
->> +	.uevent		= mdev_uevent,
->>   	.probe		= mdev_probe,
->>   	.remove		= mdev_remove,
->>   };
-> I'd merge that into the previous patch.
-
-
-Will do.
-
-Thanks
-
+Applied for v5.4, thanks Suravee.
 
