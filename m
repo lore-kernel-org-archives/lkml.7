@@ -3,102 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35A4ECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D990AECE59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E202064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C63720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 23:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvZZU4hC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AvW3Elfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390200AbfJOXJf (ORCPT
+        id S1728323AbfJOXNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 19:09:35 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46602 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfJOXJf (ORCPT
+        Tue, 15 Oct 2019 19:13:22 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42119 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfJOXNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 19:09:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o18so25697163wrv.13
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 16:09:33 -0700 (PDT)
+        Tue, 15 Oct 2019 19:13:22 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q12so13435453pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 16:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DuHx+fF2E92JEhlaePQoLmuFeHNU/07czImxZEwxanA=;
-        b=NvZZU4hCK4gBl9/e1Md+nHXL0Y0WlXJ6WZlZpGkTX+su4IryR+CmQW0avCndLe1Nbx
-         R4qxA1LunmzZIv9pDDyNN89hSl5hEczj17U5L59hxr02ZXC5UvZYoSdfF6SwK6pyba7u
-         U+fvVl8x8Cdk9tv11EbYxmdqQyGwQdIio1OUSvK2XTG+qjZm10LhX9todDHLRQFK8zEB
-         Qm+cWX4SvVM/aQQw9Bxjn23b1bry15KahaM/sA8SgopC4eTn0yR4XCmind9ejxdbT0PB
-         ugyCDvNRIvstdlDhbpCpIWW1ClD7YMvKBdw7YdiqI19sjI/xN+stgC09eCpN7HVP9xo9
-         4sZQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=AkK1IUD9itHRJl3qrEDn5W76PGecDNNhAPPx6TQzzz8=;
+        b=AvW3ElfqMmv+CbwmItArkaa8Rnz/cRp/ZjdTku9q8Ee33KpjYuWQFNgI+dHLaI+BKQ
+         g8ZAmo2OSohykJP7k51g8OEWglMNLi3t7Xtt4yO0UjuRrXaJI/rhAUrYQBxf1xNCXfdA
+         MzIDfjz0+GUt/sETI1G27w2IX9E6rDBVIuRXfTd7xFYwcorAP0ndQHDKk927gOOnTc8E
+         vvGhjl5G0Vhfr1Ld0z9UPChshknavZ7V9hN3cDWJCIBnmyRDyhrXuj91SlVJkoZx5WKi
+         E4ww6h3XOzqRdgesiRhI5pXXwaeWGMy/P2glv8rSQVIAO6Yh5XlPnrnskfOTwGp7AWIn
+         W9FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DuHx+fF2E92JEhlaePQoLmuFeHNU/07czImxZEwxanA=;
-        b=KMvpy7MVM1sil+sscy1ok7urRfDKDv7Qr/Tr/wJU/Cw1iP1jgCTdvnknGUjRHE7rxq
-         DFoiTd9ZCsDzy5x/T6Pm5SYlhia5Qo3bjbA0mU7GSSOUwMF+ZHSvRGbEEBDm3pRsmT35
-         PLTo58IQnXmyZulpgFZW+KJ6XeygutkacS2ZmCs6gjBU9Nf3dROkGUh8p/HoXlkCaWW+
-         0gBlBG8Fn8RMx2A8BUZOFWcbE/F7H/N0jfs2UMRbnR44m4zu77RHJk+OBLQmuO9MhA9C
-         H1IxoQVh0VppengZovt6/mfHD6D9n7SaPTjMkWx3iEXz9zFVd0HDvMEC1avN3CjXYA+s
-         bvVg==
-X-Gm-Message-State: APjAAAVkyvbq9t1KTYzdiDpXEyTwn05Bak26jMFi0sJzrSGxsgT2LUPB
-        maPc6UG16uDW4wpqozw34Q==
-X-Google-Smtp-Source: APXvYqy1oYXENQDYU+ylMQuWE3kL0PhJH09RZX3/Ee8okUe4msaZYKwLrL/ZIr4HAyKGvcTumVM//g==
-X-Received: by 2002:a5d:43c1:: with SMTP id v1mr33618982wrr.91.1571180972896;
-        Tue, 15 Oct 2019 16:09:32 -0700 (PDT)
-Received: from ninjahub.lan (host-2-102-13-201.as13285.net. [2.102.13.201])
-        by smtp.googlemail.com with ESMTPSA id s1sm33064362wrg.80.2019.10.15.16.09.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 16:09:32 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     eric@anholt.net, wahrenst@gmx.net, gregkh@linuxfoundation.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH] staging: vc04_services: add space to fix check warning
-Date:   Wed, 16 Oct 2019 00:09:22 +0100
-Message-Id: <20191015230922.11261-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=AkK1IUD9itHRJl3qrEDn5W76PGecDNNhAPPx6TQzzz8=;
+        b=V9PijaRu6SgLiS5vLasgnuOuoVGvWKi8FdfejTbtLlPihpyKbAFiZNczgH44HXgWmV
+         ULUdbJCQO23LvDvHmzIpe2i11QDOvdnF1RuAnnzTzwICL3dB1Q3sfLoJhGxwLMfFyMdB
+         gBK/sZNmK41jdjp14BRJScVqNUJg+SnFm0oNAaEruGmS+lpEfCvPxhP1cUQWs3aikowi
+         SYtgR/XYpeBKBqCRCK1Qnb40GhPSAVjmsQ5Re4oWEoRecNwiKcQo46WaqeY2ge5ztqSp
+         qlhPJXivsEUrAGiYbk02c/kHqXcKRmUoN9ubeHywLDZTGZGA2rREGMK26SM8Ywks7klC
+         VNJQ==
+X-Gm-Message-State: APjAAAUjNTb+Kx96kCyrivPrNTgkWCwrhJ+SVYDMoYEHWxVq3O5MYWUE
+        FzMTuHnHx94IYg4WWkdUplRicGPq1dtBjw==
+X-Google-Smtp-Source: APXvYqzOZGdubxtAq2JsWsYxt64pPyHv8XCfZGohaoG/tQzF1DNtUISZxE5TDhW8OrwjjxOl+XU9/w==
+X-Received: by 2002:a62:6d81:: with SMTP id i123mr20789870pfc.57.1571181200905;
+        Tue, 15 Oct 2019 16:13:20 -0700 (PDT)
+Received: from localhost ([49.248.193.232])
+        by smtp.gmail.com with ESMTPSA id m102sm352863pje.5.2019.10.15.16.13.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 15 Oct 2019 16:13:20 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH] of-thermal: Disable polling when interrupt property is found in DT
+Date:   Wed, 16 Oct 2019 04:43:16 +0530
+Message-Id: <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1571181041.git.amit.kucheria@linaro.org>
+References: <cover.1571181041.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add space betwen operator to fix check warning.
-Issue detected by checkpatch tool.
+Currently, in order to enable interrupt-only mode, one must set
+polling-delay-passive and polling-delay properties in the DT to 0,
+otherwise the thermal framework will continue to setup a periodic timers
+to monitor the thermal zones.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+Change the behaviour, so that on DT-based systems, we no longer have to
+set the properties to zero if we find an 'interrupt' property in the
+sensor.
+
+Following data shows the number of times
+thermal_zone_device_set_polling() is invoked with and without this
+patch. So the patch achieves the same behaviour as setting the delay
+properties to 0.
+
+Current behaviour (without setting delay properties to 0):
+  FUNC                              COUNT
+  thermal_zone_device_update          302
+  thermal_zone_device_set_pollin     7911
+
+Current behaviour (with delay properties set to 0):
+  FUNC                              COUNT
+  thermal_zone_device_update            3
+  thermal_zone_device_set_pollin        6
+
+With this patch (without setting delay properties to 0):
+  FUNC                              COUNT
+  thermal_zone_device_update            3
+  thermal_zone_device_set_pollin        6
+
+Suggested-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/staging/vc04_services/interface/vchi/vchi_cfg.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/thermal/of-thermal.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h b/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h
-index dbb6a5f07a79..192c287503a5 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h
-@@ -163,9 +163,9 @@
-  * by suspending parsing as the comment above says, but we don't.
-  * This sweeps the issue under the carpet.
-  */
--#if VCHI_RX_MSG_QUEUE_SIZE < (VCHI_MAX_MSG_SIZE/16 + 1) * VCHI_NUM_READ_SLOTS
-+#if VCHI_RX_MSG_QUEUE_SIZE < (VCHI_MAX_MSG_SIZE / 16 + 1) * VCHI_NUM_READ_SLOTS
- #  undef VCHI_RX_MSG_QUEUE_SIZE
--#  define VCHI_RX_MSG_QUEUE_SIZE ((VCHI_MAX_MSG_SIZE/16 + 1) * VCHI_NUM_READ_SLOTS)
-+#  define VCHI_RX_MSG_QUEUE_SIZE ((VCHI_MAX_MSG_SIZE / 16 + 1) * VCHI_NUM_READ_SLOTS)
- #endif
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index dc5093be553e..79ad587462b1 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -412,7 +412,8 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+ static struct thermal_zone_device *
+ thermal_zone_of_add_sensor(struct device_node *zone,
+ 			   struct device_node *sensor, void *data,
+-			   const struct thermal_zone_of_device_ops *ops)
++			   const struct thermal_zone_of_device_ops *ops,
++			   bool force_interrupts)
+ {
+ 	struct thermal_zone_device *tzd;
+ 	struct __thermal_zone *tz;
+@@ -433,6 +434,11 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+ 	tzd->ops->get_temp = of_thermal_get_temp;
+ 	tzd->ops->get_trend = of_thermal_get_trend;
  
- /* How many bulk transmits can we have pending. Once exhausted,
++	if (force_interrupts) {
++		tz->passive_delay = 0;
++		tz->polling_delay = 0;
++	}
++
+ 	/*
+ 	 * The thermal zone core will calculate the window if they have set the
+ 	 * optional set_trips pointer.
+@@ -486,6 +492,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+ {
+ 	struct device_node *np, *child, *sensor_np;
+ 	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
++	bool force_interrupts = false;
+ 
+ 	np = of_find_node_by_name(NULL, "thermal-zones");
+ 	if (!np)
+@@ -498,6 +505,9 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+ 
+ 	sensor_np = of_node_get(dev->of_node);
+ 
++	if (of_find_property(sensor_np, "interrupts", NULL))
++		force_interrupts = true;
++
+ 	for_each_available_child_of_node(np, child) {
+ 		struct of_phandle_args sensor_specs;
+ 		int ret, id;
+@@ -520,7 +530,8 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+ 
+ 		if (sensor_specs.np == sensor_np && id == sensor_id) {
+ 			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+-							 data, ops);
++							 data, ops,
++							 force_interrupts);
+ 			if (!IS_ERR(tzd))
+ 				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+ 
 -- 
-2.21.0
+2.17.1
 
