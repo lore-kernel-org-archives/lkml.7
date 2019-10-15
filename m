@@ -2,113 +2,156 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA16ECE595
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF753C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE5A205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571141576;
-	bh=wtg0eEchOXgSjaTH88QuPWmVcQOuSrobqa/ieMPeiGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XcV+31ejrY/1Qz8W7r4Zk5QgU+AqQfHTC/Yh2h9DRpjOuDsoaKbLeRFgvjioF6bBJ
-	 DD2Scs/77KHyKKbn1oZ/Zr2+h/NvBzbq1qo0hf3LJrS/O5Axj5K1XG0ItNR1lJRrUI
-	 pjuwsdhpYImITzUh1qyo+t3qdoxSal3iLVHu5PI4=
+	by mail.kernel.org (Postfix) with ESMTP id C0589205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 12:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfJOMMz (ORCPT
+        id S1731804AbfJOMM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 08:12:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32812 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbfJOMMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:12:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6F8E2B392;
-        Tue, 15 Oct 2019 12:12:53 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 14:12:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1] hugetlbfs: don't access uninitialized memmaps in
- pfn_range_valid_gigantic()
-Message-ID: <20191015121253.GH317@dhcp22.suse.cz>
-References: <20191015120717.4858-1-david@redhat.com>
+        Tue, 15 Oct 2019 08:12:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60778 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbfJOMM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:12:58 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9828669089;
+        Tue, 15 Oct 2019 12:12:57 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E39A4608C0;
+        Tue, 15 Oct 2019 12:12:35 +0000 (UTC)
+Subject: Re: [PATCH V3 1/7] mdev: class id support
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-2-jasowang@redhat.com>
+ <20191015122607.126e3960.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <084c7e28-8578-51f3-7b31-2231de8c636d@redhat.com>
+Date:   Tue, 15 Oct 2019 20:12:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015120717.4858-1-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015122607.126e3960.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 15 Oct 2019 12:12:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 15-10-19 14:07:17, David Hildenbrand wrote:
-> Uninitialized memmaps contain garbage and in the worst case trigger
-> kernel BUGs, especially with CONFIG_PAGE_POISONING. They should not get
-> touched.
-> 
-> Let's make sure that we only consider online memory (managed by the
-> buddy) that has initialized memmaps. ZONE_DEVICE is not applicable.
-> 
-> page_zone() will call page_to_nid(), which will trigger
-> VM_BUG_ON_PGFLAGS(PagePoisoned(page), page) with CONFIG_PAGE_POISONING
-> and CONFIG_DEBUG_VM_PGFLAGS when called on uninitialized memmaps. This
-> can be the case when an offline memory block (e.g., never onlined) is
-> spanned by a zone.
-> 
-> Note: As explained by Michal in [1], alloc_contig_range() will verify
-> the range. So it boils down to the wrong access in this function.
-> 
-> [1] http://lkml.kernel.org/r/20180423000943.GO17484@dhcp22.suse.cz
-> 
-> Reported-by: Michal Hocko <mhocko@kernel.org>
-> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
-> Cc: stable@vger.kernel.org # v4.13+
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+On 2019/10/15 下午6:26, Cornelia Huck wrote:
+> On Fri, 11 Oct 2019 16:15:51 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> Mdev bus only supports vfio driver right now, so it doesn't implement
+>> match method. But in the future, we may add drivers other than vfio,
+>> the first driver could be virtio-mdev. This means we need to add
+>> device class id support in bus match method to pair the mdev device
+>> and mdev driver correctly.
+>>
+>> So this patch adds id_table to mdev_driver and class_id for mdev
+>> device with the match method for mdev bus.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   Documentation/driver-api/vfio-mediated-device.rst |  7 ++++++-
+>>   drivers/gpu/drm/i915/gvt/kvmgt.c                  |  1 +
+>>   drivers/s390/cio/vfio_ccw_ops.c                   |  1 +
+>>   drivers/s390/crypto/vfio_ap_ops.c                 |  1 +
+>>   drivers/vfio/mdev/mdev_core.c                     | 11 +++++++++++
+>>   drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
+>>   drivers/vfio/mdev/mdev_private.h                  |  1 +
+>>   drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
+>>   include/linux/mdev.h                              |  8 ++++++++
+>>   include/linux/mod_devicetable.h                   |  8 ++++++++
+>>   samples/vfio-mdev/mbochs.c                        |  1 +
+>>   samples/vfio-mdev/mdpy.c                          |  1 +
+>>   samples/vfio-mdev/mtty.c                          |  1 +
+>>   13 files changed, 60 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+>> index 25eb7d5b834b..2035e48da7b2 100644
+>> --- a/Documentation/driver-api/vfio-mediated-device.rst
+>> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+>> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
+>>         * @probe: called when new device created
+>>         * @remove: called when device removed
+>>         * @driver: device driver structure
+>> +      * @id_table: the ids serviced by this driver
+>>         */
+>>        struct mdev_driver {
+>>   	     const char *name;
+>>   	     int  (*probe)  (struct device *dev);
+>>   	     void (*remove) (struct device *dev);
+>>   	     struct device_driver    driver;
+>> +	     const struct mdev_class_id *id_table;
+>>        };
+>>   
+>>   A mediated bus driver for mdev should use this structure in the function calls
+>> @@ -165,12 +167,15 @@ register itself with the mdev core driver::
+>>   	extern int  mdev_register_device(struct device *dev,
+>>   	                                 const struct mdev_parent_ops *ops);
+>>   
+>> +It is also required to specify the class_id through::
+>> +
+>> +	extern int mdev_set_class(struct device *dev, u16 id);
+> Should the document state explicitly that this should be done in the
+> ->create() callback?
 
-Thanks!
-> ---
->  mm/hugetlb.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index ef37c85423a5..b45a95363a84 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1084,11 +1084,10 @@ static bool pfn_range_valid_gigantic(struct zone *z,
->  	struct page *page;
->  
->  	for (i = start_pfn; i < end_pfn; i++) {
-> -		if (!pfn_valid(i))
-> +		page = pfn_to_online_page(i);
-> +		if (!page)
->  			return false;
->  
-> -		page = pfn_to_page(i);
-> -
->  		if (page_zone(page) != z)
->  			return false;
->  
-> -- 
-> 2.21.0
 
--- 
-Michal Hocko
-SUSE Labs
+Yes, it's better.
+
+
+> Also, I think that the class_id might be different
+> for different mdevs (even if the parent is the same) -- should that be
+> mentioned explicitly?
+
+
+Yes, depends on the mdev_supported_type.
+
+Thanks
+
+
+>
+>> +
+>>   However, the mdev_parent_ops structure is not required in the function call
+>>   that a driver should use to unregister itself with the mdev core driver::
+>>   
+>>   	extern void mdev_unregister_device(struct device *dev);
+>>   
+>> -
+>>   Mediated Device Management Interface Through sysfs
+>>   ==================================================
+>>   
+> (...)
+>
+> Looks reasonable to me.
