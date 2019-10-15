@@ -6,55 +6,52 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CEDECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E6ECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD2D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7552084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 22:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732776AbfJOWAi (ORCPT
+        id S1733078AbfJOWBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 18:00:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40774 "EHLO
+        Tue, 15 Oct 2019 18:01:07 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40794 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfJOWAh (ORCPT
+        with ESMTP id S1726545AbfJOWBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 18:00:37 -0400
+        Tue, 15 Oct 2019 18:01:07 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CC830150F0C6A;
-        Tue, 15 Oct 2019 15:00:36 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 15:00:36 -0700 (PDT)
-Message-Id: <20191015.150036.2091412267991024821.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A9A60150F0C6A;
+        Tue, 15 Oct 2019 15:01:06 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 15:01:06 -0700 (PDT)
+Message-Id: <20191015.150106.1543485057165422635.davem@davemloft.net>
 To:     nishadkamdar@gmail.com
-Cc:     woojung.huh@microchip.com, UNGLinuxDriver@microchip.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, joe@perches.com,
+Cc:     gregkh@linuxfoundation.org, joe@perches.com,
         u.kleine-koenig@pengutronix.de, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: microchip: Use the correct style for SPDX
- License Identifier
+Subject: Re: [PATCH] net: cavium: Use the correct style for SPDX License
+ Identifier
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191012121852.GA6071@nishad>
-References: <20191012121852.GA6071@nishad>
+In-Reply-To: <20191012131224.GA8087@nishad>
+References: <20191012131224.GA8087@nishad>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 15:00:37 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 15:01:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nishad Kamdar <nishadkamdar@gmail.com>
-Date: Sat, 12 Oct 2019 17:48:56 +0530
+Date: Sat, 12 Oct 2019 18:42:28 +0530
 
 > This patch corrects the SPDX License Identifier style
-> in header files related to Distributed Switch Architecture
-> drivers for Microchip KSZ series switch support.
+> in header files related to Cavium Ethernet drivers.
 > For C header files Documentation/process/license-rules.rst
 > mandates C-like comments (opposed to C source files where
 > C++ style should be used)
