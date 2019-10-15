@@ -2,166 +2,147 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4A4ECE58E
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6485ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973DC21925
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 06:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994A4217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 07:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="td8vDyR3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nc5vafav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfJOG7r (ORCPT
+        id S1726549AbfJOHD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 02:59:47 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46524 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfJOG7q (ORCPT
+        Tue, 15 Oct 2019 03:03:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39324 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfJOHDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 02:59:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e15so3526844pgu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Oct 2019 23:59:43 -0700 (PDT)
+        Tue, 15 Oct 2019 03:03:25 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w144so15880125oia.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 00:03:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mTg0FMT6vr5u2XqGUSj/m+I5t1w5ozsNKbohqK+I32g=;
-        b=td8vDyR3YArCs7AvGhwya+a/EH7MvQV5uULvkgZc8iUSMyZSzj/kfOFE4o8bKSjlRD
-         Ep0bQKe7+Xm1abyFo9bhsXvg/oxXCfTs2CWuoKoSGl+KoG0bpgN13Dg96xQuzykxcKTA
-         MWQxa32hsBFO17VdLpPpYIJKflEYr9dkiuDWgimgEG9JyNtBr25nN3m9lY93eKlEwRne
-         o3OMq1nBUsTkAwygR7+/B1RVombnoQxYB3+Lh3/GHeAsEsIKH5h+D4oNfm9pAiS8utyS
-         L1p8fe4A6VpA25fbfmQBUbiceQA1L7yWPiW7HCjYsvRT2rcall2pNF2fn7x1hIvBoxrf
-         Un7w==
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=13osAZM/TWZw15Dwa5x3pSEX72ZjaF18KaIgtXYzLRw=;
+        b=Nc5vafavPRfAueLZxe8oXGABMAyjchteIl0+yQafBzUScmrKh4p8py+RbSHD7RD7bk
+         BQ5G97XV01cN2dw1wm1Gt/2So185REO5m8W5nuvxBFgB3rRFzBvAWNYvzhyPBmNtZxCD
+         NvS224G6UnEFc4AJtY36IlffxumsjrkXkpazPoNvxUj+mXMp09jGeKJs16HyOaexKaxs
+         s/LA387At87pndv+F2yqZ0Aa0m1hMPw3q7ofqE2+1x3aKX6JLecU8ZrSPPceyCW2Ulj7
+         WrUyjZBpbFNNaquz9OQQLCAdHauVLmE2R1nr30sqGsYX+qj1KKuVdAjjDpVHThhUA5lr
+         3z3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mTg0FMT6vr5u2XqGUSj/m+I5t1w5ozsNKbohqK+I32g=;
-        b=Kn4Avy/R4sza392VJNt9hqX4LNaRDp+LjMBtvepkdXkYhsSzp3qw6hrqt4BnKwc92k
-         XSaSf2U3WwjcDMehfvsIr85yIKNbW1YG46lmfc+5FLMyQT7/GEdzAxDmxIo+oGIDGc6c
-         1ma+2uo0M3xKGwNxnIEbsgudbQw5SH8oOlV2QmroJ4H+5PvAj3GpTEKc3GiwFZ5JsCo7
-         Rs5No5oytxMdbsZCvlewoBkM1pdet6rwFr6Luc3M6+1d9jf7s/jiv8LEKQTkgodWFqNW
-         +bFuR5KLeKsNp6G6oFBrkvvwpYl/dn3uCznlk6mCdrQBCrpAELB2qjPuxP7wCVeeSj6K
-         bCQA==
-X-Gm-Message-State: APjAAAXwLDz2nzsDM/pdDeiF+zTjGxBUZBpm/cm5dHHIPX9MFswJbuR9
-        ZDx0QEjmWWomQVQZAxAK1gOBUSAlGqU=
-X-Google-Smtp-Source: APXvYqxoLX22ZMv6ADNBO+02t8Ng3OFUGaEOVWKpsG4ca9+5fEvBI/KEECsVZ2SkW2Zj9+Gej6jlpA==
-X-Received: by 2002:a62:e70d:: with SMTP id s13mr36572094pfh.240.1571122783277;
-        Mon, 14 Oct 2019 23:59:43 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id i16sm17952646pfa.184.2019.10.14.23.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 23:59:42 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [stable 4.19][PATCH 4/4] usb: gadget: udc: core: Fix segfault if udc_bind_to_driver() for pending driver fails
-Date:   Tue, 15 Oct 2019 00:59:37 -0600
-Message-Id: <20191015065937.23169-4-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191015065937.23169-1-mathieu.poirier@linaro.org>
-References: <20191015065937.23169-1-mathieu.poirier@linaro.org>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=13osAZM/TWZw15Dwa5x3pSEX72ZjaF18KaIgtXYzLRw=;
+        b=OvGhMCZGnAMqx3CZRk5BFDlR5u4HYwHplCFmUe23T/FBgQzDXcMonC2YSQxucjzpGb
+         QWA1uO79rYJzWA2UEFV2DNvtYZhJkBlD/jW8+g78EN5duHtpgdUvSUpqxm+r8IgyuOhV
+         FPiHlVWlOMS4QcTUUXiIYnV9c40WRWjA0IUwi/N5PJLwmMSprmZZqM0NahLd194znIc0
+         4wN6Sr8K/ASC3YZudDK3q59sYgRIrbx/FwUVv+YYhbQjO5c8j2lJRret4rhHaM5gME3N
+         hNpmv+weN3aN/TNvIT++zIXg++ol/tJDHlO4HGFjExqfFNq6JTTw/prWFbp2SSH1cAmt
+         inDQ==
+X-Gm-Message-State: APjAAAV10POvZwviiV+Gyz44h1Xld2mzLQcxoaghesZJalamzCMGACk5
+        Fll6jaeKZCVaxc+Ud4zLTN9h+ythNj4/omNZXVM=
+X-Google-Smtp-Source: APXvYqxsrNuGZhuo3h3fPzYjCSKnATOshU1Z4AY/Ar7OdRgQ329oHWAUyF68V6pm3co4FNrmMc+Of5Z1ZqXfiq7gAeo=
+X-Received: by 2002:aca:3641:: with SMTP id d62mr26021866oia.99.1571123004824;
+ Tue, 15 Oct 2019 00:03:24 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a9d:648:0:0:0:0:0 with HTTP; Tue, 15 Oct 2019 00:03:24 -0700 (PDT)
+In-Reply-To: <20191015064801.GA104469@owl.dominikbrodowski.net>
+References: <CAFjuqNh1=B7Ft6v7nzo3BW70EbAvK=Eko_4yqrJ4Z4N3w_Y+Xw@mail.gmail.com>
+ <CAFjuqNjLJw8J0nU2oo8rDfDUBavHLC7D0=AAwM62tp6=kHHk-A@mail.gmail.com> <20191015064801.GA104469@owl.dominikbrodowski.net>
+From:   "Michael ." <keltoiboy@gmail.com>
+Date:   Tue, 15 Oct 2019 18:03:24 +1100
+Message-ID: <CAFjuqNgxAuf+JTkWqhimDspzPd0+s5yGJro=Zi164uoxu4CmOA@mail.gmail.com>
+Subject: Re: PCMCIA not working on Panasonic Toughbook CF-29
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     linux-kernel@vger.kernel.org, Morgan Klym <moklym@gmail.com>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+Thank you for your prompt reply Dominik, I have asked everyone in the
+discussion on Notebook review to gather the information required and
+either post it there so I can reply or post it here in the list if it
+is from someone in the CC list.
 
-commit 163be6ff7739b12ff300d77897d340f661821da2 upstream
+Also thank you for replying to us all and not just on-list, none of us
+are subscribed to teh list so if a reply is only on-list none of us
+will receive it.
 
-If a gadget driver is in the pending drivers list, a UDC
-becomes available and udc_bind_to_driver() fails, then it
-gets deleted from the pending list.
-i.e. list_del(&driver->pending) in check_pending_gadget_drivers().
+Cheers.
+Michael.
 
-Then if that gadget driver is unregistered,
-usb_gadget_unregister_driver() does a list_del(&driver->pending)
-again thus causing a page fault as that list entry has been poisoned
-by the previous list_del().
-
-Fix this by using list_del_init() instead of list_del() in
-check_pending_gadget_drivers().
-
-Test case:
-
-- Make sure no UDC is available
-- modprobe g_mass_storage file=wrongfile
-- Load UDC driver so it becomes available
-	lun0: unable to open backing file: wrongfile
-- modprobe -r g_mass_storage
-
-[   60.900431] Unable to handle kernel paging request at virtual address dead000000000108
-[   60.908346] Mem abort info:
-[   60.911145]   ESR = 0x96000044
-[   60.914227]   Exception class = DABT (current EL), IL = 32 bits
-[   60.920162]   SET = 0, FnV = 0
-[   60.923217]   EA = 0, S1PTW = 0
-[   60.926354] Data abort info:
-[   60.929228]   ISV = 0, ISS = 0x00000044
-[   60.933058]   CM = 0, WnR = 1
-[   60.936011] [dead000000000108] address between user and kernel address ranges
-[   60.943136] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-[   60.948691] Modules linked in: g_mass_storage(-) usb_f_mass_storage libcomposite xhci_plat_hcd xhci_hcd usbcore ti_am335x_adc kfifo_buf omap_rng cdns3 rng_core udc_core crc32_ce xfrm_user crct10dif_ce snd_so6
-[   60.993995] Process modprobe (pid: 834, stack limit = 0x00000000c2aebc69)
-[   61.000765] CPU: 0 PID: 834 Comm: modprobe Not tainted 4.19.59-01963-g065f42a60499 #92
-[   61.008658] Hardware name: Texas Instruments SoC (DT)
-[   61.014472] pstate: 60000005 (nZCv daif -PAN -UAO)
-[   61.019253] pc : usb_gadget_unregister_driver+0x7c/0x108 [udc_core]
-[   61.025503] lr : usb_gadget_unregister_driver+0x30/0x108 [udc_core]
-[   61.031750] sp : ffff00001338fda0
-[   61.035049] x29: ffff00001338fda0 x28: ffff800846d40000
-[   61.040346] x27: 0000000000000000 x26: 0000000000000000
-[   61.045642] x25: 0000000056000000 x24: 0000000000000800
-[   61.050938] x23: ffff000008d7b0d0 x22: ffff0000088b07c8
-[   61.056234] x21: ffff000001100000 x20: ffff000002020260
-[   61.061530] x19: ffff0000010ffd28 x18: 0000000000000000
-[   61.066825] x17: 0000000000000000 x16: 0000000000000000
-[   61.072121] x15: 0000000000000000 x14: 0000000000000000
-[   61.077417] x13: ffff000000000000 x12: ffffffffffffffff
-[   61.082712] x11: 0000000000000030 x10: 7f7f7f7f7f7f7f7f
-[   61.088008] x9 : fefefefefefefeff x8 : 0000000000000000
-[   61.093304] x7 : ffffffffffffffff x6 : 000000000000ffff
-[   61.098599] x5 : 8080000000000000 x4 : 0000000000000000
-[   61.103895] x3 : ffff000001100020 x2 : ffff800846d40000
-[   61.109190] x1 : dead000000000100 x0 : dead000000000200
-[   61.114486] Call trace:
-[   61.116922]  usb_gadget_unregister_driver+0x7c/0x108 [udc_core]
-[   61.122828]  usb_composite_unregister+0x10/0x18 [libcomposite]
-[   61.128643]  msg_cleanup+0x18/0xfce0 [g_mass_storage]
-[   61.133682]  __arm64_sys_delete_module+0x17c/0x1f0
-[   61.138458]  el0_svc_common+0x90/0x158
-[   61.142192]  el0_svc_handler+0x2c/0x80
-[   61.145926]  el0_svc+0x8/0xc
-[   61.148794] Code: eb03003f d10be033 54ffff21 a94d0281 (f9000420)
-[   61.154869] ---[ end trace afb22e9b637bd9a7 ]---
-Segmentation fault
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: stable <stable@vger.kernel.org> # 4.19
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/usb/gadget/udc/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-index af88b48c1cea..b564a3251923 100644
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -1138,7 +1138,7 @@ static int check_pending_gadget_drivers(struct usb_udc *udc)
- 						dev_name(&udc->dev)) == 0) {
- 			ret = udc_bind_to_driver(udc, driver);
- 			if (ret != -EPROBE_DEFER)
--				list_del(&driver->pending);
-+				list_del_init(&driver->pending);
- 			break;
- 		}
- 
--- 
-2.17.1
-
+On 15/10/2019, Dominik Brodowski <linux@dominikbrodowski.net> wrote:
+> On Tue, Oct 15, 2019 at 05:04:28PM +1100, Michael . wrote:
+>> Good afternoon kernel developers
+>> Please accept my apology for contacting you directly about this. A
+>> small group of friends, some of whom are CCed here, have come together
+>> to try and find a solution to a problem that originated with the
+>> demise of kernel 2.6:32. First some background to the issue. We are
+>> all users of Panasonic Toughbook CF-29 models (ranging from Mark 1
+>> through to Mark 5). These Toughbooks have 2 PCMCIA card slots which
+>> are used by a variety of people for different purposes. On the CF-29
+>> Mark 1 through to Mark 3 these slots work without problem. On the
+>> CF-29 Mark 4 and Mark 5 the last known kernel the top slot worked with
+>> was 2.6:32. This has been confirmed all all major distros by most of
+>> the small group of friends I mentioned earlier.
+>>
+>> Thinking it was just a kernel config issue I did some comparisons
+>> between Debian 6 (Squeeze), Debian 7 (Wheezy), Ubuntu 10.04, and
+>> Ubuntu 10.10. On all machines both slots functioned as they should
+>> with Debian 6 and Ubuntu 10.04 but the top slot stopped working on
+>> Mark 4 and Mark 5 machines on the next release with the next kernel. I
+>> also tested Ubuntu 10.04 and 10.10 with the 2.6:32 and 2.6:35 kernel
+>> and both slots worked with the 2.6:32 kernel but not the 2.6:35
+>> kernel.With my comparisons I merged the config from 2.6:32 into the
+>> current kernel for Debian 4.19 and rebuilt the kernel, no matter what
+>> configuration changes I made the top slot still doesn't function on
+>> Mark 4 and Mark 5 machines.
+>>
+>> This issue, and its apparent start, has been confirmed on all major
+>> distro family groups. So this brings me, actually the small group of
+>> dedicated Linux users who own Panasonic Toughbook CF-29s, to contact
+>> you to ask for help in resolving this issue. I have some questions,
+>> and I realise the 2.6:32 kernel is long gone now but I'm hoping this
+>> is not a lost cause, what changes would have occurred between 2.6:32
+>> and 2.6:33 that would have stopped the hardware working on Mark 4 and
+>> Mark 5 CF-29 Toughbooks but not Mark 1 through to Mark 3? Would it be
+>> possible to correct the problem so that the hardware on our machines
+>> works as it should. While we are not kernel devs or even programmers
+>> we are enthusiasts who love Linux and our machines and we are hoping
+>> that together with you and the kernel dev group we can fix this issue
+>> together.
+>>
+>> I have attached various tar.gz files with ls* outputs so you can see
+>> the information we have so far. Thank you for taking the time to read
+>> this.
+>
+> Is this with 16-bit PCMCIA cards, or with 32-bit CardBus cards? Either
+> case,
+> please provide the output of
+>
+> 	dmesg
+>
+> 	lspci -vvv
+>
+> and
+>
+> 	lspcmcia -v -v
+>
+> (ideally all for a working and non-working configuration).
+>
+> Thanks,
+> 	Dominik
+>
