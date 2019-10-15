@@ -4,83 +4,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA26C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5218C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89092064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B71020872
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 16:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UhqyUbUZ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p5Ddy4+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388284AbfJOQy0 (ORCPT
+        id S2388297AbfJOQzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 12:54:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:56338 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfJOQy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 12:54:26 -0400
-Received: from zn.tnic (p200300EC2F157800C5C9C957E5FD72EA.dip0.t-ipconnect.de [IPv6:2003:ec:2f15:7800:c5c9:c957:e5fd:72ea])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 48D971EC0C9F;
-        Tue, 15 Oct 2019 18:54:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571158463;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rnMDMAxve5tu5ORyg7bCimEqvhkoKSIi/WDG5Ckj2mw=;
-        b=UhqyUbUZxF1aKEZWmjOecjXQ40If2V00t93Kg4amOFs1vb1YblTprErgXmjYAMMbFs1i2U
-        rBG4AYHzxbTMLCTcsNJJf17cTI1+Sh6IITzgESuitrr3eMc1W3eIWHwig8gGPLDTSj8piu
-        pPldqgdkCAB3vxJ1gR+l+JfeKn/aG08=
-Date:   Tue, 15 Oct 2019 18:54:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
-        x86@kernel.org, linux-ia64@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-xtensa@linux-xtensa.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
-Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
-Message-ID: <20191015165412.GD596@zn.tnic>
-References: <20191011000609.29728-1-keescook@chromium.org>
- <20191011000609.29728-2-keescook@chromium.org>
- <20191011082519.GI9749@gate.crashing.org>
- <201910110910.48270FC97@keescook>
- <20191011162552.GK9749@gate.crashing.org>
+        Tue, 15 Oct 2019 12:55:01 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57130 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfJOQzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:55:00 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 85EDC324;
+        Tue, 15 Oct 2019 18:54:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571158497;
+        bh=WOk9Rl/94vhaYcZy/MBFyHM9vyXT8YyyEUhoevdSg9E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p5Ddy4+2aU9kWNpMX2TTyVCyBrNjvdRk2LlJCwUSNY9lXd7g9kHEuSyJuz27X198h
+         ZGn0unbdjz9BakZ+SyXxq1mXqPq3W8EnqTvvWqKPmcU/OMqSVD1G/F++w2G6MMBs3C
+         NfVadEe3svJjsvWjoXaKr9103oTThcCyYCVm8bc4=
+Date:   Tue, 15 Oct 2019 19:54:54 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
+Message-ID: <20191015165454.GL4875@pendragon.ideasonboard.com>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191011162552.GK9749@gate.crashing.org>
+In-Reply-To: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:25:52AM -0500, Segher Boessenkool wrote:
-> Names *matter*, internal names doubly so.  So why replace a good name with
-> a worse name?  Because it is slightly less work for you?
+Hi Jcopo,
 
-So if we agree on the name "notes" and we decide to rename the other
-arches, this should all be done in a separate patchset anyway, and ontop
-of this one. And I believe Kees wouldn't mind doing it ontop since he's
-gotten his hands dirty already. :-P
+Thank you for the patches.
 
-Thx.
+On Tue, Oct 15, 2019 at 12:46:13PM +0200, Jacopo Mondi wrote:
+> References:
+> A reference to the v1 cover letter, with some background on the CMM is
+> available here:
+> https://lkml.org/lkml/2019/6/6/583
+> v2:
+> https://lore.kernel.org/linux-renesas-soc/20190706140746.29132-10-jacopo+renesas@jmondi.org/
+> v3:
+> https://lore.kernel.org/linux-renesas-soc/20190825135154.11488-1-jacopo+renesas@jmondi.org/
+> v4:
+> https://lore.kernel.org/linux-renesas-soc/20190906135436.10622-1-jacopo+renesas@jmondi.org/
+> 
+> Again, quite a consistent changelog, mostly due to the developments happened on
+> Ezequiel's VOP unit following Sean's advices.
+> 
+> I here implemented the same, and moved the CMM handling to the crtc being and
+> enable callbacks. As a result the overall implementation results quite a lot
+> simplified, mostly on the CMM driver side.
+> 
+> I have dropped tags and acks on the CMM driver and CMM enablement patches in
+> DU crtc driver because of the number of changes.
+> 
+> A more detailed change log:
+> 
+> - Rebased on renesas-devel-2019-10-07-v5.4-rc4
+> 
+> * Bindings/DT
+> - Included Rob's comments on the yaml file license and the use of 'OneOf'
+>   in the compatible property description
+> - Use the bracketed style suggested by Kieran for the 'renesas,cmm' property
+>   introduced in patch 2
+> - Re-order the properties in the SoC DTS files as suggested by Kieran
+> 
+> * CMM/DU
+> - As anticipated, moved CMM management to the crtc from the atomic commit tail
+>   helper where it was implemented in v4
+>   This allow to correctly support resume/suspend and proper ordering of the CMM
+>   enable and setup operations (enable -before- setup)
+> - As a consequence the CMM driver is greatly simplified by removing the need
+>   to cache the LUT table entries provided to cmm_setup() and later re-apply
+>   them at enable time.
+> - Better support handling of disabled CMM config option by returning -ENODEV
+>   at cmm_init() time as suggested by Kieran.
+
+Could you, for your next series (hopefully not CMM-related :-)) move the
+changelog to individual patches ? Having it in the cover letter requires
+going back and forth, and also doesn't provide detailed changelog. I
+recommend adding below a --- line in the commit message, so that every
+time you commit --amend to update a patch, you can record the exact
+detailed change at the same time.
+
+> * Testing
+> I have tested by injecting a color inversion LUT table and enabling/disabling it
+> every 50 displayed frames:
+> https://jmondi.org/cgit/kmsxx/log/?h=gamma_lut
+> 
+> CMM functionalities are retained between suspend/resume cycles (tested with
+> suspend-to-idle) without requiring a re-programming of the LUT tables.
+> 
+> Testing with real world use cases might be beneficial. Rajesh are you still
+> interested in giving this series a spin?
+> 
+> Laurent, Kieran, could we fast-track review of this and hopefully try to have it
+> merged for v5.5 ?
+> 
+> Thanks Ezequiel for having suggested me this solution.
+> 
+> Thanks
+>    j
+> 
+> Jacopo Mondi (8):
+>   dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+>   dt-bindings: display, renesas,du: Document cmms property
+>   drm: rcar-du: Add support for CMM
+>   drm: rcar-du: kms: Initialize CMM instances
+>   drm: rcar-du: crtc: Control CMM operations
+>   drm: rcar-du: crtc: Register GAMMA_LUT properties
+>   arm64: dts: renesas: Add CMM units to Gen3 SoCs
+>   drm: rcar-du: kms: Expand comment in vsps parsing routine
+> 
+>  .../bindings/display/renesas,cmm.yaml         |  67 ++++++
+>  .../bindings/display/renesas,du.txt           |   5 +
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi      |  39 ++++
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi      |  31 ++-
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi     |  31 ++-
+>  arch/arm64/boot/dts/renesas/r8a77990.dtsi     |  21 ++
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi     |  21 ++
+>  drivers/gpu/drm/rcar-du/Kconfig               |   7 +
+>  drivers/gpu/drm/rcar-du/Makefile              |   1 +
+>  drivers/gpu/drm/rcar-du/rcar_cmm.c            | 198 ++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_cmm.h            |  60 ++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  89 ++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.h        |   2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.h         |   2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c       |   5 +
+>  drivers/gpu/drm/rcar-du/rcar_du_group.h       |   2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c         |  82 +++++++-
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h        |   5 +
+>  18 files changed, 665 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
+Regards,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Laurent Pinchart
