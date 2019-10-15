@@ -2,158 +2,168 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD21CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316E6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8691620854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F304F20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 18:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJGM+lNx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1bYUzxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389142AbfJOS1f (ORCPT
+        id S1730318AbfJOSai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 14:27:35 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35796 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfJOS1e (ORCPT
+        Tue, 15 Oct 2019 14:30:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35558 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbfJOSai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 14:27:34 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 205so13024206pfw.2;
-        Tue, 15 Oct 2019 11:27:33 -0700 (PDT)
+        Tue, 15 Oct 2019 14:30:38 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y21so137468wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 11:30:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H2SFc+eSh25LItu8hgIZM6RQdRwB86HeZLQqVHf/9pI=;
-        b=RJGM+lNxvChm4N6e6agEvyTnJl9pFJiHhYUl62y4z/ZYAiLUIRsIvCqIS2kqyGC78Z
-         WeLhghMqIpgBHjYAPeb88Jvx9F+Bq/L1W8/Q7oO+x4CvckDc44ZCHdaEm+Zp+Ghehnh/
-         4mM706LdBje3Ze5JMwb6FyNp9uNe13kb6bDPcfW8cxyjtb6uW9zYZ6qXPN7NSOCeY/W1
-         ElONiCKJm/TsHeagRtcfEt0bDcWM8hiCf/QEmyd07TV3IeL9BQRdVA+FzABHzOc9uhGB
-         8sGtjIvRHfCm/iKoWmsTfO7t3yc1pTDnmSEfoH8HGNiziJiloK6+u4dppuVRuVO8TeFp
-         zmeQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fzFVXgcr+SbryhCTIPWP1x78uV1MrL2l3mggmZnG6J0=;
+        b=d1bYUzxclgcIwQyGom6nQU9FbRAuZmgiWTJXIBD5CvPkiODLcyyeIH5MOmgIY5qegO
+         wF9rakwLnWkpSmQS7tuNvPqrIV4uY42XgwNk9G+8FFAJs3YrSvMGseDiXQphlRKvwwpj
+         QDiPkjXQKBwyUMwZurpk0auizQkZlIDGnKV9JzTvAMK07ogKXnNVfKPZUFqfNfgFhoWV
+         Jl/NGyisdi4XUPts9Ku7O0WnFdjKBRJRQAjsLO8ApfiVQcDk/WNiqXxU1ElOmVa/1fr9
+         EuU0BVoz6u0pWJau3jxbISHWYBhp9nVITAudMISOYVUTmt/NJB8yPRp9LZMsJcnjAbDj
+         s17Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=H2SFc+eSh25LItu8hgIZM6RQdRwB86HeZLQqVHf/9pI=;
-        b=F/0ggztLtHdOvhgJ+4RWTzjW0Y1pd/aT6PuzZp4MYrk04jYq2kfPKm4l/vqDkhqapP
-         Lq3P0qvY4UtWXcb6+bMx95iDFeBa4eEq2/TxeIAdnlKKgB3s9eiQn/yd7uo8oN12WmFH
-         amb9blfqZYR04Ee27gbx9Ho/lCuckvcAtzDYDKJZ71Nrt3pkhWWQG5jFZwnOo0xnm6Ar
-         EZssyLqooWZ1LsT6aIAe0/6S0VsOJc3nlHYU5AaR/wxQCsrmXkOR1NckuKlkMDm7xAn5
-         6skWsAHu9bbiwntKGCGS1mINWDYNel6ysYQ6+md7nghgFZIpcoQbVPk3LFfYqtQ/ShYR
-         QdQQ==
-X-Gm-Message-State: APjAAAX7K1+aLAqcKpPq83QC1sPX1+OpW7KutYYPUo2HLZ5EBZGL0aRY
-        OiCKRu9B6oNm9laiRNjHB29WWDN4
-X-Google-Smtp-Source: APXvYqzs9weFptN+l9IyOAyWJSIJclhY9iV0zVqLy+NdSKFp0MxRMasYFNEBL15v7t02dCJMndXoZg==
-X-Received: by 2002:a17:90a:b285:: with SMTP id c5mr43646209pjr.123.1571164053316;
-        Tue, 15 Oct 2019 11:27:33 -0700 (PDT)
-Received: from [10.67.51.137] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 202sm29764643pfu.161.2019.10.15.11.27.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 11:27:32 -0700 (PDT)
-Subject: Re: [PATCH net] net: bcmgenet: Fix RGMII_MODE_EN value for GENET
- v1/2/3
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "open list:BROADCOM GENET ETHERNET DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191015174547.9837-1-f.fainelli@gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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 YVs=
-Message-ID: <0fd67300-7f23-0181-f3b3-8ee61c15ea39@gmail.com>
-Date:   Tue, 15 Oct 2019 11:27:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fzFVXgcr+SbryhCTIPWP1x78uV1MrL2l3mggmZnG6J0=;
+        b=LOwAimDz3mpYFYUhVH80sOvH47zEfTJRYyuv9QCRFPLpUDx3e7BnrAioze6SQCp4zL
+         mNYzboUUhLPGTNlMoBAuoriQnYZ8qTEYeucjs7U10GKhBF8kWjyM1fmZw/SRDCQWUfZY
+         kxcodZvD7MBJOJji9s47yY+QRyoc9471BwBiyW5FQ8ZHIp9pWx8WZxLPxq6Nksb5ehfr
+         rpOHSzzJcwA3/Zb2AAYlf0/pBjRWJunJMc+7Pmu00Rj7PhghjPnaiw5x8DCWZIoLvk2u
+         YHpZQMzIVSdcaO7w0dO3R4BxobXqCygH0eFmW92aB9AOW40KIaTFEpBv8OMv36w4Z4Eo
+         oAhQ==
+X-Gm-Message-State: APjAAAVnHqs7VFVtlZK7KRqg0dhC0c/UYtrY0IvEc3ffI9Lj9eeGgdau
+        TbrEIzw8n9FUEbt4fFZuIIdWGiTwbz/yAiQ2Nmg=
+X-Google-Smtp-Source: APXvYqw5mjBI9MyTnIQNVNmV4S5NIMpCWobeJtM4nSdr7tbShHIZntss/bw3jdnI/nRWI/84Xu5NwnHBlop2AsFW3/U=
+X-Received: by 2002:a1c:d0:: with SMTP id 199mr21418272wma.67.1571164236355;
+ Tue, 15 Oct 2019 11:30:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191015174547.9837-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
+ <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com> <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
+ <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
+In-Reply-To: <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 15 Oct 2019 14:30:23 -0400
+Message-ID: <CADnq5_P55aRJ-1VVz2uKA=xpddyi0BvDcXqPD=xVpw3aJZrzng@mail.gmail.com>
+Subject: Re: AMDGPU and 16B stack alignment
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 10:45 AM, Florian Fainelli wrote:
-> The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
-> became 6 for GENET v4 and above, account for that difference.
-> 
-> Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
->  drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
->  2 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> index 4a8fc03d82fd..dbc69d8fa05f 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-> @@ -366,6 +366,7 @@ struct bcmgenet_mib_counters {
->  #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
->  
->  #define EXT_RGMII_OOB_CTRL		0x0C
-> +#define  RGMII_MODE_EN_V123		(1 << 0)
->  #define  RGMII_LINK			(1 << 4)
->  #define  OOB_DISABLE			(1 << 5)
->  #define  RGMII_MODE_EN			(1 << 6)
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-> index 94d1dd5d56bf..e7c291bf4ed1 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-> @@ -258,7 +258,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
->  	 */
->  	if (priv->ext_phy) {
->  		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
-> -		reg |= RGMII_MODE_EN | id_mode_dis;
-> +		reg |= id_mode_dis;
-> +		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-> +			reg |= RGMII_MODE_EN_V123;
-> +		else
-> +			reg |= RGMII_MODE_EN;
->  		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
->  	}
->  
-> 
+On Tue, Oct 15, 2019 at 2:07 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, Oct 15, 2019 at 12:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Tue, Oct 15, 2019 at 9:08 AM S, Shirish <sshankar@amd.com> wrote:
+> > > On 10/15/2019 3:52 AM, Nick Desaulniers wrote:
+> >
+> > > My gcc build fails with below errors:
+> > >
+> > > dcn_calcs.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
+> > >
+> > > dcn_calc_math.c:1:0: error: -mpreferred-stack-boundary=3 is not between 4 and 12
+>
+> I was able to reproduce this failure on pre-7.1 versions of GCC.  It
+> seems that when:
+> 1. code is using doubles
+> 2. setting -mpreferred-stack-boundary=3 -mno-sse2, ie. 8B stack alignment
+> than GCC produces that error:
+> https://godbolt.org/z/7T8nbH
+>
+> That's already a tall order of constraints, so it's understandable
+> that the compiler would just error likely during instruction
+> selection, but was eventually taught how to solve such constraints.
+>
+> > >
+> > > While GPF observed on clang builds seem to be fixed.
+>
+> Thanks for the report.  Your testing these patches is invaluable, Shirish!
+>
+> >
+> > Ok, so it seems that gcc insists on having at least 2^4 bytes stack
+> > alignment when
+> > SSE is enabled on x86-64, but does not actually rely on that for
+> > correct operation
+> > unless it's using sse2. So -msse always has to be paired with
+> >  -mpreferred-stack-boundary=3.
+>
+> Seemingly only for older versions of GCC, pre 7.1.
+>
+> >
+> > For clang, it sounds like the opposite is true: when passing 16 byte
+> > stack alignment
+> > and having sse/sse2 enabled, it requires the incoming stack to be 16
+> > byte aligned,
+>
+> I don't think it requires the incoming stack to be 16B aligned for
+> sse2, I think it requires the incoming and current stack alignment to
+> match. Today it does not, which is why we observe GPFs.
+>
+> > but passing 8 byte alignment makes it do the right thing.
+> >
+> > So, should we just always pass $(call cc-option, -mpreferred-stack-boundary=4)
+> > to get the desired outcome on both?
+>
+> Hmmm...I would have liked to remove it outright, as it is an ABI
+> mismatch that is likely to result in instability and non-fun-to-debug
+> runtime issues in the future.  I suspect my patch does work for GCC
+> 7.1+.  The question is: Do we want to either:
+> 1. mark AMDGPU broken for GCC < 7.1, or
+> 2. continue supporting it via stack alignment mismatch?
+>
+> 2 is brittle, and may break at any point in the future, but if it's
+> working for someone it does make me feel bad to outright disable it.
+> What I'd image 2 looks like is (psuedo code in a Makefile):
 
-Acked-by: Doug Berger <opendmb@gmail.com>
+Well, it's been working as is for years now, at least with gcc, so I'd
+hate to break that.
+
+Alex
+
+>
+> if CC_IS_GCC && GCC_VERSION < 7.1:
+>   set stack alignment to 16B and hope for the best
+>
+> So my diff would be amended to keep the stack alignment flags, but
+> only to support GCC < 7.1.  And that assumes my change compiles with
+> GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
+> feel even more confident if someone with hardware to test on and GCC
+> 7.1+ could boot test).
+> --
+> Thanks,
+> ~Nick Desaulniers
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
