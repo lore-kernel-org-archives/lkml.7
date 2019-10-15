@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECCDECE58F
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1535EECE58F
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9FB214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF89720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 21:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEBTOr98"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PI2ztGhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389847AbfJOVSQ (ORCPT
+        id S2389858AbfJOVSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 17:18:16 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44957 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbfJOVRM (ORCPT
+        Tue, 15 Oct 2019 17:18:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42887 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbfJOVRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 17:17:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q12so15591933lfc.11;
-        Tue, 15 Oct 2019 14:17:07 -0700 (PDT)
+        Tue, 15 Oct 2019 17:17:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so21723526lje.9;
+        Tue, 15 Oct 2019 14:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=M1IGNHI8du2Zq3gFJxEz/wszSn7KLQR6VXkH2NjIP24=;
-        b=jEBTOr98hTarxb6M30tQaGYBWQUqhAStA6oNL2Or9pCAeg/BryzeOstbh+XAsy3EGv
-         cxysyZub8E2ZgqpeWHbb7JqVaMa2dCrmaZlF6S/xy9bgMB/k72hVWUF6Hc9otRnY+d3x
-         Z95znfyCIVIUnzQNz50EWgkicNMXwzDfIMcmNNG/jN6qbJeO6wLBX2YDbLkVJg1vd74E
-         5i7Kyfy6aLfJ2EL2clTxYpoe1tHcnlZGMHICZhxvRkucgRed4Mwy7HuCfb5MkR9X7C04
-         bUMilNIAJPUKLcNY5sPAWxsSrnGXP86uMUmkxtSSObwAuxe7CaQG2v6sQcdoXsr713Ye
-         h0QQ==
+        bh=7xbFab5w+z8oPGuGoizSXNjpUrRQM06nz1UpWD5n1gs=;
+        b=PI2ztGhX6G+eTN5wxOnEvU+jnYK3ucCK4n7/ucpGetS8gifhnuwOtIDKdrQK9OrijX
+         9RsJ81t62XqtY0OXi2Lx7fF5x8fGlm53PMimF/1l0s6bPTC+GCKW+6FD+dkmAC2LbVEw
+         o2/SOTchgRT6F7F10Jf4jNNk05kNVB0xLz/7zxMJYEiQ1EvpeprKgwQTOeFBGGhZMgCa
+         2eEqjjlRO7Md0C0hKtq71vOO6kG0M0WapzUw5bAx6g/ojK5kfqPVXVwqTfDF5/zuu6VA
+         ar75Wbhy566QERlrPsu2QC/3YiBHjbAbs0M0tAVHEfEjvj/yNTxpk/BlvPDxnfYU1eWe
+         cONw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=M1IGNHI8du2Zq3gFJxEz/wszSn7KLQR6VXkH2NjIP24=;
-        b=IeijQFxIMiyzV8p8geZkOSLoU31zl2qbUtY9U52B+tl+lEtFJa0FPkOG15oNCpibC4
-         Xhiu/PqUyeBj3FcUB7WP/1922j4vUnpz4YSX8OW4098ITbMgwgJOhVmPS7mOIW5hDUrd
-         4wCZqv4UrK89KeRlDYfxrpUoMR1hlqdRIv4Z+sEH+VLCbXZZco4fbzz+TkGp3kkJfVwM
-         KpKQNtXJCg7xs15LjSo8ij8mAEA3FASDabvnYdErvZePYMVFDUVg4wjzNzwExMkOr2Es
-         eY/w5Xn/mDKIS7fHYbhOJ4GJs9VTjhgAXOOBL9kLgLyHNFaojdoAtJbJTqKN8Cr765Eb
-         L+nA==
-X-Gm-Message-State: APjAAAUIQbBr5Y7d1lTsvhnrN/oOry0shLj2YvJq7geaxtxgJxF4hFhQ
-        9tYsQ4KkfjTO5lM6Bib3QD4=
-X-Google-Smtp-Source: APXvYqxgswHxllGzzYFwyGlOzRkoAwL7vTegOJrc7H+SSZxjDZdsvfNn/AkPPJgQafcp5u8JHaPmAw==
-X-Received: by 2002:a19:148:: with SMTP id 69mr10650519lfb.76.1571174226898;
-        Tue, 15 Oct 2019 14:17:06 -0700 (PDT)
+        bh=7xbFab5w+z8oPGuGoizSXNjpUrRQM06nz1UpWD5n1gs=;
+        b=UTPHIfoZDE1rK1/PFuZoGk0+HrSmHKe4EP6Tav9TtsmnDNjDV4UUZZuy1aupqUqy82
+         HAZM42ItrHggr/0zioZwAGDpx7Vutm1ZzNet8b2aprZD8u5df7qHecbRjWqn4PXSmxct
+         QhETpFgSAgayjd1QC49zTsF3uC8XOHuCLDLI7niVcBA90U97VIq9COHVX7k/9TRawJvu
+         Ob+oEp5E54Hc2VGw6HmiSft/gPyD5oeW5TrbJ9J1dMnXtgaiRNkyRF3E5RDo2UcoeJJG
+         5fV2ygJJNvTnAmFdStBd4qEHzgpi0vMxfsn0NrRDU2SHOohu9fOxDgvuoq9BC9nyD/ZZ
+         8ooQ==
+X-Gm-Message-State: APjAAAXiMMDSvEXqLhf3fI6M/0Y4QDyH6ds3AFtjlFiBRg1mOY8YP4kK
+        oMHHrDCfcTejkqlW1Ktqj58=
+X-Google-Smtp-Source: APXvYqyrIAUwcH5Ok6jcSErAPszXnbt4fsivAE3JbjH91ZVJBOWC/tjrCxc3XAheLtlvBsFgP3Icng==
+X-Received: by 2002:a2e:95d9:: with SMTP id y25mr24066214ljh.217.1571174220087;
+        Tue, 15 Oct 2019 14:17:00 -0700 (PDT)
 Received: from localhost.localdomain ([94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id t16sm5269186ljj.29.2019.10.15.14.17.05
+        by smtp.gmail.com with ESMTPSA id t16sm5269186ljj.29.2019.10.15.14.16.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 14:17:06 -0700 (PDT)
+        Tue, 15 Oct 2019 14:16:59 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -73,9 +73,9 @@ Cc:     Peter Geis <pgwipeout@gmail.com>,
         linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 07/17] cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported now)
-Date:   Wed, 16 Oct 2019 00:16:08 +0300
-Message-Id: <20191015211618.20758-8-digetx@gmail.com>
+Subject: [PATCH v1 01/17] clk: tegra: Add custom CCLK implementation
+Date:   Wed, 16 Oct 2019 00:16:02 +0300
+Message-Id: <20191015211618.20758-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191015211618.20758-1-digetx@gmail.com>
 References: <20191015211618.20758-1-digetx@gmail.com>
@@ -86,318 +86,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-parenting to intermediate clock is supported now by the clock driver
-and thus there is no need in a customized CPUFreq driver, all that code
-is common for both Tegra20 and Tegra30. The available CPU freqs are now
-specified in device-tree in a form of OPPs, all users should update their
-device-trees.
+CCLK stands for "CPU Clock", CPU core is running off CCLK. CCLK supports
+multiple parents and it has internal clock divider which uses clock
+skipping technique, meaning that CPU's voltage should correspond to the
+parent clock rate and not CCLK. PLLX is the main CCLK parent that provides
+clock rates above 1GHz and it has special property such that the CCLK's
+internal divider is set into bypass mode when PLLX is set as a parent for
+CCLK.
+
+This patch forks generic Super Clock into CCLK implementation which takes
+into account all CCLK specifics. The proper CCLK implementation is needed
+by the upcoming Tegra20 CPUFreq driver update that will allow to utilize
+the generic cpufreq-dt driver by moving intermediate clock handling into
+the clock driver. Note that technically this all could be squashed into
+clk-super, but result will be messier.
+
+Note that currently all CCLKLP bits are left in the clk-super.c and only
+CCLKG is supported by clk-tegra-super-cclk. It shouldn't be difficult
+to move the CCLKLP bits, but CCLKLP is not used by anything in kernel
+and thus better not to touch it for now.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/cpufreq/Kconfig.arm          |   4 +-
- drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
- drivers/cpufreq/tegra20-cpufreq.c    | 236 ++++++---------------------
- 3 files changed, 55 insertions(+), 187 deletions(-)
+ drivers/clk/tegra/Makefile               |   1 +
+ drivers/clk/tegra/clk-tegra-super-cclk.c | 131 +++++++++++++++++++++++
+ drivers/clk/tegra/clk.h                  |   4 +
+ 3 files changed, 136 insertions(+)
+ create mode 100644 drivers/clk/tegra/clk-tegra-super-cclk.c
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index a905796f7f85..2118c45d0acd 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -301,8 +301,8 @@ config ARM_TANGO_CPUFREQ
- 	default y
- 
- config ARM_TEGRA20_CPUFREQ
--	tristate "Tegra20 CPUFreq support"
--	depends on ARCH_TEGRA
-+	bool "Tegra20 CPUFreq support"
-+	depends on ARCH_TEGRA && CPUFREQ_DT
- 	default y
- 	help
- 	  This adds the CPUFreq driver support for Tegra20 SOCs.
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 54bc76743b1f..07e88dcd112d 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "mediatek,mt8176", },
- 	{ .compatible = "mediatek,mt8183", },
- 
-+	{ .compatible = "nvidia,tegra20", },
-+	{ .compatible = "nvidia,tegra30", },
- 	{ .compatible = "nvidia,tegra124", },
- 	{ .compatible = "nvidia,tegra210", },
- 
-diff --git a/drivers/cpufreq/tegra20-cpufreq.c b/drivers/cpufreq/tegra20-cpufreq.c
-index f84ecd22f488..042017c73afa 100644
---- a/drivers/cpufreq/tegra20-cpufreq.c
-+++ b/drivers/cpufreq/tegra20-cpufreq.c
-@@ -7,215 +7,81 @@
-  *	Based on arch/arm/plat-omap/cpu-omap.c, (C) 2005 Nokia Corporation
-  */
- 
--#include <linux/clk.h>
--#include <linux/cpufreq.h>
-+#define pr_fmt(fmt) "tegra20-cpufreq: " fmt
+diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+index df966ca06788..f04b490f5416 100644
+--- a/drivers/clk/tegra/Makefile
++++ b/drivers/clk/tegra/Makefile
+@@ -14,6 +14,7 @@ obj-y					+= clk-tegra-audio.o
+ obj-y					+= clk-tegra-periph.o
+ obj-y					+= clk-tegra-pmc.o
+ obj-y					+= clk-tegra-fixed.o
++obj-y					+= clk-tegra-super-cclk.o
+ obj-y					+= clk-tegra-super-gen4.o
+ obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
+diff --git a/drivers/clk/tegra/clk-tegra-super-cclk.c b/drivers/clk/tegra/clk-tegra-super-cclk.c
+new file mode 100644
+index 000000000000..9b41365c4331
+--- /dev/null
++++ b/drivers/clk/tegra/clk-tegra-super-cclk.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Based on clk-super.c
++ * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * Based on older tegra20-cpufreq driver by Colin Cross <ccross@google.com>
++ * Copyright (C) 2010 Google, Inc.
++ *
++ * Author: Dmitry Osipenko <digetx@gmail.com>
++ * Copyright (C) 2019 GRATE-DRIVER project
++ */
 +
-+#include <linux/bits.h>
- #include <linux/err.h>
- #include <linux/init.h>
--#include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
- #include <linux/types.h>
- 
--static struct cpufreq_frequency_table freq_table[] = {
--	{ .frequency = 216000 },
--	{ .frequency = 312000 },
--	{ .frequency = 456000 },
--	{ .frequency = 608000 },
--	{ .frequency = 760000 },
--	{ .frequency = 816000 },
--	{ .frequency = 912000 },
--	{ .frequency = 1000000 },
--	{ .frequency = CPUFREQ_TABLE_END },
--};
--
--struct tegra20_cpufreq {
--	struct device *dev;
--	struct cpufreq_driver driver;
--	struct clk *cpu_clk;
--	struct clk *pll_x_clk;
--	struct clk *pll_p_clk;
--	bool pll_x_prepared;
--};
--
--static unsigned int tegra_get_intermediate(struct cpufreq_policy *policy,
--					   unsigned int index)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--	unsigned int ifreq = clk_get_rate(cpufreq->pll_p_clk) / 1000;
--
--	/*
--	 * Don't switch to intermediate freq if:
--	 * - we are already at it, i.e. policy->cur == ifreq
--	 * - index corresponds to ifreq
--	 */
--	if (freq_table[index].frequency == ifreq || policy->cur == ifreq)
--		return 0;
--
--	return ifreq;
--}
-+#include <soc/tegra/common.h>
-+#include <soc/tegra/fuse.h>
- 
--static int tegra_target_intermediate(struct cpufreq_policy *policy,
--				     unsigned int index)
-+static bool __init cpu0_node_has_opp_v2_prop(void)
- {
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--	int ret;
--
--	/*
--	 * Take an extra reference to the main pll so it doesn't turn
--	 * off when we move the cpu off of it as enabling it again while we
--	 * switch to it from tegra_target() would take additional time.
--	 *
--	 * When target-freq is equal to intermediate freq we don't need to
--	 * switch to an intermediate freq and so this routine isn't called.
--	 * Also, we wouldn't be using pll_x anymore and must not take extra
--	 * reference to it, as it can be disabled now to save some power.
--	 */
--	clk_prepare_enable(cpufreq->pll_x_clk);
--
--	ret = clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_p_clk);
--	if (ret)
--		clk_disable_unprepare(cpufreq->pll_x_clk);
--	else
--		cpufreq->pll_x_prepared = true;
-+	struct device_node *np = of_cpu_device_node_get(0);
-+	bool ret = false;
- 
--	return ret;
--}
--
--static int tegra_target(struct cpufreq_policy *policy, unsigned int index)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--	unsigned long rate = freq_table[index].frequency;
--	unsigned int ifreq = clk_get_rate(cpufreq->pll_p_clk) / 1000;
--	int ret;
--
--	/*
--	 * target freq == pll_p, don't need to take extra reference to pll_x_clk
--	 * as it isn't used anymore.
--	 */
--	if (rate == ifreq)
--		return clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_p_clk);
--
--	ret = clk_set_rate(cpufreq->pll_x_clk, rate * 1000);
--	/* Restore to earlier frequency on error, i.e. pll_x */
--	if (ret)
--		dev_err(cpufreq->dev, "Failed to change pll_x to %lu\n", rate);
--
--	ret = clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_x_clk);
--	/* This shouldn't fail while changing or restoring */
--	WARN_ON(ret);
--
--	/*
--	 * Drop count to pll_x clock only if we switched to intermediate freq
--	 * earlier while transitioning to a target frequency.
--	 */
--	if (cpufreq->pll_x_prepared) {
--		clk_disable_unprepare(cpufreq->pll_x_clk);
--		cpufreq->pll_x_prepared = false;
--	}
-+	if (of_get_property(np, "operating-points-v2", NULL))
-+		ret = true;
- 
-+	of_node_put(np);
- 	return ret;
- }
- 
--static int tegra_cpu_init(struct cpufreq_policy *policy)
-+static int __init tegra20_cpufreq_init(void)
- {
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--
--	clk_prepare_enable(cpufreq->cpu_clk);
--
--	/* FIXME: what's the actual transition time? */
--	cpufreq_generic_init(policy, freq_table, 300 * 1000);
--	policy->clk = cpufreq->cpu_clk;
--	policy->suspend_freq = freq_table[0].frequency;
--	return 0;
--}
--
--static int tegra_cpu_exit(struct cpufreq_policy *policy)
--{
--	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
--
--	clk_disable_unprepare(cpufreq->cpu_clk);
--	return 0;
--}
--
--static int tegra20_cpufreq_probe(struct platform_device *pdev)
--{
--	struct tegra20_cpufreq *cpufreq;
-+	struct platform_device *cpufreq_dt;
-+	struct opp_table *opp_table;
-+	u32 versions[2];
- 	int err;
- 
--	cpufreq = devm_kzalloc(&pdev->dev, sizeof(*cpufreq), GFP_KERNEL);
--	if (!cpufreq)
--		return -ENOMEM;
-+	if (!soc_is_tegra())
-+		return 0;
- 
--	cpufreq->cpu_clk = clk_get_sys(NULL, "cclk");
--	if (IS_ERR(cpufreq->cpu_clk))
--		return PTR_ERR(cpufreq->cpu_clk);
-+	switch (tegra_get_chip_id()) {
-+	case TEGRA20:
-+		versions[0] = BIT(tegra_sku_info.cpu_process_id);
-+		versions[1] = BIT(tegra_sku_info.soc_speedo_id);
-+		break;
-+	case TEGRA30:
-+		versions[0] = BIT(tegra_sku_info.cpu_process_id);
-+		versions[1] = BIT(tegra_sku_info.cpu_speedo_id);
-+		break;
-+	default:
-+		return 0;
-+	}
- 
--	cpufreq->pll_x_clk = clk_get_sys(NULL, "pll_x");
--	if (IS_ERR(cpufreq->pll_x_clk)) {
--		err = PTR_ERR(cpufreq->pll_x_clk);
--		goto put_cpu;
-+	if (!cpu0_node_has_opp_v2_prop()) {
-+		pr_err("operating points not found\n");
-+		pr_err("can't continue, please update your device tree\n");
-+		return 0;
- 	}
- 
--	cpufreq->pll_p_clk = clk_get_sys(NULL, "pll_p");
--	if (IS_ERR(cpufreq->pll_p_clk)) {
--		err = PTR_ERR(cpufreq->pll_p_clk);
--		goto put_pll_x;
-+	pr_info("hardware version 0x%x 0x%x\n", versions[0], versions[1]);
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/types.h>
 +
-+	opp_table = dev_pm_opp_set_supported_hw(get_cpu_device(0), versions, 2);
-+	err = PTR_ERR_OR_ZERO(opp_table);
-+	if (err) {
-+		pr_err("failed to set supported hw: %d\n", err);
-+		return err;
- 	}
- 
--	cpufreq->dev = &pdev->dev;
--	cpufreq->driver.get = cpufreq_generic_get;
--	cpufreq->driver.attr = cpufreq_generic_attr;
--	cpufreq->driver.init = tegra_cpu_init;
--	cpufreq->driver.exit = tegra_cpu_exit;
--	cpufreq->driver.flags = CPUFREQ_NEED_INITIAL_FREQ_CHECK;
--	cpufreq->driver.verify = cpufreq_generic_frequency_table_verify;
--	cpufreq->driver.suspend = cpufreq_generic_suspend;
--	cpufreq->driver.driver_data = cpufreq;
--	cpufreq->driver.target_index = tegra_target;
--	cpufreq->driver.get_intermediate = tegra_get_intermediate;
--	cpufreq->driver.target_intermediate = tegra_target_intermediate;
--	snprintf(cpufreq->driver.name, CPUFREQ_NAME_LEN, "tegra");
--
--	err = cpufreq_register_driver(&cpufreq->driver);
--	if (err)
--		goto put_pll_p;
--
--	platform_set_drvdata(pdev, cpufreq);
-+	cpufreq_dt = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-+	err = PTR_ERR_OR_ZERO(cpufreq_dt);
-+	if (err) {
-+		pr_err("failed to create cpufreq-dt device: %d\n", err);
-+		goto err_put_supported_hw;
++#include "clk.h"
++
++#define PLLP_INDEX	4
++#define PLLX_INDEX	8
++
++static u8 cclk_super_get_parent(struct clk_hw *hw)
++{
++	return tegra_clk_super_ops.get_parent(hw);
++}
++
++static int cclk_super_set_parent(struct clk_hw *hw, u8 index)
++{
++	return tegra_clk_super_ops.set_parent(hw, index);
++}
++
++static int cclk_super_set_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long parent_rate)
++{
++	return tegra_clk_super_ops.set_rate(hw, rate, parent_rate);
++}
++
++static unsigned long cclk_super_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	if (cclk_super_get_parent(hw) == PLLX_INDEX)
++		return parent_rate;
++
++	return tegra_clk_super_ops.recalc_rate(hw, parent_rate);
++}
++
++static int cclk_super_determine_rate(struct clk_hw *hw,
++				     struct clk_rate_request *req)
++{
++	struct clk_hw *pllp_hw = clk_hw_get_parent_by_index(hw, PLLP_INDEX);
++	struct clk_hw *pllx_hw = clk_hw_get_parent_by_index(hw, PLLX_INDEX);
++	unsigned long pllp_rate;
++	long rate = req->rate;
++
++	if (WARN_ON_ONCE(!pllp_hw || !pllx_hw))
++		return -EINVAL;
++
++	/*
++	 * It is okay to run off PLLP for all CCLK rates below PLLP rate.
++	 * PLLX will be disabled in this case, saving some power.
++	 */
++	pllp_rate = clk_hw_get_rate(pllp_hw);
++
++	if (rate <= pllp_rate) {
++		rate = tegra_clk_super_ops.round_rate(hw, rate, &pllp_rate);
++		req->best_parent_rate = pllp_rate;
++		req->best_parent_hw = pllp_hw;
++		req->rate = rate;
++	} else {
++		rate = clk_hw_round_rate(pllx_hw, rate);
++		req->best_parent_rate = rate;
++		req->best_parent_hw = pllx_hw;
++		req->rate = rate;
 +	}
++
++	if (WARN_ON_ONCE(rate <= 0))
++		return -EINVAL;
++
++	return 0;
++}
++
++static const struct clk_ops tegra_cclk_super_ops = {
++	.get_parent = cclk_super_get_parent,
++	.set_parent = cclk_super_set_parent,
++	.set_rate = cclk_super_set_rate,
++	.recalc_rate = cclk_super_recalc_rate,
++	.determine_rate = cclk_super_determine_rate,
++};
++
++struct clk *tegra_clk_register_super_cclk(const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
++		spinlock_t *lock)
++{
++	struct tegra_clk_super_mux *super;
++	struct clk *clk;
++	struct clk_init_data init;
++
++	super = kzalloc(sizeof(*super), GFP_KERNEL);
++	if (!super)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &tegra_cclk_super_ops;
++	init.flags = flags;
++	init.parent_names = parent_names;
++	init.num_parents = num_parents;
++
++	super->reg = reg;
++	super->lock = lock;
++	super->width = 4;
++	super->flags = clk_super_flags;
++	super->frac_div.reg = reg + 4;
++	super->frac_div.shift = 16;
++	super->frac_div.width = 8;
++	super->frac_div.frac_width = 1;
++	super->frac_div.lock = lock;
++	super->frac_div.flags = TEGRA_DIVIDER_SUPER;
++	super->div_ops = &tegra_clk_frac_div_ops;
++
++	/* Data in .init is copied by clk_register(), so stack variable OK */
++	super->hw.init = &init;
++
++	clk = clk_register(NULL, &super->hw);
++	if (IS_ERR(clk))
++		kfree(super);
++
++	return clk;
++}
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index f81c10654aa9..095595a5b8a8 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -699,6 +699,10 @@ struct clk *tegra_clk_register_super_clk(const char *name,
+ 		const char * const *parent_names, u8 num_parents,
+ 		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
+ 		spinlock_t *lock);
++struct clk *tegra_clk_register_super_cclk(const char *name,
++		const char * const *parent_names, u8 num_parents,
++		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
++		spinlock_t *lock);
  
- 	return 0;
- 
--put_pll_p:
--	clk_put(cpufreq->pll_p_clk);
--put_pll_x:
--	clk_put(cpufreq->pll_x_clk);
--put_cpu:
--	clk_put(cpufreq->cpu_clk);
-+err_put_supported_hw:
-+	dev_pm_opp_put_supported_hw(opp_table);
- 
- 	return err;
- }
--
--static int tegra20_cpufreq_remove(struct platform_device *pdev)
--{
--	struct tegra20_cpufreq *cpufreq = platform_get_drvdata(pdev);
--
--	cpufreq_unregister_driver(&cpufreq->driver);
--
--	clk_put(cpufreq->pll_p_clk);
--	clk_put(cpufreq->pll_x_clk);
--	clk_put(cpufreq->cpu_clk);
--
--	return 0;
--}
--
--static struct platform_driver tegra20_cpufreq_driver = {
--	.probe		= tegra20_cpufreq_probe,
--	.remove		= tegra20_cpufreq_remove,
--	.driver		= {
--		.name	= "tegra20-cpufreq",
--	},
--};
--module_platform_driver(tegra20_cpufreq_driver);
--
--MODULE_ALIAS("platform:tegra20-cpufreq");
--MODULE_AUTHOR("Colin Cross <ccross@android.com>");
--MODULE_DESCRIPTION("NVIDIA Tegra20 cpufreq driver");
--MODULE_LICENSE("GPL");
-+late_initcall(tegra20_cpufreq_init);
+ /**
+  * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
 -- 
 2.23.0
 
