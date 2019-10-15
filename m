@@ -2,118 +2,143 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4756FECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383A1ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B622067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bhF8okyT"
+	by mail.kernel.org (Postfix) with ESMTP id 1660721925
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 11:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbfJOL4j (ORCPT
+        id S1729894AbfJOL4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 07:56:39 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39526 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729411AbfJOL4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 07:56:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r3so23516410wrj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 04:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yAwedaQmhP6SnPIEV8Cz99ZuZIEK2enEAC2WtodOdw8=;
-        b=bhF8okyTKEtKzcimYTnw/ute32N+lw/PA1aVErlt0+7GqFytvWWW/UuV9QZ+b7u9/d
-         KdmBJouzs/udg4X3MLdcpSfC12BH0baq40PbjzQqIu41aIGSVFiHWTR3ZIEnBXuLmKPo
-         lstQs9dPKuX1619CdQyOMPawyuMw8qAUiObWYSawPtbRjFjutB9Afy4RG7yELu16XEkT
-         5GPN/0bJf5l0hV8py8jMQFFR7VWohk7uW0Bgwuyfe5Zaktc45lFlWXqCqnNY3Rr2YEHv
-         l/Dr1/eHiI5m4DOOluHL+dnLMWd5F4GrLGIBN9YWxmXnYkHni7S41YjWj+o3KOdziFK1
-         QQVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yAwedaQmhP6SnPIEV8Cz99ZuZIEK2enEAC2WtodOdw8=;
-        b=lUUMgBD+AcKDUdJODw3qhgHZjmavy7K/g3TFoWBaQZl9kkHJ5KJqKFqQfVPah9NY11
-         1ywo8UIrd1wPv8eiIt88XmGzIHljMeHhqTSCfHgp+NKbWyOg858uqfp/VvVOYI1hDzaq
-         CiolmUPJUdyc72M4cOw0rE2rwMUH1Rg4PNAIEuNbVA1uPIerGodlZpNyEl3kwUJsKiJG
-         CajrtRYXqpMtGhk69cXiCDEqabuN9wD3sbzM+jnUr5bS9+/87mz6ErGWhAnOmojr92rN
-         2YyvJu2ONH2ZFf3NJcL95OYWn0SaiQf9VQAvf9c+X0Eb018SOEGikx90mUTTUCBlHIcx
-         Rc9w==
-X-Gm-Message-State: APjAAAVyKZPQ67/5zkqvcv8FZUhXUhV49pgDKR4iEBBvL7xm+TZc63+4
-        k+Dz8zMWBe/D+2ySUgwJEhuCACoDP3o=
-X-Google-Smtp-Source: APXvYqyD0JiP5Vjzz/Ob2cl78I3RHYa2pXAFgS65YCSh3NzGL4FLqEi7nL0+DAaVfiBX1+EWTZpHfQ==
-X-Received: by 2002:adf:ff8e:: with SMTP id j14mr3020909wrr.178.1571140596214;
-        Tue, 15 Oct 2019 04:56:36 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:7687:11a4:4657:121d])
-        by smtp.gmail.com with ESMTPSA id z9sm21434838wrl.35.2019.10.15.04.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 04:56:35 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 12:56:32 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] sched/topology: Allow sched_asym_cpucapacity to be
- disabled
-Message-ID: <20191015115632.GC242992@google.com>
-References: <20191015102956.20133-1-valentin.schneider@arm.com>
- <20191015104010.GA242992@google.com>
- <a3a1a3d9-5d3a-3ab3-0eaf-e63e0c401c99@arm.com>
- <d1dac9d1-3ac6-1a1b-f1c9-48b136833686@arm.com>
+        Tue, 15 Oct 2019 07:56:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33600 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729411AbfJOL4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 07:56:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E1225308FBB4;
+        Tue, 15 Oct 2019 11:56:41 +0000 (UTC)
+Received: from localhost (ovpn-116-252.ams2.redhat.com [10.36.116.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52C175D9E2;
+        Tue, 15 Oct 2019 11:56:38 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 12:56:37 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Jorgen Hansen <jhansen@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Adit Ranadive <aditr@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/2] vsock: don't allow half-closed socket in the
+ host transports
+Message-ID: <20191015115637.GA1346@stefanha-x1.localdomain>
+References: <20191011130758.22134-1-sgarzare@redhat.com>
+ <20191011101408-mutt-send-email-mst@kernel.org>
+ <20191011143457.4ujt3gg7oxco6gld@steredhat>
+ <20191012183838-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
 Content-Disposition: inline
-In-Reply-To: <d1dac9d1-3ac6-1a1b-f1c9-48b136833686@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191012183838-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 15 Oct 2019 11:56:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 15 Oct 2019 at 12:49:22 (+0100), Valentin Schneider wrote:
-> 
-> 
-> On 15/10/2019 11:58, Valentin Schneider wrote:
-> > On 15/10/2019 11:40, Quentin Perret wrote:
-> >>> @@ -2124,8 +2124,17 @@ static void detach_destroy_domains(const struct cpumask *cpu_map)
-> >>>  	int i;
-> >>>  
-> >>>  	rcu_read_lock();
-> >>> +
-> >>> +	if (static_key_enabled(&sched_asym_cpucapacity)) {
-> >>> +		unsigned int cpu = cpumask_any(cpu_map);
-> >>> +
-> >>> +		if (rcu_dereference(per_cpu(sd_asym_cpucapacity, cpu)))
-> >>> +			static_branch_dec_cpuslocked(&sched_asym_cpucapacity);
-> >>
-> >> Lockdep should scream for this :)
-> > 
-> > Bleh, yes indeed...
-> > 
-> 
-> Urgh, I forgot about the funny hotplug lock scenario at boot time.
-> rebuild_sched_domains() takes the lock but sched_init_domains() doesn't, so
-> we don't get the might_sleep warn at boot time.
-> 
-> So if we want to flip the key post boot time we probably need to separately
-> count our asymmetric root domains and flip the key after all the rebuilds,
-> outside of the hotplug lock.
 
-Hmm, a problem here is that static_branch*() can block (it uses a
-mutex) while you're in the rcu section, I think.
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I suppose you could just move this above rcu_read_lock() and use
-rcu_access_pointer() instead ?
+On Sat, Oct 12, 2019 at 06:38:46PM -0400, Michael S. Tsirkin wrote:
+> On Fri, Oct 11, 2019 at 04:34:57PM +0200, Stefano Garzarella wrote:
+> > On Fri, Oct 11, 2019 at 10:19:13AM -0400, Michael S. Tsirkin wrote:
+> > > On Fri, Oct 11, 2019 at 03:07:56PM +0200, Stefano Garzarella wrote:
+> > > > We are implementing a test suite for the VSOCK sockets and we disco=
+vered
+> > > > that vmci_transport never allowed half-closed socket on the host si=
+de.
+> > > >=20
+> > > > As Jorgen explained [1] this is due to the implementation of VMCI.
+> > > >=20
+> > > > Since we want to have the same behaviour across all transports, this
+> > > > series adds a section in the "Implementation notes" to exaplain this
+> > > > behaviour, and changes the vhost_transport to behave the same way.
+> > > >=20
+> > > > [1] https://patchwork.ozlabs.org/cover/847998/#1831400
+> > >=20
+> > > Half closed sockets are very useful, and lots of
+> > > applications use tricks to swap a vsock for a tcp socket,
+> > > which might as a result break.
+> >=20
+> > Got it!
+> >=20
+> > >=20
+> > > If VMCI really cares it can implement an ioctl to
+> > > allow applications to detect that half closed sockets aren't supporte=
+d.
+> > >=20
+> > > It does not look like VMCI wants to bother (users do not read
+> > > kernel implementation notes) so it does not really care.
+> > > So why do we want to cripple other transports intentionally?
+> >=20
+> > The main reason is that we are developing the test suite and we noticed
+> > the miss match. Since we want to make sure that applications behave in
+> > the same way on different transports, we thought we would solve it that
+> > way.
+> >=20
+> > But what you are saying (also in the reply of the patches) is actually
+> > quite right. Not being publicized, applications do not expect this beha=
+vior,
+> > so please discard this series.
+> >=20
+> > My problem during the tests, was trying to figure out if half-closed
+> > sockets were supported or not, so as you say adding an IOCTL or maybe
+> > better a getsockopt() could solve the problem.
+> >=20
+> > What do you think?
+> >=20
+> > Thanks,
+> > Stefano
+>=20
+> Sure, why not.
 
-Thanks,
-Quentin
+The aim is for applications using AF_VSOCK sockets to run on any
+transport.  When the semantics differ between transports it creates a
+compatibility problem.
+
+That said, I do think keeping the standard sockets behavior is
+reasonable.  If applications have problems on VMCI a sockopt may be
+necessary :(.
+
+Stefan
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2ls/UACgkQnKSrs4Gr
+c8hXfQf8DmC3BVfNYClaxCwUaQbqYFilievM4mTXLUF9Hf5yhcrEeaXDL3MDuzba
+vCMXFtTonmxmoMMRYtU+HmWKQP/02aBLgym3JOuiedb8QADkYIhPo1xtppIeC43U
+D9G+/UzHiVKOfHm2XmVpjdOGbY4xmD/J6qAOPKlFdju2ateq5Bj8AawcuuXmMewK
+ZuwZiIDK3GditH12SUl2PA9u10321wXpIhjZ5MeydxSviL91A0HN5xfwJxwxZmlR
+ddc+4gBPdGWmz5XpDutchJ4mQbcc4NA6nUvzBG43+0JhhQiAR8nvzPlTcN4mTQmw
+oGdDYLLcMdYh3HG0E6UrCOwaRlB0DQ==
+=2zm7
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
