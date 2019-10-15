@@ -2,103 +2,108 @@ Return-Path: <SRS0=fSNO=YI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE89ECE588
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8889C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76B920854
-	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A007520854
+	for <linux-kernel@archiver.kernel.org>; Tue, 15 Oct 2019 17:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JV+TKEsI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjQzDxiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388825AbfJORgZ (ORCPT
+        id S2388855AbfJORgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 13:36:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33780 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388344AbfJORgZ (ORCPT
+        Tue, 15 Oct 2019 13:36:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36290 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388836AbfJORgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 13:36:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so12941768pfl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 10:36:24 -0700 (PDT)
+        Tue, 15 Oct 2019 13:36:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y22so12932749pfr.3;
+        Tue, 15 Oct 2019 10:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m+oSkq2BGDVnMXCTCZOGBY+AVAcaQgizlBaC3TfYgbk=;
-        b=JV+TKEsIejeoGguft/smdhcOhD8TznOS3FDgaThCNzjFd/zO9Gf+USti5K/cmcvGGL
-         VL+DN5u7ePo4IWynJI4kZyUxYCOiGUo31kRO4IGsw0RDA7MEE9P0Lx+Gh5T4vmOLDPmO
-         nAWj+aCJO3XdoGRVZfY2JbnQgqczJYP20lPBE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=To+5mvjtNy/jMYleBFHXKjhUExVrM0NZ5EvyzLV5MkQ=;
+        b=BjQzDxiPDtU3NR0tZj7iCSqGzNSHrR/pxuX1wlb9wsgOUqD2KMxfwKcZZ+SoUWPVmo
+         wb/4UPChSGRx6dWWnAn6xZuYqZsaoPhLiJgN+u3z6b8tC2xSmqGn4ZCnTS1hLE0kikPP
+         EybIe+wcrMXZOQHOjvx72UvIYSo1fLnny0AuLMmMsNN1vsnzVR6XeXP43h86EjYsSy5H
+         v1kikJs3gf0cb1XLC2/fk/nQGk+wrDovY35FBNZ3eP1kaZpZ7ic2enXAfpLDxC/6C4ax
+         ESY3qnCqlqeOUCg8ak/8DsbqTO3fmbnZfUWdGMkjsMJWsXj3jhasQDIYtNElAUtSo8IY
+         j+bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m+oSkq2BGDVnMXCTCZOGBY+AVAcaQgizlBaC3TfYgbk=;
-        b=k3ggezqVK31A9nu/D6rbZuhA6rvtVL74lRiQHKKSXbFQk/3UAnnDQ0/s27mJmuJEDX
-         pvHeVCU80k5zm5a+sblfXsT+FLQ7n4MlIxr8Vwz8x9Fkba7ScZs4zowWCCsFneHmX7UI
-         G5zAQTRqdu4+IP0a7UYWeMkXNg1Xgi68cpqnZANO4kDLhxn2m1AXGG+PUHZ7Zwron7bn
-         Q2B4jTzv1mxeCEJ0xzAFGV8YLc/7NP8mODbIk/01zt41GaZGLWo+IV1JzkUOrw+ll9B5
-         hyy8PTwGp4MU/6oSPi/B3yLX4/BBN6JHqEJ9GyAm+QALA+bY7fK02bZGEYZWYVbItRvC
-         tpkA==
-X-Gm-Message-State: APjAAAXlYE33+pVJR+Dpw37OUZu4xAehZll0K7pbaGCF6UXiB6Cqn4/S
-        PgbN2yfU4Ld+gndQ8nI8FLLbTQ==
-X-Google-Smtp-Source: APXvYqyiR4aQoe1gYk78ERJu5vF+BWIQdBY7ufngAKMkxwambAKLD5Wy/+2CK6+2hmVn878fjUO5OQ==
-X-Received: by 2002:a62:b504:: with SMTP id y4mr39162264pfe.124.1571160984162;
-        Tue, 15 Oct 2019 10:36:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f74sm25484564pfa.34.2019.10.15.10.36.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=To+5mvjtNy/jMYleBFHXKjhUExVrM0NZ5EvyzLV5MkQ=;
+        b=fD1UaRmRXIJVZSBStAShT4/RVIdc37DvaRqJWZ0yQIAPlohwThUrX5c/O9/jONBE7s
+         eNW0ryQsXd80U1nqSWfg/oTz8sJWnEpAUZbmo6Q7dTEOk/E2DnY9GVwiflYc22i4VkwR
+         g8j9AkGYv9SQbbvpX3pRFvN2bVeMUy2G1xzw4ZH0u5rvUhQCarkud334tcYYYKt1F4jm
+         gOK47n2ZYgcVL+ilVN3MX4Iq/frfk50XZ2qMG08pvhqmpkZ8iZ5qjt0VhY/nNPsgnyjQ
+         Ft1n9oVjyEfYmbHikdDM0R1RHLFNhAoCykUt4cXRshZzfWW1D6ZYRH+CClZQ1qAITqz8
+         ezIw==
+X-Gm-Message-State: APjAAAWPf1khM5d/5flLMSPaT4dnlx+Fjhpo3X55Vm3Q3kt3OSYBmEQU
+        c3l1xfYjDHtws6PAVyJU/TNiBbhe
+X-Google-Smtp-Source: APXvYqycjfZiDYrtnWLlJsgkb1wZoSRv5cwdsYppZAq4qzhc31He3gsGKZR8WUpaoPhZNdI7B+vENA==
+X-Received: by 2002:a62:fc12:: with SMTP id e18mr22168905pfh.111.1571161005731;
+        Tue, 15 Oct 2019 10:36:45 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u65sm18603075pgb.36.2019.10.15.10.36.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 10:36:23 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 10:36:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Michal Simek <monstr@monstr.eu>, x86@kernel.org,
-        linux-ia64@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-xtensa@linux-xtensa.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
-Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
-Message-ID: <201910151034.A21FDCA32@keescook>
-References: <20191011000609.29728-1-keescook@chromium.org>
- <20191011000609.29728-2-keescook@chromium.org>
- <20191011082519.GI9749@gate.crashing.org>
- <201910110910.48270FC97@keescook>
- <20191011162552.GK9749@gate.crashing.org>
- <20191015165412.GD596@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015165412.GD596@zn.tnic>
+        Tue, 15 Oct 2019 10:36:44 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM GENET
+        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: bcmgenet: Add a shutdown callback
+Date:   Tue, 15 Oct 2019 10:36:24 -0700
+Message-Id: <20191015173624.10452-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 06:54:13PM +0200, Borislav Petkov wrote:
-> On Fri, Oct 11, 2019 at 11:25:52AM -0500, Segher Boessenkool wrote:
-> > Names *matter*, internal names doubly so.  So why replace a good name with
-> > a worse name?  Because it is slightly less work for you?
-> 
-> So if we agree on the name "notes" and we decide to rename the other
-> arches, this should all be done in a separate patchset anyway, and ontop
-> of this one. And I believe Kees wouldn't mind doing it ontop since he's
-> gotten his hands dirty already. :-P
+Make sure that we completely quiesce the network device, including its
+DMA to avoid having it continue to receive packets while there is no
+software alive to service those.
 
-Yeah, I'm fine with that. I would prefer to do it as a separate step,
-just to minimize the logical steps each patch takes. Shall I spin a v3
-with the Acks added and a final rename for this?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 12cb77ef1081..ecbb1e7353ba 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3597,6 +3597,11 @@ static int bcmgenet_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void bcmgenet_shutdown(struct platform_device *pdev)
++{
++	bcmgenet_remove(pdev);
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int bcmgenet_resume(struct device *d)
+ {
+@@ -3715,6 +3720,7 @@ static SIMPLE_DEV_PM_OPS(bcmgenet_pm_ops, bcmgenet_suspend, bcmgenet_resume);
+ static struct platform_driver bcmgenet_driver = {
+ 	.probe	= bcmgenet_probe,
+ 	.remove	= bcmgenet_remove,
++	.shutdown = bcmgenet_shutdown,
+ 	.driver	= {
+ 		.name	= "bcmgenet",
+ 		.of_match_table = bcmgenet_match,
 -- 
-Kees Cook
+2.17.1
+
