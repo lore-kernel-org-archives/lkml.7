@@ -3,122 +3,158 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ED5ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C1ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CC22067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300512067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PDcpx0nQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQaMRW9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbfJPFX0 (ORCPT
+        id S1731915AbfJPFXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 01:23:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33056 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfJPFX0 (ORCPT
+        Wed, 16 Oct 2019 01:23:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43245 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfJPFXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 01:23:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so13957112pfl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 22:23:26 -0700 (PDT)
+        Wed, 16 Oct 2019 01:23:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i32so13542953pgl.10;
+        Tue, 15 Oct 2019 22:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=saoyAGsKjDvsSfjCA3zQdLH5MPFlT8Eo8WfiHM6JM8o=;
-        b=PDcpx0nQR0OqGsEB4yG6vkxy48xHjjJeP0Jw2SJQ0QMf5Z3+Sbof0vkXDD3Ig7W0LU
-         N4ShRgxolreDnGeu6EPvbi0GFIeez8L4jq77E0vvdQ1OXsvyU13hMz5Dy/3BGOMZrFBE
-         gFlboTcZufi+A+nfIv+54/cpQKfxk9lSFyIzpU/EL7AYPvPFMMUu9CPXbgapX4Ehy1C+
-         ec8kfnp4XH6zOxZWSbRsutzzMTVZzYfWbRicUOlR4xErWsJUDKDtZHNFPP/FRARARjca
-         yKt21E/zpTd+HOjkVX/hH0jEuWAyw1D8gsKOH9hmro5fwlPfKeJOvTrLZ3OIWUvTFFz/
-         Bxcw==
+        bh=7dqAkDETKOIEKkdWiPPT+xp/6+UjqmTALtad5nl8xMw=;
+        b=FQaMRW9G0t+yy+7C6por4iWfh76yAqcPE67KdIa5tk/KKt1eDAwQsEVRAn0lPK+p3h
+         /r6uMz5UPvHvVw09JZ8AT490qbxfshHcbln+vrPHhzItcWlqSzoNMB+exzmKEEdUXW8z
+         qdpbCmdbe2MKynj8ftWOsgGHcSBUKOuKHeMFZzBMGLkQj0yX9o5Xj+20y2beJ+UT6RfE
+         Nd+q6yJBbOJkxQhzfunkTessRZ+a/35EC6Tgk7dHGpdCNmuSB7EDLgYAoEgfcIxUoRZn
+         5+dv8EQdcVdd7dnWSARqYCy0tudd1tb+SiA5C7iu7w9wF7y8zD2tzgkC2Wjw4nIq0q+3
+         M9ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=saoyAGsKjDvsSfjCA3zQdLH5MPFlT8Eo8WfiHM6JM8o=;
-        b=HibyNOKLOT9Di0113rVi3qFKh/IwOhxzXA4JSJyy6UQf6ZsVVX68nDSEDrE90CmTiA
-         53+WuD6i0zAvhC5H0TiQThwAMyTl5JPqg1RhRkaKPijcKwF8tSO/SQqPOza6E7JBwM6Q
-         BlYckLelBEjzIiZeGgZGgoz3Jn938NbqbbDW1sjKRMCTzuPBnpQ6uoLT28dzFzpa/6Lv
-         iE8kUpgrW1AcNYiNQDQmnZEtbzKD4DQVWHi30zFLdLEI2pQzgcQ7FIllY5uRjr9Luu2D
-         74tT+FLf2lgMZz6Z/DSuLziAU9Vc9kUpZYyw3ptoRoEgBskBpJvVDYC39FmhSyOF+G4J
-         zSYw==
-X-Gm-Message-State: APjAAAVL5MA4wQkEbYovw7KV9MgsypUMuKFad8dFPPnYzf11/e9JZvro
-        tZbAnXR9I2l6/kC4HnSaENoAWA==
-X-Google-Smtp-Source: APXvYqxJXrMIsdHO4Rsjym8iDMxG0peczoTX8o2q55MtDIt8QZRw17a5QLaERi2EsvfikM/HZIzraw==
-X-Received: by 2002:aa7:86cb:: with SMTP id h11mr43684402pfo.59.1571203405710;
-        Tue, 15 Oct 2019 22:23:25 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id 22sm24303865pfo.131.2019.10.15.22.23.24
+        bh=7dqAkDETKOIEKkdWiPPT+xp/6+UjqmTALtad5nl8xMw=;
+        b=cd7153nP9Yip4AT6wUsLMfcUrYEt3MOWOX/wQaJuZmHoOvkkBFK73dd+SfHQz53J1p
+         f5rLGd8OaL/PD9khguM66Yp9EcYC/yIdWQLsllNfVfAWV9jAQt8MrIVT6nVtBbRkj1ny
+         LaUVXjlvLLdxmYXT+LH51sIJRpwSEXlCeafz8nC7bZRPJ2hDAVsTxgGgfUMBxQfodyYJ
+         9I/X8NEg0HsUKkuOROr/XlNgLuRxlKBJMOgn7hwVqcSsUfli7DAWhuLZzPZteX9bY/6U
+         sTzlyEA+uDhHupnrTlxhfJBjbk0oDTpTSNo67/YGCa0G3mzDJGZVVJaJ2q+PIkQMRD4u
+         8TPQ==
+X-Gm-Message-State: APjAAAWYi7eqop9k50KZRmJSIaZUsG7pIATd5eN4lofSMNG5zqI4U5yx
+        AyUXX2O+FpH73+cnlXsDxKA=
+X-Google-Smtp-Source: APXvYqwz5D/0a6wRSKUeqRTr3fbqjKn6VUPUxfSFiyCiNNfAnXibRjxxLAUMQlks+GD8M0LkaHN3bA==
+X-Received: by 2002:a62:5305:: with SMTP id h5mr43761916pfb.121.1571203409261;
+        Tue, 15 Oct 2019 22:23:29 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:180::8bc])
+        by smtp.gmail.com with ESMTPSA id c34sm2051958pgb.35.2019.10.15.22.23.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 22:23:24 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 10:53:23 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 11/17] ARM: dts: tegra20: Add CPU Operating
- Performance Points
-Message-ID: <20191016052323.w6hav4qqn3ybt55q@vireshk-i7>
-References: <20191015211618.20758-1-digetx@gmail.com>
- <20191015211618.20758-12-digetx@gmail.com>
+        Tue, 15 Oct 2019 22:23:28 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 22:23:26 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: [PATCH v3 1/3] bpf: use check_zeroed_user() in
+ bpf_check_uarg_tail_zero()
+Message-ID: <20191016052324.2owkg2zochq5l7l3@ast-mbp>
+References: <20191016004138.24845-1-christian.brauner@ubuntu.com>
+ <20191016034432.4418-1-christian.brauner@ubuntu.com>
+ <20191016034432.4418-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015211618.20758-12-digetx@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191016034432.4418-2-christian.brauner@ubuntu.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-10-19, 00:16, Dmitry Osipenko wrote:
-> Operating Point are specified per HW version. The OPP voltages are kept
-> in a separate DTSI file because some boards may not define CPU regulator
-> in their device-tree if voltage scaling isn't necessary, like for example
-> in a case of tegra20-trimslice which is outlet-powered device.
+On Wed, Oct 16, 2019 at 05:44:30AM +0200, Christian Brauner wrote:
+> In v5.4-rc2 we added a new helper (cf. [1]) check_zeroed_user() which
+> does what bpf_check_uarg_tail_zero() is doing generically. We're slowly
+> switching such codepaths over to use check_zeroed_user() instead of
+> using their own hand-rolled version.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> [1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: bpf@vger.kernel.org
+> Acked-by: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 > ---
->  .../boot/dts/tegra20-cpu-opp-microvolt.dtsi   | 201 ++++++++++++
->  arch/arm/boot/dts/tegra20-cpu-opp.dtsi        | 302 ++++++++++++++++++
->  2 files changed, 503 insertions(+)
->  create mode 100644 arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
->  create mode 100644 arch/arm/boot/dts/tegra20-cpu-opp.dtsi
+> /* v1 */
+> Link: https://lore.kernel.org/r/20191009160907.10981-2-christian.brauner@ubuntu.com
 > 
-> diff --git a/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi b/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
-> new file mode 100644
-> index 000000000000..e85ffdbef876
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/tegra20-cpu-opp-microvolt.dtsi
-> @@ -0,0 +1,201 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/ {
-> +	cpu0_opp_table: cpu_opp_table0 {
-> +		opp@216000000_750 {
+> /* v2 */
+> Link: https://lore.kernel.org/r/20191016004138.24845-2-christian.brauner@ubuntu.com
+> - Alexei Starovoitov <ast@kernel.org>:
+>   - Add a comment in bpf_check_uarg_tail_zero() to clarify that
+>     copy_struct_from_user() should be used whenever possible instead.
+> 
+> /* v3 */
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - use correct checks for check_zeroed_user()
+> ---
+>  kernel/bpf/syscall.c | 25 +++++++++----------------
+>  1 file changed, 9 insertions(+), 16 deletions(-)
+> 
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 82eabd4e38ad..40edcaeccd71 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -58,35 +58,28 @@ static const struct bpf_map_ops * const bpf_map_types[] = {
+>   * There is a ToCToU between this function call and the following
+>   * copy_from_user() call. However, this is not a concern since this function is
+>   * meant to be a future-proofing of bits.
+> + *
+> + * Note, instead of using bpf_check_uarg_tail_zero() followed by
+> + * copy_from_user() use the dedicated copy_struct_from_user() helper which
+> + * performs both tasks whenever possible.
+>   */
+>  int bpf_check_uarg_tail_zero(void __user *uaddr,
+>  			     size_t expected_size,
+>  			     size_t actual_size)
+>  {
+> -	unsigned char __user *addr;
+> -	unsigned char __user *end;
+> -	unsigned char val;
+> +	size_t size = min(expected_size, actual_size);
+> +	size_t rest = max(expected_size, actual_size) - size;
+>  	int err;
+>  
+>  	if (unlikely(actual_size > PAGE_SIZE))	/* silly large */
+>  		return -E2BIG;
+>  
+> -	if (unlikely(!access_ok(uaddr, actual_size)))
+> -		return -EFAULT;
+> -
+>  	if (actual_size <= expected_size)
+>  		return 0;
+>  
+> -	addr = uaddr + expected_size;
+> -	end  = uaddr + actual_size;
+> -
+> -	for (; addr < end; addr++) {
+> -		err = get_user(val, addr);
+> -		if (err)
+> -			return err;
+> -		if (val)
+> -			return -E2BIG;
+> -	}
+> +	err = check_zeroed_user(uaddr + expected_size, rest);
 
-Maybe just drop the _750 (i.e. voltage) from the names as we don't generally
-follow it :)
+Just noticed this 'rest' math.
+I bet compiler can optimize unnecessary min+max, but
+let's save it from that job.
+Just do actual_size - expected_size here instead.
 
-> +			opp-microvolt = <750000 750000 1125000>;
-> +		};
-
--- 
-viresh
