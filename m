@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A2AFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E12FA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5D12168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B857207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263643;
-	bh=PAYf8s8/30odfXMIUrZmJ6XX6OBvHvz49VyVtIGCtdo=;
+	s=default; t=1571263648;
+	bh=TcsqvuZ+XR8wAMo4vfSW6bmuN40Y/Sm5nfpiB6C8gCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSTe7Xl4QeVZGupsmyn8dbp8TIoRIq4l3EwQ46hDy3nZ4kWJz7LeCiYAekn1r7H50
-	 F4jf57PadjJzs79c4kt7Hwy5HeVrpsN5FMWqAiNNjEUqM+ce8wd9xbiX/juD1SkxMD
-	 BwubLZRFX148JFC6otWPMCB+fs769XrIIoll5XFo=
+	b=c93dlh6Y5o9YreHgjzEUaqBiaJeb/mGT9DbJ9kn7rWQStuZTcRb9D1JGl11c+roE/
+	 ZJSln5M7cRHO9VfA5YI9im47Kv8e4886GAKwVc+0qFJJq95JetrJv3LXXiwE1wPTca
+	 hfeOjxB0GdHT5G7J3NLFJ9Abv/T2pJr71TbLM228=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407052AbfJPWHW (ORCPT
+        id S2406686AbfJPV6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:07:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406693AbfJPV6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:14 -0400
+        id S2395458AbfJPV5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:20 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 861DE20872;
-        Wed, 16 Oct 2019 21:58:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31DF821A4C;
+        Wed, 16 Oct 2019 21:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263093;
-        bh=PAYf8s8/30odfXMIUrZmJ6XX6OBvHvz49VyVtIGCtdo=;
+        s=default; t=1571263038;
+        bh=TcsqvuZ+XR8wAMo4vfSW6bmuN40Y/Sm5nfpiB6C8gCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFFzxXbegIxodqr3DU9JeIuYu+zi7IvEaTa5fZY4LYiewBOVr5k/EHPNqLu1uourA
-         q9rj4AutjpiGWJLl2m0N3CwQYr6u0cltZHBdrW45KZ2ERjqOuTnVplhUVFQVWtKVk7
-         +d7TGs7MuOHgHfmB1Tz0CTHCgyynV7I9/2OMq3NE=
+        b=aVztv6+DIWvu4H8DvsR+jd8Fv+RPDO7NvWFMU7bzwDLG+/PuVAmTF+58kRT/RAC4v
+         Giur8UhO2SA4/KV3ruI1cP/e8mw80Eu34PUgz2pV0d7muDVGlhPUnNdHBIvTqUdKRi
+         OU8oVQ77crckdG3Z0t9xffP5V1/ojIgNZSGxm5Sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 015/112] USB: adutux: fix use-after-free on disconnect
-Date:   Wed, 16 Oct 2019 14:50:07 -0700
-Message-Id: <20191016214847.953154975@linuxfoundation.org>
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 08/81] xhci: Fix false warning message about wrong bounce buffer write length
+Date:   Wed, 16 Oct 2019 14:50:19 -0700
+Message-Id: <20191016214813.136325452@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
-References: <20191016214844.038848564@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,52 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 44efc269db7929f6275a1fa927ef082e533ecde0 upstream.
+commit c03101ff4f74bb30679c1a03d551ecbef1024bf6 upstream.
 
-The driver was clearing its struct usb_device pointer, which it used as
-an inverted disconnected flag, before deregistering the character device
-and without serialising against racing release().
+The check printing out the "WARN Wrong bounce buffer write length:"
+uses incorrect values when comparing bytes written from scatterlist
+to bounce buffer. Actual copied lengths are fine.
 
-This could lead to a use-after-free if a racing release() callback
-observes the cleared pointer and frees the driver data before
-disconnect() is finished with it.
+The used seg->bounce_len will be set to equal new_buf_len a few lines later
+in the code, but is incorrect when doing the comparison.
 
-This could also lead to NULL-pointer dereferences in a racing open().
+The patch which added this false warning was backported to 4.8+ kernels
+so this should be backported as far as well.
 
-Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
-Cc: stable <stable@vger.kernel.org>     # 2.6.24
-Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Tested-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190925092913.8608-1-johan@kernel.org
+Cc: <stable@vger.kernel.org> # v4.8+
+Fixes: 597c56e372da ("xhci: update bounce buffer with correct sg num")
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-2-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/adutux.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-ring.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -762,14 +762,15 @@ static void adu_disconnect(struct usb_in
- 
- 	dev = usb_get_intfdata(interface);
- 
--	mutex_lock(&dev->mtx);	/* not interruptible */
--	dev->udev = NULL;	/* poison */
- 	usb_deregister_dev(interface, &adu_class);
--	mutex_unlock(&dev->mtx);
- 
- 	mutex_lock(&adutux_mutex);
- 	usb_set_intfdata(interface, NULL);
- 
-+	mutex_lock(&dev->mtx);	/* not interruptible */
-+	dev->udev = NULL;	/* poison */
-+	mutex_unlock(&dev->mtx);
-+
- 	/* if the device is not opened, then we clean up right now */
- 	if (!dev->open_count)
- 		adu_delete(dev);
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -3154,10 +3154,10 @@ static int xhci_align_td(struct xhci_hcd
+ 	if (usb_urb_dir_out(urb)) {
+ 		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
+ 				   seg->bounce_buf, new_buff_len, enqd_len);
+-		if (len != seg->bounce_len)
++		if (len != new_buff_len)
+ 			xhci_warn(xhci,
+ 				"WARN Wrong bounce buffer write length: %zu != %d\n",
+-				len, seg->bounce_len);
++				len, new_buff_len);
+ 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
+ 						 max_pkt, DMA_TO_DEVICE);
+ 	} else {
 
 
