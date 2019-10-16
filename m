@@ -2,179 +2,417 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84281ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551FCC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497642086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCB82086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PJ1EnvjN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fesWJuMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390873AbfJPDSf (ORCPT
+        id S2390883AbfJPDTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:18:35 -0400
-Received: from mail-eopbgr10066.outbound.protection.outlook.com ([40.107.1.66]:6112
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726973AbfJPDSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:18:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GWEiCsWj9PI1s9rxHNE8P6iyAu49rcskjGT9VFOIQxIK9guFIohml2mNCSNSvM2HDMTjgmzX1B/mU4VyswpJJb/OeqNWp8ZL5E9VAQhVXOrymCbCVtjrs6GQWi2a6pANPfrIJGIdKLWBxdhYmOM00Ysh++oCUz72rQihBX76Ex+4JJoAmkXChprHnNXQ1WDmEWQwxg5lvh27g//n4YgaH+WGfCnsIEcYgs/xreY6VedOUD47MeaO4Ejq2peEnNR7YMRzMHEU1qpx0my3JJsLiR3hVLU7E11AA+1ocCAc4z9UNNriciSQXzzSigcGkouJJC3PupGB8BlQqTZYFteQ6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NmLYANrqFxZL3C+XrkoYUbvGjX+mu/OJEWhTu+otjEM=;
- b=iBFuc7boTEHv18cSdk7BMO6/yhIslHdEJ0wvbC1v/L/m1Ngt5z76d/CzWTjAEviUTns7knVqqROUFa0x5tF7ClcUPhf+p1m9HhTC/y0thiLMyNLeB02ariWXl6UeuXsLOFU1dtSBAiy5IoanyZB7Gs47DYq27XD39b7YsVQ3tJNusTrWLCUEmTXfBgbbIsmdfhjzw43dBBJK6TTr03CPD1LNhybqa5LUk1k9b/bDCy28zqTdtN0dBK9fVH4G6385BZbJk9sWIGJN2YEryP5DuEaHll9rhaqxbrb6l9ESqqG5ZoSbtDxM5QcBD9CBRLs4R6gPgASLoMpj9VahufWveQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NmLYANrqFxZL3C+XrkoYUbvGjX+mu/OJEWhTu+otjEM=;
- b=PJ1EnvjNOfC3ONJXcB5j2X5CIlDD1d6lM/geXXdzqs8PMxLTPCcDdnqnNIuDYudpwc4IdFf3rW0ZB5QeDnY5EUW9zPDJvRZN6XXLm9y+3hzQMM3PelMuVy7Bg6eCyCL/hE+Tn/jzZCq7zmU/v8H7z/O6lfokd62U5eBU1GYQLts=
-Received: from AM6PR04MB4936.eurprd04.prod.outlook.com (20.177.34.20) by
- AM6PR04MB5944.eurprd04.prod.outlook.com (20.178.86.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Wed, 16 Oct 2019 03:18:29 +0000
-Received: from AM6PR04MB4936.eurprd04.prod.outlook.com
- ([fe80::79b4:252:8bba:c88c]) by AM6PR04MB4936.eurprd04.prod.outlook.com
- ([fe80::79b4:252:8bba:c88c%6]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 03:18:29 +0000
-From:   Fancy Fang <chen.fang@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH v3] clk: imx7ulp: do not export out IMX7ULP_CLK_MIPI_PLL
- clock
-Thread-Topic: [PATCH v3] clk: imx7ulp: do not export out IMX7ULP_CLK_MIPI_PLL
- clock
-Thread-Index: AQHVgwcPc0jqN29IB0OYPLGVX+dhGKdbCpHQgAGIAsA=
-Date:   Wed, 16 Oct 2019 03:18:29 +0000
-Message-ID: <AM6PR04MB49363E4BD4B48384A372DAFEF3920@AM6PR04MB4936.eurprd04.prod.outlook.com>
-References: <20191015031501.2703-1-chen.fang@nxp.com>
- <DB3PR0402MB3916869C2A91293F0600CF34F5930@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916869C2A91293F0600CF34F5930@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chen.fang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a6ef955-7191-49b5-f36d-08d751e7845b
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM6PR04MB5944:|AM6PR04MB5944:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5944172B16D3A1AB9CB42BC6F3920@AM6PR04MB5944.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(39860400002)(396003)(136003)(54534003)(13464003)(199004)(189003)(446003)(76116006)(66446008)(7736002)(66066001)(86362001)(305945005)(66946007)(11346002)(74316002)(71200400001)(71190400001)(64756008)(8676002)(8936002)(81166006)(2201001)(186003)(66556008)(81156014)(102836004)(486006)(26005)(476003)(2906002)(33656002)(66476007)(6116002)(7696005)(5660300002)(54906003)(110136005)(99286004)(53546011)(316002)(14454004)(76176011)(6506007)(256004)(3846002)(52536014)(14444005)(2501003)(229853002)(9686003)(25786009)(6246003)(55016002)(4326008)(6436002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5944;H:AM6PR04MB4936.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: x5E5TMq57FYk9QlKwnLQKDr2ylfn3ZHPfbkCE2bpL/Qkp23E3s4m60SlHV/q1f+vgWo4PTZdLleod48q7WNx6CWU5hKk7rj84OC8XCyllrgz9TLMt/ZsINtNeqBQtrlNLbcUBPhgeaeS4bE+HgVSlf2YpV2cXJUnMJVqz0gaP3/U5yHjqsw218N+R3QvaxOr8Me+dOK09V1EKTo1iEzY/G2HUcAclkE76/xDayuCQyl3oclGSPihr174cwtyMIIHWuz0uAELbN0ihwYnpSvRKThwls3c/DoNBxYe77cJdk/8dAvrXgH1ygo5s6lxA9CnJwRC/ahndad0sF5i42XE40fq+CgQs9yVgF1WwYqH8YkI8AYfBC6WC5ZHLYlzzo4wd3RicUe6JW92rudkNVvEstuL0Z1CywK3EZPbC+2d44c=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 15 Oct 2019 23:19:20 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35991 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfJPDTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:19:20 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h2so20093406edn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 20:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bC6d//cCKtqLEk7f6IXyL05x6GH1/UFHZ316wBDzflo=;
+        b=fesWJuMoUQCISd68Y3ULiagtt7M20XBsKxn5n8AdcZB1Ph3LKDwYQm9HS8jLfipwVi
+         tK5pQOJE15VWfDT4EC3hgqyBVGco3m80gJqPq+D1so31UFJ0NZ06RKLDUlzPl8R/7msB
+         DabW8UgJkDAsS+Fs6GyhFGWq/veU6vtHwLMwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bC6d//cCKtqLEk7f6IXyL05x6GH1/UFHZ316wBDzflo=;
+        b=NQFMOVDO0H37xF4w4ZHTV0J8EhJfssnTmeOtBBtYCBixVqA0VKB4QojE1vbHwFrgm3
+         u/e/K2CySGzM7aG5/ZtLQjj0TdFDMLNaNZ8wUMBQHlCdarShwO62UzFtV6OK2oTpfQZi
+         t6B2MMNC+vX8uk8GcqgkKtIPqpWONC+kusI8IqA9NYcshg6yiQVHeR0Nomal9qU8cHR0
+         fmXVdLsSAxJx7QbOIjK2ARox0a8ITiV4cYynZzwcgODetVODZtjW4b3feltqssi4BwWO
+         /Eceq7kGlQZ5eUcjUTryvLcZTdUbIxpTw3XGm5KVbCJ1IJQA6eTSkdlqWx9Ja9wvaTw0
+         3SkA==
+X-Gm-Message-State: APjAAAU0siyRtyhagFh2Og5OiHgqTtd5N2owhro0dgJNfXZqCy3REH7a
+        rbLIGBpy7mLaerQ4kgiG28Xj/OLAhP8NYQ==
+X-Google-Smtp-Source: APXvYqwdpePeB/l+32WqKfiEnPhQzGJys+1MQ20RYSFaCrHhcxAlqYU/8Ie0wlp1AcgY8qM/ZtZpOw==
+X-Received: by 2002:a05:6402:158f:: with SMTP id c15mr37388778edv.192.1571195957094;
+        Tue, 15 Oct 2019 20:19:17 -0700 (PDT)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id dx18sm2529928ejb.10.2019.10.15.20.19.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2019 20:19:15 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id a6so1115868wma.5
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 20:19:15 -0700 (PDT)
+X-Received: by 2002:a1c:dcd6:: with SMTP id t205mr1373333wmg.10.1571195954305;
+ Tue, 15 Oct 2019 20:19:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a6ef955-7191-49b5-f36d-08d751e7845b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 03:18:29.5428
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +51k2KPPtBcjiwAd64z3LPbV3NvXhSMK3fxHlhtlFjgmffTgfKQ4CGmrrXlrSRoVdOujqjl7FAxeuZVoJFwdcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5944
+References: <20190912094121.228435-1-tfiga@chromium.org> <20190917132305.GV3958@phenom.ffwll.local>
+ <CAAFQd5ADmObo1yVnFGaWDU=DHF+tex3tWJxTZLkxv=EdGNNM7A@mail.gmail.com>
+ <20191008100328.GN16989@phenom.ffwll.local> <CAAFQd5CR2YhyNoSv7=nUhPQ7Nap6n36DrtsCfqS+-iWydAqbNA@mail.gmail.com>
+ <20191008150435.GO16989@phenom.ffwll.local>
+In-Reply-To: <20191008150435.GO16989@phenom.ffwll.local>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 16 Oct 2019 12:19:02 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5DhKn_2uSA=1JDSj0H98aT8X9UjxWaTBwZCDfOC7YR5Sg@mail.gmail.com>
+Message-ID: <CAAFQd5DhKn_2uSA=1JDSj0H98aT8X9UjxWaTBwZCDfOC7YR5Sg@mail.gmail.com>
+Subject: Re: [RFC PATCH] drm/virtio: Export resource handles via DMA-buf API
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stevensd@chromium.org,
+        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
+        Zach Reizner <zachr@chromium.org>,
+        Keiichi Watanabe <keiichiw@chromium.org>,
+        Pawel Osciak <posciak@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5zb24sDQoNClBsZWFzZSBzZWUgbXkgYmVsb3cgY29tbWVudHMuDQoNCkJlc3QgcmVnYXJk
-cywNCkZhbmN5IEZhbmcNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFuc29u
-IEh1YW5nIA0KU2VudDogVHVlc2RheSwgT2N0b2JlciAxNSwgMjAxOSAxMToyOCBBTQ0KVG86IEZh
-bmN5IEZhbmcgPGNoZW4uZmFuZ0BueHAuY29tPjsgc2JveWRAa2VybmVsLm9yZzsgc2hhd25ndW9A
-a2VybmVsLm9yZw0KQ2M6IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbXR1
-cnF1ZXR0ZUBiYXlsaWJyZS5jb207IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBwZW5n
-dXRyb25peC5kZTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NClN1YmplY3Q6IFJF
-OiBbUEFUQ0ggdjNdIGNsazogaW14N3VscDogZG8gbm90IGV4cG9ydCBvdXQgSU1YN1VMUF9DTEtf
-TUlQSV9QTEwgY2xvY2sNCg0KSGksIEZhbmN5DQoNCj4gU3ViamVjdDogW1BBVENIIHYzXSBjbGs6
-IGlteDd1bHA6IGRvIG5vdCBleHBvcnQgb3V0IA0KPiBJTVg3VUxQX0NMS19NSVBJX1BMTCBjbG9j
-aw0KPiANCj4gVGhlIG1pcGkgcGxsIGNsb2NrIGNvbWVzIGZyb20gdGhlIE1JUEkgUEhZIFBMTCBv
-dXRwdXQsIHNvIGl0IHNob3VsZCANCj4gbm90IGJlIGEgZml4ZWQgY2xvY2suDQo+IA0KPiBNSVBJ
-IFBIWSBQTEwgaXMgaW4gdGhlIE1JUEkgRFNJIHNwYWNlLCBhbmQgaXQgaXMgdXNlZCBhcyB0aGUg
-Yml0IGNsb2NrIA0KPiBmb3IgdHJhbnNmZXJyaW5nIHRoZSBwaXhlbCBkYXRhIG91dCBhbmQgaXRz
-IG91dHB1dCBjbG9jayBpcyBjb25maWd1cmVkIA0KPiBhY2NvcmRpbmcgdG8gdGhlIGRpc3BsYXkg
-bW9kZS4NCj4gDQo+IFNvIGl0IHNob3VsZCBiZSB1c2VkIG9ubHkgZm9yIE1JUEkgRFNJIGFuZCBu
-b3QgYmUgZXhwb3J0ZWQgb3V0IGZvciANCj4gb3RoZXIgdXNhZ2VzLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogRmFuY3kgRmFuZyA8Y2hlbi5mYW5nQG54cC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2VMb2cg
-djItPnYzOg0KPiAgKiBLZWVwICdJTVg3VUxQX0NMS19NSVBJX1BMTCcgbWFjcm8gZGVmaW5pdGlv
-bi4NCj4gDQo+IENoYW5nZUxvZyB2MS0+djI6DQo+ICAqIEtlZXAgb3RoZXIgY2xvY2sgaW5kZXhl
-cyB1bmNoYW5nZWQgYXMgU2hhd24gc3VnZ2VzdGVkLg0KPiANCj4gIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg3dWxwLWNsb2NrLnR4dCB8IDEgLQ0KPiAgZHJpdmVy
-cy9jbGsvaW14L2Nsay1pbXg3dWxwLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMyAr
-LS0NCj4gIDIgZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDMgZGVsZXRpb25zKC0pDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
-L2lteDd1bHAtY2xvY2sudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Nsb2NrL2lteDd1bHAtY2xvY2sudHh0DQo+IGluZGV4IGE0ZjhjZDQ3OGY5Mi4uOTNkODlhZGI3
-YWZlIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
-Y2svaW14N3VscC1jbG9jay50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Nsb2NrL2lteDd1bHAtY2xvY2sudHh0DQo+IEBAIC04Miw3ICs4Miw2IEBAIHBjYzI6
-IHBjYzJANDAzZjAwMDAgew0KPiAgCQkgPCZzY2cxIElNWDdVTFBfQ0xLX0FQTExfUEZEMD4sDQo+
-ICAJCSA8JnNjZzEgSU1YN1VMUF9DTEtfVVBMTD4sDQo+ICAJCSA8JnNjZzEgSU1YN1VMUF9DTEtf
-U09TQ19CVVNfQ0xLPiwNCj4gLQkJIDwmc2NnMSBJTVg3VUxQX0NMS19NSVBJX1BMTD4sDQo+ICAJ
-CSA8JnNjZzEgSU1YN1VMUF9DTEtfRklSQ19CVVNfQ0xLPiwNCj4gIAkJIDwmc2NnMSBJTVg3VUxQ
-X0NMS19ST1NDPiwNCj4gIAkJIDwmc2NnMSBJTVg3VUxQX0NMS19TUExMX0JVU19DTEs+Ow0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg3dWxwLmMgDQo+IGIvZHJpdmVycy9j
-bGsvaW14L2Nsay1pbXg3dWxwLmMgaW5kZXggMjAyMmQ5YmVhZDkxLi40NTliMTIwYjcxZDUgDQo+
-IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDd1bHAuYw0KPiArKysgYi9k
-cml2ZXJzL2Nsay9pbXgvY2xrLWlteDd1bHAuYw0KPiBAQCAtMjgsNyArMjgsNyBAQCBzdGF0aWMg
-Y29uc3QgY2hhciAqIGNvbnN0IHNjc19zZWxzW10JCT0NCj4geyAiZHVtbXkiLCAic29zYyIsICJz
-aXJjIiwgImZpcmMiLCAiZHVtbQ0KPiAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBkZHJfc2Vs
-c1tdCQk9IHsgImFwbGxfcGZkX3NlbCIsICJ1cGxsIiwgfTsNCj4gIHN0YXRpYyBjb25zdCBjaGFy
-ICogY29uc3QgbmljX3NlbHNbXQkJPSB7ICJmaXJjIiwgImRkcl9jbGsiLCB9Ow0KPiAgc3RhdGlj
-IGNvbnN0IGNoYXIgKiBjb25zdCBwZXJpcGhfcGxhdF9zZWxzW10JPSB7ICJkdW1teSIsICJuaWMx
-X2J1c19jbGsiLA0KPiAibmljMV9jbGsiLCAiZGRyX2NsayIsICJhcGxsX3BmZDIiLCAiYXBsbF9w
-ZmQxIiwgImFwbGxfcGZkMCIsICJ1cGxsIiwgfTsNCj4gLXN0YXRpYyBjb25zdCBjaGFyICogY29u
-c3QgcGVyaXBoX2J1c19zZWxzW10JPSB7ICJkdW1teSIsICJzb3NjX2J1c19jbGsiLA0KPiAibXBs
-bCIsICJmaXJjX2J1c19jbGsiLCAicm9zYyIsICJuaWMxX2J1c19jbGsiLCAibmljMV9jbGsiLCAN
-Cj4gInNwbGxfYnVzX2NsayIsIH07DQo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHBlcmlw
-aF9idXNfc2Vsc1tdCT0geyAiZHVtbXkiLCAic29zY19idXNfY2xrIiwNCj4gImR1bW15IiwgImZp
-cmNfYnVzX2NsayIsICJyb3NjIiwgIm5pYzFfYnVzX2NsayIsICJuaWMxX2NsayIsIA0KPiAic3Bs
-bF9idXNfY2xrIiwgfTsNCg0KVGhlIHJlZmVyZW5jZSBtYW51YWwgZG9lcyBoYXZlIG1wbGwgYXMg
-Y2xvY2sgb3B0aW9uLCBzbyBkbyB5b3UgbWVhbiBpdCB3aWxsIE5PVCBiZSBzdXBwb3J0ZWQgYW55
-bW9yZSwgaXMgbXBsbCB1c2VkIGluc2lkZSBNSVBJIFBIWT8NCg0KW0ZGXSBZZXMuIFRoZSBtcGxs
-IGNvbWVzIGZyb20gdGhlIE1JUEkgUEhZIFBMTCB3aGljaCBpcyBhbiBpbnRlcm5hbCBQTEwgY2xv
-Y2sgaW4gTUlQSSBzcGFjZS4gQW5kIGJlc2lkZXMsIHRoaXMgY2xvY2sgZnJlcXVlbmN5IGNhbiBi
-ZSBjaGFuZ2VkIG9yIGRpc2FibGVkIGR5bmFtaWNhbGx5IHdoZW4geW91IGNoYW5nZSBkaXNwbGF5
-IG1vZGUgb3IgZGlzYWJsZSBkaXNwbGF5LiBTbyBpdCBzaG91bGQgbm90IGJlIHVzZWQgYXMgb3Ro
-ZXIgcGVyaXBoZXJhbHMncyByb290IGNsb2NrLiBUaGlzIGlzIHdoeSBJIHdhbnQgdG8gaGlkZSB0
-aGlzIG1wbGwgZnJvbSBvdGhlciBwZXJpcGhlcmFscyB0byBtYWtlIHRoaW5ncyBlYXNpZXIgdG8g
-YmUgaGFuZGxlZC4NCg0KQW5zb24NCg0KPiAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBhcm1f
-c2Vsc1tdCQk9IHsgImRpdmNvcmUiLCAiZHVtbXkiLA0KPiAiZHVtbXkiLCAiaHNydW5fZGl2Y29y
-ZSIsIH07DQo+IA0KPiAgLyogdXNlZCBieSBzb3NjL3NpcmMvZmlyYy9kZHIvc3BsbC9hcGxsIGRp
-dmlkZXJzICovIEBAIC03NSw3ICs3NSw2IEBAIA0KPiBzdGF0aWMgdm9pZCBfX2luaXQgaW14N3Vs
-cF9jbGtfc2NnMV9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+ICAJY2xrc1tJTVg3VUxQ
-X0NMS19TT1NDXQkJPQ0KPiBpbXhfb2J0YWluX2ZpeGVkX2Nsa19odyhucCwgInNvc2MiKTsNCj4g
-IAljbGtzW0lNWDdVTFBfQ0xLX1NJUkNdCQk9DQo+IGlteF9vYnRhaW5fZml4ZWRfY2xrX2h3KG5w
-LCAic2lyYyIpOw0KPiAgCWNsa3NbSU1YN1VMUF9DTEtfRklSQ10JCT0NCj4gaW14X29idGFpbl9m
-aXhlZF9jbGtfaHcobnAsICJmaXJjIik7DQo+IC0JY2xrc1tJTVg3VUxQX0NMS19NSVBJX1BMTF0J
-PSBpbXhfb2J0YWluX2ZpeGVkX2Nsa19odyhucCwNCj4gIm1wbGwiKTsNCj4gIAljbGtzW0lNWDdV
-TFBfQ0xLX1VQTExdCQk9DQo+IGlteF9vYnRhaW5fZml4ZWRfY2xrX2h3KG5wLCAidXBsbCIpOw0K
-PiANCj4gIAkvKiBTQ0cxICovDQo+IC0tDQo+IDIuMTcuMQ0KDQo=
+On Wed, Oct 9, 2019 at 12:04 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Tue, Oct 08, 2019 at 07:49:39PM +0900, Tomasz Figa wrote:
+> > On Tue, Oct 8, 2019 at 7:03 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > >
+> > > On Sat, Oct 05, 2019 at 02:41:54PM +0900, Tomasz Figa wrote:
+> > > > Hi Daniel, Gerd,
+> > > >
+> > > > On Tue, Sep 17, 2019 at 10:23 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > >
+> > > > > On Thu, Sep 12, 2019 at 06:41:21PM +0900, Tomasz Figa wrote:
+> > > > > > This patch is an early RFC to judge the direction we are following in
+> > > > > > our virtualization efforts in Chrome OS. The purpose is to start a
+> > > > > > discussion on how to handle buffer sharing between multiple virtio
+> > > > > > devices.
+> > > > > >
+> > > > > > On a side note, we are also working on a virtio video decoder interface
+> > > > > > and implementation, with a V4L2 driver for Linux. Those will be posted
+> > > > > > for review in the near future as well.
+> > > > > >
+> > > > > > Any feedback will be appreciated! Thanks in advance.
+> > > > > >
+> > > > > > ===
+> > > > > >
+> > > > > > With the range of use cases for virtualization expanding, there is going
+> > > > > > to be more virtio devices added to the ecosystem. Devices such as video
+> > > > > > decoders, encoders, cameras, etc. typically work together with the
+> > > > > > display and GPU in a pipeline manner, which can only be implemented
+> > > > > > efficiently by sharing the buffers between producers and consumers.
+> > > > > >
+> > > > > > Existing buffer management framework in Linux, such as the videobuf2
+> > > > > > framework in V4L2, implements all the DMA-buf handling inside generic
+> > > > > > code and do not expose any low level information about the buffers to
+> > > > > > the drivers.
+> > > > > >
+> > > > > > To seamlessly enable buffer sharing with drivers using such frameworks,
+> > > > > > make the virtio-gpu driver expose the resource handle as the DMA address
+> > > > > > of the buffer returned from the DMA-buf mapping operation. Arguably, the
+> > > > > > resource handle is a kind of DMA address already, as it is the buffer
+> > > > > > identifier that the device needs to access the backing memory, which is
+> > > > > > exactly the same role a DMA address provides for native devices.
+> > > > > >
+> > > > > > A virtio driver that does memory management fully on its own would have
+> > > > > > code similar to following. The code is identical to what a regular
+> > > > > > driver for real hardware would do to import a DMA-buf.
+> > > > > >
+> > > > > > static int virtio_foo_get_resource_handle(struct virtio_foo *foo,
+> > > > > >                                         struct dma_buf *dma_buf, u32 *id)
+> > > > > > {
+> > > > > >       struct dma_buf_attachment *attach;
+> > > > > >       struct sg_table *sgt;
+> > > > > >       int ret = 0;
+> > > > > >
+> > > > > >       attach = dma_buf_attach(dma_buf, foo->dev);
+> > > > > >       if (IS_ERR(attach))
+> > > > > >               return PTR_ERR(attach);
+> > > > > >
+> > > > > >       sgt = dma_buf_map_attachment(attach, DMA_BIDIRECTIONAL);
+> > > > > >       if (IS_ERR(sgt)) {
+> > > > > >               ret = PTR_ERR(sgt);
+> > > > > >               goto err_detach;
+> > > > > >       }
+> > > > > >
+> > > > > >       if (sgt->nents != 1) {
+> > > > > >               ret = -EINVAL;
+> > > > > >               goto err_unmap;
+> > > > > >       }
+> > > > > >
+> > > > > >       *id = sg_dma_address(sgt->sgl);
+> > > > >
+> > > > > I agree with Gerd, this looks pretty horrible to me.
+> > > > >
+> > > > > The usual way we've done these kind of special dma-bufs is:
+> > > > >
+> > > > > - They all get allocated at the same place, through some library or
+> > > > >   whatever.
+> > > > >
+> > > > > - You add a dma_buf_is_virtio(dma_buf) function, or maybe something that
+> > > > >   also upcasts or returns NULL, which checks for dma_buf->ops.
+> > > > >
+> > > >
+> > > > Thanks for a lot of valuable feedback and sorry for the late reply.
+> > > >
+> > > > While I agree that stuffing the resource ID in sg_dma_address() is
+> > > > quite ugly (for example, the regular address arithmetic doesn't work),
+> > > > I still believe we need to convey information about these buffers
+> > > > using regular kernel interfaces.
+> > > >
+> > > > Drivers in some subsystems like DRM tend to open code any buffer
+> > > > management and then it wouldn't be any problem to do what you
+> > > > suggested. However, other subsystems have generic frameworks for
+> > > > buffer management, like videobuf2 for V4L2. Those assume regular
+> > > > DMA-bufs that can be handled with regular dma_buf_() API and described
+> > > > using sgtables and/or pfn vectors and/or DMA addresses.
+> > >
+> > > "other subsystem sucks" doesn't sound like a good design paradigm to me.
+> > > Forced midlayers are a bad design decision isn't really new at all ...
+> > >
+> >
+> > Sorry, I don't think that's an argument. There are various design
+> > aspects and for the scenarios for which V4L2 was designed, the other
+> > subsystems may actually "suck". Let's not derail the discussion into
+> > judging which subsystems are better or worse.
+> >
+> > Those mid layers are not forced, you don't have to use videobuf2, but
+> > it saves you a lot of open coding, potential security issues and so
+> > on.
+>
+> Oh, it sounded like they're forced. If they're not then we should still be
+> able to do whatever special handling we want/need to do.
+
+They aren't forced, but if one doesn't use them, they need to
+reimplement the buffer queues in the driver. That's quite a big
+effort, especially given the subtleties of stateful (i.e. fully
+hardware-based) video decoding, such as frame buffer reordering,
+dynamic resolution changes and so on.
+
+That said, we could still grab the DMA-buf FD directly in the V4L2
+QBUF callback of the driver and save it in some map, so we can look it
+up later when given a buffer index. But we would still need to make
+the DMA-buf itself importable. For virtio-gpu I guess that would mean
+returning an sg_table backed by the shadow buffer pages.
+
+By the way, have you received the emails from the other thread?
+([PATCH] [RFC] vdec: Add virtio video decode device specification)
+
+Best regards,
+Tomasz
+
+
+> -Daniel
+>
+> >
+> > > > > - Once you've upcasted at runtime by checking for ->ops, you can add
+> > > > >   whatever fancy interfaces you want. Including a real&proper interface to
+> > > > >   get at whatever underlying id you need to for real buffer sharing
+> > > > >   between virtio devices.
+> > > > >
+> > > > > In a way virtio buffer/memory ids are a kind of private bus, entirely
+> > > > > distinct from the dma_addr_t bus. So can't really stuff them under this
+> > > > > same thing like we e.g. do with pci peer2peer.
+> > > >
+> > > > As I mentioned earlier, there is no single "dma_addr_t bus". Each
+> > > > device (as in struct device) can be on its own different DMA bus, with
+> > > > a different DMA address space. There is not even a guarantee that a
+> > > > DMA address obtained for one PCI device will be valid for another if
+> > > > they are on different buses, which could have different address
+> > > > mappings.
+> > > >
+> > > > Putting that aside, we're thinking about a different approach, as Gerd
+> > > > suggested in another thread, the one about the Virtio Video Decoder
+> > > > protocol. I'm going to reply there, making sure to CC everyone
+> > > > involved here.
+> > >
+> > > ok.
+> > > -Daniel
+> > >
+> > > >
+> > > > Best regards,
+> > > > Tomasz
+> > > >
+> > > > > -Daniel
+> > > > >
+> > > > > >
+> > > > > > err_unmap:
+> > > > > >       dma_buf_unmap_attachment(attach, sgt, DMA_BIDIRECTIONAL);
+> > > > > > err_detach:
+> > > > > >       dma_buf_detach(dma_buf, attach);
+> > > > > >
+> > > > > >       return ret;
+> > > > > > }
+> > > > > >
+> > > > > > On the other hand, a virtio driver that uses an existing kernel
+> > > > > > framework to manage buffers would not need to explicitly handle anything
+> > > > > > at all, as the framework part responsible for importing DMA-bufs would
+> > > > > > already do the work. For example, a V4L2 driver using the videobuf2
+> > > > > > framework would just call thee vb2_dma_contig_plane_dma_addr() function
+> > > > > > to get what the above open-coded function would return.
+> > > > > >
+> > > > > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/virtio/virtgpu_drv.c   |  2 +
+> > > > > >  drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++
+> > > > > >  drivers/gpu/drm/virtio/virtgpu_prime.c | 81 ++++++++++++++++++++++++++
+> > > > > >  3 files changed, 87 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > > > > > index 0fc32fa0b3c0..ac095f813134 100644
+> > > > > > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > > > > > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > > > > > @@ -210,6 +210,8 @@ static struct drm_driver driver = {
+> > > > > >  #endif
+> > > > > >       .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+> > > > > >       .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+> > > > > > +     .gem_prime_export = virtgpu_gem_prime_export,
+> > > > > > +     .gem_prime_import = virtgpu_gem_prime_import,
+> > > > > >       .gem_prime_get_sg_table = virtgpu_gem_prime_get_sg_table,
+> > > > > >       .gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
+> > > > > >       .gem_prime_vmap = virtgpu_gem_prime_vmap,
+> > > > > > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > > > > > index e28829661724..687cfce91885 100644
+> > > > > > --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > > > > > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> > > > > > @@ -367,6 +367,10 @@ void virtio_gpu_object_free_sg_table(struct virtio_gpu_object *bo);
+> > > > > >  int virtio_gpu_object_wait(struct virtio_gpu_object *bo, bool no_wait);
+> > > > > >
+> > > > > >  /* virtgpu_prime.c */
+> > > > > > +struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
+> > > > > > +                                      int flags);
+> > > > > > +struct drm_gem_object *virtgpu_gem_prime_import(struct drm_device *dev,
+> > > > > > +                                             struct dma_buf *buf);
+> > > > > >  struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj);
+> > > > > >  struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
+> > > > > >       struct drm_device *dev, struct dma_buf_attachment *attach,
+> > > > > > diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
+> > > > > > index dc642a884b88..562eb1a2ed5b 100644
+> > > > > > --- a/drivers/gpu/drm/virtio/virtgpu_prime.c
+> > > > > > +++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
+> > > > > > @@ -22,6 +22,9 @@
+> > > > > >   * Authors: Andreas Pokorny
+> > > > > >   */
+> > > > > >
+> > > > > > +#include <linux/dma-buf.h>
+> > > > > > +#include <linux/dma-direction.h>
+> > > > > > +
+> > > > > >  #include <drm/drm_prime.h>
+> > > > > >
+> > > > > >  #include "virtgpu_drv.h"
+> > > > > > @@ -30,6 +33,84 @@
+> > > > > >   * device that might share buffers with virtgpu
+> > > > > >   */
+> > > > > >
+> > > > > > +static struct sg_table *
+> > > > > > +virtgpu_gem_map_dma_buf(struct dma_buf_attachment *attach,
+> > > > > > +                     enum dma_data_direction dir)
+> > > > > > +{
+> > > > > > +     struct drm_gem_object *obj = attach->dmabuf->priv;
+> > > > > > +     struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+> > > > > > +     struct sg_table *sgt;
+> > > > > > +     int ret;
+> > > > > > +
+> > > > > > +     sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
+> > > > > > +     if (!sgt)
+> > > > > > +             return ERR_PTR(-ENOMEM);
+> > > > > > +
+> > > > > > +     ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+> > > > > > +     if (ret) {
+> > > > > > +             kfree(sgt);
+> > > > > > +             return ERR_PTR(-ENOMEM);
+> > > > > > +     }
+> > > > > > +
+> > > > > > +     sg_dma_address(sgt->sgl) = bo->hw_res_handle;
+> > > > > > +     sg_dma_len(sgt->sgl) = obj->size;
+> > > > > > +     sgt->nents = 1;
+> > > > > > +
+> > > > > > +     return sgt;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static void virtgpu_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
+> > > > > > +                                   struct sg_table *sgt,
+> > > > > > +                                   enum dma_data_direction dir)
+> > > > > > +{
+> > > > > > +     sg_free_table(sgt);
+> > > > > > +     kfree(sgt);
+> > > > > > +}
+> > > > > > +
+> > > > > > +static const struct dma_buf_ops virtgpu_dmabuf_ops =  {
+> > > > > > +     .cache_sgt_mapping = true,
+> > > > > > +     .attach = drm_gem_map_attach,
+> > > > > > +     .detach = drm_gem_map_detach,
+> > > > > > +     .map_dma_buf = virtgpu_gem_map_dma_buf,
+> > > > > > +     .unmap_dma_buf = virtgpu_gem_unmap_dma_buf,
+> > > > > > +     .release = drm_gem_dmabuf_release,
+> > > > > > +     .mmap = drm_gem_dmabuf_mmap,
+> > > > > > +     .vmap = drm_gem_dmabuf_vmap,
+> > > > > > +     .vunmap = drm_gem_dmabuf_vunmap,
+> > > > > > +};
+> > > > > > +
+> > > > > > +struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
+> > > > > > +                                      int flags)
+> > > > > > +{
+> > > > > > +     struct dma_buf *buf;
+> > > > > > +
+> > > > > > +     buf = drm_gem_prime_export(obj, flags);
+> > > > > > +     if (!IS_ERR(buf))
+> > > > > > +             buf->ops = &virtgpu_dmabuf_ops;
+> > > > > > +
+> > > > > > +     return buf;
+> > > > > > +}
+> > > > > > +
+> > > > > > +struct drm_gem_object *virtgpu_gem_prime_import(struct drm_device *dev,
+> > > > > > +                                             struct dma_buf *buf)
+> > > > > > +{
+> > > > > > +     struct drm_gem_object *obj;
+> > > > > > +
+> > > > > > +     if (buf->ops == &virtgpu_dmabuf_ops) {
+> > > > > > +             obj = buf->priv;
+> > > > > > +             if (obj->dev == dev) {
+> > > > > > +                     /*
+> > > > > > +                      * Importing dmabuf exported from our own gem increases
+> > > > > > +                      * refcount on gem itself instead of f_count of dmabuf.
+> > > > > > +                      */
+> > > > > > +                     drm_gem_object_get(obj);
+> > > > > > +                     return obj;
+> > > > > > +             }
+> > > > > > +     }
+> > > > > > +
+> > > > > > +     return drm_gem_prime_import(dev, buf);
+> > > > > > +}
+> > > > > > +
+> > > > > >  struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
+> > > > > >  {
+> > > > > >       struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+> > > > > > --
+> > > > > > 2.23.0.237.gc6a4ce50a0-goog
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Daniel Vetter
+> > > > > Software Engineer, Intel Corporation
+> > > > > http://blog.ffwll.ch
+> > >
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
