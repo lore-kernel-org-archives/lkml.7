@@ -2,140 +2,77 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4B9FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997F7FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B148421835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCND4nsO"
+	by mail.kernel.org (Postfix) with ESMTP id 7A86E21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406309AbfJPQcf (ORCPT
+        id S2406339AbfJPQem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:32:35 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36597 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390111AbfJPQcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:32:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so28838817wrd.3;
-        Wed, 16 Oct 2019 09:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1IL8KzN4eED7MJkMylgKBjULCBhCLDg5VeoFVt5LveI=;
-        b=eCND4nsOyqYAezMnMU37cySOpp5nLngSuyJa0Z+cWB+wLpxW+4pdPfI3lVITMQhUVb
-         +0XD4rsNM8jrLIZUuXL5R66YYOrsXgThdlFMqP7TrTVsOOaHF/Tc9nOv+ILcB8NCA2d5
-         iZG0V4qY5LNwMj0a+sEydSHjRWnJRbbTDX4c8b5LveFIwo4gozQ52Ce1I/W+Fbpiywq9
-         dOkRnBds7Op7Yrqqj9w2s/fcaIAs6+vYFGZtVeJEKm3PEie841QFnky0wILH1UUf++oN
-         Jw+Me7HTdZBwbIONgu1mtUZ8YMv7sl+NlXYjN8Uphs74vxoqB6BQXq2nUuJkDCFsRld9
-         Bbew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1IL8KzN4eED7MJkMylgKBjULCBhCLDg5VeoFVt5LveI=;
-        b=RwztK+pz0hUXs+5gCEch2k+gsX5UiYVae6pbDFMmM2s4gcNwZ4aQHGi/BczvjZ7A0/
-         ijTZSyhJpJ3KONl7hn9Dr7GMBVSuxQGEUb024M+cLWRGK0bAvm1B8PPFmYl3n6mj4dFc
-         qinXHW0ABPZ4ZY6KKfci0Xij+5PIw303WW1gbBvKNnMAwkG96ouQDIQ/1cJDRR5IX5tI
-         n4FcLMMEA1DpXn+jU7izzBkWJ0v6QOsBrjlSdG4RCWv39no3KKm+v+SQYZXWvvL7c4he
-         BwJjACsXJ6wtgsVGLao0pdSDw2XFGs/UoMHYfAKdQmT2RTcVcM62uc4bZ9TqBbgFyD02
-         Ieow==
-X-Gm-Message-State: APjAAAUnwF67LP9SQ+8uUSkBZOtoM8TP1DzaaGC+SvTlnpNtAUV9y0t6
-        pWMuH0LqMM3cU8e02O7KfvA=
-X-Google-Smtp-Source: APXvYqxuH63ig5G6nfHASUQgTWm3NGdPCshxv4cee3gvvED+PjjhRI5a0HIWN82XSTyHvy9sVMp4Eg==
-X-Received: by 2002:adf:ed84:: with SMTP id c4mr3352316wro.333.1571243552893;
-        Wed, 16 Oct 2019 09:32:32 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id v11sm2970044wml.30.2019.10.16.09.32.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 16 Oct 2019 09:32:31 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 18:32:31 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20191016163231.dgvurzdqcifunw35@pali>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
- <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
- <20191016140353.4hrncxa5wkx47oau@pali>
- <20191016143113.GS31224@sasha-vm>
- <20191016160349.pwghlg566hh2o7id@pali>
- <20191016162211.GA505532@kroah.com>
+        Wed, 16 Oct 2019 12:34:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:45118 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406043AbfJPQel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:34:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2261428;
+        Wed, 16 Oct 2019 09:34:41 -0700 (PDT)
+Received: from [192.168.1.103] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6FF73F68E;
+        Wed, 16 Oct 2019 09:34:35 -0700 (PDT)
+Subject: Re: [PATCHv7 19/33] lib/vdso: Prepare for time namespace support
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+References: <20191011012341.846266-1-dima@arista.com>
+ <20191011012341.846266-20-dima@arista.com>
+ <a726e64f-bf73-4eca-6acf-75926898d88a@arm.com>
+ <alpine.DEB.2.21.1910161704120.2046@nanos.tec.linutronix.de>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <5d813fa7-5415-1373-c208-397816a61379@arm.com>
+Date:   Wed, 16 Oct 2019 17:36:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uulki3czcfzmvzao"
-Content-Disposition: inline
-In-Reply-To: <20191016162211.GA505532@kroah.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <alpine.DEB.2.21.1910161704120.2046@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas,
 
---uulki3czcfzmvzao
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/16/19 4:07 PM, Thomas Gleixner wrote:
+[...]
 
-On Wednesday 16 October 2019 09:22:11 Greg Kroah-Hartman wrote:
-> On Wed, Oct 16, 2019 at 06:03:49PM +0200, Pali Roh=C3=A1r wrote:
-> > > Can I assume you will be implementing TexFAT support once the spec is
-> > > available?
-> >=20
-> > I cannot promise that I would implement something which I do not know
-> > how is working... It depends on how complicated TexFAT is and also how
-> > future exfat support in kernel would look like.
-> >=20
-> > But I'm interesting in implementing it.
->=20
-> What devices need TexFAT?  I thought it the old devices that used it are
-> long obsolete and gone.  How is this feature going to be tested/used?
+> Can you pretty please finally start to trim your replies?
 
-Hi Greg! Per 3.1.16 of exFAT specification [1], TexFAT extension is the
-only way how to use more FAT tables, like in FAT32 (where you normally
-have two FATs). Secondary FAT table can be used e.g. for redundancy or
-data recovery. For FAT32 volumes, e.g. fsck.fat uses secondary FAT table
-when first one is corrupted.
+I really apologize. I can't explain to myself how did I miss the information. It
+will not happen again.
 
-Usage of just one FAT table in exFAT is just step backward from FAT32 as
-secondary FAT table is sometimes the only way how to recover broken FAT
-fs. So I do not think that exFAT is for old devices, but rather
-non-exFAT is for old devices. Modern filesystems have journal or other
-technique to do (fast|some) recovery, exFAT has nothing.
-
-And how is this feature going to be used? That depends on specification.
-
-[1] - https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specifica=
-tion#3116-numberoffats-field
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---uulki3czcfzmvzao
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXadGHQAKCRCL8Mk9A+RD
-Ukm6AJ9ab4GclmcB/R83hw/wIqInUfSArwCeLEPDX7XQcg6sMkgXJ6qqa0gQCcE=
-=Ni+T
------END PGP SIGNATURE-----
-
---uulki3czcfzmvzao--
+-- 
+Regards,
+Vincenzo
