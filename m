@@ -2,122 +2,178 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EE4C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942F7FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550D12168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E232168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QE5ek4pV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404364AbfJPJyN (ORCPT
+        id S2404369AbfJPJyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:54:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:34420 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404266AbfJPJyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:54:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6076142F;
-        Wed, 16 Oct 2019 02:54:11 -0700 (PDT)
-Received: from [10.163.1.216] (unknown [10.163.1.216])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD8023F6C4;
-        Wed, 16 Oct 2019 02:53:56 -0700 (PDT)
-Subject: Re: [PATCH V6 2/2] mm/debug: Add tests validating architecture page
- table helpers
-To:     Qian Cai <cai@lca.pw>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Wed, 16 Oct 2019 05:54:51 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36463 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbfJPJyu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:54:50 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so23325230ljj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:54:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bdoCE4EoxSLapTmXd4+oVGs4R70YFCwt9DjIODBWD6I=;
+        b=QE5ek4pVPZfLzXJzV28P6nJ+0ySzes/vJ33aguYDmlDCotZp11VGmfub55bpIPwULu
+         445YzJByyi9BRAIfThepb5GU9gtU2sJw66rXQq2NXUn/K4dZOUAT1hnRMFbHniqB+JiG
+         weY5ynwlgmCL0ItKNN1Ahe0Uxaw+QL7EQRIy+gWWoG2biYMDsmURA9GzkizOBx9Q5MAR
+         GlB4hTBjI240TBfNo3FXNft53oV6xc4OyN+9u6a7TZYNCfNM55vYO4oSixwfV6A2LWAu
+         ho2FLuaKimvVybjSGJRrV8X58Dg13nlrNVPA5wSaWe7KAy3j8b6QuhgnmpgQs7k4Bdn1
+         mP8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bdoCE4EoxSLapTmXd4+oVGs4R70YFCwt9DjIODBWD6I=;
+        b=DDbEM/kahS1AIWRtHjVVfl/dyPMa+i6lo87HZKP2Nh1wqEkx9bB1kn+JJZ5v72cHG5
+         tTgjs8Ci19v/ZYC/a0/ZrvNfwIq7jvnkLbzg7vhy9a63faGyU8PuyhnU9Z3YxoU/kDJX
+         HF39BOIurns0UkXVh9hTGhqhsy5Pf8o/m2Bxb2jaAp9+5mMXLDlCac7Wg+KHzLEjrh6K
+         KxYoZqc2XPfR4sysTf/237Xa8+ywbtsqbSq6QXPkivXF6B47YW4P6abAR2DPm3ZV7Ix0
+         WceTBPz2ZwtGF8N+ch+H9XQncvPuS/bONWCH4O+0yBHwVcdV8Nure91KqFD8rSkDE6EK
+         mxOg==
+X-Gm-Message-State: APjAAAWLdVYc4VcwcUQeOqB5xqrHNVMkZHSID/cczuDcV4aQEWIeImqu
+        dlAO4x9fzMzYZNf75yfSqNM=
+X-Google-Smtp-Source: APXvYqxiDS53+QyM7r3Br5Xxnwu0u7VAzS+Uv9ERxHSO38DcMbzVXfh6Mfhp0Z22QaporVWAcWkmBQ==
+X-Received: by 2002:a2e:9d83:: with SMTP id c3mr25563346ljj.237.1571219688236;
+        Wed, 16 Oct 2019 02:54:48 -0700 (PDT)
+Received: from pc636.semobile.internal ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id b2sm886452lfq.27.2019.10.16.02.54.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 02:54:47 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
         Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
- <1571131302-32290-3-git-send-email-anshuman.khandual@arm.com>
- <1571162982.5937.42.camel@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7cd03155-6713-3116-1e88-f81f84dd794f@arm.com>
-Date:   Wed, 16 Oct 2019 15:24:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v3 1/3] mm/vmalloc: remove preempt_disable/enable when do preloading
+Date:   Wed, 16 Oct 2019 11:54:36 +0200
+Message-Id: <20191016095438.12391-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1571162982.5937.42.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some background. The preemption was disabled before to guarantee
+that a preloaded object is available for a CPU, it was stored for.
 
+The aim was to not allocate in atomic context when spinlock
+is taken later, for regular vmap allocations. But that approach
+conflicts with CONFIG_PREEMPT_RT philosophy. It means that
+calling spin_lock() with disabled preemption is forbidden
+in the CONFIG_PREEMPT_RT kernel.
 
-On 10/15/2019 11:39 PM, Qian Cai wrote:
-> On Tue, 2019-10-15 at 14:51 +0530, Anshuman Khandual wrote:
->> +static unsigned long __init get_random_vaddr(void)
->> +{
->> +	unsigned long random_vaddr, random_pages, total_user_pages;
->> +
->> +	total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
->> +
->> +	random_pages = get_random_long() % total_user_pages;
->> +	random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
->> +
->> +	WARN_ON(random_vaddr > TASK_SIZE);
->> +	WARN_ON(random_vaddr < FIRST_USER_ADDRESS);
-> 
-> It would be nice if this patch does not introduce a new W=1 GCC warning here on
-> x86 because FIRST_USER_ADDRESS is 0, and GCC think the code is dumb because
-> "random_vaddr" is unsigned,
-> 
-> In file included from ./arch/x86/include/asm/bug.h:83,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/mmdebug.h:5,
->                  from ./include/linux/gfp.h:5,
->                  from mm/debug_vm_pgtable.c:13:
-> mm/debug_vm_pgtable.c: In function ‘get_random_vaddr’:
-> mm/debug_vm_pgtable.c:359:23: warning: comparison of unsigned expression < 0 is
-> always false [-Wtype-limits]
->   WARN_ON(random_vaddr < FIRST_USER_ADDRESS);
->                        ^
-> ./include/asm-generic/bug.h:113:25: note: in definition of macro ‘WARN_ON’
->   int __ret_warn_on = !!(condition);    \
->                          ^~~~~~~~~
+Therefore, get rid of preempt_disable() and preempt_enable() when
+the preload is done for splitting purpose. As a result we do not
+guarantee now that a CPU is preloaded, instead we minimize the
+case when it is not, with this change.
 
-The test checks against an erroneous unsigned long overflow when
-FIRST_USER_ADDRESS is not 0 but a positive number. Wondering if
-the compiler will still complain if we merge both the WARN_ON()
-checks as || on a single statement.
+For example i run the special test case that follows the preload
+pattern and path. 20 "unbind" threads run it and each does
+1000000 allocations. Only 3.5 times among 1000000 a CPU was
+not preloaded. So it can happen but the number is negligible.
+
+V2 - > V3:
+    - update the commit message
+
+V1 -> V2:
+  - move __this_cpu_cmpxchg check when spin_lock is taken,
+    as proposed by Andrew Morton
+  - add more explanation in regard of preloading
+  - adjust and move some comments
+
+Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Acked-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ mm/vmalloc.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index e92ff5f7dd8b..b7b443bfdd92 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1078,31 +1078,34 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 
+ retry:
+ 	/*
+-	 * Preload this CPU with one extra vmap_area object to ensure
+-	 * that we have it available when fit type of free area is
+-	 * NE_FIT_TYPE.
++	 * Preload this CPU with one extra vmap_area object. It is used
++	 * when fit type of free area is NE_FIT_TYPE. Please note, it
++	 * does not guarantee that an allocation occurs on a CPU that
++	 * is preloaded, instead we minimize the case when it is not.
++	 * It can happen because of cpu migration, because there is a
++	 * race until the below spinlock is taken.
+ 	 *
+ 	 * The preload is done in non-atomic context, thus it allows us
+ 	 * to use more permissive allocation masks to be more stable under
+-	 * low memory condition and high memory pressure.
++	 * low memory condition and high memory pressure. In rare case,
++	 * if not preloaded, GFP_NOWAIT is used.
+ 	 *
+-	 * Even if it fails we do not really care about that. Just proceed
+-	 * as it is. "overflow" path will refill the cache we allocate from.
++	 * Set "pva" to NULL here, because of "retry" path.
+ 	 */
+-	preempt_disable();
+-	if (!__this_cpu_read(ne_fit_preload_node)) {
+-		preempt_enable();
+-		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+-		preempt_disable();
++	pva = NULL;
+ 
+-		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
+-			if (pva)
+-				kmem_cache_free(vmap_area_cachep, pva);
+-		}
+-	}
++	if (!this_cpu_read(ne_fit_preload_node))
++		/*
++		 * Even if it fails we do not really care about that.
++		 * Just proceed as it is. If needed "overflow" path
++		 * will refill the cache we allocate from.
++		 */
++		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+ 
+ 	spin_lock(&vmap_area_lock);
+-	preempt_enable();
++
++	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
++		kmem_cache_free(vmap_area_cachep, pva);
+ 
+ 	/*
+ 	 * If an allocation fails, the "vend" address is
+-- 
+2.20.1
+
