@@ -2,30 +2,30 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7654FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28432FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA76218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0856F20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405189AbfJPPhU (ORCPT
+        id S2405362AbfJPPha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:37:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47479 "EHLO
+        Wed, 16 Oct 2019 11:37:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47476 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404935AbfJPPhT (ORCPT
+        with ESMTP id S2405133AbfJPPhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 11:37:19 -0400
 Received: from [213.220.153.21] (helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKlMU-00050w-4Z; Wed, 16 Oct 2019 15:37:18 +0000
+        id 1iKlMS-00050w-Ol; Wed, 16 Oct 2019 15:37:16 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     oleg@redhat.com, linux-kernel@vger.kernel.org
 Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
@@ -35,9 +35,9 @@ Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
         mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
         shuah@kernel.org, tglx@linutronix.de, viro@zeniv.linux.org.uk,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v2 4/5] exit: use task_alive() in do_wait()
-Date:   Wed, 16 Oct 2019 17:36:05 +0200
-Message-Id: <20191016153606.2326-4-christian.brauner@ubuntu.com>
+Subject: [PATCH v2 2/5] test: verify fdinfo for pidfd of reaped process
+Date:   Wed, 16 Oct 2019 17:36:03 +0200
+Message-Id: <20191016153606.2326-2-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016153606.2326-1-christian.brauner@ubuntu.com>
 References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
@@ -49,34 +49,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace hlist_empty() with the new task_alive() helper which is more
-idiomatic, easier to grep for, and unifies how callers perform this check.
+Test that the fdinfo field of a pidfd referring to a dead process
+correctly shows Pid: -1 and NSpid: -1.
 
-Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Christian Kellner <christian@kellner.me>
+Reviewed-by: Christian Kellner <christian@kellner.me>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v1 */
-patch not present
+Link: https://lore.kernel.org/r/20191015141332.4055-2-christian.brauner@ubuntu.com
 
 /* v2 */
-patch introduced
+unchanged
 ---
- kernel/exit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/pidfd/pidfd_fdinfo_test.c       | 59 ++++++++++++++-----
+ 1 file changed, 45 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index a46a50d67002..2bb0cbe94bda 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1457,7 +1457,7 @@ static long do_wait(struct wait_opts *wo)
- 	 */
- 	wo->notask_error = -ECHILD;
- 	if ((wo->wo_type < PIDTYPE_MAX) &&
--	   (!wo->wo_pid || hlist_empty(&wo->wo_pid->tasks[wo->wo_type])))
-+	   (!wo->wo_pid || !task_alive(wo->wo_pid, wo->wo_type)))
- 		goto notask;
+diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+index 3721be994abd..22558524f71c 100644
+--- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+@@ -113,11 +113,15 @@ static struct child clone_newns(int (*fn)(void *), void *args,
+ 	return ret;
+ }
  
- 	set_current_state(TASK_INTERRUPTIBLE);
++static inline void child_close(struct child *child)
++{
++	close(child->fd);
++}
++
+ static inline int child_join(struct child *child, struct error *err)
+ {
+ 	int r;
+ 
+-	(void)close(child->fd);
+ 	r = wait_for_pid(child->pid);
+ 	if (r < 0)
+ 		error_set(err, PIDFD_ERROR, "waitpid failed (ret %d, errno %d)",
+@@ -128,6 +132,12 @@ static inline int child_join(struct child *child, struct error *err)
+ 	return r;
+ }
+ 
++static inline int child_join_close(struct child *child, struct error *err)
++{
++	child_close(child);
++	return child_join(child, err);
++}
++
+ static inline void trim_newline(char *str)
+ {
+ 	char *pos = strrchr(str, '\n');
+@@ -136,8 +146,8 @@ static inline void trim_newline(char *str)
+ 		*pos = '\0';
+ }
+ 
+-static int verify_fdinfo_nspid(int pidfd, struct error *err,
+-			       const char *expect, ...)
++static int verify_fdinfo(int pidfd, struct error *err, const char *prefix,
++			 size_t prefix_len, const char *expect, ...)
+ {
+ 	char buffer[512] = {0, };
+ 	char path[512] = {0, };
+@@ -160,17 +170,20 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
+ 				 pidfd);
+ 
+ 	while (getline(&line, &n, f) != -1) {
+-		if (strncmp(line, "NSpid:", 6))
++		char *val;
++
++		if (strncmp(line, prefix, prefix_len))
+ 			continue;
+ 
+ 		found = 1;
+ 
+-		r = strcmp(line + 6, buffer);
++		val = line + prefix_len;
++		r = strcmp(val, buffer);
+ 		if (r != 0) {
+ 			trim_newline(line);
+ 			trim_newline(buffer);
+-			error_set(err, PIDFD_FAIL, "NSpid: '%s' != '%s'",
+-				  line + 6, buffer);
++			error_set(err, PIDFD_FAIL, "%s '%s' != '%s'",
++				  prefix, val, buffer);
+ 		}
+ 		break;
+ 	}
+@@ -179,8 +192,8 @@ static int verify_fdinfo_nspid(int pidfd, struct error *err,
+ 	fclose(f);
+ 
+ 	if (found == 0)
+-		return error_set(err, PIDFD_FAIL, "NSpid not found for fd %d",
+-				 pidfd);
++		return error_set(err, PIDFD_FAIL, "%s not found for fd %d",
++				 prefix, pidfd);
+ 
+ 	return PIDFD_PASS;
+ }
+@@ -213,7 +226,7 @@ static int child_fdinfo_nspid_test(void *args)
+ 	}
+ 
+ 	pidfd = *(int *)args;
+-	r = verify_fdinfo_nspid(pidfd, &err, "\t0\n");
++	r = verify_fdinfo(pidfd, &err, "NSpid:", 6, "\t0\n");
+ 
+ 	if (r != PIDFD_PASS)
+ 		ksft_print_msg("NSpid fdinfo check failed: %s\n", err.msg);
+@@ -242,24 +255,42 @@ static void test_pidfd_fdinfo_nspid(void)
+ 	/* The children will have pid 1 in the new pid namespace,
+ 	 * so the line must be 'NSPid:\t<pid>\t1'.
+ 	 */
+-	verify_fdinfo_nspid(a.fd, &err, "\t%d\t%d\n", a.pid, 1);
+-	verify_fdinfo_nspid(b.fd, &err, "\t%d\t%d\n", b.pid, 1);
++	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t%d\t%d\n", a.pid, 1);
++	verify_fdinfo(b.fd, &err, "NSpid:", 6, "\t%d\t%d\n", b.pid, 1);
+ 
+ 	/* wait for the process, check the exit status and set
+ 	 * 'err' accordingly, if it is not already set.
+ 	 */
++	child_join_close(&a, &err);
++	child_join_close(&b, &err);
++
++	error_report(&err, test_name);
++}
++
++static void test_pidfd_dead_fdinfo(void)
++{
++	struct child a;
++	struct error err = {0, };
++	const char *test_name = "pidfd check fdinfo for dead process";
++
++	/* Create a new child in a new pid and mount namespace */
++	a = clone_newns(child_fdinfo_nspid_test, NULL, &err);
++	error_check(&err, test_name);
+ 	child_join(&a, &err);
+-	child_join(&b, &err);
+ 
++	verify_fdinfo(a.fd, &err, "Pid:", 4, "\t-1\n");
++	verify_fdinfo(a.fd, &err, "NSpid:", 6, "\t-1\n");
++	child_close(&a);
+ 	error_report(&err, test_name);
+ }
+ 
+ int main(int argc, char **argv)
+ {
+ 	ksft_print_header();
+-	ksft_set_plan(1);
++	ksft_set_plan(2);
+ 
+ 	test_pidfd_fdinfo_nspid();
++	test_pidfd_dead_fdinfo();
+ 
+ 	return ksft_exit_pass();
+ }
 -- 
 2.23.0
 
