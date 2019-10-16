@@ -2,137 +2,110 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A556ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B223CECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478312067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8357E2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:44:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SvmV5Lle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389501AbfJPBoa (ORCPT
+        id S2389528AbfJPBow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:44:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9544 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726383AbfJPBoa (ORCPT
+        Tue, 15 Oct 2019 21:44:52 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35013 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfJPBow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:44:30 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G1fgnU072934
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 21:44:29 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnrp6spvf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 21:44:28 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 16 Oct 2019 02:44:26 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 16 Oct 2019 02:44:21 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G1iK7p60162280
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 01:44:20 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64D9A11C052;
-        Wed, 16 Oct 2019 01:44:20 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC1D911C04C;
-        Wed, 16 Oct 2019 01:44:17 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.156.20])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 16 Oct 2019 01:44:17 +0000 (GMT)
-Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Morse <james.morse@arm.com>,
-        prsriva <prsriva@linux.microsoft.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de,
-        takahiro.akashi@linaro.org, sboyd@kernel.org,
-        catalin.marinas@arm.com, yamada.masahiro@socionext.com,
-        duwe@lst.de, bauerman@linux.ibm.com, tglx@linutronix.de,
-        allison@lohutok.net, ard.biesheuvel@linaro.org
-Date:   Tue, 15 Oct 2019 21:44:16 -0400
-In-Reply-To: <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
-References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
-         <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
-         <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
-         <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
+        Tue, 15 Oct 2019 21:44:52 -0400
+Received: by mail-il1-f194.google.com with SMTP id j9so801040ilr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 18:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9cw9NzCx7epGU/Xvw2wyJAAx8RJsP4I6+3SDXP5hV5Y=;
+        b=SvmV5LleMFDNduOG3ZnOMQucqdJuqRVjwOZVpPy+uyZWlbkqgM73zq46LfGYZDJdyz
+         dlHlBftp3GdbnS1cuXYXRlh3Hq7WQ+BAI92XnMX2Om9PAnPiw3/sathpHMJ439wK4Zjd
+         DBc/Zkm/Acqw2RQeO9T60fcVTjsUMu3dhDtl5JgAFSnMlmcfzZoU1C3t5psaQJFBhMit
+         /LCO3+HsxI/gqR9aP+16jZv7BjUaDTprjoZGnJX1s4VrAqVp9YbQL7QMrBwgcNBwGJN7
+         L1HM5y+VmS/+rHTFUwcKFhTZ+X2oGWzrTuHTWWIHeKl9u12V8JSRhFCUF9oINu7JL4vB
+         l7Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9cw9NzCx7epGU/Xvw2wyJAAx8RJsP4I6+3SDXP5hV5Y=;
+        b=joBkJdq3v4BCXax9aEJWS4tbgyV3SBK+34oY0tFjfBdph6lvAYf1rCVbynikR7hEi+
+         eXEqqwaU+0xiXFAMoR9PKu9V+YuuyDldLk/qespfMxJiu82+OP0PPzgLu47fIl2fSwX9
+         YrXviF5Shw6NXc9th3Ve6+AAtblr+2yw449C2lDb+ehaXv0YGcjBGv/wYBFRHTXamDn6
+         bGVLZpQH7YQrRl3OxTuhgzLjdYd5LS62eY37YEkJsubeom0b+HKLPT3h3JBFQE3aHyIo
+         rv9X6+PJtDIV8TcTSDlDzQi0paiLCq9GHiTAWEMVgSGtrzCvoOWVDktFM8xy6diercN8
+         f7og==
+X-Gm-Message-State: APjAAAUpqT3hsMll3U+JHcXsGhQDVtN0mjicyNHqGtKBCL/vckeyR011
+        Lp9B0Lhz4+cQIKSTMNc5PeoDABBcNgBdE4HkpwA=
+X-Google-Smtp-Source: APXvYqyU+TBYsARRfZ7iQjAiQwiOiz0lI+XMM1Up+CNpl9TgTQFA0vfAXnaxfGtvljOBJdS3DnGO2D+9AI0FBq4feIo=
+X-Received: by 2002:a92:8746:: with SMTP id d6mr9458720ilm.267.1571190290945;
+ Tue, 15 Oct 2019 18:44:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191008093711.3410-1-thomas_os@shipmail.org> <20191015100653.ittq4b2mx7pszky5@box>
+In-Reply-To: <20191015100653.ittq4b2mx7pszky5@box>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 15 Oct 2019 18:44:39 -0700
+Message-ID: <CAA9_cmcSXYB1jo1=CQ78eXVcyGWm1_TjQKd-Gmg0yAO3tObOFw@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: Fix a huge pud insertion race during faulting
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101601-4275-0000-0000-000003726CDA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101601-4276-0000-0000-00003885806B
-Message-Id: <1571190256.5250.200.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910160013
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Tue, Oct 15, 2019 at 3:06 AM Kirill A. Shutemov <kirill@shutemov.name> w=
+rote:
+>
+> On Tue, Oct 08, 2019 at 11:37:11AM +0200, Thomas Hellstr=C3=B6m (VMware) =
+wrote:
+> > From: Thomas Hellstrom <thellstrom@vmware.com>
+> >
+> > A huge pud page can theoretically be faulted in racing with pmd_alloc()
+> > in __handle_mm_fault(). That will lead to pmd_alloc() returning an
+> > invalid pmd pointer. Fix this by adding a pud_trans_unstable() function
+> > similar to pmd_trans_unstable() and check whether the pud is really sta=
+ble
+> > before using the pmd pointer.
+> >
+> > Race:
+> > Thread 1:             Thread 2:                 Comment
+> > create_huge_pud()                               Fallback - not taken.
+> >                     create_huge_pud()         Taken.
+> > pmd_alloc()                                     Returns an invalid poin=
+ter.
+> >
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent hu=
+gepages")
+> > Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> > ---
+> > RFC: We include pud_devmap() as an unstable PUD flag. Is this correct?
+> >      Do the same for pmds?
+>
+> I *think* it is correct and we should do the same for PMD, but I may be
+> wrong.
+>
+> Dan, Matthew, could you comment on this?
 
-On Tue, 2019-10-15 at 18:39 +0100, James Morse wrote:
-> If SecureBoot isn't relevant, I'm confused as to why kexec_file_load() is.
-> 
-> I thought kexec_file_load() only existed because SecureBoot systems need to validate the
-> new OS images's signature before loading it, and we can't trust user-space calling Kexec
-> to do this.
-> 
-> If there is no secure boot, why does this thing only work with kexec_file_load()?
-> (good news! With the UEFI memreseve table, it should work transparently with regular kexec
-> too)
-
-I'm so sorry for the confusion.  IMA was originally limited to
-extending trusted boot concepts to the OS.  As of Linux 3.10, IMA
-added support for extending secure boot concepts and auditing file
-hashes (commit e7c568e0fd0cf).
-
-True, kexec_file_load is required for verifying the kexec kernel
-image, but it is also required for measuring the kexec kernel image as
-well.
-
-After reading the kernel image into memory (kernel_read_file_from_fd),
-the hash is calculated and then added to the IMA measurement list and
-used to extend the TPM.  All of this is based on the IMA policy,
-including the TPM PCR.
-
-> 
-> > I am not sure if i addressed all your concerns, please let me know
-> > if i missed anything. To me most concerns look to be towards the kexec case and dependency
-> > on hardware(ACPI/TPM) during boot and early boot services, where as carrying the logs is
-> > only during the kexec_file_load sys call and does not interfere with that code path.
-> > IMA documentation: https://sourceforge.net/p/linux-ima/wiki/Home/
-> 
-> Supporting ACPI in the same way is something we need to do from day one. kexec_file_load()
-> already does this. I'm not sure "only kexec_file_load()" is a justifiable restriction...
-
-The TPM PCRs are not reset on a soft reboot.  As a result, in order to
-validate the IMA measurement list against the TPM PCRs, the IMA
-measurement list is saved on kexec load, restored on boot, and then
-the memory allocated for carrying the measurement list across kexec is
-freed.
-
-Where/how to save the IMA measurement list is architecture dependent.
- Thiago Bauermann implemented allocating and freeing the measurement
-list memory for Power.
-
-Mimi
-
+The _devmap() check in these paths near _trans_unstable() has always
+been about avoiding assumptions that the corresponding page might be
+page cache or anonymous which for dax it's neither and does not behave
+like a typical page.
