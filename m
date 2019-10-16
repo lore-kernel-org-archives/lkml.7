@@ -2,93 +2,100 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5180ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BDEFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C11218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QFObH92P"
+	by mail.kernel.org (Postfix) with ESMTP id 4F0D620872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571263275;
+	bh=vOolftVE+qMqQMtVfiOgnK134546bxeJQI56LZcIM4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OyJ7Oolz41qoQQr/+wX/6hmzVojzbj0gOxkVGO3r4mDyx3ozyN1CumlE9t7VJLkxc
+	 T0dmdoP+zCrq3frcMKyfKEFCbzWs64wMGBsR9fugNdtpeMjgrU/2h2OIHYT2pWj3gk
+	 ExmLk61fClY4+UCIIJq7mouQ17yiWqC8FyUJOQLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438975AbfJPWBM (ORCPT
+        id S2438969AbfJPWBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:01:12 -0400
-Received: from ozlabs.org ([203.11.71.1]:41521 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438917AbfJPWA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 18:00:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tmT01FSSz9sRX;
-        Thu, 17 Oct 2019 09:00:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1571263256;
-        bh=4MsmL64dyZAIeoPnH7Xa/yFXBwCvuSkYKcnGrR7vIrs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=QFObH92PJgBMlT3l42RO6dn04vkLru885Ofz29/erFVxqrgij3GfB4TRcqOBFetjj
-         3Vrac09I7jEjIbSdKe7Aq8lgAPD7olJMcrypLTjI8X0lFSgu6GOKLOAgkWODtK7glp
-         6uu8lRYFIBwbomqe79Td0dgUaBEpo9vJUArQ+hjqjB7SYIWDiYtyUg503uGRrXn9Sd
-         Ney8b05Sc0mOpi3+MmhElvZnYeqU6QnABvpSYVOSc6WJShTCqalBrd60mzt2N/OGsH
-         8BZ4tQSGU5xsXnLyhFnE+cvG415V0ePFa8smqfUFBpnVxELOdNp2lZyGUZN2K+Y/jy
-         MuQemmbUXh4TQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     cyphar@cyphar.com, mingo@redhat.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, christian@brauner.io, keescook@chromium.org,
-        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usercopy: Avoid soft lockups in test_check_nonzero_user()
-In-Reply-To: <20191016130319.vcc2mqac3ta5jjat@wittgenstein>
-References: <20191011022447.24249-1-mpe@ellerman.id.au> <20191016122732.13467-1-mpe@ellerman.id.au> <20191016130319.vcc2mqac3ta5jjat@wittgenstein>
-Date:   Thu, 17 Oct 2019 09:00:48 +1100
-Message-ID: <871rvctkof.fsf@mpe.ellerman.id.au>
+        Wed, 16 Oct 2019 18:01:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58558 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438880AbfJPWAr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 18:00:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vOolftVE+qMqQMtVfiOgnK134546bxeJQI56LZcIM4Y=; b=JIZS0pOfsM35l2T2m3tPecjkU
+        5x0txi2yPRR7W6Yb32egobpzdKl7EB1yQe7Xo/OcVmV2Z+ETuX2ZLrF3jVrFj/I10JS3hEhfRTTmZ
+        BcQuZCZy/4vPKE7l69HWnF15UcgyhIcv3nXqi2o/C4ry4+92wO21xyQlOQJUT1j5W9ejM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iKrLY-0006LQ-Vt; Wed, 16 Oct 2019 22:00:45 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 315FC274325C; Wed, 16 Oct 2019 23:00:44 +0100 (BST)
+Date:   Wed, 16 Oct 2019 23:00:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
+Message-ID: <20191016220044.GB11473@sirena.co.uk>
+References: <20191016214844.038848564@linuxfoundation.org>
+ <20191016214907.599726506@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+In-Reply-To: <20191016214907.599726506@linuxfoundation.org>
+X-Cookie: Auction:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
-> On Wed, Oct 16, 2019 at 11:27:32PM +1100, Michael Ellerman wrote:
->> On a machine with a 64K PAGE_SIZE, the nested for loops in
->> test_check_nonzero_user() can lead to soft lockups, eg:
->> 
->>   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
->>   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum virtio_balloon ip_tables x_tables autofs4
->>   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gcc-8.2.0-00001-gf5a1a536fa14-dirty #1151
->>   ...
->>   NIP __might_sleep+0x20/0xc0
->>   LR  __might_fault+0x40/0x60
->>   Call Trace:
->>     check_zeroed_user+0x12c/0x200
->>     test_user_copy_init+0x67c/0x1210 [test_user_copy]
->>     do_one_initcall+0x60/0x340
->>     do_init_module+0x7c/0x2f0
->>     load_module+0x2d94/0x30e0
->>     __do_sys_finit_module+0xc8/0x150
->>     system_call+0x5c/0x68
->> 
->> Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
->> tweak it to only scan a 1024 byte region, but make it cross the
->> page boundary.
->> 
->> Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
->> Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
->> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
->
-> With Aleksa's Reviewed-by I've picked this up:
-> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
 
-Thanks. Are you planning to send that to Linus for v5.4 or v5.5 ?
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cheers
+On Wed, Oct 16, 2019 at 02:51:44PM -0700, Greg Kroah-Hartman wrote:
+> From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+>=20
+> commit 694b14554d75f2a1ae111202e71860d58b434a21 upstream.
+>=20
+> This control mute/unmute the ADC input of SGTL5000
+> using its CHIP_ANA_CTRL register.
+
+This seems like a new feature and not an obvious candidate for stable?
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2nkwsACgkQJNaLcl1U
+h9Bwqwf/Y3vqzCq3ZLL8G8eg/PcXEoN/fRuR/9k7vBB9oXwFP7JJqyF9zJxjsTqt
+rfSquWWXQs7C7IkSIZqluLCmSNrypHYVTW7x2DQKkLDPdj2QHtg34egE8rCRkOB5
+i4qZKsiQko8F7lIa3a95DwAdAY3Z4esLIGbFxgD2GgV9w/xiRCqa4tby5WPMKv1N
+EmLNuuo0l42HFEENWF34xVRuPUhBuvu2xKA7OeGo0vv5hl8igoWqmdS9sH3889gP
+2m2DS1proiwGlxmi1tpXipVmaj4KLumK4qyvviJjea0fjrW89TtbKH+K3bC8HewU
+KYXmxPHEGwJ2uLJ8OFcyqzKketb2xg==
+=fCKq
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
