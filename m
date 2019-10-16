@@ -7,51 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22010FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F98ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11C5207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B930721928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264079;
-	bh=xBv6euVUba1KDurWy57fxqcrbRNebHaS6oJgdEzMgek=;
+	s=default; t=1571264082;
+	bh=REzPX+ps4EsntGq1fEN2z9PLK2GMZpTroTB3Ljksu9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2sv+zmOG7mMD7e+frL6tpP3VvIcFFKdiFFYppS0/VGxaBYxFTkAdwmDeq4Rjbwuc
-	 Z5V+dZ/EUdBb4mBTcaw9hRzds0xkkRci5ZSXHCJNElDPysMfU3Zd/D0JaVHt8L6ncT
-	 q76vKPOi9OSF/uJ/V9aHjO8Mb/5t5eSnmFibCll4=
+	b=nnaqy9/sfq2GnR4yjSrjqlstX1skNNO6dLqQ3C6zwu6EuC/451lynJJuO+0ignaTk
+	 N83KRKajmyF5N6PRaI47+brPCHZmDlXqennnq3NmeElkGYQtu7vlWJdU6BxmsHLrQN
+	 yHI2x17Z10+J7qXhjUpmmWfOSgl30OtiYkHr/CfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439342AbfJPWOh (ORCPT
+        id S2405289AbfJPWOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:14:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395295AbfJPVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2395244AbfJPVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:55:40 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 026C3218DE;
+        by mail.kernel.org (Postfix) with ESMTPSA id 29D7B21A49;
         Wed, 16 Oct 2019 21:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262940;
-        bh=xBv6euVUba1KDurWy57fxqcrbRNebHaS6oJgdEzMgek=;
+        s=default; t=1571262939;
+        bh=REzPX+ps4EsntGq1fEN2z9PLK2GMZpTroTB3Ljksu9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QjsUCSBj2eWSY6bS4L7+QsOdals9XxAKH/O4XCzy9oFQDBfDRlgxyfsOENdOFxXW8
-         7TBbfAf4ygD+fsNEoVaUHVU/HX/zfdba4IeaxZQwkN7Bs7unhtoXBhlqfu6bwWBoEx
-         wHhurZX8unvzXDNUEz5j8W2o7+kEhilSnOHIhUCk=
+        b=SqSziGYBbE2YpvGxC9eb4EXoTBE4RijsMuOpNakre6C+K+iBfIT7OIVlZaCsUoyZf
+         3Fl6qRj3qyf3nv0G+mXMZbmbozTXumaFt3g6Z8cX6D99u483+4tZ6v8hzRCjHI9Mnd
+         fbkU13TTeYVLc3N2L6yC7SO4mHFyIaLP8xvc2Ryw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Schmidt <jan@centricular.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 10/65] xhci: Check all endpoints for LPM timeout
-Date:   Wed, 16 Oct 2019 14:50:24 -0700
-Message-Id: <20191016214804.034964188@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 01/65] panic: ensure preemption is disabled during panic()
+Date:   Wed, 16 Oct 2019 14:50:15 -0700
+Message-Id: <20191016214756.999293102@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,46 +66,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Schmidt <jan@centricular.com>
+From: Will Deacon <will@kernel.org>
 
-commit d500c63f80f2ea08ee300e57da5f2af1c13875f5 upstream.
+commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
 
-If an endpoint is encountered that returns USB3_LPM_DEVICE_INITIATED, keep
-checking further endpoints, as there might be periodic endpoints later
-that return USB3_LPM_DISABLED due to shorter service intervals.
+Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
+calling CPU in an infinite loop, but with interrupts and preemption
+enabled.  From this state, userspace can continue to be scheduled,
+despite the system being "dead" as far as the kernel is concerned.
 
-Without this, the code can set too high a maximum-exit-latency and
-prevent the use of multiple USB3 cameras that should be able to work.
+This is easily reproducible on arm64 when booting with "nosmp" on the
+command line; a couple of shell scripts print out a periodic "Ping"
+message whilst another triggers a crash by writing to
+/proc/sysrq-trigger:
 
+  | sysrq: Trigger a crash
+  | Kernel panic - not syncing: sysrq triggered crash
+  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
+  | Hardware name: linux,dummy-virt (DT)
+  | Call trace:
+  |  dump_backtrace+0x0/0x148
+  |  show_stack+0x14/0x20
+  |  dump_stack+0xa0/0xc4
+  |  panic+0x140/0x32c
+  |  sysrq_handle_reboot+0x0/0x20
+  |  __handle_sysrq+0x124/0x190
+  |  write_sysrq_trigger+0x64/0x88
+  |  proc_reg_write+0x60/0xa8
+  |  __vfs_write+0x18/0x40
+  |  vfs_write+0xa4/0x1b8
+  |  ksys_write+0x64/0xf0
+  |  __arm64_sys_write+0x14/0x20
+  |  el0_svc_common.constprop.0+0xb0/0x168
+  |  el0_svc_handler+0x28/0x78
+  |  el0_svc+0x8/0xc
+  | Kernel Offset: disabled
+  | CPU features: 0x0002,24002004
+  | Memory Limit: none
+  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
+  |  Ping 2!
+  |  Ping 1!
+  |  Ping 1!
+  |  Ping 2!
+
+The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
+otherwise local interrupts are disabled in 'smp_send_stop()'.
+
+Disable preemption in 'panic()' before re-enabling interrupts.
+
+Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
+Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
+Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Xogium <contact@xogium.me>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Feng Tang <feng.tang@intel.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Jan Schmidt <jan@centricular.com>
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-4-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/panic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4491,12 +4491,12 @@ static int xhci_update_timeout_for_endpo
- 	alt_timeout = xhci_call_host_update_timeout_for_endpoint(xhci, udev,
- 		desc, state, timeout);
- 
--	/* If we found we can't enable hub-initiated LPM, or
-+	/* If we found we can't enable hub-initiated LPM, and
- 	 * the U1 or U2 exit latency was too high to allow
--	 * device-initiated LPM as well, just stop searching.
-+	 * device-initiated LPM as well, then we will disable LPM
-+	 * for this device, so stop searching any further.
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -146,6 +146,7 @@ void panic(const char *fmt, ...)
+ 	 * after setting panic_cpu) from invoking panic() again.
  	 */
--	if (alt_timeout == USB3_LPM_DISABLED ||
--			alt_timeout == USB3_LPM_DEVICE_INITIATED) {
-+	if (alt_timeout == USB3_LPM_DISABLED) {
- 		*timeout = alt_timeout;
- 		return -E2BIG;
- 	}
+ 	local_irq_disable();
++	preempt_disable_notrace();
+ 
+ 	/*
+ 	 * It's possible to come here directly from a panic-assertion and
 
 
