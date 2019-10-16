@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F67DFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FFDECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF5821A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD334207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264169;
-	bh=cRkolnWf1aDDalAXR1srpGSUi+osy1m/r8lbUe4kV8M=;
+	s=default; t=1571264174;
+	bh=MtMGiH1G0XKLabeSTO8c9Lk4TLaGXAQt/nU9VQmTvOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ym93/mChXv/Mskns2aJVH5XotwnINbwWSom4IkR1cF6S3Hfr7gjelnvoLVuDL23qJ
-	 gaDFUs5ASSo8i86PBxW0+E9MdTXaOZNosLDdgOiUO0JQxBZZ7kP4xff6UN2qsF3Fn7
-	 s5IGfcA+cF3EjyI4IRdiMUV+tHILo6dCrvhn5SMA=
+	b=cfQ33tjnb3mcicedN09mTYXw3W1Wf8Jb/R9cRMp0xePQ3vjiq4L/oYPhdWvhoEEqm
+	 VMr8WmPlxN7EJAbU2GC3DRc/Lz95E7OWHJ3I361EMhzIw5xDEHrj49BPgrHXCBsq1s
+	 jPlF3T2RV13EIsPzu1x9peKc/PEMXeBs7EBVbnhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437733AbfJPVzP (ORCPT
+        id S2407454AbfJPWQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45510 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395193AbfJPVzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:08 -0400
+        id S2437720AbfJPVzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:13 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E6821925;
-        Wed, 16 Oct 2019 21:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 867E7218DE;
+        Wed, 16 Oct 2019 21:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262907;
-        bh=cRkolnWf1aDDalAXR1srpGSUi+osy1m/r8lbUe4kV8M=;
+        s=default; t=1571262912;
+        bh=MtMGiH1G0XKLabeSTO8c9Lk4TLaGXAQt/nU9VQmTvOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIbuFpeOQ00Fmrg2qUEhg1Sxwo2bfe/YMLWRhmtI4qAYlcBtVUWJW5HRCU8sQ/Z6x
-         XrwcYLCcET720zXdtviUdvF/xbQgaHyVmq5+8WiQ2ZVtpBn81znHtvO+MuyhRCQJqA
-         v2KQDI1MOGUCSXQrFyRx1iv8C08wTlORbph7kBls=
+        b=rtIDieVkTAj9JMLWLZaPiFSak380oMrFwLORWSOMqSs0yfqIcsWCTWZqnnzLuQtKw
+         5mN1Y4K2ujzC22o6sU4CWL8TRRnlx/wQh4vUBIj/iK6Jl5X397sGKJvc/TkXI6dhJl
+         /QYHJ/7TyDrowes2aq9S/dCHj7O3/l/nMIwm0zAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 68/92] USB: legousbtower: fix slab info leak at probe
-Date:   Wed, 16 Oct 2019 14:50:41 -0700
-Message-Id: <20191016214843.366640404@linuxfoundation.org>
+Subject: [PATCH 4.9 72/92] USB: legousbtower: fix use-after-free on release
+Date:   Wed, 16 Oct 2019 14:50:45 -0700
+Message-Id: <20191016214844.418325456@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,36 +60,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 1d427be4a39defadda6dd8f4659bc17f7591740f upstream.
+commit 726b55d0e22ca72c69c947af87785c830289ddbc upstream.
 
-Make sure to check for short transfers when retrieving the version
-information at probe to avoid leaking uninitialised slab data when
-logging it.
+The driver was accessing its struct usb_device in its release()
+callback without holding a reference. This would lead to a
+use-after-free whenever the device was disconnected while the character
+device was still open.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
+Fixes: fef526cae700 ("USB: legousbtower: remove custom debug macro")
+Cc: stable <stable@vger.kernel.org>     # 3.12
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190919083039.30898-2-johan@kernel.org
+Link: https://lore.kernel.org/r/20191009153848.8664-5-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/legousbtower.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/misc/legousbtower.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/drivers/usb/misc/legousbtower.c
 +++ b/drivers/usb/misc/legousbtower.c
-@@ -911,8 +911,10 @@ static int tower_probe (struct usb_inter
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < 0) {
--		dev_err(idev, "LEGO USB Tower get version control request failed\n");
-+	if (result < sizeof(*get_version_reply)) {
-+		if (result >= 0)
-+			result = -EIO;
-+		dev_err(idev, "get version request failed: %d\n", result);
- 		retval = result;
- 		goto error;
- 	}
+@@ -302,6 +302,7 @@ static inline void tower_delete (struct
+ 	kfree (dev->read_buffer);
+ 	kfree (dev->interrupt_in_buffer);
+ 	kfree (dev->interrupt_out_buffer);
++	usb_put_dev(dev->udev);
+ 	kfree (dev);
+ }
+ 
+@@ -818,7 +819,7 @@ static int tower_probe (struct usb_inter
+ 
+ 	mutex_init(&dev->lock);
+ 
+-	dev->udev = udev;
++	dev->udev = usb_get_dev(udev);
+ 	dev->open_count = 0;
+ 	dev->disconnected = 0;
+ 
 
 
