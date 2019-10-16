@@ -2,128 +2,87 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2186FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBC6FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B934E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571229949;
-	bh=QgJWfhXNaWIdfb8oryrafUS5AiTR4RXOHCT8L72WYIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=taup9b4EOBdq+sSQbRif6RcazezEwGIuAQXk0BBkAryJNcQ0599WoPDE7GgFd6bSf
-	 0UJ0aQPhckrIMadb8oWH55RtdHo/561jv4+XZA+J9+wTjR3TglF7ivib2+2oMe84jP
-	 o/XIqJBJzA+qDNBcXg4wsIK3/Tv+YSoh/yyI6IIk=
+	by mail.kernel.org (Postfix) with ESMTP id B971D2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UKDHkw+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393225AbfJPMps (ORCPT
+        id S2393238AbfJPMpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:45:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41957 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390973AbfJPMps (ORCPT
+        Wed, 16 Oct 2019 08:45:51 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44369 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390973AbfJPMpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:45:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t10so11224042plr.8;
-        Wed, 16 Oct 2019 05:45:46 -0700 (PDT)
+        Wed, 16 Oct 2019 08:45:50 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u22so22537321qkk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i4Tlr8aaqHcqUHLIi1olwgg1FH4Wnc+VjJ6hwR+CHZ4=;
+        b=UKDHkw+AsWNstYEdbran6nGCcRGuySyOhWzrs1M+lF6UxheGXfo+LcAWpEEbBx+GjI
+         HjCtcPXBKQn4jwJy1cZJVsUKfW7IO6g+YkpfauBjo4HyT9qSp02EWBGyi3sOIeJrqugJ
+         aNGP9AwBpU3FcCHdLXdwuvd0t0yyMgPBETbTKtu2DJj+lWiGvu+3fDWYAeAUK+WOEA4H
+         F8rc+vcjQUPehy7NV4y5BA6xRXQqtAm5Nw1nm8zc582Y3Dcivh6Z7Y2lxO5s11cE/WnM
+         Jkct9SJXs7YpPuGDgp+lQ+hSbBaEXPMKYZarrYIGCt8VYRjlw3XqOdiH5adCuAlguYgC
+         XyWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MW2OPawZ1/S7yUUbg0Iwr6wr8CBZilFP35Sgfd8NrvI=;
-        b=llxF/QUkrOKyUU+KdhmQpMmMY9Gfd9z6w6tCedM4LOBAEk9O2YvP0V/NAHXsK4va1G
-         3Nwq9K+MBR+hkNVSiEOjfcj5JuCrTBk/BVAo8oCyEkLB/OXxMLy1UD78kDB4JPS9pbVR
-         rN61qwQL/SesmJPyMleE46qq4H+ZjZhNYJC4OBohquCLqVjIG5yz3sIIlKOpd5mZO2ZU
-         1H9H+aTjvNj8CwM1QBi+eUzpkpMgq+enRUamJvlsXMNkEaAfBFAwXwBZrKBEszwMAIfX
-         hlsP8IT6YHuRDbiDt4HiaFU4dmRlDX8EUncTUGvQFYKgDwqxsK2IqKIFMCSGMuslhguX
-         OCdw==
-X-Gm-Message-State: APjAAAVO9aPh0mKppK5HK6pDai7eZbfEuhx6j0rN8RAnZOjY5Bhd2LGF
-        gADR1yRtLRMQxhsklCqiX0g=
-X-Google-Smtp-Source: APXvYqyKGPR4ZK3MbBMfiZ9W9A5wG/MAiwUafwAuA5NTnFoMudfkEXwGcJ82nnpb3T+NzAZR6dFXmw==
-X-Received: by 2002:a17:902:8e81:: with SMTP id bg1mr7131785plb.137.1571229945751;
-        Wed, 16 Oct 2019 05:45:45 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c34sm3935476pgb.35.2019.10.16.05.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 05:45:44 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 9DF5140251; Wed, 16 Oct 2019 12:45:43 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 12:45:43 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
- support
-Message-ID: <20191016124543.GF16384@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191011141036.GK16384@42.do-not-panic.com>
- <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
- <20191011153823.GS16384@42.do-not-panic.com>
- <20191011163819.GA1295750@kroah.com>
- <20191014092216.GA16384@42.do-not-panic.com>
- <20191014092929.GA3050866@kroah.com>
- <20191014103150.GB16384@42.do-not-panic.com>
- <20191014105754.GA34057@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i4Tlr8aaqHcqUHLIi1olwgg1FH4Wnc+VjJ6hwR+CHZ4=;
+        b=kWXcGUybSM+B+ZBO9uDV1ca4OOzCJ3Dof/em9m6zB26JIy09ozhCviRNiZH2hbElft
+         Y5LK4GT3yTIaFySYtU8kmSiahvXkURBcLIRmo+jZihYszsMOg4W9zvYsV9TCgNN597cN
+         FO9stxp8ieOwccx9yWG/V/iGwJ9VhPT6jSM565K9c1ulfdQn2DXAZtW83n3UyskgcWCc
+         H4wXnW3dMw19xnCNSkEVUCdvvhMd+yNAZe0jK7ZLvjNYC0/5KNOZQIoc0890SLbfYVAg
+         nrOjolxpNUxJdUPL41ggpNBoXbyRQdzYV/mNC2NDpLQ4/60M2YWrVDsY8FxgM7Xag2aI
+         Oqfg==
+X-Gm-Message-State: APjAAAXiem4gFj6eUgRwTyCEANhEKhbH2ZvRQKsZHwuBgsKMqHhC9LCz
+        sltwUsuSO+7Py1ArvTgXeSjU0Ofk7b/5J1VydwIqZw==
+X-Google-Smtp-Source: APXvYqwOzWo5VbcvN0U8TDnN+1xwjUKgMyRheHPwsr6x9P70GL0NWL/tbYoCuW4aAJr51oKXjooJFWTyMu0zdWYL5a0=
+X-Received: by 2002:a05:620a:751:: with SMTP id i17mr39890335qki.340.1571229949254;
+ Wed, 16 Oct 2019 05:45:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014105754.GA34057@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191015091708.7934-1-jay.xu@rock-chips.com> <20191015091708.7934-3-jay.xu@rock-chips.com>
+In-Reply-To: <20191015091708.7934-3-jay.xu@rock-chips.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 14:45:38 +0200
+Message-ID: <CACRpkdbtfamz4H-RNUfdSz7eAOzRMgu-QPbVAVZKtC+Lg5VP9g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: rockchip: add rk3308 SoC support
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:57:54PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Oct 14, 2019 at 10:31:50AM +0000, Luis Chamberlain wrote:
-> > On Mon, Oct 14, 2019 at 11:29:29AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, Oct 14, 2019 at 09:22:16AM +0000, Luis Chamberlain wrote:
-> > > > On Fri, Oct 11, 2019 at 06:38:19PM +0200, Greg Kroah-Hartman wrote:
-> > > > > On Fri, Oct 11, 2019 at 03:38:23PM +0000, Luis Chamberlain wrote:
-> > > > > > On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
-> > > > > > > Hi,
-> > > > > > > 
-> > > > > > > On 10/11/19 4:10 PM, Luis Chamberlain wrote:
-> > > > > > > > Hey Hans, thanks for staying on top of this and follow up! For some
-> > > > > > > > reason the universe conspired against your first and last patch ([1/8],
-> > > > > > > > [8/8]), and I never got them. Could you bounce these or resend in case
-> > > > > > > > others confirm they also didn't get it?
-> > > > > > > 
-> > > > > > > I have received feedback from others on the first patch, so at least
-> > > > > > > that one has reached others. I've bounced patches 1 and 8 to you.
-> > > > > > 
-> > > > > > Thanks, can you also bounce the feedback received?
-> > > > > 
-> > > > > That is what lore.kernel.org is for...
-> > > > 
-> > > > If I have feedback on an email which I did not get I cannot easily reply to it.
-> > > 
-> > > I meant, use lore.kernel.org to download the mbox of the thread and then
-> > > use your email client to respond to whatever you need there.  This all
-> > > is public, no need to ask anyone else to bounce emails to you.
-> > 
-> > Last I looked it didn't allow you to downlaod an mbox of a thread...
-> 
-> It can, from the front page of "all" threads, or on the thread itself,
-> at the bottom of the page.  Search for "download" on the page.
+On Tue, Oct 15, 2019 at 11:17 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
 
-Sweet! <insert sound of discovering an item in Legend of Zelda>
+> This patch do support pinctrl for RK3308 SoCs.
+>
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 
-  Luis
+Patch applied!
+
+Yours,
+Linus Walleij
