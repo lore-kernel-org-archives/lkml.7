@@ -2,128 +2,134 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D13FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A818FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8FC20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu0T8FGJ"
+	by mail.kernel.org (Postfix) with ESMTP id 790D720854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391795AbfJPNJZ (ORCPT
+        id S2393449AbfJPNJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:09:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33057 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391745AbfJPNJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:09:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r5so36013576qtd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tZhTaYtsLx+a5EpmkY94WkZ9hPBq508AcKkHBaEnPCA=;
-        b=Cu0T8FGJ6kLXP3UbJ6UyQTlpRZMcddVVsMqf+CXaPIFKNaa3SmKXabDL4uSoSsbB5J
-         OfvBF6SVdRYuXCV7tGsab5Cm06gDzBCD1Xa/eZMK85xtI7aYfGGmm5sf8hLOsTHdliEv
-         UImPBHWKIN98ABSJjq9MUYA0qo5+AXUJJQMoVSlYqBrU017STGhWHejQDruKEuMcwhTf
-         KTGnNh+zNsZcacihn/PWSznQCCm+GbLd5202xswDdNirrTI/Mm+8Lb/LA7br1aLH6weX
-         Kr7CDRCMAGkFYi1x4N09HEshL3hJ5V4j5/tsg+7HOyF4ZEzRnNZHkd/eRm0uyWvb4PJm
-         SPbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tZhTaYtsLx+a5EpmkY94WkZ9hPBq508AcKkHBaEnPCA=;
-        b=uhfNwVjoz+rqLHKXzlbivbjNjAZTc2GO4lTKW6xkqtjQcy/zZQNwFcQ4ud/Zbl2gP+
-         4Cisvqm+Bb/7h3AHVsFsCXfwAsYFkub4O5qDoKTOoapHTUuwi2XI1n9Ity7BKHfqsW+H
-         W3h9yznqq9vFKSKQZvzeEU0i7MibpCzsLvNpR85tBlqp3sNTXWAb3vvY15i4z8IJ96L8
-         B0VIyIeQY3tYjPSq8zDA+tOzoe34RBAhrUtm6sxc6uY7gzPLL7F3DN0wkXjcattdFZmD
-         1T0jEYirWFQSEJdTkX939L4xkM8mKvceTncx0typ1U60KmZONa2wtI/4lZu6oXwNPHf+
-         Cvzw==
-X-Gm-Message-State: APjAAAXb7XX4PYohb8xcTaMccacUYO8mJZO84IN6HNalEW8885/BtBbn
-        xyfzo7dOqwbsA3Tw0Z27K1M=
-X-Google-Smtp-Source: APXvYqwlfQzqTUHN8ZaAVE22Go1TVmFvFNJI971sUsvva5uip9UQK0u7AjDPw2w1CdEv3wI8zCzMMQ==
-X-Received: by 2002:a0c:b4d2:: with SMTP id h18mr41527592qvf.208.1571231364310;
-        Wed, 16 Oct 2019 06:09:24 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id g26sm11242851qtq.88.2019.10.16.06.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 06:09:23 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B902C4DD66; Wed, 16 Oct 2019 10:09:21 -0300 (-03)
-Date:   Wed, 16 Oct 2019 10:09:21 -0300
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        hushiyuan@huawei.com, linfeilong@huawei.com
-Subject: Re: [PATCH] perf kmem: Fix memory leak in compact_gfp_flags()
-Message-ID: <20191016130921.GC22835@kernel.org>
-References: <f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com>
- <20191016130403.GA22835@kernel.org>
+        Wed, 16 Oct 2019 09:09:31 -0400
+Received: from mga02.intel.com ([134.134.136.20]:23340 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391745AbfJPNJb (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:09:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:09:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="195595361"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.210.124]) ([10.254.210.124])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Oct 2019 06:09:27 -0700
+Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
+ block for stdio
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191015053350.13909-1-yao.jin@linux.intel.com>
+ <20191015053350.13909-4-yao.jin@linux.intel.com>
+ <20191015084102.GA10951@krava>
+ <6882f3ae-0f8d-5a01-7fd5-5b9f9c93f9ac@linux.intel.com>
+ <20191016101543.GC15580@krava>
+ <456b8e97-dc50-449c-9999-0bddef0e9c4c@linux.intel.com>
+ <20191016125325.GA10222@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <3085326b-c3f1-7475-7e43-db46a749aa37@linux.intel.com>
+Date:   Wed, 16 Oct 2019 21:09:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016130403.GA22835@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191016125325.GA10222@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Oct 16, 2019 at 10:04:03AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Oct 16, 2019 at 04:38:45PM +0800, Yunfeng Ye escreveu:
-> > The memory @orig_flags is allocated by strdup(), it is freed on the
-> > normal path, but leak to free on the error path.
+
+
+On 10/16/2019 8:53 PM, Jiri Olsa wrote:
+> On Wed, Oct 16, 2019 at 06:51:07PM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 10/16/2019 6:15 PM, Jiri Olsa wrote:
+>>> On Tue, Oct 15, 2019 at 10:53:18PM +0800, Jin, Yao wrote:
+>>>
+>>> SNIP
+>>>
+>>>>>> +static struct block_header_column{
+>>>>>> +	const char *name;
+>>>>>> +	int width;
+>>>>>> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
+>>>>>> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
+>>>>>> +		.name = "Sampled Cycles%",
+>>>>>> +		.width = 15,
+>>>>>> +	},
+>>>>>> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
+>>>>>> +		.name = "Sampled Cycles",
+>>>>>> +		.width = 14,
+>>>>>> +	},
+>>>>>> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
+>>>>>> +		.name = "Avg Cycles%",
+>>>>>> +		.width = 11,
+>>>>>> +	},
+>>>>>> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
+>>>>>> +		.name = "Avg Cycles",
+>>>>>> +		.width = 10,
+>>>>>> +	},
+>>>>>> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
+>>>>>> +		.name = "[Program Block Range]",
+>>>>>> +		.width = 70,
+>>>>>> +	},
+>>>>>> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
+>>>>>> +		.name = "Shared Object",
+>>>>>> +		.width = 20,
+>>>>>> +	}
+>>>>>>     };
+>>>>>
+>>>>> so we already have support for multiple columns,
+>>>>> why don't you add those as 'struct sort_entry' objects?
+>>>>>
+>>>>
+>>>> For 'struct sort_entry' objects, do you mean I should reuse the "sort_dso"
+>>>> which has been implemented yet in util/sort.c?
+>>>>
+>>>> For other columns, it looks we can't reuse the existing sort_entry objects.
+>>>
+>>> I did not mean reuse, just add new sort entries
+>>> to current sort framework
+>>>
+>>
+>> Does it seem like what the c2c does?
 > 
-> Are you using some tool to find out these problems? Or is it just visual
-> inspection?
-
-Anyway, applied after adding this to the commit log message:
-
-Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
-
-- Arnaldo
- 
-> - Arnaldo
->  
-> > Fix this by adding free(orig_flags) on the error path.
-> > 
-> > Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> > ---
-> >  tools/perf/builtin-kmem.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-> > index 1e61e353f579..9661671cc26e 100644
-> > --- a/tools/perf/builtin-kmem.c
-> > +++ b/tools/perf/builtin-kmem.c
-> > @@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
-> >  			new = realloc(new_flags, len + strlen(cpt) + 2);
-> >  			if (new == NULL) {
-> >  				free(new_flags);
-> > +				free(orig_flags);
-> >  				return NULL;
-> >  			}
-> > 
-> > -- 
-> > 2.7.4.3
+> well c2c has its own data output with multiline column titles,
+> hence it has its own separate dimension stuff, but your code
+> output is within the standard perf report right? single column
+> output.. why couldn't you use just sort_entry ?
 > 
-> -- 
+> jirka
 > 
-> - Arnaldo
 
--- 
+No, my output is probably not within standard perf report. They are
+totally 6 columns but only one column ('Sampled Cycles%') needs to be 
+sorted. Other columns are not sorted. They only output some information.
 
-- Arnaldo
+For sort_entry, maybe the sorted column ('Sampled Cycles%') can use 
+sort_entry, but others may not need it. So I don't know if I really need 
+the sort_entry for my case.
+
+I just feel maybe I still misunderstand what you have suggested. :(
+
+Thanks
+Jin Yao
