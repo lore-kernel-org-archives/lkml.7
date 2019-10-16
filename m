@@ -2,39 +2,40 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01031C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1AEECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D1A2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAC12168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403769AbfJPHUk (ORCPT
+        id S2403928AbfJPHUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:20:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4175 "EHLO huawei.com"
+        Wed, 16 Oct 2019 03:20:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732949AbfJPHUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:20:14 -0400
+        id S1732820AbfJPHUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:20:12 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B30DB5067084C23336A1;
+        by Forcepoint Email with ESMTP id 93475A339C35B194E8B6;
         Wed, 16 Oct 2019 15:20:08 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 16 Oct 2019 15:19:59 +0800
+ 14.3.439.0; Wed, 16 Oct 2019 15:19:58 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 09/12] net: hns3: minor cleanup for hns3_handle_rx_bd()
-Date:   Wed, 16 Oct 2019 15:17:08 +0800
-Message-ID: <1571210231-29154-10-git-send-email-tanhuazhong@huawei.com>
+        Jian Shen <shenjian15@huawei.com>,
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 05/12] net: hns3: fix VF VLAN table entries inconsistent issue
+Date:   Wed, 16 Oct 2019 15:17:04 +0800
+Message-ID: <1571210231-29154-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
 References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,126 +48,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-Since commit e55970950556 ("net: hns3: Add handling of GRO Pkts
-not fully RX'ed in NAPI poll"), ring->skb is used to record the
-current SKB when processing the RX BD in hns3_handle_rx_bd(),
-so the parameter out_skb is unnecessary.
+Currently, if VF is loaded on the host side, the host doesn't
+clear the VF's VLAN table entries when VF removing. In this
+case, when doing reset and disabling sriov at the same time the
+VLAN device over VF will be removed, but the VLAN table entries
+in hardware are remained.
 
-This patch also adjusts the err checking to reduce duplication
-in hns3_handle_rx_bd(), and "err == -ENXIO" is rare case, so put
-it in the unlikely annotation.
+This patch fixes it by asking PF to clear the VLAN table entries for
+VF when VF is removing. It also clear the VLAN table full bit
+after VF VLAN table entries being cleared.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Fixes: c6075b193462 ("net: hns3: Record VF vlan tables")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 38 +++++++++----------------
- 1 file changed, 13 insertions(+), 25 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h           | 1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c    | 1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 4 ++++
+ 4 files changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 7ddeb9c..6172eb2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2834,10 +2834,10 @@ static int hns3_alloc_skb(struct hns3_enet_ring *ring, unsigned int length,
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 0059d44..05f3442 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -46,6 +46,7 @@ enum HCLGE_MBX_OPCODE {
+ 	HCLGE_MBX_PUSH_VLAN_INFO,	/* (PF -> VF) push port base vlan */
+ 	HCLGE_MBX_GET_MEDIA_TYPE,       /* (VF -> PF) get media type */
+ 	HCLGE_MBX_PUSH_PROMISC_INFO,	/* (PF -> VF) push vf promisc info */
++	HCLGE_MBX_VF_UNINIT,            /* (VF -> PF) vf is unintializing */
  
- static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
--			 struct sk_buff **out_skb, bool pending)
-+			 bool pending)
- {
--	struct sk_buff *skb = *out_skb;
--	struct sk_buff *head_skb = *out_skb;
-+	struct sk_buff *skb = ring->skb;
-+	struct sk_buff *head_skb = skb;
- 	struct sk_buff *new_skb;
- 	struct hns3_desc_cb *desc_cb;
- 	struct hns3_desc *pre_desc;
-@@ -3020,8 +3020,7 @@ static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb)
- 	return 0;
- }
- 
--static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
--			     struct sk_buff **out_skb)
-+static int hns3_handle_rx_bd(struct hns3_enet_ring *ring)
- {
- 	struct sk_buff *skb = ring->skb;
- 	struct hns3_desc_cb *desc_cb;
-@@ -3059,12 +3058,12 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
- 
- 	if (!skb) {
- 		ret = hns3_alloc_skb(ring, length, ring->va);
--		*out_skb = skb = ring->skb;
-+		skb = ring->skb;
- 
- 		if (ret < 0) /* alloc buffer fail */
- 			return ret;
- 		if (ret > 0) { /* need add frag */
--			ret = hns3_add_frag(ring, desc, &skb, false);
-+			ret = hns3_add_frag(ring, desc, false);
- 			if (ret)
- 				return ret;
- 
-@@ -3075,7 +3074,7 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
- 			       ALIGN(ring->pull_len, sizeof(long)));
+ 	HCLGE_MBX_GET_VF_FLR_STATUS = 200, /* (M7 -> PF) get vf reset status */
+ 	HCLGE_MBX_PUSH_LINK_STATUS,	/* (M7 -> PF) get port link status */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 2f0386d..962c4b4 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8218,6 +8218,7 @@ void hclge_rm_vport_all_vlan_table(struct hclge_vport *vport, bool is_del_list)
+ 			kfree(vlan);
  		}
- 	} else {
--		ret = hns3_add_frag(ring, desc, &skb, true);
-+		ret = hns3_add_frag(ring, desc, true);
- 		if (ret)
- 			return ret;
- 
-@@ -3093,8 +3092,6 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
  	}
- 
- 	skb_record_rx_queue(skb, ring->tqp->tqp_index);
--	*out_skb = skb;
--
- 	return 0;
++	clear_bit(vport->vport_id, hdev->vf_vlan_full);
  }
  
-@@ -3103,7 +3100,6 @@ int hns3_clean_rx_ring(struct hns3_enet_ring *ring, int budget,
+ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index 97463e11..d48b2f6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -797,6 +797,7 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 			hclge_get_link_mode(vport, req);
+ 			break;
+ 		case HCLGE_MBX_GET_VF_FLR_STATUS:
++		case HCLGE_MBX_VF_UNINIT:
+ 			mutex_lock(&hdev->vport_cfg_mutex);
+ 			hclge_rm_vport_all_mac_table(vport, true,
+ 						     HCLGE_MAC_ADDR_UC);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 408e386..f426f63 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2796,6 +2796,10 @@ static void hclgevf_uninit_hdev(struct hclgevf_dev *hdev)
  {
- #define RCB_NOF_ALLOC_RX_BUFF_ONCE 16
- 	int unused_count = hns3_desc_unused(ring);
--	struct sk_buff *skb = ring->skb;
- 	int recv_pkts = 0;
- 	int recv_bds = 0;
- 	int err, num;
-@@ -3126,27 +3122,19 @@ int hns3_clean_rx_ring(struct hns3_enet_ring *ring, int budget,
- 		}
+ 	hclgevf_state_uninit(hdev);
  
- 		/* Poll one pkt */
--		err = hns3_handle_rx_bd(ring, &skb);
--		if (unlikely(!skb)) /* This fault cannot be repaired */
-+		err = hns3_handle_rx_bd(ring);
-+		/* Do not get FE for the packet or failed to alloc skb */
-+		if (unlikely(!ring->skb || err == -ENXIO)) {
- 			goto out;
--
--		if (err == -ENXIO) { /* Do not get FE for the packet */
--			goto out;
--		} else if (unlikely(err)) {  /* Do jump the err */
--			recv_bds += ring->pending_buf;
--			unused_count += ring->pending_buf;
--			ring->skb = NULL;
--			ring->pending_buf = 0;
--			continue;
-+		} else if (likely(!err)) {
-+			rx_fn(ring, ring->skb);
-+			recv_pkts++;
- 		}
- 
--		rx_fn(ring, skb);
- 		recv_bds += ring->pending_buf;
- 		unused_count += ring->pending_buf;
- 		ring->skb = NULL;
- 		ring->pending_buf = 0;
--
--		recv_pkts++;
- 	}
- 
- out:
++	if (!test_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state))
++		hclgevf_send_mbx_msg(hdev, HCLGE_MBX_VF_UNINIT, 0, NULL, 0,
++				     false, NULL, 0);
++
+ 	if (test_bit(HCLGEVF_STATE_IRQ_INITED, &hdev->state)) {
+ 		hclgevf_misc_irq_uninit(hdev);
+ 		hclgevf_uninit_msi(hdev);
 -- 
 2.7.4
 
