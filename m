@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0611AECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BFEECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48E52168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FF021928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263835;
-	bh=WDeyK/gnVgGiCKbYGFrLquxi+9u0fIVly8uBD/M3siM=;
+	s=default; t=1571263837;
+	bh=Do8Ps45Db9i2Kq5cWrhLAuBtarWPj5Gh4AhA8R5NR3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IdUNthfQSQtxV3b86aEXLX2fcmf6CCpTnGpIN6NRv9UmHmY+/QfUva4+7Fqov43Nq
-	 CfsRTl853qZyt00L0JeQbLcBTdnzYxjnD8sDfScHGk6Ih0kvtnoPDg9tkL3cI6jTor
-	 NOdq6z7HxydTAx3MOIVFOcFBrTa0k6C99UCKJ3/k=
+	b=NPXXL4oT7NgKcTfpHFjhy+jFPYLWNM96rxXu7F1myqVDB6nEnFdcW2b0Jq8QmWcR4
+	 GPLhOoV9CUlloQ/+f4mg4MdB9Tu1cIGGfQxiOlA1DhR1pfYeNk/LUoaTeCayAcmD6W
+	 2M1V+Dmq6kUFM2V8tc10pFFGZhmIrx3s1ZPbo0Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407221AbfJPWKe (ORCPT
+        id S2407229AbfJPWKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:10:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731942AbfJPV5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:11 -0400
+        id S2388823AbfJPV5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:10 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A3E6218DE;
-        Wed, 16 Oct 2019 21:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A72120872;
+        Wed, 16 Oct 2019 21:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263031;
-        bh=WDeyK/gnVgGiCKbYGFrLquxi+9u0fIVly8uBD/M3siM=;
+        s=default; t=1571263029;
+        bh=Do8Ps45Db9i2Kq5cWrhLAuBtarWPj5Gh4AhA8R5NR3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JyFHbAT0E+TVcPVgkF3AGftK37FXcXpasWCWzpPge7ulGGyR/oWwfBM9p3IrVep5L
-         ZYbZFJ3RZryrH2nmIrgSVGdOTbmI25bCNmiQtvFjgyRc6IoSaFPd7U8NA9vRQWRui7
-         oEZl4cN4zvY8vs7CTnzXTRx0GdZFTz0UFVgr1jpk=
+        b=vRqhlxeX/fbiZtNZKYBwT9B3YHxg+vo3HeGev6jd7+DqP37/WpFG+t0ocsSqH3foz
+         CsV+hdrGMCDlxKlqLLx6mL7d9BFk6Q00NH7+I+J6f2PV1EbQOjE4Zbuki5B+tIZ34V
+         Wax1ZgRK0co7SQYb3nXyPTKnfzEWpkOG3hjdwuIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacky Cao <Jacky.Cao@sony.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.19 32/81] USB: dummy-hcd: fix power budget for SuperSpeed mode
-Date:   Wed, 16 Oct 2019 14:50:43 -0700
-Message-Id: <20191016214833.500019884@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 30/81] USB: usblcd: fix I/O after disconnect
+Date:   Wed, 16 Oct 2019 14:50:41 -0700
+Message-Id: <20191016214832.557502371@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -59,48 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky.Cao@sony.com <Jacky.Cao@sony.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 2636d49b64671d3d90ecc4daf971b58df3956519 upstream.
+commit eb7f5a490c5edfe8126f64bc58b9ba2edef0a425 upstream.
 
-The power budget for SuperSpeed mode should be 900 mA
-according to USB specification, so set the power budget
-to 900mA for dummy_start_ss which is only used for
-SuperSpeed mode.
+Make sure to stop all I/O on disconnect by adding a disconnected flag
+which is used to prevent new I/O from being started and by stopping all
+ongoing I/O before returning.
 
-If the max power consumption of SuperSpeed device is
-larger than 500 mA, insufficient available bus power
-error happens in usb_choose_configuration function
-when the device connects to dummy hcd.
+This also fixes a potential use-after-free on driver unbind in case the
+driver data is freed before the completion handler has run.
 
-Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/16EA1F625E922C43B00B9D82250220500871CDE5@APYOKXMS108.ap.sony.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>	# 7bbe990c989e
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190926091228.24634-7-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/dummy_hcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/misc/usblcd.c |   33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -48,6 +48,7 @@
- #define DRIVER_VERSION	"02 May 2005"
+--- a/drivers/usb/misc/usblcd.c
++++ b/drivers/usb/misc/usblcd.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/errno.h>
+ #include <linux/mutex.h>
++#include <linux/rwsem.h>
+ #include <linux/uaccess.h>
+ #include <linux/usb.h>
  
- #define POWER_BUDGET	500	/* in mA; use 8 for low-power port testing */
-+#define POWER_BUDGET_3	900	/* in mA */
+@@ -57,6 +58,8 @@ struct usb_lcd {
+ 							   using up all RAM */
+ 	struct usb_anchor	submitted;		/* URBs to wait for
+ 							   before suspend */
++	struct rw_semaphore	io_rwsem;
++	unsigned long		disconnected:1;
+ };
+ #define to_lcd_dev(d) container_of(d, struct usb_lcd, kref)
  
- static const char	driver_name[] = "dummy_hcd";
- static const char	driver_desc[] = "USB Host+Gadget Emulator";
-@@ -2446,7 +2447,7 @@ static int dummy_start_ss(struct dummy_h
- 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
- 	dum_hcd->stream_en_ep = 0;
- 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
--	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET;
-+	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET_3;
- 	dummy_hcd_to_hcd(dum_hcd)->state = HC_STATE_RUNNING;
- 	dummy_hcd_to_hcd(dum_hcd)->uses_new_polling = 1;
- #ifdef CONFIG_USB_OTG
+@@ -142,6 +145,13 @@ static ssize_t lcd_read(struct file *fil
+ 
+ 	dev = file->private_data;
+ 
++	down_read(&dev->io_rwsem);
++
++	if (dev->disconnected) {
++		retval = -ENODEV;
++		goto out_up_io;
++	}
++
+ 	/* do a blocking bulk read to get data from the device */
+ 	retval = usb_bulk_msg(dev->udev,
+ 			      usb_rcvbulkpipe(dev->udev,
+@@ -158,6 +168,9 @@ static ssize_t lcd_read(struct file *fil
+ 			retval = bytes_read;
+ 	}
+ 
++out_up_io:
++	up_read(&dev->io_rwsem);
++
+ 	return retval;
+ }
+ 
+@@ -237,11 +250,18 @@ static ssize_t lcd_write(struct file *fi
+ 	if (r < 0)
+ 		return -EINTR;
+ 
++	down_read(&dev->io_rwsem);
++
++	if (dev->disconnected) {
++		retval = -ENODEV;
++		goto err_up_io;
++	}
++
+ 	/* create a urb, and a buffer for it, and copy the data to the urb */
+ 	urb = usb_alloc_urb(0, GFP_KERNEL);
+ 	if (!urb) {
+ 		retval = -ENOMEM;
+-		goto err_no_buf;
++		goto err_up_io;
+ 	}
+ 
+ 	buf = usb_alloc_coherent(dev->udev, count, GFP_KERNEL,
+@@ -278,6 +298,7 @@ static ssize_t lcd_write(struct file *fi
+ 	   the USB core will eventually free it entirely */
+ 	usb_free_urb(urb);
+ 
++	up_read(&dev->io_rwsem);
+ exit:
+ 	return count;
+ error_unanchor:
+@@ -285,7 +306,8 @@ error_unanchor:
+ error:
+ 	usb_free_coherent(dev->udev, count, buf, urb->transfer_dma);
+ 	usb_free_urb(urb);
+-err_no_buf:
++err_up_io:
++	up_read(&dev->io_rwsem);
+ 	up(&dev->limit_sem);
+ 	return retval;
+ }
+@@ -325,6 +347,7 @@ static int lcd_probe(struct usb_interfac
+ 
+ 	kref_init(&dev->kref);
+ 	sema_init(&dev->limit_sem, USB_LCD_CONCURRENT_WRITES);
++	init_rwsem(&dev->io_rwsem);
+ 	init_usb_anchor(&dev->submitted);
+ 
+ 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
+@@ -422,6 +445,12 @@ static void lcd_disconnect(struct usb_in
+ 	/* give back our minor */
+ 	usb_deregister_dev(interface, &lcd_class);
+ 
++	down_write(&dev->io_rwsem);
++	dev->disconnected = 1;
++	up_write(&dev->io_rwsem);
++
++	usb_kill_anchored_urbs(&dev->submitted);
++
+ 	/* decrement our usage count */
+ 	kref_put(&dev->kref, lcd_delete);
+ 
 
 
