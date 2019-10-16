@@ -4,196 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16CEFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E72FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B5021848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4902168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393392AbfJPM53 (ORCPT
+        id S2404071AbfJPM6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:57:29 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:41125 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731686AbfJPM53 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:57:29 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id KirjiHi1LPduvKirnir4R3; Wed, 16 Oct 2019 14:57:27 +0200
-Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191014141427.30708-1-ribalda@kernel.org>
- <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
- <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
- <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
- <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
- <77204a05-34a5-f6f1-460f-bddaa8f2bb5c@xs4all.nl>
-Message-ID: <3768e962-9c6b-1d32-c968-569c15c5f5bf@xs4all.nl>
-Date:   Wed, 16 Oct 2019 14:57:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 08:58:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26077 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731686AbfJPM6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:58:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 05:58:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="208405786"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 16 Oct 2019 05:58:47 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 16 Oct 2019 15:58:46 +0300
+Date:   Wed, 16 Oct 2019 15:58:46 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     pumahsu <pumahsu@google.com>
+Cc:     gregkh@linuxfoundation.org, badhri@google.com, kyletso@google.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: Add sysfs node to show cc orientation
+Message-ID: <20191016125846.GC17542@kuha.fi.intel.com>
+References: <20191016034314.231363-1-pumahsu@google.com>
 MIME-Version: 1.0
-In-Reply-To: <77204a05-34a5-f6f1-460f-bddaa8f2bb5c@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfJsjDSTjSe/eU04bGP79b1Nors6UFxODyp4KAbwDZ8lP9tU1YSQOdwJQ6YB/Krh8HSZlRDADj4CW8ZOoEWNrs6oEOaAoul9ZgVLuJCJsbz2d3qAurGhg
- iAlgQRlBPPWYS/H9opapeJrtCPc720qvAxd/hDsAPqnLof8dpiXIMd2RaE7ypT/1ut9B1kR8UMntfGRCYLb4QZFZwFdvxV1G5buCLBB3ybIKjCcWMQi4B0pO
- KNR37eancBQgbBSSKsYM+zNl5zforKFuPdazAK8oFgc/nLKN71WmjzyXNay9e/8B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016034314.231363-1-pumahsu@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 2:43 PM, Hans Verkuil wrote:
-> On 10/16/19 2:39 PM, Ricardo Ribalda Delgado wrote:
->> Hi Hans:
->>
->> On Wed, Oct 16, 2019 at 2:32 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->>>
->>> On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
->>>> Hi Hans
->>>>
->>>> Not that awkward, the user has to use the brand new
->>>> v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
->>>> change.
->>>
->>> Well, a struct v4l2_ctrl_config is typically a static const, so you can't use
->>> v4l2_ctrl_ptr_create().
->>>
->>> Hmm, perhaps it is as easy as:
->>>
->>> static const struct v4l2_area def_area = {
->>>         ...
->>> };
->>>
->>> static const struct v4l2_ctrl_config ctrl = {
->>>         ...
->>>
->>>         .p_def.p_area = &def_area,
->>>         ...
->>> };
->>>
->>> Can you do a quick compile check that I am not overlooking anything?
->>>
->>> If this works, then I'll take this patch.
->>
->> Testing with gcc 9.2.1
->>
->> This works fine, no warning/error:
->>
->> static struct v4l2_area unit_size = {
->> .width = UNIT_SIZE,
->> .height = UNIT_SIZE,
->> };
->> static struct v4l2_ctrl_config area_ctrl = {
->> .type = V4L2_CTRL_TYPE_AREA,
->> .flags = V4L2_CTRL_FLAG_READ_ONLY,
->> .p_def.p_area = &unit_size,
->> };
->>
->> but if unit_size is set as CONST:
->> static const struct v4l2_area
->>
->> Then:
->> drivers/qtec/qtec_sony.c: In function ‘qtec_sony_probe’:
->> drivers/qtec/qtec_sony.c:3151:19: warning: initialization discards
->> ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
->>  3151 |   .p_def.p_area = &unit_size,
->>       |
+On Wed, Oct 16, 2019 at 11:43:14AM +0800, pumahsu wrote:
+> Export the Type-C cc orientation so that user space can
+> get this information.
+
+For what do you need this information in user space? I'm guessing you
+have something else in mind besides exposing this as just generic
+information, or debugging purposes, no?
+
+Please keep in mind that we do not always know the cable orientation.
+UCSI for example does not give any clues about which way the cable
+plug was connected to the connector. That means this sysfs file will
+most likely need to be hidden in those cases, which I guess is
+acceptable, but definitely not ideal.
+
+> Signed-off-by: pumahsu <pumahsu@google.com>
+> ---
+>  Documentation/ABI/testing/sysfs-class-typec |  7 +++++++
+>  drivers/usb/typec/class.c                   | 11 +++++++++++
+>  2 files changed, 18 insertions(+)
 > 
-> Hmm. So we need a const void *p_def instead.
+> diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> index d7647b258c3c..419f952c991d 100644
+> --- a/Documentation/ABI/testing/sysfs-class-typec
+> +++ b/Documentation/ABI/testing/sysfs-class-typec
+> @@ -108,6 +108,13 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>  Description:
+>  		Revision number of the supported USB Type-C specification.
+>  
+> +What:		/sys/class/typec/<port>/cc_orientation
+> +Date:		September 2019
+> +Contact:	Puma Hsu <pumahsu@google.com>
+> +Description:
+> +		Indicates which cc orientation is active now, or 0 when
+> +		nothing is connected.
 
-Ah, v4l2_ctrl_ptr_create() expects a non-const pointer.
+cc_orientation is a bit cryptic. I think if this is part of the port
+ABI, then we should talk about something like "connector_orientation".
 
-What happens if union v4l2_ctrl_ptr p_def; in struct v4l2_ctrl changes
-to const union v4l2_ctrl_ptr p_def; ?
+>  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+>  
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index 7d8805d9bf37..00edae63da8e 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -1238,6 +1238,16 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(usb_power_delivery_revision);
+>  
+> +static ssize_t cc_orientation_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct typec_port *p = to_typec_port(dev);
+> +
+> +	return sprintf(buf, "%d\n", typec_get_orientation(p));
+> +}
+> +static DEVICE_ATTR_RO(cc_orientation);
 
-You'll need to add const elsewhere as well, but since the default value
-is const, this might work.
+Now you are returning 0, 1 or 2 which to me is not ideal. This really
+should return a string, something like "normal" / "reversed", and in
+case the orientation is TYPEC_ORIENTATION_NONE, empty string.
 
-I'm not entirely sure this is correct code, though, but it's worth trying
-it.
+>  static struct attribute *typec_attrs[] = {
+>  	&dev_attr_data_role.attr,
+>  	&dev_attr_power_operation_mode.attr,
+> @@ -1248,6 +1258,7 @@ static struct attribute *typec_attrs[] = {
+>  	&dev_attr_usb_typec_revision.attr,
+>  	&dev_attr_vconn_source.attr,
+>  	&dev_attr_port_type.attr,
+> +	&dev_attr_cc_orientation.attr,
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(typec);
+> -- 
+> 2.23.0.700.g56cf767bdb-goog
 
-Regards,
+thanks,
 
-	Hans
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>
->>>
->>> Regards,
->>>
->>>         Hans
->>>
->>>>
->>>> Regards
->>>>
->>>> On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->>>>>
->>>>> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
->>>>>> This allows setting the default value on compound controls created via
->>>>>> v4l2_ctrl_new_custom.
->>>>>>
->>>>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
->>>>>> ---
->>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
->>>>>>  include/media/v4l2-ctrls.h           | 2 ++
->>>>>>  2 files changed, 3 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>>> index bf50d37ef6c1..12cf38f73f7b 100644
->>>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
->>>>>>                       type, min, max,
->>>>>>                       is_menu ? cfg->menu_skip_mask : step, def,
->>>>>>                       cfg->dims, cfg->elem_size,
->>>>>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
->>>>>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
->>>>>>       if (ctrl)
->>>>>>               ctrl->is_private = cfg->is_private;
->>>>>>       return ctrl;
->>>>>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
->>>>>> index 26205ba3a0a0..2fca5b823961 100644
->>>>>> --- a/include/media/v4l2-ctrls.h
->>>>>> +++ b/include/media/v4l2-ctrls.h
->>>>>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
->>>>>>   * @max:     The control's maximum value.
->>>>>>   * @step:    The control's step value for non-menu controls.
->>>>>>   * @def:     The control's default value.
->>>>>> + * @p_def:   The control's default value for compound controls.
->>>>>>   * @dims:    The size of each dimension.
->>>>>>   * @elem_size:       The size in bytes of the control.
->>>>>>   * @flags:   The control's flags.
->>>>>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
->>>>>>       s64 max;
->>>>>>       u64 step;
->>>>>>       s64 def;
->>>>>> +     union v4l2_ctrl_ptr p_def;
->>>>>>       u32 dims[V4L2_CTRL_MAX_DIMS];
->>>>>>       u32 elem_size;
->>>>>>       u32 flags;
->>>>>>
->>>>>
->>>>> I'm not sure about this. It might be a bit awkward to initialize p_def given that it is a union.
->>>>>
->>>>> Perhaps a simple void pointer would be easier?
->>>>>
->>>>> Regards,
->>>>>
->>>>>         Hans
->>>
-> 
-
+-- 
+heikki
