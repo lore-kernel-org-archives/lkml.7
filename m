@@ -2,81 +2,66 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497BAFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D7FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2329420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571256409;
-	bh=ZOsiycWlcu+SnL6IZ3oaAxvxPo3wW8QAyUj/9tKCtvo=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=bPev5Jw3BdhtytCexFJnE0XgSulXL+ul/W7IawAOzGSMd+a/qSjEU16kf0f7pO4JQ
-	 rnOcxai31DzxzEfR9gqyftACnWXn3vgxG9f6iwzaSvANWbt4/N2KsmWrbBQPv2Q55R
-	 isB6jXQtbALBVRIqbNZVsMgRI0Z7jfO8L8Sla6J8=
+	by mail.kernel.org (Postfix) with ESMTP id D6D182064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbfJPUGr (ORCPT
+        id S2388200AbfJPUIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfJPUGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:06:47 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8032064B;
-        Wed, 16 Oct 2019 20:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571256406;
-        bh=ZOsiycWlcu+SnL6IZ3oaAxvxPo3wW8QAyUj/9tKCtvo=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=B9NUNTRP+CR61Zxnndl+/V3ZoFYybuIX36+wPHeBqad6DqY92dc/6Nt/sq9pzmylP
-         liwk3NROPaBBFnZ9NXpDxuYoPC30nEwnxl1crMQZ+yK69LELdd9mdaoMM9oVjtkM1e
-         9Tk/EGuK17KAHY9D1yfSgN6NTJIKF7hldDACe0Zw=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 16 Oct 2019 16:08:53 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49591 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732883AbfJPUIw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 16:08:52 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 85E3140005;
+        Wed, 16 Oct 2019 20:08:50 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/2] rtc: s35390a: set range
+Date:   Wed, 16 Oct 2019 22:08:48 +0200
+Message-Id: <20191016200848.30246-2-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191016200848.30246-1-alexandre.belloni@bootlin.com>
+References: <20191016200848.30246-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1571122989-29361-1-git-send-email-peng.fan@nxp.com>
-References: <1571122989-29361-1-git-send-email-peng.fan@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] clk: imx: imx8mn: drop unused pll enum
-User-Agent: alot/0.8.1
-Date:   Wed, 16 Oct 2019 13:06:46 -0700
-Message-Id: <20191016200646.CF8032064B@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Peng Fan (2019-10-15 00:05:53)
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> The PLL enum definition is not used, so drop it.
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
+This is a standard BCD RTC that will fail in 2100.
 
-Was it ever used?
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-s35390a.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied to clk-next
+diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
+index 66684b80028f..03672a246356 100644
+--- a/drivers/rtc/rtc-s35390a.c
++++ b/drivers/rtc/rtc-s35390a.c
+@@ -488,6 +488,8 @@ static int s35390a_probe(struct i2c_client *client,
+ 	device_set_wakeup_capable(dev, 1);
+ 
+ 	s35390a->rtc->ops = &s35390a_rtc_ops;
++	s35390a->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
++	s35390a->rtc->range_max = RTC_TIMESTAMP_END_2099;
+ 
+ 	/* supports per-minute alarms only, therefore set uie_unsupported */
+ 	s35390a->rtc->uie_unsupported = 1;
+-- 
+2.21.0
 
