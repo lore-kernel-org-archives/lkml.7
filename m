@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD2EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0EECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825392168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54E0207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263993;
-	bh=eqaNvDbEgR9LqdmdTpj7aNxT56/z4+pKMu2ClJFzbhQ=;
+	s=default; t=1571263996;
+	bh=ctmzkKO/0+RAU0vKHEpFe2WSa3E1gEwfDsZLHH7vSGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ayTKX2//NLqUNdz8hlM9Aq7AYvLF6lknlwykejdkGdA/YI6Ri+Z4G7MvcZEyxjcea
-	 7H3YpFN9kfHp5wx8G5nYMQSYvTdQiGM/X5ZkkBLsECPG8TyBPT5nVyY4j4tdp61//9
-	 k+QOzTGbV8M1pEvhACP0tGuyl/9hptb18DJddGBI=
+	b=jH4hDzCT0vhZvTl3BK2ij5xHiZR2xGRkZWb98ToKd/inb4ux84e1R3eBAfTL4iow3
+	 IclSjpWI2kbcy0lKwcq+yeOigwIF6KQbAMvwALrvtxkRAgO9koayIVkvhYsZ0qqirJ
+	 d2loCjv076U6ZIOczQ0Bc4xMcOWSH8phGYn545Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437883AbfJPV4C (ORCPT
+        id S2437862AbfJPVz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47138 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437870AbfJPVz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:59 -0400
+        id S2437851AbfJPVzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:55 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FEDD218DE;
-        Wed, 16 Oct 2019 21:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB17920872;
+        Wed, 16 Oct 2019 21:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262958;
-        bh=eqaNvDbEgR9LqdmdTpj7aNxT56/z4+pKMu2ClJFzbhQ=;
+        s=default; t=1571262955;
+        bh=ctmzkKO/0+RAU0vKHEpFe2WSa3E1gEwfDsZLHH7vSGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVbnZHxXWfI4NzjwkwTZwKnw2F1krXY30nxlmIHXOgFped1JVVC3CQF19510z0CcJ
-         vde88ivxGvgJAP5D+EWLaF+NoESk8Pjv6sQFBRl6b+7fGolhogvzDAL6Pp430WjF0t
-         PXfVx9sAI+p0YJjA7Egc0sqKuPFgIL0ms5O6xkhQ=
+        b=qqItVLmXFsrP44xoy1WHWovXg7Tw4QVyNFsl2Exy6A0w+a4GBxRbwedxCgCJcH9In
+         HF1R4KwbHFbacIdzxST9b/FUdiuMYnxWu7cxmrRfb7twi/tWTj5pCHeTSQIIFhgCQJ
+         MuRMlvypU73A8pxZ/nBrfPcUMMzsnWkOxhs0FlAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 27/65] USB: serial: option: add support for Cinterion CLS8 devices
-Date:   Wed, 16 Oct 2019 14:50:41 -0700
-Message-Id: <20191016214822.766140932@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 24/65] USB: serial: keyspan: fix NULL-derefs on open() and write()
+Date:   Wed, 16 Oct 2019 14:50:38 -0700
+Message-Id: <20191016214819.862368298@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -59,65 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinhard Speyerer <rspmn@arcor.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit dfbac2f4da6a0c4a8f6b4d715a4077a7b8df53ad upstream.
+commit 7d7e21fafdbc7fcf0854b877bd0975b487ed2717 upstream.
 
-Add support for the serial ports of Cinterion CLS8 devices.
+Fix NULL-pointer dereferences on open() and write() which can be
+triggered by a malicious USB device.
 
-T:  Bus=01 Lev=03 Prnt=05 Port=01 Cnt=02 Dev#= 25 Spd=480  MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1e2d ProdID=00b0 Rev= 3.18
-S:  Manufacturer=GEMALTO
-S:  Product=USB Modem
-C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+The current URB allocation helper would fail to initialise the newly
+allocated URB if the device has unexpected endpoint descriptors,
+something which could lead NULL-pointer dereferences in a number of
+open() and write() paths when accessing the URB. For example:
 
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Cc: stable <stable@vger.kernel.org>
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	...
+	RIP: 0010:usb_clear_halt+0x11/0xc0
+	...
+	Call Trace:
+	 ? tty_port_open+0x4d/0xd0
+	 keyspan_open+0x70/0x160 [keyspan]
+	 serial_port_activate+0x5b/0x80 [usbserial]
+	 tty_port_open+0x7b/0xd0
+	 ? check_tty_count+0x43/0xa0
+	 tty_open+0xf1/0x490
+
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	...
+	RIP: 0010:keyspan_write+0x14e/0x1f3 [keyspan]
+	...
+	Call Trace:
+	 serial_write+0x43/0xa0 [usbserial]
+	 n_tty_write+0x1af/0x4f0
+	 ? do_wait_intr_irq+0x80/0x80
+	 ? process_echoes+0x60/0x60
+	 tty_write+0x13f/0x2f0
+
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	...
+	RIP: 0010:keyspan_usa26_send_setup+0x298/0x305 [keyspan]
+	...
+	Call Trace:
+	 keyspan_open+0x10f/0x160 [keyspan]
+	 serial_port_activate+0x5b/0x80 [usbserial]
+	 tty_port_open+0x7b/0xd0
+	 ? check_tty_count+0x43/0xa0
+	 tty_open+0xf1/0x490
+
+Fixes: fdcba53e2d58 ("fix for bugzilla #7544 (keyspan USB-to-serial converter)")
+Cc: stable <stable@vger.kernel.org>	# 2.6.21
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/keyspan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -422,6 +422,7 @@ static void option_instat_callback(struc
- #define CINTERION_PRODUCT_PH8_AUDIO		0x0083
- #define CINTERION_PRODUCT_AHXX_2RMNET		0x0084
- #define CINTERION_PRODUCT_AHXX_AUDIO		0x0085
-+#define CINTERION_PRODUCT_CLS8			0x00b0
+--- a/drivers/usb/serial/keyspan.c
++++ b/drivers/usb/serial/keyspan.c
+@@ -1745,8 +1745,8 @@ static struct urb *keyspan_setup_urb(str
  
- /* Olivetti products */
- #define OLIVETTI_VENDOR_ID			0x0b3c
-@@ -1858,6 +1859,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_AHXX_2RMNET, 0xff) },
- 	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_AHXX_AUDIO, 0xff) },
-+	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_CLS8, 0xff),
-+	  .driver_info = RSVD(0) | RSVD(4) },
- 	{ USB_DEVICE(CINTERION_VENDOR_ID, CINTERION_PRODUCT_HC28_MDM) },
- 	{ USB_DEVICE(CINTERION_VENDOR_ID, CINTERION_PRODUCT_HC28_MDMNET) },
- 	{ USB_DEVICE(SIEMENS_VENDOR_ID, CINTERION_PRODUCT_HC25_MDM) },
+ 	ep_desc = find_ep(serial, endpoint);
+ 	if (!ep_desc) {
+-		/* leak the urb, something's wrong and the callers don't care */
+-		return urb;
++		usb_free_urb(urb);
++		return NULL;
+ 	}
+ 	if (usb_endpoint_xfer_int(ep_desc)) {
+ 		ep_type_name = "INT";
 
 
