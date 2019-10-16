@@ -2,212 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F2FECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978B4ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7598B20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYNRTX88"
+	by mail.kernel.org (Postfix) with ESMTP id 62E8D20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571194629;
+	bh=+hMs2m5naZTA2c7LWGpnvVExxP3tbc8QTkpfH07iBqs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zAjRBa8LsWh6VqY4WIH3BXmAi5CVvJ2Eh3SHwMsvyPEXjuudtXCqQrtTCu+fWqkW9
+	 Kih4YMD+0xWPXJbZ92+jmDhKkHPBmOikq9+u2vBsGUc8aaeM50oUR0rGRCidxFYfaN
+	 WRS9oc3EzWbJutPLkLDzpR3JT6GjddFvwbzf+s0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390599AbfJPCwa (ORCPT
+        id S1732415AbfJPC5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 22:52:30 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]:46929 "EHLO
-        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729606AbfJPCw3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 22:52:29 -0400
-Received: by mail-qk1-f179.google.com with SMTP id e66so791278qkf.13;
-        Tue, 15 Oct 2019 19:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bUPgOrzO03ynjh7f8hMryc9lj72KYAMDsgA/uPPC8XM=;
-        b=gYNRTX88YXnJAS4PWAu/QZoCvEfhgvphEAR8wIr+TnZn0wLvA4DO6bFaDdC6koJnyq
-         f50wrcrBEgUntsBq7BHlSVi6NfK0vh9OV3142qYQ7xMJ4Yp+5e3AActXpNxPnFA+7Jf+
-         kRJf3AbqM6o5Ze96RA0IhYtRgfNbIcPqfW0BZfJBcRZFHuoKt5RimUY7jyDmhI8vRy1t
-         B3f56psva5uHsCzJwZO+E2D9TFrWKEOzKLm1lrW9KV6vcPGQas4XaTquynlvMOZa6nR3
-         WEFeF343VuYBCXRjucVWFE952OWK5s8mwJcLtihVpmNwgENoRkANM03vnhU3y4W8WBfn
-         wxHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bUPgOrzO03ynjh7f8hMryc9lj72KYAMDsgA/uPPC8XM=;
-        b=kuV+KuXpjTgin2u+6skFh+FwfnhyAX1ZBkjW8PGv/xLD6R2TmnCEQ0OZGbzdCIYsD6
-         HaP1Mca2pf4nrXXKcnC0tHFyJ/jlofIj9E05Lg3FadRHiilPzG9MTZuDq1tsvjZPCA/M
-         wD1A7tyZQQhOSvoWAC98dPvfz3oxoEuxda0oVXTvgO6CCJVLqbG6Lk3XObmOUNvhAUAU
-         04UNQKicuBlmuZO+/2R/MQqj/ptTcntt4vUngCeUu/CN6AFxyKv7n/6/HBSJedvFDZZL
-         kOpU1sBI4qdkY76NvRsy39lLRZbKx+3Nd7MCCjJkcjn/XmJlojo/nysFRNr39uTup2Mz
-         p8TA==
-X-Gm-Message-State: APjAAAWBR5bCdLM1XTFjBagm05kMa5wYCleoj+RUlGDPAxPh7NUteoAh
-        b4RAz6+uUMEvo+KFPnab4Qw=
-X-Google-Smtp-Source: APXvYqyIv/kjCfPmmI1ZZH1sTicpI04pvyW71VV9KONREQ4437Jw3v70SYAVIrXdkVem9he1PZGXGg==
-X-Received: by 2002:a37:4703:: with SMTP id u3mr39297600qka.130.1571194348643;
-        Tue, 15 Oct 2019 19:52:28 -0700 (PDT)
-Received: from smtp.gmail.com ([2804:d43:421:ecd6:45ed:dc65:8f65:8e1])
-        by smtp.gmail.com with ESMTPSA id v7sm10850321qte.29.2019.10.15.19.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 19:52:28 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 23:52:23 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     jic23@kernel.org
-Cc:     dragos.bogdan@analog.com, alexandru.ardelean@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
+        Tue, 15 Oct 2019 22:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727508AbfJPC5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 22:57:07 -0400
+Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F21D20663;
+        Wed, 16 Oct 2019 02:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571194626;
+        bh=+hMs2m5naZTA2c7LWGpnvVExxP3tbc8QTkpfH07iBqs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cUtp9lyFMxO2vgaBQlAF/1/1jU+pMkFgiN1/v/8+7+8LIQT0dQE4Zt4/zuBwfpnM0
+         0opTnnWinszln+xlbsVsc3Srx3TMAoAWpE8veEqP0IxB5wo/DPy8Igma2imjHhZjPS
+         HZj5WbupUzu57tCy95uKUkfBpyPoqV6Hfi0cmX2w=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 00/14] sched/nohz: Make kcpustat's CPUTIME_SYSTEM vtime aware v2 (Partially fix kcpustat on nohz_full)
+Date:   Wed, 16 Oct 2019 04:56:46 +0200
+Message-Id: <20191016025700.31277-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a device tree binding doc for AD7292 monitor and control system.
+Thanks to the recent patches that have brought a sensible rq->curr RCU
+lifecycle, here comes a simplified rework of
+	"[PATCH 00/25] sched/nohz: Make kcpustat vtime aware"
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+See for the record and a summary: https://lore.kernel.org/lkml/1542163569-20047-1-git-send-email-frederic@kernel.org/
+
+Since I'm trying to cut and simplify the series, this one only fixes
+the reading of kcpustat's system field for now. But that also provides
+all the necessary preparation work for the rest.
+
+User and guest time will have their own series because niceness brings
+issues of its own.
+
+git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
+	nohz/kcpustat-v2
+
+HEAD: e179e89320c53a96c5d585af38126cfb124da789
+
+Thanks,
+	Frederic
 ---
- .../bindings/iio/adc/adi,ad7292.yaml          | 107 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 108 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-new file mode 100644
-index 000000000000..40028332d9e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
-@@ -0,0 +1,107 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7292 10-Bit Monitor and Control System
-+
-+maintainers:
-+  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-+
-+description: |
-+  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
-+  Temperature Sensor, and GPIOs
-+
-+  Specifications about the part can be found at:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7292
-+
-+  reg:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description: |
-+      The regulator supply for ADC and DAC reference voltage.
-+    maxItems: 1
-+
-+  spi-cpha:
-+    description: |
-+      See Documentation/devicetree/bindings/spi/spi-controller.yaml
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^channel@[0-7]$":
-+    type: object
-+    description: |
-+      Represents the external channels which are connected to the ADC.
-+      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-+
-+    properties:
-+      reg:
-+        description: |
-+          The channel number. It can have up to 8 channels numbered from 0 to 7.
-+        maxItems: 1
-+
-+      diff-channels:
-+        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      ad7292: ad7292@0 {
-+        compatible = "adi,ad7292";
-+        reg = <0>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        spi-max-frequency = <25000000>;
-+        vref-supply = <&adc_vref>;
-+        spi-cpha;
-+
-+        channel@0 {
-+          reg = <0>;
-+          diff-channels = <0 1>;
-+        };
-+        channel@2 {
-+          reg = <2>;
-+        };
-+        channel@3 {
-+          reg = <3>;
-+        };
-+        channel@4 {
-+          reg = <4>;
-+        };
-+        channel@5 {
-+          reg = <5>;
-+        };
-+        channel@6 {
-+          reg = <6>;
-+        };
-+        channel@7 {
-+          reg = <7>;
-+        };
-+      };
-+    }
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e78317a5f4f1..5941cfc0d6f7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -819,6 +819,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7292.c
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
- 
- ANALOG DEVICES INC AD7606 DRIVER
- M:	Stefan Popa <stefan.popa@analog.com>
--- 
-2.23.0
+Frederic Weisbecker (14):
+      sched/vtime: Record CPU under seqcount for kcpustat needs
+      sched/cputime: Add vtime idle task state
+      sched/cputime: Add vtime guest task state
+      context_tracking: Remove context_tracking_active()
+      context_tracking: s/context_tracking_is_enabled/context_tracking_enabled()
+      context_tracking: Rename context_tracking_is_cpu_enabled() to context_tracking_enabled_this_cpu()
+      context_tracking: Introduce context_tracking_enabled_cpu()
+      sched/vtime: Rename vtime_accounting_cpu_enabled() to vtime_accounting_enabled_this_cpu()
+      sched/vtime: Introduce vtime_accounting_enabled_cpu()
+      context_tracking: Check static key on context_tracking_enabled_*cpu()
+      sched/kcpustat: Introduce vtime-aware kcpustat accessor for CPUTIME_SYSTEM
+      procfs: Use vtime aware kcpustat accessor to fetch CPUTIME_SYSTEM
+      cpufreq: Use vtime aware kcpustat accessor to fetch CPUTIME_SYSTEM
+      leds: Use vtime aware kcpustat accessor to fetch CPUTIME_SYSTEM
 
+
+ arch/x86/entry/calling.h                |   2 +-
+ drivers/cpufreq/cpufreq.c               |   2 +-
+ drivers/leds/trigger/ledtrig-activity.c |   2 +-
+ fs/proc/stat.c                          |   4 +-
+ include/linux/context_tracking.h        |  26 +++----
+ include/linux/context_tracking_state.h  |  21 +++---
+ include/linux/kernel_stat.h             |  11 +++
+ include/linux/sched.h                   |   9 ++-
+ include/linux/tick.h                    |   2 +-
+ include/linux/vtime.h                   |  23 +++---
+ kernel/context_tracking.c               |   6 +-
+ kernel/sched/cputime.c                  | 119 ++++++++++++++++++++++++++++----
+ kernel/time/tick-sched.c                |   2 +-
+ 13 files changed, 172 insertions(+), 57 deletions(-)
