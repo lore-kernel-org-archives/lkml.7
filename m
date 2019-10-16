@@ -3,90 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68375FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17485FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3634420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FC820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ha6hDOJl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7XnxeWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393496AbfJPQQ1 (ORCPT
+        id S2393631AbfJPQSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:16:27 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38504 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbfJPQQ0 (ORCPT
+        Wed, 16 Oct 2019 12:18:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39029 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfJPQSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:16:26 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w8so11487895plq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:16:26 -0700 (PDT)
+        Wed, 16 Oct 2019 12:18:24 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 195so5028907lfj.6;
+        Wed, 16 Oct 2019 09:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ResC/hhiygB40CQNO8g6ikuMbA0ju2V41a3xODY1vVE=;
-        b=Ha6hDOJlpfX3oR0Lo71lCcmpwUHRfznUaoRUnv6VA0oW8DYo3V3iOQyLrQhSnQHMDH
-         1ZqNiwjWcgmcyZNCR5vx+Haaa5wXkWQpq6vttdANH4PDcoef4Xkwm1JLMkYH177KuT9U
-         aE0h4rllUx2sP597BRDIh2bm46Peqp4URVGQAF0COhIR3qBtfppzGOgxAypDH0WUJ9Bd
-         u3jfndnQaIm/XpKsIRf/sfxd0Nq6lXDXR4k1bVCGe3GEm+2qA8S2Mo2JeuPHeSk8I8Q/
-         XUMLkJAyfF6Cgy7WQ4R3zO49FexD4uBIReK0ZZeILFTcqg6NC6smoewkpTm81cIregw/
-         3/fA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y1u4tBuRnd6ZjEytQ7zg9F82TRiFsD/C7WX2wqbch+8=;
+        b=Y7XnxeWv16vJcEIy56IkwtxL2LWSOOIclCzC6NanfV6A6wNIdsg7+3EZdMtgtnNVv7
+         xdIrJI/hLsYV97HRn2qp9huBjieN/OP5vRzMRErA11sJbn4U6/CdxhUJgtOMxIIDiElQ
+         Q3o+lJ42HjrYPICB6LWJXJSYr7Gt1dymkiTZHYUoowNdz7G2MKmqOtSOzRYOKdHts0Sn
+         6ZYcuo60ZcFiPCWA9rD4wKtWOlZs2u0XKR92+SqRdDkYyd6ChC8r4ZD3dXHF3k+BzLPQ
+         mD9kUuQ7qTanPS8PDIVPqvyS++w5wJyHLxpepf3r1TOh8chtfJJXsTQ3Tqrs+B0lXyoX
+         2rKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ResC/hhiygB40CQNO8g6ikuMbA0ju2V41a3xODY1vVE=;
-        b=jnGPR3ZcAOkiks9UdJonxcR8SoYwUtNgs7ygEyQz7eSA1i9bMo3QSZ5STLaO7DB00R
-         AQ523rvJolG8kqcQqxKuh9V1lmS+sAXTzyVhEtu0PcSSkXauMRozg7rIvcI7j+jEZeir
-         XGkgvb9K/HkxFTIKNiOAmYcbD2mS/xao0ukGZ+sV0GR6D+4FkD91C/9PbMwA92vdD/3W
-         dYfPshe876zf9NtCvokuLBYVx6lFrXPR7XmtUEcfcfY2v/q4c6Kt+Ix42jSUwizTayLC
-         kvdxwqFHHvV/3pugPwejtq3YNvZsvvxElZl8FLqj93yFNUndoVP0RTQWxWQ2dG4sb1/f
-         92PA==
-X-Gm-Message-State: APjAAAVoV2D13qDHgzrXJ8O4AiOnO7JlZZfQ/40JjmosElkCfPpyl5RA
-        TC+vbQ9TYVd7ycjRBTtoU/WfaQ==
-X-Google-Smtp-Source: APXvYqzcmnTEOiuKSt7BT2tO2CZWNSW1Cst0QeV7AzXL8vZ26nPCMzLc9eVwAlMHXVXLysywqp/i0A==
-X-Received: by 2002:a17:902:a5c3:: with SMTP id t3mr42557480plq.335.1571242585996;
-        Wed, 16 Oct 2019 09:16:25 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id e10sm34459145pfh.77.2019.10.16.09.16.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 16 Oct 2019 09:16:25 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
-In-Reply-To: <20191009082708.6337-1-jbrunet@baylibre.com>
-References: <20191009082708.6337-1-jbrunet@baylibre.com>
-Date:   Wed, 16 Oct 2019 09:16:24 -0700
-Message-ID: <7h7e54hdif.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y1u4tBuRnd6ZjEytQ7zg9F82TRiFsD/C7WX2wqbch+8=;
+        b=WfcuoQNzPv9bk+btBmuqoeGUlPpdXUg3rCVX+dtVuPnHDdLnI9PZ6Kd0peeBQSD5PW
+         ih7GOuRC9TvItyjnq98+atJYANsdx1nY7DMzPIc0Nzrag+IQGzO8Tt4cJ32BdsWaL93A
+         ZIvj4y4qIfEHInubsYaE/TTAi9UCTrO3na9cSy9FzSgC5gNS1CFGcnhNzpYaMk2b9TnD
+         n5egDMqSC9h6lB4/bvC0GoIRjdM4Htv6DgNiNRI2yu0y+EJj5t1V+vzASeaBfACSapXk
+         3RGI/3CNvA9GwGBNZWG19S6UAZsqwKyr3DH1CKUb1KkkVuhEsuaM4m1UGZe/DwwFJ63a
+         7mUg==
+X-Gm-Message-State: APjAAAX/O3x1HaqY1BI0tJMQx+F7bXfRZ8UOERDsDPZEwzaNQkgeQIHo
+        y8sk5Ff8JA5KYamGdLfHHK6c61CQ18nh1ahVPo0=
+X-Google-Smtp-Source: APXvYqyVZwfMVjw15XoxG0GOxNLuRAAnl9bDYbPMHaNMcwAzDZPkm7NBafCKz09RK7HbPatoJcJIcT8/B0ysUieaPvg=
+X-Received: by 2002:ac2:4888:: with SMTP id x8mr25064278lfc.90.1571242700210;
+ Wed, 16 Oct 2019 09:18:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191014061549.3669-1-o.rempel@pengutronix.de>
+ <20191014061549.3669-5-o.rempel@pengutronix.de> <20191016130057.GF4780@lunn.ch>
+In-Reply-To: <20191016130057.GF4780@lunn.ch>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 16 Oct 2019 13:20:31 -0300
+Message-ID: <CAOMZO5BRfkz+VBR6NRjSY6CymyuXRNqLnF_bOao90j64+sYZtQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] net: dsa: add support for Atheros AR9331 build-in switch
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Wed, Oct 16, 2019 at 1:01 PM Andrew Lunn <andrew@lunn.ch> wrote:
 
-> This patchset adds audio support on the sm1 SoC family and the
-> sei610 platform
+> I think C files should use /*  */, and header files //, for SPDX.
 
-Queued for v5.5.
+Not really.
 
-> Kevin, The patchset depends on:
->  - The ARB binding merged by Philipp [0]
->  - The audio clock controller bindings I just applied. A tag is
->    available for you here [1]
+From Documentation/process/license-rules.rst:
 
-I've pulled both of those into v5.5/dt64 so that branch is buildable
-standlone.
-
-Thanks for details on the dependencies.
-
-Kevin
+"C source: // SPDX-License-Identifier: <SPDX License Expression>
+ C header: /* SPDX-License-Identifier: <SPDX License Expression> */ "
