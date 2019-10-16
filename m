@@ -6,65 +6,61 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E67ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D1AECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244DD2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5905820872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571267827;
-	bh=zirAnIqC/9yz2gPtuufIs13cXwxMvCqnY5qApb41f+M=;
+	s=default; t=1571267919;
+	bh=9GwVHIhpDb3lsuz2VZlfX9zCGY0Gd78lkJdnslS7qFI=;
 	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=EPU7BIsBvW7IR4apowXDvrBf8dUj7iSJHOiaM4ai/kYcuLuqmX7c1vviKwPUaeML+
-	 kAMAKnAF8zxoP2CGPwhAa0Z0i1a7zqlPx8CqARkml+MvpLEmGA+9TJ/PRP3YJMtcrj
-	 oQFil0b2k8MZfB4pTvQ9s4aC2bRBQj8DyHNt2B3I=
+	b=bmUs+bHldZQJY4BfIBzSn8CZCBUwIT8LHApvOLuxi1zwsIMFvH13/S0suQrvUp1lF
+	 4+h/2F0pIPjE2QkKRLiQRJ1UmvS+AXvE9I+8d/KMeoAVlxJXTBGyZLwTRKM22MyqXR
+	 JKD5ifFmA3Q/PLvN6C0NJJQPpvFlPNqVPksa77Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391381AbfJPXRA (ORCPT
+        id S2395483AbfJPXSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 19:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 19:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfJPXQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:16:59 -0400
+        id S1729316AbfJPXSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 19:18:37 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC61820872;
-        Wed, 16 Oct 2019 23:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F0120872;
+        Wed, 16 Oct 2019 23:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571267818;
-        bh=zirAnIqC/9yz2gPtuufIs13cXwxMvCqnY5qApb41f+M=;
+        s=default; t=1571267916;
+        bh=9GwVHIhpDb3lsuz2VZlfX9zCGY0Gd78lkJdnslS7qFI=;
         h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=SaQGqpiLQgeR98Z05PO57/QW0eAM5ELeTAxUZFHS3ii0Oq3gWZkOhpRfJIynjgkeD
-         fc8awSBNLZlD9W0zzTLo5OlzG8eb7jKrx5mrJ6H2l6WSqobT3S29gblenIA0BzAUxg
-         fF2fv21XF4md2j1/KsDyDhRGUDtn+p+4qwQWEN0w=
+        b=olV9ACCmY1PV3guCBUGy0aYKJhjOmUEC+IxuUjWRfAG2qX9F++3J9LnkkHk73iAgX
+         ayq7EZaMEOi8SIwFSOxoDQrzfp6M1UWqmNvXNX7y0TMO+maaGLEzlYGjqmZ/UbZ5HO
+         KXha3+TxVuEplcNYtWcgJi2pfpc3EEERzj0EVjc8=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191014143642.24552-1-yuehaibing@huawei.com>
-References: <20191014143642.24552-1-yuehaibing@huawei.com>
+In-Reply-To: <841d26a2adb4bf3b4423f82a41dd3f1346413db6.1570520268.git.baolin.wang@linaro.org>
+References: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org> <841d26a2adb4bf3b4423f82a41dd3f1346413db6.1570520268.git.baolin.wang@linaro.org>
 From:   Stephen Boyd <sboyd@kernel.org>
-To:     broonie@kernel.org, eric@anholt.net, f.fainelli@gmail.com,
-        heiko@sntech.de, mbrugger@suse.com, mripard@kernel.org,
-        mturquette@baylibre.com, nsaenzjulienne@suse.de, rjui@broadcom.com,
-        sbranden@broadcom.com, wahrenst@gmx.net, yuehaibing@huawei.com
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] clk: bcm2835: use devm_platform_ioremap_resource() to simplify code
+To:     Baolin Wang <baolin.wang@linaro.org>, mturquette@baylibre.com
+Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] clk: sprd: Change to use devm_platform_ioremap_resource()
 User-Agent: alot/0.8.1
-Date:   Wed, 16 Oct 2019 16:16:57 -0700
-Message-Id: <20191016231658.CC61820872@mail.kernel.org>
+Date:   Wed, 16 Oct 2019 16:18:36 -0700
+Message-Id: <20191016231836.C1F0120872@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting YueHaibing (2019-10-14 07:36:42)
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
+Quoting Baolin Wang (2019-10-08 00:41:39)
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together, which can simpify the code.
 >=20
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
 
 Applied to clk-next
