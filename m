@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF296ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9968FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA24621D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C3F222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262931;
-	bh=zmYiQjGEmtEdvrwR3vc98QSI31T5OB7AvO/odqSsTvc=;
+	s=default; t=1571262933;
+	bh=jpHkQuztPx20siRx6Ewm3JAV1X733A187RHAZxIdgMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qiTm0Bf1IKOEmru4d49oqaxTCe70qwwrC202h3ggEMbeqwQf0KGatdm2YbN6O6A/H
-	 3BV9HsY7AqSer0MPw5ORvRgz5ppvkYchCJZzcDDDOiW0bd3M1OxGWhXnBBQYvfu9sy
-	 8tNfb/FCBzZuspexYwTGW/gfa06qx2fuh1tf0Ado=
+	b=X013xkVVRDbttJ5rykaJEo6Gz2XRZW1Rwvia29POtxrNP6ei0MyHBEU+pyOB8cv20
+	 96fj0skUGkq+VtNObF2+S/1R7rN1OaHgn53/c2xWCK3nDhD2TVcOU0rNgPP1ZKgJLm
+	 52UGld3WUWV/HpUfdf3oO4kydiV6LULwqfRtRU60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395235AbfJPVza (ORCPT
+        id S2395247AbfJPVzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46076 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391137AbfJPVz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:27 -0400
+        id S2395213AbfJPVz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:28 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BA321A49;
-        Wed, 16 Oct 2019 21:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F4021D80;
+        Wed, 16 Oct 2019 21:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262926;
-        bh=zmYiQjGEmtEdvrwR3vc98QSI31T5OB7AvO/odqSsTvc=;
+        s=default; t=1571262927;
+        bh=jpHkQuztPx20siRx6Ewm3JAV1X733A187RHAZxIdgMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E9H/WJ6P+pJv9Xhvv6V3oR6T0LDt3GJe5QTx0t1gyur9duqeNgK8U6ca4jCA17R55
-         P4qH63XsNnjWZcp8FEAZt6uYvui1bwIfpUjrhaNb0D50jtnhtUxBbj+MqkGgows7kd
-         UqL2Zcwz6OBj5xyq7mcrJEbL2mMR6hAohQEvUVao=
+        b=H3vNjB5zn9ffZNgmmGORTVJ6nRlguQxWRHMPlsMXwZ0mfs/ow7iUOnaGyXvPnFtDr
+         tYrcoBcJxIH4F4kixUTLOMp65/YUIDr9HrZahwfSjsFgXLLtXdyDGvZqgjeSAaD/3h
+         Rp9nDMeOTtWXxh5I/iUd9I+5zV0rl5Xv84tKfYCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhengbin (A)" <zhengbin13@huawei.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.9 86/92] Fix the locking in dcache_readdir() and friends
-Date:   Wed, 16 Oct 2019 14:50:59 -0700
-Message-Id: <20191016214847.975364505@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 87/92] media: stkwebcam: fix runtime PM after driver unbind
+Date:   Wed, 16 Oct 2019 14:51:00 -0700
+Message-Id: <20191016214848.243121859@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,222 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Johan Hovold <johan@kernel.org>
 
-commit d4f4de5e5ef8efde85febb6876cd3c8ab1631999 upstream.
+commit 30045f2174aab7fb4db7a9cf902d0aa6c75856a7 upstream.
 
-There are two problems in dcache_readdir() - one is that lockless traversal
-of the list needs non-trivial cooperation of d_alloc() (at least a switch
-to list_add_rcu(), and probably more than just that) and another is that
-it assumes that no removal will happen without the directory locked exclusive.
-Said assumption had always been there, never had been stated explicitly and
-is violated by several places in the kernel (devpts and selinuxfs).
+Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
+interface PM usage counter") USB drivers must always balance their
+runtime PM gets and puts, including when the driver has already been
+unbound from the interface.
 
-        * replacement of next_positive() with different calling conventions:
-it returns struct list_head * instead of struct dentry *; the latter is
-passed in and out by reference, grabbing the result and dropping the original
-value.
-        * scan is under ->d_lock.  If we run out of timeslice, cursor is moved
-after the last position we'd reached and we reschedule; then the scan continues
-from that place.  To avoid livelocks between multiple lseek() (with cursors
-getting moved past each other, never reaching the real entries) we always
-skip the cursors, need_resched() or not.
-        * returned list_head * is either ->d_child of dentry we'd found or
-->d_subdirs of parent (if we got to the end of the list).
-        * dcache_readdir() and dcache_dir_lseek() switched to new helper.
-dcache_readdir() always holds a reference to dentry passed to dir_emit() now.
-Cursor is moved to just before the entry where dir_emit() has failed or into
-the very end of the list, if we'd run out.
-        * move_cursor() eliminated - it had sucky calling conventions and
-after fixing that it became simply list_move() (in lseek and scan_positives)
-or list_move_tail() (in readdir).
+Leaving the interface with a positive PM usage counter would prevent a
+later bound driver from suspending the device.
 
-        All operations with the list are under ->d_lock now, and we do not
-depend upon having all file removals done with parent locked exclusive
-anymore.
+Note that runtime PM has never actually been enabled for this driver
+since the support_autosuspend flag in its usb_driver struct is not set.
 
-Cc: stable@vger.kernel.org
-Reported-by: "zhengbin (A)" <zhengbin13@huawei.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191001084908.2003-5-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/libfs.c |  134 +++++++++++++++++++++++++++++++------------------------------
- 1 file changed, 69 insertions(+), 65 deletions(-)
+ drivers/media/usb/stkwebcam/stk-webcam.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -85,58 +85,47 @@ int dcache_dir_close(struct inode *inode
- EXPORT_SYMBOL(dcache_dir_close);
- 
- /* parent is locked at least shared */
--static struct dentry *next_positive(struct dentry *parent,
--				    struct list_head *from,
--				    int count)
-+/*
-+ * Returns an element of siblings' list.
-+ * We are looking for <count>th positive after <p>; if
-+ * found, dentry is grabbed and passed to caller via *<res>.
-+ * If no such element exists, the anchor of list is returned
-+ * and *<res> is set to NULL.
-+ */
-+static struct list_head *scan_positives(struct dentry *cursor,
-+					struct list_head *p,
-+					loff_t count,
-+					struct dentry **res)
- {
--	unsigned *seq = &parent->d_inode->i_dir_seq, n;
--	struct dentry *res;
--	struct list_head *p;
--	bool skipped;
--	int i;
-+	struct dentry *dentry = cursor->d_parent, *found = NULL;
- 
--retry:
--	i = count;
--	skipped = false;
--	n = smp_load_acquire(seq) & ~1;
--	res = NULL;
--	rcu_read_lock();
--	for (p = from->next; p != &parent->d_subdirs; p = p->next) {
-+	spin_lock(&dentry->d_lock);
-+	while ((p = p->next) != &dentry->d_subdirs) {
- 		struct dentry *d = list_entry(p, struct dentry, d_child);
--		if (!simple_positive(d)) {
--			skipped = true;
--		} else if (!--i) {
--			res = d;
--			break;
-+		// we must at least skip cursors, to avoid livelocks
-+		if (d->d_flags & DCACHE_DENTRY_CURSOR)
-+			continue;
-+		if (simple_positive(d) && !--count) {
-+			spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_NESTED);
-+			if (simple_positive(d))
-+				found = dget_dlock(d);
-+			spin_unlock(&d->d_lock);
-+			if (likely(found))
-+				break;
-+			count = 1;
-+		}
-+		if (need_resched()) {
-+			list_move(&cursor->d_child, p);
-+			p = &cursor->d_child;
-+			spin_unlock(&dentry->d_lock);
-+			cond_resched();
-+			spin_lock(&dentry->d_lock);
- 		}
+--- a/drivers/media/usb/stkwebcam/stk-webcam.c
++++ b/drivers/media/usb/stkwebcam/stk-webcam.c
+@@ -647,8 +647,7 @@ static int v4l_stk_release(struct file *
+ 		dev->owner = NULL;
  	}
--	rcu_read_unlock();
--	if (skipped) {
--		smp_rmb();
--		if (unlikely(*seq != n))
--			goto retry;
--	}
--	return res;
--}
--
--static void move_cursor(struct dentry *cursor, struct list_head *after)
--{
--	struct dentry *parent = cursor->d_parent;
--	unsigned n, *seq = &parent->d_inode->i_dir_seq;
--	spin_lock(&parent->d_lock);
--	for (;;) {
--		n = *seq;
--		if (!(n & 1) && cmpxchg(seq, n, n + 1) == n)
--			break;
--		cpu_relax();
--	}
--	__list_del(cursor->d_child.prev, cursor->d_child.next);
--	if (after)
--		list_add(&cursor->d_child, after);
--	else
--		list_add_tail(&cursor->d_child, &parent->d_subdirs);
--	smp_store_release(seq, n + 2);
--	spin_unlock(&parent->d_lock);
-+	spin_unlock(&dentry->d_lock);
-+	dput(*res);
-+	*res = found;
-+	return p;
+ 
+-	if (is_present(dev))
+-		usb_autopm_put_interface(dev->interface);
++	usb_autopm_put_interface(dev->interface);
+ 	mutex_unlock(&dev->lock);
+ 	return v4l2_fh_release(fp);
  }
- 
- loff_t dcache_dir_lseek(struct file *file, loff_t offset, int whence)
-@@ -152,17 +141,28 @@ loff_t dcache_dir_lseek(struct file *fil
- 			return -EINVAL;
- 	}
- 	if (offset != file->f_pos) {
-+		struct dentry *cursor = file->private_data;
-+		struct dentry *to = NULL;
-+		struct list_head *p;
-+
- 		file->f_pos = offset;
--		if (file->f_pos >= 2) {
--			struct dentry *cursor = file->private_data;
--			struct dentry *to;
--			loff_t n = file->f_pos - 2;
--
--			inode_lock_shared(dentry->d_inode);
--			to = next_positive(dentry, &dentry->d_subdirs, n);
--			move_cursor(cursor, to ? &to->d_child : NULL);
--			inode_unlock_shared(dentry->d_inode);
-+		inode_lock_shared(dentry->d_inode);
-+
-+		if (file->f_pos > 2) {
-+			p = scan_positives(cursor, &dentry->d_subdirs,
-+					   file->f_pos - 2, &to);
-+			spin_lock(&dentry->d_lock);
-+			list_move(&cursor->d_child, p);
-+			spin_unlock(&dentry->d_lock);
-+		} else {
-+			spin_lock(&dentry->d_lock);
-+			list_del_init(&cursor->d_child);
-+			spin_unlock(&dentry->d_lock);
- 		}
-+
-+		dput(to);
-+
-+		inode_unlock_shared(dentry->d_inode);
- 	}
- 	return offset;
- }
-@@ -184,25 +184,29 @@ int dcache_readdir(struct file *file, st
- {
- 	struct dentry *dentry = file->f_path.dentry;
- 	struct dentry *cursor = file->private_data;
--	struct list_head *p = &cursor->d_child;
--	struct dentry *next;
--	bool moved = false;
-+	struct list_head *anchor = &dentry->d_subdirs;
-+	struct dentry *next = NULL;
-+	struct list_head *p;
- 
- 	if (!dir_emit_dots(file, ctx))
- 		return 0;
- 
- 	if (ctx->pos == 2)
--		p = &dentry->d_subdirs;
--	while ((next = next_positive(dentry, p, 1)) != NULL) {
-+		p = anchor;
-+	else
-+		p = &cursor->d_child;
-+
-+	while ((p = scan_positives(cursor, p, 1, &next)) != anchor) {
- 		if (!dir_emit(ctx, next->d_name.name, next->d_name.len,
- 			      d_inode(next)->i_ino, dt_type(d_inode(next))))
- 			break;
--		moved = true;
--		p = &next->d_child;
- 		ctx->pos++;
- 	}
--	if (moved)
--		move_cursor(cursor, p);
-+	spin_lock(&dentry->d_lock);
-+	list_move_tail(&cursor->d_child, p);
-+	spin_unlock(&dentry->d_lock);
-+	dput(next);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(dcache_readdir);
 
 
