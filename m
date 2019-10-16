@@ -2,77 +2,100 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1401FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15BCFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B4E2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC2A2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393625AbfJPQZt (ORCPT
+        id S2393740AbfJPQ01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:25:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12345 "EHLO mga07.intel.com"
+        Wed, 16 Oct 2019 12:26:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:44882 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733056AbfJPQZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:25:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 09:25:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
-   d="scan'208";a="202116161"
-Received: from hagarwal-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.5.165])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2019 09:25:44 -0700
-Date:   Wed, 16 Oct 2019 19:25:43 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191016162543.GB6279@linux.intel.com>
-References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
- <20191014190033.GA15552@linux.intel.com>
- <1571081397.3728.9.camel@HansenPartnership.com>
- <20191016110031.GE10184@linux.intel.com>
- <1571229252.3477.7.camel@HansenPartnership.com>
+        id S2390184AbfJPQ01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:26:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B92ED28;
+        Wed, 16 Oct 2019 09:26:26 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3D0D3F68E;
+        Wed, 16 Oct 2019 09:26:25 -0700 (PDT)
+Subject: Re: "Convert the AMD iommu driver to the dma-iommu api" is buggy
+To:     Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>
+Cc:     Tom Murphy <murphyt7@tcd.ie>, Christoph Hellwig <hch@lst.de>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <1571237707.5937.58.camel@lca.pw>
+ <1571237982.5937.60.camel@lca.pw> <20191016153112.GF4695@suse.de>
+ <1571241213.5937.64.camel@lca.pw> <20191016160314.GH4695@suse.de>
+ <1571242287.5937.66.camel@lca.pw>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2912dd38-72c5-93a1-1185-46b681473a62@arm.com>
+Date:   Wed, 16 Oct 2019 17:26:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571229252.3477.7.camel@HansenPartnership.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1571242287.5937.66.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
-> reversible ciphers are generally frowned upon in random number
-> generation, that's why the krng uses chacha20.  In general I think we
-> shouldn't try to code our own mixing and instead should get the krng to
-> do it for us using whatever the algorithm du jour that the crypto guys
-> have blessed is.  That's why I proposed adding the TPM output to the
-> krng as entropy input and then taking the output of the krng.
+On 16/10/2019 17:11, Qian Cai wrote:
+> On Wed, 2019-10-16 at 18:03 +0200, Joerg Roedel wrote:
+>> On Wed, Oct 16, 2019 at 11:53:33AM -0400, Qian Cai wrote:
+>>> On Wed, 2019-10-16 at 17:31 +0200, Joerg Roedel wrote:
+>>> The x86 one might just be a mistake.
+>>>
+>>> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+>>> index ad05484d0c80..63c4b894751d 100644
+>>> --- a/drivers/iommu/amd_iommu.c
+>>> +++ b/drivers/iommu/amd_iommu.c
+>>> @@ -2542,7 +2542,7 @@ static int amd_iommu_map(struct iommu_domain *dom,
+>>> unsigned long iova,
+>>>          if (iommu_prot & IOMMU_WRITE)
+>>>                  prot |= IOMMU_PROT_IW;
+>>>   
+>>> -       ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
+>>> +       ret = iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
+>>
+>> Yeah, that is a bug, I spotted that too.
+>>
+>>> @@ -1185,7 +1185,7 @@ static struct iommu_dma_msi_page
+>>> *iommu_dma_get_msi_page(struct device *dev,
+>>>          if (!iova)
+>>>                  goto out_free_page;
+>>>   
+>>> -       if (iommu_map(domain, iova, msi_addr, size, prot))
+>>> +       if (iommu_map_atomic(domain, iova, msi_addr, size, prot))
+>>>                  goto out_free_iova;
+>>
+>> Not so sure this is a bug, this code is only about setting up MSIs on
+>> ARM. It probably doesn't need to be atomic.
+> 
+> The patch "iommu: Add gfp parameter to iommu_ops::map" does this. It could be
+> called from an atomic context as showed in the arm64 call traces,
+> 
+> +int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> +             phys_addr_t paddr, size_t size, int prot)
+> +{
+> +       might_sleep();
+> +       return __iommu_map(domain, iova, paddr, size, prot, GFP_KERNEL);
+> +}
 
-It is already registered as hwrng. What else? Was the issue that
-it is only used as seed when the rng is init'd first? I haven't
-at this point gone to the internals of krng.
+Also note that it's *only* the might_sleep() at issue here - none of the 
+arm64 IOMMU drivers have been converted to look at the new gfp argument 
+yet, so anything they actually allocate while mapping will still be 
+GFP_ATOMIC anyway.
 
-/Jarkko
+(Carrying that flag down through the whole io-pgtable stack is on my 
+to-do list...)
+
+Robin.
