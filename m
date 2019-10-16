@@ -2,97 +2,220 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D41FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2FDFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7FD20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UB9ELyOZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5D35620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571231582;
+	bh=6GG8zdFDGvDo1qQWy36D+1Jipp0x6MbzMPgPTobpQkw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EPqFkfabUoMRn1CWuuWp3fM4S6Zg2TRAtzsQQ2j8JaYmoav3TEqvBX2ykwyVvgjMs
+	 Cg/TH5MZ/X7gRn1+qGM4EOmPmJHq3x7aLNyR9ZnJ3qXwvmtyTt7ViuYpLQu3XghCVV
+	 fSXG8VkUu6225rY3YS+epsJE8r9rokhWktuJ4BN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393492AbfJPNMu (ORCPT
+        id S2393505AbfJPNNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:12:50 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44134 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391688AbfJPNMu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:12:50 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u40so35932512qth.11
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:12:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8JThs1XG1ijPDoWXd001r2c0QxpUa5W2X+j98FgzGb4=;
-        b=UB9ELyOZDOPd221KTRZ44E6coQpNcftSoMxNazf7t7nDHFWdnlu49LfY4juaUuij+u
-         uyg+XuKVTfjGgg6f4yohjI/jki6Ey5vm/kSgHuM8jhxf8/TeIfQLhCTR8hCp5SKkjOEc
-         aghKyx6Go8GpAiGyEFJslvNxarC4F497LwkwyzhKWbLaZ7BdJv16xCl6s8xTFOtqdhID
-         TJFzruv3A7f6Abldxi7qPSb4ZpmJ2yHh+g3JpVmUCO+vLOrQZZ3rIcfXGEVyYPEgFO+H
-         f2kIyl+jZ8TgDuq7pviRq5YjYRyEK5T0FwsIZlAqJsL0s9vXcXnOHCVpJctB3HcgeqZH
-         ClHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8JThs1XG1ijPDoWXd001r2c0QxpUa5W2X+j98FgzGb4=;
-        b=gFHy0Onu5/D/d26KIbR+JVTiZNVLiYH17NJBa8aprTveTx6EL/67HJLraFGW1tKz9Y
-         pt7hQrg6Yt+FnwLI1qBZUYzy2IJLyozQiaSNlh0qq9PZcOYwaKxB/OSHvojXG+glR03M
-         RI7DGk5AX2yBHj4rM2JxiDA3BFgL65cWq2nCxvWZHp3x9RtvuVtESSrN54zRw/oE+61U
-         JQ/ZN2wxqHNdfpURZziqRR4LDen5V/WMZ1uOalrcijQ4V4OLl0pQoyTMYQnskvMroR9L
-         Uh0TDje1v3YU8JyM96KTVl3eC5WDy0bN+dr3DukNFrT6ttAabeYmkK/VCfvViqpwBnfl
-         O++w==
-X-Gm-Message-State: APjAAAWVEur4fQcTi1m0AO8RWaHqTvHh8c3N1hnPW2isbaAiAVn1pgYS
-        2BoJkgiusuDYRkCukVOEDYVH5LcnEMLn83N1TV/1Mg==
-X-Google-Smtp-Source: APXvYqz4WACK7QZCPQXxStJci3zXaPb5Yc24BDtLg9Q18h0g3nKjgnK1rXsHGJ3td2yB7eQaUO55uFjrFVgjSv4QrKM=
-X-Received: by 2002:aed:2462:: with SMTP id s31mr45553740qtc.40.1571231567878;
- Wed, 16 Oct 2019 06:12:47 -0700 (PDT)
+        Wed, 16 Oct 2019 09:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391688AbfJPNNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:13:00 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08FAE20663;
+        Wed, 16 Oct 2019 13:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571231579;
+        bh=6GG8zdFDGvDo1qQWy36D+1Jipp0x6MbzMPgPTobpQkw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vzGhS4eNYC4y5D4VIwdgigaWt4LpEqp5Nk4oVLKC86OAHEgvPVIkLvAFN7DCBzHk4
+         7VqQxjfjfI73apKQM1G6FsvXEagQwi+8Vfwgzd6FJjYa29OMEs70GlvlrGrx9ZMt9X
+         56uDTECXtzn3SRfIGFz3uybYyKInWHf39Uevf2H0=
+Received: by mail-lf1-f46.google.com with SMTP id u16so4868699lfq.3;
+        Wed, 16 Oct 2019 06:12:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAUUUCFYIFczfjKerp8kQtL32g3QWkc2wSzOtLXUUdvh+w5w1TQ8
+        n6chkUsr+1IqGKMfz3gyJgxJPne2y5m6BsK7Xqw=
+X-Google-Smtp-Source: APXvYqzT/N1cgrtXrDQrRHPj8eWvyv0iVr9e24iJo8IYb5hDG7elRD/rbAMkzuCcQ5vyaQZogAGXBJQGD33R9ZUtQHo=
+X-Received: by 2002:a19:4f4c:: with SMTP id a12mr1541261lfk.18.1571231577169;
+ Wed, 16 Oct 2019 06:12:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-23-arnd@arndb.de>
-In-Reply-To: <20191010203043.1241612-23-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 15:12:36 +0200
-Message-ID: <CACRpkdb07KyJDgACuh2ho822pHAUcw2ubu=WJwqxf8NO-Pv+_A@mail.gmail.com>
-Subject: Re: [PATCH 23/36] ARM: s3c: move s3cmci pinctrl handling into board files
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>
+References: <20191014141427.30708-1-ribalda@kernel.org> <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
+ <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
+ <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl> <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
+ <77204a05-34a5-f6f1-460f-bddaa8f2bb5c@xs4all.nl>
+In-Reply-To: <77204a05-34a5-f6f1-460f-bddaa8f2bb5c@xs4all.nl>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Wed, 16 Oct 2019 15:12:41 +0200
+X-Gmail-Original-Message-ID: <CAPybu_3o9LLk2fHJPk7DmwKVB2Fubftdu+7VL=U6TM03rHTTiw@mail.gmail.com>
+Message-ID: <CAPybu_3o9LLk2fHJPk7DmwKVB2Fubftdu+7VL=U6TM03rHTTiw@mail.gmail.com>
+Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Hans
 
-> Rather than call the internal s3c_gpio_cfgall_range() function
-> through a platform header, move the code into the set_power
-> callback that is already exported by the board, and add
-> a default implementation.
+On Wed, Oct 16, 2019 at 2:43 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wro=
+te:
 >
-> In DT mode, the code already does not set the pin config,
-> so nothing changes there.
+> On 10/16/19 2:39 PM, Ricardo Ribalda Delgado wrote:
+> > Hi Hans:
+> >
+> > On Wed, Oct 16, 2019 at 2:32 PM Hans Verkuil <hverkuil-cisco@xs4all.nl>=
+ wrote:
+> >>
+> >> On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
+> >>> Hi Hans
+> >>>
+> >>> Not that awkward, the user has to use the brand new
+> >>> v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
+> >>> change.
+> >>
+> >> Well, a struct v4l2_ctrl_config is typically a static const, so you ca=
+n't use
+> >> v4l2_ctrl_ptr_create().
+> >>
+> >> Hmm, perhaps it is as easy as:
+> >>
+> >> static const struct v4l2_area def_area =3D {
+> >>         ...
+> >> };
+> >>
+> >> static const struct v4l2_ctrl_config ctrl =3D {
+> >>         ...
+> >>
+> >>         .p_def.p_area =3D &def_area,
+> >>         ...
+> >> };
+> >>
+> >> Can you do a quick compile check that I am not overlooking anything?
+> >>
+> >> If this works, then I'll take this patch.
+> >
+> > Testing with gcc 9.2.1
+> >
+> > This works fine, no warning/error:
+> >
+> > static struct v4l2_area unit_size =3D {
+> > .width =3D UNIT_SIZE,
+> > .height =3D UNIT_SIZE,
+> > };
+> > static struct v4l2_ctrl_config area_ctrl =3D {
+> > .type =3D V4L2_CTRL_TYPE_AREA,
+> > .flags =3D V4L2_CTRL_FLAG_READ_ONLY,
+> > .p_def.p_area =3D &unit_size,
+> > };
+> >
+> > but if unit_size is set as CONST:
+> > static const struct v4l2_area
+> >
+> > Then:
+> > drivers/qtec/qtec_sony.c: In function =E2=80=98qtec_sony_probe=E2=80=99=
+:
+> > drivers/qtec/qtec_sony.c:3151:19: warning: initialization discards
+> > =E2=80=98const=E2=80=99 qualifier from pointer target type [-Wdiscarded=
+-qualifiers]
+> >  3151 |   .p_def.p_area =3D &unit_size,
+> >       |
 >
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Hmm. So we need a const void *p_def instead.
+>
 
-It looks good:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+If we make p_def in ctrl_config const then this will fail:
 
-It would feel better if someone was actually testing it on these
-boards. I see Ben is listed as maintainer so I bet he will
-pull the board out :)
+drivers/qtec/qtec_sony.c:3273:18: error: assignment of read-only member =E2=
+=80=98p_def=E2=80=99
+ 3273 |  area_ctrl.p_def =3D v4l2_ctrl_ptr_create((void *)&unit_size);
 
-Yours,
-Linus Walleij
+
+I think we need to leave it as in the proposed patch.
+
+> Regards,
+>
+>         Hans
+>
+> >
+> >>
+> >> Regards,
+> >>
+> >>         Hans
+> >>
+> >>>
+> >>> Regards
+> >>>
+> >>> On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.n=
+l> wrote:
+> >>>>
+> >>>> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
+> >>>>> This allows setting the default value on compound controls created =
+via
+> >>>>> v4l2_ctrl_new_custom.
+> >>>>>
+> >>>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> >>>>> ---
+> >>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+> >>>>>  include/media/v4l2-ctrls.h           | 2 ++
+> >>>>>  2 files changed, 3 insertions(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v=
+4l2-core/v4l2-ctrls.c
+> >>>>> index bf50d37ef6c1..12cf38f73f7b 100644
+> >>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> >>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> >>>>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct=
+ v4l2_ctrl_handler *hdl,
+> >>>>>                       type, min, max,
+> >>>>>                       is_menu ? cfg->menu_skip_mask : step, def,
+> >>>>>                       cfg->dims, cfg->elem_size,
+> >>>>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
+> >>>>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
+> >>>>>       if (ctrl)
+> >>>>>               ctrl->is_private =3D cfg->is_private;
+> >>>>>       return ctrl;
+> >>>>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.=
+h
+> >>>>> index 26205ba3a0a0..2fca5b823961 100644
+> >>>>> --- a/include/media/v4l2-ctrls.h
+> >>>>> +++ b/include/media/v4l2-ctrls.h
+> >>>>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
+> >>>>>   * @max:     The control's maximum value.
+> >>>>>   * @step:    The control's step value for non-menu controls.
+> >>>>>   * @def:     The control's default value.
+> >>>>> + * @p_def:   The control's default value for compound controls.
+> >>>>>   * @dims:    The size of each dimension.
+> >>>>>   * @elem_size:       The size in bytes of the control.
+> >>>>>   * @flags:   The control's flags.
+> >>>>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
+> >>>>>       s64 max;
+> >>>>>       u64 step;
+> >>>>>       s64 def;
+> >>>>> +     union v4l2_ctrl_ptr p_def;
+> >>>>>       u32 dims[V4L2_CTRL_MAX_DIMS];
+> >>>>>       u32 elem_size;
+> >>>>>       u32 flags;
+> >>>>>
+> >>>>
+> >>>> I'm not sure about this. It might be a bit awkward to initialize p_d=
+ef given that it is a union.
+> >>>>
+> >>>> Perhaps a simple void pointer would be easier?
+> >>>>
+> >>>> Regards,
+> >>>>
+> >>>>         Hans
+> >>
+>
