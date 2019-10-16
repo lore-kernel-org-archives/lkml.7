@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A8FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CF6ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2951121D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7961321D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263135;
-	bh=8ypf+V3XnMZ5d4aOrmgay6KYQXAQYppW/pnkETnQXzs=;
+	s=default; t=1571263140;
+	bh=4tGlNSxHASXe77fKr/iwjF7Jn4vL/P/jnQ4dXsy18IE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wX4JXJImyGAcEVu8eHbIwoY5cGAyvP5e+dPa5GTvu5i31TUB83w+Ia6GX2ilWwKqa
-	 a0G/hFstQW3vxoBPAEaAb8wRi3fSiTIN0XIwwgee3gS6dX1tmGqGamMYtPqWSSO6/J
-	 dyGqB2A2E9LvVO8yoaY7fuwXVQYibYpTd4zK00Ic=
+	b=SiRkr1irR+L1lof/Bg01yihyzxR+wUwgb6zTEf7WC5hcS0eXFcTpfbi82yysJqoE8
+	 fxDBg9r+Ao/YOzu2l8UeahfYYXA8Z/w/ukqZ8SVftREjaHaZ27liMkpxdzSciRjujS
+	 Bypxn3TyNhKlO423CACqYINCclYdAd+DLPaINoKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438313AbfJPV6y (ORCPT
+        id S2438349AbfJPV67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395550AbfJPV6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:04 -0400
+        id S2438120AbfJPV6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:10 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F19222BD;
-        Wed, 16 Oct 2019 21:58:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F7021D7C;
+        Wed, 16 Oct 2019 21:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263083;
-        bh=8ypf+V3XnMZ5d4aOrmgay6KYQXAQYppW/pnkETnQXzs=;
+        s=default; t=1571263089;
+        bh=4tGlNSxHASXe77fKr/iwjF7Jn4vL/P/jnQ4dXsy18IE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDBDx5WsEDKpESjM+dgi1bqKTBeTUDWn0LexLnfOMW08B6+LeZe3uB27ZUb1BFFtG
-         lmabOlZYjoy5SyDh/OEhJFV0owXqAyzn5grVdPvlvh2r7aHECFbEdbDCgsZeM66pCF
-         uilhR+ZjCXcuK5cmgAgWFp41UVy51X+Qi35dL+Ug=
+        b=iimiCU9YHyG4l5ylzBEUdVngre0AFrzKNrCz4/2BsXA83BklKosaOel3ciZCUqFXx
+         n6wqcZjezrwjrjKSftOQnL1Dg4YF95nG0irtYHu3I6hvoRA2t0YjgUt6EsLrPF2YrX
+         OJ0Tmcbz20TP9ArDsiTA/fz8S2rXXCdSeZz3UQuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 41/81] mei: avoid FW version request on Ibex Peak and earlier
-Date:   Wed, 16 Oct 2019 14:50:52 -0700
-Message-Id: <20191016214837.926708432@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Lo=C3=AFc=20Yhuel?= <loic.yhuel@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.3 010/112] xhci: Fix USB 3.1 capability detection on early xHCI 1.1 spec based hosts
+Date:   Wed, 16 Oct 2019 14:50:02 -0700
+Message-Id: <20191016214846.596424574@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,212 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit f8204f0ddd62966a0e79c2804963a21e3540dd82 upstream.
+commit 47f50d61076523e1a0d5a070062c2311320eeca8 upstream.
 
-The fixed MKHI client on PCH 6 gen platforms
-does not support fw version retrieval.
-The error is not fatal, but it fills up the kernel logs and
-slows down the driver start.
-This patch disables requesting FW version on GEN6 and earlier platforms.
+Early xHCI 1.1 spec did not mention USB 3.1 capable hosts should set
+sbrn to 0x31, or that the minor revision is a two digit BCD
+containing minor and sub-minor numbers.
+This was later clarified in xHCI 1.2.
 
-Fixes warning:
-[   15.964298] mei mei::55213584-9a29-4916-badf-0fb7ed682aeb:01: Could not read FW version
-[   15.964301] mei mei::55213584-9a29-4916-badf-0fb7ed682aeb:01: version command failed -5
+Some USB 3.1 capable hosts therefore have sbrn set to 0x30, or minor
+revision set to 0x1 instead of 0x10.
 
-Cc: <stable@vger.kernel.org> +v4.18
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20191004181722.31374-1-tomas.winkler@intel.com
+Detect the USB 3.1 capability correctly for these hosts as well
+
+Fixes: ddd57980a0fd ("xhci: detect USB 3.2 capable host controllers correctly")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Loïc Yhuel <loic.yhuel@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-5-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/bus-fixup.c |   14 +++++++++++---
- drivers/misc/mei/hw-me.c     |   21 ++++++++++++++++++---
- drivers/misc/mei/hw-me.h     |    8 ++++++--
- drivers/misc/mei/mei_dev.h   |    4 ++++
- drivers/misc/mei/pci-me.c    |   10 +++++-----
- 5 files changed, 44 insertions(+), 13 deletions(-)
+ drivers/usb/host/xhci.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/drivers/misc/mei/bus-fixup.c
-+++ b/drivers/misc/mei/bus-fixup.c
-@@ -214,13 +214,21 @@ static void mei_mkhi_fix(struct mei_cl_d
- {
- 	int ret;
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -5078,11 +5078,18 @@ int xhci_gen_setup(struct usb_hcd *hcd,
+ 		hcd->has_tt = 1;
+ 	} else {
+ 		/*
+-		 * Some 3.1 hosts return sbrn 0x30, use xhci supported protocol
+-		 * minor revision instead of sbrn. Minor revision is a two digit
+-		 * BCD containing minor and sub-minor numbers, only show minor.
++		 * Early xHCI 1.1 spec did not mention USB 3.1 capable hosts
++		 * should return 0x31 for sbrn, or that the minor revision
++		 * is a two digit BCD containig minor and sub-minor numbers.
++		 * This was later clarified in xHCI 1.2.
++		 *
++		 * Some USB 3.1 capable hosts therefore have sbrn 0x30, and
++		 * minor revision set to 0x1 instead of 0x10.
+ 		 */
+-		minor_rev = xhci->usb3_rhub.min_rev / 0x10;
++		if (xhci->usb3_rhub.min_rev == 0x1)
++			minor_rev = 1;
++		else
++			minor_rev = xhci->usb3_rhub.min_rev / 0x10;
  
-+	/* No need to enable the client if nothing is needed from it */
-+	if (!cldev->bus->fw_f_fw_ver_supported &&
-+	    !cldev->bus->hbm_f_os_supported)
-+		return;
-+
- 	ret = mei_cldev_enable(cldev);
- 	if (ret)
- 		return;
- 
--	ret = mei_fwver(cldev);
--	if (ret < 0)
--		dev_err(&cldev->dev, "FW version command failed %d\n", ret);
-+	if (cldev->bus->fw_f_fw_ver_supported) {
-+		ret = mei_fwver(cldev);
-+		if (ret < 0)
-+			dev_err(&cldev->dev, "FW version command failed %d\n",
-+				ret);
-+	}
- 
- 	if (cldev->bus->hbm_f_os_supported) {
- 		ret = mei_osver(cldev);
---- a/drivers/misc/mei/hw-me.c
-+++ b/drivers/misc/mei/hw-me.c
-@@ -1368,6 +1368,8 @@ static bool mei_me_fw_type_sps(struct pc
- #define MEI_CFG_FW_SPS                           \
- 	.quirk_probe = mei_me_fw_type_sps
- 
-+#define MEI_CFG_FW_VER_SUPP                     \
-+	.fw_ver_supported = 1
- 
- #define MEI_CFG_ICH_HFS                      \
- 	.fw_status.count = 0
-@@ -1405,31 +1407,41 @@ static const struct mei_cfg mei_me_ich10
- 	MEI_CFG_ICH10_HFS,
- };
- 
--/* PCH devices */
--static const struct mei_cfg mei_me_pch_cfg = {
-+/* PCH6 devices */
-+static const struct mei_cfg mei_me_pch6_cfg = {
- 	MEI_CFG_PCH_HFS,
- };
- 
-+/* PCH7 devices */
-+static const struct mei_cfg mei_me_pch7_cfg = {
-+	MEI_CFG_PCH_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+};
-+
- /* PCH Cougar Point and Patsburg with quirk for Node Manager exclusion */
- static const struct mei_cfg mei_me_pch_cpt_pbg_cfg = {
- 	MEI_CFG_PCH_HFS,
-+	MEI_CFG_FW_VER_SUPP,
- 	MEI_CFG_FW_NM,
- };
- 
- /* PCH8 Lynx Point and newer devices */
- static const struct mei_cfg mei_me_pch8_cfg = {
- 	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
- };
- 
- /* PCH8 Lynx Point with quirk for SPS Firmware exclusion */
- static const struct mei_cfg mei_me_pch8_sps_cfg = {
- 	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
- 	MEI_CFG_FW_SPS,
- };
- 
- /* Cannon Lake and newer devices */
- static const struct mei_cfg mei_me_pch12_cfg = {
- 	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
- 	MEI_CFG_DMA_128,
- };
- 
-@@ -1441,7 +1453,8 @@ static const struct mei_cfg *const mei_c
- 	[MEI_ME_UNDEF_CFG] = NULL,
- 	[MEI_ME_ICH_CFG] = &mei_me_ich_cfg,
- 	[MEI_ME_ICH10_CFG] = &mei_me_ich10_cfg,
--	[MEI_ME_PCH_CFG] = &mei_me_pch_cfg,
-+	[MEI_ME_PCH6_CFG] = &mei_me_pch6_cfg,
-+	[MEI_ME_PCH7_CFG] = &mei_me_pch7_cfg,
- 	[MEI_ME_PCH_CPT_PBG_CFG] = &mei_me_pch_cpt_pbg_cfg,
- 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
- 	[MEI_ME_PCH8_SPS_CFG] = &mei_me_pch8_sps_cfg,
-@@ -1480,6 +1493,8 @@ struct mei_device *mei_me_dev_init(struc
- 
- 	mei_device_init(dev, &pdev->dev, &mei_me_hw_ops);
- 	hw->cfg = cfg;
-+	dev->fw_f_fw_ver_supported = cfg->fw_ver_supported;
-+
- 	return dev;
- }
- 
---- a/drivers/misc/mei/hw-me.h
-+++ b/drivers/misc/mei/hw-me.h
-@@ -32,11 +32,13 @@
-  * @fw_status: FW status
-  * @quirk_probe: device exclusion quirk
-  * @dma_size: device DMA buffers size
-+ * @fw_ver_supported: is fw version retrievable from FW
-  */
- struct mei_cfg {
- 	const struct mei_fw_status fw_status;
- 	bool (*quirk_probe)(struct pci_dev *pdev);
- 	size_t dma_size[DMA_DSCR_NUM];
-+	u32 fw_ver_supported:1;
- };
- 
- 
-@@ -74,7 +76,8 @@ struct mei_me_hw {
-  * @MEI_ME_UNDEF_CFG:      Lower sentinel.
-  * @MEI_ME_ICH_CFG:        I/O Controller Hub legacy devices.
-  * @MEI_ME_ICH10_CFG:      I/O Controller Hub platforms Gen10
-- * @MEI_ME_PCH_CFG:        Platform Controller Hub platforms (Up to Gen8).
-+ * @MEI_ME_PCH6_CFG:       Platform Controller Hub platforms (Gen6).
-+ * @MEI_ME_PCH7_CFG:       Platform Controller Hub platforms (Gen7).
-  * @MEI_ME_PCH_CPT_PBG_CFG:Platform Controller Hub workstations
-  *                         with quirk for Node Manager exclusion.
-  * @MEI_ME_PCH8_CFG:       Platform Controller Hub Gen8 and newer
-@@ -89,7 +92,8 @@ enum mei_cfg_idx {
- 	MEI_ME_UNDEF_CFG,
- 	MEI_ME_ICH_CFG,
- 	MEI_ME_ICH10_CFG,
--	MEI_ME_PCH_CFG,
-+	MEI_ME_PCH6_CFG,
-+	MEI_ME_PCH7_CFG,
- 	MEI_ME_PCH_CPT_PBG_CFG,
- 	MEI_ME_PCH8_CFG,
- 	MEI_ME_PCH8_SPS_CFG,
---- a/drivers/misc/mei/mei_dev.h
-+++ b/drivers/misc/mei/mei_dev.h
-@@ -422,6 +422,8 @@ struct mei_fw_version {
-  *
-  * @fw_ver : FW versions
-  *
-+ * @fw_f_fw_ver_supported : fw feature: fw version supported
-+ *
-  * @me_clients_rwsem: rw lock over me_clients list
-  * @me_clients  : list of FW clients
-  * @me_clients_map : FW clients bit map
-@@ -500,6 +502,8 @@ struct mei_device {
- 
- 	struct mei_fw_version fw_ver[MEI_MAX_FW_VER_BLOCKS];
- 
-+	unsigned int fw_f_fw_ver_supported:1;
-+
- 	struct rw_semaphore me_clients_rwsem;
- 	struct list_head me_clients;
- 	DECLARE_BITMAP(me_clients_map, MEI_CLIENTS_MAX);
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -70,13 +70,13 @@ static const struct pci_device_id mei_me
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICH10_3, MEI_ME_ICH10_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICH10_4, MEI_ME_ICH10_CFG)},
- 
--	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_1, MEI_ME_PCH_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_2, MEI_ME_PCH_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_1, MEI_ME_PCH6_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_2, MEI_ME_PCH6_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CPT_1, MEI_ME_PCH_CPT_PBG_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_PBG_1, MEI_ME_PCH_CPT_PBG_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_1, MEI_ME_PCH_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_2, MEI_ME_PCH_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_3, MEI_ME_PCH_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_1, MEI_ME_PCH7_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_2, MEI_ME_PCH7_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_3, MEI_ME_PCH7_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_H, MEI_ME_PCH8_SPS_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_W, MEI_ME_PCH8_SPS_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_LP, MEI_ME_PCH8_CFG)},
+ 		switch (minor_rev) {
+ 		case 2:
 
 
