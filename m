@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBB1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21E9FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580F82168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AAE207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264206;
-	bh=85ImHd+iC/uz5AhcNCsQYGkHH6IrmsgFjvEXApBTSiY=;
+	s=default; t=1571264209;
+	bh=LUKjsPCWEtNH3HLndgOLDUzg8Vj0lrrvdvXlTRZPOks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wL9hhfj/auaur5VGmDNeAN4fix6KS65jmjh2pM1NFy5JLYT2EXRCUkicQxhS85ydP
-	 163DZKHZcMAhC9vhsB5MPcbYT516Xosh/kHOtHxeI2GzOcUrrkS8gjfTidvauGSdHA
-	 DY8T6meBaiyUnvaeiF9DU+snRm3wi6WTaMcSpPCE=
+	b=lZnmxD2zbnVlcPO8HfdvnM++RTfY3WcgffZACbpCxD3Y5j6m9DZGRMCweZsCGowIB
+	 Df2MBI9XKPz0mfUesHUy3D5bnGjFu4fo1NObBk/OHlKbKbefncNdrM4OxGhq+HfLz5
+	 yXArnEFlE/tya8nqlHXv1ZSUm557ZY/iandMH3Ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395156AbfJPVzC (ORCPT
+        id S2387606AbfJPWQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45116 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395099AbfJPVy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:56 -0400
+        id S2390952AbfJPVzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:01 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54ACB20872;
-        Wed, 16 Oct 2019 21:54:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 202CC218DE;
+        Wed, 16 Oct 2019 21:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262895;
-        bh=85ImHd+iC/uz5AhcNCsQYGkHH6IrmsgFjvEXApBTSiY=;
+        s=default; t=1571262901;
+        bh=LUKjsPCWEtNH3HLndgOLDUzg8Vj0lrrvdvXlTRZPOks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KzW7YiOy+XgZFSLcdMXQubH44PIkJDgCkSsOm7shs4sJocwsnIbU/GZRbmmmxaYN1
-         EjW4UnmbdzzAsJTULHmQV6yFNUBrQWtj6GptMbS1lsLXzjkkgpDgU2t+9GLNoheZtb
-         OxbfF2Hd9/V4gUf1C7vT+FHwHJ3/eBcrOrOjkn+Q=
+        b=UdNzhci3SEtcxTF6dxTL8SfTioql5fGp2/bEXUtg7si7tKWAiFoF3H7QuLRLT7Aul
+         mCoLEZEB/92ze0nO3rG2Cf00hZ/yasuIcSkXKZpxQx519eOebGEs6Tfrn+aCjj8d8U
+         a360MZBNttv2isqlN6mFbHwyRW7IjoQbRAEW14oI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 4.9 12/92] watchdog: imx2_wdt: fix min() calculation in imx2_wdt_set_timeout
-Date:   Wed, 16 Oct 2019 14:49:45 -0700
-Message-Id: <20191016214808.012529416@linuxfoundation.org>
+        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 61/92] USB: serial: option: add support for Cinterion CLS8 devices
+Date:   Wed, 16 Oct 2019 14:50:34 -0700
+Message-Id: <20191016214840.469490059@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -61,53 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-commit 144783a80cd2cbc45c6ce17db649140b65f203dd upstream.
+commit dfbac2f4da6a0c4a8f6b4d715a4077a7b8df53ad upstream.
 
-Converting from ms to s requires dividing by 1000, not multiplying. So
-this is currently taking the smaller of new_timeout and 1.28e8,
-i.e. effectively new_timeout.
+Add support for the serial ports of Cinterion CLS8 devices.
 
-The driver knows what it set max_hw_heartbeat_ms to, so use that
-value instead of doing a division at run-time.
+T:  Bus=01 Lev=03 Prnt=05 Port=01 Cnt=02 Dev#= 25 Spd=480  MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1e2d ProdID=00b0 Rev= 3.18
+S:  Manufacturer=GEMALTO
+S:  Product=USB Modem
+C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 
-FWIW, this can easily be tested by booting into a busybox shell and
-doing "watchdog -t 5 -T 130 /dev/watchdog" - without this patch, the
-watchdog fires after 130&127 == 2 seconds.
-
-Fixes: b07e228eee69 "watchdog: imx2_wdt: Fix set_timeout for big timeout values"
-Cc: stable@vger.kernel.org # 5.2 plus anything the above got backported to
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20190812131356.23039-1-linux@rasmusvillemoes.dk
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/imx2_wdt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -58,7 +58,7 @@
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -421,6 +421,7 @@ static void option_instat_callback(struc
+ #define CINTERION_PRODUCT_PH8_AUDIO		0x0083
+ #define CINTERION_PRODUCT_AHXX_2RMNET		0x0084
+ #define CINTERION_PRODUCT_AHXX_AUDIO		0x0085
++#define CINTERION_PRODUCT_CLS8			0x00b0
  
- #define IMX2_WDT_WMCR		0x08		/* Misc Register */
- 
--#define IMX2_WDT_MAX_TIME	128
-+#define IMX2_WDT_MAX_TIME	128U
- #define IMX2_WDT_DEFAULT_TIME	60		/* in seconds */
- 
- #define WDOG_SEC_TO_COUNT(s)	((s * 2 - 1) << 8)
-@@ -183,7 +183,7 @@ static int imx2_wdt_set_timeout(struct w
- {
- 	unsigned int actual;
- 
--	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	actual = min(new_timeout, IMX2_WDT_MAX_TIME);
- 	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
+ /* Olivetti products */
+ #define OLIVETTI_VENDOR_ID			0x0b3c
+@@ -1850,6 +1851,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_AHXX_2RMNET, 0xff) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_AHXX_AUDIO, 0xff) },
++	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_CLS8, 0xff),
++	  .driver_info = RSVD(0) | RSVD(4) },
+ 	{ USB_DEVICE(CINTERION_VENDOR_ID, CINTERION_PRODUCT_HC28_MDM) },
+ 	{ USB_DEVICE(CINTERION_VENDOR_ID, CINTERION_PRODUCT_HC28_MDMNET) },
+ 	{ USB_DEVICE(SIEMENS_VENDOR_ID, CINTERION_PRODUCT_HC25_MDM) },
 
 
