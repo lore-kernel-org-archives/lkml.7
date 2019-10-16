@@ -2,73 +2,107 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65FDFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81612FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A231218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C4F218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393012AbfJPMYo (ORCPT
+        id S2392991AbfJPM0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:24:44 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:53023 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392997AbfJPMYo (ORCPT
+        Wed, 16 Oct 2019 08:26:12 -0400
+Received: from www62.your-server.de ([213.133.104.62]:37800 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389853AbfJPM0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:24:44 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id KiM3iHU2tPduvKiM6iqv2o; Wed, 16 Oct 2019 14:24:42 +0200
-Subject: Re: [PATCH 30/34] media: cec-gpio: Use CONFIG_PREEMPTION
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-31-bigeasy@linutronix.de>
- <6897ccdb-e2b7-7739-e6b9-872306895a4f@xs4all.nl>
- <23950aea-3972-64fd-9493-d7f9f81db9d2@xs4all.nl>
- <20191016120225.bi6zyewpruvmxlnl@linutronix.de>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <da2b5eb1-18c7-f0ca-d236-6395b2683f50@xs4all.nl>
-Date:   Wed, 16 Oct 2019 14:24:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 08:26:12 -0400
+Received: from [2a02:120b:2c12:c120:71a0:62dd:894c:fd0e] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iKiNS-0006nB-7h; Wed, 16 Oct 2019 14:26:06 +0200
+Date:   Wed, 16 Oct 2019 14:26:05 +0200
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bpf: add static in net/core/filter.c
+Message-ID: <20191016122605.GC21367@pc-63.home>
+References: <20191016110446.24622-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191016120225.bi6zyewpruvmxlnl@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGm1tmWiMRu/hHe3FaOJBNR1p5NaWpTb0zP3uhTPN3nXL5KKo63TJ9oBbRIPPsvEJ7MaaONixt/ae1A+bQx8DjwEX8SJ498ZLBqrKiL1RAWfAfW8k9ue
- Hl9KmmsSuBffFBuXJDM7HSLix0t5qC2hBVd+RtzDAA+Z0ykvT0krhNljyVMNWyztgIV0d5hqLV/unxd9Oh9MizXKPSecq/b+z5kAjCMClOKmvvfu29Bd5He3
- ge6fED6wesngcO0PK1GHr9OP9RkeQ1w5pTLmTdaO9N+9RJ+YVzBqTXRK7i2L5KGAqfK1BKbUQ9g4oyVqhY+o4w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016110446.24622-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25604/Wed Oct 16 10:53:05 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 2:02 PM, Sebastian Andrzej Siewior wrote:
-> On 2019-10-16 13:51:14 [+0200], Hans Verkuil wrote:
->> Do you want me to take this patch? Just checking.
+On Wed, Oct 16, 2019 at 12:04:46PM +0100, Ben Dooks (Codethink) wrote:
+> There are a number of structs in net/core/filter.c
+> that are not exported or declared outside of the
+> file. Fix the following warnings by making these
+> all static:
 > 
-> It is up to you. You have all the dependencies so you can either add it
-> to your -next branch or leave it and we will pick it up for you.
-
-I'll take it. I'm preparing a pull request anyway.
-
-Regards,
-
-	Hans
-
+> net/core/filter.c:8465:31: warning: symbol 'sk_filter_verifier_ops' was not declared. Should it be static?
+> net/core/filter.c:8472:27: warning: symbol 'sk_filter_prog_ops' was not declared. Should it be static?
+[...]
+> net/core/filter.c:8935:27: warning: symbol 'sk_reuseport_prog_ops' was not declared. Should it be static?
 > 
->> Regards,
->>
->> 	Hans
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  net/core/filter.c | 60 +++++++++++++++++++++++------------------------
+>  1 file changed, 30 insertions(+), 30 deletions(-)
 > 
-> Sebastian
-> 
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index ed6563622ce3..f7338fee41f8 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -8462,18 +8462,18 @@ static u32 sk_msg_convert_ctx_access(enum bpf_access_type type,
+>  	return insn - insn_buf;
+>  }
+>  
+> -const struct bpf_verifier_ops sk_filter_verifier_ops = {
+> +static const struct bpf_verifier_ops sk_filter_verifier_ops = {
+>  	.get_func_proto		= sk_filter_func_proto,
+>  	.is_valid_access	= sk_filter_is_valid_access,
+>  	.convert_ctx_access	= bpf_convert_ctx_access,
+>  	.gen_ld_abs		= bpf_gen_ld_abs,
+>  };
 
+Big obvious NAK. I'm puzzled that you try to fix a compile warning, but without
+even bothering to compile the result after your patch ...
+
+Seen BPF_PROG_TYPE() ?
+
+Thanks,
+Daniel
