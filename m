@@ -2,124 +2,213 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF5AECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742B1FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3664218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B950218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263419;
-	bh=O0G17YN2tPEZ7i3JnTYzZCDAa/F7uCFuiSjmZ3wvrfA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=PYX8p3QgK0Ns/1QLpRgSrDIYkuvd9gDotawp0hMZSEVukSB6kKmyvXJzQse4QWSAR
-	 OVYRdeXEUnzASr68OgDI09kfrJC8c+IKK3YRrbg2m/lSr7lT42FUgRp1cxPXqtCnYT
-	 FmGzaNCSoDRs84qIl0/Fg88HUf0RNcq9iStE9tls=
+	s=default; t=1571263426;
+	bh=1ClfNOh3eb/EmAJBnG40vwDJgu0OrUH0YwbE5epnFwA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X+v1lUkyqv57uwC2OU3wvP3btYktLb1wIutbJPbe8+z1ChnTCcdSJ5cbLsFoBygYp
+	 ipxe/kSyk6FY8O9QUYt5xMCwfnAvVlRCPhDhWPnxrAi9xw5rvAu28e2xQhxDarKrdE
+	 XevBBXzl2FCsxTKXm6W5TRtHctrJC8gUIF/Bh3FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfJPWDi (ORCPT
+        id S2439062AbfJPWDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57792 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406826AbfJPWDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 18:03:36 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S2438483AbfJPV7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:23 -0400
+Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA193218DE;
-        Wed, 16 Oct 2019 22:03:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CB021928;
+        Wed, 16 Oct 2019 21:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263415;
-        bh=O0G17YN2tPEZ7i3JnTYzZCDAa/F7uCFuiSjmZ3wvrfA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BiWb/svlRwEwax+APMGEapJwph2a8ugfWL3JZwsnqQTfPQWA4SLexSE+F2cnVPgRU
-         2qJGp2NUMGqKYOWdToD89u2zQk8Y+dHmcIMFsy8yShVFJYscHruIHQrj9VnRNp7mlu
-         i5f8AtdnKEMXdw3+v/a8iBP1vkESb0pk/b5c38S4=
-Date:   Wed, 16 Oct 2019 17:03:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191016220333.GA88523@google.com>
+        s=default; t=1571263161;
+        bh=1ClfNOh3eb/EmAJBnG40vwDJgu0OrUH0YwbE5epnFwA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=T0ER1pHydNA0yq41SyxGOVdBmcLESPwWeOzdFwksNqmx1ZteHnD2Y7eRTrAU8FrZI
+         Mg5PcH/6HsoWOXcEuGsmfhSXVF7T004mdrD1yZcu+klI2lz8whVxI0D49O5UNJ3idr
+         YpPI++P4ubmiB2HQ4FDrFzu8rMBGwK44SnWUgOv8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.3 089/112] NFS: Fix O_DIRECT accounting of number of bytes read/written
+Date:   Wed, 16 Oct 2019 14:51:21 -0700
+Message-Id: <20191016214905.332900647@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:48:22PM +0200, Karol Herbst wrote:
-> On Wed, Oct 16, 2019 at 11:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, Oct 16, 2019 at 09:18:32PM +0200, Karol Herbst wrote:
-> > > but setting the PCI_DEV_FLAGS_NO_D3 flag does prevent using the
-> > > platform means of putting the device into D3cold, right? That's
-> > > actually what should still happen, just the D3hot step should be
-> > > skipped.
-> >
-> > If I understand correctly, when we put a device in D3cold on an ACPI
-> > system, we do something like this:
-> >
-> >   pci_set_power_state(D3cold)
-> >     if (PCI_DEV_FLAGS_NO_D3)
-> >       return 0                                   <-- nothing at all if quirked
-> >     pci_raw_set_power_state
-> >       pci_write_config_word(PCI_PM_CTRL, D3hot)  <-- set to D3hot
-> >     __pci_complete_power_transition(D3cold)
-> >       pci_platform_power_transition(D3cold)
-> >         platform_pci_set_power_state(D3cold)
-> >           acpi_pci_set_power_state(D3cold)
-> >             acpi_device_set_power(ACPI_STATE_D3_COLD)
-> >               ...
-> >                 acpi_evaluate_object("_OFF")     <-- set to D3cold
-> >
-> > I did not understand the connection with platform (ACPI) power
-> > management from your patch.  It sounds like you want this entire path
-> > except that you want to skip the PCI_PM_CTRL write?
-> >
-> 
-> exactly. I am running with this workaround for a while now and never
-> had any fails with it anymore. The GPU gets turned off correctly and I
-> see the same power savings, just that the GPU can be powered on again.
-> 
-> > That seems like something Rafael should weigh in on.  I don't know
-> > why we set the device to D3hot with PCI_PM_CTRL before using the ACPI
-> > methods, and I don't know what the effect of skipping that is.  It
-> > seems a little messy to slice out this tiny piece from the middle, but
-> > maybe it makes sense.
-> >
-> 
-> afaik when I was talking with others in the past about it, Windows is
-> doing that before using ACPI calls, but maybe they have some similar
-> workarounds for certain intel bridges as well? I am sure it affects
-> more than the one I am blacklisting here, but I rather want to check
-> each device before blacklisting all kabylake and sky lake bridges (as
-> those are the ones were this issue can be observed).
+From: Trond Myklebust <trondmy@gmail.com>
 
-From a quick look at the ACPI spec, I didn't see conditions like "OSPM
-must put PCI devices in D3hot before executing _OFF".  But obviously
-there's *some* reason and I probably just missed it.
+commit 031d73ed768a40684f3ca21992265ffdb6a270bf upstream.
 
-> Sadly we had no luck getting any information about such workaround out
-> of Nvidia or Intel.
+When a series of O_DIRECT reads or writes are truncated, either due to
+eof or due to an error, then we should return the number of contiguous
+bytes that were received/sent starting at the offset specified by the
+application.
 
-I'm not surprised; it doesn't seem like we really have the details
-needed to get to a root cause yet.  I think what we really need is a
-PCIe analyzer trace to see what happens when the device "falls off the
-bus".
+Currently, we are failing to correctly check contiguity, and so we're
+failing the generic/465 in xfstests when the race between the read
+and write RPCs causes the file to get extended while the 2 reads are
+outstanding. If the first read RPC call wins the race and returns with
+eof set, we should treat the second read RPC as being truncated.
 
-Bjorn
+Reported-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Fixes: 1ccbad9f9f9bd ("nfs: fix DIO good bytes calculation")
+Cc: stable@vger.kernel.org # 4.1+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/nfs/direct.c |   78 ++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 43 insertions(+), 35 deletions(-)
+
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -123,32 +123,49 @@ static inline int put_dreq(struct nfs_di
+ }
+ 
+ static void
+-nfs_direct_good_bytes(struct nfs_direct_req *dreq, struct nfs_pgio_header *hdr)
++nfs_direct_handle_truncated(struct nfs_direct_req *dreq,
++			    const struct nfs_pgio_header *hdr,
++			    ssize_t dreq_len)
++{
++	struct nfs_direct_mirror *mirror = &dreq->mirrors[hdr->pgio_mirror_idx];
++
++	if (!(test_bit(NFS_IOHDR_ERROR, &hdr->flags) ||
++	      test_bit(NFS_IOHDR_EOF, &hdr->flags)))
++		return;
++	if (dreq->max_count >= dreq_len) {
++		dreq->max_count = dreq_len;
++		if (dreq->count > dreq_len)
++			dreq->count = dreq_len;
++
++		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
++			dreq->error = hdr->error;
++		else /* Clear outstanding error if this is EOF */
++			dreq->error = 0;
++	}
++	if (mirror->count > dreq_len)
++		mirror->count = dreq_len;
++}
++
++static void
++nfs_direct_count_bytes(struct nfs_direct_req *dreq,
++		       const struct nfs_pgio_header *hdr)
+ {
+-	int i;
+-	ssize_t count;
++	struct nfs_direct_mirror *mirror = &dreq->mirrors[hdr->pgio_mirror_idx];
++	loff_t hdr_end = hdr->io_start + hdr->good_bytes;
++	ssize_t dreq_len = 0;
+ 
+-	WARN_ON_ONCE(dreq->count >= dreq->max_count);
++	if (hdr_end > dreq->io_start)
++		dreq_len = hdr_end - dreq->io_start;
+ 
+-	if (dreq->mirror_count == 1) {
+-		dreq->mirrors[hdr->pgio_mirror_idx].count += hdr->good_bytes;
+-		dreq->count += hdr->good_bytes;
+-	} else {
+-		/* mirrored writes */
+-		count = dreq->mirrors[hdr->pgio_mirror_idx].count;
+-		if (count + dreq->io_start < hdr->io_start + hdr->good_bytes) {
+-			count = hdr->io_start + hdr->good_bytes - dreq->io_start;
+-			dreq->mirrors[hdr->pgio_mirror_idx].count = count;
+-		}
+-		/* update the dreq->count by finding the minimum agreed count from all
+-		 * mirrors */
+-		count = dreq->mirrors[0].count;
++	nfs_direct_handle_truncated(dreq, hdr, dreq_len);
+ 
+-		for (i = 1; i < dreq->mirror_count; i++)
+-			count = min(count, dreq->mirrors[i].count);
++	if (dreq_len > dreq->max_count)
++		dreq_len = dreq->max_count;
+ 
+-		dreq->count = count;
+-	}
++	if (mirror->count < dreq_len)
++		mirror->count = dreq_len;
++	if (dreq->count < dreq_len)
++		dreq->count = dreq_len;
+ }
+ 
+ /*
+@@ -402,20 +419,12 @@ static void nfs_direct_read_completion(s
+ 	struct nfs_direct_req *dreq = hdr->dreq;
+ 
+ 	spin_lock(&dreq->lock);
+-	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
+-		dreq->error = hdr->error;
+-
+ 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
+ 		spin_unlock(&dreq->lock);
+ 		goto out_put;
+ 	}
+ 
+-	if (hdr->good_bytes != 0)
+-		nfs_direct_good_bytes(dreq, hdr);
+-
+-	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
+-		dreq->error = 0;
+-
++	nfs_direct_count_bytes(dreq, hdr);
+ 	spin_unlock(&dreq->lock);
+ 
+ 	while (!list_empty(&hdr->pages)) {
+@@ -652,6 +661,9 @@ static void nfs_direct_write_reschedule(
+ 	nfs_direct_write_scan_commit_list(dreq->inode, &reqs, &cinfo);
+ 
+ 	dreq->count = 0;
++	dreq->max_count = 0;
++	list_for_each_entry(req, &reqs, wb_list)
++		dreq->max_count += req->wb_bytes;
+ 	dreq->verf.committed = NFS_INVALID_STABLE_HOW;
+ 	nfs_clear_pnfs_ds_commit_verifiers(&dreq->ds_cinfo);
+ 	for (i = 0; i < dreq->mirror_count; i++)
+@@ -791,17 +803,13 @@ static void nfs_direct_write_completion(
+ 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
+ 
+ 	spin_lock(&dreq->lock);
+-
+-	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
+-		dreq->error = hdr->error;
+-
+ 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
+ 		spin_unlock(&dreq->lock);
+ 		goto out_put;
+ 	}
+ 
++	nfs_direct_count_bytes(dreq, hdr);
+ 	if (hdr->good_bytes != 0) {
+-		nfs_direct_good_bytes(dreq, hdr);
+ 		if (nfs_write_need_commit(hdr)) {
+ 			if (dreq->flags == NFS_ODIRECT_RESCHED_WRITES)
+ 				request_commit = true;
+
+
