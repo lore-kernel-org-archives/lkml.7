@@ -3,96 +3,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F57EFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321F4FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BA1218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FC321928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392360AbfJPOXr (ORCPT
+        id S2392396AbfJPOZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:23:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:41208 "EHLO foss.arm.com"
+        Wed, 16 Oct 2019 10:25:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbfJPOXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:23:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C76A142F;
-        Wed, 16 Oct 2019 07:23:46 -0700 (PDT)
-Received: from bogus (unknown [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EBCC3F68E;
-        Wed, 16 Oct 2019 07:23:45 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 15:23:43 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
- use it in cpufreq
-Message-ID: <20191016142343.GB5330@bogus>
-References: <2811202.iOFZ6YHztY@kreacher>
+        id S1726750AbfJPOZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:25:07 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3D0218DE;
+        Wed, 16 Oct 2019 14:25:06 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 10:25:04 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
+        pmladek@suse.com, joe.lawrence@redhat.com,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        shuah@kernel.org, kamalesh@linux.vnet.ibm.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] ftrace: Introduce PERMANENT ftrace_ops flag
+Message-ID: <20191016102504.274fc88d@gandalf.local.home>
+In-Reply-To: <20191016094853.3913f5ae@gandalf.local.home>
+References: <20191016113316.13415-1-mbenes@suse.cz>
+        <20191016113316.13415-2-mbenes@suse.cz>
+        <20191016094853.3913f5ae@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2811202.iOFZ6YHztY@kreacher>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 12:37:58PM +0200, Rafael J. Wysocki wrote:
-> Hi All,
->
-> The motivation for this series is to address the problem discussed here:
->
-> https://lore.kernel.org/linux-pm/5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org/T/#md2d89e95906b8c91c15f582146173dce2e86e99f
->
-> and also reported here:
->
-> https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
->
-> Plus, generally speaking, using the policy CPU as a proxy for the policy
-> with respect to PM QoS does not feel particularly straightforward to me
-> and adds extra complexity.
->
-> Anyway, the first patch adds frequency QoS that is based on "raw" PM QoS (kind
-> of in analogy with device PM QoS) and is just about min and max frequency
-> requests (no direct relationship to devices).
->
-> The second patch switches over cpufreq and its users to the new frequency QoS.
-> [The Fixes: tag has been tentatively added to it.]
->
-> The third one removes frequency request types from device PM QoS.
->
-> Unfortunately, the patches are rather big, but also they are quite
-> straightforward.
->
-> I didn't have the time to test this series, so giving it a go would be much
-> appreciated.
+On Wed, 16 Oct 2019 09:48:53 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks for the spinning these patches so quickly.
+> @@ -6796,10 +6798,12 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+>  
+>  	ret = proc_dointvec(table, write, buffer, lenp, ppos);
 
-I did give it a spin, but unfortunately it doesn't fix the bug I reported.
-So I looked at my bug report in detail and looks like the cpufreq_driver
-variable is set to NULL at that point and it fails to dereference it
-while trying to execute:
-	ret = cpufreq_driver->verify(new_policy);
-(Hint verify is at offset 0x1c/28)
+As you just stated on IRC, the update to ftrace_enabled gets updated in
+the above routine.
 
-So I suspect some race as this platform with bL switcher tries to
-unregister and re-register the cpufreq driver during the boot.
+I forgot about this :-/ (Senior moment)
 
-I need to spend more time on this as reverting the initial PM QoS patch
-to cpufreq.c makes the issue disappear.
+I guess there's nothing to worry about here.
 
---
-Regards,
-Sudeep
+-- Steve
+
+
+
+>  
+> -	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
+> +	if (ret || !write || (ftrace_enabled == !!sysctl_ftrace_enabled))
+>  		goto out;
+>  
