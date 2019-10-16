@@ -2,301 +2,137 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ECCFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A2EECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877032053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D71207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GA4zg9r+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JajOTL3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405377AbfJPXBY (ORCPT
+        id S2393612AbfJPXCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 19:01:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33467 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391935AbfJPXBY (ORCPT
+        Wed, 16 Oct 2019 19:02:32 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:46103 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391366AbfJPXCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:01:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so341583pfl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:01:23 -0700 (PDT)
+        Wed, 16 Oct 2019 19:02:32 -0400
+Received: by mail-pg1-f202.google.com with SMTP id 195so314329pgc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I9WFsrimijjIQTTTvra2DRi53E6Nf4wu24Q/ZNw7Ij4=;
-        b=GA4zg9r+Cze4L83PgF54iQR1EoR0TvqpiljILydNHik/A9gDCrBlrbIwnXifE0ZvdU
-         n5b1V5dRJRWR6k3MYabH6tFFosuk16xAjG8EFLxusOikLtrktJni40LSnvkr2upVRhzE
-         lgBceHPvww0z5Nhdg637voAiMDIxJsHK+saTAKPpIK15ZhrBmDA42AjTw3b2FcTOTvZh
-         kFaEq2dHrTAw/KOOWSlngsj9NC7F4Ss+2QUfOqKdCorUJ+mil7FQX8WNhrC0pvbcIjuS
-         dsKR5n/L7/4ftxh/BUQ5EaqXAX9vgIuhl+GXD4pY4sFJCPcR7E484kBl/as2/ETsyWOI
-         KRMw==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=TOJsDjv2PITtO+I2kY79PfikRO0R2R+nAMh5A6+hbOU=;
+        b=JajOTL3FBHYB10flWUxzWHuV8U8BExPlu2SCPP310A4oZrr/e8H7g3GVFIuYIaTAq9
+         l6cDESess5ADq4YsN4ZicmEE2jUNDgmND07ChfhZXF6Wkf7glYyu+OsAVxCB8rbSgwCE
+         Hub/sQF3XaZ71h/6KlSyTk7IVTI5f6KC1P9OMxwRE7wYIJj2Kifn9kw15W1LIExwyap2
+         iSBeHWxzga8Fc4QS/MO0vViGZZz9oEt2019SoCcd4cyZLuzc5vJLu7gLV+N3tTuVx7/m
+         hA/HA4EFJV/dyZOBm0UwdQW+d2ez6HxxiunDl/h/x+n7zdSOxw/1x3nFNMdCldn4mcHh
+         +3lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I9WFsrimijjIQTTTvra2DRi53E6Nf4wu24Q/ZNw7Ij4=;
-        b=VGyJLKnDcDtuRIQno0DoB0/qTzE1uo4YhXW5HPrR8CTCELHLS8AoQGXEQJZHJjOR4w
-         mLXdOPsEJGgeHjHJPAbvHWf6p2N9fvAxjHglAo8oWKX+IpJCwzsekDao+YSsYUpQla5Z
-         OQnhgXD4iAe9HXp6rLJH7cwS/+l1eVZ8jMB4zqyLFtnids0lsBV4/sOYXMCBtvJ4zoFR
-         /ZTI8I4UG8CGkLqrtWf/0+5f+vVDs+nWLms+f0wW9R5TK8xu/lRTgOBRmzBy6+Sqm3n0
-         8ZPHbVa2L2cpXQKVNM0KvM7J2GMJtv8+OpKohgLS7Ve++yDDyuMyQ3fg4XwvYaBZJkyK
-         Av0Q==
-X-Gm-Message-State: APjAAAUIpyrSCr+3z6oN6ExumMpSgCctOa4292uGjyJKkk5lJxcIU4Hc
-        BWLQNA4XTVmz/2gWRHg2Poew9Q==
-X-Google-Smtp-Source: APXvYqxy7dlCISkd8kX9c+KN64/gjeSFBDq0yKJ98CSKO5cWiWTZtyhVjbFpKdLFfIh2N39OMz5wZQ==
-X-Received: by 2002:a17:90a:3706:: with SMTP id u6mr443281pjb.107.1571266882056;
-        Wed, 16 Oct 2019 16:01:22 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id 69sm97530pgh.47.2019.10.16.16.01.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 16:01:21 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:01:16 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        changbin.du@intel.com, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
- be loaded as a module
-Message-ID: <20191016230116.GA82401@google.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
- <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
- <20191008213535.GB186342@google.com>
- <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
- <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
- <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=TOJsDjv2PITtO+I2kY79PfikRO0R2R+nAMh5A6+hbOU=;
+        b=Qo+X22D4FKwPC1T4gkbOQ/MsgI3yN1I4ZiZqs7Wkdc4udq34/1lO87Yt+93XO4W8PJ
+         wnVfWVxB/UIMAoveM0R4q0qrxfS++s1qRRfi294L4nzfp8J+p0VczpO8xbbHGfVxsaf/
+         2GbXX9RsUTQThZn6XfaT3wq6pT+FeWwNPMBl8HQaH4rETGff47XczIiXZZkXgVokQ6UQ
+         vfcAL8ckRNLbllpJztVZhjhq32DDlYiQpWcHr1+5jkg/u7UkIYWy0OVxrj5/13UiKuUV
+         LD2kXRLqCafGLUenJPDIpZ0ubOeTNLTMKINZ6/3TnfUwtq0z+uODoCh3uP6TKRqCTlyn
+         iadQ==
+X-Gm-Message-State: APjAAAVwV1Jj7suW8/7Am1Otuctm0HgkGC9BIuGzR2R2ToNJQEirURZQ
+        xPXjkroa8Wc9AKa/a8UVAROYqdSZEs7nDV5thkc=
+X-Google-Smtp-Source: APXvYqynPl/YXL4Gk/7oYI+p6Y3KkiA1eZZEQh5vORv0ob1xBED01RJ8FGVLbRhOMDZhfsVFSxRW/vr+4vbUlnoy3S0=
+X-Received: by 2002:a63:ce07:: with SMTP id y7mr652306pgf.234.1571266950938;
+ Wed, 16 Oct 2019 16:02:30 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 16:02:06 -0700
+Message-Id: <20191016230209.39663-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
+Subject: [PATCH 0/3] drm/amdgpu: fix stack alignment ABI mismatch
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     harry.wentland@amd.com, alexander.deucher@amd.com
+Cc:     yshuiv7@gmail.com, andrew.cooper3@citrix.com, arnd@arndb.de,
+        clang-built-linux@googlegroups.com, mka@google.com,
+        shirish.s@amd.com, David1.Zhou@amd.com, christian.koenig@amd.com,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:25:33AM +0100, Alan Maguire wrote:
-> On Fri, 11 Oct 2019, Brendan Higgins wrote:
-> 
-> > Sorry for the delayed reply. I will be on vacation until Wednesday,
-> > October 16th.
-> > 
-> > On Wed, Oct 9, 2019 at 9:36 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> > >
-> > > On Tue, 8 Oct 2019, Brendan Higgins wrote:
-> > >
-> > > > On Tue, Oct 08, 2019 at 03:55:44PM +0100, Alan Maguire wrote:
-> > [...]
-> > > > > diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
-> > > > > index e6d17aa..e4f3a97 100644
-> > > > > --- a/lib/kunit/string-stream.c
-> > > > > +++ b/lib/kunit/string-stream.c
-> > > > > @@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
-> > > > >
-> > > > >     return 0;
-> > > > >  }
-> > > > > +EXPORT_SYMBOL_GPL(string_stream_vadd);
-> > > >
-> > > > Is this actually needed by anything other than lib/kunit/test.c right
-> > > > now? Maybe we should move the include file into the kunit/ directory to
-> > > > hide these so no one else can use them.
-> > > >
-> > >
-> > > I tried this, and it's the right answer I think but it exposes
-> > > a problem with symbol visibility when kunit is compiled as a module.
-> > > More on this below...
-> > >
-> > > > >  int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-> > > > >  {
-> > > > > @@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
-> > > > >
-> > > > >     return result;
-> > > > >  }
-> > > > > +EXPORT_SYMBOL_GPL(string_stream_add);
-> > > > [...]
-> > > > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > > > > index c83c0fa..e7896f1 100644
-> > > > > --- a/lib/kunit/test.c
-> > > > > +++ b/lib/kunit/test.c
-> > > > [...]
-> > > > > @@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
-> > > > >      * For more background on this topic, see:
-> > > > >      * https://mike-bland.com/2011/11/01/small-medium-large.html
-> > > > >      */
-> > > > > +#ifndef MODULE
-> > > >
-> > > > Why is this block of code "ifndef MODULE"?
-> > > >
-> > >
-> > > Symbol visibility is the problem again; sysctl_hung_task_timeout_secs
-> > > isn't exported so when kunit is a module it can't find the symbol.
-> > >
-> > > I think I saw Kees mentioned something about symbol lookup too; in KTF
-> > > Knut solved this by defining ktf_find_symbol(). I'd suggest we may need a
-> > > kunit_find_symbol() with a function signature
+The x86 kernel is compiled with an 8B stack alignment via
+`-mpreferred-stack-boundary=3` for GCC since 3.6-rc1 via
+commit d9b0cde91c60 ("x86-64, gcc: Use -mpreferred-stack-boundary=3 if supported")
+or `-mstack-alignment=8` for Clang. Parts of the AMDGPU driver are
+compiled with 16B stack alignment.
 
-Based on what you said below, I think the kunit_find_symbol() may have
-value for writing tests; however, I do not think it is the right way to
-handle resources needed by test.c. I think exporting the symbols in this
-case is the lesser of the two evils.
+Generally, the stack alignment is part of the ABI. Linking together two
+different translation units with differing stack alignment is dangerous,
+particularly when the translation unit with the smaller stack alignment
+makes calls into the translation unit with the larger stack alignment.
+While 8B aligned stacks are sometimes also 16B aligned, they are not
+always.
 
-I am still suprised that you need to export a symbol that is getting
-compiled into and is only used by the kunit module. In fact, I think I
-found an example in the kernel where someone else managed this. Checkout
-stp_policy_node_priv(). Looks like the symbol is used here[1] and is
-defined here[2]. You can see here[3] and here[4] that the files end up
-in the same module. Do you mind taking a look why it works for stm, but
-not here?
+Multiple users have reported General Protection Faults (GPF) when using
+the AMDGPU driver compiled with Clang. Clang is placing objects in stack
+slots assuming the stack is 16B aligned, and selecting instructions that
+require 16B aligned memory operands.
 
-> > I thought we were just talking about exposing symbols for linking
-> > outside of a compilation unit (static vs. not static); nevertheless, I
-> > think you are right that it is relevant here. Kees, thoughts?
-> > 
-> > > void *kunit_find_symbol(const char *modname, const char *symbol_name);
-> > >
-> > > ...which does a [module_]kallsyms_lookup_sym().
-> > >
-> > > If the above makes sense I can look at adding it as a patch (and adding
-> > > a test of it of course!). What do you think?
-> > 
-> > So that won't work if you are trying to link against a symbol not in a
-> > module, right? Also, it won't work against a static symbol, right?
-> > 
-> 
-> Nope, works in both cases with the proviso that we need to use an
+At runtime, syscall handlers with 8B aligned stack call into code that
+assumes 16B stack alignment.  When the stack is a multiple of 8B but not
+16B, these instructions result in a GPF.
 
-Nifty! That sounds great!
+Remove the code that added compatibility between the differing compiler
+flags, as it will result in runtime GPFs when built with Clang.
 
-> alternative name for symbols when compiling built-in.  For example
+The series is broken into 3 patches, the first is an important fix for
+Clang for ChromeOS. The rest are attempted cleanups for GCC, but require
+additional boot testing. The first patch is critical, the rest are nice
+to have. I've compile tested the series with ToT Clang, GCC 4.9, and GCC
+8.3 **but** I do not have hardware to test on, so I need folks with the
+above compilers and relevant hardware to help test the series.
 
-Can you elaborate on "need[ing] to use an alternative name"?
+The first patch is a functional change for Clang only. It does not
+change anything for any version of GCC. Yuxuan boot tested a previous
+incarnation on hardware, but I've changed it enough that I think it made
+sense to drop the previous tested by tag.
 
-> in the case of the string-stream tests, we'd use a test init callback
-> to initialize used symbols:
-> 
-> static int string_stream_test_init(struct kunit *test)
-> {
->         _alloc_string_stream = kunit_find_symbol("alloc_string_stream");
->         _string_stream_add = kunit_find_symbol("string_stream_add");
->         _string_stream_get_string = kunit_find_symbol("string_stream_get_string");
->         _string_stream_is_empty = kunit_find_symbol("string_stream_is_empty");
->         if (IS_ERR(_alloc_string_stream) ||
->             IS_ERR(_string_stream_add) ||
->             IS_ERR(_string_stream_get_string) ||
->             IS_ERR(_string_stream_is_empty))
->                 return EINVAL;
->         return 0;
-> } 
-> 
-> I've tested this when string-stream-test is compiled built-in and as a 
-> module.  We can of course create a wrapper macro to handle these 
-> assignments.
+The second patch is a functional change for GCC 7.1+ only. It does not
+affect older versions of GCC or Clang (though if someone wanted to
+double check with pre-GCC 7.1 it wouldn't hurt).  It should be boot
+tested on GCC 7.1+ on the relevant hardware.
 
-I've got mixed feelings on this. On one hand, that has the potential to
-solve a lot of problems with visibility and modules in a way that
-doesn't immediately cause code under test to change in undesirable ways.
-On the other hand, I feel that this has the potential to be really prone
-to breakage. It would be much nicer if the compiler could tell you that
-your symbol changed rather than having to wait until you run the test.
-Just having the test tell you that a symbol doesn't exist anymore would
-be mildly annoying, but having the signature of the symbol change could
-get downright frustrating using this method.
+The final patch is also a functional change for GCC 7.1+ only. It does
+not affect older versions of GCC or Clang. It should be boot tested on
+GCC 7.1+ on the relevant hardware. Theoretically, there may be an issue
+with it, and it's ok to drop it. The series was intentional broken into
+3 in order to allow them to be incrementally tested and accepted. It's
+ok to take earlier patches without the later patches.
 
-> To illustrate further here's the test cases I'd propose adding to 
-> test-test.c with the changes. 
-> 
-> In the first case we're grabbing the "modules" variable from the kernel,
-> and in the second we're grabbing a static symbol from the test-test.ko
-> module (when it is compiled as a module):
-> 
-> /*
->  * Find non-exported kernel symbol; we use the modules list as a safe
->  * choice that should always be present.
->  */
-> static void kunit_find_symbol_kernel(struct kunit *test)
-> {
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, kunit_find_symbol("modules"));
-> }
-> 
-> #ifdef MODULE
-> /*
->  * If we are compiled as a module, use this module for lookup.
->  */
-> static void kunit_find_symbol_module(struct kunit *test)
-> {
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test,
->                                      kunit_find_symbol("kunit_find_symbol_kernel"));
-> }
-> #endif
-> 
->  
-> > Even so, I think it is pretty wonky to expect users to either a)
-> > export any symbol name to be tested,
-> 
-> Absolutely not, I'd never advocate that.  Nothing should need to change in 
+And finally, I do not condone linking object files of differing stack
+alignments.  Idealistically, we'd mark the driver broken for pre-GCC
+7.1.  Pragmatically, "if it ain't broke, don't fix it."
 
-Cool. Looks like we are on the same page then :-)
+Nick Desaulniers (3):
+  drm/amdgpu: fix stack alignment ABI mismatch for Clang
+  drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+
+  drm/amdgpu: enable -msse2 for GCC 7.1+ users
 
-> the component under test simply to facilitate testing, especially if 
-> there's a way the test framework can work around it.
+ drivers/gpu/drm/amd/display/dc/calcs/Makefile | 19 ++++++++++++-------
+ drivers/gpu/drm/amd/display/dc/dcn20/Makefile | 19 ++++++++++++-------
+ drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 19 ++++++++++++-------
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   | 19 ++++++++++++-------
+ drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 19 ++++++++++++-------
+ 5 files changed, 60 insertions(+), 35 deletions(-)
 
-I would say it depends. I think it is fine to ask people to write code
-in such a manner that makes it more testable. From my experience, this
-generally leads to better quality code.
+-- 
+2.23.0.700.g56cf767bdb-goog
 
-Nevertheless, I agree from the perspective that suddenly having to
-export symbol names for no good reason is not something we should make
-users do.
-
-> > or b) have to access them via
-> > kunit_find_symbol.  I think it is fine to have some tests that cannot
-> > be compiled as modules, if there is no other user friendly way to make
-> > this work in those cases.
-> 
-> That's fine, and I agree in some cases it's unworkable, but there are 
-> going to be a lot of tristate componenets we'd like to test, and 
-> restricting testing of those by requiring CONFIG_FOO=y seems like a 
-> limitation too.  In practice I've found symbol lookup isn't needed 
-> extensively for test development.  For cases where the weight of symbol 
-> lookup is too heavy the tests can simply stay built-in - the non-exported 
-> nature of the symbols is probably suggesting something about the nature of 
-> the interface that makes that a more natural choice anyway.  However for 
-> other cases I think there's value to having something like this feature.
-
-I think that makes sense.
-
-So, I don't think the symbol lookup is needed for this patchset. I think
-all the symbols that you use should *probably* be exported at worse
-since they are used by the core kunit library stuff.
-
-Nevertheless, I have a test coming down the pipeline for which this
-could be a potential solution. I will CC you on the test when I send it.
-
-> Of course there may be better ways to realize the functionality than what 
-> I'm proposing.
-
-Cheers!
-
-[1] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/core.c#L322
-[2] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/policy.c#L40
-[3] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/Makefile#L4
-[4] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/Kconfig#L3
