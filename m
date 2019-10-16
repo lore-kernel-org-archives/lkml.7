@@ -2,139 +2,162 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D9DFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C1DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B03F20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0743620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405548AbfJPNuc (ORCPT
+        id S2405562AbfJPNvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:50:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50354 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387953AbfJPNub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:50:31 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 793C74C11AFACF345F20;
-        Wed, 16 Oct 2019 21:50:29 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 21:50:19 +0800
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <john.garry@huawei.com>,
-        <ak@linux.intel.com>, <lukemujica@google.com>,
-        <yeyunfeng@huawei.com>, <kan.liang@linux.intel.com>,
-        <yuzenghui@huawei.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <hushiyuan@huawei.com>, <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v2] perf jevents: Fix resource leak in process_mapfile() and
- main()
-Message-ID: <d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com>
-Date:   Wed, 16 Oct 2019 21:50:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 16 Oct 2019 09:51:11 -0400
+Received: from mga05.intel.com ([192.55.52.43]:64160 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405542AbfJPNvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:51:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:51:11 -0700
+X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
+   d="scan'208";a="186154129"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 06:51:07 -0700
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de>
+ <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
+Date:   Wed, 16 Oct 2019 21:51:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are memory leaks and file descriptor resource leaks in
-process_mapfile() and main().
+On 10/16/2019 7:58 PM, Paolo Bonzini wrote:
+> On 16/10/19 13:49, Thomas Gleixner wrote:
+>> On Wed, 16 Oct 2019, Paolo Bonzini wrote:
+>>> Yes it does.  But Sean's proposal, as I understand it, leads to the
+>>> guest receiving #AC when it wasn't expecting one.  So for an old guest,
+>>> as soon as the guest kernel happens to do a split lock, it gets an
+>>> unexpected #AC and crashes and burns.  And then, after much googling and
+>>> gnashing of teeth, people proceed to disable split lock detection.
+>>
+>> I don't think that this was what he suggested/intended.
+> 
+> Xiaoyao's reply suggests that he also understood it like that.
+>
 
-Fix this by adding free(), fclose() and free_arch_std_events()
-on the error paths.
+Actually, what I replied is a little different from what you stated 
+above that guest won't receive #AC when it wasn't expecting one but the 
+userspace receives this #AC.
 
-Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
-Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
-v1 -> v2:
- - add free(eventsfp) to fix eventsfp resource leaks
- - add free_arch_std_events() on the error path
+>>> In all of these cases, the common final result is that split-lock
+>>> detection is disabled on the host.  So might as well go with the
+>>> simplest one and not pretend to virtualize something that (without core
+>>> scheduling) is obviously not virtualizable.
+>>
+>> You are completely ignoring any argument here and just leave it behind your
+>> signature (instead of trimming your reply).
+> 
+> I am not ignoring them, I think there is no doubt that this is the
+> intended behavior.  I disagree that Sean's patches achieve it, however.
+> 
+>>>> 1) Sane guest
+>>>>
+>>>> Guest kernel has #AC handler and you basically prevent it from
+>>>> detecting malicious user space and killing it. You also prevent #AC
+>>>> detection in the guest kernel which limits debugability.
+>>
+>> That's a perfectly fine situation. Host has #AC enabled and exposes the
+>> availability of #AC to the guest. Guest kernel has a proper handler and
+>> does the right thing. So the host _CAN_ forward #AC to the guest and let it
+>> deal with it. For that to work you need to expose the MSR so you know the
+>> guest state in the host.
+>>
+>> Your lazy 'solution' just renders #AC completely useless even for
+>> debugging.
+>>
+>>>> 2) Malicious guest
+>>>>
+>>>> Trigger #AC to disable the host detection and then carry out the DoS
+>>>> attack.
+>>
+>> With your proposal you render #AC useless even on hosts which have SMT
+>> disabled, which is just wrong. There are enough good reasons to disable
+>> SMT.
+> 
+> My lazy "solution" only applies to SMT enabled.  When SMT is either not
+> supported, or disabled as in "nosmt=force", we can virtualize it like
+> the posted patches have done so far.
+> 
 
- tools/perf/pmu-events/jevents.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Do we really need to divide it into two cases of SMT enabled and SMT 
+disabled?
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index e2837260ca4d..99e3fd04a5cb 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	char *line, *p;
- 	int line_num;
- 	char *tblname;
-+	int ret = 0;
+>> I agree that with SMT enabled the situation is truly bad, but we surely can
+>> be smarter than just disabling it globally unconditionally and forever.
+>>
+>> Plus we want a knob which treats guests triggering #AC in the same way as
+>> we treat user space, i.e. kill them with SIGBUS.
+> 
+> Yes, that's a valid alternative.  But if SMT is possible, I think the
+> only sane possibilities are global disable and SIGBUS.  SIGBUS (or
+> better, a new KVM_RUN exit code) can be acceptable for debugging guests too.
 
- 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
+If SIGBUS, why need to globally disable?
 
-@@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	if (!mapfp) {
- 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
- 				fpath);
-+		free(line);
- 		return -1;
- 	}
+When there is an #AC due to split-lock in guest, KVM only has below two 
+choices:
+1) inject back into guest.
+    - If kvm advertise this feature to guest, and guest kernel is 
+latest, and guest kernel must enable it too. It's the happy case that 
+guest can handler it on its own purpose.
+    - Any other cases, guest get an unexpected #AC and crash.
+2) report to userspace (I think the same like a SIGBUS)
 
-@@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 			/* TODO Deal with lines longer than 16K */
- 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
- 					prog, fpath, line_num);
--			return -1;
-+			ret = -1;
-+			goto out;
- 		}
- 		line[strlen(line)-1] = '\0';
+So for simplicity, we can do what Paolo suggested that don't advertise 
+this feature and report #AC to userspace when an #AC due to split-lock 
+in guest *but* we never disable the host's split-lock detection due to 
+guest's split-lock.
 
-@@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
-
- out:
- 	print_mapping_table_suffix(outfp);
--	return 0;
-+	fclose(mapfp);
-+	free(line);
-+	return ret;
- }
-
- /*
-@@ -1122,6 +1127,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1134,6 +1140,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1151,6 +1158,8 @@ int main(int argc, char *argv[])
- 	if (process_mapfile(eventsfp, mapfile)) {
- 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
- 		/* Make build fail */
-+		fclose(eventsfp);
-+		free_arch_std_events();
- 		return 1;
- 	}
-
--- 
-2.7.4.3
-
+> Paolo
+> 
