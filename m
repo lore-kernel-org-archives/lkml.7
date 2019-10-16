@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1B5FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99652FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D3821928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 677A121925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263530;
-	bh=+GLBanWr41SGuaV9NYI9/4ppr/jsnEijwLjwFEy87FI=;
+	s=default; t=1571263534;
+	bh=RaCzhHlC1pq45Euu7xsdx6BnoMfwFX8G685HDNTCIko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2tuLfw2Wtv/1JoYA3f78TPfsg0PJFALa6ali0HEqVc++qp0Q161sL/TKXmv8hcQjI
-	 MXLkMf8Anp/8T0Xd5hx0zLL68CTiYzAoj/rXa3egqZSfWoBR8OffQ/KLH4hs8UUgny
-	 gLCuVJSTZE3e8wwbXYRzBurW22vvIZpNsMwkyFt0=
+	b=v2Y2cQPUmER18kTFlFXz1MSl5Nbw/fPg4SY31OuGhSveBjRzUEwQpisrXH6zGHi4L
+	 E1HrRq/U9xXw/0WFie7Z2gu+oacg0iAcwjMEn5ul+/S7TU3zzaSJVQECwQ3ByJ/81A
+	 Uzh+3HxRZWpLlgcyBcrGv93E0xaKkez+UyGKawUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404250AbfJPWF3 (ORCPT
+        id S2438259AbfJPV6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52782 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438281AbfJPV6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:50 -0400
+        id S2438083AbfJPV57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:59 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 438A121928;
-        Wed, 16 Oct 2019 21:58:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94FBB21A49;
+        Wed, 16 Oct 2019 21:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263130;
-        bh=+GLBanWr41SGuaV9NYI9/4ppr/jsnEijwLjwFEy87FI=;
+        s=default; t=1571263078;
+        bh=RaCzhHlC1pq45Euu7xsdx6BnoMfwFX8G685HDNTCIko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxAqf/wzwNkHjKu8vSXfC5IGNDvkvCN1XdgZDRiJ+1GkMdCA+K2Z6iVOmNXwH3j2V
-         Oxm+QrNqQVGpGjeF5KIBR1tV8YL0O9WGrV9wKGw6houKc21Jfcp0JzZDF0T1/EgI9a
-         9GhUNq69yqfpjRqnLDUeFHJvWBdbv9N1+FtyOn/A=
+        b=ePNesxK2MiuHQB/Ei55lffD5aUp3C1eBfhbYN/SPVuSpvFb908WC/+IUATWTKOXua
+         wrgx1+FuLo9f6ypwKaq5UMAQI4utT80lWaqIs7GJzZNgbrrxks6iuETDUJ38fAMMGq
+         Eq+ciamRuFqEjY8xYx1fOQXho3Ps3DbDpd1jdvRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.3 053/112] iio: adc: ad799x: fix probe error handling
-Date:   Wed, 16 Oct 2019 14:50:45 -0700
-Message-Id: <20191016214858.448795865@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 77/81] tracing: Get trace_array reference for available_tracers files
+Date:   Wed, 16 Oct 2019 14:51:28 -0700
+Message-Id: <20191016214848.125786305@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
-References: <20191016214844.038848564@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 upstream.
+commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
 
-Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
-and reset alert status on probe") the error path is wrong since it
-leaves the vref regulator on. Fix this by disabling both regulators.
+As instances may have different tracers available, we need to look at the
+trace_array descriptor that shows the list of the available tracers for the
+instance. But there's a race between opening the file and an admin
+deleting the instance. The trace_array_get() needs to be called before
+accessing the trace_array.
 
-Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/ad799x.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/drivers/iio/adc/ad799x.c
-+++ b/drivers/iio/adc/ad799x.c
-@@ -810,10 +810,10 @@ static int ad799x_probe(struct i2c_clien
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4154,9 +4154,14 @@ static int show_traces_open(struct inode
+ 	if (tracing_disabled)
+ 		return -ENODEV;
  
- 	ret = ad799x_write_config(st, st->chip_config->default_config);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	ret = ad799x_read_config(st);
- 	if (ret < 0)
--		goto error_disable_reg;
-+		goto error_disable_vref;
- 	st->config = ret;
++	if (trace_array_get(tr) < 0)
++		return -ENODEV;
++
+ 	ret = seq_open(file, &show_traces_seq_ops);
+-	if (ret)
++	if (ret) {
++		trace_array_put(tr);
+ 		return ret;
++	}
  
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+ 	m = file->private_data;
+ 	m->private = tr;
+@@ -4164,6 +4169,14 @@ static int show_traces_open(struct inode
+ 	return 0;
+ }
+ 
++static int show_traces_release(struct inode *inode, struct file *file)
++{
++	struct trace_array *tr = inode->i_private;
++
++	trace_array_put(tr);
++	return seq_release(inode, file);
++}
++
+ static ssize_t
+ tracing_write_stub(struct file *filp, const char __user *ubuf,
+ 		   size_t count, loff_t *ppos)
+@@ -4194,8 +4207,8 @@ static const struct file_operations trac
+ static const struct file_operations show_traces_fops = {
+ 	.open		= show_traces_open,
+ 	.read		= seq_read,
+-	.release	= seq_release,
+ 	.llseek		= seq_lseek,
++	.release	= show_traces_release,
+ };
+ 
+ static ssize_t
 
 
