@@ -2,99 +2,94 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C73ECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9B9ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8589B20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B0820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571194673;
-	bh=odz7IvDohe3vWP9N/5+JcCcI8oQjhPelThgT3H33gXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iZ0U8M2nPCVGPu4NQnuUP9/7zvymn2tvJd0oKlXLTQrl4rL/jpHDtgv+eXs0OMQ+I
-	 j642CjX/VFMS8jDf7PARj63hKVqp8WPybLuetwE/9UR76y317y6fU8N+jHZgsy75NM
-	 R63k6wFiJY6UX2gJie07rnSmTDCZAsST3vvigPFM=
+	s=default; t=1571194858;
+	bh=Q6EaTHXUZJ+A9ZOpvEPtSB0LVp/m+g/JevPvkuMDYe4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vIWj1KyzgPf5JwSJccgVJicZaHQGTIjI+dav8iyDFOqU/LjoxvNZmGWLF1Sj9zkJx
+	 Pfm7oQxxw0LA01+RMPSjKpLjc3dzQSw7Kz/NHDgalpHOvUnTTXJRPxsC6d0qk0KLrQ
+	 4tuYLNWmxLxUgLe5tVl8WDLQDXWC0Olgk60nws28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390811AbfJPC5s (ORCPT
+        id S1730853AbfJPDA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 22:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53474 "EHLO mail.kernel.org"
+        Tue, 15 Oct 2019 23:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390797AbfJPC5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 22:57:45 -0400
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728588AbfJPDA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:00:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42B7F20873;
-        Wed, 16 Oct 2019 02:57:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA5D20854;
+        Wed, 16 Oct 2019 03:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571194664;
-        bh=odz7IvDohe3vWP9N/5+JcCcI8oQjhPelThgT3H33gXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHoK1C5s42yF0p8Kd4yUThk6WfX2v5Q/h6hmU/oxqWWerD5OCEgjOpoehZ2tg9OBI
-         IhFsenWp2UFBGRhAg/a/sYNWLHcCg3+zgV/QEKSY1dJEeFqxpHuQX68Cui3raT/WZB
-         n0or9VjV0d3JRpT4KpbxSfqLRhIvbcqgdO0TvHOM=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 13/14] cpufreq: Use vtime aware kcpustat accessor to fetch CPUTIME_SYSTEM
-Date:   Wed, 16 Oct 2019 04:56:59 +0200
-Message-Id: <20191016025700.31277-14-frederic@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016025700.31277-1-frederic@kernel.org>
-References: <20191016025700.31277-1-frederic@kernel.org>
+        s=default; t=1571194856;
+        bh=Q6EaTHXUZJ+A9ZOpvEPtSB0LVp/m+g/JevPvkuMDYe4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qx3o05KJQZGZrN0HgUJI3GmkNWw/R2WGNKL6xxxEPanMo+gX0DLd6aQk0eJOA3wsP
+         xDsH36/1uMy6d/v1atqafEYJbtpQKoFXqEFc1chpMzq7pF+9Id5mZLVjbag6n0RV9H
+         qmr+pLv4PT5WFRZ+p10cz4nZlcx3EwxnyQNC/Lt8=
+Date:   Wed, 16 Oct 2019 04:00:52 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] arm64: mm: Fix unused variable warning in
+ zone_sizes_init
+Message-ID: <20191016030051.4di67v6swlkz2wzy@willie-the-truck>
+References: <20191015224304.20963-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015224304.20963-1-natechancellor@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have a vtime safe kcpustat accessor for CPUTIME_SYSTEM, use
-it to start fixing frozen kcpustat values on nohz_full CPUs.
+On Tue, Oct 15, 2019 at 03:43:04PM -0700, Nathan Chancellor wrote:
+> When building arm64 allnoconfig, CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32
+> get disabled so there is a warning about max_dma being unused.
+> 
+> ../arch/arm64/mm/init.c:215:16: warning: unused variable 'max_dma'
+> [-Wunused-variable]
+>         unsigned long max_dma = min;
+>                       ^
+> 1 warning generated.
+> 
+> Add an ifdef around the variable to fix this.
+> 
+> Fixes: 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  arch/arm64/mm/init.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 44f07fdf7a59..c3d6657b9942 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -212,7 +212,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+>  	struct memblock_region *reg;
+>  	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+>  	unsigned long max_dma32 = min;
+> +#if defined(CONFIG_ZONE_DMA) || defined(CONFIG_ZONE_DMA)
+>  	unsigned long max_dma = min;
+> +#endif
 
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- drivers/cpufreq/cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This looks bogus to me :/ You're referring to CONFIG_ZONE_DMA twice, and I
+can't see how that symbol even exists on arm64.
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index c52d6fa32aac..a37ebfd7e0e8 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -120,7 +120,7 @@ static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
- 	cur_wall_time = jiffies64_to_nsecs(get_jiffies_64());
- 
- 	busy_time = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
--	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
-+	busy_time += kcpustat_field(&kcpustat_cpu(cpu), CPUTIME_SYSTEM, cpu);
- 	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
- 	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
- 	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
--- 
-2.23.0
-
+Will
