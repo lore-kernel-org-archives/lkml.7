@@ -2,235 +2,203 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DD4FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5CFECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFDD2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hu69XPON"
+	by mail.kernel.org (Postfix) with ESMTP id D5DBA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403986AbfJPTYR (ORCPT
+        id S2406507AbfJPT0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:24:17 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20220 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732079AbfJPTYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571253854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u+joB9E6UZPllDI/uMX85cBeAjG+t2HNX9sXYOx1X8g=;
-        b=Hu69XPON+KyDUbg7ST83fNJYW8boJqu0hF/fZrzUUvotlJ0EdF+BlFeR4l0GwPKHiThBv/
-        dz9e63t6B/m/Fx6sDMw9fTJmR1pzTV5qwG+4VwCxxJqLNRzzTdS2+UfrsFdj+SS409weFP
-        KK0NL3RV/7dKMWLkIE0EwbohitDTlD0=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-yHF7bnP3O1K0xPzv2qe6wQ-1; Wed, 16 Oct 2019 15:24:13 -0400
-Received: by mail-qk1-f200.google.com with SMTP id k67so24851744qkc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:24:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OG+jqdqRkE3Fucg+g07dRFYdPcRlmZaD+wZIXULv1fU=;
-        b=Y7Esk82SXUkYmr5/ZpCaDuznAxKSKMW+XiPShwrfmGe+74CRXGQcbv9xqg9uloj6wp
-         DIR3SVA6m6KqOLJ9G8fldMn/If6DiPwwOLHsUDXDY2nCGsXdwnznMPDF+uDdaKH2x8gx
-         RUATiUXFzA/o2Ae2kK9oUOOLokKVwnSucUZWaLVYX8ZphEvdCFLue7esyq4YZuuOUg9S
-         ps/w9kzU92M6RbWGseLgFD2OVcSOyNeEwdG1+hfzvztj1PN+ghS1xdIGEQG+PMX6d2Qb
-         X/aJN/vTYek6F6m/4Sh3ty27e8cJgr92KueNuJfVb/XAtbDGjyvzjS+rHPEtyeJ52KFY
-         90Sw==
-X-Gm-Message-State: APjAAAXFSkEq/t080EGZInvVZ83M7Z7uUOFwcsOB0xx7Qr+80UtxzfYD
-        sDMgQngEhejLudnwo6p4/Ge0291mMexgas8Aa1K+k41Q2uK7Q/VJ7Ze9VfFGbiJ0HEsjPaC19Kq
-        tXJIMsfCBdRY+xzrMlpITT+gsbFlg+W+ZkGEH5+6P
-X-Received: by 2002:aed:2f04:: with SMTP id l4mr46618840qtd.345.1571253852067;
-        Wed, 16 Oct 2019 12:24:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxJGUkVMN1rT2RR/9I/7CYwWp05qb4PET+7QL6jvz7eLSbBq0S4l3QRmyFViI/7SGmF8kDGBGlGhD/+k0HuDBo=
-X-Received: by 2002:aed:2f04:: with SMTP id l4mr46618816qtd.345.1571253851841;
- Wed, 16 Oct 2019 12:24:11 -0700 (PDT)
+        Wed, 16 Oct 2019 15:26:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51018 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403999AbfJPT0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 15:26:09 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 839E718C8932;
+        Wed, 16 Oct 2019 19:26:00 +0000 (UTC)
+Received: from dhcp-17-182.bos.redhat.com (ovpn-116-165.phx2.redhat.com [10.3.116.165])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AF73D5C1D4;
+        Wed, 16 Oct 2019 19:25:56 +0000 (UTC)
+Subject: Re: [PATCH] ipmi: Don't allow device module unload when in use
+To:     minyard@acm.org
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
+References: <20191014134141.GA25427@t560>
+ <20191014154632.11103-1-minyard@acm.org>
+From:   Tony Camuso <tcamuso@redhat.com>
+Message-ID: <f73aa2ef-e173-db85-e426-3bf380626f66@redhat.com>
+Date:   Wed, 16 Oct 2019 15:25:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191016182935.5616-1-andrew.smirnov@gmail.com> <20191016182935.5616-3-andrew.smirnov@gmail.com>
-In-Reply-To: <20191016182935.5616-3-andrew.smirnov@gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 16 Oct 2019 21:24:00 +0200
-Message-ID: <CAO-hwJ++YWtX29YefGzaEfCLDA=npZwUxDCkDzxALAmLLqv7FQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] HID: logitech-hidpp: rework device validation
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Sam Bazely <sambazley@fastmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-X-MC-Unique: yHF7bnP3O1K0xPzv2qe6wQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191014154632.11103-1-minyard@acm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 16 Oct 2019 19:26:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
-
-On Wed, Oct 16, 2019 at 8:30 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
-rote:
->
-> G920 device only advertises REPORT_ID_HIDPP_LONG and
-> REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
-> for REPORT_ID_HIDPP_SHORT with optional=3Dfalse will always fail and
-> prevent G920 to be recognized as a valid HID++ device.
->
-> To fix this and improve some other aspects, modify
-> hidpp_validate_device() as follows:
->
->   - Inline the code of hidpp_validate_report() to simplify
->     distingushing between non-present and invalid report descriptors
->
->   - Drop the check for id >=3D HID_MAX_IDS || id < 0 since all of our
->     IDs are static and known to satisfy that at compile time
->
->   - Change the algorithms to check all possible report
->     types (including very long report) and deem the device as a valid
->     HID++ device if it supports at least one
->
->   - Treat invalid report length as a hard stop for the validation
->     algorithm, meaning that if any of the supported reports has
->     invalid length we assume the worst and treat the device as a
->     generic HID device.
->
->   - Fold initialization of hidpp->very_long_report_length into
->     hidpp_validate_device() since it already fetches very long report
->     length and validates its value
->
-> Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be =
-handled by this module")
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204191
-> Reported-by: Sam Bazely <sambazley@fastmail.com>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Cc: Henrik Rydberg <rydberg@bitmath.org>
-> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> Cc: Austin Palmer <austinp@valvesoftware.com>
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org # 5.2+
+On 10/14/19 11:46 AM, minyard@acm.org wrote:
+> From: Corey Minyard <cminyard@mvista.com>
+> 
+> If something has the IPMI driver open, don't allow the device
+> module to be unloaded.  Before it would unload and the user would
+> get errors on use.
+> 
+> This change is made on user request, and it makes it consistent
+> with the I2C driver, which has the same behavior.
+> 
+> It does change things a little bit with respect to kernel users.
+> If the ACPI or IPMI watchdog (or any other kernel user) has
+> created a user, then the device module cannot be unloaded.  Before
+> it could be unloaded,
+> 
+> This does not affect hot-plug.  If the device goes away (it's on
+> something removable that is removed or is hot-removed via sysfs)
+> then it still behaves as it did before.
+> 
+> Reported-by: tony camuso <tcamuso@redhat.com>
+> Signed-off-by: Corey Minyard <cminyard@mvista.com>
 > ---
->  drivers/hid/hid-logitech-hidpp.c | 54 ++++++++++++++++++--------------
->  1 file changed, 30 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
-hidpp.c
-> index 85911586b3b6..8c4be991f387 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -3498,34 +3498,45 @@ static int hidpp_get_report_length(struct hid_dev=
-ice *hdev, int id)
->         return report->field[0]->report_count + 1;
->  }
->
-> -static bool hidpp_validate_report(struct hid_device *hdev, int id,
-> -                                 int expected_length, bool optional)
-> +static bool hidpp_validate_device(struct hid_device *hdev)
->  {
-> -       int report_length;
-> +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
-> +       int id, report_length, supported_reports =3D 0;
+> Tony, here is a suggested change for this.  Can you look it over and
+> see if it looks ok?
+> 
+> Thanks,
+> 
+> -corey
+> 
+>   drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
+>   include/linux/ipmi_smi.h            | 12 ++++++++----
+>   2 files changed, 24 insertions(+), 11 deletions(-)
+
+Hi Corey.
+
+You changed ipmi_register_ipmi to ipmi_add_ipmi in ipmi_msghandler, but you
+did not change it where it is actually called.
+
+# grep ipmi_register_smi drivers/char/ipmi/*.c
+drivers/char/ipmi/ipmi_powernv.c:	rc = ipmi_register_smi(&ipmi_powernv_smi_handlers, ipmi, dev, 0);
+drivers/char/ipmi/ipmi_si_intf.c:	rv = ipmi_register_smi(&handlers,
+drivers/char/ipmi/ipmi_ssif.c:	rv = ipmi_register_smi(&ssif_info->handlers,
+
+Is there a reason for changing the interface name? Is this something
+that I could do instead of troubling you with it?
+
+Regards,
+Tony
+
+
+> 
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> index 2aab80e19ae0..15680de18625 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
+>   
+>   #define IPMI_IPMB_NUM_SEQ	64
+>   struct ipmi_smi {
+> +	struct module *owner;
 > +
-> +       id =3D REPORT_ID_HIDPP_SHORT;
-> +       report_length =3D hidpp_get_report_length(hdev, id);
-> +       if (report_length) {
-> +               if (report_length < HIDPP_REPORT_SHORT_LENGTH)
-> +                       goto bad_device;
->
-> -       if (id >=3D HID_MAX_IDS || id < 0) {
-> -               hid_err(hdev, "invalid HID report id %u\n", id);
-> -               return false;
-> +               supported_reports++;
->         }
->
-> +       id =3D REPORT_ID_HIDPP_LONG;
->         report_length =3D hidpp_get_report_length(hdev, id);
-> -       if (!report_length)
-> -               return optional;
-> +       if (report_length) {
-> +               if (report_length < HIDPP_REPORT_LONG_LENGTH)
-> +                       goto bad_device;
->
-> -       if (report_length < expected_length) {
-> -               hid_warn(hdev, "not enough values in hidpp report %d\n", =
-id);
-> -               return false;
-> +               supported_reports++;
->         }
->
-> -       return true;
-> -}
-> +       id =3D REPORT_ID_HIDPP_VERY_LONG;
-> +       report_length =3D hidpp_get_report_length(hdev, id);
-> +       if (report_length) {
-> +               if (report_length > HIDPP_REPORT_LONG_LENGTH &&
-> +                   report_length < HIDPP_REPORT_VERY_LONG_MAX_LENGTH)
-
-Can you double check the conditions here?
-It's late, but I think you inverted the tests as we expect the report
-length to be between HIDPP_REPORT_LONG_LENGTH and
-HIDPP_REPORT_VERY_LONG_MAX_LENGTH inclusive, while here this creates a
-bad_device.
-
-Other than that, I really like the series.
-
-Cheers,
-Benjamin
-
-> +                       goto bad_device;
->
-> -static bool hidpp_validate_device(struct hid_device *hdev)
-> -{
-> -       return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
-> -                                    HIDPP_REPORT_SHORT_LENGTH, false) &&
-> -              hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
-> -                                    HIDPP_REPORT_LONG_LENGTH, true);
-> +               supported_reports++;
-> +               hidpp->very_long_report_length =3D report_length;
-> +       }
-> +
-> +       return supported_reports;
-> +
-> +bad_device:
-> +       hid_warn(hdev, "not enough values in hidpp report %d\n", id);
-> +       return false;
->  }
->
->  static bool hidpp_application_equals(struct hid_device *hdev,
-> @@ -3572,11 +3583,6 @@ static int hidpp_probe(struct hid_device *hdev, co=
-nst struct hid_device_id *id)
->                 return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
->         }
->
-> -       hidpp->very_long_report_length =3D
-> -               hidpp_get_report_length(hdev, REPORT_ID_HIDPP_VERY_LONG);
-> -       if (hidpp->very_long_report_length > HIDPP_REPORT_VERY_LONG_MAX_L=
-ENGTH)
-> -               hidpp->very_long_report_length =3D HIDPP_REPORT_VERY_LONG=
-_MAX_LENGTH;
+>   	/* What interface number are we? */
+>   	int intf_num;
+>   
+> @@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
+>   	if (rv)
+>   		goto out_kfree;
+>   
+> +	if (!try_module_get(intf->owner)) {
+> +		rv = -ENODEV;
+> +		goto out_kfree;
+> +	}
+> +	
+>   	/* Note that each existing user holds a refcount to the interface. */
+>   	kref_get(&intf->refcount);
+>   
+> @@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
+>   	}
+>   
+>   	kref_put(&intf->refcount, intf_free);
+> +	module_put(intf->owner);
+>   }
+>   
+>   int ipmi_destroy_user(struct ipmi_user *user)
+> @@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
+>    * been recently fetched, this will just use the cached data.  Otherwise
+>    * it will run a new fetch.
+>    *
+> - * Except for the first time this is called (in ipmi_register_smi()),
+> + * Except for the first time this is called (in ipmi_add_smi()),
+>    * this will always return good data;
+>    */
+>   static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
+> @@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work)
+>   	kref_put(&intf->refcount, intf_free);
+>   }
+>   
+> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+> -		      void		       *send_info,
+> -		      struct device            *si_dev,
+> -		      unsigned char            slave_addr)
+> +int ipmi_add_smi(struct module         *owner,
+> +		 const struct ipmi_smi_handlers *handlers,
+> +		 void		       *send_info,
+> +		 struct device         *si_dev,
+> +		 unsigned char         slave_addr)
+>   {
+>   	int              i, j;
+>   	int              rv;
+> @@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>   		return rv;
+>   	}
+>   
 > -
->         if (id->group =3D=3D HID_GROUP_LOGITECH_DJ_DEVICE)
->                 hidpp->quirks |=3D HIDPP_QUIRK_UNIFYING;
->
-> --
-> 2.21.0
->
+> +	intf->owner = owner;
+>   	intf->bmc = &intf->tmp_bmc;
+>   	INIT_LIST_HEAD(&intf->bmc->intfs);
+>   	mutex_init(&intf->bmc->dyn_mutex);
+> @@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>   
+>   	return rv;
+>   }
+> -EXPORT_SYMBOL(ipmi_register_smi);
+> +EXPORT_SYMBOL(ipmi_add_smi);
+>   
+>   static void deliver_smi_err_response(struct ipmi_smi *intf,
+>   				     struct ipmi_smi_msg *msg,
+> diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
+> index 4dc66157d872..deec18b8944a 100644
+> --- a/include/linux/ipmi_smi.h
+> +++ b/include/linux/ipmi_smi.h
+> @@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
+>    * is called, and the lower layer must get the interface from that
+>    * call.
+>    */
+> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+> -		      void                     *send_info,
+> -		      struct device            *dev,
+> -		      unsigned char            slave_addr);
+> +int ipmi_add_smi(struct module            *owner,
+> +		 const struct ipmi_smi_handlers *handlers,
+> +		 void                     *send_info,
+> +		 struct device            *dev,
+> +		 unsigned char            slave_addr);
+> +
+> +#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
+> +	ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
+>   
+>   /*
+>    * Remove a low-level interface from the IPMI driver.  This will
+> 
 
