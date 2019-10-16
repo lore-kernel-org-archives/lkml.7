@@ -2,60 +2,72 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFD3FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE7FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D63420872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1402520872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QGoMybTg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QGoMybTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392504AbfJPKmr (ORCPT
+        id S2404400AbfJPKnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:42:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:35746 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389345AbfJPKmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:42:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 930B328;
-        Wed, 16 Oct 2019 03:42:46 -0700 (PDT)
-Received: from [10.37.9.204] (unknown [10.37.9.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B02813F6C4;
-        Wed, 16 Oct 2019 03:42:39 -0700 (PDT)
-Subject: Re: [PATCHv7 01/33] ns: Introduce Time Namespace
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-References: <20191011012341.846266-1-dima@arista.com>
- <20191011012341.846266-2-dima@arista.com>
- <80af93da-d497-81de-2a2a-179bb3bc852d@arm.com>
- <alpine.DEB.2.21.1910161230070.2046@nanos.tec.linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <5f4c2f29-ca68-b19c-017f-d23730f6e871@arm.com>
-Date:   Wed, 16 Oct 2019 11:44:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 16 Oct 2019 06:43:09 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36050 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389345AbfJPKnJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:43:09 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7630160540; Wed, 16 Oct 2019 10:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571222588;
+        bh=Gnx0VU9W9M2MKA7f69n4Pw5dV4fGPZ3KgNoNOQDCD8s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QGoMybTg6SSF1woDJvQLNmzZLLWK/T77+4ZJ3251sxIIyTnZBAvJcC8fXOA0uY1C3
+         sttPgwqIUWLbkqsTMCvt3B+ZZ04mhVqVZulCo8Q4x/m9vXth/71Ipg9OQPqCZTzWGG
+         7A04pNk5chTOjLDw4p70tdG5aeSgKlrUq/TFDoSg=
+Received: from [192.168.0.104] (unknown [183.83.146.112])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 218BF602C8;
+        Wed, 16 Oct 2019 10:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571222588;
+        bh=Gnx0VU9W9M2MKA7f69n4Pw5dV4fGPZ3KgNoNOQDCD8s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QGoMybTg6SSF1woDJvQLNmzZLLWK/T77+4ZJ3251sxIIyTnZBAvJcC8fXOA0uY1C3
+         sttPgwqIUWLbkqsTMCvt3B+ZZ04mhVqVZulCo8Q4x/m9vXth/71Ipg9OQPqCZTzWGG
+         7A04pNk5chTOjLDw4p70tdG5aeSgKlrUq/TFDoSg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 218BF602C8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH 2/2] arm64: dts: sc7180: Add minimal dts/dtsi files for
+ SC7180 soc
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015103358.17550-1-rnayak@codeaurora.org>
+ <20191015103358.17550-2-rnayak@codeaurora.org>
+ <20191016052535.GC2654@vkoul-mobl>
+ <89225569-1cd3-ae0e-94ed-bbb2b3dd8e9c@codeaurora.org>
+ <20191016082432.GL2654@vkoul-mobl>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <79b24548-dc69-b09d-55d2-6a370446abdf@codeaurora.org>
+Date:   Wed, 16 Oct 2019 16:13:01 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910161230070.2046@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191016082432.GL2654@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,62 +76,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 10/16/19 11:39 AM, Thomas Gleixner wrote:
-> On Wed, 16 Oct 2019, Vincenzo Frascino wrote:
-> 
-> < Trim 250+ lines ( 3+ pages) of pointlessly wasted electrons >
-> 
->>> --- a/init/Kconfig
->>> +++ b/init/Kconfig
->>> @@ -1096,6 +1096,13 @@ config UTS_NS
->>>  	  In this namespace tasks see different info provided with the
->>>  	  uname() system call
->>>  
->>> +config TIME_NS
->>> +	bool "TIME namespace"
->>> +	default y
+>>>> +		xo_board: xo-board {
+>>>> +			compatible = "fixed-clock";
+>>>> +			clock-frequency = <38400000>;
+>>>> +			clock-output-names = "xo_board";
+>>>> +			#clock-cells = <0>;
+>>>> +		};
+>>>> +
+>>>> +		sleep_clk: sleep-clk {
+>>>> +			compatible = "fixed-clock";
+>>>> +			clock-frequency = <32764>;
+>>>> +			clock-output-names = "sleep_clk";
+>>>> +			#clock-cells = <0>;
+>>>> +		};
+>>>> +
+>>>> +		bi_tcxo: bi_tcxo {
+>>>
+>>> why is this a clock defined here? Isnt this gcc clock?
 >>
->> Having CONFIG_TIME_NS "default y" makes so that the option is selected even on
->> the architectures that have no support for time namespaces.
->> The direct consequence is that the fallbacks defined in this patch are never
->> selected and this ends up in kernel compilation errors due to missing symbols.
->>
->> The error below shows what happens on arm64 (similar behavior on other
->> architectures):
->>
->> aarch64-linux-gnu-ld: kernel/time/namespace.o: in function `timens_on_fork':
->> kernel/time/namespace.c:321: undefined reference to `vdso_join_timens'
->>
->> My proposal is to keep TIME_NS "default n" (just remove "default y"), let the
->> architectures that enable time namespaces select it and make CONFIG_TIME_NS
->> select GENERIC_VDSO_TIME_NS if arch has HAVE_GENERIC_VDSO.
+>> This is a RPMH-controlled clock and not from GCC. It is the parent clock for
+>> GCC RCGs/PLLs.
 > 
-> Nah.
+> Yes right!
 > 
-> config TIME_NS
-> 	bool "TIME namespace"
-> 	depends on GENERIC_VDSO_TIME_NS
-> 	default y
+>> Once the RPMH clock support is added these would be removed.
 > 
-> and in lib/vdso/Kconfig
+> Wont it make sense to keep this bit not upstream and then remove that
+> part when you have rpmh support available. Reduces the churn upstream!
 > 
-> config GENERIC_VDSO_TIME_NS
-> 	bool
+> The parent can be xo_board till then!
 > 
-> and let architectures which have support for the VDSO bits select it.
->
 
-Agreed, this is even better.
-
-> < Trim another gazillion of useless lines >
-> 
-> See: https://people.kernel.org/tglx/notes-about-netiquette
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+The xo_board is 38.4MHz and bi_tcxo (xo/2), which needs to be updated 
+anyways :).
 
 -- 
-Regards,
-Vincenzo
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
