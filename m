@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7036BFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE81ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E2E218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367BC21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262914;
-	bh=1+1fyWTqgaYeBWPbe4DGTlwrzehJQTZxrXvSRxP2qjk=;
+	s=default; t=1571262918;
+	bh=0rVRR0CbBTVHtEv8LVBhHuawCNnGDu3ml+NkzVi1Ro8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZge9L/VtIIzo+qygACM/XdOiOgoKnyzhCLeEfDjsJ6WGgEVS5ELBJEMx9hYlmzYb
-	 AdI7cblRASugvJw5Y5wCOpxtkZr/UuwybJGi9FXtlqhUUXZY6iIllL9Nm6Ehql5gA1
-	 ApPxqlNJGaWInJFiMr+9Ng1heA5Fr1I6VM59e59M=
+	b=ur43KZShbYNvmzv7zX5G0PX+9rE4XeLyOm46kGVNQynE6pfBSSmVuW/IeXXfwTc0V
+	 wrRu6thG11oCr/EzFpxqhKFss4F1103IEvS8ZrHhAQyCIEpyhZgO9+KFYHy0OVH50s
+	 7gXfADDMyUzeZBinmIWrIzRWZkr89DOb4CZ0ViTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437719AbfJPVzM (ORCPT
+        id S2437746AbfJPVzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45446 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395180AbfJPVzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:06 -0400
+        id S2395195AbfJPVzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:09 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 988DB21D7F;
-        Wed, 16 Oct 2019 21:55:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD0AA21925;
+        Wed, 16 Oct 2019 21:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262905;
-        bh=1+1fyWTqgaYeBWPbe4DGTlwrzehJQTZxrXvSRxP2qjk=;
+        s=default; t=1571262909;
+        bh=0rVRR0CbBTVHtEv8LVBhHuawCNnGDu3ml+NkzVi1Ro8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=beGJNmcH5pT7nae0XVIWpU64OHrLer3TfKmpG0lmrkyF2/tT43FlaMEC9wHnAr9eF
-         9yCUqHRosQ2lbfJmE9Tfm5rHC2720d6Gy+eYAYl91MMeelzV4S7ugxE4nd1/CPwGk9
-         040Vgn9n0ja1XMpl36EneAHaKCVFMbZX5/UurPWA=
+        b=Q2xPGQv73SIIzVQYJt3D633IaF95NDj5yrFMqOQLpGZThZySHS+h4RTQf/iC/cD9M
+         I0XTd4cfLc6sYSx1gccqQjGirN5vJReXy2p4xPLJSfNnGK6TkXx1aZ8ksKOHUrKP25
+         1ZWqapCw28JAdg49WaC+DhDPO2ivK3TzsG3wUhRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.9 66/92] usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt,wedge}()
-Date:   Wed, 16 Oct 2019 14:50:39 -0700
-Message-Id: <20191016214842.396485132@linuxfoundation.org>
+        syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 69/92] USB: legousbtower: fix deadlock on disconnect
+Date:   Wed, 16 Oct 2019 14:50:42 -0700
+Message-Id: <20191016214843.701774402@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,36 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 1aae1394294cb71c6aa0bc904a94a7f2f1e75936 upstream.
+commit 33a7813219f208f4952ece60ee255fd983272dec upstream.
 
-The commit 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-had added a usbhsg_pipe_disable() calling into
-__usbhsg_ep_set_halt_wedge() accidentally. But, this driver should
-not call the usbhsg_pipe_disable() because the function discards
-all queues. So, this patch removes it.
+Fix a potential deadlock if disconnect races with open.
 
-Fixes: 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-Cc: <stable@vger.kernel.org> # v3.1+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1569924633-322-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Since commit d4ead16f50f9 ("USB: prevent char device open/deregister
+race") core holds an rw-semaphore while open is called and when
+releasing the minor number during deregistration. This can lead to an
+ABBA deadlock if a driver takes a lock in open which it also holds
+during deregistration.
+
+This effectively reverts commit 78663ecc344b ("USB: disconnect open race
+in legousbtower") which needlessly introduced this issue after a generic
+fix for this race had been added to core by commit d4ead16f50f9 ("USB:
+prevent char device open/deregister race").
+
+Fixes: 78663ecc344b ("USB: disconnect open race in legousbtower")
+Cc: stable <stable@vger.kernel.org>	# 2.6.24
+Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+Tested-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190919083039.30898-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/renesas_usbhs/mod_gadget.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/usb/misc/legousbtower.c |   19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -730,8 +730,6 @@ static int __usbhsg_ep_set_halt_wedge(st
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
- 	unsigned long flags;
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -185,7 +185,6 @@ static const struct usb_device_id tower_
+ };
  
--	usbhsg_pipe_disable(uep);
+ MODULE_DEVICE_TABLE (usb, tower_table);
+-static DEFINE_MUTEX(open_disc_mutex);
+ 
+ #define LEGO_USB_TOWER_MINOR_BASE	160
+ 
+@@ -338,18 +337,14 @@ static int tower_open (struct inode *ino
+ 		goto exit;
+ 	}
+ 
+-	mutex_lock(&open_disc_mutex);
+ 	dev = usb_get_intfdata(interface);
 -
- 	dev_dbg(dev, "set halt %d (pipe %d)\n",
- 		halt, usbhs_pipe_number(pipe));
+ 	if (!dev) {
+-		mutex_unlock(&open_disc_mutex);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
  
+ 	/* lock this device */
+ 	if (mutex_lock_interruptible(&dev->lock)) {
+-		mutex_unlock(&open_disc_mutex);
+ 	        retval = -ERESTARTSYS;
+ 		goto exit;
+ 	}
+@@ -357,12 +352,10 @@ static int tower_open (struct inode *ino
+ 
+ 	/* allow opening only once */
+ 	if (dev->open_count) {
+-		mutex_unlock(&open_disc_mutex);
+ 		retval = -EBUSY;
+ 		goto unlock_exit;
+ 	}
+ 	dev->open_count = 1;
+-	mutex_unlock(&open_disc_mutex);
+ 
+ 	/* reset the tower */
+ 	result = usb_control_msg (dev->udev,
+@@ -429,10 +422,9 @@ static int tower_release (struct inode *
+ 
+ 	if (dev == NULL) {
+ 		retval = -ENODEV;
+-		goto exit_nolock;
++		goto exit;
+ 	}
+ 
+-	mutex_lock(&open_disc_mutex);
+ 	if (mutex_lock_interruptible(&dev->lock)) {
+ 	        retval = -ERESTARTSYS;
+ 		goto exit;
+@@ -462,10 +454,7 @@ static int tower_release (struct inode *
+ 
+ unlock_exit:
+ 	mutex_unlock(&dev->lock);
+-
+ exit:
+-	mutex_unlock(&open_disc_mutex);
+-exit_nolock:
+ 	return retval;
+ }
+ 
+@@ -932,7 +921,6 @@ static int tower_probe (struct usb_inter
+ 	if (retval) {
+ 		/* something prevented us from registering this driver */
+ 		dev_err(idev, "Not able to get a minor for this device.\n");
+-		usb_set_intfdata (interface, NULL);
+ 		goto error;
+ 	}
+ 	dev->minor = interface->minor;
+@@ -964,16 +952,13 @@ static void tower_disconnect (struct usb
+ 	int minor;
+ 
+ 	dev = usb_get_intfdata (interface);
+-	mutex_lock(&open_disc_mutex);
+-	usb_set_intfdata (interface, NULL);
+ 
+ 	minor = dev->minor;
+ 
+-	/* give back our minor */
++	/* give back our minor and prevent further open() */
+ 	usb_deregister_dev (interface, &tower_class);
+ 
+ 	mutex_lock(&dev->lock);
+-	mutex_unlock(&open_disc_mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+ 	if (!dev->open_count) {
 
 
