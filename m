@@ -2,52 +2,54 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8885ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF544FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CC8218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1B0218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263304;
-	bh=+z+39EK4lI4JE1/tBx7E6JtZIILC2csIKnEB6iWYPFs=;
+	s=default; t=1571263310;
+	bh=eBXi4eUco+qCfMawbbaI//iav+3ieFt2vwWQoS4XPDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJbD9DKWuCCUYGEmu4ya3YNCM4Z8gqY1wf3CR9vM7mcnJbVXoCsq7c442uuWBuJSU
-	 hFdY0pYcHDLPTLNwqGGA3p6fjtYnF0r1SiGOlQlEm1ARXjaxBuPo6YlLKOWzrsGr94
-	 H/8+2nFWAEQNyBE1x8zxI+E3XFfoz6TeDQIu3OpA=
+	b=rtudOCqkgcMHM9noo++hSFHaDEdE0D/1ShYmhfu+ulpXbi+qXPHawEwSR1x56GTgM
+	 iLbm/9er3XyVO45M8gY+0ESbwkfNiUfuzAh0YS4ZfHefusJWyiVDurzmOnEatFmREo
+	 lWnFGTVVH2BrNm1yZlFx2kSTpcCR/9XdZKGWbil0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438786AbfJPWA3 (ORCPT
+        id S2438754AbfJPWAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:00:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438461AbfJPV7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:18 -0400
+        id S2438427AbfJPV7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:13 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEC55218DE;
-        Wed, 16 Oct 2019 21:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D35E21D7F;
+        Wed, 16 Oct 2019 21:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263157;
-        bh=+z+39EK4lI4JE1/tBx7E6JtZIILC2csIKnEB6iWYPFs=;
+        s=default; t=1571263152;
+        bh=eBXi4eUco+qCfMawbbaI//iav+3ieFt2vwWQoS4XPDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLYmQYtt1ult0WPYr1ZK/P1FhNl5t9c2/yQO+22ySc1mP4HYxMicvIMEftrr6v2IC
-         vxzyQf/69ufxP7Wm1TPdNyJZXUgqk/996tU3okqreGBct5vAwTfyGjg9amQLhdB7A2
-         IxQ3CMUXWjs1YxRo5YSeE0PPQv6w2Uj8AR1BWu/0=
+        b=SW/BUHmMXbEZ6caxMy3hzShb1myZjHdNirgVL3j3TRbAoTXvA5Zwh8EChhejGA8T0
+         xMWpPH/dO5GAKmDzWazZXhWd99cMmPVq7JSTCy55Bontr84G9r3OJYCKVnOTK+6JVh
+         3n5+Og4fAlavpd6/C5m8l2NTnSvbSXRA3hLS53/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 086/112] Btrfs: fix memory leak due to concurrent append writes with fiemap
-Date:   Wed, 16 Oct 2019 14:51:18 -0700
-Message-Id: <20191016214905.047723990@linuxfoundation.org>
+        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 080/112] firmware: google: increment VPD key_len properly
+Date:   Wed, 16 Oct 2019 14:51:12 -0700
+Message-Id: <20191016214904.524571232@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -60,150 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit c67d970f0ea8dcc423e112137d34334fa0abb8ec upstream.
+[ Upstream commit 442f1e746e8187b9deb1590176f6b0ff19686b11 ]
 
-When we have a buffered write that starts at an offset greater than or
-equals to the file's size happening concurrently with a full ranged
-fiemap, we can end up leaking an extent state structure.
+Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
+decoding VPD data") adds length checks, but the new vpd_decode_entry()
+function botched the logic -- it adds the key length twice, instead of
+adding the key and value lengths separately.
 
-Suppose we have a file with a size of 1Mb, and before the buffered write
-and fiemap are performed, it has a single extent state in its io tree
-representing the range from 0 to 1Mb, with the EXTENT_DELALLOC bit set.
+On my local system, this means vpd.c's vpd_section_create_attribs() hits
+an error case after the first attribute it parses, since it's no longer
+looking at the correct offset. With this patch, I'm back to seeing all
+the correct attributes in /sys/firmware/vpd/...
 
-The following sequence diagram shows how the memory leak happens if a
-fiemap a buffered write, starting at offset 1Mb and with a length of
-4Kb, are performed concurrently.
-
-          CPU 1                                                  CPU 2
-
-  extent_fiemap()
-    --> it's a full ranged fiemap
-        range from 0 to LLONG_MAX - 1
-        (9223372036854775807)
-
-    --> locks range in the inode's
-        io tree
-      --> after this we have 2 extent
-          states in the io tree:
-          --> 1 for range [0, 1Mb[ with
-              the bits EXTENT_LOCKED and
-              EXTENT_DELALLOC_BITS set
-          --> 1 for the range
-              [1Mb, LLONG_MAX[ with
-              the EXTENT_LOCKED bit set
-
-                                                  --> start buffered write at offset
-                                                      1Mb with a length of 4Kb
-
-                                                  btrfs_file_write_iter()
-
-                                                    btrfs_buffered_write()
-                                                      --> cached_state is NULL
-
-                                                      lock_and_cleanup_extent_if_need()
-                                                        --> returns 0 and does not lock
-                                                            range because it starts
-                                                            at current i_size / eof
-
-                                                      --> cached_state remains NULL
-
-                                                      btrfs_dirty_pages()
-                                                        btrfs_set_extent_delalloc()
-                                                          (...)
-                                                          __set_extent_bit()
-
-                                                            --> splits extent state for range
-                                                                [1Mb, LLONG_MAX[ and now we
-                                                                have 2 extent states:
-
-                                                                --> one for the range
-                                                                    [1Mb, 1Mb + 4Kb[ with
-                                                                    EXTENT_LOCKED set
-                                                                --> another one for the range
-                                                                    [1Mb + 4Kb, LLONG_MAX[ with
-                                                                    EXTENT_LOCKED set as well
-
-                                                            --> sets EXTENT_DELALLOC on the
-                                                                extent state for the range
-                                                                [1Mb, 1Mb + 4Kb[
-                                                            --> caches extent state
-                                                                [1Mb, 1Mb + 4Kb[ into
-                                                                @cached_state because it has
-                                                                the bit EXTENT_LOCKED set
-
-                                                    --> btrfs_buffered_write() ends up
-                                                        with a non-NULL cached_state and
-                                                        never calls anything to release its
-                                                        reference on it, resulting in a
-                                                        memory leak
-
-Fix this by calling free_extent_state() on cached_state if the range was
-not locked by lock_and_cleanup_extent_if_need().
-
-The same issue can happen if anything else other than fiemap locks a range
-that covers eof and beyond.
-
-This could be triggered, sporadically, by test case generic/561 from the
-fstests suite, which makes duperemove run concurrently with fsstress, and
-duperemove does plenty of calls to fiemap. When CONFIG_BTRFS_DEBUG is set
-the leak is reported in dmesg/syslog when removing the btrfs module with
-a message like the following:
-
-  [77100.039461] BTRFS: state leak: start 6574080 end 6582271 state 16402 in tree 0 refs 1
-
-Otherwise (CONFIG_BTRFS_DEBUG not set) detectable with kmemleak.
-
-CC: stable@vger.kernel.org # 4.16+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decoding VPD data")
+Cc: <stable@vger.kernel.org>
+Cc: Hung-Te Lin <hungte@chromium.org>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Link: https://lore.kernel.org/r/20190930214522.240680-1-briannorris@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/firmware/google/vpd_decode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1591,7 +1591,6 @@ static noinline ssize_t btrfs_buffered_w
- 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	struct btrfs_root *root = BTRFS_I(inode)->root;
- 	struct page **pages = NULL;
--	struct extent_state *cached_state = NULL;
- 	struct extent_changeset *data_reserved = NULL;
- 	u64 release_bytes = 0;
- 	u64 lockstart;
-@@ -1611,6 +1610,7 @@ static noinline ssize_t btrfs_buffered_w
- 		return -ENOMEM;
+diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
+index dda525c0f9682..5c6f2a74f1049 100644
+--- a/drivers/firmware/google/vpd_decode.c
++++ b/drivers/firmware/google/vpd_decode.c
+@@ -52,7 +52,7 @@ static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
+ 	if (max_len - consumed < *entry_len)
+ 		return VPD_FAIL;
  
- 	while (iov_iter_count(i) > 0) {
-+		struct extent_state *cached_state = NULL;
- 		size_t offset = offset_in_page(pos);
- 		size_t sector_offset;
- 		size_t write_bytes = min(iov_iter_count(i),
-@@ -1758,9 +1758,20 @@ again:
- 		if (copied > 0)
- 			ret = btrfs_dirty_pages(inode, pages, dirty_pages,
- 						pos, copied, &cached_state);
-+
-+		/*
-+		 * If we have not locked the extent range, because the range's
-+		 * start offset is >= i_size, we might still have a non-NULL
-+		 * cached extent state, acquired while marking the extent range
-+		 * as delalloc through btrfs_dirty_pages(). Therefore free any
-+		 * possible cached extent state to avoid a memory leak.
-+		 */
- 		if (extents_locked)
- 			unlock_extent_cached(&BTRFS_I(inode)->io_tree,
- 					     lockstart, lockend, &cached_state);
-+		else
-+			free_extent_state(cached_state);
-+
- 		btrfs_delalloc_release_extents(BTRFS_I(inode), reserve_bytes,
- 					       true);
- 		if (ret) {
+-	consumed += decoded_len;
++	consumed += *entry_len;
+ 	*_consumed = consumed;
+ 	return VPD_OK;
+ }
+-- 
+2.20.1
+
 
 
