@@ -2,95 +2,196 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E72FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80B4FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE47D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CE62082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="jSkGGBjc"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="f+NsON8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbfJPRji (ORCPT
+        id S2389163AbfJPRkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:39:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33428 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfJPRji (ORCPT
+        Wed, 16 Oct 2019 13:40:08 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42611 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfJPRkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:39:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id r5so37382815qtd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:39:37 -0700 (PDT)
+        Wed, 16 Oct 2019 13:40:08 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e5so11587285pls.9
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/Cx4XbFIa1sZs/uYwPjwYiglQbxuZVrvQE3ZO+WHpZ0=;
-        b=jSkGGBjcRJJqTIh9MNDMGXbNJRI/LCnDRhaNwChrhsAbMBmD27FKvuIkphNz9Zi+ng
-         bCqKQB7KdnAZy13xgSk+OvLy669mvex/kNk+EG1zJh5tlurc77U7xwtFOHuirYtFDY1z
-         bCoUFVI7zHaBEYuFhR+BesqwbCo3dh2BnZFbU=
+        bh=Lw499SE/B/hjFaUHPEW33doDXG49HvU0MA8Y3SKqLDQ=;
+        b=f+NsON8MCU924pXongPNuXmBEB+tRUxv8lgRxVAdhnNLEJVRp7UCCf5eXF8S3+Jrv0
+         dMJ/A4WL5ekhgXqrwNh3JXbbdm37/j/gxFi9g7iMj4lgZVQ2MlzujxSSg5F0Tjq/3bP4
+         jo5XAkwASSBxntr4ggp89/QacdqSgXtm3iaDFhjQd2xl12cf0X/naXACfh4suysLM3QR
+         85E+4SJK685B6JJMmkb6ogPcLCp9rnNvv0eYDnHbKWjRfoI7O2zWDLRDee/w4oAEVtES
+         RuapFXWoZ/y6YOT0yNpmVMb+ala/CytuzD350PcwFmlFdGInByfCdnYVpPUS0waptOtT
+         WeFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/Cx4XbFIa1sZs/uYwPjwYiglQbxuZVrvQE3ZO+WHpZ0=;
-        b=FsZqLJwwHLpCfFKvVP2dnzJxO2piA+k/j88TAHstvZZ/bcWkxO8W8nRQOX7oKbb1X8
-         TiNvcRWJ+AiVCk4hiLOgoHNz+dFhjI0edijpMcYy1ULikfy8i9TVVAkYjkHjcOkzP88v
-         hgwhx9ZQhv1vBtKRlDQV43eMQC0KJqGI7DoCPd4QTTwluQRqz6Sj6iZOT3jN5wjELErv
-         Sj7awZdU+9Nk3wh0Tf4jYKm+6wCrOl60CjAXQGe8oN9Cjv0wWZ8o6hL52QL9opL0Aajj
-         XLW7LRlyeerfe8oPnv5K/ZvNJbIMX+ya4RE2sHWu92YJcGi0kUY+a4zP5cyphvH2M5Z3
-         X0/Q==
-X-Gm-Message-State: APjAAAU4ww7j6jeQjzjP4YWnh28jLHw/XGoPQfMN6xgBzuLkiPLA5Ssx
-        CBwMsHioN0PES4X2w3UVfLL5Z9xW4PlKIRYyAnAvAIL6
-X-Google-Smtp-Source: APXvYqwlghLwWKjPsF+lWMlnNrlMqW+5iR9QfBzroa/KEZbXO+cGpX2YYJRRQlH+ZiqpUprUp8HPYcr1Oo2PT6xdYkw=
-X-Received: by 2002:a02:9a15:: with SMTP id b21mr3863352jal.103.1571245902352;
- Wed, 16 Oct 2019 10:11:42 -0700 (PDT)
+        bh=Lw499SE/B/hjFaUHPEW33doDXG49HvU0MA8Y3SKqLDQ=;
+        b=KTsbYvQLEb/Y+Kp+2s9nJvgFuw24P4kpEiSlD3rjox3exNNqPJbUuoLUSES7gp4+Zl
+         A3O+TK6O1GvoU+/WgY0BsQ2xWg6BXH3l7IhijYbZ4Woqu67OcMuTghQJyHkdERDrz30Q
+         KuKs8ZC05oZHiOL5jJErgY/oervHj6v1+eN+PCkzUFXZ5UAZKH0FYPRmgvhDppKCXFdP
+         ryrwm3wZ3fdR4FCxin44SH0Uyy+pwx7UPKxz9+IfVknXqWetLG7zXSWmK0M5UFx0nfDd
+         6Pelg+JikvPenrDK78Bi6+dikmNDIjDIiOh8hSYA8dF0Ph+GY0rDwb6X4IowxY4pfvJ+
+         2lzg==
+X-Gm-Message-State: APjAAAU5YtWPrrQc7uOhK2ffs2SjqP4/489u83HGQhcOGlLzgbD0QhfG
+        rN0V7ZesmW9n9wkIUZdE1BDf7ldDyXVoYn1wOBJzv/pqRsOfLg==
+X-Google-Smtp-Source: APXvYqw+6T+5LMBGMuiz84tkGGsDm2TNA6txkwNEVh5y/8wzUeCrXqRK3UwmkJL5VwwCAAsk+CEkMYOUa6VlV/pR2d8=
+X-Received: by 2002:a1f:2e0a:: with SMTP id u10mr12656927vku.79.1571246166944;
+ Wed, 16 Oct 2019 10:16:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
-In-Reply-To: <20190919052822.10403-1-jagan@amarulasolutions.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 16 Oct 2019 22:41:31 +0530
-Message-ID: <CAMty3ZAScACpT_ULQwJciLLu23eG_+JmYUCkrr-kOjJLe-E=-A@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arm64: dts: rockchip: ROC-PC fixes
-To:     Heiko Stuebner <heiko@sntech.de>, Levin Du <djw@t-chip.com.cn>,
-        Akash Gajjar <akash@openedev.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Da Xue <da@lessconfused.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
+References: <20191015061349.141448-1-wvw@google.com> <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
+In-Reply-To: <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 16 Oct 2019 22:45:55 +0530
+Message-ID: <CAHLCerN0CWOox-_=ywVO40R9LCahBRoU6Myg3Ca3p_TkZyJAMw@mail.gmail.com>
+Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
+To:     Wei Wang <wvw@google.com>
+Cc:     wei.vince.wang@gmail.com, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+On Wed, Oct 16, 2019 at 10:20 PM Amit Kucheria
+<amit.kucheria@verdurent.com> wrote:
+>
+> On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
+> >
+> > The paths thermal_zone%d and cooling_device%d are not intuitive and the
+> > numbers are subject to change due to device tree change. This usually
+> > leads to tree traversal in userspace code.
+> > The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
+> > cooling_device respectively.
+>
+> I like this.
+>
+> > Signed-off-by: Wei Wang <wvw@google.com>
+> > ---
+> >  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
+> >  1 file changed, 21 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> > index d4481cc8958f..0ff8fb1d7b0a 100644
+> > --- a/drivers/thermal/thermal_core.c
+> > +++ b/drivers/thermal/thermal_core.c
+> > @@ -22,6 +22,7 @@
+> >  #include <net/netlink.h>
+> >  #include <net/genetlink.h>
+> >  #include <linux/suspend.h>
+> > +#include <linux/kobject.h>
+> >
+> >  #define CREATE_TRACE_POINTS
+> >  #include <trace/events/thermal.h>
+> > @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
+> >
+> >  static atomic_t in_suspend;
+> >  static bool power_off_triggered;
+> > +static struct kobject *cdev_link_kobj;
+> > +static struct kobject *tz_link_kobj;
+> >
+> >  static struct thermal_governor *def_governor;
+> >
+> > @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
+> >         struct thermal_zone_device *pos = NULL;
+> >         int result;
+> >
+> > -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
+> > +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
+> >                 return ERR_PTR(-EINVAL);
+>
+> This should be a separate fix, if needed.
+>
+> >         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
+> > @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
+> >                 return ERR_PTR(result);
+> >         }
+> >
+> > -       /* Add 'this' new cdev to the global cdev list */
+> > +       /* Add 'this' new cdev to the global cdev list and create link*/
+> >         mutex_lock(&thermal_list_lock);
+> >         list_add(&cdev->node, &thermal_cdev_list);
+> > +       if (!cdev_link_kobj)
+> > +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
+> > +                                               cdev->device.kobj.parent);
+> > +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
+> > +                                               &cdev->device.kobj, cdev->type))
+> > +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
+>
+> Any reason not to use the following form instead? It seems easier to read.
+>
+> if (!cdev_link_kobj) {
+>                cdev_link_kobj = kobject_create_and_add("cdev-by-name",
+>                                                cdev->device.kobj.parent);
+>               ret = sysfs_create_link(cdev_link_kobj,
+>                                               &cdev->device.kobj, cdev->type))
+>               if (ret)
+>                        dev_err(&cdev->device, "Failed to create
+> cdev-by-name link\n");
+> }
 
-On Thu, Sep 19, 2019 at 10:58 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> This series is trying to fix the Linux boot and other
-> regulators stuff for ROC-RK3399-PC board.
->
-> patch 1: attach pinctrl to pwm2 pin
->
-> patch 2-4: libretech naming conventions
->
-> patch 5-6: regulator renaming, input rails fixes
->
-> Any inputs?
-> Jagan.
->
-> Jagan Teki (6):
->   arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
->   dt-bindings: arm: rockchip: Use libretech for roc-pc binding
->   arm64: dts: rockchip: Use libretech model, compatible for ROC-PC
+I can now see why you had to do that - none of the other links would
+get created after the first one.
 
-These two patches are still valid right apart from renaming patch? any
-comments on those?
+Perhaps create the directories in the __init functions and only create
+the links here?
+
+
+> >         mutex_unlock(&thermal_list_lock);
+> >
+> >         /* Update binding information for 'this' new cdev */
+> > @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
+> >                         }
+> >                 }
+> >         }
+> > +       if (cdev_link_kobj)
+> > +               sysfs_remove_link(cdev_link_kobj, cdev->type);
+> >
+> >         mutex_unlock(&thermal_list_lock);
+> >
+> > @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+> >
+> >         mutex_lock(&thermal_list_lock);
+> >         list_add_tail(&tz->node, &thermal_tz_list);
+> > +       if (!tz_link_kobj)
+> > +               tz_link_kobj = kobject_create_and_add("tz-by-name",
+> > +                                               tz->device.kobj.parent);
+> > +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
+> > +                                               &tz->device.kobj, tz->type))
+> > +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
+>
+> Same as above.
+>
+> >         mutex_unlock(&thermal_list_lock);
+> >
+> >         /* Bind cooling devices for this zone */
+> > @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+> >                         }
+> >                 }
+> >         }
+> > +       if (tz_link_kobj)
+> > +               sysfs_remove_link(tz_link_kobj, tz->type);
+> >
+> >         mutex_unlock(&thermal_list_lock);
+> >
+> > --
+> > 2.23.0.700.g56cf767bdb-goog
+> >
