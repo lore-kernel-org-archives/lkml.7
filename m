@@ -7,49 +7,65 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E49EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1599ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6579D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64B921925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263802;
-	bh=gOCozBjGAfUTSdsMSA+T/zIPGhaGMj6OatYm4ZELN80=;
+	s=default; t=1571263804;
+	bh=aYhgH6fzlsQzxS6skawnwMCgmv+FYnwhSWjRU2M2VK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AfPCQM0VYe91uOTXiv65H3zbjOnQFQyu5KezB61LKl2lre4EzpZBtF3J4ptf4Dce9
-	 R5dfYnfhqyJBKOi2f69DptZnZOIYrdlyS28OMNSR9lOeLEVWTEOKQVRQnn5TXJ0vEt
-	 IZKKJXB4D110vr0qwcB1QwFFZJi4ojyN12Cdjs5s=
+	b=Mw5dnrTbDsUMYdn0z2ZE9hWLm96zUJ0XXrQoCPZuicCPkz5tO8+zs+RwS4Zz09PRJ
+	 Z81sU2y5Rg2GCa9n7iPE3xP18a2a2CnTqRQHBjrxhbq7DJ/mMF6R30EfCd85wlPaxK
+	 YWqeNtQFRb39MNEsPoQr6ghk6E1JHY3pj+0RbmsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439155AbfJPWKA (ORCPT
+        id S2438001AbfJPV5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49990 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395417AbfJPV5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:24 -0400
+        id S2387438AbfJPV4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:45 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 136C521925;
-        Wed, 16 Oct 2019 21:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C13FC20872;
+        Wed, 16 Oct 2019 21:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263043;
-        bh=gOCozBjGAfUTSdsMSA+T/zIPGhaGMj6OatYm4ZELN80=;
+        s=default; t=1571263004;
+        bh=aYhgH6fzlsQzxS6skawnwMCgmv+FYnwhSWjRU2M2VK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3RAsjEIbxRhhBFaJ4UmmcZ9GtFCvTgNxnJLR6bW0qktyEH5PhfVkv4GgB3/OqdgR
-         yg2PHKeK8LTFEwg4pUkhThjFIBK25lPWfOFc1Ze8kqddsTmS0iPOP65/Y+xBcV7sr+
-         CCoa7fIpxAqyOpel656+4eJDyh7filN44HXyXMCA=
+        b=ij8sdJAg8lYrSscvaURxzdmbfBX4THUM92wzsP7SXG8hyiq94RX8cTj0M5o8/oT8F
+         C+5YVwX2ZRNB1igEfpH2eYtZfUENWAoUokbXhXrHd/IKd0YVDo3RI7k+Q5gRiZKW70
+         fS7vlGL8nhhMpw+Ryy6d03azuV5CJ/d+UmnlRClg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 47/81] iio: adc: axp288: Override TS pin bias current for some models
-Date:   Wed, 16 Oct 2019 14:50:58 -0700
-Message-Id: <20191016214839.832877112@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        John Salem <josalem@microsoft.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Tom McDonald <thomas.mcdonald@microsoft.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 45/65] perf inject jit: Fix JIT_CODE_MOVE filename
+Date:   Wed, 16 Oct 2019 14:50:59 -0700
+Message-Id: <20191016214833.734751175@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,89 +75,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Steve MacLean <Steve.MacLean@microsoft.com>
 
-commit 972917419a0ba25afbf69d5d8c9fa644d676f887 upstream.
+commit b59711e9b0d22fd47abfa00602fd8c365cdd3ab7 upstream.
 
-Since commit 9bcf15f75cac ("iio: adc: axp288: Fix TS-pin handling") we
-preserve the bias current set by the firmware at boot.  This fixes issues
-we were seeing on various models, but it seems our old hardcoded 80ųA bias
-current was working around a firmware bug on at least one model laptop.
+During perf inject --jit, JIT_CODE_MOVE records were injecting MMAP records
+with an incorrect filename. Specifically it was missing the ".so" suffix.
 
-In order to both have our cake and eat it, this commit adds a dmi based
-list of models where we need to override the firmware set bias current and
-adds the one model we now know needs this to it: The Lenovo Ideapad 100S
-(11 inch version).
+Further the JIT_CODE_LOAD record were silently truncating the
+jr->load.code_index field to 32 bits before generating the filename.
 
-Fixes: 9bcf15f75cac ("iio: adc: axp288: Fix TS-pin handling")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203829
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Make both records emit the same filename based on the full 64 bit
+code_index field.
+
+Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Brian Robbins <brianrob@microsoft.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: John Keeping <john@metanate.com>
+Cc: John Salem <josalem@microsoft.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
+Link: http://lore.kernel.org/lkml/BN8PR21MB1362FF8F127B31DBF4121528F7800@BN8PR21MB1362.namprd21.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/axp288_adc.c |   32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ tools/perf/util/jitdump.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/adc/axp288_adc.c
-+++ b/drivers/iio/adc/axp288_adc.c
-@@ -16,6 +16,7 @@
-  *
-  */
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -394,7 +394,7 @@ static int jit_repipe_code_load(struct j
+ 	size_t size;
+ 	u16 idr_size;
+ 	const char *sym;
+-	uint32_t count;
++	uint64_t count;
+ 	int ret, csize, usize;
+ 	pid_t pid, tid;
+ 	struct {
+@@ -417,7 +417,7 @@ static int jit_repipe_code_load(struct j
+ 		return -1;
  
-+#include <linux/dmi.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
-@@ -34,6 +35,11 @@
- #define AXP288_ADC_EN_MASK				0xF0
- #define AXP288_ADC_TS_ENABLE				0x01
+ 	filename = event->mmap2.filename;
+-	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%u.so",
++	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+ 			jd->dir,
+ 			pid,
+ 			count);
+@@ -530,7 +530,7 @@ static int jit_repipe_code_move(struct j
+ 		return -1;
  
-+#define AXP288_ADC_TS_BIAS_MASK				GENMASK(5, 4)
-+#define AXP288_ADC_TS_BIAS_20UA				(0 << 4)
-+#define AXP288_ADC_TS_BIAS_40UA				(1 << 4)
-+#define AXP288_ADC_TS_BIAS_60UA				(2 << 4)
-+#define AXP288_ADC_TS_BIAS_80UA				(3 << 4)
- #define AXP288_ADC_TS_CURRENT_ON_OFF_MASK		GENMASK(1, 0)
- #define AXP288_ADC_TS_CURRENT_OFF			(0 << 0)
- #define AXP288_ADC_TS_CURRENT_ON_WHEN_CHARGING		(1 << 0)
-@@ -186,10 +192,36 @@ static int axp288_adc_read_raw(struct ii
- 	return ret;
- }
- 
-+/*
-+ * We rely on the machine's firmware to correctly setup the TS pin bias current
-+ * at boot. This lists systems with broken fw where we need to set it ourselves.
-+ */
-+static const struct dmi_system_id axp288_adc_ts_bias_override[] = {
-+	{
-+		/* Lenovo Ideapad 100S (11 inch) */
-+		.matches = {
-+		  DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		  DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 100S-11IBY"),
-+		},
-+		.driver_data = (void *)(uintptr_t)AXP288_ADC_TS_BIAS_80UA,
-+	},
-+	{}
-+};
-+
- static int axp288_adc_initialize(struct axp288_adc_info *info)
- {
-+	const struct dmi_system_id *bias_override;
- 	int ret, adc_enable_val;
- 
-+	bias_override = dmi_first_match(axp288_adc_ts_bias_override);
-+	if (bias_override) {
-+		ret = regmap_update_bits(info->regmap, AXP288_ADC_TS_PIN_CTRL,
-+					 AXP288_ADC_TS_BIAS_MASK,
-+					 (uintptr_t)bias_override->driver_data);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/*
- 	 * Determine if the TS pin is enabled and set the TS current-source
- 	 * accordingly.
+ 	filename = event->mmap2.filename;
+-	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%"PRIu64,
++	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+ 	         jd->dir,
+ 	         pid,
+ 		 jr->move.code_index);
 
 
