@@ -2,127 +2,112 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF66ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AAAECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFFC205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sNdzysg8"
+	by mail.kernel.org (Postfix) with ESMTP id 12E56205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391925AbfJPJQA (ORCPT
+        id S2404156AbfJPJQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:16:00 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:38276 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391903AbfJPJP7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:15:59 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191016091556euoutp0144fb9fe04ffdeadeb04d5e62eba4285a~OFdyB1fGG2350523505euoutp01l
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:15:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191016091556euoutp0144fb9fe04ffdeadeb04d5e62eba4285a~OFdyB1fGG2350523505euoutp01l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571217356;
-        bh=9dORfT2C1mUG6n6ublUc6Js/kNhg/nSvlOn7r+wmFJ4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sNdzysg8IV07QNG16Sqy/DKIqRHBTS5BGJOQaTDU2zaYxUBgBMC+HeYqZRshKMdmT
-         qJ04kweMoohiCCraSv/ToLHiTYk6D4mm+VFIyn3ob4xoaKl0maAkb2Q2w9dnWGpdjz
-         0joGX0IzVpR8VQYrNtOBDk+Mgd0HAV326YW6umUc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191016091556eucas1p11bbb7d273f8cce2bcb1ec23c429781ff~OFdxpaz0_0289802898eucas1p1V;
-        Wed, 16 Oct 2019 09:15:56 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 04.EB.04469.CCFD6AD5; Wed, 16
-        Oct 2019 10:15:56 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191016091556eucas1p2b94b3ca327b17248afc651cda1d57606~OFdxW4yHG2333023330eucas1p2c;
-        Wed, 16 Oct 2019 09:15:56 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191016091556eusmtrp2f8dc80fafe484d2653d7fb16d861d72f~OFdxWGaIA0353103531eusmtrp2g;
-        Wed, 16 Oct 2019 09:15:56 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-d3-5da6dfcc2389
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5F.FF.04117.CCFD6AD5; Wed, 16
-        Oct 2019 10:15:56 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191016091555eusmtip2d51b4724fb25774ae834cd2813c1cc02~OFdwzmirq1657316573eusmtip2u;
-        Wed, 16 Oct 2019 09:15:55 +0000 (GMT)
-Subject: Re: [PATCH v4 1/6] opp: Handle target/min/max voltage in
- dev_pm_opp_adjust_voltage()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, vireshk@kernel.org,
-        robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <83933504-bef3-a1f5-1420-d3aa2864bab5@samsung.com>
-Date:   Wed, 16 Oct 2019 11:15:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Wed, 16 Oct 2019 05:16:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:33476 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391680AbfJPJQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:16:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36DE5142F;
+        Wed, 16 Oct 2019 02:16:16 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 357283F6C4;
+        Wed, 16 Oct 2019 02:16:14 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 10:16:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] PAXB INTx support with proper model
+Message-ID: <20191016091607.GA22848@e121166-lin.cambridge.arm.com>
+References: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
+ <107116f2-a5ff-c545-1864-eb5885c4c60e@gmail.com>
+ <88449493-4a32-1eda-434d-317b149173eb@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191014062649.oegc2rwigmdv6kju@vireshk-i7>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7djPc7pn7i+LNeh7IWaxccZ6Vov5R86x
-        WvQ/fs1scf78BnaLTY+vsVpc3jWHzeJz7xFGixnn9zFZrD1yl92ide8RdouNXz0sNj84xubA
-        47FpVSebx51re9g8Ni+p9+jbsorR4/MmuQDWKC6blNSczLLUIn27BK6MGTcbWApamSsOdPaz
-        NDBuZOpi5OSQEDCRWPPpGZDNxSEksIJR4kn3RGYI5wujxK/5/1khnM+MEl3vp7N1MXKAteyb
-        xQ0RX84osan9FVT7W0aJtv5p7CBzhQXiJXZMOsAO0iAioCXx8mYqSA2zwB4miVUT1rOB1LAJ
-        GEr0Hu1jBLF5Bewk/n7ZBhZnEVCV2PnvAhNIr6hAhMTpr4kQJYISJ2c+YQGxOQUsJY437wN7
-        gVlAXKLpy0pWCFteYvvbOWAfSAhcY5d41riUGeJPF4n3a15C2cISr45vYYewZST+75zPBNHQ
-        zCjRs/s2O4QzgVHi/vEFjBBV1hKHj19kBbmIWUBTYv0ufYiwo8Sb57uhocInceOtIMQRfBKT
-        tk1nhgjzSnS0CUFUq0j8XjUdGuxSEt1P/rNMYFSaheS1WUjemYXknVkIexcwsqxiFE8tLc5N
-        Ty02zEst1ytOzC0uzUvXS87P3cQITFin/x3/tIPx66WkQ4wCHIxKPLwJPctihVgTy4orcw8x
-        SnAwK4nwzm9ZEivEm5JYWZValB9fVJqTWnyIUZqDRUmct5rhQbSQQHpiSWp2ampBahFMlomD
-        U6qB0dn8gmmu8mJL71VOV4yKdy2PdE/I3sfTctZzRpmO4hwrnfiQHT++XXu+tn3rrNOJPxZ6
-        cBx4tahH/yfLOnsdK950veIY1/+XDZy6xE/6X/1yQPyyZ/OeeoHA+p9Zpxj5j9y5f1Oq9zTz
-        VMVXGzcsZgz68NN7fnqb2IYFny5e5yp6J+PaGzCzXYmlOCPRUIu5qDgRAG3vEoJUAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsVy+t/xe7pn7i+LNZj4kNli44z1rBbzj5xj
-        teh//JrZ4vz5DewWmx5fY7W4vGsOm8Xn3iOMFjPO72OyWHvkLrtF694j7BYbv3pYbH5wjM2B
-        x2PTqk42jzvX9rB5bF5S79G3ZRWjx+dNcgGsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaW
-        eobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZM242sBS0Mlcc6OxnaWDcyNTFyMEhIWAisW8Wdxcj
-        F4eQwFJGidWHJzJDxKUk5rcodTFyApnCEn+udbFB1LxmlDi/7RkjSEJYIF5ix6QD7CD1IgJa
-        Ei9vpoLUMAvsYZJoarnKCNFwiEliStM2dpAGNgFDid6jfWDNvAJ2En+/bGMDsVkEVCV2/rvA
-        BGKLCkRIPN9+A6pGUOLkzCcsIDangKXE8eZ9YDXMAuoSf+ZdYoawxSWavqxkhbDlJba/ncM8
-        gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzACN127OeWHYxd
-        74IPMQpwMCrx8CrMXxYrxJpYVlyZe4hRgoNZSYR3fsuSWCHelMTKqtSi/Pii0pzU4kOMpkDP
-        TWSWEk3OByaPvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjG3Z
-        WZccbhxXOSnxOHPpW/aNSW76zY6V/1lvVCW+9bU9t3fZvwlTjqRt/hkUJNRzc2L4+taSFKmt
-        AVx/rMOXreEsDOzdZ3XRd7/CDDfxLxFiCmo/41ZXPlZ3l0ie41YiX3/pwNznk+xOb2usjmjh
-        YYjSeXp0vmK3bG6pjHjkT8W3DdqtEeoZSizFGYmGWsxFxYkA4b+6k+YCAAA=
-X-CMS-MailID: 20191016091556eucas1p2b94b3ca327b17248afc651cda1d57606
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190910123636eucas1p250ec04901f227b947cc38936563f63b2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190910123636eucas1p250ec04901f227b947cc38936563f63b2
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
-        <CGME20190910123636eucas1p250ec04901f227b947cc38936563f63b2@eucas1p2.samsung.com>
-        <20190910123618.27985-2-s.nawrocki@samsung.com> <20191002143310.GA15898@pi3>
-        <ada1bb2f-a824-c34e-6561-04a35782a9b8@samsung.com>
-        <20191014062649.oegc2rwigmdv6kju@vireshk-i7>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88449493-4a32-1eda-434d-317b149173eb@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 08:26, Viresh Kumar wrote:
-> I am waiting for Andrew to send me the next set of patches. You depend
-> on only one of the patches ? In that case you can just pick that patch
-> from his series, keep his authorship intact and make changes from 1/6
-> and send along with your series.
+On Tue, Oct 15, 2019 at 10:28:24AM -0700, Florian Fainelli wrote:
+> On 9/4/19 10:16 AM, Florian Fainelli wrote:
+> > On 8/28/19 1:54 AM, Srinath Mannam wrote:
+> >> This patch series adds PCIe legacy interrupt (INTx) support to the iProc
+> >> PCIe driver by modeling it with its own IRQ domain. All 4 interrupts INTA,
+> >> INTB, INTC, INTD share the same interrupt line connected to the GIC
+> >> in the system. This is now modeled by using its own IRQ domain.
+> >>
+> >> Also update all relevant devicetree files to adapt to the new model.
+> >>
+> >> This patch set is based on Linux-5.2-rc4.
+> >>
+> >> Changes from v1:
+> >>   - Addressed Rob, Lorenzo, Arnd's comments
+> >>     - Used child node for interrupt controller.
+> >>   - Addressed Andy Shevchenko's comments
+> >>     - Replaced while loop with do-while.
+> > 
+> > Lorenzo, Bjorn, if you are good with the binding and PCI host driver
+> > changes, you can take patches 1-2 through your tree, and I will queue up
+> > the others through the Broadcom ARM SoC pull requests. If not, please
+> > feel free to add a:
+> > 
+> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> I am starting to queue Device Tree patches for 5.5 and I need to know
+> whether I should be picking up patches 2 through 6, or if you are going
+> to do this, thank you.
 
-Yes, only that single patch. I will incorporate my changes then and resend, 
-thank you.
+I am going to do this but I have comments on the patches they will
+have to be updated anyway.
+
+Thanks and apologies for the delay.
+
+Lorenzo
+
+> >> Ray Jui (6):
+> >>   dt-bindings: pci: Update iProc PCI binding for INTx support
+> >>   PCI: iproc: Add INTx support with better modeling
+> >>   arm: dts: Change PCIe INTx mapping for Cygnus
+> >>   arm: dts: Change PCIe INTx mapping for NSP
+> >>   arm: dts: Change PCIe INTx mapping for HR2
+> >>   arm64: dts: Change PCIe INTx mapping for NS2
+> >>
+> >>  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  48 ++++++++--
+> >>  arch/arm/boot/dts/bcm-cygnus.dtsi                  |  30 ++++++-
+> >>  arch/arm/boot/dts/bcm-hr2.dtsi                     |  30 ++++++-
+> >>  arch/arm/boot/dts/bcm-nsp.dtsi                     |  45 ++++++++--
+> >>  arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  28 +++++-
+> >>  drivers/pci/controller/pcie-iproc.c                | 100 ++++++++++++++++++++-
+> >>  drivers/pci/controller/pcie-iproc.h                |   6 ++
+> >>  7 files changed, 260 insertions(+), 27 deletions(-)
+> >>
+> > 
+> > 
+> 
+> 
+> -- 
+> Florian
