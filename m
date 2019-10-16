@@ -4,49 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C42FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6918FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4086C21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE7D207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264146;
-	bh=OWP9qiIYdbw9wGZUH+h8+ReE0Xal0SwpufBF+1eIWUQ=;
+	s=default; t=1571264149;
+	bh=61zl7DkTaWrXCdCD6qktASwL8w1xwvcJ3Y+nDn38yoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FxwE8/R0ztJxKPTkNFdGlQGmJE33kMPoThdCNh+vYOpm8w/+IK7e5w4THwfuxCU60
-	 dFQbcT0CrDPDCOSZ6qyWv0LxiQuRKc3oK5X89f5EZ9SooLF6chzeo9VDVla+yemDAR
-	 L+T7QfcPSZscWfMi6moVh0eErH6b7bjPCPb2UM18=
+	b=Vbra3V18Fur23xv5DHt6cBOnUcWe4wf6qOjItHqW6JSm9jnFZafoXVJvgpxljckBH
+	 JS9uYt7q9A63LBga8j++g1uK4/OjVH14jWpziVP+QsGNVWJSqlFLMLVvsdxY83KZ45
+	 CSPFb2eYloxv3k8ftJ06Tt84uYee1NHf9Armv+Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439392AbfJPWPp (ORCPT
+        id S2437784AbfJPVzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:15:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437781AbfJPVzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437748AbfJPVzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:17 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA18721925;
-        Wed, 16 Oct 2019 21:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C7D1218DE;
+        Wed, 16 Oct 2019 21:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262921;
-        bh=OWP9qiIYdbw9wGZUH+h8+ReE0Xal0SwpufBF+1eIWUQ=;
+        s=default; t=1571262916;
+        bh=61zl7DkTaWrXCdCD6qktASwL8w1xwvcJ3Y+nDn38yoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CPPTjtSu/b0F7eenbRQmG9N8QrtCReLgJuXAmOenJVyAGKfZrBqT9hBdJE7kQ80bl
-         G83S+6kCPZ2QAJEDWuxav9KzLpBix/u7aqYCfxVeZrCH9/la50i5q9bVBaldBzMx+J
-         N7tjnn1wNBQaSiIFlvuKps3CkOgiR0EKlpYyTokA=
+        b=aVhWrnaswqTQjQsdIPP8LDcoErM56dPS7JJVgIaJe6Lruq7znAHVpleEF+Ym3Q1Tm
+         ANX13YnlPo9gQJsCylwxGolX1gQDUSYme47GcXNEHuukGCr2lKpBukq2gZQafzH+wk
+         EXWWEiCbqjPjoOKYOFAOb/mhJqntphH50K4bxtXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.9 80/92] CIFS: Force revalidate inode when dentry is stale
-Date:   Wed, 16 Oct 2019 14:50:53 -0700
-Message-Id: <20191016214846.918626643@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Talbert <swt@techie.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 76/92] efivar/ssdt: Dont iterate over EFI vars if no SSDT override was specified
+Date:   Wed, 16 Oct 2019 14:50:49 -0700
+Message-Id: <20191016214845.951472119@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,61 +72,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit c82e5ac7fe3570a269c0929bf7899f62048e7dbc upstream.
+commit c05f8f92b701576b615f30aac31fabdc0648649b upstream.
 
-Currently the client indicates that a dentry is stale when inode
-numbers or type types between a local inode and a remote file
-don't match. If this is the case attributes is not being copied
-from remote to local, so, it is already known that the local copy
-has stale metadata. That's why the inode needs to be marked for
-revalidation in order to tell the VFS to lookup the dentry again
-before openning a file. This prevents unexpected stale errors
-to be returned to the user space when openning a file.
+The kernel command line option efivar_ssdt= allows the name to be
+specified of an EFI variable containing an ACPI SSDT table that should
+be loaded into memory by the OS, and treated as if it was provided by
+the firmware.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Currently, that code will always iterate over the EFI variables and
+compare each name with the provided name, even if the command line
+option wasn't set to begin with.
+
+So bail early when no variable name was provided. This works around a
+boot regression on the 2012 Mac Pro, as reported by Scott.
+
+Tested-by: Scott Talbert <swt@techie.net>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Fixes: 475fb4e8b2f4 ("efi / ACPI: load SSTDs from EFI variables")
+Link: https://lkml.kernel.org/r/20191002165904.8819-3-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/firmware/efi/efi.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -405,6 +405,7 @@ int cifs_get_inode_info_unix(struct inod
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*pinode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -412,6 +413,7 @@ int cifs_get_inode_info_unix(struct inod
- 		/* if filetype is different, return error */
- 		if (unlikely(((*pinode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -917,6 +919,7 @@ cifs_get_inode_info(struct inode **inode
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
-@@ -924,6 +927,7 @@ cifs_get_inode_info(struct inode **inode
- 		/* if filetype is different, return error */
- 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -243,6 +243,9 @@ static __init int efivar_ssdt_load(void)
+ 	void *data;
+ 	int ret;
+ 
++	if (!efivar_ssdt[0])
++		return 0;
++
+ 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
+ 
+ 	list_for_each_entry_safe(entry, aux, &entries, list) {
 
 
