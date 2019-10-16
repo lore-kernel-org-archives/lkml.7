@@ -2,91 +2,181 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE70FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB510FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CE52064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA1121D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:10:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uaiYoccz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fPxPUbFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbfJPSIc (ORCPT
+        id S1732524AbfJPSKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:08:32 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41648 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfJPSIb (ORCPT
+        Wed, 16 Oct 2019 14:10:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56414 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfJPSKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:08:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GI8Uc6072282;
-        Wed, 16 Oct 2019 13:08:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571249310;
-        bh=YCyXThMK8TLR4zdXzUs0SnFwUHzK41OhlkUpk4hCt5U=;
-        h=From:To:CC:Subject:Date;
-        b=uaiYocczNbzUSbPAJ/m2HsAEms55zM5LF/s1jlqdKV3PIXEi3zpiql3Mi7P6L1LHr
-         EliFhDoTArWY1mKPFA8qe+AmWeBIZa1qasy90/8aginTxv4J/v/Yut8qcBCaRYa7qz
-         vR/RxZkdINps/q6jW6160qFFkB23pGXf6lPXlGeM=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GI8UHP109640
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 13:08:30 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 13:08:23 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 13:08:23 -0500
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GI8TWB028204;
-        Wed, 16 Oct 2019 13:08:29 -0500
-Received: from localhost ([10.250.79.55])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GI8SZ25474;
-        Wed, 16 Oct 2019 13:08:28 -0500 (CDT)
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Jiri Kosina <trivial@kernel.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH 01/10] drm/nouveau: remove unneeded conversions to bool
-Date:   Wed, 16 Oct 2019 14:08:12 -0400
-Message-ID: <20191016180821.24036-1-afd@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 16 Oct 2019 14:10:14 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GI3TB5114038;
+        Wed, 16 Oct 2019 18:10:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=A1msIco8vn35mUi9RwRz5PHZjiwBQKtO5H+Zka1OE08=;
+ b=fPxPUbFPaYNfQI2v3Ik1BWWnMkTDegFEHNEvu6kyTPlGbiNA9NNLJN5RRtQMnx9efY3I
+ YjNVg03lg2XmuS2U7+nyB1ZaukKvEEdWB3ED6gduu2Sy8hyHo+f82SpkqnMX8DjINtq9
+ eDm/mO2XwitmRjwIlEdsM3SvOWkYlAfPFZ+zwF+WtG7Y6yeC+M3vmTia77iNhzqXUwiE
+ T9f+AGw/1FL9xFJ+b8YdPuKZOJsN/UhUh8U4QQaP1k0T/l+Acce4lcZxNmaWBLeBW8oU
+ XrDav+T7uNx6LH/RXosAf8IbWxFwDTpFnOxtsZw42q23GHYeQ41cFywiWpH0Q9sQqvG7 Eg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2vk6sqru58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 18:10:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GI48xP041255;
+        Wed, 16 Oct 2019 18:10:02 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vp70nc4fb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 18:10:02 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9GIA0PO004509;
+        Wed, 16 Oct 2019 18:10:00 GMT
+Received: from [10.159.134.52] (/10.159.134.52)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Oct 2019 18:09:59 +0000
+Subject: Re: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup
+ functions
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191015164033.87276-1-xiaoyao.li@intel.com>
+ <20191015164033.87276-2-xiaoyao.li@intel.com>
+ <82a41967-98ca-1bc8-fce3-77aaf18b0c1a@oracle.com>
+ <7d4f2202-d200-f24c-d4cb-dcdfdda7f3b7@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <2cb1e187-c633-e11c-985c-24ad1e5434c2@oracle.com>
+Date:   Wed, 16 Oct 2019 11:09:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <7d4f2202-d200-f24c-d4cb-dcdfdda7f3b7@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910160150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910160150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Found with scripts/coccinelle/misc/boolconv.cocci.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- drivers/gpu/drm/nouveau/nouveau_ttm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 10/15/19 6:27 PM, Xiaoyao Li wrote:
+> On 10/16/2019 6:05 AM, Krish Sadhukhan wrote:
+>>
+>>
+>> On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
+>>> Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
+>>> to match what they really do.
+>>>
+>>> No functional change.
+>>>
+>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>>> ---
+>>>   arch/x86/kvm/vmx/nested.c | 2 +-
+>>>   arch/x86/kvm/vmx/nested.h | 2 +-
+>>>   arch/x86/kvm/vmx/vmx.c    | 9 +++------
+>>>   3 files changed, 5 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>> index 5e231da00310..7935422d311f 100644
+>>> --- a/arch/x86/kvm/vmx/nested.c
+>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct 
+>>> kvm_vcpu *vcpu,
+>>>       return ret;
+>>>   }
+>>> -void nested_vmx_vcpu_setup(void)
+>>> +void nested_vmx_vmcs_setup(void)
+>>>   {
+>>>       if (enable_shadow_vmcs) {
+>>>           vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
+>>> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+>>> index 187d39bf0bf1..2be1ba7482c9 100644
+>>> --- a/arch/x86/kvm/vmx/nested.h
+>>> +++ b/arch/x86/kvm/vmx/nested.h
+>>> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct 
+>>> nested_vmx_msrs *msrs, u32 ept_caps,
+>>>                   bool apicv);
+>>>   void nested_vmx_hardware_unsetup(void);
+>>>   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct 
+>>> kvm_vcpu *));
+>>> -void nested_vmx_vcpu_setup(void);
+>>> +void nested_vmx_vmcs_setup(void);
+>>>   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
+>>>   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool 
+>>> from_vmentry);
+>>>   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 
+>>> exit_reason);
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index e660e28e9ae0..58b77a882426 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
+>>>   #define VMX_XSS_EXIT_BITMAP 0
+>>> -/*
+>>> - * Sets up the vmcs for emulated real mode.
+>>> - */
+>>> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>>> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+>>>   {
+>>>       int i;
+>>>       if (nested)
+>>> -        nested_vmx_vcpu_setup();
+>>> +        nested_vmx_vmcs_setup();
+>>>       if (cpu_has_vmx_msr_bitmap())
+>>>           vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
+>>> @@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct 
+>>> kvm *kvm, unsigned int id)
+>>>       cpu = get_cpu();
+>>>       vmx_vcpu_load(&vmx->vcpu, cpu);
+>>>       vmx->vcpu.cpu = cpu;
+>>> -    vmx_vcpu_setup(vmx);
+>>> +    vmx_vmcs_setup(vmx);
+>>>       vmx_vcpu_put(&vmx->vcpu);
+>>>       put_cpu();
+>>>       if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
+>>
+>> May be we should rename vmx_vcpu_reset() to vmx_vmcs_reset()  as well  ?
+>
+> Not really. vmx_vcpu_reset() not only resets vmcs but also the 
+> emulated field of vmx vcpu.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-index f0daf958e03a..e2fe2608193e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -236,7 +236,7 @@ nouveau_ttm_init(struct nouveau_drm *drm)
- 	ret = ttm_bo_device_init(&drm->ttm.bdev,
- 				  &nouveau_bo_driver,
- 				  dev->anon_inode->i_mapping,
--				  drm->client.mmu.dmabits <= 32 ? true : false);
-+				  drm->client.mmu.dmabits <= 32);
- 	if (ret) {
- 		NV_ERROR(drm, "error initialising bo driver, %d\n", ret);
- 		return ret;
--- 
-2.17.1
+It would be a better organization of the code if the resetting of the 
+VMCS fields were placed in a separate function.
+
+
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
 
