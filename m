@@ -2,69 +2,122 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A08BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A334ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294382054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DD52054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571215429;
+	bh=zdxpXfBX1Df1fCDu+yqsfgYk8vCFvsl4TlsaH8rSTBs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AKYgFT6y9rZQVtnc/onBp4YR8VWTL9LovxLDn9ECTvFeHskbTDAgWWsjWjzAsCSV8
+	 sNNEfPb43aIW6MFrNl9e1+630ZpM6tJxm9lxPGGgDsW2cTKx5BAqUMCC+D9ju5oT+T
+	 cO4o57EFJmDWEHPLEC67VtHXunwUdWo2mARzi+b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732572AbfJPInf (ORCPT
+        id S1733094AbfJPInr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:43:35 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:41653 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfJPIne (ORCPT
+        Wed, 16 Oct 2019 04:43:47 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39617 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfJPInr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:43:34 -0400
-Received: from [167.98.27.226] (helo=[10.35.5.173])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKeu2-0000B8-Ev; Wed, 16 Oct 2019 09:43:30 +0100
-Subject: Re: [PATCH] net: stmmac: fix argument to stmmac_pcs_ctrl_ane()
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191016082205.26899-1-ben.dooks@codethink.co.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <27111986-1fc4-534d-9cd8-65bcab94a840@codethink.co.uk>
-Date:   Wed, 16 Oct 2019 09:43:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 04:43:47 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w144so19339121oia.6;
+        Wed, 16 Oct 2019 01:43:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dg2J0niQMCT6Z5y5BBQlerOQRn1zPEoYqtOLluuNJXg=;
+        b=Gy8mLX8ITS941h6+6LYaW01+QLjGF4ymhRVbxASmzOE12aPu1ETz9JGTG2K7grp2ze
+         3hHHjnr8oNmAn4zpyXhGj/PWG4nhNP+5Y1gDoo0koR4drRAiwzRnKBAt+dts3IBdRWfU
+         mEgVYSf/VZMZyj89WA8TurVb0b5nAjWwDWFBaSoucjYP9s5YOxSr59x46DpN3h/so9gv
+         UkfS83h5M5eBf0Wo8dGOZJe9I0c5hzkXLiZn0atQiHOafjrKcfJKSIvoBvtza79cLDr9
+         nk9pRkh6rrCjF/2k/Nq8fdTaUjzy8ovSL0rEGOohAwG2qotHgUg+rMfqGJpRCEpUfdeF
+         U7FA==
+X-Gm-Message-State: APjAAAVF7rSTS8U/affJnSB0I0D2wDSKyPIZ8X6YrXI0kR5BfhiZL2j1
+        eoH/oTazd40SM4PwniZhblrbM8Mi9EBWfWqRtrw=
+X-Google-Smtp-Source: APXvYqwLDwsEcM2k51IhaToIeEdjXU0WpTfJyZtwPC7Vpz4JkXsAhfr8H4jtDscd/SKmdImFvmWvH9d8Mev4+N2mOYM=
+X-Received: by 2002:a05:6808:917:: with SMTP id w23mr2359694oih.68.1571215424642;
+ Wed, 16 Oct 2019 01:43:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016082205.26899-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+ <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+ <a1c503a7-6136-a405-369c-596a680183f2@gmail.com> <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
+ <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
+ <CAJZ5v0hxsy3ZKFvtWULHAVog4=3rYQfd3-61A9dNaKeUbiDtrg@mail.gmail.com> <20191016082742.nttzuofes6uds4pu@vireshk-i7>
+In-Reply-To: <20191016082742.nttzuofes6uds4pu@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 16 Oct 2019 10:43:33 +0200
+Message-ID: <CAJZ5v0hwaF3kvBHj6yoSJ8AQPOA00jTxMt7fv=k7YYGkL2jdMg@mail.gmail.com>
+Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS framework
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/10/2019 09:22, Ben Dooks (Codethink) wrote:
-> The stmmac_pcs_ctrl_ane() expects a register address as
-> argument 1, but for some reason the mac_device_info is
-> being passed.
-> 
-> Fix the warning (and possible bug) from sparse:
-> 
-> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17: warning: incorrect type in argument 1 (different address spaces)
-> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17:    expected void [noderef] <asn:2> *ioaddr
-> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17:    got struct mac_device_info *hw
+On Wed, Oct 16, 2019 at 10:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 15-10-19, 23:50, Rafael J. Wysocki wrote:
+> > On Tue, Oct 15, 2019 at 5:53 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> > > > - Update QoS framework with the knowledge of related CPUs, this has been pending
+> > > >   until now from my side. And this is the thing we really need to do. Eventually
+> > > >   we shall have only a single notifier list for all CPUs of a policy, at least
+> > > >   for MIN/MAX frequencies.
+> > >
+> > > - Move the PM QoS requests and notifiers to the new policy CPU on all
+> > > changes of that.  That is, when cpufreq_offline() nominates the new
+> > > "leader", all of the QoS stuff for the policy needs to go to this one.
+> >
+> > Alas, that still will not work, because things like
+> > acpi_processor_ppc_init() only work accidentally for one-CPU policies.
+>
+> I am not sure what problem you see here ? Can you please explain a bit more.
 
-apologies, looks like I reposted this by accident.
+Never mind, sorry.  This is called for policy->cpu too.
 
+> > Generally, adding such a PM QoS request to a non-policy CPU simply has
+> > no effect until it becomes a policy CPU which may be never.
+>
+> I was thinking maybe we can read the constraints for all CPUs in the
+> policy->cpus mask in cpufreq_set_policy() and so this part of the problem will
+> just go away. The only part that would be left is to remove the QoS constraints
+> properly.
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+That would be on the complicated side IMO.
 
-https://www.codethink.co.uk/privacy.html
+> > It looks like using device PM QoS for cpufreq is a mistake in general
+> > and what is needed is a struct pm_qos_constraints member in struct
+> > cpufreq_policy and something like
+> >
+> > struct freq_pm_qos_request {
+> >         enum freq_pm_qos_req_type type; /* min or max */
+> >         struct plist_node pnode;
+> >         struct cpufreq_policy *policy;
+> > };
+> >
+> > Then, pm_qos_update_target() can be used for adding, updating and
+> > removing requests.
+
+I have patches implementing this idea, more or less, almost ready,
+stay tuned. :-)
