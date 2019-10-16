@@ -2,129 +2,121 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EA2C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25CDECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6180B2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3ED2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BjhPAYII";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BjhPAYII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391261AbfJPHwo (ORCPT
+        id S2391386AbfJPHxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:52:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726277AbfJPHwn (ORCPT
+        Wed, 16 Oct 2019 03:53:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48024 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfJPHxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:52:43 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G7gKGY024964
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 03:52:42 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vng3u1rtn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 03:52:42 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Wed, 16 Oct 2019 08:52:40 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 16 Oct 2019 08:52:38 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G7qbFe29753460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 07:52:37 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15A5DA405C;
-        Wed, 16 Oct 2019 07:52:37 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B929EA4065;
-        Wed, 16 Oct 2019 07:52:36 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 16 Oct 2019 07:52:36 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        Wed, 16 Oct 2019 03:53:01 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B1BEE60ACF; Wed, 16 Oct 2019 07:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571212380;
+        bh=B4BR77eewIz3s7+EglpvEI0AcW8SYIvXdSFzpWYfH3M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BjhPAYIIJFIgONI+muMr76SqIo8g2aX9X3qXv0KNg/DVzy5E2PRrNS/GRAT7Jrist
+         Q8SIwfZUyfQLFHI3m2Awy5op9rPKA6pdYJA3JNZzwCWRWmOiDgXJjwAOt4Iv3CXROK
+         yn5uH8uGaRger5WSWAeMckGbvPhyOq0bUel9oCME=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 862F8A01B6;
-        Wed, 16 Oct 2019 18:52:32 +1100 (AEDT)
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [ANNOUNCE] Call for Sessions - linux.conf.au 2020 Kernel Miniconf
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     lwn@lwn.net
-Date:   Wed, 16 Oct 2019 18:52:32 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 943A060ACF;
+        Wed, 16 Oct 2019 07:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571212380;
+        bh=B4BR77eewIz3s7+EglpvEI0AcW8SYIvXdSFzpWYfH3M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BjhPAYIIJFIgONI+muMr76SqIo8g2aX9X3qXv0KNg/DVzy5E2PRrNS/GRAT7Jrist
+         Q8SIwfZUyfQLFHI3m2Awy5op9rPKA6pdYJA3JNZzwCWRWmOiDgXJjwAOt4Iv3CXROK
+         yn5uH8uGaRger5WSWAeMckGbvPhyOq0bUel9oCME=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 943A060ACF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH 2/2] arm64: dts: sc7180: Add minimal dts/dtsi files for
+ SC7180 soc
+To:     Vinod Koul <vkoul@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015103358.17550-1-rnayak@codeaurora.org>
+ <20191015103358.17550-2-rnayak@codeaurora.org>
+ <20191016052535.GC2654@vkoul-mobl>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <89225569-1cd3-ae0e-94ed-bbb2b3dd8e9c@codeaurora.org>
+Date:   Wed, 16 Oct 2019 13:22:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191016052535.GC2654@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101607-0020-0000-0000-000003797D21
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101607-0021-0000-0000-000021CF9F44
-Message-Id: <b15cd04a-b7d0-f14c-38e4-6204858425db@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=829 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910160072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LCA2020 Kernel Miniconf - Gold Coast, Queensland, Australia - 2020-01-14
-------------------------------------------------------------------------
+Hi Vinod,
 
-******
+On 10/16/2019 10:55 AM, Vinod Koul wrote:
+> On 15-10-19, 16:03, Rajendra Nayak wrote:
+> 
+>> +	timer {
+>> +		compatible = "arm,armv8-timer";
+>> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
+>> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
+>> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
+>> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
+>> +	};
+>> +
+>> +	clocks {
+> 
+> Can we have these sorted alphabetically please
+> 
+>> +		xo_board: xo-board {
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <38400000>;
+>> +			clock-output-names = "xo_board";
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		sleep_clk: sleep-clk {
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <32764>;
+>> +			clock-output-names = "sleep_clk";
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		bi_tcxo: bi_tcxo {
+> 
+> why is this a clock defined here? Isnt this gcc clock?
+> 
 
-LCA Kernel Miniconf submissions open!
+This is a RPMH-controlled clock and not from GCC. It is the parent clock 
+for GCC RCGs/PLLs.
 
-Submissions close: 2019-12-08 (early submissions until 2019-11-17)
+Once the RPMH clock support is added these would be removed.
 
-Submissions: https://linux.conf.au/proposals/submit/kernel-miniconf/
-
-More info: https://lca-kernel.ozlabs.org/2020-cfs.html
-
-******
-
-linux.conf.au 2020 will be held at the Gold Coast Convention and 
-Exhibition Centre, from 13-17 January 2020. The Kernel Miniconf is 
-returning once again to discuss all things kernel.
-
-The Kernel Miniconf is a single-day miniconf track about everything 
-related to the kernel and low-level systems programming.
-
-The Kernel Miniconf will focus on a variety of kernel-related topics - 
-technical presentations on up-and-coming kernel developments, the future 
-direction of the kernel, and kernel development community and process 
-matters. Past Kernel Miniconfs have included technical talks on topics 
-such as memory management, RCU, scheduling and filesystems, as well as 
-talks on Linux kernel community topics such as licensing and Linux 
-kernel development process.
-
-We invite submissions on anything related to kernel and low-level 
-systems programming. We welcome submissions from developers of all 
-levels of experience in the kernel community, covering a broad range of 
-topics. The focus of the miniconf will primarily be on Linux, however 
-non-Linux talks of sufficient interest to a primarily Linux audience 
-will be considered.
-
-Early Close Date: 2019-11-17, midnight Anywhere on Earth (UTC-12)
-Final Close Date: 2019-12-08, midnight Anywhere on Earth (UTC-12)
-Submissions: https://linux.conf.au/proposals/submit/kernel-miniconf/
-
-** For more information: http://lca-kernel.ozlabs.org/2020-cfs.html **
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
