@@ -2,162 +2,110 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D672FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABB2FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476CE20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1323D20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:12:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p2VwOvll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392630AbfJPLKq (ORCPT
+        id S2404877AbfJPLMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:10:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34354 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbfJPLKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:10:45 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 017B810DCC8A;
-        Wed, 16 Oct 2019 11:10:45 +0000 (UTC)
-Received: from [10.36.118.23] (unknown [10.36.118.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26D916046B;
-        Wed, 16 Oct 2019 11:10:41 +0000 (UTC)
-Subject: Re: [PATCH] mm/page_alloc: Make alloc_gigantic_page() available for
- general use
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <1571211293-29974-1-git-send-email-anshuman.khandual@arm.com>
- <c7ac9f99-a34f-c553-b216-b847d093cae9@redhat.com>
- <20191016085123.GO317@dhcp22.suse.cz>
- <679b5c66-8f1b-ec4d-64dd-13fbc440917d@redhat.com>
- <20191016110831.GV317@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <eb2406d5-1327-1365-be0e-ee319ab92088@redhat.com>
-Date:   Wed, 16 Oct 2019 13:10:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 07:12:42 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43790 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390844AbfJPLMm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:12:42 -0400
+Received: by mail-lj1-f195.google.com with SMTP id n14so23518146ljj.10
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 04:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v71FlkQ6J0UpJP7xXEoyiSKAD0pF3wX4jouOoO7MnLU=;
+        b=p2VwOvllbg/0/Neh5/P7m4vAWBzv1dXkn+WNCkRcqrMNWDx9pfbHIa1twG4R8nWXjf
+         X0M7OXDXTJjEo6uAH35h6Pb+KV8ArvF5+d3HYtX/xO1AsS0HaJJlRtU8llEBmLpfkGwX
+         qoYLlT9L7uvJ/T+E+qUzOdI6FY45brr2Bv6PTnSoZJ71z9Vvwf01D5P/l9RmTXc+IC2N
+         lbO6S9Db5rrGVTg5iZLHpv5cQ7fUNfoslwR10po8ClfKUicmkFsBs9TTsTHq9Kkd+uc3
+         NlHHMouM3yK4d/F+R4Mow1+AUxpLJFyFS0nNGhD2SjvgZwuSNWd09Ebc9nuNkfqJfYao
+         beIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v71FlkQ6J0UpJP7xXEoyiSKAD0pF3wX4jouOoO7MnLU=;
+        b=OHqIHmKqJjL7qXfwU/lYkq6kNu10Uk13yNxR7fKr1FaOHiG+iDkSCzlR9Tr/Z5S8mR
+         Dh72gLNwixSeC94eYWx3eHCl4ejsFBbzJxAr5qTatgsfSWVS/cj4XGsWELobVJXHDEIj
+         rKulIPjLseF3GuTmKJf9U/xLFrkMejhyrpfoiZeHZnz8IUpu4dnjpU1xaCBHwpQqJF4v
+         Ocv0tO6PhSDhanFzyvtRg3OQL5bdgOd7f/4KPPSqem6mZ7c6qaakx0v9Qt3XgUjt3oj5
+         oevyctAErHEBEHbLivkI+op3LJ7uJiSrEr/QrQrl/wHUhMPvO5ZWvU/VmL520EGMnNvD
+         RWvw==
+X-Gm-Message-State: APjAAAVp9mqsse3ZiAMpWY4aXunuffyLymryJRITYA0tj3r40Q/O4tWb
+        lvocN71e/tIaqrSa4RrjFjIrnpnlAGLlCTWAGxnYsg==
+X-Google-Smtp-Source: APXvYqy4lzrmB+aQANagIA9pI4peUp9E83YYX2I1eb8nCIhO/KTMZcmTe+F/iRjlb9lEwc7ZwWZU9GViug9WdVdMM3s=
+X-Received: by 2002:a2e:481a:: with SMTP id v26mr18093137lja.41.1571224358312;
+ Wed, 16 Oct 2019 04:12:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016110831.GV317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Wed, 16 Oct 2019 11:10:45 +0000 (UTC)
+References: <20191004122923.22674-1-amelie.delaunay@st.com>
+ <CACRpkda6CyYCt-s-VkaK856Jt3TxQg+HVDz-5Ww9T9KNHHAjaQ@mail.gmail.com> <8eb2090a-e50e-2e4f-982b-073ad24e553c@st.com>
+In-Reply-To: <8eb2090a-e50e-2e4f-982b-073ad24e553c@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 13:12:25 +0200
+Message-ID: <CACRpkda1H+fUidZG3wccM-YCyk_Ya9gRb8s-JV35qWvEBOKWPQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: stmfx: add irq_request/release_resources callbacks
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.10.19 13:08, Michal Hocko wrote:
-> On Wed 16-10-19 10:56:16, David Hildenbrand wrote:
->> On 16.10.19 10:51, Michal Hocko wrote:
->>> On Wed 16-10-19 10:08:21, David Hildenbrand wrote:
->>>> On 16.10.19 09:34, Anshuman Khandual wrote:
->>> [...]
->>>>> +static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
->>>>> +				   unsigned long nr_pages)
->>>>> +{
->>>>> +	unsigned long i, end_pfn = start_pfn + nr_pages;
->>>>> +	struct page *page;
->>>>> +
->>>>> +	for (i = start_pfn; i < end_pfn; i++) {
->>>>> +		page = pfn_to_online_page(i);
->>>>> +		if (!page)
->>>>> +			return false;
->>>>> +
->>>>> +		if (page_zone(page) != z)
->>>>> +			return false;
->>>>> +
->>>>> +		if (PageReserved(page))
->>>>> +			return false;
->>>>> +
->>>>> +		if (page_count(page) > 0)
->>>>> +			return false;
->>>>> +
->>>>> +		if (PageHuge(page))
->>>>> +			return false;
->>>>> +	}
->>>>
->>>> We might still try to allocate a lot of ranges that contain unmovable data
->>>> (we could avoid isolating a lot of page blocks in the first place). I'd love
->>>> to see something like pfn_range_movable() (similar, but different to
->>>> is_mem_section_removable(), which uses has_unmovable_pages()).
->>>
->>> Just to make sure I understand. Do you want has_unmovable_pages to be
->>> called inside pfn_range_valid_contig?
->>
->> I think this requires more thought, as has_unmovable_pages() works on
->> pageblocks only AFAIK. If you try to allocate < MAX_ORDER - 1, you could get
->> a lot of false positives.
->>
->> E.g., if a free "MAX_ORDER - 1" page spans two pageblocks and you only test
->> the second pageblock, you might detect "unmovable" if not taking proper care
->> of the "bigger" free page. (alloc_contig_range() properly works around that
->> issue)
-> 
-> OK, I see your point. You are right that false positives are possible. I
-> would deal with those in a separate patch though.
-> 
->>> [...]
->>>>> +struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
->>>>> +				int nid, nodemask_t *nodemask)
->>>>> +{
->>>>> +	unsigned long ret, pfn, flags;
->>>>> +	struct zonelist *zonelist;
->>>>> +	struct zone *zone;
->>>>> +	struct zoneref *z;
->>>>> +
->>>>> +	zonelist = node_zonelist(nid, gfp_mask);
->>>>> +	for_each_zone_zonelist_nodemask(zone, z, zonelist,
->>>>> +					gfp_zone(gfp_mask), nodemask) {
->>>>
->>>> One important part is to never use the MOVABLE zone here (otherwise
->>>> unmovable data would end up on the movable zone). But I guess the caller is
->>>> responsible for that (not pass GFP_MOVABLE) like gigantic pages do.
->>>
->>> Well, if the caller uses GFP_MOVABLE then the movability should be
->>> implemented in some form. If that is not the case then it is a bug on
->>> the caller behalf.
->>>
->>>>> +		spin_lock_irqsave(&zone->lock, flags);
->>>>> +
->>>>> +		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
->>>>
->>>> This alignment does not make too much sense when allowing passing in !power
->>>> of two orders. Maybe the caller should specify the requested alignment
->>>> instead? Or should we enforce this to be aligned to make our life easier for
->>>> now?
->>>
->>> Are there any usecases that would require than the page alignment?
->>
->> Gigantic pages have to be aligned AFAIK.
-> 
-> Aligned to what? I do not see any guarantee like that in the existing
-> code.
-> 
+On Mon, Oct 7, 2019 at 4:53 PM Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+> On 10/5/19 6:49 PM, Linus Walleij wrote:
+> > On Fri, Oct 4, 2019 at 2:29 PM Amelie Delaunay <amelie.delaunay@st.com>
 
-pfn = ALIGN(zone->zone_start_pfn, nr_pages);
+> >> +       pctl->irq_chip.irq_request_resources = stmfx_gpio_irq_request_resources;
+> >> +       pctl->irq_chip.irq_release_resources = stmfx_gpio_irq_release_resources;
+> >
+> > What about just adding
+> >
+> > pctl->irq_chip.irq_enable and do stmfx_gpio_direction_input()
+> > in that callback instead? gpiolib will helpfully wrap it.
+>
+> Thanks for pointing that out to me.
+>
+> I can't use .irq_enable because of I2C transfer to set gpio direction
+> (scheduling while atomic BUG occurs in this case). Indeed, .irq_enable
+> is called under raw_spin_lock_irqsave in __setup_irq() while
+> irq_request_resources is called before.
+>
+> I could apply gpio direction in stmfx_pinctrl_irq_bus_sync_unlock
+> depending on pctl->irq_gpi_src[] (checking which one is set, to set
+> input direction), but this will be applied each time a consumer requests
+> a stmfx gpio irq.
 
--- 
+Oh I get it, hm. I thought it would be covered by the sync_unlock()
+but I guess not then.
 
-Thanks,
+> IMHO, keeping .irq_request/release_resources callbacks and using
+> gpiochip_reqres_irq()/gpiochip_relres_irq() seems to be the best compromise.
 
-David / dhildenb
+OK let's go with that for now, please put in some comments as
+to why this gets done there so we know when reading the
+code.
+
+Yours,
+Linus Walleij
