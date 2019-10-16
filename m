@@ -2,134 +2,130 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F5FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F3FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BFF21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="t2WIQRuE"
+	by mail.kernel.org (Postfix) with ESMTP id 341D0218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405737AbfJPOkY (ORCPT
+        id S2404778AbfJPOnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:40:24 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38954 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405214AbfJPOkX (ORCPT
+        Wed, 16 Oct 2019 10:43:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50458 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727291AbfJPOnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:40:23 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 34F3C9F4;
-        Wed, 16 Oct 2019 16:40:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1571236821;
-        bh=Ix3XoJ8c2YHEbbRw/h23s9VQOlN2/0+X/ZG7Iozx4OM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t2WIQRuEIMiyqAfhI9K8seGMZLbuogVv7sRdQ7WqmidxqES1u0zjmgqsIAcvtNU0X
-         7hOxXRHo7DR3i+oByIuV5RL8j6//k0NHBiGcO2C9kzqa9jMY4EOZznm/CB7A/E20Et
-         OKbsxfLMRm3Payf72G5DnLmaBjHgn8ddDYDVKxHs=
-Date:   Wed, 16 Oct 2019 17:40:18 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 2/3] dt-bindings: Add Logic PD Type 28 display panel
-Message-ID: <20191016144018.GG5175@pendragon.ideasonboard.com>
-References: <20191016135147.7743-1-aford173@gmail.com>
- <20191016135147.7743-2-aford173@gmail.com>
+        Wed, 16 Oct 2019 10:43:46 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iKkWM-0006wq-TK; Wed, 16 Oct 2019 16:43:26 +0200
+Date:   Wed, 16 Oct 2019 16:43:26 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+In-Reply-To: <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+Message-ID: <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de> <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com> <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com> <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191016135147.7743-2-aford173@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
-
-Thank you for the patch.
-
-On Wed, Oct 16, 2019 at 08:51:46AM -0500, Adam Ford wrote:
-> This patch adds documentation of device tree bindings for the WVGA panel
-> Logic PD Type 28 display.
+On Wed, 16 Oct 2019, Xiaoyao Li wrote:
+> On 10/16/2019 7:26 PM, Paolo Bonzini wrote:
+> > Old guests are prevalent enough that enabling split-lock detection by
+> > default would be a big usability issue.  And even ignoring that, you
+> > would get the issue you describe below:
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> V5:  Replace GPIO_ACTIVE_HIGH with 0 to fix make dt_binding_check -k
-> V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
-> V3:  Correct build errors from 'make dt_binding_check'
-> V2:  Use YAML instead of TXT for binding
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> new file mode 100644
-> index 000000000000..2834287b8d88
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
-> +
-> +maintainers:
-> +  - Adam Ford <aford173@gmail.com>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: logicpd,type28
-> +
-> +  power-supply: true
-> +  enable-gpios: true
-> +  backlight: true
-> +  port: true
-> +
-> +required:
-> +  - compatible
+> Right, whether enabling split-lock detection is made by the administrator. The
+> administrator is supposed to know the consequence of enabling it. Enabling it
+> means don't want any split-lock happens in userspace, of course VMM softwares
+> are under control.
 
-Should the port be required too ? Apart from that,
+I have no idea what you are talking about, but the whole thing is trivial
+enough to describe in a decision matrix:
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+N | #AC       | #AC enabled | SMT | Ctrl    | Guest | Action
+R | available | on host     |     | exposed | #AC   |
+--|-----------|-------------|-----|---------|-------|---------------------
+  |           |             |     |         |       |
+0 | N         |     x       |  x  |   N     |   x   | None
+  |           |             |     |         |       |
+1 | Y         |     N       |  x  |   N     |   x   | None
+  |           |             |     |         |       |
+2 | Y         |     Y       |  x  |   Y     |   Y   | Forward to guest
+  |           |             |     |         |       |
+3 | Y         |     Y       |  N  |   Y     |   N   | A) Store in vCPU and
+  |           |             |     |         |       |    toggle on VMENTER/EXIT
+  |           |             |     |         |       |
+  |           |             |     |         |       | B) SIGBUS or KVM exit code
+  |           |             |     |         |       |
+4 | Y         |     Y       |  Y  |   Y     |   N   | A) Disable globally on
+  |           |             |     |         |       |    host. Store in vCPU/guest
+  |           |             |     |         |       |    state and evtl. reenable
+  |           |             |     |         |       |    when guest goes away.
+  |           |             |     |         |       | 
+  |           |             |     |         |       | B) SIGBUS or KVM exit code
 
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    lcd0: display {
-> +      compatible = "logicpd,type28";
-> +      enable-gpios = <&gpio5 27 0>;
-> +      backlight = <&backlight>;
-> +      port {
-> +        lcd_in: endpoint {
-> +          remote-endpoint = <&dpi_out>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
+  [234] need proper accounting and tracepoints in KVM
 
--- 
-Regards,
+  [34]  need a policy decision in KVM
 
-Laurent Pinchart
+Now there are a two possible state transitions:
+
+ #AC enabled on host during runtime
+
+   Existing guests are not notified. Nothing changes.
+
+
+ #AC disabled on host during runtime
+
+   That only affects state #2 from the above table and there are two
+   possible solutions:
+
+     1) Do nothing.
+
+     2) Issue a notification to the guest. This would be doable at least
+     	for Linux guests because any guest kernel which handles #AC is
+	at least the same generation as the host which added #AC.
+
+   	Whether it's worth it, I don't know, but it makes sense at least
+	for consistency reasons.
+
+     For a first step I'd go for 'Do nothing'
+
+SMT state transitions could be handled in a similar way, but I don't think
+it's worth the trouble. The above should cover everything at least on a
+best effort basis.
+
+Thanks,
+
+	tglx
