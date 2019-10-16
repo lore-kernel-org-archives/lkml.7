@@ -2,54 +2,51 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B42FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799A1ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564C5207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45579207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263948;
-	bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
+	s=default; t=1571263951;
+	bh=UlGrKMgXgRaTB19PpiO2d5UObMhWdYR3TmQmAa+QV6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pM6QNwqJgosg91vw84xXgsKy07qtaJGSSSZL+hfgJDsenJ3hc7XLVD43IYkvZSr7H
-	 qUUeb4p37YwjDVqewM96rOzGBWmCR4AqlZIZmXwx0Vtel3dnQWB8Vvwc8Naq1C/IZf
-	 fa6coBSrEyE4F0K9giL7+UuHMK68JJYjK/8izN8Q=
+	b=P7/XvrX/OYQxkRZXw2XWWY/6+tuZkeDCTSOYIztOfzytJ/ebQ5WUzANsKWbiO7OvQ
+	 UT670DUJp1T+uox2/mSoT1ON9xBBMImiOMfAiKZWTse0uGyzze+G2zeT0GIN3LGi2Y
+	 LgN5bHFVB4IxFJ1QCuCanBRd68WQwHbVVuVgr2AA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406659AbfJPWM1 (ORCPT
+        id S2439253AbfJPWMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406628AbfJPV4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:21 -0400
+        id S2406613AbfJPV4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:17 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0D221925;
-        Wed, 16 Oct 2019 21:56:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABFF21925;
+        Wed, 16 Oct 2019 21:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262980;
-        bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
+        s=default; t=1571262977;
+        bh=UlGrKMgXgRaTB19PpiO2d5UObMhWdYR3TmQmAa+QV6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JkH+MvONciyf/yd7aWjhLhjk5FkVr7AlfaNH8jhbTLBq08k9pU5826W44KxYPROD
-         HpTNGpH8m9LXLDYoW69s+uU93jprg73Gfa//epjGX72vQG2emTl31JVUvtami9RLeS
-         0bFNAHWbaWWExRMYmJsrBAqxWLWEYIhexsoBfT3E=
+        b=cwycZzVUMtW2QF7K8Kcg1yFoZislhG3nGQlYp1D0CkYHXaO4bmiasbCavMpsK7Zxk
+         GV1WTMSNuM+zejZS1YUISFL6t8D25Jppw5O16b2QWIfAMc5xwotxbw/gyOCMaWiRUH
+         aKODznVCOFyuEZ/6bfDUhioMJQIvb5XhzXnkvLhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 50/65] firmware: google: increment VPD key_len properly
-Date:   Wed, 16 Oct 2019 14:51:04 -0700
-Message-Id: <20191016214835.824729336@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.14 46/65] CIFS: Gracefully handle QueryInfo errors during open
+Date:   Wed, 16 Oct 2019 14:51:00 -0700
+Message-Id: <20191016214834.485897161@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -62,48 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-[ Upstream commit 442f1e746e8187b9deb1590176f6b0ff19686b11 ]
+commit 30573a82fb179420b8aac30a3a3595aa96a93156 upstream.
 
-Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
-decoding VPD data") adds length checks, but the new vpd_decode_entry()
-function botched the logic -- it adds the key length twice, instead of
-adding the key and value lengths separately.
+Currently if the client identifies problems when processing
+metadata returned in CREATE response, the open handle is being
+leaked. This causes multiple problems like a file missing a lease
+break by that client which causes high latencies to other clients
+accessing the file. Another side-effect of this is that the file
+can't be deleted.
 
-On my local system, this means vpd.c's vpd_section_create_attribs() hits
-an error case after the first attribute it parses, since it's no longer
-looking at the correct offset. With this patch, I'm back to seeing all
-the correct attributes in /sys/firmware/vpd/...
+Fix this by closing the file after the client hits an error after
+the file was opened and the open descriptor wasn't returned to
+the user space. Also convert -ESTALE to -EOPENSTALE to allow
+the VFS to revalidate a dentry and retry the open.
 
-Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decoding VPD data")
 Cc: <stable@vger.kernel.org>
-Cc: Hung-Te Lin <hungte@chromium.org>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Link: https://lore.kernel.org/r/20190930214522.240680-1-briannorris@chromium.org
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/firmware/google/vpd_decode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/file.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
-index e75abe9fa122c..6c7ab2ba85d2f 100644
---- a/drivers/firmware/google/vpd_decode.c
-+++ b/drivers/firmware/google/vpd_decode.c
-@@ -62,7 +62,7 @@ static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
- 	if (max_len - consumed < *entry_len)
- 		return VPD_FAIL;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -252,6 +252,12 @@ cifs_nt_open(char *full_path, struct ino
+ 		rc = cifs_get_inode_info(&inode, full_path, buf, inode->i_sb,
+ 					 xid, fid);
  
--	consumed += decoded_len;
-+	consumed += *entry_len;
- 	*_consumed = consumed;
- 	return VPD_OK;
- }
--- 
-2.20.1
-
++	if (rc) {
++		server->ops->close(xid, tcon, fid);
++		if (rc == -ESTALE)
++			rc = -EOPENSTALE;
++	}
++
+ out:
+ 	kfree(buf);
+ 	return rc;
 
 
