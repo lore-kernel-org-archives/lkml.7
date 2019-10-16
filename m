@@ -2,58 +2,53 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECE9FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FADECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66DD20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE69B20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263564;
-	bh=jphSXo0H1nebo1iEBpk4uSYr10SEphXsBJeMQa/Sj7Y=;
+	s=default; t=1571263567;
+	bh=yk9sT55xKYSbTU7SwJdDXKQs5jxFZqeLsk4v9Gu/aQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qJQ4JWUC+EwXisYrYjSbHNPpl5Iu/Yt/drCuIa3gclmMCuJghdkJigO8fjlW63tRQ
-	 7k/h5S3Nb4qTTXgQFP0dksJbAyGhYOsDNrHuNEQujQ6KVcovLsv0skJy6WZDly/7z7
-	 tVAKjoJ5e8RV/OvriFX3XX3uJ+cb75q2mfPXa4dQ=
+	b=ZM23Ik9y49touyB1fNsgQ6iVsRglxG7LiyVdfYqq7zZbzIIcGePtUJnwxC0wmYPiK
+	 5xk9DSG5bg3MidMp7lW96SpCcZgWGuBfvmLKVx5OV+nFXmf+l+gEeDfkOQmOnRlbNF
+	 M7tSVX8ChXnoahuJNYwwQWsQfvkAS22A5ys+9k2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438212AbfJPV6i (ORCPT
+        id S2406922AbfJPWGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395540AbfJPV5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:50 -0400
+        id S2438209AbfJPV6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:38 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24C7821928;
-        Wed, 16 Oct 2019 21:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D549021D7E;
+        Wed, 16 Oct 2019 21:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263070;
-        bh=jphSXo0H1nebo1iEBpk4uSYr10SEphXsBJeMQa/Sj7Y=;
+        s=default; t=1571263117;
+        bh=yk9sT55xKYSbTU7SwJdDXKQs5jxFZqeLsk4v9Gu/aQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3sqMyLXMEsxH0/HYrJODRXuU0tTuQn6e2DTcH62XUmKGlV1oCBJynFkG98W5zwuj
-         NsbiIaC62ArILMWeAeNN/u6yMbtn8ADE3rQoCqtoEhQChDW2ryVjZoAEEzfIGg6JHK
-         ZZ3VC1iqOjNU8p46r9H5yEcncj8p/mMxD42FAFTY=
+        b=b1AHQgIr28ccZ1Z4oYH/XxjepXW1Bf90O/bh6w0ww5tEwQjD9Xw00rmseK6k5gKUt
+         dSpYPgUm3MXnl3rHEFarPR2oFJuINoEz2dPdoQGwVp7TQaI5UwZDmsHci1pC56mDiw
+         rnGSEdLVhVckZC5uvY+dAwKxjntaZnb8IZlYWGVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Will Deacon <will@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 70/81] arm64: topology: Use PPTT to determine if PE is a thread
-Date:   Wed, 16 Oct 2019 14:51:21 -0700
-Message-Id: <20191016214846.320148933@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 023/112] USB: ldusb: fix NULL-derefs on driver unbind
+Date:   Wed, 16 Oct 2019 14:50:15 -0700
+Message-Id: <20191016214851.712718557@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,73 +58,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+From: Johan Hovold <johan@kernel.org>
 
-Commit 98dc19902a0b2e5348e43d6a2c39a0a7d0fc639e upstream.
+commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
 
-ACPI 6.3 adds a thread flag to represent if a CPU/PE is
-actually a thread. Given that the MPIDR_MT bit may not
-represent this information consistently on homogeneous machines
-we should prefer the PPTT flag if its available.
+The driver was using its struct usb_interface pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg, dev_warn and dev_err statements in
+the completion handlers which relies on said pointer.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Robert Richter <rrichter@marvell.com>
-[will: made acpi_cpu_is_threaded() return 'bool']
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
+
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
+
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/kernel/topology.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/usb/misc/ldusb.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 0825c4a856e33..6106c49f84bc8 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -340,17 +340,28 @@ void remove_cpu_topology(unsigned int cpu)
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -153,6 +153,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
+ struct ld_usb {
+ 	struct mutex		mutex;		/* locks this structure */
+ 	struct usb_interface	*intf;		/* save off the usb interface pointer */
++	unsigned long		disconnected:1;
+ 
+ 	int			open_count;	/* number of times this port has been opened */
+ 
+@@ -192,12 +193,10 @@ static void ld_usb_abort_transfers(struc
+ 	/* shutdown transfer */
+ 	if (dev->interrupt_in_running) {
+ 		dev->interrupt_in_running = 0;
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_in_urb);
++		usb_kill_urb(dev->interrupt_in_urb);
+ 	}
+ 	if (dev->interrupt_out_busy)
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_out_urb);
++		usb_kill_urb(dev->interrupt_out_urb);
  }
  
- #ifdef CONFIG_ACPI
-+static bool __init acpi_cpu_is_threaded(int cpu)
-+{
-+	int is_threaded = acpi_pptt_cpu_is_thread(cpu);
-+
-+	/*
-+	 * if the PPTT doesn't have thread information, assume a homogeneous
-+	 * machine and return the current CPU's thread state.
-+	 */
-+	if (is_threaded < 0)
-+		is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
-+
-+	return !!is_threaded;
-+}
-+
- /*
-  * Propagate the topology information of the processor_topology_node tree to the
-  * cpu_topology array.
+ /**
+@@ -205,8 +204,6 @@ static void ld_usb_abort_transfers(struc
   */
- static int __init parse_acpi_topology(void)
+ static void ld_usb_delete(struct ld_usb *dev)
  {
--	bool is_threaded;
- 	int cpu, topology_id;
- 
--	is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
+-	ld_usb_abort_transfers(dev);
 -
- 	for_each_possible_cpu(cpu) {
- 		int i, cache_id;
+ 	/* free data structures */
+ 	usb_free_urb(dev->interrupt_in_urb);
+ 	usb_free_urb(dev->interrupt_out_urb);
+@@ -263,7 +260,7 @@ static void ld_usb_interrupt_in_callback
  
-@@ -358,7 +369,7 @@ static int __init parse_acpi_topology(void)
- 		if (topology_id < 0)
- 			return topology_id;
+ resubmit:
+ 	/* resubmit if we're still running */
+-	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
++	if (dev->interrupt_in_running && !dev->buffer_overflow) {
+ 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
+ 		if (retval) {
+ 			dev_err(&dev->intf->dev,
+@@ -392,7 +389,7 @@ static int ld_usb_release(struct inode *
+ 		retval = -ENODEV;
+ 		goto unlock_exit;
+ 	}
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 		mutex_unlock(&dev->mutex);
+ 		/* unlock here as ld_usb_delete frees dev */
+@@ -423,7 +420,7 @@ static __poll_t ld_usb_poll(struct file
  
--		if (is_threaded) {
-+		if (acpi_cpu_is_threaded(cpu)) {
- 			cpu_topology[cpu].thread_id = topology_id;
- 			topology_id = find_acpi_cpu_topology(cpu, 1);
- 			cpu_topology[cpu].core_id   = topology_id;
--- 
-2.20.1
-
+ 	dev = file->private_data;
+ 
+-	if (!dev->intf)
++	if (dev->disconnected)
+ 		return EPOLLERR | EPOLLHUP;
+ 
+ 	poll_wait(file, &dev->read_wait, wait);
+@@ -462,7 +459,7 @@ static ssize_t ld_usb_read(struct file *
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -542,7 +539,7 @@ static ssize_t ld_usb_write(struct file
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -764,6 +761,9 @@ static void ld_usb_disconnect(struct usb
+ 	/* give back our minor */
+ 	usb_deregister_dev(intf, &ld_usb_class);
+ 
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&dev->mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+@@ -771,7 +771,7 @@ static void ld_usb_disconnect(struct usb
+ 		mutex_unlock(&dev->mutex);
+ 		ld_usb_delete(dev);
+ 	} else {
+-		dev->intf = NULL;
++		dev->disconnected = 1;
+ 		/* wake up pollers */
+ 		wake_up_interruptible_all(&dev->read_wait);
+ 		wake_up_interruptible_all(&dev->write_wait);
 
 
