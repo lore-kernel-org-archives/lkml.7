@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3C6ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5515AFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C4621E6F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB0821D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263050;
-	bh=QnzyiG1RU6k+z3AYzuEm5NDXb59XVvAABJsQUEMmJf4=;
+	s=default; t=1571263055;
+	bh=mROoGw3K30hCRnp8qGru45WqsaXtMc1lRQErYgNGCVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n34CA+QUySvwDNzB6rtlll7IjevYrp/WgR43WSWP3GZdHis7/w8OhERzY9TGRgnHs
-	 rERFafzYXGI3CqkRVBmPJOxbRV+8qyMZUDGCm0DzCWe7eSgh+UamjA+5F6P4ygfWuY
-	 hGmOWVcNowBTUGGHFMSJ8mDR9HpjjndmspNlB1Jo=
+	b=h/cVrmNuk4/3akxKAqeuLIDDQDBPXeXXPvOvAwYPaIKqSk6GKiTAz6s74UU2MgmUP
+	 erPPBeTfJM0aq0gdpdQ5M2SOhcLvz3TkE3cp6AmdshoU2FOucpoqVOyZ+VCPVjbGeA
+	 GRlWO+2GVVeaaVHaUpIIKj3SXg4iT3UFhO/DHBpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391803AbfJPV53 (ORCPT
+        id S2406677AbfJPV5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437931AbfJPV4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:52 -0400
+        id S2404011AbfJPV4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:54 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3AE8218DE;
-        Wed, 16 Oct 2019 21:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C3821A49;
+        Wed, 16 Oct 2019 21:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263011;
-        bh=QnzyiG1RU6k+z3AYzuEm5NDXb59XVvAABJsQUEMmJf4=;
+        s=default; t=1571263013;
+        bh=mROoGw3K30hCRnp8qGru45WqsaXtMc1lRQErYgNGCVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xN0CGx/EHvmjbCaXeum43DjaegBVQtCklvrofDiPk6ZIsZQaSQ0NARUNMdfEWkWOY
-         WNraNH+VnogbRmIA7jZcfTENtunmnJOcyxNZJe2JFZG+dVJjuEtgnGzBQttiJ2xRbb
-         WUwFYfZZ8oI0iiQG6ntcyb4PrjUv/0eVUH834wr4=
+        b=rwwzClxL9DyoxmnvAtJzUePJvNHtqImfTcETM5HOWAUmns2X/elyFNMeoaEigTTBr
+         BSiLfvPZ8s7XcZzieGaaPBhKAH5/72mNkpXjmxPVNNwcb7o/YuuPlOidcGOinMV5V4
+         sZ03w9iBQGzE7mLxcelIdLZrYNOEfCkRKi++T2Hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Torez Smith <torez@redhat.com>,
-        Bill Kuzeja <william.kuzeja@stratus.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 13/81] xhci: Prevent deadlock when xhci adapter breaks during init
-Date:   Wed, 16 Oct 2019 14:50:24 -0700
-Message-Id: <20191016214818.188637314@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 15/81] USB: adutux: fix use-after-free on disconnect
+Date:   Wed, 16 Oct 2019 14:50:26 -0700
+Message-Id: <20191016214820.197503740@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,92 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bill Kuzeja <William.Kuzeja@stratus.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 8de66b0e6a56ff10dd00d2b0f2ae52e300178587 upstream.
+commit 44efc269db7929f6275a1fa927ef082e533ecde0 upstream.
 
-The system can hit a deadlock if an xhci adapter breaks while initializing.
-The deadlock is between two threads: thread 1 is tearing down the
-adapter and is stuck in usb_unlocked_disable_lpm waiting to lock the
-hcd->handwidth_mutex. Thread 2 is holding this mutex (while still trying
-to add a usb device), but is stuck in xhci_endpoint_reset waiting for a
-stop or config command to complete. A reboot is required to resolve.
+The driver was clearing its struct usb_device pointer, which it used as
+an inverted disconnected flag, before deregistering the character device
+and without serialising against racing release().
 
-It turns out when calling xhci_queue_stop_endpoint and
-xhci_queue_configure_endpoint in xhci_endpoint_reset, the return code is
-not checked for errors. If the timing is right and the adapter dies just
-before either of these commands get issued, we hang indefinitely waiting
-for a completion on a command that didn't get issued.
+This could lead to a use-after-free if a racing release() callback
+observes the cleared pointer and frees the driver data before
+disconnect() is finished with it.
 
-This wasn't a problem before the following fix because we didn't send
-commands in xhci_endpoint_reset:
+This could also lead to NULL-pointer dereferences in a racing open().
 
-commit f5249461b504 ("xhci: Clear the host side toggle manually when
-    endpoint is soft reset")
-
-With the patch I am submitting, a duration test which breaks adapters
-during initialization (and which deadlocks with the standard kernel) runs
-without issue.
-
-Fixes: f5249461b504 ("xhci: Clear the host side toggle manually when endpoint is soft reset")
-Cc: <stable@vger.kernel.org> # v4.17+
-Cc: Torez Smith <torez@redhat.com>
-Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
-Signed-off-by: Torez Smith <torez@redhat.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-7-git-send-email-mathias.nyman@linux.intel.com
+Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
+Cc: stable <stable@vger.kernel.org>     # 2.6.24
+Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+Tested-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190925092913.8608-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |   23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ drivers/usb/misc/adutux.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -3065,6 +3065,7 @@ static void xhci_endpoint_reset(struct u
- 	unsigned int ep_index;
- 	unsigned long flags;
- 	u32 ep_flag;
-+	int err;
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -764,14 +764,15 @@ static void adu_disconnect(struct usb_in
  
- 	xhci = hcd_to_xhci(hcd);
- 	if (!host_ep->hcpriv)
-@@ -3114,7 +3115,17 @@ static void xhci_endpoint_reset(struct u
- 		xhci_free_command(xhci, cfg_cmd);
- 		goto cleanup;
- 	}
--	xhci_queue_stop_endpoint(xhci, stop_cmd, udev->slot_id, ep_index, 0);
+ 	dev = usb_get_intfdata(interface);
+ 
+-	mutex_lock(&dev->mtx);	/* not interruptible */
+-	dev->udev = NULL;	/* poison */
+ 	usb_deregister_dev(interface, &adu_class);
+-	mutex_unlock(&dev->mtx);
+ 
+ 	mutex_lock(&adutux_mutex);
+ 	usb_set_intfdata(interface, NULL);
+ 
++	mutex_lock(&dev->mtx);	/* not interruptible */
++	dev->udev = NULL;	/* poison */
++	mutex_unlock(&dev->mtx);
 +
-+	err = xhci_queue_stop_endpoint(xhci, stop_cmd, udev->slot_id,
-+					ep_index, 0);
-+	if (err < 0) {
-+		spin_unlock_irqrestore(&xhci->lock, flags);
-+		xhci_free_command(xhci, cfg_cmd);
-+		xhci_dbg(xhci, "%s: Failed to queue stop ep command, %d ",
-+				__func__, err);
-+		goto cleanup;
-+	}
-+
- 	xhci_ring_cmd_db(xhci);
- 	spin_unlock_irqrestore(&xhci->lock, flags);
- 
-@@ -3128,8 +3139,16 @@ static void xhci_endpoint_reset(struct u
- 					   ctrl_ctx, ep_flag, ep_flag);
- 	xhci_endpoint_copy(xhci, cfg_cmd->in_ctx, vdev->out_ctx, ep_index);
- 
--	xhci_queue_configure_endpoint(xhci, cfg_cmd, cfg_cmd->in_ctx->dma,
-+	err = xhci_queue_configure_endpoint(xhci, cfg_cmd, cfg_cmd->in_ctx->dma,
- 				      udev->slot_id, false);
-+	if (err < 0) {
-+		spin_unlock_irqrestore(&xhci->lock, flags);
-+		xhci_free_command(xhci, cfg_cmd);
-+		xhci_dbg(xhci, "%s: Failed to queue config ep command, %d ",
-+				__func__, err);
-+		goto cleanup;
-+	}
-+
- 	xhci_ring_cmd_db(xhci);
- 	spin_unlock_irqrestore(&xhci->lock, flags);
- 
+ 	/* if the device is not opened, then we clean up right now */
+ 	if (!dev->open_count)
+ 		adu_delete(dev);
 
 
