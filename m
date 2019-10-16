@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0600FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFFAFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B947F207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05840207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264228;
-	bh=oQqt3M4StlXw6mUeaHdr3WrAtVNIj8RQ6R1srCQRt48=;
+	s=default; t=1571264232;
+	bh=VSbXwjB/rESacjz5cqElma2cY0HPqi2u7mtCeUhEyZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmCnn0gfDFHBXQ8a4jw5N4121to4RQqgmikZdnHyiYcXmQSHleYg/wED+15khI5io
-	 33Lp7adlusNupG/9GCfF6zDkdU1CQyY7fgUGvYcwEe2ahNSL0jRB2MjO1D+NmIzoe4
-	 +NbJZC4Nxo6gP6QEmMXToB7lrUDFBYQ2iO9p6zAA=
+	b=kTOn/wdSocvM7bxPLzbWh8DJTkmSTVegCMxP3yyhcDi+GuxaQu2Lkpxtxq/aUmmWZ
+	 r82ydzrCNWGZu12et8U2xjV6DaowIXpNiMhUxA20Z1gzMQZCQ/tAHfRv0cgV2ZyTD+
+	 3DNYdeSrzbnBvVYjEfVJiYuTKbA/l9Smyz4iekGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388011AbfJPWRH (ORCPT
+        id S2395112AbfJPVy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390245AbfJPVy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390245AbfJPVyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:51 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363D521D7F;
-        Wed, 16 Oct 2019 21:54:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C14D20872;
+        Wed, 16 Oct 2019 21:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262897;
-        bh=oQqt3M4StlXw6mUeaHdr3WrAtVNIj8RQ6R1srCQRt48=;
+        s=default; t=1571262890;
+        bh=VSbXwjB/rESacjz5cqElma2cY0HPqi2u7mtCeUhEyZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kid4bUIrsiq2VFxzfI6laVNII0gJIg0hLSI2vNE8RdKvUBcVbjFE4Y7GuAiCaPJ5d
-         5cxmfvbsWGssjUH91mdd2SejeSw8h+/GT+az00x8p7ibZWf9+lnsK4WRk9R/uLa2zH
-         y+rK+O7q7v0jAbmQJERa8Kd4I+uz1aOrH/85/W4M=
+        b=zBQ7Vlp7OPtns3VJbGF8JftDCop5d3lUOHJF56V1Dvd2EunBvNiHeAeDpKCn1ECI4
+         RugevvriTnKldO3xRXEsIcFH8XdC6o/8jMHw3Ylshv2hvJ0z90KQA3lb43yUJWol52
+         6YE4rpWHZ/LoAnUAmfuHEKTm8JW7k5BGt7RaG7Xs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 14/92] cfg80211: initialize on-stack chandefs
-Date:   Wed, 16 Oct 2019 14:49:47 -0700
-Message-Id: <20191016214811.372948112@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 4.9 47/92] USB: adutux: remove redundant variable minor
+Date:   Wed, 16 Oct 2019 14:50:20 -0700
+Message-Id: <20191016214834.728835208@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,72 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit f43e5210c739fe76a4b0ed851559d6902f20ceb1 upstream.
+commit 8444efc4a052332d643ed5c8aebcca148c7de032 upstream.
 
-In a few places we don't properly initialize on-stack chandefs,
-resulting in EDMG data to be non-zero, which broke things.
+Variable minor is being assigned but never read, hence it is redundant
+and can be removed. Cleans up clang warning:
 
-Additionally, in a few places we rely on the driver to init the
-data completely, but perhaps we shouldn't as non-EDMG drivers
-may not initialize the EDMG data, also initialize it there.
+drivers/usb/misc/adutux.c:770:2: warning: Value stored to 'minor' is
+never read
 
-Cc: stable@vger.kernel.org
-Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/1569239475-I2dcce394ecf873376c386a78f31c2ec8b538fa25@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c     |    4 +++-
- net/wireless/reg.c         |    2 +-
- net/wireless/wext-compat.c |    2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/misc/adutux.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -2069,6 +2069,8 @@ static int nl80211_parse_chandef(struct
- 
- 	control_freq = nla_get_u32(info->attrs[NL80211_ATTR_WIPHY_FREQ]);
- 
-+	memset(chandef, 0, sizeof(*chandef));
-+
- 	chandef->chan = ieee80211_get_channel(&rdev->wiphy, control_freq);
- 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
- 	chandef->center_freq1 = control_freq;
-@@ -2538,7 +2540,7 @@ static int nl80211_send_iface(struct sk_
- 
- 	if (rdev->ops->get_channel) {
- 		int ret;
--		struct cfg80211_chan_def chandef;
-+		struct cfg80211_chan_def chandef = {};
- 
- 		ret = rdev_get_channel(rdev, wdev, &chandef);
- 		if (ret == 0) {
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -1564,7 +1564,7 @@ static void reg_call_notifier(struct wip
- 
- static bool reg_wdev_chan_valid(struct wiphy *wiphy, struct wireless_dev *wdev)
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -789,13 +789,11 @@ error:
+ static void adu_disconnect(struct usb_interface *interface)
  {
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
- 	enum nl80211_iftype iftype;
+ 	struct adu_device *dev;
+-	int minor;
  
---- a/net/wireless/wext-compat.c
-+++ b/net/wireless/wext-compat.c
-@@ -799,7 +799,7 @@ static int cfg80211_wext_giwfreq(struct
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	int ret;
+ 	dev = usb_get_intfdata(interface);
  
- 	switch (wdev->iftype) {
+ 	mutex_lock(&dev->mtx);	/* not interruptible */
+ 	dev->udev = NULL;	/* poison */
+-	minor = dev->minor;
+ 	usb_deregister_dev(interface, &adu_class);
+ 	mutex_unlock(&dev->mtx);
+ 
 
 
