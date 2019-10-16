@@ -2,142 +2,77 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFAFFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E089FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85F42168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BsaK07H4"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE8921A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406215AbfJPQYN (ORCPT
+        id S2406239AbfJPQYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:24:13 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:58568 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406179AbfJPQYI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:24:08 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 16 Oct 2019 12:24:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44334 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406222AbfJPQYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:24:16 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0E0C0C300A;
-        Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571243046; bh=sQQnWNTHgJgqWsf7Fs/Gt9Bwrdd0KhmQt5tqyg196Ac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsaK07H4OejHgox9AYlonp99duJAAWde7cz7GBf+tFPHsXVXmb+HN7T8ccVclIIiJ
-         tYkVC9dYeEOOP2hlYi44FJNoW1ThNvfskjQBLZl3DFHUvM9LQVkKsJLO3K1lKxNek/
-         eRIPZXIsM3bdXaFW+E1xP+2I83QQ4QS7UEBMo5DzyKYO6UIsjW+qMw5/obztNXFt5c
-         qqlp+ZtIl+9ahgyCrJcY8kl+J0x00BCqGI7QwFatU0cig+o6IMP8jwXOWkKDgMLbG/
-         tYEe4r5CSjzz/Aaw7Ay/8BI1vMVNITF9AL31tdyWaYlrXHXZCVHgNKkwmvYIwRCF2B
-         8Kcsyzehu620w==
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 935BDA0083;
-        Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     linux-mm@kvack.org
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH v3 5/5] asm-generic/mm: stub out p{4,u}d_clear_bad() if __PAGETABLE_P{4,U}D_FOLDED
-Date:   Wed, 16 Oct 2019 09:24:00 -0700
-Message-Id: <20191016162400.14796-6-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191016162400.14796-1-vgupta@synopsys.com>
-References: <20191016162400.14796-1-vgupta@synopsys.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id DEB2130860C1;
+        Wed, 16 Oct 2019 16:24:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 803E35D9CD;
+        Wed, 16 Oct 2019 16:24:12 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 16 Oct 2019 18:24:13 +0200 (CEST)
+Date:   Wed, 16 Oct 2019 18:24:09 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, aarcange@redhat.com,
+        akpm@linux-foundation.org, christian@kellner.me, cyphar@cyphar.com,
+        elena.reshetova@intel.com, guro@fb.com, jannh@google.com,
+        ldv@altlinux.org, linux-api@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
+        peterz@infradead.org, shuah@kernel.org, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk
+Subject: Re: [PATCH v2 1/5] pidfd: verify task is alive when printing fdinfo
+Message-ID: <20191016162408.GB31585@redhat.com>
+References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
+ <20191016153606.2326-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016153606.2326-1-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 16 Oct 2019 16:24:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This came up when removing __ARCH_HAS_5LEVEL_HACK for ARC as code bloat.
-With this patch we see the following code reduction.
+On 10/16, Christian Brauner wrote:
+>
+> +static inline bool task_alive(struct pid *pid, enum pid_type type)
+> +{
+> +	return !hlist_empty(&pid->tasks[type]);
+> +}
 
-| bloat-o-meter2 vmlinux-D-elide-p4d_free_tlb vmlinux-E-elide-p?d_clear_bad
-| add/remove: 0/2 grow/shrink: 0/0 up/down: 0/-40 (-40)
-| function                                     old     new   delta
-| pud_clear_bad                                 20       -     -20
-| p4d_clear_bad                                 20       -     -20
-| Total: Before=4136930, After=4136890, chg -1.000000%
+So you decided to add a helper ;) OK, but note that its name is very
+confusing and misleading. Even more than pid_alive() we already have.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- include/asm-generic/pgtable.h | 11 +++++++++++
- mm/pgtable-generic.c          |  9 +++++++++
- 2 files changed, 20 insertions(+)
+What does "alive" actually mean? Say, task_alive(pid, PIDTYPE_SID) == F
+after fork(). Then it becomes T if this task does setsid().
 
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 818691846c90..9cdcbc7c0b7b 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -558,8 +558,19 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
-  * Do the tests inline, but report and clear the bad entry in mm/memory.c.
-  */
- void pgd_clear_bad(pgd_t *);
-+
-+#ifndef __PAGETABLE_P4D_FOLDED
- void p4d_clear_bad(p4d_t *);
-+#else
-+#define p4d_clear_bad(p4d)        do { } while (0)
-+#endif
-+
-+#ifndef __PAGETABLE_PUD_FOLDED
- void pud_clear_bad(pud_t *);
-+#else
-+#define pud_clear_bad(p4d)        do { } while (0)
-+#endif
-+
- void pmd_clear_bad(pmd_t *);
- 
- static inline int pgd_none_or_clear_bad(pgd_t *pgd)
-diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-index 532c29276fce..3d7c01e76efc 100644
---- a/mm/pgtable-generic.c
-+++ b/mm/pgtable-generic.c
-@@ -24,18 +24,27 @@ void pgd_clear_bad(pgd_t *pgd)
- 	pgd_clear(pgd);
- }
- 
-+#ifndef __PAGETABLE_P4D_FOLDED
- void p4d_clear_bad(p4d_t *p4d)
- {
- 	p4d_ERROR(*p4d);
- 	p4d_clear(p4d);
- }
-+#endif
- 
-+#ifndef __PAGETABLE_PUD_FOLDED
- void pud_clear_bad(pud_t *pud)
- {
- 	pud_ERROR(*pud);
- 	pud_clear(pud);
- }
-+#endif
- 
-+/*
-+ * Note that the pmd variant below can't be stub'ed out just as for p4d/pud
-+ * above. pmd folding is special and typically pmd_* macros refer to upper
-+ * level even when folded
-+ */
- void pmd_clear_bad(pmd_t *pmd)
- {
- 	pmd_ERROR(*pmd);
--- 
-2.20.1
+And why task_ if it accepts pid+pid_type? May be pid_has_task() or
+something like this...
+
+OK, since I can't suggest a better name I won't really argue. Feel free
+to add my reviewed-by to this series.
+
+Oleg.
 
