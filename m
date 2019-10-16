@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89920FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD3BECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5120420872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B53320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263387;
-	bh=TZAzt8b0InQqkoVFvO0WAITq7FHov/uXFi2a0LWBaNE=;
+	s=default; t=1571263389;
+	bh=wlLlmK994FjL3PziOltQbyYG2OnxFty8CYXPDJhvTl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m4kEzYmuJ6kTIiB/Hsc86pZCokOdht4TZJ9vj1fwKnWGKfbFBxU1dB64W7f5nszK4
-	 2F4wbmE6w1gMxomo6IiPksmyh86+ZHt/TvWP9D0BSdtxHSjWi2n1YIyY6jyjo7OvfS
-	 L/2XmPp/6rphad0/koC+MtQo8Zech/6AcVGowzn4=
+	b=zbfWOmkzptNVIpbmIXO5Cp/uOB6xFvRSJwRSLSu5FpVVAUtElR8LofHlu+kz2ysju
+	 HITPLuxk7+uZqcg9faYNwhoJX4qVmjxh3C8wamOTYOnGhaWY6pRpeHU5gwmIJeBoEp
+	 +4iwAwX6p62E3L73jaawD0HxpUBSvruiBgSMPiJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439047AbfJPWDF (ORCPT
+        id S2439056AbfJPWDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:03:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438498AbfJPV7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2438528AbfJPV7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:59:31 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 183AA21D7C;
-        Wed, 16 Oct 2019 21:59:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3926E21D7D;
+        Wed, 16 Oct 2019 21:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263171;
-        bh=TZAzt8b0InQqkoVFvO0WAITq7FHov/uXFi2a0LWBaNE=;
+        s=default; t=1571263170;
+        bh=wlLlmK994FjL3PziOltQbyYG2OnxFty8CYXPDJhvTl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f+gaMMpPvZML7tZziMlcLG/BEbj2gW8f10u3dIkV51RdfN3Xg0FKhxJPiQ/6FVwdh
-         y/yuSFTLjKJ8tlX7+u++zQfZSAr/mvbkA9x1nFRhpEzoUsxYk9OaBCQrvsugLVH43S
-         gp/9JHu+z4XoiJ6NcSUYarzHRZFFpti0FNkknu9Q=
+        b=bnPo8qeFKuZ5PeGVLSVee+IQt7dy2ogna/mq5i8PAOaw/cB2kR46/w2gHTNMEII5t
+         Eap9dTYGqZkzD3WTWY+1PZbJtmeRDrGUXkGlYYeMHelZA/OVLLi/A5fDdISY/tmO9R
+         ApDwjCaRMIGWeuMs22vQESv/VEbWuQQeNSSAKadY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kenneth Graunke <kenneth@whitecape.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.3 098/112] drm/i915: Whitelist COMMON_SLICE_CHICKEN2
-Date:   Wed, 16 Oct 2019 14:51:30 -0700
-Message-Id: <20191016214906.224784666@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.3 071/112] CIFS: Gracefully handle QueryInfo errors during open
+Date:   Wed, 16 Oct 2019 14:51:03 -0700
+Message-Id: <20191016214903.478659039@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -60,42 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kenneth Graunke <kenneth@whitecape.org>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit 282b7fd5f5ab4eba499e1162c1e2802c6d0bb82e upstream.
+commit 30573a82fb179420b8aac30a3a3595aa96a93156 upstream.
 
-This allows userspace to use "legacy" mode for push constants, where
-they are committed at 3DPRIMITIVE or flush time, rather than being
-committed at 3DSTATE_BINDING_TABLE_POINTERS_XS time.  Gen6-8 and Gen11
-both use the "legacy" behavior - only Gen9 works in the "new" way.
+Currently if the client identifies problems when processing
+metadata returned in CREATE response, the open handle is being
+leaked. This causes multiple problems like a file missing a lease
+break by that client which causes high latencies to other clients
+accessing the file. Another side-effect of this is that the file
+can't be deleted.
 
-Conflating push constants with binding tables is painful for userspace,
-we would like to be able to avoid doing so.
+Fix this by closing the file after the client hits an error after
+the file was opened and the open descriptor wasn't returned to
+the user space. Also convert -ESTALE to -EOPENSTALE to allow
+the VFS to revalidate a dentry and retry the open.
 
-Signed-off-by: Kenneth Graunke <kenneth@whitecape.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190911014801.26821-1-kenneth@whitecape.org
-(cherry picked from commit 0606259e3b3a1220a0f04a92a1654a3f674f47ee)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gt/intel_workarounds.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/file.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/gpu/drm/i915/gt/intel_workarounds.c
-+++ b/drivers/gpu/drm/i915/gt/intel_workarounds.c
-@@ -1042,6 +1042,9 @@ static void gen9_whitelist_build(struct
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -253,6 +253,12 @@ cifs_nt_open(char *full_path, struct ino
+ 		rc = cifs_get_inode_info(&inode, full_path, buf, inode->i_sb,
+ 					 xid, fid);
  
- 	/* WaAllowUMDToModifyHDCChicken1:skl,bxt,kbl,glk,cfl */
- 	whitelist_reg(w, GEN8_HDC_CHICKEN1);
++	if (rc) {
++		server->ops->close(xid, tcon, fid);
++		if (rc == -ESTALE)
++			rc = -EOPENSTALE;
++	}
 +
-+	/* WaSendPushConstantsFromMMIO:skl,bxt */
-+	whitelist_reg(w, COMMON_SLICE_CHICKEN2);
- }
- 
- static void skl_whitelist_build(struct intel_engine_cs *engine)
+ out:
+ 	kfree(buf);
+ 	return rc;
 
 
