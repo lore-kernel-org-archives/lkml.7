@@ -2,105 +2,118 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF68FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A76CFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E0320872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B89620872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389863AbfJPJdn (ORCPT
+        id S2389956AbfJPJfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:33:43 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25194 "EHLO mga17.intel.com"
+        Wed, 16 Oct 2019 05:35:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:33898 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388426AbfJPJdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:33:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 02:33:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="200006317"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 16 Oct 2019 02:33:40 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iKfgZ-0008F9-Hq; Wed, 16 Oct 2019 12:33:39 +0300
-Date:   Wed, 16 Oct 2019 12:33:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the pm tree (Was:
- linux-next: build warning after merge of the pm tree)
-Message-ID: <20191016093339.GU32742@smile.fi.intel.com>
-References: <20191015100855.31b8a3d5@canb.auug.org.au>
- <20191015101650.2a1541af@canb.auug.org.au>
- <4823987.OjxUhv8yZC@kreacher>
- <CAMuHMdUc7unFPvb2hhy9kL6WcJGsDTpjOW=CD=0n+pw-OGH9Dg@mail.gmail.com>
+        id S1727328AbfJPJfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:35:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9CFA142F;
+        Wed, 16 Oct 2019 02:35:17 -0700 (PDT)
+Received: from [10.1.196.105] (unknown [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8E053F6C4;
+        Wed, 16 Oct 2019 02:35:14 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: entry.S: Do not preempt from IRQ before all
+ cpufeatures are enabled
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Julien Thierry <julien.thierry@arm.com>
+References: <20191015172544.186627-1-james.morse@arm.com>
+ <20191015200755.aavtyhq56lewazah@willie-the-truck>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <e6d58ed6-2d5e-8c78-c824-d0d5abff8394@arm.com>
+Date:   Wed, 16 Oct 2019 10:35:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUc7unFPvb2hhy9kL6WcJGsDTpjOW=CD=0n+pw-OGH9Dg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191015200755.aavtyhq56lewazah@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:15:44AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Oct 15, 2019 at 1:27 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > On Tuesday, October 15, 2019 1:16:50 AM CEST Stephen Rothwell wrote:
-> > > On Tue, 15 Oct 2019 10:08:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-> > > wrote:
+Hi Will,
 
-> > > This became a build failure for the powerpc ppc64_allmodconfig build:
-> > >
-> > > In file included from include/linux/i2c.h:13,
-> > >                  from arch/powerpc/platforms/pasemi/misc.c:14:
-> > > include/linux/acpi.h:682:31: error: 'struct acpi_device' declared inside pa=
-> > > rameter list will not be visible outside of this definition or declaration =
-> > > [-Werror]
-> > >   682 | acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, =
-> > > const char *uid2)
-> > >       |                               ^~~~~~~~~~~
-> > > cc1: all warnings being treated as errors
-> > >
-> > > (and many more)
-> > >
-> > > I have used the pm tree from next-20191014 for today.
-> >
-> > So this looks weird, because there is an acpi_dev_put() stub in
-> > include/linux/acpi.h too in the same #else block and it takes a
-> > (struct acpi_device *) pointer too and it has not been touched by
-> > the commit in question.  So why has it built successfully so far?
+On 15/10/2019 21:07, Will Deacon wrote:
+> Patch looks good apart from one thing...
 > 
-> Looks like that never warned because acpi_dev_put() is located after
+> On Tue, Oct 15, 2019 at 06:25:44PM +0100, James Morse wrote:
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index 2c2e56bd8913..67a1d86981a9 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -223,6 +223,7 @@ extern long schedule_timeout_uninterruptible(long timeout);
+>>  extern long schedule_timeout_idle(long timeout);
+>>  asmlinkage void schedule(void);
+>>  extern void schedule_preempt_disabled(void);
+>> +asmlinkage void preempt_schedule_irq(void);
 > 
->     static inline struct acpi_device *
->     acpi_dev_get_first_match_dev(const char *hid, const char *uid, s64 hrv)
->     {
->             return NULL;
->     }
-> 
-> Moving acpi_dev_hid_uid_match() down gets rid of the warning, too.
+> I don't understand the need for this hunk, since we're only calling the
+> function from C now. Please could you explain?
 
-Sounds like a compiler bug.
+(A prototype is needed to make the thing build[0], but)
 
-It thinks that struct acpi_device * is defined as function prototype?
+you mean the asmlinkage?
 
--- 
-With Best Regards,
-Andy Shevchenko
+The definition in kernel/sched/core.c has asmlinkage. It does nothing on arm64, but if
+another architecture does add a C call, and uses asmlinkage to tinker with the calling
+convention, it would need to be here so callers use the correct convention.
+
+e.g. for X86_32 defines asmlinkage in arch/x86/include/asm/linkage.h:
+| #define asmlinkage CPP_ASMLINKAGE __attribute__((regparm(0)))
+
+This forces all arguments out of registers and onto the stack [1].
+
+Without this annotation, asm->preempt_schedule_irq() callers would put arguments on the
+stack, but C->preempt_schedule_irq() callers would use whatever the C->C calling
+convention is, which might not match.
+
+schedule() further up the hunk does the same.
+
+I agree it doesn't matter today, but omitting it would be a bug for the next user to debug!
 
 
+Thanks,
+
+James
+
+[0] Without that hunk,
+../arch/arm64/kernel/process.c: In function ‘arm64_preempt_schedule_irq’:
+../arch/arm64/kernel/process.c:650:3: error: implicit declaration of function
+‘preempt_schedule_irq’; did you mean ‘preempt_schedule’?
+[-Werror=implicit-function-declaration]
+   preempt_schedule_irq();
+   ^~~~~~~~~~~~~~~~~~~~
+   preempt_schedule
+cc1: some warnings being treated as errors
+make[3]: *** [../scripts/Makefile.build:266: arch/arm64/kernel/process.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [../scripts/Makefile.build:509: arch/arm64/kernel] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/home/morse/kernel/linux/Makefile:1649: arch/arm64] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [../Makefile:179: sub-make] Error 2
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/x86-Function-Attributes.html
