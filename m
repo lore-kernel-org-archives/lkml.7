@@ -2,161 +2,122 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CC1C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EADC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C8720854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53B920854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="K4uUkZzT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D45DQTXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389242AbfJPG6y (ORCPT
+        id S2389245AbfJPG7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:58:54 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:34486 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387860AbfJPG6x (ORCPT
+        Wed, 16 Oct 2019 02:59:54 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:47001 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387777AbfJPG7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:58:53 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9G6w29i025003;
-        Wed, 16 Oct 2019 02:58:36 -0400
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2050.outbound.protection.outlook.com [104.47.36.50])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2vk8pavh7e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 16 Oct 2019 02:58:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bKtFoE++cjxtD4z8rp17piOgoT2IqIK1Auf3joVG/XVUfHiu0GywvdbZyK3Meh+QHb6oWLPuU7b0N+J+OhRcE3u5gobDMrNEFfl5X0/cQnMZ32IJyI1Qi//ryIfMTcrsdw7z4WalwFapGS8zll0u91X5JpKoAVrOd/j3BKx7rRv98xLR2q7hFZ0G3gSzQaYxosQ7mkhUPxSOm0vz3eHw7Tu5jSdvRRTpup1I9SVBHBOMi0mABCGeLEMwhhwp3uKQNu8LwosXD2tw7gkz0wjljVt8SCBj9BxLCOO9NDXDXbhFfq0NbzWTW1NUtiVQgx6vQuaTmfyzE5jKSBfXOdNjdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HRKM/Tw+8Fx7roqjC6nss9yvk93qgKbblpi6IRPgqug=;
- b=DN3QNKAi03+qhyXRGqNA9xzwPtvOh143D2PUQhfpHNKFpnmVBrSiLhM8kDnRUsbGr3/QKoRw17aCZf2qIW6DMF1MBO3bBiW1vXVf2RHoFpKmV+DwkW6cmLboCITklMKG8beb56ZSRr8XrjhiejYS7nlFHktETCx4BsDy0FYWHd+2CwJKL31xTjZfdWywf8vqNnKcHrFMot5Yy0qjkLrcD498C1+EtMIQ4lKXspx15pBgLeLE2GPCRqKz59qsZGKfFWIOMTQURzn8r+UM1XdI6c/HQP9tm8eUnieRLGcXtpdCRWJ589gBf7pn5HqwWnuwJg0NyKF9Ag5YkdWxbHFSOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=lwfinger.net smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
+        Wed, 16 Oct 2019 02:59:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o18so26566140wrv.13;
+        Tue, 15 Oct 2019 23:59:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HRKM/Tw+8Fx7roqjC6nss9yvk93qgKbblpi6IRPgqug=;
- b=K4uUkZzTybjtPKXt6grlazfu5ahlsY+OtlFdWaxT2npQRBKTKPCL1QC8pMDCCRmMI0KZ4I0vgka/bI7O4A/VEDKMN9xCHutRxLAmKuSuw6jcp8+qBx28F/FZi1QhT1YWou20XWgniGJk79dscHd3TnrGx6xnXqq3UDvcjzd9Aqg=
-Received: from CY4PR03CA0108.namprd03.prod.outlook.com (2603:10b6:910:4d::49)
- by SN6PR03MB3629.namprd03.prod.outlook.com (2603:10b6:805:42::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Wed, 16 Oct
- 2019 06:58:33 +0000
-Received: from BL2NAM02FT018.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::201) by CY4PR03CA0108.outlook.office365.com
- (2603:10b6:910:4d::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16 via Frontend
- Transport; Wed, 16 Oct 2019 06:58:32 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT018.mail.protection.outlook.com (10.152.77.170) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2347.16
- via Frontend Transport; Wed, 16 Oct 2019 06:58:32 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x9G6wPKh030844
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 15 Oct 2019 23:58:25 -0700
-Received: from saturn.ad.analog.com (10.48.65.112) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 16 Oct 2019 02:58:31 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>
-CC:     <Larry.Finger@lwfinger.net>, <gregkh@linuxfoundation.org>,
-        <saurav.girepunje@gmail.com>, <gustavo@embeddedor.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] staging: rtl8188eu: make efuse_power_switch() function static
-Date:   Wed, 16 Oct 2019 09:58:34 +0300
-Message-ID: <20191016065834.12186-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=diX73upTDH+Le9kcw7/XCVjA0EDthPi0kI1j7qCDE7U=;
+        b=D45DQTXRZHpHqmNV1ZHx/1jV+zI72KyaocnL5qI5Bhvrm4gLEuEFtVXPXUYWHUfG35
+         fLqAhBs2BjHNKQ05KN9EFlH1euiZStEoZRRO7IMq2A9pM2HV115cXo36Eb4MAh9aOKTu
+         rbYX09lp4sO4fuO/YdzCEurFqJQduJanR1vYdAVt4095ahIb3hjimbmyLZJyo/QPn0V5
+         PQ1E02E0nlbssAYBvHNoZHIu2+ahFhCHowIj/ClyCk2I2DI5+URuXjr7+bHBt1Jl7BN5
+         Y1Yex9kIG9e0r9el3lhHv5C9AJ8x9RIGOQARUt1X7CSZGRdtqFTvMuBsWMSVKiHMjZhy
+         VnzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=diX73upTDH+Le9kcw7/XCVjA0EDthPi0kI1j7qCDE7U=;
+        b=sebAGfZkICGwEQOY4/BVZnAM2x144+Hc7F661/9JM536h39VTvRuGon9hQHqCscden
+         P/jDLoEtYN7bH7xO5u5ANeBF/UOWzWTWx1GkEzFi1NMFL4M7cjMupTZa1i6YaUr/9n5u
+         MWvYVacea97VBaz+cH1+ZPxB6ZTcnKJFDE9/22uUYBFnyvmGJg5NiI3S9rj7f5xCt6Ry
+         L5RLXiTNaiF92VJyDRANZ9gg/vTJCuMcH1K+SHh0lW++zCOuD4r0HEWevQiBs7hiR9iX
+         NV624b97Umn6rw+AI9mrcVlVGlpuP/3e5ogMNxtluuNa/pvVBNKdXI+NQNi9NCocjAJY
+         xqbA==
+X-Gm-Message-State: APjAAAX2q0t+w1Vi6uRHWqk9GT6VhYOlSr3X93FfwW4D6MCxZjBI9UpO
+        GqCh5/bbpYrYPFp4y1Ia52I=
+X-Google-Smtp-Source: APXvYqzw7i7UVTV7xJwRgPRf9mHmCqNLbvW5Tm4FhWaG2fTixmFPnl/QWZqe/Xpc2GrgzM2xBXPoUg==
+X-Received: by 2002:adf:fa87:: with SMTP id h7mr1308017wrr.304.1571209189718;
+        Tue, 15 Oct 2019 23:59:49 -0700 (PDT)
+Received: from localhost ([46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id k24sm6060907wmi.1.2019.10.15.23.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 23:59:47 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 08:59:45 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        alexandre.torgue@st.com, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: pwm-stm32: document pinctrl sleep
+ state
+Message-ID: <20191016065945.GA1296874@ulmo>
+References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
+ <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(376002)(346002)(199004)(189003)(26005)(486006)(50466002)(4326008)(316002)(44832011)(7696005)(51416003)(7636002)(356004)(2870700001)(54906003)(1076003)(110136005)(5660300002)(336012)(106002)(2906002)(2616005)(476003)(426003)(305945005)(126002)(86362001)(186003)(478600001)(14444005)(50226002)(70586007)(8676002)(48376002)(246002)(70206006)(8936002)(107886003)(47776003)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR03MB3629;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4ff36038-77eb-496b-c965-08d7520641f8
-X-MS-TrafficTypeDiagnostic: SN6PR03MB3629:
-X-Microsoft-Antispam-PRVS: <SN6PR03MB36295BB9139AFC85D14B3AD0F9920@SN6PR03MB3629.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0192E812EC
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Z1glPbG5KiI3Gw0YbMZBprM8cqIavatCYV1xhLolxtM0D0zSpP0tKzJ0rm1k/tPcUDdR4hkhYwQfVStY8purV8bMjQHV/RzVMku2WQgIXiKIILT8G36cWexgDE1CPFlqhMWgfWT3bt5wbeDyM4BfD+w0n+OwRxmKsSnYsf0/MtbmVpVtCXoS90sRBZt7N17e7UZoPIWWDA90c8hhfWlkEfINXImRVAW/NBszFgD/xvB8+av3uQTtdc3j91F1iDhWDGvcCS+Oecm5rw8/4Hv+hVsG7RSDcP9t0Ox0jz4bcsAEF7QMKEPvhfZEbSZt9TJE/WN68rHjsL4IKWfLjKMGUeUoj7puuywwoMUO8uOzvlR6NphB4rsOMS0NSf+DpPIbqszcoBI94L5+u+1JhysviJBnQ4Np64BwBevhBLhqy9U=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2019 06:58:32.5899
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ff36038-77eb-496b-c965-08d7520641f8
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB3629
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-16_02:2019-10-15,2019-10-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 clxscore=1011 mlxscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910160064
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+In-Reply-To: <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The `rtl8188eu` driver is built as a kmod in order to avoid symbol
-conflicts (at link-time) with other Realtek drivers.
 
-Internally, we use this driver as builtin [vs kmod], and we've identified
-the `efuse_power_switch()` symbol to be conflicting at link-time with the
-one from the `rtlwifi` driver.
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-An alternative solution would have been to rename the function, but it
-doesn't look like it's being used outside of this driver, so just make it
-static.
+On Fri, Oct 04, 2019 at 02:53:51PM +0200, Fabrice Gasnier wrote:
+> Add documentation for pinctrl sleep state that can be used by
+> STM32 timers PWM.
+>=20
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/staging/rtl8188eu/core/rtw_efuse.c    | 2 +-
- drivers/staging/rtl8188eu/include/rtw_efuse.h | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+Applied, thanks.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_efuse.c b/drivers/staging/rtl8188eu/core/rtw_efuse.c
-index 02c476f45b33..47eaff9ffd58 100644
---- a/drivers/staging/rtl8188eu/core/rtw_efuse.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_efuse.c
-@@ -25,7 +25,7 @@ enum{
-  * When we want to enable write operation, we should change to pwr on state.
-  * When we stop write, we should switch to 500k mode and disable LDO 2.5V.
-  */
--void efuse_power_switch(struct adapter *pAdapter, u8 write, u8 pwrstate)
-+static void efuse_power_switch(struct adapter *pAdapter, u8 write, u8 pwrstate)
- {
- 	u8 tempval;
- 	u16 tmpv16;
-diff --git a/drivers/staging/rtl8188eu/include/rtw_efuse.h b/drivers/staging/rtl8188eu/include/rtw_efuse.h
-index 3ec53761e9fd..7a9c8ff0daa9 100644
---- a/drivers/staging/rtl8188eu/include/rtw_efuse.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_efuse.h
-@@ -82,7 +82,6 @@ u8 efuse_OneByteWrite(struct adapter *adapter, u16 addr, u8 data);
- 
- void efuse_ReadEFuse(struct adapter *Adapter, u8 efuseType, u16 _offset,
- 		u16 _size_byte, u8 *pbuf);
--void efuse_power_switch(struct adapter *adapt, u8 write, u8  pwrstate);
- int Efuse_PgPacketRead(struct adapter *adapt, u8 offset, u8 *data);
- bool Efuse_PgPacketWrite(struct adapter *adapter, u8 offset, u8 word, u8 *data);
- void efuse_WordEnableDataRead(u8 word_en, u8 *sourdata, u8 *targetdata);
--- 
-2.20.1
+Thierry
 
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2mv98ACgkQ3SOs138+
+s6HF3BAAmYT8qlTIl02DuYkZiIEEQt9hsB26Q0G5lb9hNoOoKx6lZQ+fH6rl2YGG
+4qNTgV7tO6d2L3ip18Khcwjix/qAMIquiQS7X98cRjYA72kq3zwY5hj6pRxwF0Z5
+qdY0aTeeN2YpT9rhOR0vjmMfVGDgds9wfCLZXvkYGJ1eIHlrWD7MTDBcQeResxLk
+IGpnF6avlEnIlnaVKhUExslBOfivCtPho2GT8mXRQwR2UEjT2hQwJf+Sx98retQ9
+C9rrKMP900bMgeyBzQ0AZbZk1/U6wW1yeJaIITR0wJFLN+Gg+FMS+lb/fhGYMKwu
+9uQUNAYK03J0FUEZp8Esp1W36ua2XVlmEd+7meqo1OQXBG3uVPpIwTJrBmbPON7s
+Q5wHH96B8zjwGdwaVXi/opEDrRezm5c3Ek2bE5cuKfE1grspT0TIqrxmfKnJjzEY
+p12kGLnyp7UCaRV8EpUlVDo74koFoMtsCJMNB+PkeZfJEcpoAE1P+gJtt7mWzrXa
+dH/ZR6ezffrGbHvH9xKqWLoYSBv1r6PbAiNTJLFCzfWUGBujwQut3bTMNJQoEC4Y
+cYPLZnLDnw4Sv7tRoF3nlz3zI5RmQy6qQ0ycz/0CXNv1+W5LVgBa1izwHJ5g1Civ
++vcMdBtQEl6PC4APpHq3jfKFRnO/LOfYRuh8YFl0IwUa9dURl2Q=
+=xIm6
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
