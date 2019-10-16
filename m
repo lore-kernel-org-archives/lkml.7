@@ -6,96 +6,110 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02CFC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39C5ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF30020872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51F420872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbfJPH1p (ORCPT
+        id S2388518AbfJPH2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:27:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43446 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfJPH1p (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:27:45 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CF47D8E580;
-        Wed, 16 Oct 2019 07:27:44 +0000 (UTC)
-Received: from krava (unknown [10.40.205.39])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6A04A60A9F;
-        Wed, 16 Oct 2019 07:27:42 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 09:27:41 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf list: Hide deprecated events by default
-Message-ID: <20191016072741.GA15031@krava>
-References: <20191015025357.8708-1-yao.jin@linux.intel.com>
- <20191015091401.GE10951@krava>
- <627305a7-3aec-037a-1c36-6ca884f35d1d@linux.intel.com>
+        Wed, 16 Oct 2019 03:28:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48458 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfJPH2m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:28:42 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iKdjU-0007KO-Cs; Wed, 16 Oct 2019 09:28:32 +0200
+Date:   Wed, 16 Oct 2019 09:28:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+cc:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
+        yangbo.lu@nxp.com, john.stultz@linaro.org,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
+        suzuki.poulose@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com,
+        justin.he@arm.com, nd@arm.com
+Subject: Re: [PATCH v5 3/6] timekeeping: Add clocksource to
+ system_time_snapshot
+In-Reply-To: <aa1ec910-b7b6-2568-4583-5fa47aac367f@redhat.com>
+Message-ID: <alpine.DEB.2.21.1910160914230.2518@nanos.tec.linutronix.de>
+References: <20191015104822.13890-1-jianyong.wu@arm.com> <20191015104822.13890-4-jianyong.wu@arm.com> <9274d21c-2c43-2e0d-f086-6aaba3863603@redhat.com> <alpine.DEB.2.21.1910152212580.2518@nanos.tec.linutronix.de>
+ <aa1ec910-b7b6-2568-4583-5fa47aac367f@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <627305a7-3aec-037a-1c36-6ca884f35d1d@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 16 Oct 2019 07:27:44 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:59:13AM +0800, Jin, Yao wrote:
-> 
-> 
-> On 10/15/2019 5:14 PM, Jiri Olsa wrote:
-> > On Tue, Oct 15, 2019 at 10:53:57AM +0800, Jin Yao wrote:
-> > > There are some deprecated events listed by perf list. But we can't remove
-> > > them from perf list with ease because some old scripts may use them.
-> > > 
-> > > Deprecated events are old names of renamed events.  When an event gets
-> > > renamed the old name is kept around for some time and marked with
-> > > Deprecated. The newer Intel event lists in the tree already have these
-> > > headers.
-> > > 
-> > > So we need to keep them in the event list, but provide a new option to
-> > > show them. The new option is "--deprecated".
-> > > 
-> > > With this patch, the deprecated events are hidden by default but they can
-> > > be displayed when option "--deprecated" is enabled.
+On Wed, 16 Oct 2019, Paolo Bonzini wrote:
+> On 15/10/19 22:13, Thomas Gleixner wrote:
+> > On Tue, 15 Oct 2019, Paolo Bonzini wrote:
+> >> On 15/10/19 12:48, Jianyong Wu wrote:
+> >>>  
+> >>>
+> >>
+> >> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 > > 
-> > not sure it's wise to hide them, because people will not read man page
-> > to find --deprecated option, they will rather complain right away ;-)
-> > 
-> > how about to display them as another topic, like:
-> > 
-> > pipeline:
-> > 	...
-> > uncore:
-> > 	...
-> > deprecated:
-> > 	...
-> > 
-> > jirka
-> > 
+> > You're sure about having reviewed that in detail?
 > 
-> Hi Jiri,
+> I did review the patch; the void* ugliness is not in this one, and I do
+> have some other qualms on that one.
 > 
-> I don't know if we add a new topic "deprecated" in perf list output, does
-> the old script need to be modified as well?
+> > This changelog is telling absolutely nothing WHY anything outside of the
+> > timekeeping core code needs access to the current clocksource. Neither does
+> > it tell why it is safe to provide the pointer to random callers.
 > 
-> Say the events are moved to the "deprecated" section, I just guess the
-> script needs the modification.
-> 
-> That's just my personal guess. :)
+> Agreed on the changelog, but the pointer to a clocksource is already
+> part of the timekeeping external API via struct system_counterval_t.
+> get_device_system_crosststamp for example expects a clocksource pointer
+> but provides no way to get such a pointer.
 
-i did not mean adding new topic all the way down,
-just to display the deprecated events like that
+That's a completely different beast, really.
 
-jirka
+The clocksource pointer is handed in by the caller and the core code
+validates if the clocksource is the same as the current system clocksource
+and not the other way round.
+
+So there is no need for getting that pointer from the core code because the
+caller knows already which clocksource needs to be active to make.the whole
+cross device timestamp correlation work. And in that case it's the callers
+responsibility to ensure that the pointer is valid which is the case for
+the current use cases.
+
+From your other reply:
+
+> Why add a global id?  ARM can add it to archdata similar to how x86 has
+> vclock_mode.  But I still think the right thing to do is to include the
+> full system_counterval_t in the result of ktime_get_snapshot.  (More in
+> a second, feel free to reply to the other email only).
+
+No, the clocksource pointer is not going to be exposed as there is no
+guarantee that it will be still around after the call returns.
+
+It's not even guaranteed to be correct when the store happens in Wu's patch
+simply because the store is done outside of the seqcount protected region.
+
+Vs. arch data: arch data is an opaque struct, so you'd need to store a
+pointer which has the same issue as the clocksource pointer itself.
+
+If we want to convey information then it has to be in the generic part
+of struct clocksource.
+
+In fact we could even simplify the existing get_device_system_crosststamp()
+use case by using the ID field.
+
+Thanks,
+
+	tglx
