@@ -2,177 +2,183 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA952C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256D4C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8477F21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58F621835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sih3elzl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xAo6znHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391536AbfJPIhi (ORCPT
+        id S2391593AbfJPIh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:37:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43704 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfJPIhh (ORCPT
+        Wed, 16 Oct 2019 04:37:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38906 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfJPIh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:37:37 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f21so10920378plj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:37:37 -0700 (PDT)
+        Wed, 16 Oct 2019 04:37:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so14263395pfe.5
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:37:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=6cSi/VaBu5qlG+iJux71TE9YR4HRfY9/qMQAkEfziBc=;
-        b=Sih3elzljcS0vhgJ36VNbRv5XOwR5L9xaCP9+NFtnvXSBLwbjexzqFbTtHyWv38WkB
-         fEsNhmhm2OCHgx8ouEzAbulTJ29ur77D6v3p7loHNwCv7VILm7zArLV3Er7knHyfrCmD
-         PFn1YxvCZvKFGCXdZicc+JTb9qJY/Yc/zwNEhfN30CJcyRnUadDrKBNTMdLa8sI8h4Pv
-         N8cN9aIG65SAYaepi4+sst/PGGJa4HRRmxvKnWEGy7Ll7Wp6G5HwOYPHBcqN9DWHai1P
-         XPtfY4pg9bQiXT/WKmGuxOe3eORhfNHNl/1JWrG/ytm0LtjZjbrwu7bwx8OLUAqzwL7h
-         oDvg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WWx1FFGKOuJRMtTkmthoLwPW2Kzf5U2CvR5+YTbodjA=;
+        b=xAo6znHjl9Ltmw0vFumuJohwKsXKRXzV5r7dKsvyLhx07WH33ymhlFmV5JYx4A6Q/P
+         dwNiGyzV4LQPENRdjWLcE+KhysJS+FpDi7o7o1LqTO89hSS/57UbHIwL9OkUrBtm9d9Z
+         seJvCEGO6N7Z5WbVVOV4j1xbr+cxt2cddiTtV825tcj+vOPJuzATkOhvRzXgOIOYOkEO
+         j2iZyGrgrp5+fE48Ue6kUdwTtf+itGbLbuv1nBwIjSmnDorusk8z1dCLe8vzNLvzqh9A
+         yk9JYyZhinPISSSBTv7ZRuQzRp9Oan1cEIyciN76kcIEluvWjdvQo/Lb+u7966xVJ8PC
+         oBHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=6cSi/VaBu5qlG+iJux71TE9YR4HRfY9/qMQAkEfziBc=;
-        b=qvxfezRRCE+toc5ORqHK+Bn5Gylg2NfhjGjle0gTmVw6DLAV5l1fgPEXKl3tAe4DCY
-         RRxbpNvZDFgh5dN0MX/+VyziyIkAWTEMsS+CgxVTZ5Ikx/Xfarf4yJG5+y8C06EgExTT
-         ebviae687oceoElkLZt/am+M3xtSHZsQ4ho1DWRRIp+HTG8+SRQOiqCDMKoclJZlwtqz
-         6Joai4Gv32pm4exmzaWa5ne9qm9fGx96/y2XDQLvhC+ckM/GT0nEV3BHrWWWKDLUmAk2
-         0wntQSkyRBHGrc0NPNidARX66H2QHx7BRAiSWSBoWCSRTT35fF0uuXmdTO6sS0MAAE9R
-         YYFA==
-X-Gm-Message-State: APjAAAVdr0VzeZ614iprrBrhWvUhbBZF9hGX9um3lfGDSXxJbMj8aJJh
-        9b5oMH/iO5FxKFUfZYx9q90k+w==
-X-Google-Smtp-Source: APXvYqxrjlYYFOCzTIUNAMj9ngnlXfgJLbuE50AKjdKisF23Hn9DvigMvUi4Sbw/LKGBXYHNVnboMA==
-X-Received: by 2002:a17:902:7c8f:: with SMTP id y15mr40413967pll.0.1571215057114;
-        Wed, 16 Oct 2019 01:37:37 -0700 (PDT)
-Received: from [10.111.0.242] ([85.203.47.199])
-        by smtp.gmail.com with ESMTPSA id e6sm32782799pfl.146.2019.10.16.01.37.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 01:37:36 -0700 (PDT)
-Subject: Re: [PATCH v5 2/3] uacce: add uacce driver
-To:     reg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-References: <1571035735-31882-1-git-send-email-zhangfei.gao@linaro.org>
- <1571035735-31882-3-git-send-email-zhangfei.gao@linaro.org>
- <20191014113231.00002967@huawei.com>
- <e71edf57-8449-e8d1-01ba-aed3ecf379e1@linaro.org>
- <20191015175555.GB1072965@kroah.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <f20230bd-0c48-4362-c434-207f6f2478f0@linaro.org>
-Date:   Wed, 16 Oct 2019 16:37:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WWx1FFGKOuJRMtTkmthoLwPW2Kzf5U2CvR5+YTbodjA=;
+        b=YASyM2xOsQGZxTrWfYaUiwip4NcDsV2IecDWsf4dDmp0dN7OkFKAqsK9LDsQCBhYjO
+         b/xBhWT2HrnpGhpJX5p7PsTAJ2VQCPQmkQWNg2G64KPFaZuIeYGLThbmArXlJdGyd4X/
+         qdkouLjQj04zEfQDez7Z2pGaUZpqVui4kBqbqXm2BFzxwN4ZyCRmsidvAvLLBD6Qx7DT
+         oyqe9BKNj/vbUaabbSrZXgUxObUt5TT4mZfHtQ1TrGOOfVOMoUZg0D7Dn9t2+ILesw7H
+         /vzI9VwpJuCMcTTsiNCoEY+nyYEJ8dbz2qlF0hv4LZGOzDkVUeivZNLc25mgAyhAZ2gz
+         YyZg==
+X-Gm-Message-State: APjAAAWh60uSDIapdaTPWr/eFiQH8b9AmJCnNcV7kqfiuGlxEZ4NKFWn
+        /9G9NDg020AtdP7hSLtGHgRJJioDyg==
+X-Google-Smtp-Source: APXvYqywjX6EG0Vqzgqg0Uy+SXn8Ybru/4U99k3x4yloIPg3KKmXpn26QBKc4s/l+yy1i0k3CZZVSw==
+X-Received: by 2002:a17:90a:246e:: with SMTP id h101mr3523435pje.133.1571215076312;
+        Wed, 16 Oct 2019 01:37:56 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6099:7d36:58bc:3eb9:a64a:7942])
+        by smtp.gmail.com with ESMTPSA id v8sm4594520pje.6.2019.10.16.01.37.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 16 Oct 2019 01:37:55 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 14:07:48 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     mchehab@kernel.org, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191016083748.GA2288@Mani-XPS-13-9360>
+References: <20191011035613.13598-1-manivannan.sadhasivam@linaro.org>
+ <20191011035613.13598-2-manivannan.sadhasivam@linaro.org>
+ <20191015224554.GA5634@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20191015175555.GB1072965@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015224554.GA5634@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rob,
 
+On Tue, Oct 15, 2019 at 05:45:54PM -0500, Rob Herring wrote:
+> On Fri, Oct 11, 2019 at 09:26:12AM +0530, Manivannan Sadhasivam wrote:
+> > Add devicetree binding for IMX296 CMOS image sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../devicetree/bindings/media/i2c/imx296.txt  | 55 +++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.txt
+> 
+> You should know by now, use DT schema format please.
+> 
 
-On 2019/10/16 上午1:55, reg Kroah-Hartman wrote:
-> On Tue, Oct 15, 2019 at 03:39:00PM +0800, zhangfei wrote:
->> Hi, Jonathan
->>
->> On 2019/10/14 下午6:32, Jonathan Cameron wrote:
->>> On Mon, 14 Oct 2019 14:48:54 +0800
->>> Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
->>>
->>>> From: Kenneth Lee <liguozhu@hisilicon.com>
->>>>
->>>> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
->>>> provide Shared Virtual Addressing (SVA) between accelerators and processes.
->>>> So accelerator can access any data structure of the main cpu.
->>>> This differs from the data sharing between cpu and io device, which share
->>>> data content rather than address.
->>>> Since unified address, hardware and user space of process can share the
->>>> same virtual address in the communication.
->>>>
->>>> Uacce create a chrdev for every registration, the queue is allocated to
->>>> the process when the chrdev is opened. Then the process can access the
->>>> hardware resource by interact with the queue file. By mmap the queue
->>>> file space to user space, the process can directly put requests to the
->>>> hardware without syscall to the kernel space.
->>>>
->>>> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
->>>> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
->>>> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>> Hi,
->>>
->>> Some superficial comments from me.
->> Thanks for the suggestion.
->>>> +/*
->>>> + * While user space releases a queue, all the relatives on the queue
->>>> + * should be released immediately by this putting.
->>> This one needs rewording but I'm not quite sure what
->>> relatives are in this case.
->>>> + */
->>>> +static long uacce_put_queue(struct uacce_queue *q)
->>>> +{
->>>> +	struct uacce_device *uacce = q->uacce;
->>>> +
->>>> +	mutex_lock(&uacce_mutex);
->>>> +
->>>> +	if ((q->state == UACCE_Q_STARTED) && uacce->ops->stop_queue)
->>>> +		uacce->ops->stop_queue(q);
->>>> +
->>>> +	if ((q->state == UACCE_Q_INIT || q->state == UACCE_Q_STARTED) &&
->>>> +	     uacce->ops->put_queue)
->>>> +		uacce->ops->put_queue(q);
->>>> +
->>>> +	q->state = UACCE_Q_ZOMBIE;
->>>> +	mutex_unlock(&uacce_mutex);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>> ..
->>>
->>>> +
->>>> +static ssize_t qfrs_size_show(struct device *dev,
->>>> +				struct device_attribute *attr, char *buf)
->>>> +{
->>>> +	struct uacce_device *uacce = to_uacce_device(dev);
->>>> +	unsigned long size;
->>>> +	int i, ret;
->>>> +
->>>> +	for (i = 0, ret = 0; i < UACCE_QFRT_MAX; i++) {
->>>> +		size = uacce->qf_pg_size[i] << PAGE_SHIFT;
->>>> +		if (i == UACCE_QFRT_SS)
->>>> +			break;
->>>> +		ret += sprintf(buf + ret, "%lu\t", size);
->>>> +	}
->>>> +	ret += sprintf(buf + ret, "%lu\n", size);
->>>> +
->>>> +	return ret;
->>>> +}
->>> This may break the sysfs rule of one thing per file.  If you have
->>> multiple regions, they should probably each have their own file
->>> to give their size.
->> Is the rule must be applied?
-> Yes, it always must be followed.  Please fix.
->
-OK, understand. Have updated in v6.
+I know for other subsystems but by having a vague look at the existing bindings
+I thought media subsystem is still using .txt. But I now see few yaml bindings
+in linux-next and will switch over this.
 
-Thanks for the patience.
+Btw, is it mandatory now to use YAML bindings for all subsystems? I don't
+see any issue (instead I prefer) but I remember that you defer to the preference
+of the subsystem maintainers before!
 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.txt b/Documentation/devicetree/bindings/media/i2c/imx296.txt
+> > new file mode 100644
+> > index 000000000000..25d3b15162c1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.txt
+> > @@ -0,0 +1,55 @@
+> > +* Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> > +
+> > +The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> > +sensor with square pixel array and 1.58 M effective pixels. This chip features
+> > +a global shutter with variable charge-integration time. It is programmable
+> > +through I2C and 4-wire interfaces. The sensor output is available via CSI-2
+> > +serial data output (1 Lane).
+> > +
+> > +Required Properties:
+> > +- compatible: Should be "sony,imx296"
+> > +- reg: I2C bus address of the device
+> > +- clocks: Reference to the mclk clock.
+> > +- clock-names: Should be "mclk".
+> > +- clock-frequency: Frequency of the mclk clock in Hz.
+> > +- vddo-supply: Interface power supply.
+> > +- vdda-supply: Analog power supply.
+> > +- vddd-supply: Digital power supply.
+> > +
+> > +Optional Properties:
+> > +- reset-gpios: Sensor reset GPIO
+> > +
+> > +The imx296 device node should contain one 'port' child node with
+> > +an 'endpoint' subnode. For further reading on port node refer to
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +Required Properties on endpoint:
+> > +- data-lanes: check ../video-interfaces.txt
+> 
+> This should only be required when not using all the lanes on the device.
+> 
+
+This is a bit weird! How will someone know how many lanes the device is using
+by looking at the binding? He can anyway refer the datasheet but still...
+
+> > +- remote-endpoint: check ../video-interfaces.txt
+> 
+> Don't really need to document this.
+> 
+
+okay.
+
+Thanks,
+Mani
+
+> > +
+> > +Example:
+> > +	&i2c1 {
+> > +		...
+> > +		imx296: camera-sensor@1a {
+> > +			compatible = "sony,imx296";
+> > +			reg = <0x1a>;
+> > +
+> > +			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&camera_rear_default>;
+> > +
+> > +			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> > +			clock-names = "mclk";
+> > +			clock-frequency = <37125000>;
+> > +
+> > +			vddo-supply = <&camera_vddo_1v8>;
+> > +			vdda-supply = <&camera_vdda_3v3>;
+> > +			vddd-supply = <&camera_vddd_1v2>;
+> > +
+> > +			port {
+> > +				imx296_ep: endpoint {
+> > +					data-lanes = <1>;
+> > +					remote-endpoint = <&csiphy0_ep>;
+> > +				};
+> > +			};
+> > +		};
+> > -- 
+> > 2.17.1
+> > 
