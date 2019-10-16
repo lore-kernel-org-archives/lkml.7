@@ -2,156 +2,172 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F12BFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCCCECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A554207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFD6207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5ZVArQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405610AbfJPXDZ (ORCPT
+        id S2405776AbfJPXFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 19:03:25 -0400
-Received: from muru.com ([72.249.23.125]:37728 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732249AbfJPXDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:03:24 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 1FDFF8107;
-        Wed, 16 Oct 2019 23:03:56 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 16:03:18 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Adam Ford <aford173@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        maemo-leste@lists.dyne.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@pyra-handheld.com, Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [Letux-kernel] Lay common foundation to make PVR/SGX work
- without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-Message-ID: <20191016230318.GK5610@atomide.com>
-References: <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
- <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
- <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
- <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
- <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
- <72851E17-9B56-4CA5-B164-667836A7C894@goldelico.com>
- <1A69DA38-DD6D-4C2B-9F42-D293796AC98A@goldelico.com>
+        Wed, 16 Oct 2019 19:05:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46517 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731616AbfJPXFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 19:05:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so309701pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dvr2k2cesqfqWN6XGDafc/ENwBi4+yjAQQmmpnGGw1M=;
+        b=j5ZVArQNVMKzmkp+DRled9bM3rrZ/59tqf72vSdYRblhYDT7OdWKSLu8b4ZhXvnmWY
+         RBe0YRjhf+228rDoYlf1FOs4ipUl2vCn9ce/y0H5bt1n78fFi7EPW7r9mFDM9Ik5sCXP
+         KFOR6Nb0NkY46WU7xEUn9swCntPjQuLCqe77V1vMCY9uB7LPhRf7+KIZMiZy4wC43aKK
+         nmHGIn9otzLVJrfckmeEO6poTKol439elLaDIeGXgzoFcueonkBUVSY1XF1q1BpFvPDG
+         u1REr8fQmr++x737PzzimqhhHDd17CdN2S7h/RHfj/hDR5iMB+msu5M68JbMPAfEV35u
+         OukA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dvr2k2cesqfqWN6XGDafc/ENwBi4+yjAQQmmpnGGw1M=;
+        b=guejIYVhshw5tmOkRwgTyAQ+HcqNqiKOtxl5b0ySY97G9Z7O+6NvWMVyqoyFVbFPYz
+         ZM8cJvefqJ0mWZWtnUHto/5cMEgIAtDbzKCQ65H4TutL+RzW31KMIJMNmBmnYZcBobHw
+         00h6Opo285eGXu2zTLGVJMd+MI7AL2vHRtyUipQiPW7WwQmX3vvhh8/DX7M16cu10IJx
+         2b2kQG2aDSjNdWgaxrTBw8I3YbnfWzIl4/HjRH0op0PAEo/9DGbyLvpJTf74HFVb49wm
+         d2sTJD14WJUgm44h7IgpkYxRFdJpnlIIvK62Ut8mIqJnDVsjMGAH8BRBCHOmjM9Ay1NV
+         g8Dw==
+X-Gm-Message-State: APjAAAX91dg6FQq1SJsfawG4yVG9uztbyOSmViOXFsKb/L9MgPR5fYzD
+        jnR3dkp6qIgyPu+ByWoUNP+25Hp4W67xG+squNDqNA==
+X-Google-Smtp-Source: APXvYqwCWg6vuWk/c7vo6aVbHSfyIrRLJzTxaFNbwVhkRwUofko28zx66hVQm8lxJNsn7OZeLh6uNs1z75f9BLHI7/Y=
+X-Received: by 2002:a63:5448:: with SMTP id e8mr679797pgm.10.1571267138767;
+ Wed, 16 Oct 2019 16:05:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1A69DA38-DD6D-4C2B-9F42-D293796AC98A@goldelico.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
+ <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com> <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
+ <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
+ <20191015202636.GA1671072@rani> <CAKwvOd=yGXMwdoxKCD2gcEgevozf41jVmqCkW7CU=Xvd7mqtjw@mail.gmail.com>
+ <20191016185500.GA2674383@rani>
+In-Reply-To: <20191016185500.GA2674383@rani>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 16 Oct 2019 16:05:27 -0700
+Message-ID: <CAKwvOdkXDyqMA-mOz_PE9x0V0ePtA9uFcJS+1ibpBqde6MXX4g@mail.gmail.com>
+Subject: Re: AMDGPU and 16B stack alignment
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
+        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191014 09:12]:
-> 
-> > Am 12.10.2019 um 15:09 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> > 
-> > Hi,
-> > 
-> >> Am 05.10.2019 um 18:58 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> > 
-> > I have found the following description, followed all steps, and it works:
-> > 
-> > http://blog.0xpebbles.org/PowerVR-SGX-on-the-beaglebone-black-in-2019
-> > 
-> > So with this, I have got a working user-space setup for BeagleBone and some working
-> > pvrsrvkm.ko module (kernel 4.4.155-ti-r155) for evaluation.
-> 
-> > What I don't have yet is the full source code or build recipe for the specific
-> > 4.4.155-ti-r155 pvrsrvkm.ko from TI.
-> > 
-> > But even without having this yet, I can start experiments by replacing
-> > kernel and pvrsrvkm.ko with mine. This should allow to gain new insights.
-> 
-> Good news:
-> 
-> after making a Hybrid SD image of the setup described above and replacing the
-> 4.4.155-ti-r155 kernel with its pvrsrvkm.ko by my own 5.4-rc2 kernel and pvrsrvkm,
-> I was able to start the pvrsrv uKernel. And run the gles1test1 on beaglebone
-> (without LCD but also without errors).
-> 
-> With this knowledge I could adapt my user-space. There are indeed different
-> non-free binaries for sgx530, sgx540, sgx544. And SGX needs enough coherent memory.
-> So I could make a completely self-built kernel and rootfs (using the git clone from
-> ti for the firmware + make install) run on BeagleBone.
-> 
-> Here is a quickly taken video:
-> 
-> https://youtu.be/jFCPR_EvtjY
+On Wed, Oct 16, 2019 at 11:55 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Tue, Oct 15, 2019 at 06:51:26PM -0700, Nick Desaulniers wrote:
+> > On Tue, Oct 15, 2019 at 1:26 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > >
+> > > On Tue, Oct 15, 2019 at 11:05:56AM -0700, Nick Desaulniers wrote:
+> > > > Hmmm...I would have liked to remove it outright, as it is an ABI
+> > > > mismatch that is likely to result in instability and non-fun-to-debug
+> > > > runtime issues in the future.  I suspect my patch does work for GCC
+> > > > 7.1+.  The question is: Do we want to either:
+> > > > 1. mark AMDGPU broken for GCC < 7.1, or
+> > > > 2. continue supporting it via stack alignment mismatch?
+> > > >
+> > > > 2 is brittle, and may break at any point in the future, but if it's
+> > > > working for someone it does make me feel bad to outright disable it.
+> > > > What I'd image 2 looks like is (psuedo code in a Makefile):
+> > > >
+> > > > if CC_IS_GCC && GCC_VERSION < 7.1:
+> > > >   set stack alignment to 16B and hope for the best
+> > > >
+> > > > So my diff would be amended to keep the stack alignment flags, but
+> > > > only to support GCC < 7.1.  And that assumes my change compiles with
+> > > > GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
+> > > > feel even more confident if someone with hardware to test on and GCC
+> > > > 7.1+ could boot test).
+> > > > --
+> > > > Thanks,
+> > > > ~Nick Desaulniers
+> > >
+> > > If we do keep it, would adding -mstackrealign make it more robust?
+> > > That's simple and will only add the alignment to functions that require
+> > > 16-byte alignment (at least on gcc).
+> >
+> > I think there's also `-mincoming-stack-boundary=`.
+> > https://github.com/ClangBuiltLinux/linux/issues/735#issuecomment-540038017
+>
+> Yes, but -mstackrealign looks like it's supported by clang as well.
 
-Nice :)
+Good to know, but I want less duct tape, not more.
 
-> With the same setup, I can now also load the kernel driver and run pvrsrvctl on
-> DM3730 without errors, but the gles1test1 reports some error and fails to run.
-> Maybe something in the video subsystem or memory mapping is still wrong.
-> 
-> Unfortunately, the same setup does not run on omap5. It looks like there are different
-> releases for the non-free binaries and I have to pick the right one.
-> 
-> On BBB the version I could make running is branch ti-img-sgx/1.14.3699939_k4.4 from
-> git://git.ti.com/graphics/omap5-sgx-ddk-um-linux.git. Target ti335x works while
-> target jacinto6evm fails for OMAP5. A diff on the binaries for e.g. pvrsrvctl shows
-> that they are different.
-> 
-> If you want to repeat this setup and my instructions are too imprecise, please
-> ask.
-> 
-> So in summary this means:
-> * the common foundation (clock, reset, power etc.) setup is working - thanks to Tero, Tony and others
-> * I have added device tree nodes for each SoC type to define sgx registers, interrupts, compatible etc.
-> * compiling SoC specific kernel module variants from single source tree works
-> * the work can already be demoed on BBB and OMAP5 Pyra (using different user-space binaries)
-> 
-> Basically I am now ready to post an RFC for the sgx child device nodes together
-> with a bindings document [1]. But I am not sure if I should better wait until
-> really all underlaying prm+rtsctl+syscon+idlest-polling patches by Tero and Tony [2]
-> have matured in linux-next and have arrived in v5.5-rc1. Would be short before Xmas.
+> >
+> > >
+> > > Alternative is to use
+> > > __attribute__((force_align_arg_pointer)) on functions that might be
+> > > called from 8-byte-aligned code.
+> >
+> > Which is hard to automate and easy to forget.  Likely a large diff to fix today.
+>
+> Right, this is a no-go, esp to just fix old compilers.
+> >
+> > >
+> > > It looks like -mstackrealign should work from gcc 5.3 onwards.
+> >
+> > The kernel would generally like to support GCC 4.9+.
+> >
+> > There's plenty of different ways to keep layering on duct tape and
+> > bailing wire to support differing ABIs, but that's just adding
+> > technical debt that will have to be repaid one day.  That's why the
+> > cleanest solution IMO is mark the driver broken for old toolchains,
+> > and use a code-base-consistent stack alignment.  Bending over
+> > backwards to support old toolchains means accepting stack alignment
+> > mismatches, which is in the "unspecified behavior" ring of the
+> > "undefined behavior" Venn diagram.  I have the same opinion on relying
+> > on explicitly undefined behavior.
+> >
+> > I'll send patches for fixing up Clang, but please consider my strong
+> > advice to generally avoid stack alignment mismatches, regardless of
+> > compiler.
+> > --
+> > Thanks,
+> > ~Nick Desaulniers
+>
+> What I suggested was in reference to your proposal for dropping the
+> -mpreferred-stack-boundary=4 for modern compilers, but keeping it for
+> <7.1. -mstackrealign would at least let 5.3 onwards be less likely to
+> break (and it doesn't error before then, I think it just doesn't
+> actually do anything, so no worse than now at least).
+>
+> Simply dropping support for <7.1 would be cleanest, yes, but it sounds
+> like people don't want to go that far.
 
-I think you've already proven that we can have a generic binding for the
-sgx using standard properties :) So AFAIK, there's nothing stopping you
-from posting the binding and dts changes for review for v5.5.
+That's fair.  I've included your suggestions in the commit message of
+02/03 of a series I just sent but forgot to in reply to this thread:
+https://lkml.org/lkml/2019/10/16/1700
 
-> Independent of low level patches, we all have to discuss how we want to get the GPLed
-> kernel driver [3] into mainline drivers/staging. This likely needs more cleanup before
-> it can be proposed.
-
-You probably need a shell script using sed or something to get rid of the
-crazy directory path for the kernel driver :) Just make it something like:
-
-drivers/staging/pvr
-
-Then if you have a script doing the directory path conversion, you can
-still convert and diff against any other prv branches you may find.
-
-And you can get rid of all the LINUX_VERSION_CODE stuff too for the
-mainline kernel.
-
-Regards,
-
-Tony
-
-
-> [1]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap-pvr-soc-glue-v5
-> [2]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap-sysc-prm-gfx
-> [3]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/latest-pvr
-> 
+Also, I do appreciate the suggestions and understand the value of brainstorming.
+-- 
+Thanks,
+~Nick Desaulniers
