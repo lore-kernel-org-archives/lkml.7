@@ -2,96 +2,105 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67208FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EC3FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4083B2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="UkDzwlkB"
+	by mail.kernel.org (Postfix) with ESMTP id A91562067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406575AbfJPRK3 (ORCPT
+        id S2406587AbfJPRKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:10:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42578 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406453AbfJPRK2 (ORCPT
+        Wed, 16 Oct 2019 13:10:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12058 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406453AbfJPRKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:10:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f14so9541404pgi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=0cNywFNADhUI1kRZtOJYpH0zXDmwDMxvQ8ELH46NO6Q=;
-        b=UkDzwlkBo8OxWsWkSSsM66G5Tk3Xp4HPoJ0xHC3/biSsKCEmqEmYg79o6SAGQn5jzx
-         CaG+uZzeEI5fkMpGY+A97dgs2n4KkNfXVbia3hkFrbv2fB74wdMJevcIQDqRgY8nqbTo
-         62QB/n/vspsIOi9R5YHoK5hn1LtOoXoEiOr19iGFUXip1kNS+v9gh9BsMRic9lDOt8Ik
-         ZRHgD6wnA2g2TV0XWgiQfJS2+R25imNWGL2PhGtBd3OXwPvGMNvq8KT9UJhLD/d0K0Ge
-         F6GdEUtB819mcEcYFknS9xnVXzPqmKPBoO2YUCKgPLgxqgP9b8Fr0A9eZyiv5N+hPcKb
-         2qyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=0cNywFNADhUI1kRZtOJYpH0zXDmwDMxvQ8ELH46NO6Q=;
-        b=bZpENTzryq7zSEsg9W/MshqrQPoR7312dgj/YjP70K+2JkgunFXpa25GjH3Cw9fXQc
-         QkB3n3zttF6U0Sy72VTsCAFlWJklzII5lgdXMNvsX18YWeC7tQuj72Wuwu8YFc2pTTyy
-         IYGJeEZprTkY1dS18TWzKyuiI2L7KOzo8ZDAUP2/hvNZEl4ePzBhaORKDDSBPxVTTmrE
-         bjSsJF0QCT2LvRh6TzpbtW3lUIofrY7EZAjlrN9QuaTOiYN9DGCBrhHDcrykuJy+N1fT
-         lXWf0oN6MjJ5t5aZufir1j/+B26AUJgHdlL1Q1verg7nOXpk/wdwFY0R+PsdcTTBo3rP
-         ZRng==
-X-Gm-Message-State: APjAAAXYLngR49ys3l6vPF7h9URfoPYSRxDckFVBwoHITAMn9+Av1dQX
-        VNMI2ER6VBuFPteJO2SKiqnuhQ==
-X-Google-Smtp-Source: APXvYqwXqs75kRjkMDu/5UYr5Jh0qOBN1tP7nsttBOkJTt8DNE6wMwnjzWsX/ZtdJnAHzijyeYq9ng==
-X-Received: by 2002:a63:9d49:: with SMTP id i70mr28109095pgd.120.1571245827703;
-        Wed, 16 Oct 2019 10:10:27 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id w6sm30670953pfj.17.2019.10.16.10.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 10:10:27 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 10:10:23 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Huazhong Tan <tanhuazhong@huawei.com>
-Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>
-Subject: Re: [PATCH net-next 08/12] net: hns3: introduce ring_to_netdev() in
- enet module
-Message-ID: <20191016101023.21915feb@cakuba.netronome.com>
-In-Reply-To: <1571210231-29154-9-git-send-email-tanhuazhong@huawei.com>
-References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
-        <1571210231-29154-9-git-send-email-tanhuazhong@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 16 Oct 2019 13:10:37 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9GH88bo034243
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:10:35 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vp5uxkj1w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:10:35 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Wed, 16 Oct 2019 18:10:33 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 16 Oct 2019 18:10:29 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9GHAS2N39453030
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 17:10:29 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC9D6AE045;
+        Wed, 16 Oct 2019 17:10:28 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8FA2AE053;
+        Wed, 16 Oct 2019 17:10:26 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.32.238])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 16 Oct 2019 17:10:26 +0000 (GMT)
+Subject: Re: [PATCH v3 2/3] selftests/livepatch: Make dynamic debug setup and
+ restore generic
+To:     Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
+        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
+        pmladek@suse.com, joe.lawrence@redhat.com
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+References: <20191016113316.13415-1-mbenes@suse.cz>
+ <20191016113316.13415-3-mbenes@suse.cz>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Wed, 16 Oct 2019 22:40:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191016113316.13415-3-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101617-0016-0000-0000-000002B8A3F2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101617-0017-0000-0000-00003319C83C
+Message-Id: <f50cf434-6dd2-51eb-a688-0da79d7ab8bc@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 15:17:07 +0800, Huazhong Tan wrote:
-> From: Yunsheng Lin <linyunsheng@huawei.com>
+On 10/16/19 5:03 PM, Miroslav Benes wrote:
+> From: Joe Lawrence <joe.lawrence@redhat.com>
 > 
-> There are a few places that need to access the netdev of a ring
-> through ring->tqp->handle->kinfo.netdev, and ring->tqp is a struct
-> which both in enet and hclge modules, it is better to use the
-> struct that is only used in enet module.
+> Livepatch selftests currently save the current dynamic debug config and
+> tweak it for the selftests. The config is restored at the end. Make the
+> infrastructure generic, so that more variables can be saved and
+> restored.
 > 
-> This patch adds the ring_to_netdev() to access the netdev of ring
-> through ring->tqp_vector->napi.dev.
-> 
-> Also, struct hns3_enet_ring is a frequently used in critical data
-> path, so make it cacheline aligned as struct hns3_enet_tqp_vector.
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> ---
+>  .../testing/selftests/livepatch/functions.sh  | 22 +++++++++++--------
+>  .../selftests/livepatch/test-callbacks.sh     |  2 +-
+>  .../selftests/livepatch/test-livepatch.sh     |  2 +-
+>  .../selftests/livepatch/test-shadow-vars.sh   |  2 +-
 
-That part seems logically separate, should it be a separate patch?
+A minor nit pick, should the README also updated with the setup_config()?
 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+-- 
+Kamalesh
+
