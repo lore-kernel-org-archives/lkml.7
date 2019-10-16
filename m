@@ -7,57 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F683FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C51FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299DD21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D48821A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jRww9Y28"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tLNpmVuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436535AbfJPSTt (ORCPT
+        id S2436549AbfJPSTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:19:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58002 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732498AbfJPSTs (ORCPT
+        Wed, 16 Oct 2019 14:19:53 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42936 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732498AbfJPSTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:19:48 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJlXk027872;
-        Wed, 16 Oct 2019 13:19:47 -0500
+        Wed, 16 Oct 2019 14:19:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJoql075068;
+        Wed, 16 Oct 2019 13:19:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571249987;
-        bh=T0Wqvw9FARKK+UyjfGusaRKLYAOtIzt53we2Zr6ccdc=;
-        h=From:To:CC:Subject:Date;
-        b=jRww9Y28vewKob/xtxXss/lyvbrfvaKdRoz6dJMkj0UXWmfamYo+Ja7tUnefLKAhZ
-         rx0K+82FX+cg5D8cHERF+RAt6c13vnPV4pHcqqcK2aCk8Qber1gYNHxJQVDPMffSss
-         WVOpUcmWc4ODt0V5yglsDOzloR5J4D9DgJ5rvvf8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJlo2015378;
-        Wed, 16 Oct 2019 13:19:47 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1571249990;
+        bh=J5i69E6YdMXzp6QNcU6tx2+jf+ojcsLxiEzeQv7dvLg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=tLNpmVuEdUWaMO+2/VaqJ/imqFxTJobm3fU5ms2OaE2isLFSqcYDPlF7NWEk+6/Ok
+         FlAlVzaeE8PiNDoUwi5ZDBa8tjGiYsHz5KvY3QpYROaYuWi3g+88ZCUcLx9papIoFm
+         bTSPM46MMc2S5d1SOilQ0DlLDLKRYPox5uya7/WI=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GIJoCC033646
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 13:19:50 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 13:19:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 13:19:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 13:19:40 -0500
+ Frontend Transport; Wed, 16 Oct 2019 13:19:43 -0500
 Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJkuB074565;
-        Wed, 16 Oct 2019 13:19:46 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJnks096141;
+        Wed, 16 Oct 2019 13:19:49 -0500
 Received: from localhost ([10.250.79.55])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GIJjZ07804;
-        Wed, 16 Oct 2019 13:19:45 -0500 (CDT)
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GIJmZ07854;
+        Wed, 16 Oct 2019 13:19:48 -0500 (CDT)
 From:   "Andrew F. Davis" <afd@ti.com>
 To:     Jiri Kosina <trivial@kernel.org>
 CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH 04/10] atl1c: remove unneeded conversions to bool
-Date:   Wed, 16 Oct 2019 14:19:38 -0400
-Message-ID: <20191016181944.25106-1-afd@ti.com>
+Subject: [PATCH 05/10] mlxsw: Remove unneeded conversions to bool
+Date:   Wed, 16 Oct 2019 14:19:39 -0400
+Message-ID: <20191016181944.25106-2-afd@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191016181944.25106-1-afd@ti.com>
+References: <20191016181944.25106-1-afd@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -70,21 +73,21 @@ Found with scripts/coccinelle/misc/boolconv.cocci.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- drivers/net/ethernet/atheros/atl1c/atl1c_main.c | 2 +-
+ drivers/net/ethernet/mellanox/mlxsw/switchx2.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-index 2b239ecea05f..d6385899762c 100644
---- a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-+++ b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-@@ -1189,7 +1189,7 @@ static void atl1c_start_mac(struct atl1c_adapter *adapter)
- 	struct atl1c_hw *hw = &adapter->hw;
- 	u32 mac, txq, rxq;
- 
--	hw->mac_duplex = adapter->link_duplex == FULL_DUPLEX ? true : false;
-+	hw->mac_duplex = adapter->link_duplex == FULL_DUPLEX;
- 	hw->mac_speed = adapter->link_speed == SPEED_1000 ?
- 		atl1c_mac_speed_1000 : atl1c_mac_speed_10_100;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+index 1c14c051ee52..1de6a9c6cd00 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+@@ -180,7 +180,7 @@ static int mlxsw_sx_port_oper_status_get(struct mlxsw_sx_port *mlxsw_sx_port,
+ 	if (err)
+ 		return err;
+ 	oper_status = mlxsw_reg_paos_oper_status_get(paos_pl);
+-	*p_is_up = oper_status == MLXSW_PORT_ADMIN_STATUS_UP ? true : false;
++	*p_is_up = oper_status == MLXSW_PORT_ADMIN_STATUS_UP;
+ 	return 0;
+ }
  
 -- 
 2.17.1
