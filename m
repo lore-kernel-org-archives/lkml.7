@@ -2,117 +2,103 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D81FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF19FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4A121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54FD21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqycmVl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394184AbfJPR6r (ORCPT
+        id S2394194AbfJPR6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:58:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:46972 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfJPR6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:58:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8612F28;
-        Wed, 16 Oct 2019 10:58:46 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A1D43F6C4;
-        Wed, 16 Oct 2019 10:58:44 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 18:58:42 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        Will Deacon <will.deacon@arm.com>, Torsten Duwe <duwe@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
-Message-ID: <20191016175841.GF46264@lakrids.cambridge.arm.com>
-References: <20190208150826.44EBC68DD2@newverein.lst.de>
- <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
- <20190311114945.GA5625@lst.de>
- <20190408153628.GL6139@lakrids.cambridge.arm.com>
- <20190409175238.GE9255@fuggles.cambridge.arm.com>
- <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
- <20190724161500.GG2624@lakrids.cambridge.arm.com>
- <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
+        Wed, 16 Oct 2019 13:58:54 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33344 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfJPR6x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:58:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so15216071pfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=O4neeP46Aj8j5ls4dZXm/jjSg5a94zuoaIAF6BtKDgY=;
+        b=ZqycmVl+8d17eNUxTMRF7q7RJFdCpbcpcUAnhv2sxBWLCaEgaB8q4zpvkO4RzF1AF6
+         S/wPPTIMV+lDmKnP+3FP2sLbPT1R825/ZPk7ObeH62eaN4rH7dR+12KD8fz7BHBtvvfb
+         54S2A3LZnKOrjqzNwQCnRUZVhBahTgWPzqv392Eap26NqbgIeGOHXDLAKrENclxw1xch
+         4isdhXkAVukgL7ulhVq9+iIZfRotAirHfxDgetpUcZ0oTMMxwrDwGinZSFktvh2meqZH
+         xTXLuhdTa+OgiialtOXaGvrFgj8wQ7h+FOAP1lPkFlWWf8hNEE09X6w1U7fhvZgMn18D
+         HoeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=O4neeP46Aj8j5ls4dZXm/jjSg5a94zuoaIAF6BtKDgY=;
+        b=T+fs+JK+V6CcL4geypgieicUZYYtw1/fFxRbieSwpGdXRXAmfszDL8OlqOGFeUDN6k
+         YHDyUVCo4vFoMz2qJl7tyWIOrUTtLk5ie+L8LcPrHEsg5MTU9iFPw6yK8YvY5mXnXr8k
+         Ar2LL71K+p2Ni69QMYGItVux90D5TL4h73tjmqqlXwr2wJLHmDyvj1CeIiWaiHeVVu2t
+         G1XVDvlBHluamjxpl785RbAa03wt4riy/45uC7++DNQ2JfPn5OsnoGhIWD4McuJTZoKD
+         1ESpVavbmB4Qyw4tliMq4ywhsXYq4vqbCy1kzNqYfYre5BztsCj2VT8sjwXD/4Qa3J2z
+         2Sqg==
+X-Gm-Message-State: APjAAAUoGKV6ZP1Y4TwQZLYI5PNDCLkw35fnegt2EeXmauiIsB2aEoQ1
+        omzTQBKHE8qJg4fZiWSHIk4=
+X-Google-Smtp-Source: APXvYqy4/EL5IUYq4Ot0vpCK8X+Jb259afT8E1SFeYsIGBOEwUcSeFS27lREJ8hSRCuQbAelmCvuZQ==
+X-Received: by 2002:a17:90a:8002:: with SMTP id b2mr241267pjn.39.1571248731173;
+        Wed, 16 Oct 2019 10:58:51 -0700 (PDT)
+Received: from iclxps (155-97-232-235.usahousing.utah.edu. [155.97.232.235])
+        by smtp.gmail.com with ESMTPSA id d5sm39592753pfa.180.2019.10.16.10.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 10:58:50 -0700 (PDT)
+Message-ID: <38f39e9e77cb4bc809a15da45d988f33cb0f7f00.camel@gmail.com>
+Subject: Re: [PATCH v4 1/2] lib: devres: add a helper function for ioremap_uc
+From:   Tuowen Zhao <ztuowen@gmail.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Wed, 16 Oct 2019 11:58:48 -0600
+In-Reply-To: <20191016125615.GI16384@42.do-not-panic.com>
+References: <20191014153344.8996-1-ztuowen@gmail.com>
+         <201910150232.F7RTW83B%lkp@intel.com>
+         <c4bcdf14e0a60a679429eebd439b2380d97dafe9.camel@gmail.com>
+         <20191015074434.GU32742@smile.fi.intel.com>
+         <20191016125615.GI16384@42.do-not-panic.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 01:42:59PM +0200, Jiri Kosina wrote:
-> On Wed, 24 Jul 2019, Mark Rutland wrote:
+On Wed, 2019-10-16 at 12:56 +0000, Luis Chamberlain wrote:
+> Indeed, can you add that? If you are not comfortable the way to leave
+> behind lazy architectures is the HAS_FOO feature and then have your
+> driver require that or depend on the archs that support this. This
+> allows non-lazy architecturess to move forward with life.
 > 
-> > > > > > So what's the status now? Besides debatable minor style
-> > > > > > issues there were no more objections to v8. Would this
-> > > > > > go through the ARM repo or via the ftrace repo?
-> > > > >
-> > > > > Sorry agains for the delay on this. I'm now back in the office and in
-> > > > > front of a computer daily, so I can spend a bit more time on this.
-> > > > >
-> > > > > Regardless of anything else, I think that we should queue the first
-> > > > > three patches now. I've poked the relevant maintainers for their acks so
-> > > > > that those can be taken via the arm64 tree.
-> > > > >
-> > > > > I'm happy to do the trivial cleanups on the last couple of patches (e.g.
-> > > > > s/lr/x30), and I'm actively looking at the API rework I requested.
-> > > >
-> > > > Ok, I've picked up patches 1-3 and I'll wait for you to spin updates to the
-> > > > last two.
-> > > 
-> > > Ok, I see that patches 1-3 are picked up and are already present in recent
-> > > kernels.
-> > > 
-> > > Is there any progress on remaining two patches?
-> > 
-> > I'm afraid that I've been distracted on other fronts, so I haven't made
-> > progress there.
-> > 
-> > > Any help required?
-> > 
-> > If you'd be happy to look at the cleanup I previously suggested for the
-> > core, that would be great. When I last looked, it was simple to rework
-> > things so that arch code doesn't have to define MCOUNT_ADDR, but I
-> > hadn't figured out exactly how to split the core mcount assumptions from
-> > the important state machine bits.
-> > 
-> > I'll take another look and see if I can provide more detail. :)
-> 
-> Hi Mark,
+>   Luis
 
-Hi Jiri,
+Upon close examination, the issue seems easy to fix. Going to submit a
+new set shortly.
 
-> has any progress been made on any front? Feels like this got stuck a bit.
+sparc64 and hexagon don't have ioremap_uc defined. Hexagon also doesn't
+have ioremap_wc but didn't report an issue before so devm_ioremap won't
+have an problem.
 
-Sorry about this; I've been a bit distracted.
+Interestingly tho, majority of the archs include <asm-generic/io.h>,
+thus having prototypes. These two archs and a few others don't. I'm
+wondering if including the prototypes is actually the recommended
+practice.
 
-I've just done the core (non-arm64) bits today, and pushed that out:
+Tuowen
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/ftrace-with-regs
-
-... I'll fold the remainging bits of patches 4 and 5 together tomorrow
-atop of that.
-
-Thanks,
-Mark.
