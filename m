@@ -2,171 +2,116 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE346FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774D6FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997AF21D71
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:12:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cXsdf3W0";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="i5hA4CSe"
+	by mail.kernel.org (Postfix) with ESMTP id 59D1421D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406118AbfJPQMd (ORCPT
+        id S2405846AbfJPQOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:12:33 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:20562 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405716AbfJPQMc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:12:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1571242352; x=1602778352;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=LEr1iTG81jUIiKe4A9+2N5c1Jb/z1mZqs/TTurE2cyg=;
-  b=cXsdf3W0LPPksTLthOrS+S2fzqkzB/KOQHm9NP/a9xkjvkEi9Ge6COOH
-   qWSC20WXbk7wEExy15AxGrR5p/kgaue09AtCmzgBs8WU4uGd7NuCEfIZS
-   yuRByt2nR6bmBW8ogS1e8BGPuuI6up6KfhE4vr7eeKaWC+84K1kTxTQfJ
-   rFdt4qIjv5q6bV+/qoR07roCBj1W/OWnQyYxKYCde62j6EPmTkNvsocl+
-   7kk2MRAzlHGlHI4xuBHpPU24kvnOe3qgrSPw+YZxHn5qL124ZHCM49Pp0
-   WQ7f4OPYtBg7ECCWfbnLNIFIC7MNwB88jAH/3JdXDJXGChN8syi+NL5xw
-   g==;
-IronPort-SDR: eareGs2/DZrJEGGw29DA4ey7a0OngU8cJjtUuBvqJq7xMF20GtJJNrDQtj8c0gQTOFXIvN9cya
- wbzY9Sl+cmKRaWo2rGTtfey6wd9IYxOzslUtllZbziWiMceLnCpdwXUr44TikGpADz1eZFdUso
- hAO21UF1wVf/JF8gLNs2OkNo/gexsLRzBUAJE3s91ncrOz1yO2r3iMGqQR7FSZfSR6mpbRLDAZ
- 5lTBz5Z1CHjQ77RaKqspDqndFrmYAROohNKMGNc1vMpZDogJ/NyehmDUbl02oY1fNBMq1ac5eH
- hyI=
-X-IronPort-AV: E=Sophos;i="5.67,304,1566835200"; 
-   d="scan'208";a="120681260"
-Received: from mail-by2nam01lp2054.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.54])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Oct 2019 00:12:30 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZMVj2x1MjDbGqfcty7ggZDXeahua4mZujt87CZPl+LmuDVG+7g1VwgCGU4MFWOV9+HdiLqaLQ2kfILtOqpY4Nq7N5Q0xKjlsGHhWdpafd28jeSHVOxPX2SiHRR2+UQi2R+R86nASZh/cinFJj1dx2VsK/ojVybkUROdGKCeBiFM4iYEDRpIvL6kwndk9QZsU42JxvZmVXCtr7qBywZn2w0HycEfZEY1qEjrsDEf8hGYNDQMXna5duENl56UVdTgVyT3QRUI+E65zCY7y+iVHtXhgUBproUjQ0c9FzasFn7PWGqIwwPaotzWinRlyCGz9q5smkp1q22nrpjC+0XPIng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RCXRELHZWT9dsTWPHt0dSCJC5e4c86eGIvx5+ueMqsU=;
- b=g5IkiQ/LyFKSa5U32QoU727kQZOsRX+Hc3GgvEWzJnIpM4sLq5X74lVH/xpQ/9aGYDoDoQkgTE+qhV+3m7t/z4LYFpyyKXDR6K6nMpTls8OMcPl5H8ytQbhIh2fvIjDNhnrgxhf9b+inTi5E6Poc16GpXXdd46hMX6uKHdiUkl9rK7MsYUPvQ3D4ICWtj6z1w0qDEKCVz9pyMACqHfLu4FbprVrFEX3xDxXCDTJ4I7gaeOmqqO85X4zrcDeNky1VxxOtLayBU/Gymo8NAMdSPzZtaTVu7t31wK8F2HZY3TnoYlgFpqB6obMFhdW57nVyzwI2oHVAvbYGwi4A/og6rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RCXRELHZWT9dsTWPHt0dSCJC5e4c86eGIvx5+ueMqsU=;
- b=i5hA4CSedBsF0uHGVGI/EABhvSD56eisowkaoM4z3VJPq/8vqBOq4c2HjUjPwRaZiWSFKO73U8YyMwj3VCEIrJ3jF63yefTv8DS+p8qtCTKD3Z1RImXNrEaPRadprqQbDuoVHySBBuacpPrHr7XnAm9HozpMVyKERRJaqapUlYI=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6397.namprd04.prod.outlook.com (52.132.170.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.17; Wed, 16 Oct 2019 16:12:29 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::1454:87a:13b0:d3a]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::1454:87a:13b0:d3a%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 16:12:29 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v9 22/22] RISC-V: KVM: Add MAINTAINERS entry
-Thread-Topic: [PATCH v9 22/22] RISC-V: KVM: Add MAINTAINERS entry
-Thread-Index: AQHVhDyC5+d3sl6SWk+4WxaMPYYu7A==
-Date:   Wed, 16 Oct 2019 16:12:29 +0000
-Message-ID: <20191016160649.24622-23-anup.patel@wdc.com>
-References: <20191016160649.24622-1-anup.patel@wdc.com>
-In-Reply-To: <20191016160649.24622-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::16) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.27.162]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bd14f9b3-29a0-48b3-5fd0-08d75253a49a
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: MN2PR04MB6397:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB6397FF8A9257D359596B9D328D920@MN2PR04MB6397.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1303;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(376002)(396003)(346002)(366004)(189003)(199004)(81166006)(102836004)(316002)(44832011)(486006)(55236004)(110136005)(305945005)(7736002)(8676002)(11346002)(2616005)(446003)(54906003)(476003)(86362001)(6512007)(6436002)(386003)(6506007)(81156014)(2906002)(6486002)(1076003)(8936002)(186003)(26005)(50226002)(5660300002)(9456002)(36756003)(4744005)(66946007)(64756008)(66446008)(66476007)(71200400001)(71190400001)(66556008)(52116002)(7416002)(99286004)(256004)(25786009)(76176011)(14454004)(4326008)(478600001)(3846002)(6116002)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6397;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U1ulebGK3UrvlvpSv6mFq+P/HgvQ+xlahvNALEMmBhhshSug1FNRgcz+7grb22Nk/7ODPFzEoQGktIZyfMSVpCl/DO3dajJP71/qLgi56g4wSrEiops9SaAzJYkyfj/LUmiVVKKeUBtNxFT/Dt9x671VbVoJsrPqtO5wQcGgOSkr7yuS2Rpfh4BHXRkzSPWJJJA/KON+duMJyPWJj3/MYRhifjck0Tzgzx+DI5x58NnoU52Q5rs9dYgfGwDzyi9znYR23pTnoVizhO0D5SrI6OAiewEbZqTPfy3cHpZarDA3UusWmPFFOHs3gkvZIyl0+ISdCsP2pFA1G1UT1HCP0ZhjaI0N/9iCB654PJ8J6xVNf7+DDpvd2tLc7LlwRlaOdyEPtD6FJ497eflbyb//tJ4OfAugZVIlbJI7FcKyxSM=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 16 Oct 2019 12:14:21 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11485 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728343AbfJPQOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:14:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 09:14:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
+   d="scan'208";a="200106495"
+Received: from unknown (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 16 Oct 2019 09:14:18 -0700
+Subject: Re: [PATCH 8/8] x86, kcsan: Enable KCSAN for x86
+To:     Marco Elver <elver@google.com>
+Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
+        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
+        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
+        dave.hansen@linux.intel.com, dhowells@redhat.com,
+        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
+        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
+        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
+        npiggin@gmail.com, paulmck@linux.ibm.com, peterz@infradead.org,
+        tglx@linutronix.de, will@kernel.org, kasan-dev@googlegroups.com,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+References: <20191016083959.186860-1-elver@google.com>
+ <20191016083959.186860-9-elver@google.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <ce0d1658-c000-be20-c997-34ca488e4406@intel.com>
+Date:   Wed, 16 Oct 2019 09:14:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd14f9b3-29a0-48b3-5fd0-08d75253a49a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 16:12:29.7895
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TwfH0qXMbglhJYmps49fYzVVq/c8yQcN0Os84+Kd7O6Xh3CmsmuUsFjB/t8ZWMSZwVt4uLe5b4hyx1KflJ+ZkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6397
+In-Reply-To: <20191016083959.186860-9-elver@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as maintainer for KVM RISC-V and Atish as designated reviewer.
+On 10/16/19 1:39 AM, Marco Elver wrote:
+> This patch enables KCSAN for x86, with updates to build rules to not use
+> KCSAN for several incompatible compilation units.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+First of all KCSAN looks really interesting!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a69e6db80c79..b73b9488a7c2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8979,6 +8979,16 @@ F:	arch/powerpc/include/asm/kvm*
- F:	arch/powerpc/kvm/
- F:	arch/powerpc/kernel/kvm*
-=20
-+KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
-+M:	Anup Patel <anup.patel@wdc.com>
-+R:	Atish Patra <atish.patra@wdc.com>
-+L:	kvm@vger.kernel.org
-+T:	git git://github.com/kvm-riscv/linux.git
-+S:	Maintained
-+F:	arch/riscv/include/uapi/asm/kvm*
-+F:	arch/riscv/include/asm/kvm*
-+F:	arch/riscv/kvm/
-+
- KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- M:	Janosch Frank <frankja@linux.ibm.com>
---=20
-2.17.1
-
+For the x86 code, though, I'd really appreciate some specific notes on
+why individual compilation units are incompatible.  There might be some
+that were missed, and we have to figure out what we do for any future
+work.  Knowing the logic used on these would be really helpful in the
+future.
