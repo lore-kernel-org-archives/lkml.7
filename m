@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F64FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D014DECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92191207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47F8207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264040;
-	bh=p2hpVRbC8Jly2F1s4pNUtyiOKFL/9LU3ijU71COuF3g=;
+	s=default; t=1571264043;
+	bh=M6SR5GjYxGUI+9nzIIp3JhPfCJi1hqJh+mra8AS75kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wuOYOsLNKmhFdCcpmjy6sScQ4clU/En5KMoELhrQl87PilO8Xi/fqHheguLAx83PM
-	 MDIHDISnYCyIU/AptfZO3phdFt7V+X079cPdKGWqkCkDKBacF3a0aVEWCoc45c09BH
-	 MEbe3dye9OP1/7ZQ5k3xI5cGzo2OTIfPOrQnby84=
+	b=ib7nagaXkI2xJWeYZOnnapGL+xg/u+ueRnRf7Tjvf+hLzCYSm7CZ9YEtIPVlINaO7
+	 6QyZGcxA3nl22JbXGHmLWcyAdZ1U+E86yHbGRGJOIANiABhfMc3SgbxkPT1zeaH6nO
+	 JVXaE6lrHPz7IRz2ueS9rw/6tCYeGw0VgV1RgZjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395323AbfJPVzn (ORCPT
+        id S2390020AbfJPVzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46510 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395272AbfJPVzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:37 -0400
+        id S2390372AbfJPVzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:35 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73CEA21D7F;
-        Wed, 16 Oct 2019 21:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9516C21D80;
+        Wed, 16 Oct 2019 21:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262936;
-        bh=p2hpVRbC8Jly2F1s4pNUtyiOKFL/9LU3ijU71COuF3g=;
+        s=default; t=1571262934;
+        bh=M6SR5GjYxGUI+9nzIIp3JhPfCJi1hqJh+mra8AS75kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xcZcpMY2N7ZFEBzPv+yvLDa3Qq1dmV15jiiDxj7BE5uE5g9Ifwskn2k0Ix78c9rSz
-         rs46TjFS+UrBw0yKX5VN/AL6KvuGKjS3fbwGQzPlNdj3zcY/kr2kgxXdEB3x7AkiYc
-         Oi/sdB/ofOANaja4sbedOoxOX9YSzD0EpEAG4TYo=
+        b=Tii2GyRwd3z2uLltI0hB8YYCxt/l+xMGPwHxNcajQngEVScQZT6a45rg6f+28ni4y
+         JGS8w6E7BCrc7AuVM8R+1cAzJesN02zYIw6bZho1OTyVh0qfQfYVnX+ckXtEXfrkfS
+         IIfuGeoHVq2pIZLsc51sEA92Gny9NMDLSXcKaWmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 58/92] USB: serial: keyspan: fix NULL-derefs on open() and write()
-Date:   Wed, 16 Oct 2019 14:50:31 -0700
-Message-Id: <20191016214839.504017372@linuxfoundation.org>
+Subject: [PATCH 4.9 56/92] USB: ldusb: fix NULL-derefs on driver unbind
+Date:   Wed, 16 Oct 2019 14:50:29 -0700
+Message-Id: <20191016214838.885312409@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,72 +60,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 7d7e21fafdbc7fcf0854b877bd0975b487ed2717 upstream.
+commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
 
-Fix NULL-pointer dereferences on open() and write() which can be
-triggered by a malicious USB device.
+The driver was using its struct usb_interface pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg, dev_warn and dev_err statements in
+the completion handlers which relies on said pointer.
 
-The current URB allocation helper would fail to initialise the newly
-allocated URB if the device has unexpected endpoint descriptors,
-something which could lead NULL-pointer dereferences in a number of
-open() and write() paths when accessing the URB. For example:
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
 
-	BUG: kernel NULL pointer dereference, address: 0000000000000000
-	...
-	RIP: 0010:usb_clear_halt+0x11/0xc0
-	...
-	Call Trace:
-	 ? tty_port_open+0x4d/0xd0
-	 keyspan_open+0x70/0x160 [keyspan]
-	 serial_port_activate+0x5b/0x80 [usbserial]
-	 tty_port_open+0x7b/0xd0
-	 ? check_tty_count+0x43/0xa0
-	 tty_open+0xf1/0x490
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
 
-	BUG: kernel NULL pointer dereference, address: 0000000000000000
-	...
-	RIP: 0010:keyspan_write+0x14e/0x1f3 [keyspan]
-	...
-	Call Trace:
-	 serial_write+0x43/0xa0 [usbserial]
-	 n_tty_write+0x1af/0x4f0
-	 ? do_wait_intr_irq+0x80/0x80
-	 ? process_echoes+0x60/0x60
-	 tty_write+0x13f/0x2f0
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000000
-	...
-	RIP: 0010:keyspan_usa26_send_setup+0x298/0x305 [keyspan]
-	...
-	Call Trace:
-	 keyspan_open+0x10f/0x160 [keyspan]
-	 serial_port_activate+0x5b/0x80 [usbserial]
-	 tty_port_open+0x7b/0xd0
-	 ? check_tty_count+0x43/0xa0
-	 tty_open+0xf1/0x490
-
-Fixes: fdcba53e2d58 ("fix for bugzilla #7544 (keyspan USB-to-serial converter)")
-Cc: stable <stable@vger.kernel.org>	# 2.6.21
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/keyspan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/misc/ldusb.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/serial/keyspan.c
-+++ b/drivers/usb/serial/keyspan.c
-@@ -1250,8 +1250,8 @@ static struct urb *keyspan_setup_urb(str
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -158,6 +158,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
+ struct ld_usb {
+ 	struct mutex		mutex;		/* locks this structure */
+ 	struct usb_interface*	intf;		/* save off the usb interface pointer */
++	unsigned long		disconnected:1;
  
- 	ep_desc = find_ep(serial, endpoint);
- 	if (!ep_desc) {
--		/* leak the urb, something's wrong and the callers don't care */
--		return urb;
-+		usb_free_urb(urb);
-+		return NULL;
+ 	int			open_count;	/* number of times this port has been opened */
+ 
+@@ -197,12 +198,10 @@ static void ld_usb_abort_transfers(struc
+ 	/* shutdown transfer */
+ 	if (dev->interrupt_in_running) {
+ 		dev->interrupt_in_running = 0;
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_in_urb);
++		usb_kill_urb(dev->interrupt_in_urb);
  	}
- 	if (usb_endpoint_xfer_int(ep_desc)) {
- 		ep_type_name = "INT";
+ 	if (dev->interrupt_out_busy)
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_out_urb);
++		usb_kill_urb(dev->interrupt_out_urb);
+ }
+ 
+ /**
+@@ -210,8 +209,6 @@ static void ld_usb_abort_transfers(struc
+  */
+ static void ld_usb_delete(struct ld_usb *dev)
+ {
+-	ld_usb_abort_transfers(dev);
+-
+ 	/* free data structures */
+ 	usb_free_urb(dev->interrupt_in_urb);
+ 	usb_free_urb(dev->interrupt_out_urb);
+@@ -267,7 +264,7 @@ static void ld_usb_interrupt_in_callback
+ 
+ resubmit:
+ 	/* resubmit if we're still running */
+-	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
++	if (dev->interrupt_in_running && !dev->buffer_overflow) {
+ 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
+ 		if (retval) {
+ 			dev_err(&dev->intf->dev,
+@@ -396,7 +393,7 @@ static int ld_usb_release(struct inode *
+ 		retval = -ENODEV;
+ 		goto unlock_exit;
+ 	}
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 		mutex_unlock(&dev->mutex);
+ 		/* unlock here as ld_usb_delete frees dev */
+@@ -427,7 +424,7 @@ static unsigned int ld_usb_poll(struct f
+ 
+ 	dev = file->private_data;
+ 
+-	if (!dev->intf)
++	if (dev->disconnected)
+ 		return POLLERR | POLLHUP;
+ 
+ 	poll_wait(file, &dev->read_wait, wait);
+@@ -466,7 +463,7 @@ static ssize_t ld_usb_read(struct file *
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -546,7 +543,7 @@ static ssize_t ld_usb_write(struct file
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -768,6 +765,9 @@ static void ld_usb_disconnect(struct usb
+ 	/* give back our minor */
+ 	usb_deregister_dev(intf, &ld_usb_class);
+ 
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&dev->mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+@@ -775,7 +775,7 @@ static void ld_usb_disconnect(struct usb
+ 		mutex_unlock(&dev->mutex);
+ 		ld_usb_delete(dev);
+ 	} else {
+-		dev->intf = NULL;
++		dev->disconnected = 1;
+ 		/* wake up pollers */
+ 		wake_up_interruptible_all(&dev->read_wait);
+ 		wake_up_interruptible_all(&dev->write_wait);
 
 
