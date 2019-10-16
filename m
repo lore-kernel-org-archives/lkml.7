@@ -2,191 +2,95 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD185ECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DE7ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F12E20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062C220854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FsMI5jcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389674AbfJPCLs (ORCPT
+        id S2389712AbfJPCO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 22:11:48 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:16421 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730641AbfJPCLq (ORCPT
+        Tue, 15 Oct 2019 22:14:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37673 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730455AbfJPCO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 22:11:46 -0400
-IronPort-SDR: N6FH4mCHZeUaR7ocCQ9TWT/KdZTr6he++DDaboXcCSfGNbr8L4Nx0upnOAcEGAL3bjYVQ68hQm
- e7q22jP4ODgKUSWVwut/A7VTO4Q4h2oYwgS3yd1/08ZRQpVOkQ22cHeFXbTlmzPrfATel1bJgR
- jghT72D4v7n+l4dJQK0+11JuVyilh6jYRLTvhdUOe934Qo264QwLrM71g6NJ3Ilms3B66qo5YR
- d7TUzdDG60MnbHh21edRbC3Vj5fSF8AEKUTdba7w/5o0enXTdcEFoK7nUaVfduuc7ENqlBv2qo
- oJQ=
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 15 Oct 2019 19:11:44 -0700
-IronPort-SDR: K76gbLDhuoZDDJrQCNN13HZ9A5WrcpdSTfKKkwuDeAko/lEyG4+huxLJR/0z9nbqu6QJRm2suA
- EnSYEdDjk0NgfxTDQqzp5K1dG7TxbI+SUrnWfHBG5Hetgj3D8U9z1BKaqkh+nUABL0NjxGoXIJ
- oLlxg4+E/zZVRZazdQKCbd07wM3yVBRJR0t4iBjwqxXysqOBmb8Kyd+IXe44pgrwfv9Cqj2z/+
- /g3ZUQWY+b+gAoRP2I1BLJgNJHlD4T75EPTgesmEXG4mpWq7iSew1u9ZW9VevEVYYfcvKqWWjo
- Sp0FORFCmIKvwPrY6YxUHBHY
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 15 Oct 2019 19:11:44 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 73171473B; Tue, 15 Oct 2019 19:11:44 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH 1/1] pwm: Convert period and duty cycle to u64
-Date:   Tue, 15 Oct 2019 19:11:39 -0700
-Message-Id: <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
-References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
+        Tue, 15 Oct 2019 22:14:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l21so22287429lje.4;
+        Tue, 15 Oct 2019 19:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dZBjgflZUS0VEu2+zyGgxZgBbs6Ispwu0JDsbM63CLE=;
+        b=FsMI5jcfDV8QuHHUyk8C6hI6V3hKANoxTut3jPAALDhpSpkUuL+u5sgtcVFb6hwhTH
+         MuesHwQ6Q+wu6JLhERHXVd1BY178VDtJquh8PqycvgERReId04sSNaKNPXGTfG2zfLt+
+         HaFkEXEZCVN87iM7QJ5Y4jIaHoADJN0SBntJLlZodccARQadmgK+1eQfbZskV9WhX2Ei
+         b1vw8Zcf+OgP2Yd7gJXhdJrOiPm1KAMEbjhntCioVfzPx+Bzl+460RrqvzFMWSCeuTs8
+         0jQ5SZ1OvomnsnjFKQuusU+udw0mvHGYWRq/w1vX7gF7Qajuy4GQI0Ao2Jw7D11h7oRh
+         gREw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dZBjgflZUS0VEu2+zyGgxZgBbs6Ispwu0JDsbM63CLE=;
+        b=hM4L0Q/dJemLZJkRg1FVJgo8P/pSif0HX7CfMEcK4GZA19a6Vbo9DgTQRJHuDyaecT
+         N4eEov5Ml3QPA/qTVknyRqTQB2ee1b6GineAK5/iXtIokfp6mO783FdMMqmO2l6DOPMT
+         NWqflKxfF5V57JEx50GZ4Fxkm7VoWnyWW1iEoMRM1rCcgtnbbJPEVamW94IKzXm/3rEF
+         oEZxVIvx5rXhuBFaTfwSFke6kJUMOW5j5MOTs9uHBR5LikQXzse2pC8Ww9+6G05AwInX
+         0tPa7+qJ6dZYup2BZhiclPhchCs3iQBawbhQf4VJ19zsO9W3QUKuCSw3n3IKiePFg4An
+         1uRw==
+X-Gm-Message-State: APjAAAUR2RzwunbfzsFnomyqHgzTZ6AK6arxGx/Yu7YDr+n53JNzpjHz
+        OnVF4I10f0m4e7frTuNeGWYD17fgTof+es/ch1U=
+X-Google-Smtp-Source: APXvYqy4d7LLcbur92M48iHdAm6oxdiqE9mK96GX+ha/61CfUjwxGQ427y/eEkfdA1RL3CkDXJV+wXcvciT67X8WbIY=
+X-Received: by 2002:a2e:9cc9:: with SMTP id g9mr23396415ljj.188.1571192094476;
+ Tue, 15 Oct 2019 19:14:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191009160907.10981-1-christian.brauner@ubuntu.com> <20191016004138.24845-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20191016004138.24845-1-christian.brauner@ubuntu.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 15 Oct 2019 19:14:42 -0700
+Message-ID: <CAADnVQ+JmXK4EGtt-6pm+KENPooewfikaRE5dZqi1pMBc_jdxw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] bpf: switch to new usercopy helpers
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because period and duty cycle are defined as ints with units of
-nanoseconds, the maximum time duration that can be set is limited to
-~2.147 seconds. Change their definitions to u64 so that higher durations
-may be set.
+On Tue, Oct 15, 2019 at 5:41 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> Hey everyone,
+>
+> In v5.4-rc2 we added two new helpers check_zeroed_user() and
+> copy_struct_from_user() including selftests (cf. [1]). It is a generic
+> interface designed to copy a struct from userspace. The helpers will be
+> especially useful for structs versioned by size of which we have quite a
+> few.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/core.c  |  4 ++--
- drivers/pwm/sysfs.c | 10 +++++-----
- include/linux/pwm.h | 16 ++++++++--------
- 3 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 6ad51aa..dc79c03 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 		if (state.enabled)
- 			seq_puts(s, " enabled");
- 
--		seq_printf(s, " period: %u ns", state.period);
--		seq_printf(s, " duty: %u ns", state.duty_cycle);
-+		seq_printf(s, " period: %llu ns", state.period);
-+		seq_printf(s, " duty: %llu ns", state.duty_cycle);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 2389b86..3fb1610 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.period);
-+	return sprintf(buf, "%llu\n", state.period);
- }
- 
- static ssize_t period_store(struct device *child,
-@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
- 	struct pwm_export *export = child_to_pwm_export(child);
- 	struct pwm_device *pwm = export->pwm;
- 	struct pwm_state state;
--	unsigned int val;
-+	u64 val;
- 	int ret;
- 
--	ret = kstrtouint(buf, 0, &val);
-+	ret = kstrtou64(buf, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
- 
- 	pwm_get_state(pwm, &state);
- 
--	return sprintf(buf, "%u\n", state.duty_cycle);
-+	return sprintf(buf, "%llu\n", state.duty_cycle);
- }
- 
- static ssize_t duty_cycle_store(struct device *child,
-@@ -212,7 +212,7 @@ static ssize_t capture_show(struct device *child,
- 	if (ret)
- 		return ret;
- 
--	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
-+	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
- }
- 
- static DEVICE_ATTR_RW(period);
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index b2c9c46..1efdd63 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -39,7 +39,7 @@ enum pwm_polarity {
-  * current PWM hardware state.
-  */
- struct pwm_args {
--	unsigned int period;
-+	u64 period;
- 	enum pwm_polarity polarity;
- };
- 
-@@ -56,8 +56,8 @@ enum {
-  * @enabled: PWM enabled status
-  */
- struct pwm_state {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- };
-@@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
-+static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
- {
- 	if (pwm)
- 		pwm->state.period = period;
- }
- 
--static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-+static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
- 		pwm->state.duty_cycle = duty;
- }
- 
--static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
-+static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
- 
-@@ -308,8 +308,8 @@ struct pwm_chip {
-  * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
-  */
- struct pwm_capture {
--	unsigned int period;
--	unsigned int duty_cycle;
-+	u64 period;
-+	u64 duty_cycle;
- };
- 
- #if IS_ENABLED(CONFIG_PWM)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Was it tested?
+Either your conversion is incorrect or that generic helper is broken.
+./test_progs -n 2
+and
+./test_btf
+are catching the bug:
+BTF prog info raw test[8] (line_info (No subprog. zero tailing
+line_info): do_test_info_raw:6205:FAIL prog_fd:-1
+expected_prog_load_failure:0 errno:7
+nonzero tailing record in line_infoprocessed 0 insns (limit 1000000)
+max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
