@@ -2,91 +2,112 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EECECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E84AECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111E32084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8642067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESng4kYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390385AbfJPAup (ORCPT
+        id S2390391AbfJPAvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:50:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfJPAup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:50:45 -0400
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4AC62067B;
-        Wed, 16 Oct 2019 00:50:43 +0000 (UTC)
-Subject: Re: [PATCH 10/34] m68k/coldfire: Use CONFIG_PREEMPTION
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-11-bigeasy@linutronix.de>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <39d20c16-50a4-34f5-f98c-979138bf1a29@linux-m68k.org>
-Date:   Wed, 16 Oct 2019 10:50:41 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 20:51:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41316 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfJPAvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 20:51:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t3so13178166pga.8;
+        Tue, 15 Oct 2019 17:51:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ltDDMUh1xlGD4pSNgA8gXhuyIlk9MRYKGGQg9juTsMI=;
+        b=ESng4kYOkOnZLU/DzjYsLdjh7C5CB6GUodh+IWsqAZ4P01OcAJtvt0DOLrVr7F/I8A
+         n6sksneAap2FO8dVRMtdN8Ma7tQI6BF6QfgH86zssY3TVRgbsQOl3lYPIoDYeD5Q0dBq
+         FhBLk9BDtFad/SKmPxUcLeQPy2LCcALb+nN/UUnucawqphDPr9zYfGQNGacfU6fpSoYJ
+         Zto30yNn7g6J4goB+1X7AeiZxSqF4jhXneRascWSTsxNsTi5qUE3sfxcwH3lUA6N8rwc
+         hMJMrAVISfOUAZsMVZpo5gz6LeWleKJGkkmuj2TiTmoFs6HsKrFFIGjx0ufbcyK+LqM7
+         J3fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ltDDMUh1xlGD4pSNgA8gXhuyIlk9MRYKGGQg9juTsMI=;
+        b=EQu88cMbDBflGaGUbxC0foLi4e8rE++X8mXFD2o47PO4lE9kyw9vjxB2KVgJ+yk6aV
+         hX/A54Q3Zjyna+TUnDKgBwtXzViuyjeGlSMZ+Eex/MHNlLs/8TcwZT+wuaiJdx614xdJ
+         rpHb/C9wVoGOoR1GhU063pvwYLfg2r0pWcnK4Fxlfvbh8oPH5Nydva/7OSbLZtTkoKLN
+         BdX6FhE6Tnn7b92ud2SbbuJCzubMTekswK2zrSNl6TP3HApM9Ld1FUwv2nVqc0fBQYkB
+         8gcpJTCUnF5XJW6Qfs57+bwOucfz+c32Q9MeaRjh1ii7LE+gia/fr7XSMj8fIDxJGeiX
+         EHdQ==
+X-Gm-Message-State: APjAAAU2r4MHBxSdHTlDz7tM46+FlYvO3z2Mjd/1crpm5QbaSHd8FD24
+        apMOcFgmNQ+2gOK45VhF9Qg=
+X-Google-Smtp-Source: APXvYqwJDTu4vKA3PfnnGNTkK/CMsVarlVnprvX8tF/2URNi2jEGttdgSydEoyp1fgfzdyXw/3Z+nw==
+X-Received: by 2002:aa7:8b4d:: with SMTP id i13mr15985072pfd.29.1571187070365;
+        Tue, 15 Oct 2019 17:51:10 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 206sm21506960pge.80.2019.10.15.17.51.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 17:51:09 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 17:51:07 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "Input: elantech - enable SMBus on new (2018+)
+ systems"
+Message-ID: <20191016005107.GA35946@dtor-ws>
+References: <20191001070845.9720-1-kai.heng.feng@canonical.com>
+ <CAO-hwJJ_hjL8=D+BDTW6LQRhd86NawORuY-jnDF71mD88woiDw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191015191821.11479-11-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO-hwJJ_hjL8=D+BDTW6LQRhd86NawORuY-jnDF71mD88woiDw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
-
-On 16/10/19 5:17 am, Sebastian Andrzej Siewior wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Fri, Oct 11, 2019 at 05:26:05PM +0200, Benjamin Tissoires wrote:
+> Hi Kai-Heng,
 > 
-> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-> Both PREEMPT and PREEMPT_RT require the same functionality which today
-> depends on CONFIG_PREEMPT.
+> On Tue, Oct 1, 2019 at 9:09 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com> wrote:
+> >
+> > This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
+> >
+> > Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
+> > and this breaks older laptops with new BIOS update.
+> >
+> > So let's revert this patch.
+> >
+> > There are still new HP laptops still need to use SMBus to support all
+> > features, but it'll be enabled via a whitelist.
+> >
 > 
-> Switch the entry code over to use CONFIG_PREEMPTION.
+> You might want to add here:
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204771
 > 
-> Cc: Greg Ungerer <gerg@linux-m68k.org>
-
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
-
-Do you want me to take this via the m68knommu git tree?
-Or are you taking the whole series via some other tree?
-
-Regards
-Greg
-
-
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: linux-m68k@lists.linux-m68k.org
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->   arch/m68k/coldfire/entry.S | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > 
-> diff --git a/arch/m68k/coldfire/entry.S b/arch/m68k/coldfire/entry.S
-> index 52d312d5b4d4f..d43a02795a4a4 100644
-> --- a/arch/m68k/coldfire/entry.S
-> +++ b/arch/m68k/coldfire/entry.S
-> @@ -108,7 +108,7 @@ ENTRY(system_call)
->   	btst	#5,%sp@(PT_OFF_SR)	/* check if returning to kernel */
->   	jeq	Luser_return		/* if so, skip resched, signals */
->   
-> -#ifdef CONFIG_PREEMPT
-> +#ifdef CONFIG_PREEMPTION
->   	movel	%sp,%d1			/* get thread_info pointer */
->   	andl	#-THREAD_SIZE,%d1	/* at base of kernel stack */
->   	movel	%d1,%a0
+> Oops, seems like you are missing my acked by:
+> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 > 
+> Also, don't we want to send this one to stable as well? I can't
+> remember if we reverted it in all the released kernels.
+
+It looks like we need it for 5.3 so I marked it for stable.
+
+Thanks.
+
+-- 
+Dmitry
