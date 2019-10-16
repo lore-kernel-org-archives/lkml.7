@@ -2,53 +2,52 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53556ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8885ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9FB218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CC8218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263298;
-	bh=34dwj3LqK+f/Pc6CdTWGf50hADG+/PaAMtm6ggm8DlM=;
+	s=default; t=1571263304;
+	bh=+z+39EK4lI4JE1/tBx7E6JtZIILC2csIKnEB6iWYPFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kIEkf3e7d2gQBcpKyiftSzYQ87jNwZ/5DYBzVKjjSNkM8cmgalKmiLA+2hT7/pag
-	 8tYUxsQ8wR8HdHiP73ppc4Aq0dnfliFihnB7iV3qaleIPQp0PmEom0Xze+I1FqJKho
-	 beTs2WaDaUqeyTEx+2pflE8sLOoiA+QjCyLZgXqM=
+	b=dJbD9DKWuCCUYGEmu4ya3YNCM4Z8gqY1wf3CR9vM7mcnJbVXoCsq7c442uuWBuJSU
+	 hFdY0pYcHDLPTLNwqGGA3p6fjtYnF0r1SiGOlQlEm1ARXjaxBuPo6YlLKOWzrsGr94
+	 H/8+2nFWAEQNyBE1x8zxI+E3XFfoz6TeDQIu3OpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438827AbfJPWAh (ORCPT
+        id S2438786AbfJPWA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54076 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:00:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438485AbfJPV7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:23 -0400
+        id S2438461AbfJPV7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:18 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CEA021A49;
-        Wed, 16 Oct 2019 21:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC55218DE;
+        Wed, 16 Oct 2019 21:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263162;
-        bh=34dwj3LqK+f/Pc6CdTWGf50hADG+/PaAMtm6ggm8DlM=;
+        s=default; t=1571263157;
+        bh=+z+39EK4lI4JE1/tBx7E6JtZIILC2csIKnEB6iWYPFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+wuKtJKbK8wH8mBuvelYk7JSW9ipxZDXFH4BZbfH19c3zQG9BH2AuT3VKUkRKEaP
-         lEr1RQTj/YoSukfW2uo20zCm0JoU089rBero255AViI0wiCVYzbsTHVK0zEI9CtdK1
-         qoZg8Vm6kaZVeQSSo9r5F143mULtxKR9nqU6iY7I=
+        b=GLYmQYtt1ult0WPYr1ZK/P1FhNl5t9c2/yQO+22ySc1mP4HYxMicvIMEftrr6v2IC
+         vxzyQf/69ufxP7Wm1TPdNyJZXUgqk/996tU3okqreGBct5vAwTfyGjg9amQLhdB7A2
+         IxQ3CMUXWjs1YxRo5YSeE0PPQv6w2Uj8AR1BWu/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 5.3 090/112] MIPS: Disable Loongson MMI instructions for kernel build
-Date:   Wed, 16 Oct 2019 14:51:22 -0700
-Message-Id: <20191016214905.434758748@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.3 086/112] Btrfs: fix memory leak due to concurrent append writes with fiemap
+Date:   Wed, 16 Oct 2019 14:51:18 -0700
+Message-Id: <20191016214905.047723990@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -61,57 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 2f2b4fd674cadd8c6b40eb629e140a14db4068fd upstream.
+commit c67d970f0ea8dcc423e112137d34334fa0abb8ec upstream.
 
-GCC 9.x automatically enables support for Loongson MMI instructions when
-using some -march= flags, and then errors out when -msoft-float is
-specified with:
+When we have a buffered write that starts at an offset greater than or
+equals to the file's size happening concurrently with a full ranged
+fiemap, we can end up leaking an extent state structure.
 
-  cc1: error: ‘-mloongson-mmi’ must be used with ‘-mhard-float’
+Suppose we have a file with a size of 1Mb, and before the buffered write
+and fiemap are performed, it has a single extent state in its io tree
+representing the range from 0 to 1Mb, with the EXTENT_DELALLOC bit set.
 
-The kernel shouldn't be using these MMI instructions anyway, just as it
-doesn't use floating point instructions. Explicitly disable them in
-order to fix the build with GCC 9.x.
+The following sequence diagram shows how the memory leak happens if a
+fiemap a buffered write, starting at offset 1Mb and with a length of
+4Kb, are performed concurrently.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: 3702bba5eb4f ("MIPS: Loongson: Add GCC 4.4 support for Loongson2E")
-Fixes: 6f7a251a259e ("MIPS: Loongson: Add basic Loongson 2F support")
-Fixes: 5188129b8c9f ("MIPS: Loongson-3: Improve -march option and move it to Platform")
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: stable@vger.kernel.org # v2.6.32+
-Cc: linux-mips@vger.kernel.org
+          CPU 1                                                  CPU 2
+
+  extent_fiemap()
+    --> it's a full ranged fiemap
+        range from 0 to LLONG_MAX - 1
+        (9223372036854775807)
+
+    --> locks range in the inode's
+        io tree
+      --> after this we have 2 extent
+          states in the io tree:
+          --> 1 for range [0, 1Mb[ with
+              the bits EXTENT_LOCKED and
+              EXTENT_DELALLOC_BITS set
+          --> 1 for the range
+              [1Mb, LLONG_MAX[ with
+              the EXTENT_LOCKED bit set
+
+                                                  --> start buffered write at offset
+                                                      1Mb with a length of 4Kb
+
+                                                  btrfs_file_write_iter()
+
+                                                    btrfs_buffered_write()
+                                                      --> cached_state is NULL
+
+                                                      lock_and_cleanup_extent_if_need()
+                                                        --> returns 0 and does not lock
+                                                            range because it starts
+                                                            at current i_size / eof
+
+                                                      --> cached_state remains NULL
+
+                                                      btrfs_dirty_pages()
+                                                        btrfs_set_extent_delalloc()
+                                                          (...)
+                                                          __set_extent_bit()
+
+                                                            --> splits extent state for range
+                                                                [1Mb, LLONG_MAX[ and now we
+                                                                have 2 extent states:
+
+                                                                --> one for the range
+                                                                    [1Mb, 1Mb + 4Kb[ with
+                                                                    EXTENT_LOCKED set
+                                                                --> another one for the range
+                                                                    [1Mb + 4Kb, LLONG_MAX[ with
+                                                                    EXTENT_LOCKED set as well
+
+                                                            --> sets EXTENT_DELALLOC on the
+                                                                extent state for the range
+                                                                [1Mb, 1Mb + 4Kb[
+                                                            --> caches extent state
+                                                                [1Mb, 1Mb + 4Kb[ into
+                                                                @cached_state because it has
+                                                                the bit EXTENT_LOCKED set
+
+                                                    --> btrfs_buffered_write() ends up
+                                                        with a non-NULL cached_state and
+                                                        never calls anything to release its
+                                                        reference on it, resulting in a
+                                                        memory leak
+
+Fix this by calling free_extent_state() on cached_state if the range was
+not locked by lock_and_cleanup_extent_if_need().
+
+The same issue can happen if anything else other than fiemap locks a range
+that covers eof and beyond.
+
+This could be triggered, sporadically, by test case generic/561 from the
+fstests suite, which makes duperemove run concurrently with fsstress, and
+duperemove does plenty of calls to fiemap. When CONFIG_BTRFS_DEBUG is set
+the leak is reported in dmesg/syslog when removing the btrfs module with
+a message like the following:
+
+  [77100.039461] BTRFS: state leak: start 6574080 end 6582271 state 16402 in tree 0 refs 1
+
+Otherwise (CONFIG_BTRFS_DEBUG not set) detectable with kmemleak.
+
+CC: stable@vger.kernel.org # 4.16+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/loongson64/Platform |    4 ++++
- arch/mips/vdso/Makefile       |    1 +
- 2 files changed, 5 insertions(+)
+ fs/btrfs/file.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/arch/mips/loongson64/Platform
-+++ b/arch/mips/loongson64/Platform
-@@ -66,6 +66,10 @@ else
-       $(call cc-option,-march=mips64r2,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
- endif
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1591,7 +1591,6 @@ static noinline ssize_t btrfs_buffered_w
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	struct page **pages = NULL;
+-	struct extent_state *cached_state = NULL;
+ 	struct extent_changeset *data_reserved = NULL;
+ 	u64 release_bytes = 0;
+ 	u64 lockstart;
+@@ -1611,6 +1610,7 @@ static noinline ssize_t btrfs_buffered_w
+ 		return -ENOMEM;
  
-+# Some -march= flags enable MMI instructions, and GCC complains about that
-+# support being enabled alongside -msoft-float. Thus explicitly disable MMI.
-+cflags-y += $(call cc-option,-mno-loongson-mmi)
+ 	while (iov_iter_count(i) > 0) {
++		struct extent_state *cached_state = NULL;
+ 		size_t offset = offset_in_page(pos);
+ 		size_t sector_offset;
+ 		size_t write_bytes = min(iov_iter_count(i),
+@@ -1758,9 +1758,20 @@ again:
+ 		if (copied > 0)
+ 			ret = btrfs_dirty_pages(inode, pages, dirty_pages,
+ 						pos, copied, &cached_state);
 +
- #
- # Loongson Machines' Support
- #
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -9,6 +9,7 @@ ccflags-vdso := \
- 	$(filter -mmicromips,$(KBUILD_CFLAGS)) \
- 	$(filter -march=%,$(KBUILD_CFLAGS)) \
- 	$(filter -m%-float,$(KBUILD_CFLAGS)) \
-+	$(filter -mno-loongson-%,$(KBUILD_CFLAGS)) \
- 	-D__VDSO__
- 
- ifdef CONFIG_CC_IS_CLANG
++		/*
++		 * If we have not locked the extent range, because the range's
++		 * start offset is >= i_size, we might still have a non-NULL
++		 * cached extent state, acquired while marking the extent range
++		 * as delalloc through btrfs_dirty_pages(). Therefore free any
++		 * possible cached extent state to avoid a memory leak.
++		 */
+ 		if (extents_locked)
+ 			unlock_extent_cached(&BTRFS_I(inode)->io_tree,
+ 					     lockstart, lockend, &cached_state);
++		else
++			free_extent_state(cached_state);
++
+ 		btrfs_delalloc_release_extents(BTRFS_I(inode), reserve_bytes,
+ 					       true);
+ 		if (ret) {
 
 
