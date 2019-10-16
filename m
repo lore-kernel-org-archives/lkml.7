@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3630ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD2CFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F15021D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3DB21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="CiaFl7Mk"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="LLthtC7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437033AbfJPUBn (ORCPT
+        id S2437043AbfJPUBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:01:43 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43614 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727575AbfJPUBE (ORCPT
+        Wed, 16 Oct 2019 16:01:44 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36835 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436905AbfJPUBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:01:04 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t20so32647838qtr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:01:03 -0700 (PDT)
+        Wed, 16 Oct 2019 16:01:00 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o12so38035853qtf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=2dB/JT7cpleUq4odQT8133EyCdo3KLVbNGsuR1ejXK0=;
-        b=CiaFl7Mk/0Ai1uwEa1O2lGNLVpZo5+wb8v4pxmTWNb/dm2ro8mnYZnV8Edb/RXkgRm
-         ki9I2+kYEPNZ+agtblWoi4KTtibPFfC2vJiQksWU9jlWzvdVmWqdIkA4Lb0g30wQcKQL
-         vpQgAcBEBz8iFcDhWcWOcJFD4aLtX8PKUsr7KjYk5pXKwhCAV4dpCJ/hfY7qSm7PN9TL
-         O2WTpHeLIh+12Q279PtAXhUhmTU/kr03dDQNBMsaRp6U/XSuSZ//IdFVQofebNWXkdPb
-         7sUSw+IThgjUN6desgaUOBQdZufgn2uDSC9v6BTW3ULEOcUHxK+y1y0yRmtPvPsMsmeI
-         wKMQ==
+        bh=zqjz6RgOj4sr7JAtiYy2U5c4q561GRonF/uToZbvMtQ=;
+        b=LLthtC7Z0agY8Vp/MZgx+7D2aXNxndD44msqC/X0okCV465MaYJvQsqSE9+VuFAcSr
+         TcB4zHdjU/Vswk8EVE4miktspKMn0pTBzroRoTQZWoZwUuzdEfMlqvjz7fmsGvk7T2ZM
+         5/I6z5zILNUJV+Cw2RSB7xPNNP1wAvsp9nbEpm6O6YBGbWiUOh7UTO8ZgtQ344Ql//TO
+         0sQ4gx5pkTjgYDZQX+2z5vaB73fqyIn+te9CcR1939r4/03cZkkz1sr1imWCVBWE1TnF
+         OfRxclovnZUw8az+6t8P7XZTvoChwcgxunJzdlAUFWttRw6PXTykHUERYanemEjzSe7y
+         WzWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2dB/JT7cpleUq4odQT8133EyCdo3KLVbNGsuR1ejXK0=;
-        b=E0ffZV/P38+M/IPu83xpiTdXyay60aQL+8NySxgFa3c6Ve1m4s7FnoUm5Qd+RyAAf1
-         wohlnph2weQZhZysYRyCq3IQYt4nirmn01RpO2AmLRQr8Cf5YrmqZIdNFnkr0IUJKLzh
-         5TWkOR/I3v01fIjaTV2jDJ1HmsVHVNWA+S1NeMW2QZafxY2gSu2ipgHVXBLzh4ClNaes
-         L20uvkZheym6IRetqo7XxydbLFRtZOb8YBcStfkUoxJWaYCF23dLk/sIQQSvdJgXKA1P
-         zkfzxPbwpwvEiybv/VVtQHLAlTiJCpYbyT+U1uY7Pkq5JWFzo0HWxFpOdKIk6K7SC2PJ
-         0Myg==
-X-Gm-Message-State: APjAAAUGJ7Tr5Z78KCKnRCf2F65/yCDp1PXu5BGJOz177YW66jwRZYkS
-        3BEOvOdsztqfgm0qyPE9cqEfQg==
-X-Google-Smtp-Source: APXvYqwMAUjRlLpWrrpgx3tDKuFsAxRFXePefh3P5/JOzZtFez2e3nLHNDhNVIJG5zsuWzwbBLXj9g==
-X-Received: by 2002:ad4:51cc:: with SMTP id p12mr29646954qvq.243.1571256062832;
-        Wed, 16 Oct 2019 13:01:02 -0700 (PDT)
+        bh=zqjz6RgOj4sr7JAtiYy2U5c4q561GRonF/uToZbvMtQ=;
+        b=l7Hc0m+65usRUdtcTEWR98Q6dS0gh8JtFk5/i/RCbyNH4XZl97U4280mMZoa669Xl6
+         qbraBvshWkA0L7pRSQdtTRpEUqhaIEb96WCD9YyTs7snTCOxIqW0yUnTmE8sXr5kjO0I
+         qi5bln0b9ZJV4OwoUReGRwIpa3tuDu8LHaDOwkJ/vOPK3tn45Vp80NgnRvXTu7XVeuIK
+         X0av4yfUgKzmGsKfFQVtBfsDKW8yMk0vEA3RCovxnIl5yTR8rH+WEahPzMM6f31QOyKz
+         bP2ERtaLE0WDGCVN37A/9y3Lsh3dzsyJj57H23KKX/BpgT7hGaSc6v7DQJGo7LPLmNNS
+         11rg==
+X-Gm-Message-State: APjAAAV9vwVagtssLvCfO+9i54yT/Le62rFhpbZbUJRGKPQieEgOvTBh
+        4SnoXg1P3HFZUeP3zP/QR2m0tv4/UME=
+X-Google-Smtp-Source: APXvYqxeEmEBJ8iuQjzSMlHmkpciqeX2tmKot2rZrpYNF10NaJYEF1ASBSV5ESwtGHI0azLzv5plFw==
+X-Received: by 2002:a05:6214:208:: with SMTP id i8mr42898296qvt.108.1571256059489;
+        Wed, 16 Oct 2019 13:00:59 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.01.01
+        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.00.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:01:02 -0700 (PDT)
+        Wed, 16 Oct 2019 13:00:58 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -66,9 +66,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
         tglx@linutronix.de
-Subject: [PATCH v7 16/25] arm64: kexec: call kexec_image_info only once
-Date:   Wed, 16 Oct 2019 16:00:25 -0400
-Message-Id: <20191016200034.1342308-17-pasha.tatashin@soleen.com>
+Subject: [PATCH v7 14/25] arm64: trans_pgd: pass NULL instead of init_mm to *_populate functions
+Date:   Wed, 16 Oct 2019 16:00:23 -0400
+Message-Id: <20191016200034.1342308-15-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
 References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
@@ -79,46 +79,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kexec_image_info() is called during load time, and
-right before kernel is being kexec'ed. There is no need to do both.
-So, call it only once when segments are loaded and the physical
-location of page with copy of arm64_relocate_new_kernel is known.
+trans_pgd_* should be independent from mm context because the tables that
+are created by this code are used when there are no mm context around, as
+it is between kernels. Simply replace mm_init's with NULL.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/machine_kexec.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/arm64/mm/trans_pgd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 46718b289a6b..f94119b5cebc 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -66,6 +66,7 @@ int machine_kexec_post_load(struct kimage *kimage)
- 	memcpy(reloc_code, arm64_relocate_new_kernel,
- 	       arm64_relocate_new_kernel_size);
- 	kimage->arch.kern_reloc = __pa(reloc_code);
-+	kexec_image_info(kimage);
+diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+index df3a10d36f62..2b02a646101f 100644
+--- a/arch/arm64/mm/trans_pgd.c
++++ b/arch/arm64/mm/trans_pgd.c
+@@ -67,7 +67,7 @@ static int copy_pte(struct trans_pgd_info *info, pmd_t *dst_pmdp,
+ 	dst_ptep = trans_alloc(info);
+ 	if (!dst_ptep)
+ 		return -ENOMEM;
+-	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
++	pmd_populate_kernel(NULL, dst_pmdp, dst_ptep);
+ 	dst_ptep = pte_offset_kernel(dst_pmdp, start);
  
- 	return 0;
- }
-@@ -80,8 +81,6 @@ int machine_kexec_post_load(struct kimage *kimage)
-  */
- int machine_kexec_prepare(struct kimage *kimage)
- {
--	kexec_image_info(kimage);
--
- 	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
- 		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
- 		return -EBUSY;
-@@ -167,8 +166,6 @@ void machine_kexec(struct kimage *kimage)
- 	WARN(in_kexec_crash && (stuck_cpus || smp_crash_stop_failed()),
- 		"Some CPUs may be stale, kdump will be unreliable.\n");
+ 	src_ptep = pte_offset_kernel(src_pmdp, start);
+@@ -90,7 +90,7 @@ static int copy_pmd(struct trans_pgd_info *info, pud_t *dst_pudp,
+ 		dst_pmdp = trans_alloc(info);
+ 		if (!dst_pmdp)
+ 			return -ENOMEM;
+-		pud_populate(&init_mm, dst_pudp, dst_pmdp);
++		pud_populate(NULL, dst_pudp, dst_pmdp);
+ 	}
+ 	dst_pmdp = pmd_offset(dst_pudp, start);
  
--	kexec_image_info(kimage);
--
- 	/* Flush the reboot_code_buffer in preparation for its execution. */
- 	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
+@@ -126,7 +126,7 @@ static int copy_pud(struct trans_pgd_info *info, pgd_t *dst_pgdp,
+ 		dst_pudp = trans_alloc(info);
+ 		if (!dst_pudp)
+ 			return -ENOMEM;
+-		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
++		pgd_populate(NULL, dst_pgdp, dst_pudp);
+ 	}
+ 	dst_pudp = pud_offset(dst_pgdp, start);
  
+@@ -218,7 +218,7 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+ 		pudp = trans_alloc(info);
+ 		if (!pudp)
+ 			return -ENOMEM;
+-		pgd_populate(&init_mm, pgdp, pudp);
++		pgd_populate(NULL, pgdp, pudp);
+ 	}
+ 
+ 	pudp = pud_offset(pgdp, dst_addr);
+@@ -226,7 +226,7 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+ 		pmdp = trans_alloc(info);
+ 		if (!pmdp)
+ 			return -ENOMEM;
+-		pud_populate(&init_mm, pudp, pmdp);
++		pud_populate(NULL, pudp, pmdp);
+ 	}
+ 
+ 	pmdp = pmd_offset(pudp, dst_addr);
+@@ -234,7 +234,7 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+ 		ptep = trans_alloc(info);
+ 		if (!ptep)
+ 			return -ENOMEM;
+-		pmd_populate_kernel(&init_mm, pmdp, ptep);
++		pmd_populate_kernel(NULL, pmdp, ptep);
+ 	}
+ 
+ 	ptep = pte_offset_kernel(pmdp, dst_addr);
 -- 
 2.23.0
 
