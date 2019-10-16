@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D27DECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E84EFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B21207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB52F207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263821;
-	bh=ONS2EygcQU152NOuMAZMhNEtFoUo4KLiKujogzhpwkw=;
+	s=default; t=1571263828;
+	bh=5iTKraSr6YCzgOAbZj3fnmt3DlD0mJRxEZgpQheQyyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjjOTjxLbS5zn2LRRVrj+yzyRt5wbDNZU9CkI1VxFm3H0txbY8eHLuwCDoaXgMKQV
-	 BfbPhPmWyNfLUXeJLy97M2kbZ5kXBOEOVY54DSioR29pLMoZEX21XNPhpO20whNmDb
-	 HWVtCOIfu8fB2zwvFfoT/uIgkqYxGmsmAX2jJCNU=
+	b=DxEJn93Iq7AGA238FfrBfRzSxk0A6wRerWUXgeX0AzD54bN3YI7HMz2SiMNyMR86E
+	 udnjL9/tofrX354bVH+Z7rKMTifZ1yVGF55lz+wje8ufCqX67vJWSSvYUA0PdkQo3M
+	 lDdaxhv3Qpxlk5MJ0uhh8eEHqOqABfugEMh6gZXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407187AbfJPWKT (ORCPT
+        id S2407196AbfJPWK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437980AbfJPV5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:17 -0400
+        id S1729429AbfJPV5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:16 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 582C221928;
-        Wed, 16 Oct 2019 21:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8877720872;
+        Wed, 16 Oct 2019 21:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263037;
-        bh=ONS2EygcQU152NOuMAZMhNEtFoUo4KLiKujogzhpwkw=;
+        s=default; t=1571263035;
+        bh=5iTKraSr6YCzgOAbZj3fnmt3DlD0mJRxEZgpQheQyyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iykxtzwHiygYs+JhMzGfUGuEdyOrpzkFYx1DvBQwjIieq6DTdybzuqkuHUCdVdrXq
-         RYolmeZrTPUn0iZQyR3a0uUlXK0rqCcCKIO4dLvHtQjU1vMQLsFkzTqDST34+V1bm3
-         1beastq+1l+ue0sal51hrPDZ+Mr1MSvyLBBGY2WQ=
+        b=cI/39r+VB8KwFkd1PyrRh2LzxYYXlbS5aIdkAhI5Rxzm1iVTLzmDGi/7BWMpz6aRr
+         UYkJbz+OzdgqZS/IZc5cxQ6eg4oq3VXlHH1jT0/RK+5hvI9V7qC0uZ9WVP75XtGVDI
+         857UiUg046cLGFLZig0QBV8WocNk5HoMDmz970cQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 07/81] USB: usb-skeleton: fix NULL-deref on disconnect
-Date:   Wed, 16 Oct 2019 14:50:18 -0700
-Message-Id: <20191016214812.519618795@linuxfoundation.org>
+Subject: [PATCH 4.19 05/81] USB: yurex: fix NULL-derefs on disconnect
+Date:   Wed, 16 Oct 2019 14:50:16 -0700
+Message-Id: <20191016214809.831170094@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,68 +60,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit bed5ef230943863b9abf5eae226a20fad9a8ff71 upstream.
+commit aafb00a977cf7d81821f7c9d12e04c558c22dc3c upstream.
 
 The driver was using its struct usb_interface pointer as an inverted
-disconnected flag and was setting it to NULL before making sure all
-completion handlers had run. This could lead to NULL-pointer
-dereferences in the dev_err() statements in the completion handlers
-which relies on said pointer.
+disconnected flag, but was setting it to NULL without making sure all
+code paths that used it were done with it.
 
-Fix this by using a dedicated disconnected flag.
+Before commit ef61eb43ada6 ("USB: yurex: Fix protection fault after
+device removal") this included the interrupt-in completion handler, but
+there are further accesses in dev_err and dev_dbg statements in
+yurex_write() and the driver-data destructor (sic!).
 
-Note that this is also addresses a NULL-pointer dereference at release()
-and a struct usb_interface reference leak introduced by a recent runtime
-PM fix, which depends on and should have been submitted together with
-this patch.
+Fix this by unconditionally stopping also the control URB at disconnect
+and by using a dedicated disconnected flag.
 
-Fixes: 4212cd74ca6f ("USB: usb-skeleton.c: remove err() usage")
-Fixes: 5c290a5e42c3 ("USB: usb-skeleton: fix runtime PM after driver unbind")
-Cc: stable <stable@vger.kernel.org>
+Note that we need to take a reference to the struct usb_interface to
+avoid a use-after-free in the destructor whenever the device was
+disconnected while the character device was still open.
+
+Fixes: aadd6472d904 ("USB: yurex.c: remove dbg() usage")
+Fixes: 45714104b9e8 ("USB: yurex.c: remove err() usage")
+Cc: stable <stable@vger.kernel.org>     # 3.5: ef61eb43ada6
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009170944.30057-2-johan@kernel.org
+Link: https://lore.kernel.org/r/20191009153848.8664-6-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usb-skeleton.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/usb/misc/yurex.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/usb-skeleton.c
-+++ b/drivers/usb/usb-skeleton.c
-@@ -59,6 +59,7 @@ struct usb_skel {
- 	spinlock_t		err_lock;		/* lock for errors */
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -60,6 +60,7 @@ struct usb_yurex {
+ 
  	struct kref		kref;
- 	struct mutex		io_mutex;		/* synchronize I/O with disconnect */
+ 	struct mutex		io_mutex;
 +	unsigned long		disconnected:1;
- 	wait_queue_head_t	bulk_in_wait;		/* to wait for an ongoing read */
- };
- #define to_skel_dev(d) container_of(d, struct usb_skel, kref)
-@@ -236,7 +237,7 @@ static ssize_t skel_read(struct file *fi
- 	if (rv < 0)
- 		return rv;
+ 	struct fasync_struct	*async_queue;
+ 	wait_queue_head_t	waitq;
  
--	if (!dev->interface) {		/* disconnect() was called */
-+	if (dev->disconnected) {		/* disconnect() was called */
- 		rv = -ENODEV;
- 		goto exit;
+@@ -107,6 +108,7 @@ static void yurex_delete(struct kref *kr
+ 				dev->int_buffer, dev->urb->transfer_dma);
+ 		usb_free_urb(dev->urb);
  	}
-@@ -418,7 +419,7 @@ static ssize_t skel_write(struct file *f
++	usb_put_intf(dev->interface);
+ 	usb_put_dev(dev->udev);
+ 	kfree(dev);
+ }
+@@ -205,7 +207,7 @@ static int yurex_probe(struct usb_interf
+ 	init_waitqueue_head(&dev->waitq);
  
- 	/* this lock makes sure we don't submit URBs to gone devices */
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* disconnect() was called */
-+	if (dev->disconnected) {		/* disconnect() was called */
- 		mutex_unlock(&dev->io_mutex);
- 		retval = -ENODEV;
- 		goto error;
-@@ -569,7 +570,7 @@ static void skel_disconnect(struct usb_i
+ 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
+-	dev->interface = interface;
++	dev->interface = usb_get_intf(interface);
+ 
+ 	/* set up the endpoint information */
+ 	iface_desc = interface->cur_altsetting;
+@@ -316,8 +318,9 @@ static void yurex_disconnect(struct usb_
  
  	/* prevent more I/O from starting */
+ 	usb_poison_urb(dev->urb);
++	usb_poison_urb(dev->cntl_urb);
  	mutex_lock(&dev->io_mutex);
 -	dev->interface = NULL;
 +	dev->disconnected = 1;
  	mutex_unlock(&dev->io_mutex);
  
- 	usb_kill_anchored_urbs(&dev->submitted);
+ 	/* wakeup waiters */
+@@ -405,7 +408,7 @@ static ssize_t yurex_read(struct file *f
+ 	dev = file->private_data;
+ 
+ 	mutex_lock(&dev->io_mutex);
+-	if (!dev->interface) {		/* already disconnected */
++	if (dev->disconnected) {		/* already disconnected */
+ 		mutex_unlock(&dev->io_mutex);
+ 		return -ENODEV;
+ 	}
+@@ -440,7 +443,7 @@ static ssize_t yurex_write(struct file *
+ 		goto error;
+ 
+ 	mutex_lock(&dev->io_mutex);
+-	if (!dev->interface) {		/* already disconnected */
++	if (dev->disconnected) {		/* already disconnected */
+ 		mutex_unlock(&dev->io_mutex);
+ 		retval = -ENODEV;
+ 		goto error;
 
 
