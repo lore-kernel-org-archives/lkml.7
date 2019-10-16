@@ -2,172 +2,107 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCCCECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EF7ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFD6207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB38E207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5ZVArQN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiuoBFuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405776AbfJPXFl (ORCPT
+        id S2405925AbfJPXHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 19:05:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46517 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731616AbfJPXFk (ORCPT
+        Wed, 16 Oct 2019 19:07:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46165 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389129AbfJPXHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:05:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q5so309701pfg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:05:39 -0700 (PDT)
+        Wed, 16 Oct 2019 19:07:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o18so106760wrv.13;
+        Wed, 16 Oct 2019 16:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dvr2k2cesqfqWN6XGDafc/ENwBi4+yjAQQmmpnGGw1M=;
-        b=j5ZVArQNVMKzmkp+DRled9bM3rrZ/59tqf72vSdYRblhYDT7OdWKSLu8b4ZhXvnmWY
-         RBe0YRjhf+228rDoYlf1FOs4ipUl2vCn9ce/y0H5bt1n78fFi7EPW7r9mFDM9Ik5sCXP
-         KFOR6Nb0NkY46WU7xEUn9swCntPjQuLCqe77V1vMCY9uB7LPhRf7+KIZMiZy4wC43aKK
-         nmHGIn9otzLVJrfckmeEO6poTKol439elLaDIeGXgzoFcueonkBUVSY1XF1q1BpFvPDG
-         u1REr8fQmr++x737PzzimqhhHDd17CdN2S7h/RHfj/hDR5iMB+msu5M68JbMPAfEV35u
-         OukA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GgIaguR3zbW5gymqzaWVQpClblW7SO//3IVmlVP9BgY=;
+        b=IiuoBFuZdV4Pqx5uMcjA+lPbeMx76MAfmUxTfsfdre59jzBQFy65+F4vOE2nKGK6dq
+         1voKvpJ9VXhFw8T1/s+FZ6WxTYABILErZjPM2YKiJ1XYXanIOI/LUmdOBYsdiP9tuRac
+         lzKRP5VNGJbOGpovoGriN/18zbJAWtygUrwUU04CewDKTkReAQ1NfEsvdPoXkRro8437
+         AnhlqjIruPEVoTKfCqJHAmW+Bq6Bb8WZS9JpVGTkV8T1wao+R034UFnmVK1lw06V8TzC
+         /NNRwUSBMPgH5Gin9M2sr3DIGaZbOcprxfJA+0h9iOS+y81ODLEnfTfwr6CiSIEYnO6S
+         6qxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dvr2k2cesqfqWN6XGDafc/ENwBi4+yjAQQmmpnGGw1M=;
-        b=guejIYVhshw5tmOkRwgTyAQ+HcqNqiKOtxl5b0ySY97G9Z7O+6NvWMVyqoyFVbFPYz
-         ZM8cJvefqJ0mWZWtnUHto/5cMEgIAtDbzKCQ65H4TutL+RzW31KMIJMNmBmnYZcBobHw
-         00h6Opo285eGXu2zTLGVJMd+MI7AL2vHRtyUipQiPW7WwQmX3vvhh8/DX7M16cu10IJx
-         2b2kQG2aDSjNdWgaxrTBw8I3YbnfWzIl4/HjRH0op0PAEo/9DGbyLvpJTf74HFVb49wm
-         d2sTJD14WJUgm44h7IgpkYxRFdJpnlIIvK62Ut8mIqJnDVsjMGAH8BRBCHOmjM9Ay1NV
-         g8Dw==
-X-Gm-Message-State: APjAAAX91dg6FQq1SJsfawG4yVG9uztbyOSmViOXFsKb/L9MgPR5fYzD
-        jnR3dkp6qIgyPu+ByWoUNP+25Hp4W67xG+squNDqNA==
-X-Google-Smtp-Source: APXvYqwCWg6vuWk/c7vo6aVbHSfyIrRLJzTxaFNbwVhkRwUofko28zx66hVQm8lxJNsn7OZeLh6uNs1z75f9BLHI7/Y=
-X-Received: by 2002:a63:5448:: with SMTP id e8mr679797pgm.10.1571267138767;
- Wed, 16 Oct 2019 16:05:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
- <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com> <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
- <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
- <20191015202636.GA1671072@rani> <CAKwvOd=yGXMwdoxKCD2gcEgevozf41jVmqCkW7CU=Xvd7mqtjw@mail.gmail.com>
- <20191016185500.GA2674383@rani>
-In-Reply-To: <20191016185500.GA2674383@rani>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 16 Oct 2019 16:05:27 -0700
-Message-ID: <CAKwvOdkXDyqMA-mOz_PE9x0V0ePtA9uFcJS+1ibpBqde6MXX4g@mail.gmail.com>
-Subject: Re: AMDGPU and 16B stack alignment
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
-        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Matthias Kaehlcke <mka@google.com>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GgIaguR3zbW5gymqzaWVQpClblW7SO//3IVmlVP9BgY=;
+        b=MeRgzzSCao9kCPCTIOKHHSDLUZpECKVvmsjVa19K99icWst/SEJwdodLwTf7Wbtc9e
+         rh1YDZsEiJMIjez6HlIZh3lLxSvmI9/MnmTQuUJKsRUIgElpiHxDyxQ6ytE2Zs5HwFEB
+         YEPHsleQXinziLRAkdliJqX8qHaNjVi6hj/kN5QBNyjDClESnHRDcHOPnzclTPSii4IC
+         BEhEtEP/ZYRu7YYqnBfnDAB6v+2w91EpQbJMW72Gkrn+Sp+rySsHnGZthm+zKVaUFtgJ
+         RtZ6flj8Zo0kg5NTg3ykuc0v6RLKm2duki/s11uPnpci6qKKMIYHpJwuzv8JUGlvzBlC
+         KgIw==
+X-Gm-Message-State: APjAAAUNehlNBJwtkHllzJl0Co2/UxZaUDaEfmZKsp71OJrmwBFYvYHo
+        c4vW4n0tEdKNYQHqMyEftohLCDNd
+X-Google-Smtp-Source: APXvYqwoJT4pqCR3zmv0RSm0ZDWFSVA8QyFQbkize4ArET7GpVnTYC2dFOU6tqdkjaRSdNWX+u8d/w==
+X-Received: by 2002:adf:dd88:: with SMTP id x8mr251880wrl.140.1571267241080;
+        Wed, 16 Oct 2019 16:07:21 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id l9sm297071wme.45.2019.10.16.16.07.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 16 Oct 2019 16:07:20 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net 0/4] net: bcmgenet: restore internal EPHY support
+Date:   Wed, 16 Oct 2019 16:06:28 -0700
+Message-Id: <1571267192-16720-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:55 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Tue, Oct 15, 2019 at 06:51:26PM -0700, Nick Desaulniers wrote:
-> > On Tue, Oct 15, 2019 at 1:26 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Tue, Oct 15, 2019 at 11:05:56AM -0700, Nick Desaulniers wrote:
-> > > > Hmmm...I would have liked to remove it outright, as it is an ABI
-> > > > mismatch that is likely to result in instability and non-fun-to-debug
-> > > > runtime issues in the future.  I suspect my patch does work for GCC
-> > > > 7.1+.  The question is: Do we want to either:
-> > > > 1. mark AMDGPU broken for GCC < 7.1, or
-> > > > 2. continue supporting it via stack alignment mismatch?
-> > > >
-> > > > 2 is brittle, and may break at any point in the future, but if it's
-> > > > working for someone it does make me feel bad to outright disable it.
-> > > > What I'd image 2 looks like is (psuedo code in a Makefile):
-> > > >
-> > > > if CC_IS_GCC && GCC_VERSION < 7.1:
-> > > >   set stack alignment to 16B and hope for the best
-> > > >
-> > > > So my diff would be amended to keep the stack alignment flags, but
-> > > > only to support GCC < 7.1.  And that assumes my change compiles with
-> > > > GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
-> > > > feel even more confident if someone with hardware to test on and GCC
-> > > > 7.1+ could boot test).
-> > > > --
-> > > > Thanks,
-> > > > ~Nick Desaulniers
-> > >
-> > > If we do keep it, would adding -mstackrealign make it more robust?
-> > > That's simple and will only add the alignment to functions that require
-> > > 16-byte alignment (at least on gcc).
-> >
-> > I think there's also `-mincoming-stack-boundary=`.
-> > https://github.com/ClangBuiltLinux/linux/issues/735#issuecomment-540038017
->
-> Yes, but -mstackrealign looks like it's supported by clang as well.
+I managed to get my hands on an old BCM97435SVMB board to do some
+testing with the latest kernel and uncovered a number of things
+that managed to get broken over the years (some by me ;).
 
-Good to know, but I want less duct tape, not more.
+This commit set attempts to correct the errors I observed in my
+testing.
 
-> >
-> > >
-> > > Alternative is to use
-> > > __attribute__((force_align_arg_pointer)) on functions that might be
-> > > called from 8-byte-aligned code.
-> >
-> > Which is hard to automate and easy to forget.  Likely a large diff to fix today.
->
-> Right, this is a no-go, esp to just fix old compilers.
-> >
-> > >
-> > > It looks like -mstackrealign should work from gcc 5.3 onwards.
-> >
-> > The kernel would generally like to support GCC 4.9+.
-> >
-> > There's plenty of different ways to keep layering on duct tape and
-> > bailing wire to support differing ABIs, but that's just adding
-> > technical debt that will have to be repaid one day.  That's why the
-> > cleanest solution IMO is mark the driver broken for old toolchains,
-> > and use a code-base-consistent stack alignment.  Bending over
-> > backwards to support old toolchains means accepting stack alignment
-> > mismatches, which is in the "unspecified behavior" ring of the
-> > "undefined behavior" Venn diagram.  I have the same opinion on relying
-> > on explicitly undefined behavior.
-> >
-> > I'll send patches for fixing up Clang, but please consider my strong
-> > advice to generally avoid stack alignment mismatches, regardless of
-> > compiler.
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
->
-> What I suggested was in reference to your proposal for dropping the
-> -mpreferred-stack-boundary=4 for modern compilers, but keeping it for
-> <7.1. -mstackrealign would at least let 5.3 onwards be less likely to
-> break (and it doesn't error before then, I think it just doesn't
-> actually do anything, so no worse than now at least).
->
-> Simply dropping support for <7.1 would be cleanest, yes, but it sounds
-> like people don't want to go that far.
+The first commit applies to all internal PHYs to restore proper
+reporting of link status when a link comes up.
 
-That's fair.  I've included your suggestions in the commit message of
-02/03 of a series I just sent but forgot to in reply to this thread:
-https://lkml.org/lkml/2019/10/16/1700
+The second commit restores the soft reset to the initialization of
+the older internal EPHYs used by 40nm Set-Top Box devices.
 
-Also, I do appreciate the suggestions and understand the value of brainstorming.
+The third corrects a bug I introduced when removing excessive soft
+resets by altering the initialization sequence in a way that keeps
+the GENETv3 MAC interface happy.
+
+Finally, I observed a number of issues when manually configuring
+the network interface of the older EPHYs that appear to be resolved
+by the fourth commit.
+
+Doug Berger (4):
+  net: bcmgenet: don't set phydev->link from MAC
+  net: phy: bcm7xxx: define soft_reset for 40nm EPHY
+  net: bcmgenet: soft reset 40nm EPHYs before MAC init
+  net: bcmgenet: reset 40nm EPHY on energy detect
+
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |  41 +++++----
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h |   2 +-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   | 112 +++++++++++--------------
+ drivers/net/phy/bcm7xxx.c                      |   1 +
+ 4 files changed, 79 insertions(+), 77 deletions(-)
+
 -- 
-Thanks,
-~Nick Desaulniers
+2.7.4
+
