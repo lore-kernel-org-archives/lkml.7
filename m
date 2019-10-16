@@ -2,121 +2,94 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25CDECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDB7C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3ED2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BjhPAYII";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BjhPAYII"
+	by mail.kernel.org (Postfix) with ESMTP id E2F9C2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391386AbfJPHxB (ORCPT
+        id S2403979AbfJPHxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:53:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48024 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfJPHxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:53:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B1BEE60ACF; Wed, 16 Oct 2019 07:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571212380;
-        bh=B4BR77eewIz3s7+EglpvEI0AcW8SYIvXdSFzpWYfH3M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BjhPAYIIJFIgONI+muMr76SqIo8g2aX9X3qXv0KNg/DVzy5E2PRrNS/GRAT7Jrist
-         Q8SIwfZUyfQLFHI3m2Awy5op9rPKA6pdYJA3JNZzwCWRWmOiDgXJjwAOt4Iv3CXROK
-         yn5uH8uGaRger5WSWAeMckGbvPhyOq0bUel9oCME=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 943A060ACF;
-        Wed, 16 Oct 2019 07:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571212380;
-        bh=B4BR77eewIz3s7+EglpvEI0AcW8SYIvXdSFzpWYfH3M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BjhPAYIIJFIgONI+muMr76SqIo8g2aX9X3qXv0KNg/DVzy5E2PRrNS/GRAT7Jrist
-         Q8SIwfZUyfQLFHI3m2Awy5op9rPKA6pdYJA3JNZzwCWRWmOiDgXJjwAOt4Iv3CXROK
-         yn5uH8uGaRger5WSWAeMckGbvPhyOq0bUel9oCME=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 943A060ACF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH 2/2] arm64: dts: sc7180: Add minimal dts/dtsi files for
- SC7180 soc
-To:     Vinod Koul <vkoul@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191015103358.17550-1-rnayak@codeaurora.org>
- <20191015103358.17550-2-rnayak@codeaurora.org>
- <20191016052535.GC2654@vkoul-mobl>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <89225569-1cd3-ae0e-94ed-bbb2b3dd8e9c@codeaurora.org>
-Date:   Wed, 16 Oct 2019 13:22:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 03:53:07 -0400
+Received: from mga04.intel.com ([192.55.52.120]:2771 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfJPHxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:53:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 00:53:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="194765822"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Oct 2019 00:53:01 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iKe7A-0006HQ-Vb; Wed, 16 Oct 2019 10:53:00 +0300
+Date:   Wed, 16 Oct 2019 10:53:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 05/14] software node: clean up
+ property_copy_string_array()
+Message-ID: <20191016075300.GO32742@smile.fi.intel.com>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-6-dmitry.torokhov@gmail.com>
+ <20191015120726.GG32742@smile.fi.intel.com>
+ <20191015181211.GD105649@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <20191016052535.GC2654@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015181211.GD105649@dtor-ws>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On Tue, Oct 15, 2019 at 11:12:11AM -0700, Dmitry Torokhov wrote:
+> On Tue, Oct 15, 2019 at 03:07:26PM +0300, Andy Shevchenko wrote:
+> > On Fri, Oct 11, 2019 at 04:07:12PM -0700, Dmitry Torokhov wrote:
+> > > Because property_copy_string_array() stores the newly allocated pointer in the
+> > > destination property, we have an awkward code in property_entry_copy_data()
+> > > where we fetch the new pointer from dst.
+> > 
+> > I don't see a problem in this function.
+> > 
+> > Rather 'awkward code' is a result of use property_set_pointer() which relies on
+> > data type.
+> 
+> No, the awkwardness is that we set the pointer once in
+> property_copy_string_array(), then fetch it in
+> property_entry_copy_data() only to set it again via
+> property_set_pointer().
 
-On 10/16/2019 10:55 AM, Vinod Koul wrote:
-> On 15-10-19, 16:03, Rajendra Nayak wrote:
-> 
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
->> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
->> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
->> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
->> +	};
->> +
->> +	clocks {
-> 
-> Can we have these sorted alphabetically please
-> 
->> +		xo_board: xo-board {
->> +			compatible = "fixed-clock";
->> +			clock-frequency = <38400000>;
->> +			clock-output-names = "xo_board";
->> +			#clock-cells = <0>;
->> +		};
->> +
->> +		sleep_clk: sleep-clk {
->> +			compatible = "fixed-clock";
->> +			clock-frequency = <32764>;
->> +			clock-output-names = "sleep_clk";
->> +			#clock-cells = <0>;
->> +		};
->> +
->> +		bi_tcxo: bi_tcxo {
-> 
-> why is this a clock defined here? Isnt this gcc clock?
-> 
+Yes, since property_set_pointer is called independently
+on the type of the value.
 
-This is a RPMH-controlled clock and not from GCC. It is the parent clock 
-for GCC RCGs/PLLs.
 
-Once the RPMH clock support is added these would be removed.
+> This is confising and awkward and I believe it
+> is cleaner for property_copy_string_array() to give a pointer to a copy
+> of a string array, and then property_entry_copy_data() use it when
+> handling the destination structure.
 
+We probably need a 3rd opinion here.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+With Best Regards,
+Andy Shevchenko
 
---
+
