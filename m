@@ -2,108 +2,59 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DCBECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B20C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C8320872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DADD20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388733AbfJPHad (ORCPT
+        id S2388791AbfJPHbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:30:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35306 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387700AbfJPHac (ORCPT
+        Wed, 16 Oct 2019 03:31:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48468 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388737AbfJPHbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:30:32 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKdlN-0005JP-Gq; Wed, 16 Oct 2019 07:30:29 +0000
-Date:   Wed, 16 Oct 2019 09:30:28 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH v3 2/3] bpf: use copy_struct_from_user() in
- bpf_prog_get_info_by_fd()y
-Message-ID: <20191016073027.muvlebjy2zdg2yha@wittgenstein>
-References: <20191016004138.24845-1-christian.brauner@ubuntu.com>
- <20191016034432.4418-1-christian.brauner@ubuntu.com>
- <20191016034432.4418-3-christian.brauner@ubuntu.com>
- <20191016052548.gktf2ctvee7mrwlr@ast-mbp>
+        Wed, 16 Oct 2019 03:31:39 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iKdmO-0007Nm-2r; Wed, 16 Oct 2019 09:31:32 +0200
+Date:   Wed, 16 Oct 2019 09:31:32 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 26/34] Documentation/RCU: Use CONFIG_PREEMPTION where
+ appropriate
+Message-ID: <20191016073131.b35nfcc3vzbm2pfk@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-27-bigeasy@linutronix.de>
+ <20191016041330.GF2689@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191016052548.gktf2ctvee7mrwlr@ast-mbp>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191016041330.GF2689@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 10:25:49PM -0700, Alexei Starovoitov wrote:
-> On Wed, Oct 16, 2019 at 05:44:31AM +0200, Christian Brauner wrote:
-> > In v5.4-rc2 we added a new helper (cf. [1]) copy_struct_from_user().
-> > This helper is intended for all codepaths that copy structs from
-> > userspace that are versioned by size. bpf_prog_get_info_by_fd() does
-> > exactly what copy_struct_from_user() is doing.
-> > Note that copy_struct_from_user() is calling min() already. So
-> > technically, the min_t() call could go. But the info_len is used further
-> > below so leave it.
-> > 
-> > [1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > Cc: bpf@vger.kernel.org
-> > Acked-by: Aleksa Sarai <cyphar@cyphar.com>
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v1 */
-> > Link: https://lore.kernel.org/r/20191009160907.10981-3-christian.brauner@ubuntu.com
-> > 
-> > /* v2 */
-> > Link: https://lore.kernel.org/r/20191016004138.24845-3-christian.brauner@ubuntu.com
-> > - Alexei Starovoitov <ast@kernel.org>:
-> >   - remove unneeded initialization
-> > 
-> > /* v3 */
-> > unchanged
-> > ---
-> >  kernel/bpf/syscall.c | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > index 40edcaeccd71..151447f314ca 100644
-> > --- a/kernel/bpf/syscall.c
-> > +++ b/kernel/bpf/syscall.c
-> > @@ -2306,20 +2306,17 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
-> >  				   union bpf_attr __user *uattr)
-> >  {
-> >  	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
-> > -	struct bpf_prog_info info = {};
-> > +	struct bpf_prog_info info;
-> >  	u32 info_len = attr->info.info_len;
-> >  	struct bpf_prog_stats stats;
-> >  	char __user *uinsns;
-> >  	u32 ulen;
-> >  	int err;
-> >  
-> > -	err = bpf_check_uarg_tail_zero(uinfo, sizeof(info), info_len);
-> > +	info_len = min_t(u32, sizeof(info), info_len);
-> > +	err = copy_struct_from_user(&info, sizeof(info), uinfo, info_len);
-> 
-> really?! min?!
-> Frankly I'm disappointed in quality of these patches.
-> Especially considering it's v3.
+On 2019-10-15 21:13:30 [-0700], Paul E. McKenney wrote:
+> Sadly, this one ran afoul of the .txt-to-.rst migration.  Even applying
+> it against linus/master and cherry-picking it does not help.  I will
+> defer it for the moment -- perhaps Mauro or Joel have some advice.
 
-Ok, then I'm sorry.
+Don't worry about it then. Just point me to the tree once it is done.
 
-Christian
+> 							Thanx, Paul
+
+Sebastian
