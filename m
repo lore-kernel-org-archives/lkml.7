@@ -2,131 +2,139 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D956FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A51AFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5A7205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC476205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393065AbfJPMbT (ORCPT
+        id S2393082AbfJPMcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:31:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52536 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387743AbfJPMbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:31:18 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5450687638;
-        Wed, 16 Oct 2019 12:31:18 +0000 (UTC)
-Received: from [10.36.116.19] (ovpn-116-19.ams2.redhat.com [10.36.116.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B6FA85D9CD;
-        Wed, 16 Oct 2019 12:31:15 +0000 (UTC)
-Subject: Re: [PATCH RFC v3 4/9] mm: Export alloc_contig_range() /
- free_contig_range()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Potapenko <glider@google.com>
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-5-david@redhat.com>
- <20191016112051.GW317@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <ef8b47c6-45ad-1b32-c54d-829b44a12131@redhat.com>
-Date:   Wed, 16 Oct 2019 14:31:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 08:32:11 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:35859 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728987AbfJPMcK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:32:10 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id KiTEiHXKMPduvKiTHiqxSU; Wed, 16 Oct 2019 14:32:08 +0200
+Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191014141427.30708-1-ribalda@kernel.org>
+ <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
+ <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
+Date:   Wed, 16 Oct 2019 14:32:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191016112051.GW317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 16 Oct 2019 12:31:18 +0000 (UTC)
+X-CMAE-Envelope: MS4wfCnc8UaDcTkIF87b4ZT3K2Hh+wH4DkCmHP9DtTNw7s/ToCu55G49LNtOPybwvtEzJlyErJ6J83s04tZZZsHLC2LEy9FIMU1AbadJYgMOz2lLwZjny55Z
+ gzSW6YRh5+J/TiK4+CPzlUJvGMBfQqjYglYQausyeRE6fIoZP66MSdm2y+ZPDV2Lnjl6u2sTNWvCCbL1F7c4JpIMdesiNC90zKGQP63Q2icJDEJrYCCsTiJF
+ ubE5yQVrDP7yOB0L1vdW4dZz0IaGkKCUKxD5vaWPNlsyAmX6OH5yQaigcyWFrQ0r
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.10.19 13:20, Michal Hocko wrote:
-> On Thu 19-09-19 16:22:23, David Hildenbrand wrote:
->> A virtio-mem device wants to allocate memory from the memory region it
->> manages in order to unplug it in the hypervisor - similar to
->> a balloon driver. Also, it might want to plug previously unplugged
->> (allocated) memory and give it back to Linux. alloc_contig_range() /
->> free_contig_range() seem to be the perfect interface for this task.
+On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
+> Hi Hans
+> 
+> Not that awkward, the user has to use the brand new
+> v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
+> change.
+
+Well, a struct v4l2_ctrl_config is typically a static const, so you can't use
+v4l2_ctrl_ptr_create().
+
+Hmm, perhaps it is as easy as:
+
+static const struct v4l2_area def_area = {
+	...
+};
+
+static const struct v4l2_ctrl_config ctrl = {
+	...
+
+	.p_def.p_area = &def_area,
+	...
+};
+
+Can you do a quick compile check that I am not overlooking anything?
+
+If this works, then I'll take this patch.
+
+Regards,
+
+	Hans
+
+> 
+> Regards
+> 
+> On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
 >>
->> In contrast to existing balloon devices, a virtio-mem device operates
->> on bigger chunks (e.g., 4MB) and only on physical memory it manages. It
->> tracks which chunks (subblocks) are still plugged, so it can go ahead
->> and try to alloc_contig_range()+unplug them on unplug request, or
->> plug+free_contig_range() unplugged chunks on plug requests.
+>> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
+>>> This allows setting the default value on compound controls created via
+>>> v4l2_ctrl_new_custom.
+>>>
+>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>> ---
+>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+>>>  include/media/v4l2-ctrls.h           | 2 ++
+>>>  2 files changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> index bf50d37ef6c1..12cf38f73f7b 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
+>>>                       type, min, max,
+>>>                       is_menu ? cfg->menu_skip_mask : step, def,
+>>>                       cfg->dims, cfg->elem_size,
+>>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
+>>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
+>>>       if (ctrl)
+>>>               ctrl->is_private = cfg->is_private;
+>>>       return ctrl;
+>>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+>>> index 26205ba3a0a0..2fca5b823961 100644
+>>> --- a/include/media/v4l2-ctrls.h
+>>> +++ b/include/media/v4l2-ctrls.h
+>>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
+>>>   * @max:     The control's maximum value.
+>>>   * @step:    The control's step value for non-menu controls.
+>>>   * @def:     The control's default value.
+>>> + * @p_def:   The control's default value for compound controls.
+>>>   * @dims:    The size of each dimension.
+>>>   * @elem_size:       The size in bytes of the control.
+>>>   * @flags:   The control's flags.
+>>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
+>>>       s64 max;
+>>>       u64 step;
+>>>       s64 def;
+>>> +     union v4l2_ctrl_ptr p_def;
+>>>       u32 dims[V4L2_CTRL_MAX_DIMS];
+>>>       u32 elem_size;
+>>>       u32 flags;
+>>>
 >>
->> A virtio-mem device will use alloc_contig_range() / free_contig_range()
->> only on ranges that belong to the same node/zone in at least
->> MAX(MAX_ORDER - 1, pageblock_order) order granularity - e.g., 4MB on
->> x86-64. The virtio-mem device added that memory, so the memory
->> exists and does not contain any holes. virtio-mem will only try to allocate
->> on ZONE_NORMAL, never on ZONE_MOVABLE, just like when allocating
->> gigantic pages (we don't put unmovable data into the movable zone).
-> 
-> Is there any real reason to export as GPL rather than generic
-> EXPORT_SYMBOL? In other words do we need to restrict the usage this
-> interface only to GPL modules and why if so. All other allocator APIs
-> are EXPORT_SYMBOL so there should better be a good reason for this one
-> to differ. I can understand that this one is slightly different by
-> requesting a specific range of the memory but it is still under a full
-> control of the core MM to say no.
+>> I'm not sure about this. It might be a bit awkward to initialize p_def given that it is a union.
+>>
+>> Perhaps a simple void pointer would be easier?
+>>
+>> Regards,
+>>
+>>         Hans
 
-I thought that we might - at least initially - might want to know all 
-users. If you prefer, I can drop the GPL.
-
-> 
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: Mike Rapoport <rppt@linux.ibm.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
->> Cc: Alexander Potapenko <glider@google.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> Other than that, I do not think exporting this function is harmful. It
-> would be worse to reinvent it and do it wrong.
-> 
-> I usually prefer to add a caller in the same patch, though, because it
-> makes the usage explicit and clear.
-> 
-
-It's the next patch in this series (I prefer to split this from the 
-actual driver):
-
-https://lkml.org/lkml/2019/9/19/486
-
-> Acked-by: Michal Hocko <mhocko@suse.com> # to export contig range allocator API
-
-Thanks!
-
--- 
-
-Thanks,
-
-David / dhildenb
