@@ -2,113 +2,162 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C997FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB00FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649692168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571237719;
-	bh=EC0NWPqiMIyYdSGB6Jsb2ZNNFQOoamCS1c4X8iCqPNM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=DPqNN9FO28a0a2jhv+QqhqnHAjmny3gujDyTHjY5wLlmt1sbJfAH/5Gp5fOOWVUVb
-	 qOlRfF0fA82fXoSxQJFTtwo1/SgZ5VS7VV2hf2bip9+lEqNktVOPRTmWOvLuFveeEE
-	 NQCWChVETkHdV602P5ytlfXY7NNL6xQ616A0QfoE=
+	by mail.kernel.org (Postfix) with ESMTP id 2893E2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpLeVx0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405815AbfJPOzS (ORCPT
+        id S2405828AbfJPOz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:55:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46393 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393064AbfJPOzR (ORCPT
+        Wed, 16 Oct 2019 10:55:26 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43988 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405817AbfJPOzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:55:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d1so24289500ljl.13;
-        Wed, 16 Oct 2019 07:55:15 -0700 (PDT)
+        Wed, 16 Oct 2019 10:55:25 -0400
+Received: by mail-io1-f68.google.com with SMTP id v2so54162900iob.10;
+        Wed, 16 Oct 2019 07:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WsRXU2seKLqonJyjXRBsnNj1M9VdSNz6TzMXTF2DqOE=;
+        b=gpLeVx0lT1xzsOOJKDlnAf0oUpt5+fFrIs1kgXhcsJyXK8Lksxss8daWaaxFU/1ke6
+         EI3CYVCI/gjBVHYHF5Aqe61wIn5OYFHamutZQnz7rnBU6yrDgLWJpHfTdE3r0GdpEJed
+         6Iu8Dt9jevfXRR9SGydsQM0s8BIj/IaPIm8bhqxix9sJwzOE4nC6C7PnNx1kzY/E69Ln
+         PLQOHZpkruD8jEjM4YM4ABlrSj4NRVJ7IjMgXSQrryrFirAfne6PiDp4oB5iMCgo3nbO
+         vX5/gIdT9dHIXlUI0IuyhOxa8vLH5tdR+Od2MGlpBCtAtVu9rnVow0bnZSgmwX5do2As
+         orKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CCfz1udCO4iU6up5+Db3Z9kSOI2I8n3Hfy4n2+SvpRY=;
-        b=takbKn32OG50f1p4knweJWiwgRgPnfxD2vsyEH8Uk3G/HwwfWBxHD2Nfgkb3RzPhic
-         uj2tYi08BTUIbQ5ZTxaqUpQcF1Lgji+4PEQZsAoOiIVl2sRVyallxwveoUPv01gf8R0N
-         bnU9EUFHvhZR1aI8JPL4SPn45elVxFO325yqm5+GwpUqTdEzNTXXuadyt5kKsnTc9F5J
-         s+s0Yexd4gp5OqvTgjR3WqIeGMju95elZaSoGXnRvyHKH6GijMjBGdmkmFfNUTVjfVqR
-         9RnwCODDV7Ylo7NTunagt/rHAjdJw1sw9iqeo0vW3C9hWV7N3LiqqyjCVRbqxEKAsQGP
-         TDxQ==
-X-Gm-Message-State: APjAAAULQTmzczk67gRtx24S4+1qag9z0qZBunykthxptN3joPNYeTqk
-        qxqzRSKZ8RbgVBdbqtC9fKc=
-X-Google-Smtp-Source: APXvYqxG7CI/8BsMPfBrwI63mtNVIjtRqJP90lwXOJZwjbrevduVUxHrUTjcKYOmD3FI1WkaNy2tKA==
-X-Received: by 2002:a2e:c42:: with SMTP id o2mr25138621ljd.166.1571237714980;
-        Wed, 16 Oct 2019 07:55:14 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id u8sm7726251lfb.36.2019.10.16.07.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 07:55:13 -0700 (PDT)
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v2] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
-Date:   Wed, 16 Oct 2019 16:55:12 +0200
-Message-Id: <20191016145512.24747-1-ribalda@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WsRXU2seKLqonJyjXRBsnNj1M9VdSNz6TzMXTF2DqOE=;
+        b=p3Gwh01c86/q0msxX2w/YRAvG7mE7nkiJmDAx5S4m71GtpNnDX4ZzSrSdnOg60jG/x
+         GuKIFfAvP56gMmYtXUB8k0EcQDDRfkVaVBUh7syDZltHZykAfa9j0dWkSmc6H1sgDHV/
+         1UXJXBkTFg21iCqu1HkzFnZtHXL+sj6AYoxusv+z/nFBhaTD7s0cz3mbqhUO76F/fGYR
+         GmwsiVn3mBu+ybJXbclnIySU9ynXIDvKphRDkZZLm2Gt8+vJM9TAFBud5WyzXcSZ0qDx
+         u9C5ljY95ScAW+GoGcZtjThxWNrs49fNcMqM9lhhv9R4w3rMPXr9th5duSasbEW5oFN0
+         6Now==
+X-Gm-Message-State: APjAAAXL36Exb1u8bSrpLsYpaKm+wy/75wAsUrDhEMEHO+Tg+0sLtdgO
+        FQgmyVK5pSbOXu7lj+FjyiOVu596w5/pBDwuD4w=
+X-Google-Smtp-Source: APXvYqwZrFFGnXE2/LlaSltNPG5F0vYPaaUxMhoyXQyYWQpz1kDoiel4AdpJBMLakJV8NtyF44Gkecosan9olvXX4BQ=
+X-Received: by 2002:a5d:9952:: with SMTP id v18mr26088875ios.58.1571237723091;
+ Wed, 16 Oct 2019 07:55:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191016135147.7743-1-aford173@gmail.com> <20191016135147.7743-2-aford173@gmail.com>
+ <20191016144018.GG5175@pendragon.ideasonboard.com>
+In-Reply-To: <20191016144018.GG5175@pendragon.ideasonboard.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 16 Oct 2019 09:55:11 -0500
+Message-ID: <CAHCN7xJhHHoia_o4rb0VgvCP71X94Pvem684F2quMijNNpNxVA@mail.gmail.com>
+Subject: Re: [PATCH V5 2/3] dt-bindings: Add Logic PD Type 28 display panel
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows setting the default value on compound controls created via
-v4l2_ctrl_new_custom.
+On Wed, Oct 16, 2019 at 9:40 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Adam,
+>
+> Thank you for the patch.
+>
+> On Wed, Oct 16, 2019 at 08:51:46AM -0500, Adam Ford wrote:
+> > This patch adds documentation of device tree bindings for the WVGA panel
+> > Logic PD Type 28 display.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> > V5:  Replace GPIO_ACTIVE_HIGH with 0 to fix make dt_binding_check -k
+> > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
+> > V3:  Correct build errors from 'make dt_binding_check'
+> > V2:  Use YAML instead of TXT for binding
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> > new file mode 100644
+> > index 000000000000..2834287b8d88
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> > @@ -0,0 +1,42 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> > +
+> > +maintainers:
+> > +  - Adam Ford <aford173@gmail.com>
+> > +
+> > +allOf:
+> > +  - $ref: panel-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: logicpd,type28
+> > +
+> > +  power-supply: true
+> > +  enable-gpios: true
+> > +  backlight: true
+> > +  port: true
+> > +
+> > +required:
+> > +  - compatible
+>
+> Should the port be required too ? Apart from that,
 
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
----
- drivers/media/v4l2-core/v4l2-ctrls.c | 3 ++-
- include/media/v4l2-ctrls.h           | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+I supposed that's true, but I used ampire,am-480272h3tmqw-t01h.yaml as
+the example, and it doesn't list it as a required item.
+Is there anything else I need to address?  I feel like I'm trying to
+hit a moving target.
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index bf50d37ef6c1..939aa110daa0 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -2583,7 +2583,8 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
- 			type, min, max,
- 			is_menu ? cfg->menu_skip_mask : step, def,
- 			cfg->dims, cfg->elem_size,
--			flags, qmenu, qmenu_int, ptr_null, priv);
-+			flags, qmenu, qmenu_int,
-+			v4l2_ctrl_ptr_create((void *)cfg->p_def), priv);
- 	if (ctrl)
- 		ctrl->is_private = cfg->is_private;
- 	return ctrl;
-diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-index 26205ba3a0a0..d08d19a4ae34 100644
---- a/include/media/v4l2-ctrls.h
-+++ b/include/media/v4l2-ctrls.h
-@@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
-  * @max:	The control's maximum value.
-  * @step:	The control's step value for non-menu controls.
-  * @def:	The control's default value.
-+ * @p_def:	The control's default value for compound controls.
-  * @dims:	The size of each dimension.
-  * @elem_size:	The size in bytes of the control.
-  * @flags:	The control's flags.
-@@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
- 	s64 max;
- 	u64 step;
- 	s64 def;
-+	const void *p_def;
- 	u32 dims[V4L2_CTRL_MAX_DIMS];
- 	u32 elem_size;
- 	u32 flags;
--- 
-2.23.0
-
+adam
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    lcd0: display {
+> > +      compatible = "logicpd,type28";
+> > +      enable-gpios = <&gpio5 27 0>;
+> > +      backlight = <&backlight>;
+> > +      port {
+> > +        lcd_in: endpoint {
+> > +          remote-endpoint = <&dpi_out>;
+> > +        };
+> > +      };
+> > +    };
+> > +
+> > +...
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
