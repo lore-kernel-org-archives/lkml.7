@@ -2,121 +2,95 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F04FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE643FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067AC218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OflYA2g4"
+	by mail.kernel.org (Postfix) with ESMTP id 8DDA421925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393932AbfJPOTz (ORCPT
+        id S2393941AbfJPOUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:19:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48500 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727442AbfJPOTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:19:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=2gfBz9doyaXqlfWGuAYNroU7aTSAFE6JHtbYJe4Wvoo=; b=OflYA2g45TEOHaOj3PxZPb2irR
-        iuDLs2iQqK9Toz8vWWSaccnAYSd83vMzaXLBjRPHsFegisJWmx7AzxLWb7lS/WrdEywG1gx5ONnN1
-        ATUcuVRmDrEsyfswvfLPTKjnryIY5BgcIuYKYr41t+KwOvXwhw3IKlypFrZjW1RiQa8U=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iKk9W-0007pf-RD; Wed, 16 Oct 2019 16:19:50 +0200
-Date:   Wed, 16 Oct 2019 16:19:50 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>, hkallweit1@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, olteanv@gmail.com,
-        rmk+kernel@armlinux.org.uk, cphealy@gmail.com,
-        Jose Abreu <joabreu@synopsys.com>
-Subject: Re: [PATCH net-next 2/2] net: phy: Add ability to debug RGMII
- connections
-Message-ID: <20191016141950.GC17013@lunn.ch>
-References: <20191015224953.24199-1-f.fainelli@gmail.com>
- <20191015224953.24199-3-f.fainelli@gmail.com>
+        Wed, 16 Oct 2019 10:20:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4224 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727442AbfJPOUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:20:01 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2C655EECCF023BF90BBA;
+        Wed, 16 Oct 2019 22:20:00 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 22:19:54 +0800
+Subject: Re: [PATCH v2] perf kmem: Fix memory leak in compact_gfp_flags()
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <hushiyuan@huawei.com>, <linfeilong@huawei.com>
+References: <7fd48f77-fbc4-b99f-60c1-ccc7d8d287e9@huawei.com>
+ <20191016140651.GF22835@kernel.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <fc49d489-3ea3-104d-6409-ea0438818ef3@huawei.com>
+Date:   Wed, 16 Oct 2019 22:19:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015224953.24199-3-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191016140651.GF22835@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If all is well, we stop iterating over all possible RGMII combinations
-> and offer the one that is deemed suitable which is what an user should
-> be trying by configuring the platform appropriately.
 
-Hi Florian
 
-I like the idea, however...
+On 2019/10/16 22:06, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Oct 16, 2019 at 09:26:50PM +0800, Yunfeng Ye escreveu:
+>> The memory @orig_flags is allocated by strdup(), it is freed on the
+>> normal path, but leak to free on the error path.
+>>
+>> Fix this by adding free(orig_flags) on the error path.
+>>
+>> Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>> ---
+>> v1 -> v2:
+>>  - add "Fixes:" message
+> 
+> No need for that, I did it already, just next time look for when the
+> problem you fixed was introduced, that way the various bots out there
+> can pick this up for backports, i.e. your fix has a higher chance of
+> being beneficial to more systems.
+> 
+Normally I will add "Fixes:", this time is forgot. thanks.
 
-I think it would be good to always iterate over all possible delay
-modes, not until it works. We want to try to catch PHY drivers which
-don't implement all four possible settings. If two or more delay modes
-work, it suggests something is wrong in the implementation, not all
-modes are supported correctly.
+> - Arnaldo
+>  
+>>  tools/perf/builtin-kmem.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+>> index 1e61e353f579..9661671cc26e 100644
+>> --- a/tools/perf/builtin-kmem.c
+>> +++ b/tools/perf/builtin-kmem.c
+>> @@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
+>>  			new = realloc(new_flags, len + strlen(cpt) + 2);
+>>  			if (new == NULL) {
+>>  				free(new_flags);
+>> +				free(orig_flags);
+>>  				return NULL;
+>>  			}
+>>
+>> -- 
+>> 2.7.4.3
+> 
 
-> +int phy_rgmii_debug_probe(struct phy_device *phydev)
-> +{
-> +	struct net_device *ndev = phydev->attached_dev;
-> +	unsigned char operstate = ndev->operstate;
-> +	phy_interface_t rgmii_modes[4] = {
-> +		PHY_INTERFACE_MODE_RGMII,
-> +		PHY_INTERFACE_MODE_RGMII_ID,
-> +		PHY_INTERFACE_MODE_RGMII_RXID,
-> +		PHY_INTERFACE_MODE_RGMII_TXID
-> +	};
-> +	struct phy_rgmii_debug_priv *priv;
-> +	unsigned int i, count;
-> +	int ret;
-> +
-> +	ret = phy_rgmii_can_debug(phydev);
-> +	if (ret <= 0)
-> +		return ret;
-> +
-> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	if (phy_rgmii_probes_type.af_packet_priv)
-> +		return -EBUSY;
-> +
-> +	phy_rgmii_probes_type.af_packet_priv = priv;
-> +	priv->phydev = phydev;
-> +	INIT_WORK(&priv->work, phy_rgmii_probe_xmit_work);
-> +	init_completion(&priv->compl);
-> +
-> +	/* We are now testing this network device */
-> +	ndev->operstate = IF_OPER_TESTING;
-
-I should dig out and re-submit my patch set of doing this.
-
-> +
-> +	dev_add_pack(&phy_rgmii_probes_type);
-> +
-> +	/* Determine where to start */
-> +	for (i = 0; i < ARRAY_SIZE(rgmii_modes); i++) {
-> +		if (phydev->interface == rgmii_modes[i])
-> +			break;
-> +	}
-
-I don't think that is a good idea. What if setting the RGMII delay is
-a NOP, and relying on strapping? We will never know we have the wrong
-mode in DT, because it works. I would much prefer we used all four
-modes, all four modes pass, and then we know the driver is broken.
-
-       Andrew
