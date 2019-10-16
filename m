@@ -2,161 +2,160 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBB9ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFAAC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D78F20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856FC20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e6dZ4jnO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403798AbfJPDdp (ORCPT
+        id S2403816AbfJPDdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:33:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:22945 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730211AbfJPDdo (ORCPT
+        Tue, 15 Oct 2019 23:33:47 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39181 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403802AbfJPDdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:33:44 -0400
-X-UUID: 9b3a021651fe4c8b987019d54e8d0414-20191016
-X-UUID: 9b3a021651fe4c8b987019d54e8d0414-20191016
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 940793888; Wed, 16 Oct 2019 11:33:41 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 16 Oct 2019 11:33:37 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 16 Oct 2019 11:33:36 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>
-CC:     Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
-        <chao.hao@mediatek.com>, <edison.hsieh@mediatek.com>
-Subject: [PATCH v4 2/7] iommu/mediatek: Add a new tlb_lock for tlb_flush
-Date:   Wed, 16 Oct 2019 11:33:07 +0800
-Message-ID: <1571196792-12382-3-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571196792-12382-1-git-send-email-yong.wu@mediatek.com>
-References: <1571196792-12382-1-git-send-email-yong.wu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Tue, 15 Oct 2019 23:33:45 -0400
+Received: by mail-pl1-f196.google.com with SMTP id s17so10568725plp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 20:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=GYRc8Evk3wu8EUiuELp77RSTyUut+SJabJSgyybQCKc=;
+        b=e6dZ4jnOdh701k6NIby9LePCeZk359ThphqZ/2dmJcm5ahDdEyvbcCb7e1qoumSLz0
+         8j+1PiF2T63bndbhCteIdZ/+q9rAHX7I70BI2N3BlLE9Mt562iWVzRA6MOYGzlpwWKcQ
+         GxWtdyTnInOCSf5l461dxNA5c2yEklyi3Mzj6nxxJAWzf8tSW9nlA43PAX/DEFhL1x5K
+         wmgkPA9ikT+8E1AQJ2eAIdMSaNcViHVg26qtyYT587vUUX/1mnFB4MICD79iJd31EkHg
+         LFcGqZVjhYpd+WkBoT7+lhEmQevDkes86Ld4ASBmJgLVKKUK3mnqhH1jmHEmjuR00Kbw
+         n2SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=GYRc8Evk3wu8EUiuELp77RSTyUut+SJabJSgyybQCKc=;
+        b=ucEcVXCyPo77C++Gftp0a63wbe8+inGc/IqKPXf6jzyX+l4OVzhKWwO3l1gx4N+P5a
+         FETrkC66Bxi2uBEgsWJODuAzzoACdT8pPxtUezL40+u2dxlEb34xD5UU5wk5Iml9NTdG
+         kuUalYZW58+GH/IhTgbY234ZZ+zHTRtMHl12Qbsqv+tvEBtRHCyuNQHpN+yl5wYnTFdI
+         pVy2Yv9olMPMOUwbFrCkPHDhLjtpmgPEdEltDh7elu7gc2JF1YKPkc6kBJhTnvIU0gZh
+         OMholMWAJykPZFbWtALYrOvH6J773GPsT91sVxyztLYs75XvR5sfglJHHxdzAESS7cAZ
+         +mEQ==
+X-Gm-Message-State: APjAAAWB4DOSQtSGfaAMnrl/KasvFmxuMiAu/giZ43o42ya78ijaVFGp
+        QjIYx1tA6Ky15icQJGr8fyDpy/YhT30=
+X-Google-Smtp-Source: APXvYqzi4gPMxKJwhqOxXiD5FPvDSBSoufhfjLaVn4yXk8AEbK4UogbAw0pn+zPiG0oPOnXiM33JVw==
+X-Received: by 2002:a17:902:a988:: with SMTP id bh8mr39613879plb.303.1571196824723;
+        Tue, 15 Oct 2019 20:33:44 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id l23sm748356pjy.12.2019.10.15.20.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 20:33:44 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [RFC][PATCH v3 01/11] dt-bindings: usb: rt1711h: Add connector bindings
+Date:   Wed, 16 Oct 2019 03:33:30 +0000
+Message-Id: <20191016033340.1288-2-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191016033340.1288-1-john.stultz@linaro.org>
+References: <20191016033340.1288-1-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API
-TLB sync") help move the tlb_sync of unmap from v7s into the iommu
-framework. It helps add a new function "mtk_iommu_iotlb_sync", But it
-lacked the lock, then it will cause the variable "tlb_flush_active"
-may be changed unexpectedly, we could see this warning log randomly:
+Add connector binding documentation for Richtek RT1711H Type-C
+chip driver
 
-mtk-iommu 10205000.iommu: Partial TLB flush timed out, falling back to
-full flush
+It was noted by Rob Herring that the rt1711h binding docs
+doesn't include the connector binding.
 
-The HW requires tlb_flush/tlb_sync in pairs strictly, this patch adds
-a new tlb_lock for tlb operations to fix this issue.
+Thus this patch adds such documentation following the details
+in Documentation/devicetree/bindings/usb/typec-tcpci.txt
 
-Fixes: 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API TLB
-sync")
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: ShuFan Lee <shufan_lee@richtek.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/iommu/mtk_iommu.c | 23 ++++++++++++++++++++++-
- drivers/iommu/mtk_iommu.h |  1 +
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ .../bindings/usb/richtek,rt1711h.txt          | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 76b9388..c2f6c78 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -219,22 +219,37 @@ static void mtk_iommu_tlb_sync(void *cookie)
- static void mtk_iommu_tlb_flush_walk(unsigned long iova, size_t size,
- 				     size_t granule, void *cookie)
- {
-+	struct mtk_iommu_data *data = cookie;
-+	unsigned long flags;
+diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+index d4cf53c071d9..e3fc57e605ed 100644
+--- a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
++++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+@@ -6,10 +6,39 @@ Required properties:
+  - interrupts : <a b> where a is the interrupt number and b represents an
+    encoding of the sense and level information for the interrupt.
+ 
++Required sub-node:
++- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
++  of connector node are specified in
++  Documentation/devicetree/bindings/connector/usb-connector.txt
 +
-+	spin_lock_irqsave(&data->tlb_lock, flags);
- 	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, false, cookie);
- 	mtk_iommu_tlb_sync(cookie);
-+	spin_unlock_irqrestore(&data->tlb_lock, flags);
- }
- 
- static void mtk_iommu_tlb_flush_leaf(unsigned long iova, size_t size,
- 				     size_t granule, void *cookie)
- {
-+	struct mtk_iommu_data *data = cookie;
-+	unsigned long flags;
+ Example :
+ rt1711h@4e {
+ 	compatible = "richtek,rt1711h";
+ 	reg = <0x4e>;
+ 	interrupt-parent = <&gpio26>;
+ 	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
 +
-+	spin_lock_irqsave(&data->tlb_lock, flags);
- 	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, true, cookie);
- 	mtk_iommu_tlb_sync(cookie);
-+	spin_unlock_irqrestore(&data->tlb_lock, flags);
- }
- 
- static void mtk_iommu_tlb_flush_page_nosync(struct iommu_iotlb_gather *gather,
- 					    unsigned long iova, size_t granule,
- 					    void *cookie)
- {
-+	struct mtk_iommu_data *data = cookie;
-+	unsigned long flags;
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++		power-role = "dual";
++		try-power-role = "sink";
++		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
++		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
++			     PDO_VAR(5000, 12000, 2000)>;
++		op-sink-microwatt = <10000000>;
 +
-+	spin_lock_irqsave(&data->tlb_lock, flags);
- 	mtk_iommu_tlb_add_flush_nosync(iova, granule, granule, true, cookie);
-+	spin_unlock_irqrestore(&data->tlb_lock, flags);
- }
- 
- static const struct iommu_flush_ops mtk_iommu_flush_ops = {
-@@ -453,7 +468,12 @@ static void mtk_iommu_flush_iotlb_all(struct iommu_domain *domain)
- static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
- 				 struct iommu_iotlb_gather *gather)
- {
--	mtk_iommu_tlb_sync(mtk_iommu_get_m4u_data());
-+	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
-+	unsigned long flags;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	spin_lock_irqsave(&data->tlb_lock, flags);
-+	mtk_iommu_tlb_sync(data);
-+	spin_unlock_irqrestore(&data->tlb_lock, flags);
- }
- 
- static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
-@@ -733,6 +753,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	spin_lock_init(&data->tlb_lock);
- 	list_add_tail(&data->list, &m4ulist);
- 
- 	if (!iommu_present(&platform_bus_type))
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index fc0f16e..8cae22d 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -58,6 +58,7 @@ struct mtk_iommu_data {
- 	struct iommu_group		*m4u_group;
- 	bool                            enable_4GB;
- 	bool				tlb_flush_active;
-+	spinlock_t			tlb_lock; /* lock for tlb range flush */
- 
- 	struct iommu_device		iommu;
- 	const struct mtk_iommu_plat_data *plat_data;
++			port@1 {
++				reg = <1>;
++				usb_con_ss: endpoint {
++					remote-endpoint = <&usb3_data_ss>;
++				};
++			};
++		};
++	};
+ };
 -- 
-1.9.1
+2.17.1
 
