@@ -2,77 +2,97 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12CEFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831B0FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271BB2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDFD2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qg2C4rZR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTvgClYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405680AbfJPOAL (ORCPT
+        id S2405693AbfJPOAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:00:11 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45606 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405621AbfJPOAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:00:11 -0400
-Received: from zn.tnic (p200300EC2F0939004484EE387460D5B4.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:3900:4484:ee38:7460:d5b4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E94AF1EC0C94;
-        Wed, 16 Oct 2019 16:00:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571234410;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rfxIM8UotEOA5drHs/In94FZKXAHPY17r+q8zUsKTkA=;
-        b=qg2C4rZRmNUBmUMaMbNtLj0hn+Wrf5HZ5loBjTUmRIC7+jAO3PIVmM3GTYYaFuIPOUaxKX
-        y9cjQA3Z9w6z3IJlSLgpo0H3aVhGrRYhFG8twBYEe5+AU7UXXziU+hZLlX4qwe5C/1Sagt
-        jDVxp8S1qPZnAVHUYur/zPtZW0SJXzA=
-Date:   Wed, 16 Oct 2019 16:00:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, bberg@redhat.com, x86@kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, ckellner@redhat.com
-Subject: Re: [PATCH 1/2] x86, mce, therm_throt: Optimize logging of thermal
- throttle messages
-Message-ID: <20191016140001.GF1138@zn.tnic>
-References: <2c2b65c23be3064504566c5f621c1f37bf7e7326.camel@redhat.com>
- <20191014212101.25719-1-srinivas.pandruvada@linux.intel.com>
- <20191015084833.GD2311@hirez.programming.kicks-ass.net>
- <f481b4ab6dfebbc0637c843e5f1cd4ddfd4bd60b.camel@linux.intel.com>
- <20191016081405.GO2328@hirez.programming.kicks-ass.net>
+        Wed, 16 Oct 2019 10:00:41 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37846 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405621AbfJPOAk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:00:40 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u184so22841208qkd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gqml278NTu5znyLj4o9Te22EdTDlURV2Qw1cIDtLTt4=;
+        b=VTvgClYQ4A/Fh9y5c/hd9xtq28k1VhkkJC6Lae1lj1lS9CSeatI4xJUFt7aVOZWMpC
+         c70NFA/b7hFsue6/wOXLILAIv1rMEqDmIBvWLgw6pEyTOArvK00uv3y2ezSbJfK//Mo4
+         i5r/NkgWwB3lrYFwN5LcQ2tCGu8aeZgWrDRUWzHNOOQGwGamIoEpvEQqymVoEvVUbbPM
+         BMHUwKj6KZhVgqPx3JZOk8L73cAWjLzEeo4NDhHQfPwLXBPLSaQKGY3a2evpL/0tLBHW
+         9QGKALZPSodLHlZ5Ia7E3FjNomYdIpr+7Yb013hif8sY1MGNRGE4+poi7QzFf+5L98II
+         qPDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gqml278NTu5znyLj4o9Te22EdTDlURV2Qw1cIDtLTt4=;
+        b=RyiP5AOAQ/F3SIV1EexWKQTCnRaX5Ig/wo4ad+e+Eb14iBkf08FAfcSbpTMIgwNa6N
+         u5/ILBbGkN/EQt00VY/lgZRjUKk1+/gdDOkhAJ/WmCkXInOrZ9EnwJxsayk92xrcsAtk
+         bjTipJfo/jktvMgEjw380zPEfJFcBpeMNQehEzfBRreBIX0hvj5iKKKAuUNrglHPjrRI
+         cjJ5fwo/u1kQazRKjgl5Z9G9ciUA27kLEMlmWQBF1Xj5VSMCjfP86wjo9xkEiooOicRE
+         d9/+ePIlNfzaplVpGXjYPqjYvaUJNjsUSMZof0Q6gIGcxA3WofjuYgUZ+2k9Tf6uvhzo
+         Gw+Q==
+X-Gm-Message-State: APjAAAWopWj8j0BG2hPftC9X3r4EInAauRxrX5NJs4xifalhuNpSmw2e
+        Fl1dW+KT0Y97RyzxP3BKCQ++pNR/RsnnUfpnkLZELQ==
+X-Google-Smtp-Source: APXvYqxE/W8Wym2zPEoThfzgBl+Y8q8y0M/tZiDg5SGuXU2OGToGJCLrZSvaS15buTSq1qqdW86Kkg/8vbhVY6QMYW4=
+X-Received: by 2002:a05:620a:34b:: with SMTP id t11mr38547340qkm.213.1571234438671;
+ Wed, 16 Oct 2019 07:00:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191016081405.GO2328@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191008044153.12734-1-andrew@aj.id.au> <CACRpkda5cWaA7R3XzyiERCCgwUrjnXd+wCBeKvt-wtjex7wNDg@mail.gmail.com>
+ <2de90789-c374-4821-89f9-5d5f01e7d2d6@www.fastmail.com>
+In-Reply-To: <2de90789-c374-4821-89f9-5d5f01e7d2d6@www.fastmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 16:00:26 +0200
+Message-ID: <CACRpkdbmbyNmW8tL_L0agBajomPybXsjn9ix_F5-B3fZnfuW9A@mail.gmail.com>
+Subject: Re: [PATCH 0/7] pinctrl: Fixes for AST2600 support
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Johnny Huang <johnny_huang@aspeedtech.com>,
+        Ryan Chen <ryanchen.aspeed@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:14:05AM +0200, Peter Zijlstra wrote:
-> That all sounds like the printk should be downgraded too, it is not a
-> KERN_CRIT warning. It is more a notification that we're getting warm.
+On Wed, Oct 16, 2019 at 1:42 PM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-Right, and I think we should take Benjamin's patch after all - perhaps
-even tag it for stable if that message is annoying people too much - and
-Srinivas can do the dynamic thing ontop.
+> I was hoping to get them into the 5.4 fixes branch: I consider them all fixes
 
-Thx.
+OK I moved them all to fixes.
 
--- 
-Regards/Gruss,
-    Boris.
+> > I need a shortlist of anything that should go into v5.4 if anything.
+>
+> IMO all of them should go into 5.4, as above.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+OK
+
+>  It's there something I can do in the future to communicate this better?
+
+Nah it is a complicated process, things need to be done manually
+at times, overly obsessing with process is counterproductive.
+
+Yours,
+Linus Walleij
