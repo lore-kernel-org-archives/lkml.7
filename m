@@ -2,57 +2,51 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F41FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C495ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2DB21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9DA21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264592;
-	bh=7PZGtIV8pUjbgU6gth72dxv5B0tbvccGyLsGcxsm5ps=;
+	s=default; t=1571264598;
+	bh=55pIYmCZVMIoqRNbdhjyORr7+NR7SE8xoBV2E7ain4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLlWRTbQfIqdrtwImatSNWKRtQb6gPtOhkijvjsTsdXdnzBTL4S/xDu3ridRzMYKm
-	 CnZB36hdjm7NPABvYdwOJThTKNeNfVMpG0HdRImJ1NpbWzBiUs2Mig+ou0XWjLoB/f
-	 1k67wpNm59KHEBqVpDvOKsGrUJ+2R5RE3vteVbaw=
+	b=0cPHE/MBUyi4izNvmQnFc8DoI7CobXHYihh4HyGnSVp7TXLJMP4Le3AMv7xLATl9C
+	 T5SnBM/E3i8tx5t+j9UVGkmavPuIBGduhrHdp5d9zeO/f86RiHN8ffUbEmG5gGfbpl
+	 DYMJhGTlX2lPkfYyOAS1k5c7hG0epIxVD0UhZa4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394131AbfJPWXK (ORCPT
+        id S2439411AbfJPWXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394765AbfJPVxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:02 -0400
+        id S2437114AbfJPVw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:52:59 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E3CA21925;
-        Wed, 16 Oct 2019 21:53:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D4621D7C;
+        Wed, 16 Oct 2019 21:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262781;
-        bh=7PZGtIV8pUjbgU6gth72dxv5B0tbvccGyLsGcxsm5ps=;
+        s=default; t=1571262779;
+        bh=55pIYmCZVMIoqRNbdhjyORr7+NR7SE8xoBV2E7ain4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3JzgZsFInpcVh6WPupe0oMpTQEf84ffh24vCi5rDq08r0KY4YGC0P+G6P8po7+We
-         z8eKcRJxAdDH9tFDQp10erLv8r7JXZNVM7XcLjasCZlhcyrY8yM/sWaybrPqt5ZRPe
-         dJAzVJCXB0ULkUVTPp1w6nV5dMF00BGhZxRcCAYI=
+        b=X+rnxRfu+MmPEofIN+Mqa7lsvp1PANV52EzjkL9G9WlZLFB3fwYY26zPZiASCohxF
+         Uaj7rIDdiUk2s4RKhi+FPL+A1N/0+B47oBrZsR0/+BtiBe4ZEkiGrdHFGv4P3VwmEE
+         9I/jIiAdI/2F5Zv6KiWHN6Y4Qx3T6YH9U9HbRhqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/79] perf stat: Fix a segmentation fault when using repeat forever
-Date:   Wed, 16 Oct 2019 14:49:57 -0700
-Message-Id: <20191016214751.367078730@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.4 02/79] s390/topology: avoid firing events before kobjs are created
+Date:   Wed, 16 Oct 2019 14:49:37 -0700
+Message-Id: <20191016214732.696445726@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -65,108 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 443f2d5ba13d65ccfd879460f77941875159d154 ]
+commit f3122a79a1b0a113d3aea748e0ec26f2cb2889de upstream.
 
-Observe a segmentation fault when 'perf stat' is asked to repeat forever
-with the interval option.
+arch_update_cpu_topology is first called from:
+kernel_init_freeable->sched_init_smp->sched_init_domains
 
-Without fix:
+even before cpus has been registered in:
+kernel_init_freeable->do_one_initcall->s390_smp_init
 
-  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
-  #           time             counts unit events
-       5.000211692  3,13,89,82,34,157      cycles
-      10.000380119  1,53,98,52,22,294      cycles
-      10.040467280       17,16,79,265      cycles
-  Segmentation fault
+Do not trigger kobject_uevent change events until cpu devices are
+actually created. Fixes the following kasan findings:
 
-This problem was only observed when we use forever option aka -r 0 and
-works with limited repeats. Calling print_counter with ts being set to
-NULL, is not a correct option when interval is set. Hence avoid
-print_counter(NULL,..)  if interval is set.
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb40/0xee0
+Read of size 8 at addr 0000000000000020 by task swapper/0/1
 
-With fix:
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb36/0xee0
+Read of size 8 at addr 0000000000000018 by task swapper/0/1
 
-  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
-   #           time             counts unit events
-       5.019866622  3,15,14,43,08,697      cycles
-      10.039865756  3,15,16,31,95,261      cycles
-      10.059950628     1,26,05,47,158      cycles
-       5.009902655  3,14,52,62,33,932      cycles
-      10.019880228  3,14,52,22,89,154      cycles
-      10.030543876       66,90,18,333      cycles
-       5.009848281  3,14,51,98,25,437      cycles
-      10.029854402  3,15,14,93,04,918      cycles
-       5.009834177  3,14,51,95,92,316      cycles
+CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000143c6db7e>] show_stack+0x14e/0x1a8)
+ [<0000000145956498>] dump_stack+0x1d0/0x218
+ [<000000014429fb4c>] print_address_description+0x64/0x380
+ [<000000014429f630>] __kasan_report+0x138/0x168
+ [<0000000145960b96>] kobject_uevent_env+0xb36/0xee0
+ [<0000000143c7c47c>] arch_update_cpu_topology+0x104/0x108
+ [<0000000143df9e22>] sched_init_domains+0x62/0xe8
+ [<000000014644c94a>] sched_init_smp+0x3a/0xc0
+ [<0000000146433a20>] kernel_init_freeable+0x558/0x958
+ [<000000014599002a>] kernel_init+0x22/0x160
+ [<00000001459a71d4>] ret_from_fork+0x28/0x30
+ [<00000001459a71dc>] kernel_thread_starter+0x0/0x10
 
-Committer notes:
+Cc: stable@vger.kernel.org
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Did the 'git bisect' to find the cset introducing the problem to add the
-Fixes tag below, and at that time the problem reproduced as:
-
-  (gdb) run stat -r0 -I500 sleep 1
-  <SNIP>
-  Program received signal SIGSEGV, Segmentation fault.
-  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
-  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
-  (gdb) bt
-  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
-  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
-  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
-  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
-  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
-  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
-  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
-  (gdb)
-
-Mostly the same as just before this patch:
-
-  Program received signal SIGSEGV, Segmentation fault.
-  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
-  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
-  (gdb) bt
-  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
-  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
-      at util/stat-display.c:1172
-  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
-  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
-  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
-  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
-  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
-  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
-  (gdb)
-
-Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org # v4.2+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/topology.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index e77880b5094de..65a6922db7223 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1416,7 +1416,7 @@ int cmd_stat(int argc, const char **argv, const char *prefix __maybe_unused)
- 				run_idx + 1);
- 
- 		status = run_perf_stat(argc, argv);
--		if (forever && status != -1) {
-+		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
- 			perf_stat__reset_stats();
- 		}
--- 
-2.20.1
-
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -291,7 +291,8 @@ int arch_update_cpu_topology(void)
+ 		topology_update_polarization_simple();
+ 	for_each_online_cpu(cpu) {
+ 		dev = get_cpu_device(cpu);
+-		kobject_uevent(&dev->kobj, KOBJ_CHANGE);
++		if (dev)
++			kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+ 	}
+ 	return rc;
+ }
 
 
