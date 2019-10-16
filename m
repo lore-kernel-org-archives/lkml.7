@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4B7FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB0BECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793CA222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18D821A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262810;
-	bh=A/GUR8jKlGoJbWO4krzlD2ky3UB/AYk6f6PkrqbWfYQ=;
+	s=default; t=1571262815;
+	bh=2/YXhLFdEXvDWwBgH8c0w48Z1nq/ZTRqxtt8A54n0uM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/Aq9VSlSiVip2kXxtwC0xZU8uKuMqvSz4iaW5s/VIMTpVZlUqv/QJXJnYpu8Kv85
-	 r1SUkpGpLTRon9WQzH8dVVe/IsIhq2JgweuzQRHMuCbkzbB2AQzdtPr6J8aQPQHAaW
-	 yZHjGT+ooxMG5hi2GLFd8YgEY+SBIyLaeN2AqTzg=
+	b=2ByJg3+EUtNKD9qM30Xdks+cP7/u+P9+ag+wkfHJ6uUS++9jIE/zNJir7kqtUZLc4
+	 qcHocCfFHO+lTQjphsUJImv+OpuaNNCzdURkDpQcJZVyYxHy6T0avtMdVSDpgO+jdt
+	 RrpkL0Gf00ytAz3bvu+lGNtKseypNhH1UAtqCW4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394880AbfJPVx3 (ORCPT
+        id S2437540AbfJPVxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394837AbfJPVxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:22 -0400
+        id S2394855AbfJPVxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:25 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8CE321A4C;
-        Wed, 16 Oct 2019 21:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3392921A4C;
+        Wed, 16 Oct 2019 21:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262801;
-        bh=A/GUR8jKlGoJbWO4krzlD2ky3UB/AYk6f6PkrqbWfYQ=;
+        s=default; t=1571262805;
+        bh=2/YXhLFdEXvDWwBgH8c0w48Z1nq/ZTRqxtt8A54n0uM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LusOh1wUhGqE212qpG8MbB2LrW4l0qfYXTFdjvEfi1asYBqPzvkhzs+9MOo0WMyjz
-         Pdwb93CumDI/21W9CnWZ/ff3Cz1JLsfxzEvqn6KYaniW1RZO7jnb4LLFww/aTjjPGW
-         g0/DzLk80L5mtCLxM8xbYMx8SGQRYDBG865Df9eM=
+        b=xFNQttbw0rVIrBtfABdmCpIDuhME/EfiDx2x/YvERGRY2Oac4I99vGQOWI/XdwaC/
+         ZDebo9usvIyF32DxkyRXyY+DskXmog+rYKz5cwsV42dGa4+Lfxscfz5nf9Q9/HiYIa
+         BCJtKPo6pMCikQyOIOegogMsXQNe8N7mVHYqyXEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Subject: [PATCH 4.4 07/79] powerpc/powernv: Restrict OPAL symbol map to only be readable by root
-Date:   Wed, 16 Oct 2019 14:49:42 -0700
-Message-Id: <20191016214736.089883453@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 39/79] USB: adutux: fix use-after-free on disconnect
+Date:   Wed, 16 Oct 2019 14:50:14 -0700
+Message-Id: <20191016214801.599309080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,54 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Donnellan <ajd@linux.ibm.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit e7de4f7b64c23e503a8c42af98d56f2a7462bd6d upstream.
+commit 44efc269db7929f6275a1fa927ef082e533ecde0 upstream.
 
-Currently the OPAL symbol map is globally readable, which seems bad as
-it contains physical addresses.
+The driver was clearing its struct usb_device pointer, which it used as
+an inverted disconnected flag, before deregistering the character device
+and without serialising against racing release().
 
-Restrict it to root.
+This could lead to a use-after-free if a racing release() callback
+observes the cleared pointer and frees the driver data before
+disconnect() is finished with it.
 
-Fixes: c8742f85125d ("powerpc/powernv: Expose OPAL firmware symbol map")
-Cc: stable@vger.kernel.org # v3.19+
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190503075253.22798-1-ajd@linux.ibm.com
+This could also lead to NULL-pointer dereferences in a racing open().
+
+Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
+Cc: stable <stable@vger.kernel.org>     # 2.6.24
+Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+Tested-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190925092913.8608-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/opal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/usb/misc/adutux.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -580,7 +580,10 @@ static ssize_t symbol_map_read(struct fi
- 				       bin_attr->size);
- }
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -803,14 +803,15 @@ static void adu_disconnect(struct usb_in
  
--static BIN_ATTR_RO(symbol_map, 0);
-+static struct bin_attribute symbol_map_attr = {
-+	.attr = {.name = "symbol_map", .mode = 0400},
-+	.read = symbol_map_read
-+};
+ 	dev = usb_get_intfdata(interface);
  
- static void opal_export_symmap(void)
- {
-@@ -597,10 +600,10 @@ static void opal_export_symmap(void)
- 		return;
+-	mutex_lock(&dev->mtx);	/* not interruptible */
+-	dev->udev = NULL;	/* poison */
+ 	usb_deregister_dev(interface, &adu_class);
+-	mutex_unlock(&dev->mtx);
  
- 	/* Setup attributes */
--	bin_attr_symbol_map.private = __va(be64_to_cpu(syms[0]));
--	bin_attr_symbol_map.size = be64_to_cpu(syms[1]);
-+	symbol_map_attr.private = __va(be64_to_cpu(syms[0]));
-+	symbol_map_attr.size = be64_to_cpu(syms[1]);
+ 	mutex_lock(&adutux_mutex);
+ 	usb_set_intfdata(interface, NULL);
  
--	rc = sysfs_create_bin_file(opal_kobj, &bin_attr_symbol_map);
-+	rc = sysfs_create_bin_file(opal_kobj, &symbol_map_attr);
- 	if (rc)
- 		pr_warn("Error %d creating OPAL symbols file\n", rc);
- }
++	mutex_lock(&dev->mtx);	/* not interruptible */
++	dev->udev = NULL;	/* poison */
++	mutex_unlock(&dev->mtx);
++
+ 	/* if the device is not opened, then we clean up right now */
+ 	if (!dev->open_count)
+ 		adu_delete(dev);
 
 
