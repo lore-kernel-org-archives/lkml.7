@@ -2,164 +2,122 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF89ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A592DC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750B021835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B532054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qz6/a6BT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IupuLxn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404135AbfJPImA (ORCPT
+        id S2390139AbfJPImC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:42:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40140 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729153AbfJPIl6 (ORCPT
+        Wed, 16 Oct 2019 04:42:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58800 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390087AbfJPIl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:41:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571215317;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Odl3XM0IOwYiqnn7McJ4rA5F3y4GYEy0PoMhKp7EuqA=;
-        b=Qz6/a6BTH1glApgz5pAka0uDzY9LMPJ5Z1kAsuO0ewGYM1WXWdFV4mp3W9cYqzyn7KmQTa
-        h4aTAsd6uEjmH3Gask58MiXEje1VLldSE2ZrkhKVvOWLM/5Niq5lGbPSpsCNoPrnscrZLN
-        U1S1Vy+M/UldRJ3x/fiPYP8570TmVG8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322--YOMb6qbNQyp48A4uKe5SQ-1; Wed, 16 Oct 2019 04:41:55 -0400
-Received: by mail-wr1-f70.google.com with SMTP id t11so11364566wro.10
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:41:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CKea4fgnuRbz+5DOp7dpx2hJLrHN7p/gd9EwER5p4Gw=;
-        b=TT8M9rxyXnTkTUfj+wGAG2vbWBcWGbJovWlMRopOb/Md4y9Gi0hPBXfSDotR0/31Ah
-         veh+Np7dlVJFA940IPIOV+nolRo/dNWHflRu8U17VeVLcml+3D6D+/mfEbsdF05h2L7H
-         qp3XjqgA63qQjCh6fJM7CuN/fiZy/tSok8kt799CrwYFkbS7TCSU0rNTEceG5QsmoU6E
-         YUya67e+pfR/Oj7q/y8f0HQKKdAxI9sG9bR8Yrzdg5gD881jcHLhahuKy+pBr3vldBhP
-         fHreXOWsNcQ8bH9sdNuv32IeTxIwXoY/0oMmY4egI7f0DT1NtSGWPF+sStoPr35/CXwK
-         83qg==
-X-Gm-Message-State: APjAAAWH0NDWMv/qHYIY9G7R3XAL00bo/cBn0fcJVVcW/UsssW463S8X
-        BqRnjuFktKMq1Y55znwsGpm3JqJaZ2/TLRamH4KIxcIrlye9EKA7BEaAk6fJCnIGX5z6ko+Du4s
-        qGzZvqLB6BOKKaLze1SmPX2J9
-X-Received: by 2002:a7b:c3cf:: with SMTP id t15mr2289594wmj.85.1571215314256;
-        Wed, 16 Oct 2019 01:41:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwrQlNyMu4DwNofDUKwhYGMXDXxGX8pkasLXliSgnyS0AbYWsqUQ3yeEDgYtWry+jaTBU/T9A==
-X-Received: by 2002:a7b:c3cf:: with SMTP id t15mr2289580wmj.85.1571215314069;
-        Wed, 16 Oct 2019 01:41:54 -0700 (PDT)
-Received: from dhcp-44-196.space.revspace.nl ([2a0e:5700:4:11:6eb:1143:b8be:2b8])
-        by smtp.gmail.com with ESMTPSA id q22sm1633528wmj.5.2019.10.16.01.41.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2019 01:41:53 -0700 (PDT)
-Subject: Re: Is IRQ number 0 a valid IRQ ?
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <4ef7a462-5ded-0ac7-242e-888a9d36362b@redhat.com>
- <alpine.DEB.2.21.1910141414210.2531@nanos.tec.linutronix.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c89f2f3d-5bb1-3e84-e989-bb61a36b3548@redhat.com>
-Date:   Wed, 16 Oct 2019 10:41:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 04:41:59 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G8fQnT054935;
+        Wed, 16 Oct 2019 03:41:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571215286;
+        bh=aSRpuLVp5PoC9Dq+98yBbK/K+q52Oq+i7oGbPusjzIs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IupuLxn5B/Ry75qSBUOS3YhHXhxCLYq3BDscxUdS3jqm0CZCiVGKerYAz8fpodgG8
+         3y3O6VcA4ZrtQJ5yTDsOoYyaSA3wCSscjPy+QcMqaRSp7EV1xegxyWgLmvXGYMF/IZ
+         kSa/0XSjoUbWrxXzW+jHaIzsbKzJVVHSAAz/vnqg=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G8fQ1e101268;
+        Wed, 16 Oct 2019 03:41:26 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 03:41:25 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 03:41:19 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G8fLCx117756;
+        Wed, 16 Oct 2019 03:41:22 -0500
+Subject: Re: [PATCH] Fix reading support of the 1-4-4-DTR read-mode from the
+ wrong bit of the SFDP table which is part of the linux-imx fork located in
+ the following repo:
+ https://source.codeaurora.org/external/imx/linux-imx/?h=imx_4.14.98_2.1.0
+To:     Christoph Fink <christoph.fink@omicron-lab.com>
+CC:     Boris Brezillon <boris.brezillon@free-electrons.com>,
+        Richard Weinberger <richard@nod.at>,
+        Christoph Fink <fink.christoph@gmail.com>,
+        Huang Shijie <shijie8@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>,
+        Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>,
+        Han Xu <han.xu@nxp.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1568184843-11300-1-git-send-email-christoph.fink@omicron-lab.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <2c950e5b-bf77-b2a8-d7ee-6c669948b68f@ti.com>
+Date:   Wed, 16 Oct 2019 14:11:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1910141414210.2531@nanos.tec.linutronix.de>
+In-Reply-To: <1568184843-11300-1-git-send-email-christoph.fink@omicron-lab.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-MC-Unique: -YOMb6qbNQyp48A4uKe5SQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 10/14/19 2:25 PM, Thomas Gleixner wrote:
-> Hans,
->=20
-> On Sat, 5 Oct 2019, Hans de Goede wrote:
->=20
->> This is something which I have been wondering for ever since there are
->> several places in the kernel where IRQ number 0 is treated as not being
->> valid (as no IRQ found mostly I guess). Where as other places do treat
->> IRQ number 0 as valid... ?
->=20
-> IRQ0 is a historical x86 nuisance. On x86 irq0 is still valid - it's the
-> legacy timer irq. I'd be happy to fix that up, but there are quite some
-> assumptions vs. the irq numbering of the x86 legacy interrupt numbers in
-> general. BIOS/ACPI has them hard coded as well, so it's not entirely
-> trivial to fix that up.
->=20
-> For everything else than x86 (and maybe ia64( irq 0 should not exist and =
-DT
-> based irq enumeration treated it as invalid interrupt number forever.
->=20
-> Though there were some old ARM subarchs which used to have hardcoded lega=
-cy
-> interrupt numbers including 0 as well.
->  =20
->> Some examples which treat IRQ 0 special:
->>
->> drivers/base/platform.c: __platform_get_irq() :
->>
->>          if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
->>                  int ret;
->>
->>                  ret =3D of_irq_get(dev->dev.of_node, num);
->>                  if (ret > 0 || ret =3D=3D -EPROBE_DEFER)
->>                          return ret;
->>          }
->>
->> Note if (ret > 0) not if (ret >=3D 0)
->=20
-> Yeah. It makes the code fall through when ret =3D=3D 0 so it can try the =
-other
-> methods. What a mess...
->=20
->> Other example: drivers/usb/dwc3/gadget.c: dwc3_gadget_get_irq() :
->>
->>          if (!irq)
->>                  irq =3D -EINVAL;
->=20
-> That one translates irq0 into an error code.
->  =20
->> So 2 questions:
->>
->> 1) Is this special handling of IRQ number 0 valid code, or just
->> mostly some leftover from older days when IRQ number 0 was maybe
->> special ?
->=20
-> Kinda both.
->=20
->> 2) Either way (*) I think we (I volunteer) should document this somewher=
-e,
->> other then adding a note about this to the platform_get_irq docs any
->> other place where it would be good to specify this?
->>
->> *) Either IRQ number 0 is not special and then we need to stop the
->> cargo-culting of treating it special, or it is special and then we
->> need to document that.
->=20
-> One way to solve it would be to change the '0' return value from the core
-> functions (irqdomain) to -EINVAL or such, but that needs some thorough
-> analysis whether there is valid irq 0 usage outside of x86/ia64.
 
-I see, so the TL;DR: is its complicated. So I guess it is best to leave
-this as is, thank you for your explanation.
+On 11/09/19 12:24 PM, Christoph Fink wrote:
+> From: Christoph Fink <fink.christoph@gmail.com>
+> 
 
-Regards,
+This patch is not against mainline kernel. There is no support for DTR
+mode in kernel yet. Below hunk is not even present in the spi-nor.c.
 
-Hans
+For future submissions:
+Subject line should be one line summary of the patch starting with
+prefix "mtd: spi-nor:" (hint: run git log on file to know the format)
+and commit message should have detailed description of the patch
 
+Regards
+Vignesh
+
+
+> Signed-off-by: Christoph Fink <fink.christoph@gmail.com>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 8cc4b04..7fd52fa 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2089,7 +2089,7 @@ static const struct sfdp_bfpt_read sfdp_bfpt_reads[] = {
+>  	/* Fast Read 1-4-4-DTR */
+>  	{
+>  		SNOR_HWCAPS_READ_1_4_4_DTR,
+> -		BFPT_DWORD(1), BIT(21),	/* Supported bit */
+> +		BFPT_DWORD(1), BIT(19),	/* Supported bit */
+>  		BFPT_DWORD(3), 0,	/* Settings */
+>  		SNOR_PROTO_1_4_4_DTR,
+>  	},
+> 
+
+-- 
+Regards
+Vignesh
