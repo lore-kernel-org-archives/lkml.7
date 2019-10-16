@@ -2,118 +2,338 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264DBFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA606FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D1720663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F24B20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GpxV3Yir"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C9UK7bh+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393713AbfJPNwv (ORCPT
+        id S2393727AbfJPNxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:52:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34922 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388108AbfJPNwv (ORCPT
+        Wed, 16 Oct 2019 09:53:10 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36427 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393717AbfJPNxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:52:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GDnadY072397;
-        Wed, 16 Oct 2019 13:52:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=RT6WwgIAQ124uGpiC/zTSw0NchbyOlxzq3SDduZSmwQ=;
- b=GpxV3Yir75uCm3qsU+Be3dsU9hcQLqlHxSI7TTBBgJvFi3qCwuLgRQqusnTNlQ0DwTc5
- 3qreNb1hE3cR/gUZcmRBJkwDecgLG5+8XQgaK1/JTxuNokpgNbaLdDQHEkqr+/K9WNT+
- 4MyrAXXwZVmp8i4htnPgz0Rh9z0EtfQY08NlCaSkKqW+j8W8bpWvlXI0mtA5rAOGFdLy
- 26yZuj4J/kBzHdO4aXZAdqLgX+Vi/d4RAPD3nVtWqZixfKh9/mUFcgQ9K4N/YLoU99iS
- QfArAsSoEWq+SlO6LTwpscHVdGNP0eRGavGAWaDNUtwFiu/pArHO7YFHCs+Fhwm8HTVF xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vk7frewux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 13:52:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GDgrMt186456;
-        Wed, 16 Oct 2019 13:50:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2vnf7tdyed-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 13:50:18 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9GDoDs6029673;
-        Wed, 16 Oct 2019 13:50:13 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Oct 2019 06:50:13 -0700
-Date:   Wed, 16 Oct 2019 16:50:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        driverdev-devel@linuxdriverproject.org, olaf@aepfle.de,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, jackm@mellanox.com,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        marcelo.cerri@canonical.com, linux-pci@vger.kernel.org,
-        apw@canonical.com, vkuznets@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] PCI/PM: Make power management op coding style
- consistent
-Message-ID: <20191016135002.GA24678@kadam>
-References: <20191014230016.240912-1-helgaas@kernel.org>
- <20191014230016.240912-6-helgaas@kernel.org>
+        Wed, 16 Oct 2019 09:53:10 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 67so20201557oto.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pXaUYTlHBDwej+JruJ2WTRxguQOYJLFuT4MqoWM48a4=;
+        b=C9UK7bh+ztLhwBM8J33XqmOMriejaJ+0xBWQ6kKLjRvTfQIxk5p/YpBZGwm9t49f9O
+         xrSm9+8G6fyjGt+qPRHVWarJDF/9bBUe05isRIgqUFacAMzOUJfCTVcJeiDjWPxOjHTm
+         5sqfr+HZQHAW+K7huLX8uVp+FtOB+3cHS3DYiJegAId2vcxFnEQLLzv5aj1GhYHwEb3k
+         tMqUv0gevFgRy3WOSk9EKLDeg21dXFnWX1U0zIKJlDA9zyPfJzApkRdMeAPAn/ZEXlCp
+         eeaChM88DYDHx1QmnU19AZsQvEFi7LV9EgRPZKoI2iHv/uSey1DQoTW9mA92EzRyf/h1
+         Wk9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pXaUYTlHBDwej+JruJ2WTRxguQOYJLFuT4MqoWM48a4=;
+        b=ZPrIRYyHOY7co9fbzgV6YIC/rkT8MFMx5aX9RfREDjzIZCxif7ZNF76HP2zy0XVzHG
+         b8j+DJNl9maA6W1+kGGocF/rioUd0WT9ZzFHnUB5lYg2kUl7dxMc9EOaxNJffYPIbfOV
+         DfTAWfDQgUbGZIXWAxIH8l8Y9+jFULJWIVu6+4LpwS+Y+DIi5R4lZfZl6w9kk8bhmNYQ
+         EFSnQVgAElKgDIbTP2+JcZXVSa/xru0IrYkm435HBbm16Q0VETGiwTn9W5GyqRRyz5ZO
+         B37P5uDc4nkDzePT2zVLJzxjYEnDpUpi5/g2nxBej8ZokkpAs3q2jZiEvaK3x7YoT98F
+         QBgg==
+X-Gm-Message-State: APjAAAVileQW16wY/7kXNs0CjzSrD5uHIAMxjKl7fuc1U4GkIBvkJXmL
+        VPZKzI25JDax1J8b8f/9iVWMvixco2UEKysCeRxHcA==
+X-Google-Smtp-Source: APXvYqzFavdggnaXP/V8PoDQYCbLiuVoElErTrh7JNRIbFLWthPWSxHzXi/gtBRq+FPGjih37+pfVizePnpq6egTXfY=
+X-Received: by 2002:a9d:724e:: with SMTP id a14mr34578027otk.23.1571233986798;
+ Wed, 16 Oct 2019 06:53:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014230016.240912-6-helgaas@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=931
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910160121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910160122
+References: <20191016083959.186860-1-elver@google.com> <20191016083959.186860-2-elver@google.com>
+ <CAAeHK+wO226yFsWw97wET_CY3aCiqX30JBYLtBspO5PbSV9FAA@mail.gmail.com>
+In-Reply-To: <CAAeHK+wO226yFsWw97wET_CY3aCiqX30JBYLtBspO5PbSV9FAA@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 16 Oct 2019 15:52:53 +0200
+Message-ID: <CANpmjNOcE=myHAC4xYOdssMUvJP2=1BeXmQ62O_tRQ-5cbiKMA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:00:14PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Some of the power management ops use this style:
-> 
->   struct device_driver *drv = dev->driver;
->   if (drv && drv->pm && drv->pm->prepare(dev))
->     drv->pm->prepare(dev);
-> 
-> while others use this:
-> 
->   const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+> > diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
+> > new file mode 100644
+> > index 000000000000..5b46cc5593c3
+> > --- /dev/null
+> > +++ b/Documentation/dev-tools/kcsan.rst
+> > @@ -0,0 +1,202 @@
+> > +The Kernel Concurrency Sanitizer (KCSAN)
+> > +========================================
+> > +
+> > +Overview
+> > +--------
+> > +
+> > +*Kernel Concurrency Sanitizer (KCSAN)* is a dynamic data-race detector for
+> > +kernel space. KCSAN is a sampling watchpoint-based data-race detector -- this
+> > +is unlike Kernel Thread Sanitizer (KTSAN), which is a happens-before data-race
+> > +detector. Key priorities in KCSAN's design are lack of false positives,
+> > +scalability, and simplicity. More details can be found in `Implementation
+> > +Details`_.
+> > +
+> > +KCSAN uses compile-time instrumentation to instrument memory accesses. KCSAN is
+> > +supported in both GCC and Clang. With GCC it requires version 7.3.0 or later.
+> > +With Clang it requires version 7.0.0 or later.
+> > +
+> > +Usage
+> > +-----
+> > +
+> > +To enable KCSAN configure kernel with::
+> > +
+> > +    CONFIG_KCSAN = y
+> > +
+> > +KCSAN provides several other configuration options to customize behaviour (see
+> > +their respective help text for more info).
+> > +
+> > +debugfs
+> > +~~~~~~~
+> > +
+> > +* The file ``/sys/kernel/debug/kcsan`` can be read to get stats.
+> > +
+> > +* KCSAN can be turned on or off by writing ``on`` or ``off`` to
+> > +  ``/sys/kernel/debug/kcsan``.
+> > +
+> > +* Writing ``!some_func_name`` to ``/sys/kernel/debug/kcsan`` adds
+> > +  ``some_func_name`` to the report filter list, which (by default) blacklists
+> > +  reporting data-races where either one of the top stackframes are a function
+> > +  in the list.
+> > +
+> > +* Writing either ``blacklist`` or ``whitelist`` to ``/sys/kernel/debug/kcsan``
+> > +  changes the report filtering behaviour. For example, the blacklist feature
+> > +  can be used to silence frequently occurring data-races; the whitelist feature
+> > +  can help with reproduction and testing of fixes.
+> > +
+> > +Error reports
+> > +~~~~~~~~~~~~~
+> > +
+> > +A typical data-race report looks like this::
+> > +
+> > +    ==================================================================
+> > +    BUG: KCSAN: data-race in generic_permission / kernfs_refresh_inode
+> > +
+> > +    write to 0xffff8fee4c40700c of 4 bytes by task 175 on cpu 4:
+> > +     kernfs_refresh_inode+0x70/0x170
+> > +     kernfs_iop_permission+0x4f/0x90
+> > +     inode_permission+0x190/0x200
+> > +     link_path_walk.part.0+0x503/0x8e0
+> > +     path_lookupat.isra.0+0x69/0x4d0
+> > +     filename_lookup+0x136/0x280
+> > +     user_path_at_empty+0x47/0x60
+> > +     vfs_statx+0x9b/0x130
+> > +     __do_sys_newlstat+0x50/0xb0
+> > +     __x64_sys_newlstat+0x37/0x50
+> > +     do_syscall_64+0x85/0x260
+> > +     entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > +
+> > +    read to 0xffff8fee4c40700c of 4 bytes by task 166 on cpu 6:
+> > +     generic_permission+0x5b/0x2a0
+> > +     kernfs_iop_permission+0x66/0x90
+> > +     inode_permission+0x190/0x200
+> > +     link_path_walk.part.0+0x503/0x8e0
+> > +     path_lookupat.isra.0+0x69/0x4d0
+> > +     filename_lookup+0x136/0x280
+> > +     user_path_at_empty+0x47/0x60
+> > +     do_faccessat+0x11a/0x390
+> > +     __x64_sys_access+0x3c/0x50
+> > +     do_syscall_64+0x85/0x260
+> > +     entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > +
+> > +    Reported by Kernel Concurrency Sanitizer on:
+> > +    CPU: 6 PID: 166 Comm: systemd-journal Not tainted 5.3.0-rc7+ #1
+> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> > +    ==================================================================
+> > +
+> > +The header of the report provides a short summary of the functions involved in
+> > +the race. It is followed by the access types and stack traces of the 2 threads
+> > +involved in the data-race.
+> > +
+> > +The other less common type of data-race report looks like this::
+> > +
+> > +    ==================================================================
+> > +    BUG: KCSAN: racing read in e1000_clean_rx_irq+0x551/0xb10
+>
+> Do we want to have a different bug title here? Can we also report this
+> as a data-race to simplify report parsing rules?
 
-I like this patch a lot, especially the direct returns.  But it
-occurs to me that in the future this conditional would look better as
+Changed to just "data-race in" as well.
 
-	const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+> > +
+> > +    race at unknown origin, with read to 0xffff933db8a2ae6c of 1 bytes by interrupt on cpu 0:
+> > +     e1000_clean_rx_irq+0x551/0xb10
+> > +     e1000_clean+0x533/0xda0
+> > +     net_rx_action+0x329/0x900
+> > +     __do_softirq+0xdb/0x2db
+> > +     irq_exit+0x9b/0xa0
+> > +     do_IRQ+0x9c/0xf0
+> > +     ret_from_intr+0x0/0x18
+> > +     default_idle+0x3f/0x220
+> > +     arch_cpu_idle+0x21/0x30
+> > +     do_idle+0x1df/0x230
+> > +     cpu_startup_entry+0x14/0x20
+> > +     rest_init+0xc5/0xcb
+> > +     arch_call_rest_init+0x13/0x2b
+> > +     start_kernel+0x6db/0x700
+> > +
+> > +    Reported by Kernel Concurrency Sanitizer on:
+> > +    CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc7+ #2
+> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> > +    ==================================================================
+> > +
+> > +This report is generated where it was not possible to determine the other
+> > +racing thread, but a race was inferred due to the data-value of the watched
+> > +memory location having changed. These can occur either due to missing
+> > +instrumentation or e.g. DMA accesses.
+> > +
+> > +Data-Races
+> > +----------
+> > +
+> > +Informally, two operations *conflict* if they access the same memory location,
+> > +and at least one of them is a write operation. In an execution, two memory
+> > +operations from different threads form a **data-race** if they *conflict*, at
+> > +least one of them is a *plain access* (non-atomic), and they are *unordered* in
+> > +the "happens-before" order according to the `LKMM
+> > +<../../tools/memory-model/Documentation/explanation.txt>`_.
+> > +
+> > +Relationship with the Linux Kernel Memory Model (LKMM)
+> > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > +
+> > +The LKMM defines the propagation and ordering rules of various memory
+> > +operations, which gives developers the ability to reason about concurrent code.
+> > +Ultimately this allows to determine the possible executions of concurrent code,
+> > +and if that code is free from data-races.
+> > +
+> > +KCSAN is aware of *atomic* accesses (``READ_ONCE``, ``WRITE_ONCE``,
+> > +``atomic_*``, etc.), but is oblivious of any ordering guarantees. In other
+> > +words, KCSAN assumes that as long as a plain access is not observed to race
+> > +with another conflicting access, memory operations are correctly ordered.
+> > +
+> > +This means that KCSAN will not report *potential* data-races due to missing
+> > +memory ordering. If, however, missing memory ordering (that is observable with
+> > +a particular compiler and architecture) leads to an observable data-race (e.g.
+> > +entering a critical section erroneously), KCSAN would report the resulting
+> > +data-race.
+> > +
+> > +Implementation Details
+> > +----------------------
+> > +
+> > +The general approach is inspired by `DataCollider
+> > +<http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf>`_.
+> > +Unlike DataCollider, KCSAN does not use hardware watchpoints, but instead
+> > +relies on compiler instrumentation. Watchpoints are implemented using an
+> > +efficient encoding that stores access type, size, and address in a long; the
+> > +benefits of using "soft watchpoints" are portability and greater flexibility in
+> > +limiting which accesses trigger a watchpoint.
+> > +
+> > +More specifically, KCSAN requires instrumenting plain (unmarked, non-atomic)
+> > +memory operations; for each instrumented plain access:
+> > +
+> > +1. Check if a matching watchpoint exists; if yes, and at least one access is a
+> > +   write, then we encountered a racing access.
+> > +
+> > +2. Periodically, if no matching watchpoint exists, set up a watchpoint and
+> > +   stall some delay.
+> > +
+> > +3. Also check the data value before the delay, and re-check the data value
+> > +   after delay; if the values mismatch, we infer a race of unknown origin.
+> > +
+> > +To detect data-races between plain and atomic memory operations, KCSAN also
+> > +annotates atomic accesses, but only to check if a watchpoint exists
+> > +(``kcsan_check_atomic(..)``); i.e.  KCSAN never sets up a watchpoint on atomic
+> > +accesses.
+> > +
+> > +Key Properties
+> > +~~~~~~~~~~~~~~
+> > +
+> > +1. **Performance Overhead:** KCSAN's runtime is minimal, and does not require
+> > +   locking shared state for each access. This results in significantly better
+> > +   performance in comparison with KTSAN.
+> > +
+> > +2. **Memory Overhead:** No shadow memory is required. The current
+> > +   implementation uses a small array of longs to encode watchpoint information,
+> > +   which is negligible.
+> > +
+> > +3. **Memory Ordering:** KCSAN is *not* aware of the LKMM's ordering rules. This
+> > +   may result in missed data-races (false negatives), compared to a
+> > +   happens-before data-race detector such as KTSAN.
+> > +
+> > +4. **Accuracy:** Imprecise, since it uses a sampling strategy.
+> > +
+> > +5. **Annotation Overheads:** Minimal annotation is required outside the KCSAN
+> > +   runtime. With a happens-before data-race detector, any omission leads to
+> > +   false positives, which is especially important in the context of the kernel
+> > +   which includes numerous custom synchronization mechanisms. With KCSAN, as a
+> > +   result, maintenance overheads are minimal as the kernel evolves.
+> > +
+> > +6. **Detects Racy Writes from Devices:** Due to checking data values upon
+> > +   setting up watchpoints, racy writes from devices can also be detected.
+>
+> This part compares KCSAN with KTSAN, do we need it here? I think it
+> might be better to move this to the cover letter as a rationale as to
+> why we went with the watchpoint based approach, instead of the
+> happens-before one.
 
-or something.
+Removed mentions of KTSAN where it doesn't add very much.
 
-regards,
-dan carpenter
+These are properties of the design that, if not summarized here, would
+be lost and we'd have to look at the code. This is also for the
+benefit of developers using KCSAN to detect races, highlighting the
+pros and cons in the inherent design they should be aware of. I prefer
+keeping this information here, as otherwise it will get lost and we
+will have no central place to refer to.
 
+> Some performance numbers comparing KCSAN with a non instrumented
+> kernel would be more useful here.
+
+I've added a sentence with some empirical data.
+
+Changes queued for v2.
+
+Many thanks,
+-- Marco
