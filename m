@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810D5FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F73FFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEAE207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C4C207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263815;
-	bh=AyP47DE0aOW3YdRHBv28szmli6vQ7mQ8OQ0KpvCpmzI=;
+	s=default; t=1571263818;
+	bh=izqO9ALxtxnEoEPIVKQWUWSUcpA2AFD+pQ0ufO4hGps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CRCn6FZc4GyDLGRSJQAE7a+FDoI1LUX3Fo90szKLRbX60Av9Ze15SJXtLlYfADx8n
-	 MqezXpUvY2jq+5GzoG8J2HMcY/INCYeADcYwmbaO1dupB0J1huA+lznlk7YWmRaTF2
-	 b2JU9MRBihln/P1OwQ7hXChkMz3RVdqkF5D5LNDo=
+	b=bCajdcfKlCa28pkL9iHLhDg8JO6yfr7C4Tgu/fbuiMN2iPLsIXxBs78/rxS0lvysg
+	 bJqYC286ikbfYbYNu/O32u2Y8NVynWPXa6kInK8uC7dbiPxJAU53JdBPsAy2T4oaJ3
+	 4oXo3USRi9agOpFT2uq7Ycn5r6bccmOKEDopcnPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437986AbfJPV5S (ORCPT
+        id S2407176AbfJPWKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390510AbfJPV4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:42 -0400
+        id S2437976AbfJPV5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:17 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744D621D7A;
-        Wed, 16 Oct 2019 21:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79989218DE;
+        Wed, 16 Oct 2019 21:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263001;
-        bh=AyP47DE0aOW3YdRHBv28szmli6vQ7mQ8OQ0KpvCpmzI=;
+        s=default; t=1571263036;
+        bh=izqO9ALxtxnEoEPIVKQWUWSUcpA2AFD+pQ0ufO4hGps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgnpMCiZsrQXwmpmYnXjhUluIYGv9F1z8EhJpjT9GT6DqMcHNibDZFxqu7BbnDrYp
-         S5wbKAg/STipsMW80bmPHMCZep69AU5uEGTOmdzldsDruJoFvFI/PfSPRZVLhBp2SS
-         U9OfNolwCpu827wWyqHnVgo2xmjcn3ZZh2ta7GrU=
+        b=SLxBMhPWkvNRMDKC4324E/TCP6aBbo/C8rnJV+dvCxb7gc1kOtBN8pZdkzK2/MNK4
+         JABYfwkNYFuajn8GzdyjOoz3Mqo917OVIu3NzDl79Ak7AwPvxrmuuYS/i2bH+IoIHx
+         o33UuNhkJAdVY+w3p1nuiA4yNS6yGLs5IOQiy1Po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Frey <dpfrey@gmail.com>,
-        Andreas Dannenberg <dannenberg@ti.com>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 42/65] iio: light: opt3001: fix mutex unlock race
-Date:   Wed, 16 Oct 2019 14:50:56 -0700
-Message-Id: <20191016214832.459532926@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 06/81] USB: usb-skeleton: fix runtime PM after driver unbind
+Date:   Wed, 16 Oct 2019 14:50:17 -0700
+Message-Id: <20191016214811.706227648@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
-References: <20191016214756.457746573@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,56 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Frey <dpfrey@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 82f3015635249a8c8c45bac303fd84905066f04f upstream.
+commit 5c290a5e42c3387e82de86965784d30e6c5270fd upstream.
 
-When an end-of-conversion interrupt is received after performing a
-single-shot reading of the light sensor, the driver was waking up the
-result ready queue before checking opt->ok_to_ignore_lock to determine
-if it should unlock the mutex. The problem occurred in the case where
-the other thread woke up and changed the value of opt->ok_to_ignore_lock
-to false prior to the interrupt thread performing its read of the
-variable. In this case, the mutex would be unlocked twice.
+Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
+interface PM usage counter") USB drivers must always balance their
+runtime PM gets and puts, including when the driver has already been
+unbound from the interface.
 
-Signed-off-by: David Frey <dpfrey@gmail.com>
-Reviewed-by: Andreas Dannenberg <dannenberg@ti.com>
-Fixes: 94a9b7b1809f ("iio: light: add support for TI's opt3001 light sensor")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Leaving the interface with a positive PM usage counter would prevent a
+later bound driver from suspending the device.
+
+Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191001084908.2003-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/light/opt3001.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/usb-skeleton.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/iio/light/opt3001.c
-+++ b/drivers/iio/light/opt3001.c
-@@ -695,6 +695,7 @@ static irqreturn_t opt3001_irq(int irq,
- 	struct iio_dev *iio = _iio;
- 	struct opt3001 *opt = iio_priv(iio);
- 	int ret;
-+	bool wake_result_ready_queue = false;
+--- a/drivers/usb/usb-skeleton.c
++++ b/drivers/usb/usb-skeleton.c
+@@ -71,6 +71,7 @@ static void skel_delete(struct kref *kre
+ 	struct usb_skel *dev = to_skel_dev(kref);
  
- 	if (!opt->ok_to_ignore_lock)
- 		mutex_lock(&opt->lock);
-@@ -729,13 +730,16 @@ static irqreturn_t opt3001_irq(int irq,
- 		}
- 		opt->result = ret;
- 		opt->result_ready = true;
--		wake_up(&opt->result_ready_queue);
-+		wake_result_ready_queue = true;
- 	}
+ 	usb_free_urb(dev->bulk_in_urb);
++	usb_put_intf(dev->interface);
+ 	usb_put_dev(dev->udev);
+ 	kfree(dev->bulk_in_buffer);
+ 	kfree(dev);
+@@ -122,10 +123,7 @@ static int skel_release(struct inode *in
+ 		return -ENODEV;
  
- out:
- 	if (!opt->ok_to_ignore_lock)
- 		mutex_unlock(&opt->lock);
+ 	/* allow the device to be autosuspended */
+-	mutex_lock(&dev->io_mutex);
+-	if (dev->interface)
+-		usb_autopm_put_interface(dev->interface);
+-	mutex_unlock(&dev->io_mutex);
++	usb_autopm_put_interface(dev->interface);
  
-+	if (wake_result_ready_queue)
-+		wake_up(&opt->result_ready_queue);
-+
- 	return IRQ_HANDLED;
- }
+ 	/* decrement the count on our device */
+ 	kref_put(&dev->kref, skel_delete);
+@@ -505,7 +503,7 @@ static int skel_probe(struct usb_interfa
+ 	init_waitqueue_head(&dev->bulk_in_wait);
  
+ 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
+-	dev->interface = interface;
++	dev->interface = usb_get_intf(interface);
+ 
+ 	/* set up the endpoint information */
+ 	/* use only the first bulk-in and bulk-out endpoints */
 
 
