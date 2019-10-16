@@ -2,160 +2,190 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA26FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FE9FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBEE205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:18:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="AZLLC5Cx"
+	by mail.kernel.org (Postfix) with ESMTP id 3E2D2205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405175AbfJPMST (ORCPT
+        id S2405165AbfJPMSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:18:19 -0400
-Received: from mail-eopbgr700082.outbound.protection.outlook.com ([40.107.70.82]:26849
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392929AbfJPMSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:18:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m54/4ZdfMhUBvtOmZMOv3/t7uNfrKEULXTp2DNCUYr+kC7O2/F7OxEzeQCfo5nYyAM1kQgIhPGNgiQiIbJdKKPH8VN1xVZys8OqwMBZ4CppenrGcPNZ3CnHCDqL+x5Am9uUOdLii6exVNoeEby3PJ/P0zMyh2zDXwiPobbLcOX5nTD4zlIvbthYa4vZcFM5nQQOfQ6DwEXp8QnMooYtQyG7ANBxS2FA+JsnU11dTsjiUWv6JdwtaJsI6brdWimAayELifF7WCyDS6GL0mSwh4A/9Htmm+QoIV5HVAii1DCCJNA+qYbglEeDLiChtgpn1hMlpaqIP5c67rISlvrHDng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3z2xOhWXvmfFZmKdVwcZb8+1Uqsj6TZZPkb2kzhAO5o=;
- b=WZYET+cV6Y5zrLokbfosTL2TO1chJEN4tqDMJRzw1CZLML2ubBmGcC7KgJ370o4MQNNlGuBy+adtPoRpjflih1J+p7c8xvVtYvd3BNw+f37OEGk2OWhs/swvbIfqIwTVmP7gjCnA+Cmc14wFiAS+h8/mmP57EUb9eQs8ThXHVFwiFzLhU3DCiD8g8qX3jFF8o9qxlFs2F/mw1P9rjMQk9P9WSUycdjYBbf1/lE+b4ya6WWtFSLH0pXQ21o4XEwS/+JmW4PisRxH9fnLDCkhLK8y24GHitspt1Zwy7SS3ykigC9Fu6P0nQ/nz2CZCi5zQmn9BbFg2pKnbPRr1OAjG6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3z2xOhWXvmfFZmKdVwcZb8+1Uqsj6TZZPkb2kzhAO5o=;
- b=AZLLC5CxcV3En6d9nizYhNjFI65Aje2iqVLkCfCXCFVBOVH3xMWwqaYg8FxGfpDf0RuhLTB3FBZZcfNdGcrX54IcwLHnNozEo/XiOVMNocfIGnpeZD87kRb8z5F62Apa534W/IFkZpTxlaFg0I3mvOAZO9ZkKs3BOVfWqLpPYac=
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1804.namprd12.prod.outlook.com (10.175.91.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.16; Wed, 16 Oct 2019 12:18:15 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::7428:f6b3:a0b1:a02e]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::7428:f6b3:a0b1:a02e%10]) with mapi id 15.20.2347.023; Wed, 16 Oct
- 2019 12:18:15 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "Huang, Ray" <Ray.Huang@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 06/11] drm/ttm: factor out ttm_bo_mmap_vma_setup
-Thread-Topic: [PATCH v4 06/11] drm/ttm: factor out ttm_bo_mmap_vma_setup
-Thread-Index: AQHVhBgm8b1N9k1O9kyDrY9pK+JLoqddL1qA
-Date:   Wed, 16 Oct 2019 12:18:15 +0000
-Message-ID: <c08921f8-8ae9-55aa-c472-6b660b96576b@amd.com>
-References: <20191016115203.20095-1-kraxel@redhat.com>
- <20191016115203.20095-7-kraxel@redhat.com>
-In-Reply-To: <20191016115203.20095-7-kraxel@redhat.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM0PR02CA0069.eurprd02.prod.outlook.com
- (2603:10a6:208:d2::46) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c7ce3351-f65f-4198-cb64-08d75232eb7b
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM5PR12MB1804:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB1804A279D2FA57C755A1F96583920@DM5PR12MB1804.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(346002)(136003)(366004)(189003)(199004)(478600001)(2616005)(6506007)(66476007)(52116002)(66556008)(386003)(486006)(58126008)(66946007)(110136005)(54906003)(14454004)(65956001)(6246003)(65806001)(25786009)(316002)(5660300002)(476003)(64756008)(2501003)(99286004)(81166006)(76176011)(186003)(8676002)(81156014)(6116002)(4326008)(36756003)(31686004)(2906002)(6486002)(11346002)(6436002)(446003)(46003)(305945005)(256004)(71190400001)(66446008)(8936002)(71200400001)(102836004)(6512007)(7736002)(86362001)(229853002)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1804;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EvrI819zA/hMne18DGUnm+3eOpc6mAj4G23vEbf9TvDLS+1qqZDx9idK7WfET6N4mg98QFtM0KgyAc9eZAn5yYgZcxxeHi6xvO/YSt8qbCtBTDgiUNFRUFxBC5sabW+PS2r3P2MavJUnXo5HK6/2vR/5feCy+eZZnjwrZ/NT1QPbr083pCf/FBrOCe9huQ3tBhoFv3dW68TLAvcJThce5RjPhd4gQBlmBgpRT5p4YujzvoNwq/Ozu7Ar/Pe0N+7vAG+RtgNDIwYIxmPg0lbBMuS8t8/zPJKsddGwJyoev6akI5LDFP3+tb5eLidclZTaI92v2s0i6VT6ymsMn/snvjV8rOCXvGd5gOGKxJeO47189cg6hX/Euo3ffCDEJVj66BUPNzo1EhOzrzKie9oPO0kny4wWYka1S9z8LJO+Gxo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <247E3E5866AFC648A293BEFFE195484F@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 16 Oct 2019 08:18:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:4555 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392929AbfJPMSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:18:15 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DF9A43079B77;
+        Wed, 16 Oct 2019 12:18:13 +0000 (UTC)
+Received: from [10.3.116.74] (ovpn-116-74.phx2.redhat.com [10.3.116.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4343B5C1D8;
+        Wed, 16 Oct 2019 12:18:10 +0000 (UTC)
+Subject: Re: [PATCH] ipmi: Don't allow device module unload when in use
+To:     minyard@acm.org
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
+References: <20191014134141.GA25427@t560>
+ <20191014154632.11103-1-minyard@acm.org>
+From:   tony camuso <tcamuso@redhat.com>
+Message-ID: <40e26052-3ccb-684a-540f-61ff47077690@redhat.com>
+Date:   Wed, 16 Oct 2019 08:18:09 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7ce3351-f65f-4198-cb64-08d75232eb7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 12:18:15.1124
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YYA+o5EdSIkf7/xlF5vhBDe4skwuLzCjjhvgy3tDMSiE8Q8TcLSGt3YwVOOfKk2K
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1804
+In-Reply-To: <20191014154632.11103-1-minyard@acm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 16 Oct 2019 12:18:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMTYuMTAuMTkgdW0gMTM6NTEgc2NocmllYiBHZXJkIEhvZmZtYW5uOg0KPiBGYWN0b3Igb3V0
-IHR0bSB2bWEgc2V0dXAgdG8gYSBuZXcgZnVuY3Rpb24uDQo+IFJlZHVjZXMgY29kZSBkdXBsaWNh
-dGlvbiBhIGJpdC4NCj4NCj4gdjI6IGRvbid0IGNoYW5nZSB2bV9mbGFncyAobW92ZWQgdG8gc2Vw
-YXJhdGUgcGF0Y2gpLg0KPiB2NDogbWFrZSB0dG1fYm9fbW1hcF92bWFfc2V0dXAgc3RhdGljLg0K
-Pg0KPiBTaWduZWQtb2ZmLWJ5OiBHZXJkIEhvZmZtYW5uIDxrcmF4ZWxAcmVkaGF0LmNvbT4NCg0K
-UmV2aWV3ZWQtYnk6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4g
-Zm9yIHRoaXMgb25lIGFuZCANCiM3IGluIHRoZSBzZXJpZXMuDQoNCj4gLS0tDQo+ICAgZHJpdmVy
-cy9ncHUvZHJtL3R0bS90dG1fYm9fdm0uYyB8IDQ2ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0t
-LS0tLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlv
-bnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3ZtLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vdHRtL3R0bV9ib192bS5jDQo+IGluZGV4IDRhYTAwN2VkZmZiMC4u
-NTMzNDVjMDg1NGQ1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdHRtL3R0bV9ib192
-bS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3ZtLmMNCj4gQEAgLTQyNiw2
-ICs0MjYsMjggQEAgc3RhdGljIHN0cnVjdCB0dG1fYnVmZmVyX29iamVjdCAqdHRtX2JvX3ZtX2xv
-b2t1cChzdHJ1Y3QgdHRtX2JvX2RldmljZSAqYmRldiwNCj4gICAJcmV0dXJuIGJvOw0KPiAgIH0N
-Cj4gICANCj4gK3N0YXRpYyB2b2lkIHR0bV9ib19tbWFwX3ZtYV9zZXR1cChzdHJ1Y3QgdHRtX2J1
-ZmZlcl9vYmplY3QgKmJvLCBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSkNCj4gK3sNCj4gKwl2
-bWEtPnZtX29wcyA9ICZ0dG1fYm9fdm1fb3BzOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBOb3RlOiBX
-ZSdyZSB0cmFuc2ZlcnJpbmcgdGhlIGJvIHJlZmVyZW5jZSB0bw0KPiArCSAqIHZtYS0+dm1fcHJp
-dmF0ZV9kYXRhIGhlcmUuDQo+ICsJICovDQo+ICsNCj4gKwl2bWEtPnZtX3ByaXZhdGVfZGF0YSA9
-IGJvOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBXZSdkIGxpa2UgdG8gdXNlIFZNX1BGTk1BUCBvbiBz
-aGFyZWQgbWFwcGluZ3MsIHdoZXJlDQo+ICsJICogKHZtYS0+dm1fZmxhZ3MgJiBWTV9TSEFSRUQp
-ICE9IDAsIGZvciBwZXJmb3JtYW5jZSByZWFzb25zLA0KPiArCSAqIGJ1dCBmb3Igc29tZSByZWFz
-b24gVk1fUEZOTUFQICsgeDg2IFBBVCArIHdyaXRlLWNvbWJpbmUgaXMgdmVyeQ0KPiArCSAqIGJh
-ZCBmb3IgcGVyZm9ybWFuY2UuIFVudGlsIHRoYXQgaGFzIGJlZW4gc29ydGVkIG91dCwgdXNlDQo+
-ICsJICogVk1fTUlYRURNQVAgb24gYWxsIG1hcHBpbmdzLiBTZWUgZnJlZWRlc2t0b3Aub3JnIGJ1
-ZyAjNzU3MTkNCj4gKwkgKi8NCj4gKwl2bWEtPnZtX2ZsYWdzIHw9IFZNX01JWEVETUFQOw0KPiAr
-CXZtYS0+dm1fZmxhZ3MgfD0gVk1fSU8gfCBWTV9ET05URVhQQU5EIHwgVk1fRE9OVERVTVA7DQo+
-ICt9DQo+ICsNCj4gICBpbnQgdHRtX2JvX21tYXAoc3RydWN0IGZpbGUgKmZpbHAsIHN0cnVjdCB2
-bV9hcmVhX3N0cnVjdCAqdm1hLA0KPiAgIAkJc3RydWN0IHR0bV9ib19kZXZpY2UgKmJkZXYpDQo+
-ICAgew0KPiBAQCAtNDQ5LDI0ICs0NzEsNyBAQCBpbnQgdHRtX2JvX21tYXAoc3RydWN0IGZpbGUg
-KmZpbHAsIHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLA0KPiAgIAlpZiAodW5saWtlbHkocmV0
-ICE9IDApKQ0KPiAgIAkJZ290byBvdXRfdW5yZWY7DQo+ICAgDQo+IC0Jdm1hLT52bV9vcHMgPSAm
-dHRtX2JvX3ZtX29wczsNCj4gLQ0KPiAtCS8qDQo+IC0JICogTm90ZTogV2UncmUgdHJhbnNmZXJy
-aW5nIHRoZSBibyByZWZlcmVuY2UgdG8NCj4gLQkgKiB2bWEtPnZtX3ByaXZhdGVfZGF0YSBoZXJl
-Lg0KPiAtCSAqLw0KPiAtDQo+IC0Jdm1hLT52bV9wcml2YXRlX2RhdGEgPSBibzsNCj4gLQ0KPiAt
-CS8qDQo+IC0JICogV2UnZCBsaWtlIHRvIHVzZSBWTV9QRk5NQVAgb24gc2hhcmVkIG1hcHBpbmdz
-LCB3aGVyZQ0KPiAtCSAqICh2bWEtPnZtX2ZsYWdzICYgVk1fU0hBUkVEKSAhPSAwLCBmb3IgcGVy
-Zm9ybWFuY2UgcmVhc29ucywNCj4gLQkgKiBidXQgZm9yIHNvbWUgcmVhc29uIFZNX1BGTk1BUCAr
-IHg4NiBQQVQgKyB3cml0ZS1jb21iaW5lIGlzIHZlcnkNCj4gLQkgKiBiYWQgZm9yIHBlcmZvcm1h
-bmNlLiBVbnRpbCB0aGF0IGhhcyBiZWVuIHNvcnRlZCBvdXQsIHVzZQ0KPiAtCSAqIFZNX01JWEVE
-TUFQIG9uIGFsbCBtYXBwaW5ncy4gU2VlIGZyZWVkZXNrdG9wLm9yZyBidWcgIzc1NzE5DQo+IC0J
-ICovDQo+IC0Jdm1hLT52bV9mbGFncyB8PSBWTV9NSVhFRE1BUDsNCj4gLQl2bWEtPnZtX2ZsYWdz
-IHw9IFZNX0lPIHwgVk1fRE9OVEVYUEFORCB8IFZNX0RPTlREVU1QOw0KPiArCXR0bV9ib19tbWFw
-X3ZtYV9zZXR1cChibywgdm1hKTsNCj4gICAJcmV0dXJuIDA7DQo+ICAgb3V0X3VucmVmOg0KPiAg
-IAl0dG1fYm9fcHV0KGJvKTsNCj4gQEAgLTQ4MSwxMCArNDg2LDcgQEAgaW50IHR0bV9mYmRldl9t
-bWFwKHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLCBzdHJ1Y3QgdHRtX2J1ZmZlcl9vYmplY3Qg
-KmJvKQ0KPiAgIA0KPiAgIAl0dG1fYm9fZ2V0KGJvKTsNCj4gICANCj4gLQl2bWEtPnZtX29wcyA9
-ICZ0dG1fYm9fdm1fb3BzOw0KPiAtCXZtYS0+dm1fcHJpdmF0ZV9kYXRhID0gYm87DQo+IC0Jdm1h
-LT52bV9mbGFncyB8PSBWTV9NSVhFRE1BUDsNCj4gLQl2bWEtPnZtX2ZsYWdzIHw9IFZNX0lPIHwg
-Vk1fRE9OVEVYUEFORDsNCj4gKwl0dG1fYm9fbW1hcF92bWFfc2V0dXAoYm8sIHZtYSk7DQo+ICAg
-CXJldHVybiAwOw0KPiAgIH0NCj4gICBFWFBPUlRfU1lNQk9MKHR0bV9mYmRldl9tbWFwKTsNCg0K
+On 10/14/19 11:46 AM, minyard@acm.org wrote:
+> From: Corey Minyard <cminyard@mvista.com>
+> 
+> If something has the IPMI driver open, don't allow the device
+> module to be unloaded.  Before it would unload and the user would
+> get errors on use.
+> 
+> This change is made on user request, and it makes it consistent
+> with the I2C driver, which has the same behavior.
+> 
+> It does change things a little bit with respect to kernel users.
+> If the ACPI or IPMI watchdog (or any other kernel user) has
+> created a user, then the device module cannot be unloaded.  Before
+> it could be unloaded,
+> 
+> This does not affect hot-plug.  If the device goes away (it's on
+> something removable that is removed or is hot-removed via sysfs)
+> then it still behaves as it did before.
+> 
+> Reported-by: tony camuso <tcamuso@redhat.com>
+> Signed-off-by: Corey Minyard <cminyard@mvista.com>
+> ---
+> Tony, here is a suggested change for this.  Can you look it over and
+> see if it looks ok?
+> 
+> Thanks,
+> 
+> -corey
+> 
+>   drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
+>   include/linux/ipmi_smi.h            | 12 ++++++++----
+>   2 files changed, 24 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> index 2aab80e19ae0..15680de18625 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
+>   
+>   #define IPMI_IPMB_NUM_SEQ	64
+>   struct ipmi_smi {
+> +	struct module *owner;
+> +
+>   	/* What interface number are we? */
+>   	int intf_num;
+>   
+> @@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
+>   	if (rv)
+>   		goto out_kfree;
+>   
+> +	if (!try_module_get(intf->owner)) {
+> +		rv = -ENODEV;
+> +		goto out_kfree;
+> +	}
+> +	
+>   	/* Note that each existing user holds a refcount to the interface. */
+>   	kref_get(&intf->refcount);
+>   
+> @@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
+>   	}
+>   
+>   	kref_put(&intf->refcount, intf_free);
+> +	module_put(intf->owner);
+>   }
+>   
+>   int ipmi_destroy_user(struct ipmi_user *user)
+> @@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
+>    * been recently fetched, this will just use the cached data.  Otherwise
+>    * it will run a new fetch.
+>    *
+> - * Except for the first time this is called (in ipmi_register_smi()),
+> + * Except for the first time this is called (in ipmi_add_smi()),
+>    * this will always return good data;
+>    */
+>   static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
+> @@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work)
+>   	kref_put(&intf->refcount, intf_free);
+>   }
+>   
+> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+> -		      void		       *send_info,
+> -		      struct device            *si_dev,
+> -		      unsigned char            slave_addr)
+> +int ipmi_add_smi(struct module         *owner,
+> +		 const struct ipmi_smi_handlers *handlers,
+> +		 void		       *send_info,
+> +		 struct device         *si_dev,
+> +		 unsigned char         slave_addr)
+>   {
+>   	int              i, j;
+>   	int              rv;
+> @@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>   		return rv;
+>   	}
+>   
+> -
+> +	intf->owner = owner;
+>   	intf->bmc = &intf->tmp_bmc;
+>   	INIT_LIST_HEAD(&intf->bmc->intfs);
+>   	mutex_init(&intf->bmc->dyn_mutex);
+> @@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>   
+>   	return rv;
+>   }
+> -EXPORT_SYMBOL(ipmi_register_smi);
+> +EXPORT_SYMBOL(ipmi_add_smi);
+>   
+>   static void deliver_smi_err_response(struct ipmi_smi *intf,
+>   				     struct ipmi_smi_msg *msg,
+> diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
+> index 4dc66157d872..deec18b8944a 100644
+> --- a/include/linux/ipmi_smi.h
+> +++ b/include/linux/ipmi_smi.h
+> @@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
+>    * is called, and the lower layer must get the interface from that
+>    * call.
+>    */
+> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+> -		      void                     *send_info,
+> -		      struct device            *dev,
+> -		      unsigned char            slave_addr);
+> +int ipmi_add_smi(struct module            *owner,
+> +		 const struct ipmi_smi_handlers *handlers,
+> +		 void                     *send_info,
+> +		 struct device            *dev,
+> +		 unsigned char            slave_addr);
+> +
+> +#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
+> +	ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
+>   
+>   /*
+>    * Remove a low-level interface from the IPMI driver.  This will
+> 
+
+Thanks, Corey.
+
+Regards,
+Tony
+
