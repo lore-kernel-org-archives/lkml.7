@@ -2,59 +2,64 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A2EECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC86AECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D71207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753FB207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JajOTL3F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KWxGWHf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393612AbfJPXCc (ORCPT
+        id S2395085AbfJPXCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 19:02:32 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:46103 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391366AbfJPXCc (ORCPT
+        Wed, 16 Oct 2019 19:02:39 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:45295 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391366AbfJPXCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:02:32 -0400
-Received: by mail-pg1-f202.google.com with SMTP id 195so314329pgc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:02:31 -0700 (PDT)
+        Wed, 16 Oct 2019 19:02:37 -0400
+Received: by mail-pl1-f201.google.com with SMTP id t12so151622plo.12
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=TOJsDjv2PITtO+I2kY79PfikRO0R2R+nAMh5A6+hbOU=;
-        b=JajOTL3FBHYB10flWUxzWHuV8U8BExPlu2SCPP310A4oZrr/e8H7g3GVFIuYIaTAq9
-         l6cDESess5ADq4YsN4ZicmEE2jUNDgmND07ChfhZXF6Wkf7glYyu+OsAVxCB8rbSgwCE
-         Hub/sQF3XaZ71h/6KlSyTk7IVTI5f6KC1P9OMxwRE7wYIJj2Kifn9kw15W1LIExwyap2
-         iSBeHWxzga8Fc4QS/MO0vViGZZz9oEt2019SoCcd4cyZLuzc5vJLu7gLV+N3tTuVx7/m
-         hA/HA4EFJV/dyZOBm0UwdQW+d2ez6HxxiunDl/h/x+n7zdSOxw/1x3nFNMdCldn4mcHh
-         +3lg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=+9wE/YnttgoSYQLeI+fM6xNhxWRLjwkrvMn1N+1ady8=;
+        b=KWxGWHf/P+f67fdjVt7CHFaUPxIFnuczkzjPcZZra9YWURUHteNwdscbJ2znQA8eDV
+         goEv3nDRQ4QVE54XSj97jGZSKnPPJYm/Ov6TLOC4DeDckmJ9hHj8QLEgDKRumt4d1Wnb
+         2fHWw5wBhp4xYmQWaql25ZVWU2ghWSggTBnMoDugXAH+1CekRsI4PmfIgmjNGx+fQQKi
+         gO+rfcHvncvjMPD1muXY+aVIPjcsFjSyHleTPM06S5sISHbiSqlBsdVMUZE2yXEoXMpv
+         Bz7Apmfek4PX7D1+ys3wMXOK7h2IXkN+PV4JxSSfBH/QpzCu4c/AagQYlV5ooJOlylQn
+         wLuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=TOJsDjv2PITtO+I2kY79PfikRO0R2R+nAMh5A6+hbOU=;
-        b=Qo+X22D4FKwPC1T4gkbOQ/MsgI3yN1I4ZiZqs7Wkdc4udq34/1lO87Yt+93XO4W8PJ
-         wnVfWVxB/UIMAoveM0R4q0qrxfS++s1qRRfi294L4nzfp8J+p0VczpO8xbbHGfVxsaf/
-         2GbXX9RsUTQThZn6XfaT3wq6pT+FeWwNPMBl8HQaH4rETGff47XczIiXZZkXgVokQ6UQ
-         vfcAL8ckRNLbllpJztVZhjhq32DDlYiQpWcHr1+5jkg/u7UkIYWy0OVxrj5/13UiKuUV
-         LD2kXRLqCafGLUenJPDIpZ0ubOeTNLTMKINZ6/3TnfUwtq0z+uODoCh3uP6TKRqCTlyn
-         iadQ==
-X-Gm-Message-State: APjAAAVwV1Jj7suW8/7Am1Otuctm0HgkGC9BIuGzR2R2ToNJQEirURZQ
-        xPXjkroa8Wc9AKa/a8UVAROYqdSZEs7nDV5thkc=
-X-Google-Smtp-Source: APXvYqynPl/YXL4Gk/7oYI+p6Y3KkiA1eZZEQh5vORv0ob1xBED01RJ8FGVLbRhOMDZhfsVFSxRW/vr+4vbUlnoy3S0=
-X-Received: by 2002:a63:ce07:: with SMTP id y7mr652306pgf.234.1571266950938;
- Wed, 16 Oct 2019 16:02:30 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:02:06 -0700
-Message-Id: <20191016230209.39663-1-ndesaulniers@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=+9wE/YnttgoSYQLeI+fM6xNhxWRLjwkrvMn1N+1ady8=;
+        b=SIJXMHkDHFXDCky4zS4cnz0JUPSChGqwht7LgFnqLJZ4XYowEFY16tRqd18MXNCXuY
+         DTUzO3k1J+oI6L9xRLwW8DkObQXYKnJHzOCdr24r8DHyf8M3Tv3fbdjiiHa88V/XCwr9
+         JJX+dleHrF3lhgQ8zAKi7ZqTtfwpIN92mQarXA6jF75Y4bVOtDbhgu3NG8iGhUjHt592
+         FjB11S+cGZO/VdVKxUyAR4V10FNlUNgXkygRYNOtYvRMdwy5XAbJr/SmsXMAwEIgyAz8
+         Mf2wMH+/+zojUstf6QLsunAYez6gYtRhLOSwWFEt1Lpjb9qBeM6sOQ1CfZE8Smbq3DI3
+         +YOQ==
+X-Gm-Message-State: APjAAAUoMmNziWfUpu6zoaYBD+SFWUkkz/I/fRPUd1b+gkni5wLHyQOR
+        tQMeM0h0TkLcMwxPIMGHhIg0NZ/dhJd4BEi3eZY=
+X-Google-Smtp-Source: APXvYqwH1yCvYBDfbKhdl19zSWC1uGut6YcPZH49DaXgT6YV4aCSTkkrAoOP3PncsvwWtgc8p0shEeoAmd14KO3c858=
+X-Received: by 2002:a63:e057:: with SMTP id n23mr640963pgj.94.1571266956495;
+ Wed, 16 Oct 2019 16:02:36 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 16:02:07 -0700
+In-Reply-To: <20191016230209.39663-1-ndesaulniers@google.com>
+Message-Id: <20191016230209.39663-2-ndesaulniers@google.com>
 Mime-Version: 1.0
+References: <20191016230209.39663-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH 0/3] drm/amdgpu: fix stack alignment ABI mismatch
+Subject: [PATCH 1/3] drm/amdgpu: fix stack alignment ABI mismatch for Clang
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     harry.wentland@amd.com, alexander.deucher@amd.com
 Cc:     yshuiv7@gmail.com, andrew.cooper3@citrix.com, arnd@arndb.de,
@@ -91,48 +96,133 @@ assumes 16B stack alignment.  When the stack is a multiple of 8B but not
 16B, these instructions result in a GPF.
 
 Remove the code that added compatibility between the differing compiler
-flags, as it will result in runtime GPFs when built with Clang.
+flags, as it will result in runtime GPFs when built with Clang. Cleanups
+for GCC will be sent in later patches in the series.
 
-The series is broken into 3 patches, the first is an important fix for
-Clang for ChromeOS. The rest are attempted cleanups for GCC, but require
-additional boot testing. The first patch is critical, the rest are nice
-to have. I've compile tested the series with ToT Clang, GCC 4.9, and GCC
-8.3 **but** I do not have hardware to test on, so I need folks with the
-above compilers and relevant hardware to help test the series.
+Link: https://github.com/ClangBuiltLinux/linux/issues/735
+Debugged-by: Yuxuan Shui <yshuiv7@gmail.com>
+Reported-by: Shirish S <shirish.s@amd.com>
+Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
+Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ drivers/gpu/drm/amd/display/dc/calcs/Makefile | 10 ++++------
+ drivers/gpu/drm/amd/display/dc/dcn20/Makefile | 10 ++++------
+ drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 10 ++++------
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   | 10 ++++------
+ drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 10 ++++------
+ 5 files changed, 20 insertions(+), 30 deletions(-)
 
-The first patch is a functional change for Clang only. It does not
-change anything for any version of GCC. Yuxuan boot tested a previous
-incarnation on hardware, but I've changed it enough that I think it made
-sense to drop the previous tested by tag.
-
-The second patch is a functional change for GCC 7.1+ only. It does not
-affect older versions of GCC or Clang (though if someone wanted to
-double check with pre-GCC 7.1 it wouldn't hurt).  It should be boot
-tested on GCC 7.1+ on the relevant hardware.
-
-The final patch is also a functional change for GCC 7.1+ only. It does
-not affect older versions of GCC or Clang. It should be boot tested on
-GCC 7.1+ on the relevant hardware. Theoretically, there may be an issue
-with it, and it's ok to drop it. The series was intentional broken into
-3 in order to allow them to be incrementally tested and accepted. It's
-ok to take earlier patches without the later patches.
-
-And finally, I do not condone linking object files of differing stack
-alignments.  Idealistically, we'd mark the driver broken for pre-GCC
-7.1.  Pragmatically, "if it ain't broke, don't fix it."
-
-Nick Desaulniers (3):
-  drm/amdgpu: fix stack alignment ABI mismatch for Clang
-  drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+
-  drm/amdgpu: enable -msse2 for GCC 7.1+ users
-
- drivers/gpu/drm/amd/display/dc/calcs/Makefile | 19 ++++++++++++-------
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile | 19 ++++++++++++-------
- drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 19 ++++++++++++-------
- drivers/gpu/drm/amd/display/dc/dml/Makefile   | 19 ++++++++++++-------
- drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 19 ++++++++++++-------
- 5 files changed, 60 insertions(+), 35 deletions(-)
-
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/Makefile b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+index 985633c08a26..4b1a8a08a5de 100644
+--- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+@@ -24,13 +24,11 @@
+ # It calculates Bandwidth and Watermarks values for HW programming
+ #
+ 
+-ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+-	cc_stack_align := -mpreferred-stack-boundary=4
+-else ifneq ($(call cc-option, -mstack-alignment=16),)
+-	cc_stack_align := -mstack-alignment=16
+-endif
++calcs_ccflags := -mhard-float -msse
+ 
+-calcs_ccflags := -mhard-float -msse $(cc_stack_align)
++ifdef CONFIG_CC_IS_GCC
++calcs_ccflags += -mpreferred-stack-boundary=4
++endif
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ calcs_ccflags += -msse2
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+index ddb8d5649e79..5fe3eb80075d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+@@ -10,13 +10,11 @@ ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
+ DCN20 += dcn20_dsc.o
+ endif
+ 
+-ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+-	cc_stack_align := -mpreferred-stack-boundary=4
+-else ifneq ($(call cc-option, -mstack-alignment=16),)
+-	cc_stack_align := -mstack-alignment=16
+-endif
++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse
+ 
+-CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
++ifdef CONFIG_CC_IS_GCC
++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -mpreferred-stack-boundary=4
++endif
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -msse2
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+index ef673bffc241..7057e20748b9 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+@@ -3,13 +3,11 @@
+ 
+ DCN21 = dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o
+ 
+-ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+-	cc_stack_align := -mpreferred-stack-boundary=4
+-else ifneq ($(call cc-option, -mstack-alignment=16),)
+-	cc_stack_align := -mstack-alignment=16
+-endif
++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse
+ 
+-CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o := -mhard-float -msse $(cc_stack_align)
++ifdef CONFIG_CC_IS_GCC
++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -mpreferred-stack-boundary=4
++endif
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -msse2
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+index 5b2a65b42403..1bd6e307b7f8 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+@@ -24,13 +24,11 @@
+ # It provides the general basic services required by other DAL
+ # subcomponents.
+ 
+-ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+-	cc_stack_align := -mpreferred-stack-boundary=4
+-else ifneq ($(call cc-option, -mstack-alignment=16),)
+-	cc_stack_align := -mstack-alignment=16
+-endif
++dml_ccflags := -mhard-float -msse
+ 
+-dml_ccflags := -mhard-float -msse $(cc_stack_align)
++ifdef CONFIG_CC_IS_GCC
++dml_ccflags += -mpreferred-stack-boundary=4
++endif
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ dml_ccflags += -msse2
+diff --git a/drivers/gpu/drm/amd/display/dc/dsc/Makefile b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+index b456cd23c6fa..932c3055230e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+@@ -1,13 +1,11 @@
+ #
+ # Makefile for the 'dsc' sub-component of DAL.
+ 
+-ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+-	cc_stack_align := -mpreferred-stack-boundary=4
+-else ifneq ($(call cc-option, -mstack-alignment=16),)
+-	cc_stack_align := -mstack-alignment=16
+-endif
++dsc_ccflags := -mhard-float -msse
+ 
+-dsc_ccflags := -mhard-float -msse $(cc_stack_align)
++ifdef CONFIG_CC_IS_GCC
++dsc_ccflags += -mpreferred-stack-boundary=4
++endif
+ 
+ ifdef CONFIG_CC_IS_CLANG
+ dsc_ccflags += -msse2
 -- 
 2.23.0.700.g56cf767bdb-goog
 
