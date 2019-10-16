@@ -2,112 +2,98 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E84AECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8CBECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8642067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESng4kYO"
+	by mail.kernel.org (Postfix) with ESMTP id 3CE2A2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571187156;
+	bh=A/u6kf+idGmi0psouuwo2uYEmwrcJV3/rAZxg91qHqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kMzCzZcN73UDGlc8GitTAxHnVro5jXr2Y1aMg7XWLa3del2z+X3oZyNEnf7a/5xS6
+	 buVHFUg2eldf8ak+fq1K/Ca5YBLLgMN3pSk0zoLmnevw52xES4Z9nWnSP1XE4K9PUr
+	 iVxaLhUdifL4hqog6Dyel7f5pqL58MN3j6gtY6N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390391AbfJPAvM (ORCPT
+        id S2390376AbfJPAwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:51:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41316 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfJPAvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:51:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so13178166pga.8;
-        Tue, 15 Oct 2019 17:51:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ltDDMUh1xlGD4pSNgA8gXhuyIlk9MRYKGGQg9juTsMI=;
-        b=ESng4kYOkOnZLU/DzjYsLdjh7C5CB6GUodh+IWsqAZ4P01OcAJtvt0DOLrVr7F/I8A
-         n6sksneAap2FO8dVRMtdN8Ma7tQI6BF6QfgH86zssY3TVRgbsQOl3lYPIoDYeD5Q0dBq
-         FhBLk9BDtFad/SKmPxUcLeQPy2LCcALb+nN/UUnucawqphDPr9zYfGQNGacfU6fpSoYJ
-         Zto30yNn7g6J4goB+1X7AeiZxSqF4jhXneRascWSTsxNsTi5qUE3sfxcwH3lUA6N8rwc
-         hMJMrAVISfOUAZsMVZpo5gz6LeWleKJGkkmuj2TiTmoFs6HsKrFFIGjx0ufbcyK+LqM7
-         J3fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ltDDMUh1xlGD4pSNgA8gXhuyIlk9MRYKGGQg9juTsMI=;
-        b=EQu88cMbDBflGaGUbxC0foLi4e8rE++X8mXFD2o47PO4lE9kyw9vjxB2KVgJ+yk6aV
-         hX/A54Q3Zjyna+TUnDKgBwtXzViuyjeGlSMZ+Eex/MHNlLs/8TcwZT+wuaiJdx614xdJ
-         rpHb/C9wVoGOoR1GhU063pvwYLfg2r0pWcnK4Fxlfvbh8oPH5Nydva/7OSbLZtTkoKLN
-         BdX6FhE6Tnn7b92ud2SbbuJCzubMTekswK2zrSNl6TP3HApM9Ld1FUwv2nVqc0fBQYkB
-         8gcpJTCUnF5XJW6Qfs57+bwOucfz+c32Q9MeaRjh1ii7LE+gia/fr7XSMj8fIDxJGeiX
-         EHdQ==
-X-Gm-Message-State: APjAAAU2r4MHBxSdHTlDz7tM46+FlYvO3z2Mjd/1crpm5QbaSHd8FD24
-        apMOcFgmNQ+2gOK45VhF9Qg=
-X-Google-Smtp-Source: APXvYqwJDTu4vKA3PfnnGNTkK/CMsVarlVnprvX8tF/2URNi2jEGttdgSydEoyp1fgfzdyXw/3Z+nw==
-X-Received: by 2002:aa7:8b4d:: with SMTP id i13mr15985072pfd.29.1571187070365;
-        Tue, 15 Oct 2019 17:51:10 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 206sm21506960pge.80.2019.10.15.17.51.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 17:51:09 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 17:51:07 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "Input: elantech - enable SMBus on new (2018+)
- systems"
-Message-ID: <20191016005107.GA35946@dtor-ws>
-References: <20191001070845.9720-1-kai.heng.feng@canonical.com>
- <CAO-hwJJ_hjL8=D+BDTW6LQRhd86NawORuY-jnDF71mD88woiDw@mail.gmail.com>
+        Tue, 15 Oct 2019 20:52:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfJPAwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 20:52:34 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBB62067B;
+        Wed, 16 Oct 2019 00:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571187154;
+        bh=A/u6kf+idGmi0psouuwo2uYEmwrcJV3/rAZxg91qHqE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r19ysU3rAAeZjA20PGXZfcyCuNTanJ//ncuAzJyhWwBqaGSRbFW87Etnhh8gO5p44
+         2UlV1lUL06p7snIdPhtRNozDVafNOXaOyFxXmQrpz71aQVNJAsm0+N+Z0ihPQBLn7y
+         ekjRiYktKe+zcw1od2VAC5IRwSB1OUpLjQKSAPUo=
+Date:   Tue, 15 Oct 2019 17:52:32 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: fsmount: add missing mntget()
+Message-ID: <20191016005232.GA726@sol.localdomain>
+Mail-Followup-To: Al Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+References: <20190610183031.GE63833@gmail.com>
+ <20190612184313.143456-1-ebiggers@kernel.org>
+ <20190613084728.GA32129@miu.piliscsaba.redhat.com>
+ <20190709230029.GO641@sol.localdomain>
+ <20190710003113.GC17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO-hwJJ_hjL8=D+BDTW6LQRhd86NawORuY-jnDF71mD88woiDw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190710003113.GC17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 05:26:05PM +0200, Benjamin Tissoires wrote:
-> Hi Kai-Heng,
+On Wed, Jul 10, 2019 at 01:31:13AM +0100, Al Viro wrote:
+> On Tue, Jul 09, 2019 at 04:00:29PM -0700, Eric Biggers wrote:
 > 
-> On Tue, Oct 1, 2019 at 9:09 AM Kai-Heng Feng
-> <kai.heng.feng@canonical.com> wrote:
-> >
-> > This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
-> >
-> > Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
-> > and this breaks older laptops with new BIOS update.
-> >
-> > So let's revert this patch.
-> >
-> > There are still new HP laptops still need to use SMBus to support all
-> > features, but it'll be enabled via a whitelist.
-> >
+> > > index 49a058c73e4c..26f74e092bd9 100644
+> > > --- a/fs/pnode.h
+> > > +++ b/fs/pnode.h
+> > > @@ -44,7 +44,7 @@ int propagate_mount_busy(struct mount *, int);
+> > >  void propagate_mount_unlock(struct mount *);
+> > >  void mnt_release_group_id(struct mount *);
+> > >  int get_dominating_id(struct mount *mnt, const struct path *root);
+> > > -unsigned int mnt_get_count(struct mount *mnt);
+> > > +int mnt_get_count(struct mount *mnt);
+> > >  void mnt_set_mountpoint(struct mount *, struct mountpoint *,
+> > >  			struct mount *);
+> > >  void mnt_change_mountpoint(struct mount *parent, struct mountpoint *mp,
+> > 
+> > Miklos, are you planning to send this as a formal patch?
 > 
-> You might want to add here:
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204771
-> 
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> 
-> Oops, seems like you are missing my acked by:
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> 
-> Also, don't we want to send this one to stable as well? I can't
-> remember if we reverted it in all the released kernels.
+> Hold it for a while, OK?  There's an unpleasant issue (a very long-standing
+> one) with boxen that have an obscene amount of RAM.  Some of the counters
+> involved will need to become long.  This is the coming cycle fodder (mounts
+> and inodes are relatively easy; it's dentry->d_count that brings arseloads
+> of fun) and I'd rather deal with that sanity check as part of the same series.
+> It's not forgotten...  Patch series re limiting the number of negative
+> dentries is also getting into the same mix.  Watch #work.dcache - what's
+> in there is basically prep work for the big pile for the next cycle; it'll
+> be interesting...
 
-It looks like we need it for 5.3 so I marked it for stable.
+Al, whatever happened to the refcounting patches you mentioned here?
 
-Thanks.
-
--- 
-Dmitry
+- Eric
