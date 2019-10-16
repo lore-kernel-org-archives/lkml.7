@@ -2,110 +2,121 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4B0FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BEFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A9B21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2894F21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijjVZXxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406545AbfJPQza (ORCPT
+        id S2406252AbfJPRA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:55:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:23521 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406111AbfJPQz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:55:29 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33DE12D6A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:55:29 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id j125so1465427wmj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:55:29 -0700 (PDT)
+        Wed, 16 Oct 2019 13:00:27 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35185 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfJPRA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:00:26 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m15so37201632qtq.2;
+        Wed, 16 Oct 2019 10:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1ITMSYb2mpF3RaZgz9ExWMw4f2fxz+CBvsGA+3mZlnY=;
+        b=ijjVZXxvfuZw0TNdMfAxpyi2d8BL7/Z8qq/jxibkITdBmlt8llqyRR+Yf1H0Sua2oz
+         nxNsLpDDlKv59Ueffc82qHmOGkGfp6D2WKzqWu9lwt5Ata/yAcht7OfcU5iF6GIn2dKf
+         Z1xEWN4cSpvTDfpv6+WjtF7t3nU0yxRlI/CqXNDwUC7O+9/gRWkOfLwlNq7H1LbbF8sZ
+         XZeuAsQ/vVWJ62X28Vjk/96f+sGyNTGltBgxwjCEKaUeeIVdUeQb+DA70wdfRokLaVJq
+         4lFv+KWiy0I/nrW52cNOjNWNBM2D6UHoVuyH0ypctDTWrNbrU5efkRg/Rk9CuwtAP8qj
+         sAwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=5eauZ8UWoa8Teikz+lMqufdR9RWWOJTpe6HYZySF3XQ=;
-        b=hOzAAJFOqf8qVZVsLFsbswuOggUq73ly7AHHQEW+tlPzwS9Sh1SiHuUe8phvRlOZ76
-         NNSOFwz2YMNL/GhN2UrFsxGWhO308FNH1xOihGfhZFkKYL4QADmGM9uyt7oqZ6HRdGYP
-         TfmNxZVCyoP2VVOP0Bj9PrhTcsUQJ7hrw9Dh8Vq7bIQVHnwopPdGa9NhNBQjD6BHjDsv
-         Fmhjone2NDjBm0bdgQCE4Ki8PMA4m79dXovKHBsentXe6jNUel5VNObQL8oN+LHrh10E
-         /3FKaHi791ZVAc6fVZKuS3AxcptSWS1/DYBY+gMkqX+zn1jvGwFFmB8I03M/YPVf74em
-         JhuA==
-X-Gm-Message-State: APjAAAWsNRgkNXN2ii8/xLRnWYePHc6d06gi8ddpdFpkJRb8peMsePVJ
-        ev2MWqn5x6PnjnKBO0LMVCBluyaCCxFtkv0o80zqVnvmPZYUu6joNQ+Lt4c9zlp6SF9sGxujSem
-        Pda+nbDBA3qXcw+0nv0aaZDXD
-X-Received: by 2002:a7b:cb03:: with SMTP id u3mr4252060wmj.126.1571244927627;
-        Wed, 16 Oct 2019 09:55:27 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyuvglafYRyO2dw3NYNU7hLZnq5YAdlC0kd1+/aDdwG5i7+O3zXN79X77AarslEyv0RfZFXgw==
-X-Received: by 2002:a7b:cb03:: with SMTP id u3mr4252040wmj.126.1571244927345;
-        Wed, 16 Oct 2019 09:55:27 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a71sm2976147wme.11.2019.10.16.09.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 09:55:26 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linmiaohe@huawei.com, mingfangsen@huawei.com, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH] KVM: SVM: Fix potential wrong physical id in avic_handle_ldr_update
-In-Reply-To: <1571217908-7693-1-git-send-email-linmiaohe@huawei.com>
-References: <1571217908-7693-1-git-send-email-linmiaohe@huawei.com>
-Date:   Wed, 16 Oct 2019 18:55:25 +0200
-Message-ID: <87zhi03a0y.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1ITMSYb2mpF3RaZgz9ExWMw4f2fxz+CBvsGA+3mZlnY=;
+        b=GR4Ys9fnkCh94U4Q7hfFRMgihO8SJ/55AEdndzZLOKaKGKdRTAt2ZpQOiXSL2wYzPp
+         ClqxbMHOoIkSY5j6BRnQ9qHCoc0PvVoeddCpo2HSc6V2oCIqyjIGFIMND4OV4Ud5Im56
+         dNwzenrvaMP4Efl1+Lpl4QP8QxzSNL8qqlx9Q1wzG6V+wAhuVKqca5t3fWTeWAJQgDbS
+         ifaVEeY6dymkGIvXfszraIzHVcNde0j2OuQYt7JrOnxUEhXAGakHAm41KVA4rOtU1Ft5
+         1N0cdffEQNUz5QdgT8P22/ojGX/+4YUwEe8TVL0vgNC5UGjay/q/v9ZWvpOsISWkjezS
+         1s+w==
+X-Gm-Message-State: APjAAAW8xIR9jFZQ2sS4qTOjBGGmmpRTrTtFBOQdopeyLjiLq/xBnkED
+        uS/8/eTnWaRUjCSiPQ0/fD5yi+QntDofy+B3mgs=
+X-Google-Smtp-Source: APXvYqyuL/2JXnrA0RyJL6yz67FJ8Lms7lPxW5N5SBM54W/lLa5IDZGtH0jjpkiAz30csKSYqVRDxFzRXZXUzmgAJNc=
+X-Received: by 2002:ac8:1a78:: with SMTP id q53mr45222642qtk.379.1571245225491;
+ Wed, 16 Oct 2019 10:00:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1568994791.git.esyr@redhat.com> <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
+ <87d4b42f-7aa2-5372-27e4-a28e4c724f37@kernel.dk> <CAPhsuW68rK3zGF3A8HnwArh7bs+-AAvZBtVkt4gcxPnFCGxwAQ@mail.gmail.com>
+In-Reply-To: <CAPhsuW68rK3zGF3A8HnwArh7bs+-AAvZBtVkt4gcxPnFCGxwAQ@mail.gmail.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 16 Oct 2019 10:00:13 -0700
+Message-ID: <CAPhsuW6ZSbKLYPpUk3DT+HxTfcuOVPG64rQ057aoLGgrGSeGHA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
+To:     Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miaohe Lin <linmiaohe@huawei.com> writes:
+Hi Jeff and J. Bruce,
 
-> Guest physical APIC ID may not equal to vcpu->vcpu_id in some case.
-> We may set the wrong physical id in avic_handle_ldr_update as we
-> always use vcpu->vcpu_id.
+On Wed, Oct 2, 2019 at 9:55 AM Song Liu <liu.song.a23@gmail.com> wrote:
 >
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/svm.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index f8ecb6d..67cb5ba 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4591,6 +4591,8 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
->  	int ret = 0;
->  	struct vcpu_svm *svm = to_svm(vcpu);
->  	u32 ldr = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LDR);
-> +	u32 apic_id_reg = kvm_lapic_get_reg(vcpu->arch.apic, APIC_ID);
-> +	u32 id = (apic_id_reg >> 24) & 0xff;
+> On Tue, Oct 1, 2019 at 5:55 PM Jens Axboe <axboe@kernel.dk> wrote:
+> >
+> > On 10/1/19 5:12 PM, Song Liu wrote:
+> > > On Fri, Sep 20, 2019 at 8:58 AM Eugene Syromiatnikov <esyr@redhat.com> wrote:
+> > >>
+> > >> Hello.
+> > >>
+> > >> This is a small fix of a typo (or, more specifically, some remnant of
+> > >> the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
+> > >> which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
+> > >> with "H" is used in man page and everywhere else, it's probably worth
+> > >> to make the name used in the fcntl.h UAPI header in line with it.
+> > >> The two follow-up patches update usage sites of this constant in kernel
+> > >> to use the new spelling.
+> > >>
+> > >> The old name is retained as it is part of UAPI now.
+> > >>
+> > >> Changes since v2[1]:
+> > >>   * Updated RWF_WRITE_LIFE_NOT_SET constant usage
+> > >>     in drivers/md/raid5-ppl.c:ppl_init_log().
+> > >>
+> > >> Changes since v1[2]:
+> > >>   * Changed format of the commit ID in the commit message of the first patch.
+> > >>   * Removed bogus Signed-off-by that snuck into the resend of the series.
+> > >
+> > > Applied to md-next.
+> >
+> > I think the core fs change should core in through a core tree, then
+> > the md bits can go in at will after that.
 
-If we reach here than we're guaranteed to be in xAPIC mode, right? Could
-you maybe export and use kvm_xapic_id() here then (and in
-avic_handle_apic_id_update() too)?
+As Jens suggested, we should route core fs patches through core tree. Could
+you please apply these patches? Since the change is small, probably you can
+also apply md patches?
 
->  
->  	if (ldr == svm->ldr_reg)
->  		return 0;
-> @@ -4598,7 +4600,7 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
->  	avic_invalidate_logical_id_entry(vcpu);
->  
->  	if (ldr)
-> -		ret = avic_ldr_write(vcpu, vcpu->vcpu_id, ldr);
-> +		ret = avic_ldr_write(vcpu, id, ldr);
->  
->  	if (!ret)
->  		svm->ldr_reg = ldr;
+Thanks,
+Song
 
--- 
-Vitaly
+PS: for the series:
+
+Acked-by: Song Liu <songliubraving@fb.com>
