@@ -2,264 +2,311 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273E7FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F75FA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90B02067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4AB2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cDMLHUXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394130AbfJPP2R (ORCPT
+        id S2394142AbfJPP3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:28:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48346 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731190AbfJPP2R (ORCPT
+        Wed, 16 Oct 2019 11:29:04 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46709 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392991AbfJPP3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:28:17 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9GFRcwg125317
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:28:15 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vp4f6utp0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:28:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sth@linux.ibm.com>;
-        Wed, 16 Oct 2019 16:28:13 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 16 Oct 2019 16:28:09 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9GFS7kF60489962
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 15:28:07 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBB4B11C052;
-        Wed, 16 Oct 2019 15:28:07 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C73B11C054;
-        Wed, 16 Oct 2019 15:28:07 +0000 (GMT)
-Received: from [9.152.214.37] (unknown [9.152.214.37])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 16 Oct 2019 15:28:07 +0000 (GMT)
-Subject: Re: memory leaks in dasd_eckd_check_characteristics() error paths
-To:     Qian Cai <cai@lca.pw>, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1570044801.5576.262.camel@lca.pw>
- <6f5584d5-755c-e416-52da-3cb99c69adaf@linux.ibm.com>
- <1571234974.5937.53.camel@lca.pw>
- <ddc3fb26-2286-de78-70dd-ef0f62bfd6c0@linux.ibm.com>
- <1571239578.5937.62.camel@lca.pw>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- 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
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Date:   Wed, 16 Oct 2019 17:28:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 11:29:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 89so20486989oth.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V9VEJ6qCsL2ywbrpNNXgyPcRNbaXwu3Y4oOlJhBpLzQ=;
+        b=cDMLHUXZK9cMI2/GCB64rQqpH3gxjuGZNiLW7PVaJUUcrSTGnUd89F+fe1nuIvO0Fa
+         dUVOOVGMVkibaDN2U3QOAKuVrnTDKzqEFFR4aRPZ+x4DUecvR60CxRXNHTaYUIryLWlY
+         GP0IdCOYERcI8Sv+trmIiCysCspwk3tTYzMpuyqF8ghLI/dVaDkab1XBRbwsBWkiF7ri
+         tlOtabO/vY2XtZYqGhMjmjj9D9JbBqqFeLrO5JRvnUjYRWlm+2w3z57IanSq6eVS05QI
+         N9/5GCdaCrwm7FkqeDEFdHd+D4o4aPwI4+EQ5AGN/AEpcAyOr6hbMepo9So70Ps3W8/Q
+         dWqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V9VEJ6qCsL2ywbrpNNXgyPcRNbaXwu3Y4oOlJhBpLzQ=;
+        b=P1YPJ/+tuaS2Mc/r8DPI9EO9hWTf7WkhPr+g3kPhEy8Tp4mKX9M1rrAeeI9V+3kQ+M
+         R/TwGI86GxIRg3Nuv0//mu2R16tnDLOZqdONQh3/kFwmdcIekFNIIQVHPN5BfhUWSig6
+         fkI3KNgjDZNjQQcUEIyDee0qXe5KcKl4DNLZD0Figk0cIgVnBK0I+dlgTCLH79NoCpKo
+         YaWJtA49Gwh+Mm/qwvx74UtUkOMgBT4CLQRc6bDafuZYrXl7DgGOrLxZFskT7OdQX9OM
+         tVdoeNM3YW4DMRY33dcTyhePoKg8RW4srX/N0pyAEdLcGjXjwBBXW3HZHN+eukC/JDj5
+         esBQ==
+X-Gm-Message-State: APjAAAU7gFA0s9VFgHvGo18Xbo4MkKLMnFBzDaaN7Zlf9e3IBzyLFZEo
+        xFb7u0HH52Vu1bmxK4BgIqcL35D10NikYlHJOAiStw==
+X-Google-Smtp-Source: APXvYqxwgp+zi0BPWcA5EYFlnLtpnZA5f6BadLLiWGM2ewOW44p8W5YP5jVes3s2F+Rtq1EiRqUqeBH/KPbq4q7mKqs=
+X-Received: by 2002:a9d:6c96:: with SMTP id c22mr3645106otr.194.1571239742813;
+ Wed, 16 Oct 2019 08:29:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1571239578.5937.62.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19101615-0016-0000-0000-000002B89DF7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101615-0017-0000-0000-00003319C1C8
-Message-Id: <3e03a30c-f0c8-2941-7545-fcf609d77cb0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=65 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910160131
+References: <20191015162300.22024-1-brgl@bgdev.pl> <20191015162300.22024-2-brgl@bgdev.pl>
+ <CAL_JsqKhGr6QDWZFR6cq6MH-0vghb9oSgkCCdi7bhiKmvrkY_w@mail.gmail.com>
+ <CAMRc=Mdb7T6p7xXWJBS2UXq0E-FD4WRtaP7H-AvRH0s6-MyJ8A@mail.gmail.com> <CAL_JsqJZ9myO3Uwb6j_R3W8EpVtOaCZV6_tDfNAXwoaUZO+kNQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJZ9myO3Uwb6j_R3W8EpVtOaCZV6_tDfNAXwoaUZO+kNQ@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 16 Oct 2019 17:28:51 +0200
+Message-ID: <CAMpxmJUrwTn9cafnGD5KPJObhgYq0GN2EedwGiey2tAXwFmbvA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.10.19 17:26, Qian Cai wrote:
-> On Wed, 2019-10-16 at 16:56 +0200, Stefan Haberland wrote:
->> On 16.10.19 16:09, Qian Cai wrote:
->>> On Wed, 2019-10-16 at 15:29 +0200, Stefan Haberland wrote:
->>>> Hi,
->>>>
->>>> thanks for reporting this.
->>>>
->>>> On 02.10.19 21:33, Qian Cai wrote:
->>>>> For some reasons, dasd_eckd_check_characteristics() received -ENOMEM and then
->>>>> dasd_generic_set_online() emits this message,
->>>>>
->>>>> dasd: 0.0.0122 Setting the DASD online with discipline ECKD failed with rc=-12
->>>>>
->>>>> After that, there are several memory leaks below. There are "config_data" and
->>>>> then stored as,
->>>>>
->>>>> /* store per path conf_data */
->>>>> device->path[pos].conf_data = conf_data;
->>>>>
->>>>> When it processes the error path in  dasd_generic_set_online(), it calls
->>>>> dasd_delete_device() which nuke the whole "struct dasd_device" without freeing
->>>>> the device->path[].conf_data first. 
->>>> Usually dasd_delete_device() calls dasd_generic_free_discipline() which
->>>> takes care of
->>>> the device->path[].conf_data in dasd_eckd_uncheck_device().
->>>> From a first look this looks sane.
->>>>
->>>> So I need to spend a closer look if this does not happen correctly here.
->>> When dasd_eckd_check_characteristics() failed here,
->>>
->>> 	if (!private) {
->>> 		private = kzalloc(sizeof(*private), GFP_KERNEL | GFP_DMA);
->>> 		if (!private) {
->>> 			dev_warn(&device->cdev->dev,
->>> 				 "Allocating memory for private DASD data "
->>> 				 "failed\n");
->>> 			return -ENOMEM;
->>> 		}
->>> 		device->private = private;
->>>
->>> The device->private is NULL.
->>>
->>> Then, in dasd_eckd_uncheck_device(), it will return immediately.
->>>
->>> 	if (!private)
->>> 		return;
->> Yes but in this case there is no per_path configuration data stored.
->> This is done after the private structure is allocated successfully.
-> Yes, you are right. It has been a while so I must lost a bit memory. Actually,
-> it looks like in dasd_eckd_check_characteristic() that device->private is set to
-> NULL from this path,
+=C5=9Br., 16 pa=C5=BA 2019 o 15:51 Rob Herring <robh+dt@kernel.org> napisa=
+=C5=82(a):
 >
-> 	/* Read Configuration Data */
-> 	rc = dasd_eckd_read_conf(device);
-> 	if (rc)
-> 		goto out_err1;
+> On Wed, Oct 16, 2019 at 7:55 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> >
+> > wt., 15 pa=C5=BA 2019 o 23:17 Rob Herring <robh+dt@kernel.org> napisa=
+=C5=82(a):
+> > >
+> > > On Tue, Oct 15, 2019 at 11:23 AM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+> > > >
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > Convert the binding document for MAX77650 core MFD module to YAML.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > ---
+> > > >  .../devicetree/bindings/mfd/max77650.txt      | 47 +----------
+> > > >  .../devicetree/bindings/mfd/max77650.yaml     | 83 +++++++++++++++=
+++++
+> > > >  2 files changed, 84 insertions(+), 46 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.=
+yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/D=
+ocumentation/devicetree/bindings/mfd/max77650.txt
+> > > > index b529d8d19335..080871686b3b 100644
+> > > > --- a/Documentation/devicetree/bindings/mfd/max77650.txt
+> > > > +++ b/Documentation/devicetree/bindings/mfd/max77650.txt
+> > > > @@ -1,46 +1 @@
+> > > > -MAX77650 ultra low-power PMIC from Maxim Integrated.
+> > > > -
+> > > > -Required properties:
+> > > > --------------------
+> > > > -- compatible:          Must be "maxim,max77650"
+> > > > -- reg:                 I2C device address.
+> > > > -- interrupts:          The interrupt on the parent the controller =
+is
+> > > > -                       connected to.
+> > > > -- interrupt-controller: Marks the device node as an interrupt cont=
+roller.
+> > > > -- #interrupt-cells:    Must be <2>.
+> > > > -
+> > > > -- gpio-controller:     Marks the device node as a gpio controller.
+> > > > -- #gpio-cells:         Must be <2>. The first cell is the pin numb=
+er and
+> > > > -                       the second cell is used to specify the gpio=
+ active
+> > > > -                       state.
+> > > > -
+> > > > -Optional properties:
+> > > > ---------------------
+> > > > -gpio-line-names:       Single string containing the name of the GP=
+IO line.
+> > > > -
+> > > > -The GPIO-controller module is represented as part of the top-level=
+ PMIC
+> > > > -node. The device exposes a single GPIO line.
+> > > > -
+> > > > -For device-tree bindings of other sub-modules (regulator, power su=
+pply,
+> > > > -LEDs and onkey) refer to the binding documents under the respectiv=
+e
+> > > > -sub-system directories.
+> > > > -
+> > > > -For more details on GPIO bindings, please refer to the generic GPI=
+O DT
+> > > > -binding document <devicetree/bindings/gpio/gpio.txt>.
+> > > > -
+> > > > -Example:
+> > > > ---------
+> > > > -
+> > > > -       pmic@48 {
+> > > > -               compatible =3D "maxim,max77650";
+> > > > -               reg =3D <0x48>;
+> > > > -
+> > > > -               interrupt-controller;
+> > > > -               interrupt-parent =3D <&gpio2>;
+> > > > -               #interrupt-cells =3D <2>;
+> > > > -               interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> > > > -
+> > > > -               gpio-controller;
+> > > > -               #gpio-cells =3D <2>;
+> > > > -               gpio-line-names =3D "max77650-charger";
+> > > > -       };
+> > > > +This file has been moved to max77650.yaml.
+> > > > diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/=
+Documentation/devicetree/bindings/mfd/max77650.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..5186ad287ec7
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
+> > > > @@ -0,0 +1,83 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/mfd/max77650.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: MAX77650 ultra low-power PMIC from Maxim Integrated.
+> > > > +
+> > > > +maintainers:
+> > > > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > > +
+> > > > +description: |
+> > > > +  This document describes the DT properties of the core MFD contro=
+ller.
+> > > > +
+> > > > +  The GPIO-controller module is represented as part of the top-lev=
+el PMIC
+> > > > +  node. The device exposes a single GPIO line.
+> > > > +
+> > > > +  For device-tree bindings of other sub-modules (regulator, power =
+supply,
+> > > > +  LEDs and onkey) refer to the binding documents under the respect=
+ive
+> > > > +  sub-system directories.
+> > > > +
+> > > > +  For more details on GPIO bindings, please refer to the generic G=
+PIO DT
+> > > > +  binding document <devicetree/bindings/gpio/gpio.txt>.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: maxim,max77650
+> > > > +
+> > > > +  reg:
+> > > > +    description:
+> > > > +      I2C device address.
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  interrupts:
+> > > > +    description:
+> > > > +      The interrupt on the parent the controller is connected to.
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  interrupt-controller: true
+> > > > +
+> > > > +  "#interrupt-cells":
+> > > > +    const: 2
+> > > > +    description:
+> > > > +      The first cell is the IRQ number, the second cell is the tri=
+gger type.
+> > > > +
+> > > > +  gpio-controller: true
+> > > > +
+> > > > +  "#gpio-cells":
+> > > > +    const: 2
+> > > > +    description:
+> > > > +      The first cell is the pin number and the second cell is used=
+ to specify
+> > > > +      the gpio active state.
+> > > > +
+> > > > +  gpio-line-names:
+> > > > +    $ref: '/schemas/types.yaml#/definitions/string-array'
+> > > > +    maxItems: 1
+> > > > +    description:
+> > > > +      Single string containing the name of the GPIO line.
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - interrupts
+> > > > +  - interrupt-controller
+> > > > +  - "#interrupt-cells"
+> > > > +  - gpio-controller
+> > > > +  - "#gpio-cells"
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    pmic@48 {
+> > > > +        compatible =3D "maxim,max77650";
+> > > > +        reg =3D <0x48>;
+> > > > +
+> > > > +        interrupt-controller;
+> > > > +        interrupt-parent =3D <&gpio2>;
+> > > > +        #interrupt-cells =3D <2>;
+> > > > +        interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> > >
+> > > Examples are built now. Run 'make dt_binding_check' on bindings befor=
+e
+> > > sending them:
+> > >
+> > > Error: Documentation/devicetree/bindings/mfd/max77650.example.dts:24.=
+29-30
+> > > syntax error
+> > > FATAL ERROR: Unable to parse input tree
+> > > scripts/Makefile.lib:321: recipe for target
+> > > 'Documentation/devicetree/bindings/mfd/max77650.example.dt.yaml'
+> > > failed
+> > > make[1]: *** [Documentation/devicetree/bindings/mfd/max77650.example.=
+dt.yaml]
+> > > Error 1
+> > >
+> > > You need to include any includes that you use.
+> > >
+> > > Rob
+> >
+> > Hi Rob,
+> >
+> > thanks for the review.
+> >
+> > I'm on v5.4-rc3 and when running dt_binding_check, the error I'm
+> > getting is this:
+> >
+> > # make dt_binding_check
+> > DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/mfd/max77650.yaml
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> >   CHKDT   Documentation/devicetree/bindings/mfd/max77650.yaml
+> > make[1]: *** No rule to make target
+> > 'Documentation/devicetree/bindings/mfd/max77650.example.dt.yaml',
+> > needed by '__build'.  Stop.
+> > make: *** [Makefile:1263: dt_binding_check] Error 2
+> >
+> > Is this caused by the same issue or am I missing something?
 >
-> out_err1:
-> 	kfree(private->conf_data);
-> 	kfree(device->private);
-> 	device->private = NULL;
-> 	return rc;
+> I believe that's because dtc needs to be built with libyaml support.
 >
-> because dasd_eckd_read_conf() returns -ENOMEM and calls,
->
-> out_error:
-> 	kfree(rcd_buf);
-> 	*rcd_buffer = NULL;
-> 	*rcd_buffer_size = 0;
-> 	return ret;
->
-> It will only free its own config_data in one operational path, but there could
-> has already allocated in earlier paths in dasd_eckd_read_conf() without any
-> rollback and calls return,
->
-> 	for (lpm = 0x80; lpm; lpm>>= 1) {
-> 		if (!(lpm & opm))
-> 			continue;
-> 		rc = dasd_eckd_read_conf_lpm(device, &conf_data,
-> 					     &conf_len, lpm);
-> 		if (rc && rc != -EOPNOTSUPP) {	/* -EOPNOTSUPP is ok */
-> 			DBF_EVENT_DEVID(DBF_WARNING, device->cdev,
-> 					"Read configuration data returned "
-> 					"error %d", rc);
-> 			return rc;
-> 		}
->
-> Later, dasd_eckd_uncheck_device() see private->device is NULL without cleaning
-> up. Does it make sense?
 
-Yes, this looks like an error path not handling this correctly.
+Indeed, I didn't have the development package installed, but
+surprisingly I didn't get the warning from scripts/dtc/Makefile about
+that either.
 
->
->>
->>>>> Is it safe to free those in
->>>>> dasd_free_device() without worrying about the double-free? Or, is it better to
->>>>> free those in dasd_eckd_check_characteristics()'s goto error handling, i.e.,
->>>>> out_err*?
->>>>>
->>>>> --- a/drivers/s390/block/dasd.c
->>>>> +++ b/drivers/s390/block/dasd.c
->>>>> @@ -153,6 +153,9 @@ struct dasd_device *dasd_alloc_device(void)
->>>>>   */
->>>>>  void dasd_free_device(struct dasd_device *device)
->>>>>  {
->>>>> +       for (int i = 0; i < 8; i++)
->>>>> +               kfree(device->path[i].conf_data);
->>>>> +
->>>>>         kfree(device->private);
->>>>>         free_pages((unsigned long) device->ese_mem, 1);
->>>>>         free_page((unsigned long) device->erp_mem);
->>>>>
->>>>>
->>>>> unreferenced object 0x0fcee900 (size 256):
->>>>>   comm "dasdconf.sh", pid 446, jiffies 4294940081 (age 170.340s)
->>>>>   hex dump (first 32 bytes):
->>>>>     dc 01 01 00 f0 f0 f2 f1 f0 f7 f9 f0 f0 c9 c2 d4  ................
->>>>>     f7 f5 f0 f0 f0 f0 f0 f0 f0 c6 d9 c2 f7 f1 62 33  ..............b3
->>>>>   backtrace:
->>>>>     [<00000000a83b1992>] kmem_cache_alloc_trace+0x200/0x388
->>>>>     [<00000000048ef3e2>] dasd_eckd_read_conf+0x408/0x1400 [dasd_eckd_mod]
->>>>>     [<00000000ce31f195>] dasd_eckd_check_characteristics+0x3cc/0x938
->>>>> [dasd_eckd_mod]
->>>>>     [<00000000f6f1759b>] dasd_generic_set_online+0x150/0x4c0
->>>>>     [<00000000efca1efa>] ccw_device_set_online+0x324/0x808
->>>>>     [<00000000f9779774>] online_store_recog_and_online+0xe8/0x220
->>>>>     [<00000000349a5446>] online_store+0x2ce/0x420
->>>>>     [<000000005bd145f8>] kernfs_fop_write+0x1bc/0x270
->>>>>     [<0000000005664197>] vfs_write+0xce/0x220
->>>>>     [<0000000044a8bccb>] ksys_write+0xea/0x190
->>>>>     [<0000000037335938>] system_call+0x296/0x2b4
->>
+Bart
 
+> Rob
