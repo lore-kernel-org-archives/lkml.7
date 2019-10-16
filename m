@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F2FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97946FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FCD207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA55207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264016;
-	bh=crHSjvYMY9d/dYMyzSZHnf5e6SCkxwWPOlxaPZTBiYQ=;
+	s=default; t=1571264020;
+	bh=T/ispQqBFYx+Dt0v8DmKHA7q7O9Ug7uRRz1rITIolcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxi+txCn88ZOkAhjMtBFDAg6wXyfbTZmQErrGxrCDlaHXNqYkyWnNOify7nnKAVnX
-	 cuyYRtXlGWMGUXDFKJAFMvnH6554MLU+U1/cOGjFsRdV5MmY9FLpJ8K7oSmpTJMkbC
-	 NkOsUpa2+BpGph3zB372CKcfz6dCk87g83QCXfbk=
+	b=aWqLYKhNGhq5Kxx1nhY0Rg8H46yBHG2JzAM97JuZTC5gciaBhjGQsP++LzhDmv03o
+	 7kQdmkPnxp5Hfc5B4FOfcinQJOe0lyrFumoATmdAcrV5fYgxQdQGzymk+1QLfcEdnQ
+	 q2R44LREkQI7hmbb6c70bE30GLLlxZ5je3ErevYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393174AbfJPWNe (ORCPT
+        id S2439337AbfJPWNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:13:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395367AbfJPVzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:51 -0400
+        id S2437826AbfJPVzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:49 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F5721925;
-        Wed, 16 Oct 2019 21:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6CF21928;
+        Wed, 16 Oct 2019 21:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262950;
-        bh=crHSjvYMY9d/dYMyzSZHnf5e6SCkxwWPOlxaPZTBiYQ=;
+        s=default; t=1571262948;
+        bh=T/ispQqBFYx+Dt0v8DmKHA7q7O9Ug7uRRz1rITIolcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLDzr2f3XxrVF4Wl8ZE8Ydkyk27aqrahQvqdwONMh8pVFtxLd9XTJOCmacX95ahLY
-         F8IWj8hyzcxlE8r3bJKbULfT70JObZRoXCNXb0NxjqEcLndHVyyUb6g4Gr/2tK3kn/
-         06K4JH0s75/gPPVyi6OEedaDQLyNqhbqO1WDMVYQ=
+        b=a2ykbMtRhGCZVTfPIdomY+7Njs+e6s5RyMgVvZUhC2lCVuW7xjddk2a8cSdtATY5N
+         rihq3f79y5uX2F3I9tgxohMgs0hyQORxcFM+632J08yJT9I4nobSS3SD4p7BXJfDB6
+         67jW8oPTP5g8ig+B9LIKuzMjInAbvleWsEd2U1l4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 20/65] USB: usblp: fix runtime PM after driver unbind
-Date:   Wed, 16 Oct 2019 14:50:34 -0700
-Message-Id: <20191016214815.264366153@linuxfoundation.org>
+Subject: [PATCH 4.14 19/65] USB: iowarrior: fix use-after-free after driver unbind
+Date:   Wed, 16 Oct 2019 14:50:33 -0700
+Message-Id: <20191016214813.881350919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -60,43 +60,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 9a31535859bfd8d1c3ed391f5e9247cd87bb7909 upstream.
+commit b5f8d46867ca233d773408ffbe691a8062ed718f upstream.
 
-Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
-interface PM usage counter") USB drivers must always balance their
-runtime PM gets and puts, including when the driver has already been
-unbound from the interface.
+Make sure to stop also the asynchronous write URBs on disconnect() to
+avoid use-after-free in the completion handler after driver unbind.
 
-Leaving the interface with a positive PM usage counter would prevent a
-later bound driver from suspending the device.
-
-Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
-Cc: stable <stable@vger.kernel.org>
+Fixes: 946b960d13c1 ("USB: add driver for iowarrior devices.")
+Cc: stable <stable@vger.kernel.org>	# 2.6.21: 51a2f077c44e ("USB: introduce usb_anchor")
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191001084908.2003-3-johan@kernel.org
+Link: https://lore.kernel.org/r/20191009104846.5925-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/usblp.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/misc/iowarrior.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -474,10 +474,12 @@ static int usblp_release(struct inode *i
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -87,6 +87,7 @@ struct iowarrior {
+ 	char chip_serial[9];		/* the serial number string of the chip connected */
+ 	int report_size;		/* number of bytes in a report */
+ 	u16 product_id;
++	struct usb_anchor submitted;
+ };
  
- 	mutex_lock(&usblp_mutex);
- 	usblp->used = 0;
--	if (usblp->present) {
-+	if (usblp->present)
- 		usblp_unlink_urbs(usblp);
--		usb_autopm_put_interface(usblp->intf);
--	} else		/* finish cleanup from disconnect */
+ /*--------------*/
+@@ -428,11 +429,13 @@ static ssize_t iowarrior_write(struct fi
+ 			retval = -EFAULT;
+ 			goto error;
+ 		}
++		usb_anchor_urb(int_out_urb, &dev->submitted);
+ 		retval = usb_submit_urb(int_out_urb, GFP_KERNEL);
+ 		if (retval) {
+ 			dev_dbg(&dev->interface->dev,
+ 				"submit error %d for urb nr.%d\n",
+ 				retval, atomic_read(&dev->write_busy));
++			usb_unanchor_urb(int_out_urb);
+ 			goto error;
+ 		}
+ 		/* submit was ok */
+@@ -774,6 +777,8 @@ static int iowarrior_probe(struct usb_in
+ 	iface_desc = interface->cur_altsetting;
+ 	dev->product_id = le16_to_cpu(udev->descriptor.idProduct);
+ 
++	init_usb_anchor(&dev->submitted);
 +
-+	usb_autopm_put_interface(usblp->intf);
-+
-+	if (!usblp->present)		/* finish cleanup from disconnect */
- 		usblp_cleanup(usblp);
- 	mutex_unlock(&usblp_mutex);
- 	return 0;
+ 	res = usb_find_last_int_in_endpoint(iface_desc, &dev->int_in_endpoint);
+ 	if (res) {
+ 		dev_err(&interface->dev, "no interrupt-in endpoint found\n");
+@@ -889,6 +894,7 @@ static void iowarrior_disconnect(struct
+ 		   Deleting the device is postponed until close() was called.
+ 		 */
+ 		usb_kill_urb(dev->int_in_urb);
++		usb_kill_anchored_urbs(&dev->submitted);
+ 		wake_up_interruptible(&dev->read_wait);
+ 		wake_up_interruptible(&dev->write_wait);
+ 		mutex_unlock(&dev->mutex);
 
 
