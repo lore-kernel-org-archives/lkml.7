@@ -2,139 +2,158 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C77FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37F6FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987F120854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pc5Jrb43"
+	by mail.kernel.org (Postfix) with ESMTP id C58E8218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732426AbfJPL6X (ORCPT
+        id S2387476AbfJPL7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:58:23 -0400
-Received: from mout.web.de ([212.227.17.11]:44107 "EHLO mout.web.de"
+        Wed, 16 Oct 2019 07:59:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37752 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfJPL6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:58:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571227087;
-        bh=a+1GVviXwdLUCjJJtDMUOawEAo2G33VYxdEtE7DBm8Q=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=pc5Jrb43rsiHse/tfUegDS+Ew3+Fzh5DhUizXyYf8JPXX77NGZk9EASNDuMu8GKOF
-         tnVWHtSgfZktZ5r1tKqSWV2eOXpjYGE+3S45CCS+F37tP1jgtXAkZr4D8b+23nLQTN
-         hoJRHRzfUIHkM4mpVubevJP3gz7S/IN/biIsuF0I=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.85.206]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MLPNm-1iK9yW46rq-000eYE; Wed, 16
- Oct 2019 13:58:07 +0200
-Subject: Re: clk: samsung: Checking a kmemdup() call in
- _samsung_clk_register_pll()
-To:     Tomasz Figa <tomasz.figa@gmail.com>, linux-clk@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Aditya Pakki <pakki001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <7933ce8f-ca1b-6ed8-14b9-59679130dc47@web.de>
- <CA+Ln22GpcMF5e8wjwoRH0wExyoGfta4n3YuaOBNDE+rfqhSZjg@mail.gmail.com>
- <39a142ae-e0a1-0683-d68c-128b388f480e@web.de>
- <CA+Ln22FCH-q-joG6i=K2u=3vZTwwytkk0Q48oKekGkVb+VtL3Q@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <43617d6a-c778-629b-81b0-aa0accf09d80@web.de>
-Date:   Wed, 16 Oct 2019 13:58:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1726372AbfJPL7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:59:01 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5A8B17FDE9
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:59:00 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id k184so1107306wmk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 04:59:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iQqLr0072EPsnTxt9Tx21FXVuFvWLQZSEt/0llfkeOA=;
+        b=WjwqEqgS61VtAectjHI/os0huTSyJy3vHD7JOhXAy1P7I2pzIQVkXjxmvgnzsz+Jlf
+         7odHrXIf6o5Jmb9/YOF5bovsVEjCpSiebYSDR9oj4CZFwpY3ocwoqCskuXZW4EuNOba/
+         fvQika3v61ZjRC7PTyVdBazsicCWVy8zANwkBjUcYDcey2c1Dh5XCRYzi+XB8qCEl9AP
+         rsLvodw8YImRnBQv6IfaVgOVzZZx2FaLXZyoQna1PPOpe8vaNuAjMmHAt4/p+NAEDxgf
+         tXA3tSEZhJzoNu+JesuGeCJMK2pnvMBpews8v3sBkyTzvu53Wo85XBK7S9Aklg9loMCi
+         5blQ==
+X-Gm-Message-State: APjAAAXexUzV17POpCQ0yDhpug9do76uvRa1JqO5Q6sbtV2tkXU6JBYt
+        qWYyk9XJg/D3hphOy6ljn1t5YnbNME8nUaUHHSIPdhqbv8UaYS5KQ0P0ZQWdYAItSO3ErMSbZXa
+        FteBFhJef6Maz71pNhDaCp9ss
+X-Received: by 2002:adf:ecc7:: with SMTP id s7mr2398976wro.305.1571227138943;
+        Wed, 16 Oct 2019 04:58:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyPn2WqMqrALmzAf7rRPCploJic5/A4+kCdmkuSxok12U/qcGXOFuOtsmSdfRterPobr4w6Pg==
+X-Received: by 2002:adf:ecc7:: with SMTP id s7mr2398937wro.305.1571227138615;
+        Wed, 16 Oct 2019 04:58:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d001:591b:c73b:6c41? ([2001:b07:6468:f312:d001:591b:c73b:6c41])
+        by smtp.gmail.com with ESMTPSA id u11sm2148223wmd.32.2019.10.16.04.58.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 04:58:58 -0700 (PDT)
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
+Date:   Wed, 16 Oct 2019 13:58:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CA+Ln22FCH-q-joG6i=K2u=3vZTwwytkk0Q48oKekGkVb+VtL3Q@mail.gmail.com>
+In-Reply-To: <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:54pWJEpaiZs1qxWmTa/OWZ9tXGNN4h0kEg9bN1x0P0xYr2S2ugO
- 0QY6Iq5wsPy6azs/F09/Ide4O+p7A94gw244waY2OsWUVaS/AoMq4metO2pYXgUJo1CDWSE
- 03dP5yYhvC5ET5FyF/MILYTkRrvUvTiPwA8k9KaRVCangwXljvtXXZtsYy0zQf9MQ7Tq1gI
- wmpYD5VR1rH2dDU3pu2Cg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8AAAHjxk6lk=:XKAMOU9Pa5g9aYKvsgrVAX
- r9jxuUOV0PNXWSZrdmy0IYMopWeQHKFu2M8D6kqCv3iubxOBML3/vJ7NUuNZRarLwP2bvmK7k
- zeDGaQeZKE864m03SvVvM4iYlkcCldNVRvXTHb2cg9+aqMcPT/Qw4fgDojfNMfEPhL4C0fpq7
- R0k0GvLEFz8sN7Xr1GGen+AlnFcRx1AvV/3TDv7JskBXn7kfGkRNNVv6jOQiIgettkQ+GMGUN
- MPe1AoFnKZ1E3aRpxwXyOyPXhBML9GmFHXdW2OxQ50VcfGjRRwhYwcgBMzCkmfc3UyQ3dBe3R
- v+WZ2jStn/JDbylwXzTz9ith0uT9nOojE7Rm/3QS765tHdK0OdMv6GdS5TW6KqoyXRTxteHs0
- t76NOrwPHwP1Ex4Z35ufnxQeUkm016o44Q71UCWOKbD5pNcf6nhJ8jRuPM+JjbGIB7KKh70+V
- KCmxogN3ILfJc5K6r8oFubv5HsNnxj605St3HwyRlP40HbDWYZ4iGWBICT+5AA32k7UJwJk7J
- rPpxRp3ASANzSkp3b5ySNZje50d1g98DbzO7k04kVNNlE7fjHviRXekExe3Vi3qmMaUhHweZO
- p5C3GbmnyKirAowHBb059e+GIh31BivMA1yqlKi1bnyH72euGcmUjS1HVXJPnfI6J7mnGoIKl
- FNWL6280mNWQSwxalW+UEMJMNQE0+mGeWkPcUs92h0Hm1T5PQYR990O2lkU7RwoF2ni1ru77M
- UXlNlqJunlikeuIH8ZnG0LfKujI60mqG6LILFoE+o+c9Ai1XSM2PZbWogSIhhlsOKLULK6cU5
- HzMHoTqX6lxfbHtdn9oXRj42IpQzb8/+o4f+/mSKk/11upS/EOvgOosiunMoVMpj6YbRet3zY
- HCRpygu66tDg4mVFJnrZYCz0JvQFdg6+qDbB9LEMZSjhWZK4xh8T5TJhj3TEc/iqDdDGG8djz
- ASwGFs7GS4QTOI8WQi342mwjJcXtxNTFB8rz3oJ80mnUexfujJLp72dQariZ9eo4JTy6Lrwuk
- vsvOwhl/FyfM1tPVQyHHmpPdHjnOTNXHD7CYcCE2B6VRqgeW1Df+5Sk84isuxtuG4VdoX87Lh
- MZ7PduWwA3ule6e7vLGqfl3PXeTpKt2mQZ1gJP/RsU4s2g3ANJWl7KxaGFJmouNPC3IrRyIzh
- fnZShSI7kVY7l1d8Fk3dfo6btLPRiaa2W+pYRgV2l3jynga6boJKE2nHp9+FZkjj++pm1p25c
- +pzq6nWOOXqye7wCZ9midQQlMixJFkevMA5kLF9lWl5kYgPj5TguiL5cqtYs=
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> A backtrace should be enough for this kind of a failure that shouldn't
-> normally happen and if happens, then the rest of the system must be in
-> a state already about to fail anyway.
+On 16/10/19 13:49, Thomas Gleixner wrote:
+> On Wed, 16 Oct 2019, Paolo Bonzini wrote:
+>> Yes it does.  But Sean's proposal, as I understand it, leads to the
+>> guest receiving #AC when it wasn't expecting one.  So for an old guest,
+>> as soon as the guest kernel happens to do a split lock, it gets an
+>> unexpected #AC and crashes and burns.  And then, after much googling and
+>> gnashing of teeth, people proceed to disable split lock detection.
+> 
+> I don't think that this was what he suggested/intended.
 
-Does this feedback mean that you would like to omit two extra
-error messages from this function implementation?
+Xiaoyao's reply suggests that he also understood it like that.
 
-Regards,
-Markus
+>> In all of these cases, the common final result is that split-lock
+>> detection is disabled on the host.  So might as well go with the
+>> simplest one and not pretend to virtualize something that (without core
+>> scheduling) is obviously not virtualizable.
+> 
+> You are completely ignoring any argument here and just leave it behind your
+> signature (instead of trimming your reply).
+
+I am not ignoring them, I think there is no doubt that this is the
+intended behavior.  I disagree that Sean's patches achieve it, however.
+
+>>> 1) Sane guest
+>>>
+>>> Guest kernel has #AC handler and you basically prevent it from
+>>> detecting malicious user space and killing it. You also prevent #AC
+>>> detection in the guest kernel which limits debugability.
+> 
+> That's a perfectly fine situation. Host has #AC enabled and exposes the
+> availability of #AC to the guest. Guest kernel has a proper handler and
+> does the right thing. So the host _CAN_ forward #AC to the guest and let it
+> deal with it. For that to work you need to expose the MSR so you know the
+> guest state in the host.
+> 
+> Your lazy 'solution' just renders #AC completely useless even for
+> debugging.
+> 
+>>> 2) Malicious guest
+>>>
+>>> Trigger #AC to disable the host detection and then carry out the DoS 
+>>> attack.
+> 
+> With your proposal you render #AC useless even on hosts which have SMT
+> disabled, which is just wrong. There are enough good reasons to disable
+> SMT.
+
+My lazy "solution" only applies to SMT enabled.  When SMT is either not
+supported, or disabled as in "nosmt=force", we can virtualize it like
+the posted patches have done so far.
+
+> I agree that with SMT enabled the situation is truly bad, but we surely can
+> be smarter than just disabling it globally unconditionally and forever.
+> 
+> Plus we want a knob which treats guests triggering #AC in the same way as
+> we treat user space, i.e. kill them with SIGBUS.
+
+Yes, that's a valid alternative.  But if SMT is possible, I think the
+only sane possibilities are global disable and SIGBUS.  SIGBUS (or
+better, a new KVM_RUN exit code) can be acceptable for debugging guests too.
+
+Paolo
