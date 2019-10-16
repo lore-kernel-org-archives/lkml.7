@@ -2,119 +2,121 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5801AFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B6BFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371162067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A5E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393743AbfJPRHB (ORCPT
+        id S2394006AbfJPRHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:07:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44850 "EHLO mx1.redhat.com"
+        Wed, 16 Oct 2019 13:07:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:45988 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388161AbfJPRHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:07:00 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 345B788313
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 17:07:00 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id g67so1233483wmg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:07:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=gs7j7P97MguiwVXLFd4gwkovHtcAde4RLohzpgnXT0M=;
-        b=BMr0FShOnwe1mN1IYVDgVOpD2RgspUr/O0JVXNCIwuE7flP5WwHyx9tNvLUNRQ5EAq
-         IOx3EalrmZ+Sph8nyoJsxp/keqSJ7Ok/ZIf1p2YMSmXrq9X7ccprkNxzfSgbCPpgP8fC
-         yw2frzJgqcB72bYEBVZpxatuCEXrRdBUzsgFd4vwu5dx1OEXy7Eod9Ec9Gk/ieQfP+lT
-         BJV7RFu7Qxvh9HOdsGDJBKFYNqOmynJunQxdNiDou4o2BBaJ8CbFaXxPlFvmKPblBbdG
-         dzQ863r2LYHs+Xz60G/jTCQAqWc5Sr5vNst8Frhe2IhTqrwjuKuFFeEyVmE/3m0bMoW4
-         YW6w==
-X-Gm-Message-State: APjAAAVMYDbPXLi5NyPLLLl9u7prIkY5ry2G+bCa6zQQkYDKXVWKkfOJ
-        rNzGPJmmx3aOxcoti8LL0uc3vZaI8YpZvXZNboTMrzx7nvkq8pIu+HliG3DHNO6xGqTWmTp4cAk
-        C7br4Ma5ZcJkkzgVx7o4+Yc/D
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr4584935wma.44.1571245618930;
-        Wed, 16 Oct 2019 10:06:58 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyTOPCffn6fos0yiy5ZNrUHWqJEU8VeKDXOXKziUzRHJm9s4opmF4QO5ABHTLAraHwRok8b9A==
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr4584913wma.44.1571245618706;
-        Wed, 16 Oct 2019 10:06:58 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id e18sm35106204wrv.63.2019.10.16.10.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 10:06:58 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     suleiman@google.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] kvm: clear kvmclock MSR on reset
-In-Reply-To: <1570704617-32285-1-git-send-email-pbonzini@redhat.com>
-References: <1570704617-32285-1-git-send-email-pbonzini@redhat.com>
-Date:   Wed, 16 Oct 2019 19:06:57 +0200
-Message-ID: <87wod439hq.fsf@vitty.brq.redhat.com>
+        id S2393829AbfJPRHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:07:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C81928;
+        Wed, 16 Oct 2019 10:07:43 -0700 (PDT)
+Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6A83F3F6C4;
+        Wed, 16 Oct 2019 10:07:42 -0700 (PDT)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     joro@8bytes.org
+Cc:     iommu@lists.linux-foundation.org, maz@kernel.org,
+        julien.grall@arm.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] iommu/dma: Relax locking in iommu_dma_prepare_msi()
+Date:   Wed, 16 Oct 2019 18:07:36 +0100
+Message-Id: <5af5e77102ca52576cb96816f0abcf6398820055.1571245656.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.21.0.dirty
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+Since commit ece6e6f0218b ("iommu/dma-iommu: Split iommu_dma_map_msi_msg()
+in two parts"), iommu_dma_prepare_msi() should no longer have to worry
+about preempting itself, nor being called in atomic context at all. Thus
+we can downgrade the IRQ-safe locking to a simple mutex to avoid angering
+the new might_sleep() check in iommu_map().
 
-> After resetting the vCPU, the kvmclock MSR keeps the previous value but it is
-> not enabled.  This can be confusing, so fix it.
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f26f8be4e621..a55252c69118 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2533,6 +2533,7 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
->  static void kvmclock_reset(struct kvm_vcpu *vcpu)
->  {
->  	vcpu->arch.pv_time_enabled = false;
-> +	vcpu->arch.time = 0;
->  }
->  
->  static void kvm_vcpu_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa)
-> @@ -2698,8 +2699,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	case MSR_KVM_SYSTEM_TIME: {
->  		struct kvm_arch *ka = &vcpu->kvm->arch;
->  
-> -		kvmclock_reset(vcpu);
-> -
->  		if (vcpu->vcpu_id == 0 && !msr_info->host_initiated) {
->  			bool tmp = (msr == MSR_KVM_SYSTEM_TIME);
->  
-> @@ -2713,14 +2712,13 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		kvm_make_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu);
->  
->  		/* we verify if the enable bit is set... */
-> +		vcpu->arch.pv_time_enabled = false;
->  		if (!(data & 1))
->  			break;
->  
->  		if (kvm_gfn_to_hva_cache_init(vcpu->kvm,
->  		     &vcpu->arch.pv_time, data & ~1ULL,
->  		     sizeof(struct pvclock_vcpu_time_info)))
-> -			vcpu->arch.pv_time_enabled = false;
-> -		else
->  			vcpu->arch.pv_time_enabled = true;
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/iommu/dma-iommu.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-Hm, are you sure you didn't want to write !kvm_gfn_to_hva_cache_init()?
-
->  
->  		break;
-
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index f321279baf9e..4ba3c49de017 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -19,6 +19,7 @@
+ #include <linux/iova.h>
+ #include <linux/irq.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
+ #include <linux/pci.h>
+ #include <linux/scatterlist.h>
+ #include <linux/vmalloc.h>
+@@ -43,7 +44,6 @@ struct iommu_dma_cookie {
+ 		dma_addr_t		msi_iova;
+ 	};
+ 	struct list_head		msi_page_list;
+-	spinlock_t			msi_lock;
+ 
+ 	/* Domain for flush queue callback; NULL if flush queue not in use */
+ 	struct iommu_domain		*fq_domain;
+@@ -62,7 +62,6 @@ static struct iommu_dma_cookie *cookie_alloc(enum iommu_dma_cookie_type type)
+ 
+ 	cookie = kzalloc(sizeof(*cookie), GFP_KERNEL);
+ 	if (cookie) {
+-		spin_lock_init(&cookie->msi_lock);
+ 		INIT_LIST_HEAD(&cookie->msi_page_list);
+ 		cookie->type = type;
+ 	}
+@@ -1150,7 +1149,7 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 		if (msi_page->phys == msi_addr)
+ 			return msi_page;
+ 
+-	msi_page = kzalloc(sizeof(*msi_page), GFP_ATOMIC);
++	msi_page = kzalloc(sizeof(*msi_page), GFP_KERNEL);
+ 	if (!msi_page)
+ 		return NULL;
+ 
+@@ -1180,7 +1179,7 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+ 	struct iommu_dma_cookie *cookie;
+ 	struct iommu_dma_msi_page *msi_page;
+-	unsigned long flags;
++	static DEFINE_MUTEX(msi_prepare_lock);
+ 
+ 	if (!domain || !domain->iova_cookie) {
+ 		desc->iommu_cookie = NULL;
+@@ -1190,13 +1189,12 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+ 	cookie = domain->iova_cookie;
+ 
+ 	/*
+-	 * We disable IRQs to rule out a possible inversion against
+-	 * irq_desc_lock if, say, someone tries to retarget the affinity
+-	 * of an MSI from within an IPI handler.
++	 * In fact we should already be serialised by irq_domain_mutex
++	 * here, but that's way subtle, so belt and braces...
+ 	 */
+-	spin_lock_irqsave(&cookie->msi_lock, flags);
++	mutex_lock(&msi_prepare_lock);
+ 	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
+-	spin_unlock_irqrestore(&cookie->msi_lock, flags);
++	mutex_unlock(&msi_prepare_lock);
+ 
+ 	msi_desc_set_iommu_cookie(desc, msi_page);
+ 
 -- 
-Vitaly
+2.21.0.dirty
+
