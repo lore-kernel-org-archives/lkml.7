@@ -2,86 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27597FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B3FFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B09C20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F0D2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392515AbfJPKn1 (ORCPT
+        id S2404488AbfJPKoi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:43:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52408 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389345AbfJPKn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:43:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 03:43:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="220736033"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.130])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Oct 2019 03:43:23 -0700
-Date:   Wed, 16 Oct 2019 13:43:22 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-integrity@vger.kernel.org,
-        David Safford <david.safford@ge.com>,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Salt tpm_get_random() result with get_random_bytes()
-Message-ID: <20191016104322.GC10184@linux.intel.com>
-References: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
- <20191015170450.GB5444@ziepe.ca>
- <20191016103805.GA10184@linux.intel.com>
+        Wed, 16 Oct 2019 06:44:38 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:38514 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfJPKoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:44:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id E0BB860632C6;
+        Wed, 16 Oct 2019 12:44:35 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 6FufNbvA2Q6M; Wed, 16 Oct 2019 12:44:35 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 8312360632EE;
+        Wed, 16 Oct 2019 12:44:35 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id sYeCDUamV9iC; Wed, 16 Oct 2019 12:44:35 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 4ED9760632C6;
+        Wed, 16 Oct 2019 12:44:35 +0200 (CEST)
+Date:   Wed, 16 Oct 2019 12:44:35 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1581937397.24882.1571222675188.JavaMail.zimbra@nod.at>
+In-Reply-To: <20191016100803.31003-1-ben.dooks@codethink.co.uk>
+References: <20191016100803.31003-1-ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH] ubifs: possible missed le64_to_cpu() in journal
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016103805.GA10184@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ubifs: possible missed le64_to_cpu() in journal
+Thread-Index: w8iv2kuYlm145q0tWl6kPtPgp4Op6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 01:38:05PM +0300, Jarkko Sakkinen wrote:
-> On Tue, Oct 15, 2019 at 02:04:50PM -0300, Jason Gunthorpe wrote:
-> > On Tue, Oct 15, 2019 at 03:47:02PM +0300, Jarkko Sakkinen wrote:
-> > > Salt the result that comes from the TPM RNG with random bytes from the
-> > > kernel RNG. This will allow to use tpm_get_random() as a substitute for
-> > > get_random_bytes().  TPM could have a bug (making results predicatable),
-> > > backdoor or even an inteposer in the bus. Salting gives protections
-> > > against these concerns.
-> > 
-> > Seems like a dangerous use case, why would any kernel user that cared
-> > about quality of randomness ever call a tpm_* API to get quality
-> > random data?
+----- Ursprüngliche Mail -----
+> Von: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+> An: linux-kernel@lists.codethink.co.uk
+> CC: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>, "richard" <richard@nod.at>, "Artem Bityutskiy"
+> <dedekind1@gmail.com>, "Adrian Hunter" <adrian.hunter@intel.com>, "linux-mtd" <linux-mtd@lists.infradead.org>,
+> "linux-kernel" <linux-kernel@vger.kernel.org>
+> Gesendet: Mittwoch, 16. Oktober 2019 12:08:03
+> Betreff: [PATCH] ubifs: possible missed le64_to_cpu() in journal
+
+> In the ubifs_jnl_write_inode() functon, it calls ubifs_iget()
+> with xent->inum. The xent->inum is __le64, but the ubifs_iget()
+> takes native cpu endian.
 > 
-> This is related to this discussion:
+> I think that this should be changed to passing le64_to_cpu(xent->inum)
+> to fix the following sparse warning:
 > 
-> https://lore.kernel.org/linux-integrity/CAE=NcrY3BTvD-L2XP6bsO=9oAJLtSD0wYpUymVkAGAnYObsPzQ@mail.gmail.com/T/#t
+> fs/ubifs/journal.c:902:58: warning: incorrect type in argument 2 (different base
+> types)
+> fs/ubifs/journal.c:902:58:    expected unsigned long inum
+> fs/ubifs/journal.c:902:58:    got restricted __le64 [usertype] inum
 > 
-> I could also move this to the call site.
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Artem Bityutskiy <dedekind1@gmail.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> fs/ubifs/journal.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
+> index d6136f7c1cfc..388fe8f5dc51 100644
+> --- a/fs/ubifs/journal.c
+> +++ b/fs/ubifs/journal.c
+> @@ -899,7 +899,7 @@ int ubifs_jnl_write_inode(struct ubifs_info *c, const struct
+> inode *inode)
+> 			fname_name(&nm) = xent->name;
+> 			fname_len(&nm) = le16_to_cpu(xent->nlen);
+> 
+> -			xino = ubifs_iget(c->vfs_sb, xent->inum);
+> +			xino = ubifs_iget(c->vfs_sb, le64_to_cpu(xent->inum));
 
-But I hear you anyway.
+Good catch!
 
-I think for trusted keys the best strategy would be to do
-exactly this:
-
-1. Generate one random value with get_random_bytes_arch()
-2. Generate another with backend specific technology (we
-   have now two TPM and TEE) if an RNG available.
-3. Xor the values together.
-
-/Jarkko
+Thanks,
+//richard
