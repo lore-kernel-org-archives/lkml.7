@@ -2,114 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F9FECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CB0C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3122E2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571196926;
-	bh=NjsMhpYVP779BKlQlynjlqFZHLWRBBm1A3PdjhOLNb0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=hJBR3Nca6vMbtaVCa4G5Zdskc5XYuO+6RlGhSoD/75up5Yd803ShGyclhyCIkoiVE
-	 gwIV3oY5mrs9S98ITC9PXzTNbfZBG3BoguIqKAc0fIRsrKEH+1VxXmss0uBt2DtoAF
-	 mg4pNkM8BQuTFmCvnYdfr1C13JG+3w5eG/dFb8CQ=
+	by mail.kernel.org (Postfix) with ESMTP id 500B320663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyDL16WH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391101AbfJPDfZ (ORCPT
+        id S1729489AbfJPDiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727688AbfJPDfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:35:24 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [76.14.14.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A73A20663;
-        Wed, 16 Oct 2019 03:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571196923;
-        bh=NjsMhpYVP779BKlQlynjlqFZHLWRBBm1A3PdjhOLNb0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=S+JU7BUh4twUx5S2IAtzJ+I8gHGKCFdLP2ZucnZkHBx91AJOA7vgcDJc4U3IKjDcL
-         bYQooA6NcRgH6x8d60NUfVysbsTOyN6KsZp+FJQKBdA8aKxDx+gM3J1D2NJQ4Jwg2z
-         ZVoP4yqVcIQBhkjltSfLQ4RStQ9pz+xbMjhKs/mQ=
-Date:   Tue, 15 Oct 2019 20:35:22 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 1/7] rcu: fix incorrect conditional compilation
-Message-ID: <20191016033522.GW2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191015102402.1978-1-laijs@linux.alibaba.com>
- <20191015102402.1978-2-laijs@linux.alibaba.com>
+        Tue, 15 Oct 2019 23:38:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42832 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbfJPDiN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:38:13 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f14so8293424pgi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 20:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xDw1E+VxBs/5UND1mf/klt16slydi9JotBXF01e+CRk=;
+        b=kyDL16WHaN2o9selPh6MHGPHfV+X7wEq0FllVlq4/AMM/N0LVOftGKRuCwqzhga1Hd
+         cdN+t0MyQmeFRJ5bf/XbDXmItS0ZWVX7UiLiUci5QgPuJ0pmI/mAIAOhsVOExjXSLXDk
+         WCFFMMunb9/gDv9fzRuwcEBPTAfrgn2BIMd7bsPFc9ZEvqcn3DgN99CzDKWE1tGebs5x
+         6vF/R0l5IS2cpf/QJz71tCyEslIqkHo+nXy2rjOCY8UdaKI5fPfbIO9owHZ/WIva3dDB
+         ++BCPIgmNCv0Mm2uFmWjsB7CWPUdt7AcPg514jBVxgt4Lt/OWXlHaApJAdDUsRfJPF9d
+         J/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xDw1E+VxBs/5UND1mf/klt16slydi9JotBXF01e+CRk=;
+        b=EHoqt0XbwgkkBMgmoBNxj0qwZoaxks/YonvPeCzBBnlXWj3VTOi/XTXWoyGFlIn8IU
+         nHaNNEWcBpv3ui8FKwwcaEHs2q5G2MIBPSdCa0DiR6l6goSwGpIAHxUdcOyqRklbahSG
+         sbAlFO7Ig9MGLw8cVKKoZ7W+i3oVgPeJLvFGEEWpuH6b6/YxAwznxKkpUXuy/GU9BjQ+
+         xbQUReOx44lGNNyom3aRu8pHeAQ7J1T2XmcHc/oNdGKlNwkp8xw2vrax6/4T8oU0bBEx
+         kx4FYjF01iALGkPcAJuSgpuhtXp2eRelO0X6z+7D/go6PotNvwD1NHgqPtPOUbIz5bna
+         1+6A==
+X-Gm-Message-State: APjAAAUHUOjSuK5Dnmz8oV+unVZFgfScjY0OYt+KCkqCy2CWklcfH8It
+        6rBCbqJMSvHFj92ez2DGHko9jA==
+X-Google-Smtp-Source: APXvYqxIMFWNe/yMHUCIaIMu64JgM3ECcEsbE/RT/QAxjCKzVVSrI8MfKrdZOI2NiD63SyqLmhqvNQ==
+X-Received: by 2002:aa7:9ed2:: with SMTP id r18mr41382466pfq.1.1571197092543;
+        Tue, 15 Oct 2019 20:38:12 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id y17sm32299937pfo.171.2019.10.15.20.38.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 20:38:10 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 09:08:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] ACPI: processor: Avoid NULL pointer dereferences at init
+ time
+Message-ID: <20191016033808.uqgc4ss6xcg4ta5v@vireshk-i7>
+References: <9765491.cFa8AugBjT@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191015102402.1978-2-laijs@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9765491.cFa8AugBjT@kreacher>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 10:23:56AM +0000, Lai Jiangshan wrote:
-> DO NOT pick it to stable tree.
-> (Since the title has "fix", this statement may help stop
-> AI pick it to stable tree)
+On 15-10-19, 19:35, Rafael J. Wysocki wrote:
+> rom: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> The tokens SRCU and TINY_RCU are not defined by any configurations,
-> they should be CONFIG_SRCU and CONFIG_TINY_RCU. But there is no
-> harm when "TINY_RCU" is wrongly used, which are always non-defined,
-> which makes "!defined(TINY_RCU)" always true, which means
-> the code block is always inclued, and the included code block
-> doesn't cause any compilation error so far when CONFIG_TINY_RCU.
-> It is also the reason this change doesn't need for stable.
+> If there are neither processor objects nor processor device objects
+> in the ACPI tables, the per-CPU processors table will not be
+> initialized and attempting to dereference pointers from there will
+> cause the kernel to crash.  This happens in acpi_processor_ppc_init()
+> and acpi_thermal_cpufreq_init() after commit d15ce412737a ("ACPI:
+> cpufreq: Switch to QoS requests instead of cpufreq notifier")
+> which didn't add the requisite NULL pointer checks in there.
 > 
-> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-
-Applied for review and testing, thank you!
-
-							Thanx, Paul
-
+> Add the NULL pointer checks to acpi_processor_ppc_init() and
+> acpi_thermal_cpufreq_init(), and to the corresponding "exit"
+> routines.
+> 
+> While at it, drop redundant return instructions from
+> acpi_processor_ppc_init() and acpi_thermal_cpufreq_init().
+> 
+> Fixes: d15ce412737a ("ACPI: cpufreq: Switch to QoS requests instead of cpufreq notifier")
+> Reported-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  kernel/rcu/rcu.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> index a7ab2a023dd3..05f936ed167a 100644
-> --- a/kernel/rcu/rcu.h
-> +++ b/kernel/rcu/rcu.h
-> @@ -254,7 +254,7 @@ void rcu_test_sync_prims(void);
->   */
->  extern void resched_cpu(int cpu);
->  
-> -#if defined(SRCU) || !defined(TINY_RCU)
-> +#if defined(CONFIG_SRCU) || !defined(CONFIG_TINY_RCU)
->  
->  #include <linux/rcu_node_tree.h>
->  
-> @@ -391,7 +391,7 @@ do {									\
->  #define raw_lockdep_assert_held_rcu_node(p)				\
->  	lockdep_assert_held(&ACCESS_PRIVATE(p, lock))
->  
-> -#endif /* #if defined(SRCU) || !defined(TINY_RCU) */
-> +#endif /* #if defined(CONFIG_SRCU) || !defined(CONFIG_TINY_RCU) */
->  
->  #ifdef CONFIG_SRCU
->  void srcu_init(void);
-> -- 
-> 2.20.1
-> 
+>  drivers/acpi/processor_perflib.c |   10 ++++++----
+>  drivers/acpi/processor_thermal.c |   10 ++++++----
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+-- 
+viresh
