@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD8AECE59F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF1ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03C3218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0AF21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571205621;
-	bh=4H3tWk+zop2+KUujkuYiqlVvULRhOuGq1UuNieJ5OPA=;
+	s=default; t=1571205642;
+	bh=8eaAxPL2KayDUCaf1S4jMsM2BVtAzQbFkkpPFytTUFY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xPZnQMmeu/6Go055Flvx6FerOA+JopVU4ys2zaw1at1Inyo1ViegW1lTzJjgNt3u2
-	 2FSOxt6ij9r0yb8FPTWqt8AmrYK053Q9+rTiSnF2I1Y7uoCEww+9Ny5tEW4lwYXIdk
-	 YvpqSa4xBAMPLD7JTUFNl79tAXIWhSxu26skitiU=
+	b=VRhhBNwCMotkCK6AfLCXeBj2n8sEEiHHzcS3n+lgubnyiFwYRccb+Ob9xMP+JqMQM
+	 H3vGa2apCrrHud6XnpJc3lvp1iKsiMH2cY/oYhvne5TfBpVtqglmBfen7hOzX2Vi7y
+	 n5rGq5gI4VgQ4k7l20V+w00fQufGgmUHKvILeJek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388084AbfJPGAU (ORCPT
+        id S2388161AbfJPGAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:00:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53696 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 02:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbfJPGAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:00:19 -0400
+        id S2387929AbfJPGAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 02:00:41 -0400
 Received: from localhost (unknown [171.76.123.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8192920872;
-        Wed, 16 Oct 2019 06:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C446C20872;
+        Wed, 16 Oct 2019 06:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571205619;
-        bh=4H3tWk+zop2+KUujkuYiqlVvULRhOuGq1UuNieJ5OPA=;
+        s=default; t=1571205640;
+        bh=8eaAxPL2KayDUCaf1S4jMsM2BVtAzQbFkkpPFytTUFY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TyYCwie3IcY1X/3kBwCnD2TquAmVmA95mrSQB+Z2BbGE/Wa+gyjl8ZRxGqdw/c31J
-         J0V4pMOZW69COyW5OIPDX1MNUMrYym9KG9jHgw3sUCd5D5eKPW/oh7DxDGVXhv+kZ5
-         k6Zt35LoYWQgExGfgVL8LEnaEZbymZ4tWbGB8cws=
-Date:   Wed, 16 Oct 2019 11:30:15 +0530
+        b=p0oW49M8iTuaGttBcVoEKOWVs23gzFxq5ABXZPBb+81Jc/W1q9vsSS7JEaIKFhweD
+         6RvihGSk/RZHyGSIMalD3BYzyGW8+oUt2A6axpbrJPlzv+koyRmbES8V5eXzB6gUIi
+         jZRCKUX2Xt+fNWGe2gkC3Hia/45pfMwRm/1vwlSc=
+Date:   Wed, 16 Oct 2019 11:30:35 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Olof Johansson <olof@lixom.net>,
         Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Jagan Teki <jagan@amarulasolutions.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
@@ -53,23 +54,26 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm CPUfreq HW driver
-Message-ID: <20191016060015.GE2654@vkoul-mobl>
-References: <20191011234402.374271-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm socinfo driver
+Message-ID: <20191016060035.GF2654@vkoul-mobl>
+References: <20191011234828.374419-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011234402.374271-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20191011234828.374419-1-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-10-19, 16:44, Bjorn Andersson wrote:
-> The Qualcomm CPUfreq HW provides CPU voltage and frequency scaling on
-> many modern Qualcomm SoCs. Enable the driver for this hardware block to
-> enable this functionality on the SDM845 platform.
+On 11-10-19, 16:48, Bjorn Andersson wrote:
+> The Qualcomm socinfo driver provides SoC information to userspace using
+> the standard soc interface as well as a number of debugfs entries.
+> 
+> Enable this to allow certain user space tools to acquire this
+> information, as well as getting developers access to the information in
+> debugfs that is useful when reporting bugs.
 
 lgtm, tested on db845c
 
@@ -83,17 +87,17 @@ Tested-by: Vinod Koul <vkoul@kernel.org>
 >  1 file changed, 1 insertion(+)
 > 
 > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index dea051a64257..45e55dfe1ee4 100644
+> index 45e55dfe1ee4..a5953b0b382d 100644
 > --- a/arch/arm64/configs/defconfig
 > +++ b/arch/arm64/configs/defconfig
-> @@ -85,6 +85,7 @@ CONFIG_ACPI_CPPC_CPUFREQ=m
->  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
->  CONFIG_ARM_SCPI_CPUFREQ=y
->  CONFIG_ARM_IMX_CPUFREQ_DT=m
-> +CONFIG_ARM_QCOM_CPUFREQ_HW=y
->  CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
->  CONFIG_ARM_TEGRA186_CPUFREQ=y
->  CONFIG_ARM_SCPI_PROTOCOL=y
+> @@ -744,6 +744,7 @@ CONFIG_QCOM_SMEM=y
+>  CONFIG_QCOM_SMD_RPM=y
+>  CONFIG_QCOM_SMP2P=y
+>  CONFIG_QCOM_SMSM=y
+> +CONFIG_QCOM_SOCINFO=m
+>  CONFIG_ARCH_R8A774A1=y
+>  CONFIG_ARCH_R8A774C0=y
+>  CONFIG_ARCH_R8A7795=y
 > -- 
 > 2.23.0
 
