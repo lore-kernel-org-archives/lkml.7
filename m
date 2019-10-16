@@ -2,137 +2,179 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7B8FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AC3FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3C320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqWvWcG3"
+	by mail.kernel.org (Postfix) with ESMTP id E959421835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406546AbfJPRBD (ORCPT
+        id S2406555AbfJPRBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:01:03 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45092 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfJPRBD (ORCPT
+        Wed, 16 Oct 2019 13:01:22 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:42254 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2406545AbfJPRBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:01:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u12so11530919pls.12;
-        Wed, 16 Oct 2019 10:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KwEuYR87HPnv/4ymC/dnp2PQlBlu56yCgjQvKHxqMDY=;
-        b=lqWvWcG36Dr+6xbOCkA7KBb8R9ftHLZy3op77dCbvivNTOdpZDATt346L5z0l5N8DZ
-         iHlaM5A29y97VN7y7GzsBKnArFvx9Ev2xYa6JZndILd/Ze4J7Ce/9uXpnIyh/TBIyT8B
-         7Sk0aAqDiybH5NNALj5HGmhFrRAOYMGiW2Lzk2cuXXQyMDha8MMgHyvW+xDtm2TUb0lT
-         Xp9o2lqTH6yoGaToC9kTmQSI9EUjFgD3LTn2p0ido/l1sMPP/9YJ9cmNzuEkcSlfR0xp
-         8FjJrCqrOrT6ULRh9+9F0rMqaVkzk3INjPL4yZLhA2z72dHItAacB3yIH5kxLePDSn9+
-         g/Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KwEuYR87HPnv/4ymC/dnp2PQlBlu56yCgjQvKHxqMDY=;
-        b=SUsmDYbSOOkuR0QBIPDcyFxKnNgireDJ0hbq3tftjdtUa2qCc8DGRGIQRX30FoBIVn
-         2BmTV87lk9e17GhCxdn/KdcyqKBBhw+9VInCRCazEAjPNMY4Tcr60hIZqdauF9RxLP7e
-         gNtp809cBAUSlzRg5RC/yxOCShXZMQvoCd7KM+rX8ltehRZOxNZi2QlvMBzVr8+zdi68
-         hUD2+H93UUybqwljY/MAAZfEUsC+0Kgo1NPYHQGmrZ0VvW1vGVz5CDc1YLAjWgB253+q
-         x0wncA+9ybc/6yvIblm1QXLjubqG4k9aai5UGam+qKpWsYrsxOmf7BGfTM7tBU4sELz5
-         TBwQ==
-X-Gm-Message-State: APjAAAW0NvBuNViFiR1UdPZutls+N+kr3hRYwZVd13xywI1+AdYdOsjs
-        8dqHSMOWLP6e72ZiVTo7oufJE9IH
-X-Google-Smtp-Source: APXvYqxmTxXEY5vMcZWG4jH8CSBGkoA4x0BOwlghuIDIyUC1kokmfk535VYCa85Dwfz07DZx6o+BCw==
-X-Received: by 2002:a17:902:a717:: with SMTP id w23mr42861942plq.27.1571245262316;
-        Wed, 16 Oct 2019 10:01:02 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 4sm2988525pja.29.2019.10.16.10.01.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 10:01:01 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 10:00:59 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 05/14] software node: clean up
- property_copy_string_array()
-Message-ID: <20191016170059.GE35946@dtor-ws>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-6-dmitry.torokhov@gmail.com>
- <20191015120726.GG32742@smile.fi.intel.com>
- <20191015181211.GD105649@dtor-ws>
- <20191016075300.GO32742@smile.fi.intel.com>
+        Wed, 16 Oct 2019 13:01:21 -0400
+Received: (qmail 2878 invoked by uid 2102); 16 Oct 2019 13:01:20 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Oct 2019 13:01:20 -0400
+Date:   Wed, 16 Oct 2019 13:01:20 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        USB list <linux-usb@vger.kernel.org>,
+        <linux-block@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
+In-Reply-To: <20191013181116.GA3858@lazy.lzy>
+Message-ID: <Pine.LNX.4.44L0.1910161258081.1304-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016075300.GO32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:53:00AM +0300, Andy Shevchenko wrote:
-> On Tue, Oct 15, 2019 at 11:12:11AM -0700, Dmitry Torokhov wrote:
-> > On Tue, Oct 15, 2019 at 03:07:26PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Oct 11, 2019 at 04:07:12PM -0700, Dmitry Torokhov wrote:
-> > > > Because property_copy_string_array() stores the newly allocated pointer in the
-> > > > destination property, we have an awkward code in property_entry_copy_data()
-> > > > where we fetch the new pointer from dst.
+On Sun, 13 Oct 2019, Piergiorgio Sartor wrote:
+
+> On Mon, Sep 30, 2019 at 08:25:01PM +0200, Piergiorgio Sartor wrote:
+> > On Sun, Sep 29, 2019 at 09:01:48PM -0400, Alan Stern wrote:
+> > > On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
 > > > 
-> > > I don't see a problem in this function.
+> > > > On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
+> > > > > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
+> > > > > 
+> > > > > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
+> > > > > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
+> > > > > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
+> > > > > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
+> > > > > > > > > > Let's bring this to the attention of some more people.
+> > > > > > > > > > 
+> > > > > > > > > > It looks like the bug that was supposed to be fixed by commit
+> > > > > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
+> > > > > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
+> > > > > > > > > > the bug still occurs.
+> > > > > > > > > 
+> > > > > > > > > Piergiorgio,
+> > > > > > > > > 
+> > > > > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
+> > > > > > > > > device and send that to this thread?
+> > > > > > > > 
+> > > > > > > > Hi all,
+> > > > > > > > 
+> > > > > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
+> > > > > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
+> > > > > > > > for USB storage devices (2.0 and 3.0).
+> > > > > > > > 
+> > > > > > > > This is for the PC showing the issue.
+> > > > > > > > 
+> > > > > > > > In an other PC, which does not show the issus at the moment,
+> > > > > > > > the values are 120, for USB2.0, and 256, for USB3.0.
 > > > 
-> > > Rather 'awkward code' is a result of use property_set_pointer() which relies on
-> > > data type.
+> > > > > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
+> > > > > to 5.2.8.  If you can identify a particular commit which caused the
+> > > > > problem to start, that would help.
+> > > > 
+> > > > OK, I tried a bisect (2 days compilations...).
+> > > > Assuming I've done everything correctly (how to
+> > > > test this? How to remove the guilty patch?), this
+> > > > was the result:
+> > > > 
+> > > > 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
+> > > > commit 09324d32d2a0843e66652a087da6f77924358e62
+> > > > Author: Christoph Hellwig <hch@lst.de>
+> > > > Date:   Tue May 21 09:01:41 2019 +0200
+> > > > 
+> > > >     block: force an unlimited segment size on queues with a virt boundary
+> > > > 
+> > > >     We currently fail to update the front/back segment size in the bio when
+> > > >     deciding to allow an otherwise gappy segement to a device with a
+> > > >     virt boundary.  The reason why this did not cause problems is that
+> > > >     devices with a virt boundary fundamentally don't use segments as we
+> > > >     know it and thus don't care.  Make that assumption formal by forcing
+> > > >     an unlimited segement size in this case.
+> > > > 
+> > > >     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
+> > > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > >     Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> > > >     Reviewed-by: Hannes Reinecke <hare@suse.com>
+> > > >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> > > > 
+> > > > :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
+> > > > 
+> > > > What to do now?
+> > > 
+> > > Here's how to verify that the bisection got a correct result.  First, 
+> > > do a git checkout of commit 09324d32d2a0, build the kernel, and make 
+> > > sure that it exhibits the problem.
+> > > 
+> > > Next, have git write out the contents of that commit in the form of a
+> > > patch (git show commit-id >patchfile), and revert it (git apply -R
+> > > patchfile).  Build the kernel from that tree, and make sure that it
+> > > does not exhibit the problem.  If it doesn't, you have definitely shown
+> > > that this commit is the cause (or at least, is _one_ of the causes).
 > > 
-> > No, the awkwardness is that we set the pointer once in
-> > property_copy_string_array(), then fetch it in
-> > property_entry_copy_data() only to set it again via
-> > property_set_pointer().
+> > I tried as suggested, i.e. jumping to commit
+> > 09324d32d2a0843e66652a087da6f77924358e62, testing,
+> > removing the patch, testing.
+> > The result was as expected.
+> > I was able to reproduce the issue with the commit,
+> > I was not able to reproduce it without.
+> > It seems this patch / commit is causing the problem.
+> > Directly or indirectly.
+> > 
+> > What are the next steps?
 > 
-> Yes, since property_set_pointer is called independently
-> on the type of the value.
-
-We still call property_set_pointer() independently of the type of the
-value even with this patch. The point is that we do not set the pointer
-in property_copy_string_array(), so we only set the pointer once.
-
-We used to have essentially for string arrays:
-
-	copy data
-	set pointer in dst
-	get pointer from dst
-	set pointer in dst
-
-With this patch we have:
-
-	copy data
-	set pointer in dst
-
+> Hi all,
 > 
+> I tested kernel 5.3.5 (Fedora kernel-5.3.5-200.fc30.x86_64),
+> with same problematic results.
 > 
-> > This is confising and awkward and I believe it
-> > is cleaner for property_copy_string_array() to give a pointer to a copy
-> > of a string array, and then property_entry_copy_data() use it when
-> > handling the destination structure.
+> Again, what should be done now?
+> Could you please revert the patch?
 > 
-> We probably need a 3rd opinion here.
+> Or is there something else to check?
 
-I think I can still convince you ;)
+Here is one more thing you can try.  I have no idea whether it will 
+make any difference, but the Changelog entry for the patch you 
+identified suggests that it might help.
 
-Thanks.
+Alan Stern
 
--- 
-Dmitry
+
+
+Index: usb-devel/drivers/usb/storage/scsiglue.c
+===================================================================
+--- usb-devel.orig/drivers/usb/storage/scsiglue.c
++++ usb-devel/drivers/usb/storage/scsiglue.c
+@@ -68,7 +68,6 @@ static const char* host_info(struct Scsi
+ static int slave_alloc (struct scsi_device *sdev)
+ {
+ 	struct us_data *us = host_to_us(sdev->host);
+-	int maxp;
+ 
+ 	/*
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -78,15 +77,6 @@ static int slave_alloc (struct scsi_devi
+ 	sdev->inquiry_len = 36;
+ 
+ 	/*
+-	 * USB has unusual scatter-gather requirements: the length of each
+-	 * scatterlist element except the last must be divisible by the
+-	 * Bulk maxpacket value.  Fortunately this value is always a
+-	 * power of 2.  Inform the block layer about this requirement.
+-	 */
+-	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * Some host controllers may have alignment requirements.
+ 	 * We'll play it safe by requiring 512-byte alignment always.
+ 	 */
+
