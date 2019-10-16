@@ -2,184 +2,105 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2701AFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE8DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CEA20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E3420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbZlVSMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393535AbfJPNNO (ORCPT
+        id S2393548AbfJPNNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:13:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45958 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390087AbfJPNNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:13:12 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D51EEA3CD92;
-        Wed, 16 Oct 2019 13:13:11 +0000 (UTC)
-Received: from [10.3.116.74] (ovpn-116-74.phx2.redhat.com [10.3.116.74])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3647560127;
-        Wed, 16 Oct 2019 13:13:11 +0000 (UTC)
-Subject: Re: [PATCH] ipmi: Don't allow device module unload when in use
-From:   tony camuso <tcamuso@redhat.com>
-To:     minyard@acm.org
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
-References: <20191014134141.GA25427@t560>
- <20191014154632.11103-1-minyard@acm.org>
- <40e26052-3ccb-684a-540f-61ff47077690@redhat.com>
-Message-ID: <321ed6cb-929c-462f-2459-9caf67be224e@redhat.com>
-Date:   Wed, 16 Oct 2019 09:13:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 09:13:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35738 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbfJPNNe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:13:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p30so14294208pgl.2;
+        Wed, 16 Oct 2019 06:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C3WMejLIjX/sN4h8RDr6kyJEZVhRO/kXeqFDRFF6Id8=;
+        b=lbZlVSMXAaG45YMMWa8UqrZlE3mNsCasc5BFMYhZcETMQqmJCvgmOTLr7gfz8HrKHu
+         eEdTYOcFOGto7xSuq4Ubox4D2RUcQXEtZbmkFSB/I/JDek6+CuHQ+WWMPQTHIs/Mk/mP
+         qXFlhQxgDQQMvILeKOUlNYmP7iCbES0YFtXHKZGxxvUTQcFZypFfH5dHUzdQLJ/Qpv+d
+         h3HtGKJHsCkcxMoKujCuTiPiTt1JRu3lR+jbO/Crwj7/pGNEX6sXJOJnk2P+T2/Xnan8
+         5l9QrDaWaeEXuS7aPnU4jZq+Km9U5QgJJgLrtR+qcC4JIka0Vh6UmV871gOHIJrimT6I
+         uJHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=C3WMejLIjX/sN4h8RDr6kyJEZVhRO/kXeqFDRFF6Id8=;
+        b=eW84I/8sIG+AvtGCvbkQObt50qlegioBy+Tf38GwAK3SBjtM1yaJqL3jmYtzXmJILV
+         VYltFYkEJ5E3bLPq5/e4YdMuyZ2blNgb71d1CY8WbwbWKO23AXDbRZGH3FwlD/j+etaW
+         24nIbhE28qEyNvV/XmEkZVudWf3xhHDxGIYdHaCqMZ64rXMEU2Ms0q1bPZlq4Zx7FJZ7
+         iZytYiIRMpjalOvarSvPGE0ad9amjCddd+zp+GkAfLpnIQs2ga2vJGV7v9oVVYKF2yTJ
+         CwB7sQ8O6fY5Zx8IEXbxaPzvt4mytqqj0dt2LVJq2NDb5W43TIaaNCGXIdTko7+Z/DA0
+         4lYw==
+X-Gm-Message-State: APjAAAUjs10LPHmhjyg9AV62H9cL45KSSNQIISkgoXeSg9cO84AtJaxi
+        xrK4i56Xd4vDX2WmHXUn89o=
+X-Google-Smtp-Source: APXvYqyqahV9zVwQW3dqjD79x3+FqITP01LbOa2/B5n0zWhcO1UPkVNuw7hURrivflb7cequRdvdPQ==
+X-Received: by 2002:a17:90a:a781:: with SMTP id f1mr5116963pjq.29.1571231613537;
+        Wed, 16 Oct 2019 06:13:33 -0700 (PDT)
+Received: from localhost.localdomain ([45.124.203.14])
+        by smtp.gmail.com with ESMTPSA id n3sm28433569pff.102.2019.10.16.06.13.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 06:13:32 -0700 (PDT)
+From:   Joel Stanley <joel@jms.id.au>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH] clk: ast2600: Fix enabling of clocks
+Date:   Wed, 16 Oct 2019 23:43:19 +1030
+Message-Id: <20191016131319.31318-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <40e26052-3ccb-684a-540f-61ff47077690@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 13:13:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 8:18 AM, tony camuso wrote:
-> On 10/14/19 11:46 AM, minyard@acm.org wrote:
->> From: Corey Minyard <cminyard@mvista.com>
->>
->> If something has the IPMI driver open, don't allow the device
->> module to be unloaded.  Before it would unload and the user would
->> get errors on use.
->>
->> This change is made on user request, and it makes it consistent
->> with the I2C driver, which has the same behavior.
->>
->> It does change things a little bit with respect to kernel users.
->> If the ACPI or IPMI watchdog (or any other kernel user) has
->> created a user, then the device module cannot be unloaded.  Before
->> it could be unloaded,
->>
->> This does not affect hot-plug.  If the device goes away (it's on
->> something removable that is removed or is hot-removed via sysfs)
->> then it still behaves as it did before.
->>
->> Reported-by: tony camuso <tcamuso@redhat.com>
->> Signed-off-by: Corey Minyard <cminyard@mvista.com>
->> ---
->> Tony, here is a suggested change for this.  Can you look it over and
->> see if it looks ok?
->>
->> Thanks,
->>
->> -corey
->>
->>   drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
->>   include/linux/ipmi_smi.h            | 12 ++++++++----
->>   2 files changed, 24 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
->> index 2aab80e19ae0..15680de18625 100644
->> --- a/drivers/char/ipmi/ipmi_msghandler.c
->> +++ b/drivers/char/ipmi/ipmi_msghandler.c
->> @@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
->>   #define IPMI_IPMB_NUM_SEQ    64
->>   struct ipmi_smi {
->> +    struct module *owner;
->> +
->>       /* What interface number are we? */
->>       int intf_num;
->> @@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
->>       if (rv)
->>           goto out_kfree;
->> +    if (!try_module_get(intf->owner)) {
->> +        rv = -ENODEV;
->> +        goto out_kfree;
->> +    }
->> +
->>       /* Note that each existing user holds a refcount to the interface. */
->>       kref_get(&intf->refcount);
->> @@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
->>       }
->>       kref_put(&intf->refcount, intf_free);
->> +    module_put(intf->owner);
->>   }
->>   int ipmi_destroy_user(struct ipmi_user *user)
->> @@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
->>    * been recently fetched, this will just use the cached data.  Otherwise
->>    * it will run a new fetch.
->>    *
->> - * Except for the first time this is called (in ipmi_register_smi()),
->> + * Except for the first time this is called (in ipmi_add_smi()),
->>    * this will always return good data;
->>    */
->>   static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
->> @@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work)
->>       kref_put(&intf->refcount, intf_free);
->>   }
->> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->> -              void               *send_info,
->> -              struct device            *si_dev,
->> -              unsigned char            slave_addr)
->> +int ipmi_add_smi(struct module         *owner,
->> +         const struct ipmi_smi_handlers *handlers,
->> +         void               *send_info,
->> +         struct device         *si_dev,
->> +         unsigned char         slave_addr)
->>   {
->>       int              i, j;
->>       int              rv;
->> @@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->>           return rv;
->>       }
->> -
->> +    intf->owner = owner;
->>       intf->bmc = &intf->tmp_bmc;
->>       INIT_LIST_HEAD(&intf->bmc->intfs);
->>       mutex_init(&intf->bmc->dyn_mutex);
->> @@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->>       return rv;
->>   }
->> -EXPORT_SYMBOL(ipmi_register_smi);
->> +EXPORT_SYMBOL(ipmi_add_smi);
->>   static void deliver_smi_err_response(struct ipmi_smi *intf,
->>                        struct ipmi_smi_msg *msg,
->> diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
->> index 4dc66157d872..deec18b8944a 100644
->> --- a/include/linux/ipmi_smi.h
->> +++ b/include/linux/ipmi_smi.h
->> @@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
->>    * is called, and the lower layer must get the interface from that
->>    * call.
->>    */
->> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->> -              void                     *send_info,
->> -              struct device            *dev,
->> -              unsigned char            slave_addr);
->> +int ipmi_add_smi(struct module            *owner,
->> +         const struct ipmi_smi_handlers *handlers,
->> +         void                     *send_info,
->> +         struct device            *dev,
->> +         unsigned char            slave_addr);
->> +
->> +#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
->> +    ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
->>   /*
->>    * Remove a low-level interface from the IPMI driver.  This will
->>
-> 
-> Thanks, Corey.
-> 
-> Regards,
-> Tony
-> 
+The struct clk_ops enable callback for the aspeed gates mixes up the set
+to clear and write to set registers.
 
-And I meant to add that I will be testing this over the next couple days.
+Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/clk/clk-ast2600.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 1c1bb39bb04e..b1318e6b655b 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -266,10 +266,11 @@ static int aspeed_g6_clk_enable(struct clk_hw *hw)
+ 
+ 	/* Enable clock */
+ 	if (gate->flags & CLK_GATE_SET_TO_DISABLE) {
+-		regmap_write(gate->map, get_clock_reg(gate), clk);
+-	} else {
+-		/* Use set to clear register */
++		/* Clock is clear to enable, so use set to clear register */
+ 		regmap_write(gate->map, get_clock_reg(gate) + 0x04, clk);
++	} else {
++		/* Clock is set to enable, so use write to set register */
++		regmap_write(gate->map, get_clock_reg(gate), clk);
+ 	}
+ 
+ 	if (gate->reset_idx >= 0) {
+-- 
+2.23.0
 
