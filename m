@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B93FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3C9FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2863207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3C221925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263908;
-	bh=+WHMJPY9Vs1h+DK/XD29qKX+c1rTvE9yIux+6B5TVKg=;
+	s=default; t=1571263915;
+	bh=LA6KR0c28eo+/gwg1dpmIVId20Zt7vqtc46BEbBLHF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYZ6rj2SFaTVPdiRl4U0whoFWNyNTZhOBIZ43js3f8s3CZX6xovbHM+FoQi6hSIQX
-	 8jOgYSZQgfqdVfptmlz71xHhe3ozWcYKK/i9KCCjGpNf+J3YJAKzsrv8GDSGSjFrv0
-	 EL1PlJlKno4OiVlcKKjtmKBd1Pdy/H8WKIq90nck=
+	b=JGmN3W6bn8lK61SQiPCNHuyR02CA7v+MUHI7dJhy3tbv+QSMsEVKA3BFlfXAnAWOs
+	 EiDAn9dZyEz264LxiDHUNldhsVZBEUm5aqx7Xp5pF4rgmGe7MsLd47hpMjV7X8GWUE
+	 u7MomWB5yZ17+LXb0BNFi3FmVjPZ3Nvl5PcNRiEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439219AbfJPWLr (ORCPT
+        id S2407332AbfJPWLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:11:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48526 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391459AbfJPV4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:38 -0400
+        id S2395387AbfJPV4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:37 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6D5021D7A;
-        Wed, 16 Oct 2019 21:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3CFD21D7E;
+        Wed, 16 Oct 2019 21:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262998;
-        bh=+WHMJPY9Vs1h+DK/XD29qKX+c1rTvE9yIux+6B5TVKg=;
+        s=default; t=1571262997;
+        bh=LA6KR0c28eo+/gwg1dpmIVId20Zt7vqtc46BEbBLHF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XeG1SdnlozZ+u4vgkWLWl14hJlLk3aOtoyDvxKk+T98MeGJ803nQJpglH+/dNjVD7
-         SkQVJc6+fWdTrSDEqS6o4pvG1SRIBsfJbuAqfVmOnZY+5WgoNV4tVSh2pR2oI9gq/U
-         rVtsQLaT9BtGs/G/ECIdpv6ErDb7QCngIuIfSQEA=
+        b=Ei9WmJEQXc2Ekz7ggbd5h8YMQCP3EWqTFq1FnKXfWzF3HTUTyvT4eMPWwMcemuGq4
+         gfkA/y6raidPMYVxYqRRTKm72Ph9FgPK1jl0qvpB5ZjY7iZyi1DUszouObb1Uy/+al
+         vNv3nktPqDSrWOWoLyPfD1L99IXUB8MG0xFeMMPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH 4.14 39/65] staging: vt6655: Fix memory leak in vt6655_probe
-Date:   Wed, 16 Oct 2019 14:50:53 -0700
-Message-Id: <20191016214829.600074955@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH 4.14 65/65] xfs: clear sb->s_fs_info on mount failure
+Date:   Wed, 16 Oct 2019 14:51:19 -0700
+Message-Id: <20191016214840.649307743@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -58,37 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-commit 80b15db5e1e9c3300de299b2d43d1aafb593e6ac upstream.
+commit c9fbd7bbc23dbdd73364be4d045e5d3612cf6e82 upstream.
 
-In vt6655_probe, if vnt_init() fails the cleanup code needs to be called
-like other error handling cases. The call to device_free_info() is
-added.
+We recently had an oops reported on a 4.14 kernel in
+xfs_reclaim_inodes_count() where sb->s_fs_info pointed to garbage
+and so the m_perag_tree lookup walked into lala land.
 
-Fixes: 67013f2c0e58 ("staging: vt6655: mac80211 conversion add main mac80211 functions")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191004200319.22394-1-navid.emamdoost@gmail.com
+Essentially, the machine was under memory pressure when the mount
+was being run, xfs_fs_fill_super() failed after allocating the
+xfs_mount and attaching it to sb->s_fs_info. It then cleaned up and
+freed the xfs_mount, but the sb->s_fs_info field still pointed to
+the freed memory. Hence when the superblock shrinker then ran
+it fell off the bad pointer.
+
+With the superblock shrinker problem fixed at teh VFS level, this
+stale s_fs_info pointer is still a problem - we use it
+unconditionally in ->put_super when the superblock is being torn
+down, and hence we can still trip over it after a ->fill_super
+call failure. Hence we need to clear s_fs_info if
+xfs-fs_fill_super() fails, and we need to check if it's valid in
+the places it can potentially be dereferenced after a ->fill_super
+failure.
+
+Signed-Off-By: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/vt6655/device_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_super.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1668,8 +1668,10 @@ vt6655_probe(struct pci_dev *pcid, const
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1715,6 +1715,7 @@ xfs_fs_fill_super(
+  out_close_devices:
+ 	xfs_close_devices(mp);
+  out_free_fsname:
++	sb->s_fs_info = NULL;
+ 	xfs_free_fsname(mp);
+ 	kfree(mp);
+  out:
+@@ -1732,6 +1733,10 @@ xfs_fs_put_super(
+ {
+ 	struct xfs_mount	*mp = XFS_M(sb);
  
- 	priv->hw->max_signal = 100;
++	/* if ->fill_super failed, we have no mount to tear down */
++	if (!sb->s_fs_info)
++		return;
++
+ 	xfs_notice(mp, "Unmounting Filesystem");
+ 	xfs_filestream_unmount(mp);
+ 	xfs_unmountfs(mp);
+@@ -1741,6 +1746,8 @@ xfs_fs_put_super(
+ 	xfs_destroy_percpu_counters(mp);
+ 	xfs_destroy_mount_workqueues(mp);
+ 	xfs_close_devices(mp);
++
++	sb->s_fs_info = NULL;
+ 	xfs_free_fsname(mp);
+ 	kfree(mp);
+ }
+@@ -1760,6 +1767,9 @@ xfs_fs_nr_cached_objects(
+ 	struct super_block	*sb,
+ 	struct shrink_control	*sc)
+ {
++	/* Paranoia: catch incorrect calls during mount setup or teardown */
++	if (WARN_ON_ONCE(!sb->s_fs_info))
++		return 0;
+ 	return xfs_reclaim_inodes_count(XFS_M(sb));
+ }
  
--	if (vnt_init(priv))
-+	if (vnt_init(priv)) {
-+		device_free_info(priv);
- 		return -ENODEV;
-+	}
- 
- 	device_print_info(priv);
- 	pci_set_drvdata(pcid, priv);
 
 
