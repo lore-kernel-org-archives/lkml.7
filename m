@@ -2,117 +2,154 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD8BFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8833CFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BC821835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B7F21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HeZJ0LsX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CX9jJvlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406520AbfJPQxe (ORCPT
+        id S2406526AbfJPQyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:53:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38834 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406479AbfJPQxd (ORCPT
+        Wed, 16 Oct 2019 12:54:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36572 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfJPQye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:53:33 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u28so18076518lfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:53:32 -0700 (PDT)
+        Wed, 16 Oct 2019 12:54:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 23so14646749pgk.3;
+        Wed, 16 Oct 2019 09:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tNeMRNIfdjHwkdsyXewzfu5Z/8d+Ipu1WBE/Nji2j6o=;
-        b=HeZJ0LsXW7mmUON1V5xmhDSncNZB6lkZZK/aQWqiaeWfoLceQmVHBsDrCPQSNheJR8
-         IlGmQI4GJ0a3KeeFkLuB74++cbk9zF0MDCMgauIVVv0MwlsN3fCAwETly3Hs6g4/FkHw
-         iEk8N0MQZJH+hJFBo2HVA6OtUhJMuYfZ5sPusj5OQxOppuNXZYOgYxDnB9MIBb3gxyzH
-         1icSwpBDJK0X2hCL65Fadnjyq+4tckml3p2rGvN2a9MV48WAFf+YIo2fnTLKfDbQ6ASd
-         XuEN3r0BA457vpI/RA+I/+JpNL3X/U4hmzV6WfI7z2bL2ECB+9Oj+VZvzNfX+X+uijTK
-         m2Vg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VWaIAT+NIDKyZZqlxsr5yjIRMKyrU2W1SmxhpCA3akw=;
+        b=CX9jJvlCJgqdx644ullcaHmHVFaLYUbiQLuRkMSy1pZwwRhIKLBvQvRgTtCC16ag/U
+         3GC67I3dPFUAIe5+8cAr2O3T4kVxFvMVSWGovbHCxQdb2YJT8EC4XCR1RrXyJNcuTvN1
+         IUmKI8pMEgYbgkFCywzY8WWLTFv5RzlHUlYriN9p6bkHJ1eWAE3QTfC87vqy5YxBuvLh
+         BTP7QMbWuA8mTjZ33boNGOyO/esbkgXNSbJPX6lyCXgS7xl1nsdE4BDuO3mGuv2Z19ti
+         IGuqzbr34/Tb1TCYQezYnfZ6TGIv+TU34ATEl+YtTrS/687b2T5SGlps9JOglirLaS9K
+         j5ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tNeMRNIfdjHwkdsyXewzfu5Z/8d+Ipu1WBE/Nji2j6o=;
-        b=AsV1blh07LKRzdGKlHGA3s8wY/3Nx80q2WR+iDI/caPTnLXQ16y46+MpDAj2N+xuJN
-         inu1RJCmP918bVhFWZ6Gun5a2drMk5jZAXm2LItxybWNk+3xNdHyq/57xap9JhOMQdQc
-         REVQ4jJxJplVamUnyjZMqa60hjG3OmqwwTeWXEGELq+Sh/7Z95b4MwHzCRYKzVACUvSN
-         cIM9xFXhSlr6vSPqUBVxxeWqzNqn2GpN7qKn//PFUgzAVjfbJ66dRFL3EsQJHfIzkkvQ
-         j6fQuA3tnvHup1+K1oXRnArgZpzH8xjwWyg7eXJgVAQneq+pIzYMZeOmnA419lF7wVaD
-         B43g==
-X-Gm-Message-State: APjAAAVzIgAKo09KHLyGjIcNpA4vTQS54kag2ldFQi1hu+tcOlNdKt5T
-        TJAeZEWfhm/ZCXdQxeUpWkEVrPmZ//eYetFk/Fk=
-X-Google-Smtp-Source: APXvYqwMseb7aiO3tFfsZ84aQ9dmGeiDkv2eggWi2RKvGK2efG0A11Ujp0LulqKpVQBfYEFHkesdEqqpegAgmnEE75E=
-X-Received: by 2002:a19:6e0a:: with SMTP id j10mr9861743lfc.131.1571244811925;
- Wed, 16 Oct 2019 09:53:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VWaIAT+NIDKyZZqlxsr5yjIRMKyrU2W1SmxhpCA3akw=;
+        b=kMO+VhNDMEECTF/PArgXc38IVFES7ninio6+SnDbXxYJO0i1+XPEPXIyue6az2GmWx
+         30FcnNduZCPtMrlqsrWT/d3SVS1W02LyV76D7KsmhodyyCTBd0EJlQpZAZSIubS+pt6Y
+         VkJAH80/rHIznZoaHaHX+V9cVQ3MUSAwPQ0nvWuBAsVV6WKYn163kKmIcf4T3Kki0Ft1
+         k+p413G/M1aCMmqn1L6rAHEwxW2PWtfTXNNPxrWrYmRaPiqEEPS6J+jzWpcwckAPSAgS
+         uIN+Ze+dIePukM4GHZSJYRdMNQna0LcWaP1iF9DbnpiR8v6Q28+yVhHFXb95UtauSWtA
+         42VA==
+X-Gm-Message-State: APjAAAX8ngkRAJ1uh5yY/Pz1ZeUF1tDh3KddZPQoPPgkbe3uerQqcKrj
+        0ClDBqRU/AOtXjHxNAkjnqE=
+X-Google-Smtp-Source: APXvYqwS5IJwPJhOsLM+llJ8huzG+KnbDTsk7VAndmiSyqCoCvrSTXYRJcIRhsrVPy3hVniVV6U5jA==
+X-Received: by 2002:aa7:8e16:: with SMTP id c22mr45557155pfr.116.1571244873756;
+        Wed, 16 Oct 2019 09:54:33 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id h4sm25090979pfg.159.2019.10.16.09.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 09:54:33 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 09:54:30 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
+Message-ID: <20191016165430.GD35946@dtor-ws>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-11-dmitry.torokhov@gmail.com>
+ <20191014073720.GH32742@smile.fi.intel.com>
+ <20191015182206.GF105649@dtor-ws>
+ <20191016075940.GP32742@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20191016082430.5955-1-poeschel@lemonage.de>
-In-Reply-To: <20191016082430.5955-1-poeschel@lemonage.de>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 16 Oct 2019 18:53:20 +0200
-Message-ID: <CANiq72=uXWpEWHixM+wwyxZfzQ41WYvQsoV8B3+JLRharDjC0w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] auxdisplay: Make charlcd.[ch] more general
-To:     Lars Poeschel <poeschel@lemonage.de>
-Cc:     Willy Tarreau <willy@haproxy.com>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016075940.GP32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:24 AM Lars Poeschel <poeschel@lemonage.de> wrote:
->
-> charlcd.c contains lots of hd44780 hardware specific stuff. It is nearly
-> impossible to reuse the interface for other character based displays.
-> The current users of charlcd are the hd44780 and the panel drivers.
-> This does factor out the hd44780 specific stuff out of charlcd into a
-> new module called hd44780_common.
-> charlcd gets rid of the hd44780 specfics and more generally useable.
-> The hd44780 and panel drivers are modified to use the new
-> hd44780_common.
-> This is tested on a hd44780 connected through the gpios of a pcf8574.
->
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> ---
->  drivers/auxdisplay/Kconfig          |  16 +
->  drivers/auxdisplay/Makefile         |   1 +
->  drivers/auxdisplay/charlcd.c        | 591 ++++++++--------------------
->  drivers/auxdisplay/charlcd.h        | 109 ++++-
->  drivers/auxdisplay/hd44780.c        | 121 ++++--
->  drivers/auxdisplay/hd44780_common.c | 370 +++++++++++++++++
->  drivers/auxdisplay/hd44780_common.h |  32 ++
->  drivers/auxdisplay/panel.c          | 178 ++++-----
->  8 files changed, 851 insertions(+), 567 deletions(-)
+On Wed, Oct 16, 2019 at 10:59:40AM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 15, 2019 at 11:22:06AM -0700, Dmitry Torokhov wrote:
+> > On Mon, Oct 14, 2019 at 10:37:20AM +0300, Andy Shevchenko wrote:
+> > > On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
+> > > > We do not need a special flag to know if we are dealing with an array,
+> > > > as we can get that data from ratio between element length and the data
+> > > > size, however we do need a flag to know whether the data is stored
+> > > > directly inside property_entry or separately.
+> > > 
+> > > > -	if (prop->is_array)
+> > > > +	if (!prop->is_inline)
+> > > 
+> > > > -	if (p->is_array) {
+> > > > +	if (!p->is_inline) {
+> > > 
+> > > > -	if (src->is_array) {
+> > > > +	if (!src->is_inline) {
+> > > 
+> > > May we have positive conditionals instead?
+> > 
+> > I was trying to limit the context churn. I can definitely change
+> > property_get_pointer(), but the other 2 I think are better in the
+> > current form.
+> > 
+> > > 
+> > > > + * @is_inline: True when the property value is stored directly in
+> > > 
+> > > I think word 'directly' is superfluous here.
+> > > Or, perhaps, 'stored directly' -> 'embedded'
+> > 
+> > I'm OK with "embedded".
+> > 
+> > > 
+> > > > + *     &struct property_entry instance.
+> > > 
+> > > > + * @pointer: Pointer to the property when it is stored separately from
+> > > > + *     the &struct property_entry instance.
+> > > 
+> > > 'separately from' -> 'outside' ?
+> > 
+> > Umm, I think I prefer "separately" actually.
+> > 
+> > > 
+> > > > + * @value: Value of the property when it is stored inline.
+> > > 
+> > > 'stored inline' -> 'embedded in the &struct...' ?
+> > 
+> > I was trying to have a link "stored inline" -> "is_inline".
+> > 
+> > Do we want to change the flag to be "is_embedded"?
+> 
+> In dictionaries I have
+> 
+> embedded <-> unilateral
 
-Thanks Lars, CC'ing Geert since he wrote a large portion of this, as
-well as Andy.
+Are you trying to show synonym or antonym here? But I am pretty sure
+"unilateral" is either.
 
-From a cursory look (sorry, not doing it inline since it is a pain to
-edit in this UI given the size...):
-  * panel.c doesn't compile since lcd_backlight's return type did not
-get updated, which makes me uneasy. I am not sure why you changed the
-return type anyway, since callers ignore it and callees always return
-0.
-  * Declared and then immediately defined hd44780_common in the header...?
-  * Some things (e.g. the addition of enums like charlcd_onoff) seem
-like could have been done other patches (since they are not really
-related to the reorganization).
-  * From checkpatch.pl: DOS line endings and trailing whitespace
+Antonyms for our use of "embedded" are likely "detached" or
+"disconnected".
 
-I am not capable of testing this, so extra testing by anyone who has
-the different hardware affected around is very welcome.
+> inline <-> ???
 
-Cheers,
-Miguel
+"out of line" but I still believe "stored separately" explains precisely
+what we have here.
+
+Thanks.
+
+-- 
+Dmitry
