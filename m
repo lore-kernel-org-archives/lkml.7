@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CDCFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8008FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32D720872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D36320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263377;
-	bh=PnK/FwqO/xgaKpMwhmCootWXP5GSiD5o327VEuPnSAM=;
+	s=default; t=1571263382;
+	bh=r+8aUgc/mfaf5/2iPvz/+sfyyYAYN95Yw/xN8JOWDWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTF2f7IRKeWi3rBvHgNBOWFTak6uppDKYKB+y/JzMLMdU9mxp9tZTfY9hixsKUg+U
-	 VNDCZK2/Pdu6e5BHD4zuBxMj3ZwkEQQxYy59xIhjhSaxS005Q8W3NTVfzNs7grHMOK
-	 F8iwjQ1CZ/cOQqO4kAxoOBv/I3FTL2wu/u93+WkI=
+	b=ucxyeQVQDysFsmdX9vp2gHKHIChhkMNIuVyA5l+j03l7Qn7OQmD0lFnuatg+1gczs
+	 8BCdet6AVOYVjt6NR0ALpZ8NcApzTUA4pJUqAf/i1ta5xr7lAETReo8Trf/jl/4dCU
+	 KkhPHG50Z86YnZVh3P8e1rvZ9Um6vPLfFBW7wnRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406769AbfJPWCz (ORCPT
+        id S2406779AbfJPWDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54478 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438543AbfJPV7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2438540AbfJPV7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:59:33 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03406218DE;
-        Wed, 16 Oct 2019 21:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B2121D7D;
+        Wed, 16 Oct 2019 21:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263173;
-        bh=PnK/FwqO/xgaKpMwhmCootWXP5GSiD5o327VEuPnSAM=;
+        s=default; t=1571263172;
+        bh=r+8aUgc/mfaf5/2iPvz/+sfyyYAYN95Yw/xN8JOWDWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHFNvpQl0Xmm6cmfnhcZoRXg2epyLfudGHEZxOMnOS9s02AkbYCxvbNgLcxsdf7vs
-         vesviiiGKWgzdNtVbzvxgEs95EsoRa667Wz0WC8p73it3acvw63hfnI4kKwJoKvc30
-         +v11HueMIXWvXCpq3IigePQDZS/KnP4h6Dv4PoBg=
+        b=f8LWlH25HwUGhEa2B0i9sdqlOqi3xzDntY/YCZcOz90aWiaJTuKVpQ9SHdmhf9QWw
+         PlB4VNrpAM4lNOTWcFPABICN5TTXLSv7n1d9xi1O/+weHaJd5C/dfFkSRZxdeW94R9
+         MirpzmB8ODkWXFmiS+Qnx+ZCTtfDJQRdWI7qp4HQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 5.3 100/112] drm/msm: Use the correct dma_sync calls harder
-Date:   Wed, 16 Oct 2019 14:51:32 -0700
-Message-Id: <20191016214906.445819351@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.william.auld@gmail.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.3 099/112] drm/i915: Mark contents as dirty on a write fault
+Date:   Wed, 16 Oct 2019 14:51:31 -0700
+Message-Id: <20191016214906.326608454@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -59,60 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 9f614197c744002f9968e82c649fdf7fe778e1e7 upstream.
+commit b925708f28c2b7a3a362d709bd7f77bc75c1daac upstream.
 
-Looks like the dma_sync calls don't do what we want on armv7 either.
-Fixes:
+Since dropping the set-to-gtt-domain in commit a679f58d0510 ("drm/i915:
+Flush pages on acquisition"), we no longer mark the contents as dirty on
+a write fault. This has the issue of us then not marking the pages as
+dirty on releasing the buffer, which means the contents are not written
+out to the swap device (should we ever pick that buffer as a victim).
+Notably, this is visible in the dumb buffer interface used for cursors.
+Having updated the cursor contents via mmap, and swapped away, if the
+shrinker should evict the old cursor, upon next reuse, the cursor would
+be invisible.
 
-  Unable to handle kernel paging request at virtual address 50001000
-  pgd = (ptrval)
-  [50001000] *pgd=00000000
-  Internal error: Oops: 805 [#1] SMP ARM
-  Modules linked in:
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc6-00271-g9f159ae07f07 #4
-  Hardware name: Freescale i.MX53 (Device Tree Support)
-  PC is at v7_dma_clean_range+0x20/0x38
-  LR is at __dma_page_cpu_to_dev+0x28/0x90
-  pc : [<c011c76c>]    lr : [<c01181c4>]    psr: 20000013
-  sp : d80b5a88  ip : de96c000  fp : d840ce6c
-  r10: 00000000  r9 : 00000001  r8 : d843e010
-  r7 : 00000000  r6 : 00008000  r5 : ddb6c000  r4 : 00000000
-  r3 : 0000003f  r2 : 00000040  r1 : 50008000  r0 : 50001000
-  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-  Control: 10c5387d  Table: 70004019  DAC: 00000051
-  Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+E.g. echo 80 > /proc/sys/kernel/sysrq ; echo f > /proc/sysrq-trigger
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Fixes: 3de433c5b38a ("drm/msm: Use the correct dma_sync calls in msm_gem")
-Tested-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111541
+Fixes: a679f58d0510 ("drm/i915: Flush pages on acquisition")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Matthew Auld <matthew.william.auld@gmail.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v5.2+
+Reviewed-by: Matthew Auld <matthew.william.auld@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190920121821.7223-1-chris@chris-wilson.co.uk
+(cherry picked from commit 5028851cdfdf78dc22eacbc44a0ab0b3f599ee4a)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/msm_gem.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -50,7 +50,7 @@ static void sync_for_device(struct msm_g
- {
- 	struct device *dev = msm_obj->base.dev->dev;
+--- a/drivers/gpu/drm/i915/gem/i915_gem_mman.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_mman.c
+@@ -317,7 +317,11 @@ vm_fault_t i915_gem_fault(struct vm_faul
+ 				   msecs_to_jiffies_timeout(CONFIG_DRM_I915_USERFAULT_AUTOSUSPEND));
+ 	GEM_BUG_ON(!obj->userfault_count);
  
--	if (get_dma_ops(dev)) {
-+	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
- 		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
- 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	} else {
-@@ -63,7 +63,7 @@ static void sync_for_cpu(struct msm_gem_
- {
- 	struct device *dev = msm_obj->base.dev->dev;
+-	i915_vma_set_ggtt_write(vma);
++	if (write) {
++		GEM_BUG_ON(!i915_gem_object_has_pinned_pages(obj));
++		i915_vma_set_ggtt_write(vma);
++		obj->mm.dirty = true;
++	}
  
--	if (get_dma_ops(dev)) {
-+	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
- 		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
- 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	} else {
+ err_fence:
+ 	i915_vma_unpin_fence(vma);
 
 
