@@ -2,212 +2,122 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB931ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6DECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9926821835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uqwzsV6O"
+	by mail.kernel.org (Postfix) with ESMTP id E564C21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388908AbfJPIbb (ORCPT
+        id S2389488AbfJPIcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:31:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34116 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730392AbfJPIba (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:31:30 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m19so19447097otp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TaAko0rHRb4gyBH2lBWVYnJuZHP/kcOSHoWKD/0YW+0=;
-        b=uqwzsV6OK3KphoWbeGbFhcWhYjV9Jubd8rt5VmBD5qSpRmrGE/3/lstncLn/ole9qk
-         j0iwCAs3bdFZeO79+dh2d+v1jLnSkh4ZqDXFOWimb6GQP4pQ4fMiIvbDciukoNihRaIz
-         44kzIDO1nkMbOK9JHJ7CQkkvLHFqk3sXb7/swrQqkv6ZPZvrz6dMvy2Q6FaIRTDOUo7H
-         cNpQD2NKK3jyfPuZUa0bxTCVNQYQlw2zhBKt0kuIOExdefo7hkSiof5+XpOu/aY/Tdck
-         D2gERzMdFQrJsrqYbmF+uudNRJkZHa8oNdDBCU0SQUs9Oi5t6fQTSoA9oWl57XDqapqE
-         Ivjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TaAko0rHRb4gyBH2lBWVYnJuZHP/kcOSHoWKD/0YW+0=;
-        b=JoUQqJRvtzz1IhSZoMDpGlW7QxJC2wOtY0V5bHQ2bfzksWm5hBUiOBMYzh7IFnxqSX
-         fr9l8g5mpV/VjuqURI/dK3kw04rSys6025McwbmcFsNjG/xrRceYfI9mmWdS/IA9GoHF
-         5s3NqtXpnxqk4rdZa0bGsyDKW1kei3HGCS+lak+Xl9xyIf7Zst/oTXWjP5wkwVOz0MXI
-         VPXYBXaDA5wZMp2jEgaikB/DOpKe4peJMfWzFO9ysLewFK8wkEqoHJj4uXDIEPw2b12C
-         n4Tgms1WjC1/MJ2O9H7QyQ43+6l5MGwmNyMtq59c0ijvRbgzY/owxGRaBGX9Vsqlg3g3
-         hVFw==
-X-Gm-Message-State: APjAAAV8+2Z3uae0slQTf4fur5u6AWddfiLmqHzxNODq4u/fX7MhL7vO
-        wH9W5eACVU+5eAybbSItLBDbOi+3GrKTKGwDRJNdyQ==
-X-Google-Smtp-Source: APXvYqzjLLdNQ3WjVdvOT/4N0uavAJR6Mv4Jgxn5lrygES8vBTMlSZ0M5fHGe1wdjBwZwcW06xlKs32f4hJ3sJgiAfQ=
-X-Received: by 2002:a9d:344a:: with SMTP id v68mr33650170otb.85.1571214688147;
- Wed, 16 Oct 2019 01:31:28 -0700 (PDT)
+        Wed, 16 Oct 2019 04:32:39 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:28169 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729236AbfJPIcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:32:39 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2a.mailbox.org (Postfix) with ESMTPS id 5201CA1F82;
+        Wed, 16 Oct 2019 10:32:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id VpkJpA2e4UPE; Wed, 16 Oct 2019 10:32:29 +0200 (CEST)
+Date:   Wed, 16 Oct 2019 19:32:19 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
+ operations
+Message-ID: <20191016083218.ttsaqnxpjh5i5bgv@yavin.dot.cyphar.com>
+References: <20191012010539.6131-1-cyphar@cyphar.com>
+ <20191014154136.GF18794@devbig004.ftw2.facebook.com>
+ <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
+ <20191014163307.GG18794@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-References: <20191015162300.22024-1-brgl@bgdev.pl> <20191015162300.22024-5-brgl@bgdev.pl>
- <20191015191837.jd6lbk3qbsmzuwfu@earth.universe>
-In-Reply-To: <20191015191837.jd6lbk3qbsmzuwfu@earth.universe>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 16 Oct 2019 10:31:17 +0200
-Message-ID: <CAMpxmJXH6k7PqEE_VfRZ-k1eL+7NSPRuZY8yP8XbYzgVdOAvJQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] dt-bindings: power: max77650: convert the binding
- document to yaml
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jvbscg62ooyqvvh3"
+Content-Disposition: inline
+In-Reply-To: <20191014163307.GG18794@devbig004.ftw2.facebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 15 pa=C5=BA 2019 o 21:18 Sebastian Reichel <sre@kernel.org> napisa=C5=
-=82(a):
->
-> Hi,
->
-> On Tue, Oct 15, 2019 at 06:22:58PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Convert the binding document for MAX77650 charger module to YAML.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
->
-> Looks sensible to me. Assuming this goes through Rob:
->
-> Acked-by: Sebastian Reichel <sre@kernel.org>
 
-Oops, I added your ack for v1 to the leds patch in v2 by mistake.
-There'll be a v3 though so no worries.
+--jvbscg62ooyqvvh3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
-Bart
+On 2019-10-14, Tejun Heo <tj@kernel.org> wrote:
+> Hello, Aleksa.
+>=20
+> On Tue, Oct 15, 2019 at 02:59:31AM +1100, Aleksa Sarai wrote:
+> > On 2019-10-14, Tejun Heo <tj@kernel.org> wrote:
+> > > On Sat, Oct 12, 2019 at 12:05:39PM +1100, Aleksa Sarai wrote:
+> > > > Because pids->limit can be changed concurrently (but we don't want =
+to
+> > > > take a lock because it would be needlessly expensive), use the
+> > > > appropriate memory barriers.
+> > >=20
+> > > I can't quite tell what problem it's fixing.  Can you elaborate a
+> > > scenario where the current code would break that your patch fixes?
+> >=20
+> > As far as I can tell, not using *_ONCE() here means that if you had a
+> > process changing pids->limit from A to B, a process might be able to
+> > temporarily exceed pids->limit -- because pids->limit accesses are not
+> > protected by mutexes and the C compiler can produce confusing
+> > intermediate values for pids->limit[1].
+> >
+> > But this is more of a correctness fix than one fixing an actually
+> > exploitable bug -- given the kernel memory model work, it seems like a
+> > good idea to just use READ_ONCE() and WRITE_ONCE() for shared memory
+> > access.
+>=20
+> READ/WRITE_ONCE provides protection against compiler generating
+> multiple accesses for a single operation.  It won't prevent split
+> writes / reads of 64bit variables on 32bit machines.  For that, you'd
+> have to switch them to atomic64_t's.
 
->
-> -- Sebastian
->
-> >  .../power/supply/max77650-charger.txt         | 29 +------------
-> >  .../power/supply/max77650-charger.yaml        | 42 +++++++++++++++++++
-> >  2 files changed, 43 insertions(+), 28 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/power/supply/max7=
-7650-charger.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/max77650-ch=
-arger.txt b/Documentation/devicetree/bindings/power/supply/max77650-charger=
-.txt
-> > index e6d0fb6ff94e..fbab7d3ac8e3 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
-xt
-> > +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.t=
-xt
-> > @@ -1,28 +1 @@
-> > -Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> > -
-> > -This module is part of the MAX77650 MFD device. For more details
-> > -see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > -
-> > -The charger is represented as a sub-node of the PMIC node on the devic=
-e tree.
-> > -
-> > -Required properties:
-> > ---------------------
-> > -- compatible:                Must be "maxim,max77650-charger"
-> > -
-> > -Optional properties:
-> > ---------------------
-> > -- input-voltage-min-microvolt:       Minimum CHGIN regulation voltage.=
- Must be one
-> > -                             of: 4000000, 4100000, 4200000, 4300000,
-> > -                             4400000, 4500000, 4600000, 4700000.
-> > -- input-current-limit-microamp:      CHGIN input current limit (in mic=
-roamps). Must
-> > -                             be one of: 95000, 190000, 285000, 380000,
-> > -                             475000.
-> > -
-> > -Example:
-> > ---------
-> > -
-> > -     charger {
-> > -             compatible =3D "maxim,max77650-charger";
-> > -             input-voltage-min-microvolt =3D <4200000>;
-> > -             input-current-limit-microamp =3D <285000>;
-> > -     };
-> > +This file was moved to max77650-charger.yaml.
-> > diff --git a/Documentation/devicetree/bindings/power/supply/max77650-ch=
-arger.yaml b/Documentation/devicetree/bindings/power/supply/max77650-charge=
-r.yaml
-> > new file mode 100644
-> > index 000000000000..9dd0dad0f948
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/supply/max77650-charger.y=
-aml
-> > @@ -0,0 +1,42 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/power/supply/max77650-charger.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Battery charger driver for MAX77650 PMIC from Maxim Integrated.
-> > +
-> > +maintainers:
-> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > +
-> > +description: |
-> > +  This module is part of the MAX77650 MFD device. For more details
-> > +  see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > +
-> > +  The charger is represented as a sub-node of the PMIC node on the dev=
-ice tree.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: maxim,max77650-charger
-> > +
-> > +  input-voltage-min-microvolt:
-> > +    description:
-> > +      Minimum CHGIN regulation voltage.
-> > +    enum: [ 4000000, 4100000, 4200000, 4300000,
-> > +            4400000, 4500000, 4600000, 4700000 ]
-> > +
-> > +  input-current-limit-microamp:
-> > +    description:
-> > +      CHGIN input current limit (in microamps).
-> > +    enum: [ 95000, 190000, 285000, 380000, 475000 ]
-> > +
-> > +required:
-> > +  - compatible
-> > +
-> > +examples:
-> > +  - |
-> > +    charger {
-> > +        compatible =3D "maxim,max77650-charger";
-> > +        input-voltage-min-microvolt =3D <4200000>;
-> > +        input-current-limit-microamp =3D <285000>;
-> > +    };
-> > --
-> > 2.23.0
-> >
+Maybe I'm misunderstanding Documentation/atomic_t.txt, but it looks to
+me like it's explicitly saying that I shouldn't use atomic64_t if I'm
+just using it for fetching and assignment.
+
+> The non-RMW ops are (typically) regular LOADs and STOREs and are
+> canonically implemented using READ_ONCE(), WRITE_ONCE(),
+> smp_load_acquire() and smp_store_release() respectively. Therefore, if
+> you find yourself only using the Non-RMW operations of atomic_t, you
+> do not in fact need atomic_t at all and are doing it wrong.
+
+As for 64-bit on 32-bit machines -- that is a separate issue, but from
+[1] it seems to me like there are more problems that *_ONCE() fixes than
+just split reads and writes.
+
+[1]: https://lwn.net/Articles/793253/
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--jvbscg62ooyqvvh3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXabVjwAKCRCdlLljIbnQ
+Eo+bAP4twCdIzc/3irINS1h8+SDHb5Id/IYDo/ool67sAVKdmAD/ddb+01/LuSQE
+N1Ie5O8BQm/MY6wpbxlAT69EyW1n8QY=
+=rCSZ
+-----END PGP SIGNATURE-----
+
+--jvbscg62ooyqvvh3--
