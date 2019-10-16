@@ -2,71 +2,84 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92578FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD88EFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7582521A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8033B21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571250687;
+	bh=2wAyGU0cUCFqc/8Sq42nh9uu/5+uzjYvLgMet1RoezY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WPPIyFiehBUxR86iz71yvv3W68N70IqHsvZUhl3irvwXvbRjE6yL0/PzbBAq7t0aT
+	 Dx+BSleuz/kLZqh4wn3MHR7R+eKvn+89rh3o5RQz08ExcbF4m1b7DPKjX9jnoyjeU8
+	 lmtHZMj6IDs8DhCsg9KVfp9CtY6+Iwz6aStX3LhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394251AbfJPSbM (ORCPT
+        id S2394263AbfJPSb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:31:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47528 "EHLO mx1.redhat.com"
+        Wed, 16 Oct 2019 14:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391082AbfJPSbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:31:11 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2391082AbfJPSb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 14:31:26 -0400
+Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5851D10C092D;
-        Wed, 16 Oct 2019 18:31:11 +0000 (UTC)
-Received: from localhost (ovpn-112-25.phx2.redhat.com [10.3.112.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23FAD60605;
-        Wed, 16 Oct 2019 18:31:09 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 14:31:08 -0400 (EDT)
-Message-Id: <20191016.143108.2159602485232151042.davem@redhat.com>
-To:     hayeswang@realtek.com
-Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        pmalani@chromium.org, grundler@chromium.org
-Subject: Re: [PATCH net-next] r8152: support request_firmware for RTL8153
-From:   David Miller <davem@redhat.com>
-In-Reply-To: <1394712342-15778-329-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-329-Taiwan-albertk@realtek.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 16 Oct 2019 18:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6BFE21D7A;
+        Wed, 16 Oct 2019 18:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571250685;
+        bh=2wAyGU0cUCFqc/8Sq42nh9uu/5+uzjYvLgMet1RoezY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=znZ2ibZLzc9MrZ18ZkPUt9B1GkhgYfZs48gTIYNPKAhAJj+ur1wnb2WgjiTvyD7rE
+         /VJ1ImpjowBfY0Yy0lbF6tGBpvspvNwQTnIQUI/StDFOYY+4cb2Pgx1n3dlW6CKi2T
+         Lz1SOiwZwIAybVdgHpd15pwIQMy6k5tTIYdf2uEQ=
+Date:   Wed, 16 Oct 2019 11:31:21 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [stable 4.19][PATCH 1/4] ARM: dts: am4372: Set memory bandwidth
+ limit for DISPC
+Message-ID: <20191016183121.GD801860@kroah.com>
+References: <20191015065937.23169-1-mathieu.poirier@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015065937.23169-1-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hayes Wang <hayeswang@realtek.com>
-Date: Wed, 16 Oct 2019 11:02:42 +0800
+On Tue, Oct 15, 2019 at 12:59:34AM -0600, Mathieu Poirier wrote:
+> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> commit f90ec6cdf674248dcad85bf9af6e064bf472b841 upstream
+> 
+> Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
+> avoid underflow errors due to the bandwidth needs of higher resolutions.
+> 
+> am43xx can not provide enough bandwidth to DISPC to correctly handle
+> 'high' resolutions.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Cc: stable <stable@vger.kernel.org> # 4.19
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 
-> This patch supports loading additional firmware file through
-> request_firmware().
-> 
-> A firmware file may include a header followed by several blocks
-> which have different types of firmware. Currently, the supported
-> types are RTL_FW_END, RTL_FW_PLA, and RTL_FW_USB.
-> 
-> The firmware is used to fix some compatible or hardware issues. For
-> example, the device couldn't be found after rebooting several times.
-> 
-> The supported chips are
-> 	RTL_VER_04 (rtl8153a-2.fw)
-> 	RTL_VER_05 (rtl8153a-3.fw)
-> 	RTL_VER_06 (rtl8153a-4.fw)
-> 	RTL_VER_09 (rtl8153b-2.fw)
-> 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
-> Reviewed-by: Prashant Malani <pmalani@chromium.org>
+What about 5.3?  Is this ok there?
 
-Applied, thank you.
+thanks,
+
+greg k-h
