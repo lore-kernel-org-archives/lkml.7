@@ -2,97 +2,152 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831B0FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C732FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDFD2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173062067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTvgClYQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0NeTObn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405693AbfJPOAl (ORCPT
+        id S2405703AbfJPOB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:00:41 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37846 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405621AbfJPOAk (ORCPT
+        Wed, 16 Oct 2019 10:01:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50273 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393750AbfJPOB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:00:40 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u184so22841208qkd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:00:39 -0700 (PDT)
+        Wed, 16 Oct 2019 10:01:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 5so3071951wmg.0;
+        Wed, 16 Oct 2019 07:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gqml278NTu5znyLj4o9Te22EdTDlURV2Qw1cIDtLTt4=;
-        b=VTvgClYQ4A/Fh9y5c/hd9xtq28k1VhkkJC6Lae1lj1lS9CSeatI4xJUFt7aVOZWMpC
-         c70NFA/b7hFsue6/wOXLILAIv1rMEqDmIBvWLgw6pEyTOArvK00uv3y2ezSbJfK//Mo4
-         i5r/NkgWwB3lrYFwN5LcQ2tCGu8aeZgWrDRUWzHNOOQGwGamIoEpvEQqymVoEvVUbbPM
-         BMHUwKj6KZhVgqPx3JZOk8L73cAWjLzEeo4NDhHQfPwLXBPLSaQKGY3a2evpL/0tLBHW
-         9QGKALZPSodLHlZ5Ia7E3FjNomYdIpr+7Yb013hif8sY1MGNRGE4+poi7QzFf+5L98II
-         qPDQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5tkwolCFpRKx5qnqNxGR6We20ScAxiOW+QzsdK04jT4=;
+        b=K0NeTObnG71lXifvS94m4TId7eL58ETa2T/GnPUYyqbCUBGXmDXHSPOKY6IYR/bF91
+         Qq0KQsRo1HOV6JDWiRhUmxITUnexlMjNH07gFq0AL6852pAnsw5tpRrms2uMDw1aH3AY
+         gnA0dvo9MujjDYxmytQ0G0TuVQdobcSzybGhJ2J8YhGLdjL9lMCDEjvKECmBsjzl6tx7
+         ry8aZs38gaX4lcix+cNWHPx3fMNr4ufNCh1YSMsrjOgWufpA7saBAxcc6FfA/VSYdYKP
+         eRyVSGWBU5v/qSMPJzXeUuljW5QEi18nRpENWRIwRRn/ixwH+WoVyEkMA2Ww2R99p26q
+         Grbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gqml278NTu5znyLj4o9Te22EdTDlURV2Qw1cIDtLTt4=;
-        b=RyiP5AOAQ/F3SIV1EexWKQTCnRaX5Ig/wo4ad+e+Eb14iBkf08FAfcSbpTMIgwNa6N
-         u5/ILBbGkN/EQt00VY/lgZRjUKk1+/gdDOkhAJ/WmCkXInOrZ9EnwJxsayk92xrcsAtk
-         bjTipJfo/jktvMgEjw380zPEfJFcBpeMNQehEzfBRreBIX0hvj5iKKKAuUNrglHPjrRI
-         cjJ5fwo/u1kQazRKjgl5Z9G9ciUA27kLEMlmWQBF1Xj5VSMCjfP86wjo9xkEiooOicRE
-         d9/+ePIlNfzaplVpGXjYPqjYvaUJNjsUSMZof0Q6gIGcxA3WofjuYgUZ+2k9Tf6uvhzo
-         Gw+Q==
-X-Gm-Message-State: APjAAAWopWj8j0BG2hPftC9X3r4EInAauRxrX5NJs4xifalhuNpSmw2e
-        Fl1dW+KT0Y97RyzxP3BKCQ++pNR/RsnnUfpnkLZELQ==
-X-Google-Smtp-Source: APXvYqxE/W8Wym2zPEoThfzgBl+Y8q8y0M/tZiDg5SGuXU2OGToGJCLrZSvaS15buTSq1qqdW86Kkg/8vbhVY6QMYW4=
-X-Received: by 2002:a05:620a:34b:: with SMTP id t11mr38547340qkm.213.1571234438671;
- Wed, 16 Oct 2019 07:00:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191008044153.12734-1-andrew@aj.id.au> <CACRpkda5cWaA7R3XzyiERCCgwUrjnXd+wCBeKvt-wtjex7wNDg@mail.gmail.com>
- <2de90789-c374-4821-89f9-5d5f01e7d2d6@www.fastmail.com>
-In-Reply-To: <2de90789-c374-4821-89f9-5d5f01e7d2d6@www.fastmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 16:00:26 +0200
-Message-ID: <CACRpkdbmbyNmW8tL_L0agBajomPybXsjn9ix_F5-B3fZnfuW9A@mail.gmail.com>
-Subject: Re: [PATCH 0/7] pinctrl: Fixes for AST2600 support
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5tkwolCFpRKx5qnqNxGR6We20ScAxiOW+QzsdK04jT4=;
+        b=SeI2DOQxOvO89orNryvKpub1yF9ubLRmJ4g9pQMKDV87cy4/8wj2U3roqwY4gvCjRM
+         XHxeuwl1M1cuGv5f2No5EY6LMFxVGVdNI7J1wn7nPdG3JWUSqEo8JwN4w59jmzcG6nFj
+         QKlLhyKbUPbKR9xObWRF3RmtWRnxaOCHaJwiGdYUrBvQ/+Pxji8t27X4gw3F03LLd7vE
+         Dz43t+D8SKuUOzSzF6qNjqTqlS/+Shz5ji6P78nD3SZEVh1fAgj7UoTRetRYRYE3p+2w
+         blNZRH8LB704BoVCaATRNl3jGOPdikcJnjDn7aTu9sXBRaYLwKuqT10KjOnW2A0OrWsb
+         ytdw==
+X-Gm-Message-State: APjAAAUZ3fwdnUaNOfur4/O7H/KpkXPgFLcxCY1M1Mf6meQafzUbO1mg
+        4v0YcQ+85dVmUilCB3NvmoI=
+X-Google-Smtp-Source: APXvYqz3fMJ3QIVHe9ejYBeq2FoKIVagsDUuq0HAJ3lgCd2RE2GNj2OiV2pOouE2sFRNYWoY0LhsSg==
+X-Received: by 2002:a05:600c:1088:: with SMTP id e8mr3633948wmd.27.1571234485934;
+        Wed, 16 Oct 2019 07:01:25 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id p85sm2930949wme.23.2019.10.16.07.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 07:01:22 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 16:01:21 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Johnny Huang <johnny_huang@aspeedtech.com>,
-        Ryan Chen <ryanchen.aspeed@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/17] NVIDIA Tegra20 CPUFreq driver major update
+Message-ID: <20191016140121.GA1862769@ulmo>
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191016052716.yipztnpg7bcuzhfn@vireshk-i7>
+ <8cf055a3-57fd-c275-9e74-a9fb5d284866@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Content-Disposition: inline
+In-Reply-To: <8cf055a3-57fd-c275-9e74-a9fb5d284866@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 1:42 PM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> I was hoping to get them into the 5.4 fixes branch: I consider them all fixes
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK I moved them all to fixes.
+On Wed, Oct 16, 2019 at 04:16:27PM +0300, Dmitry Osipenko wrote:
+> 16.10.2019 08:27, Viresh Kumar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On 16-10-19, 00:16, Dmitry Osipenko wrote:
+> >> Hello,
+> >>
+> >> This series moves intermediate-clk handling from tegra20-cpufreq into
+> >> tegra-clk driver, this allows us to switch to generic cpufreq-dt driver
+> >> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+> >> of the box. All boards need to adopt CPU OPPs in their device-trees in
+> >> order to get cpufreq support. This series adds OPPs only to selective
+> >> boards because there is assumption in a current device-trees that CPU
+> >> voltage is set for 1GHz freq and this won't work for those CPUs that
+> >> can go over 1GHz and thus require voltage regulators to be set up for
+> >> voltage scaling support (CC'ed Marcel for Toradex boards). We could
+> >> probably add delete-node for OPPs over 1GHz if there are not actively
+> >> maintained boards.
+> >=20
+> > How do you want to get these patches merged ? Can I just pick the cpufr=
+eq bits
+> > alone ?
+> >=20
+>=20
+> The cpufreq bits strictly depend on the clk patches and the regulators
+> coupler/balancer series. Hence all patches in this series should collect
+> acks from relevant maintainers and then Thierry will pick up the
+> patchsets in a correct order via tegra tree, at least that's my vision.
+>=20
+> Thierry, are you okay with that approach?
 
-> > I need a shortlist of anything that should go into v5.4 if anything.
->
-> IMO all of them should go into 5.4, as above.
+Works for me. I already have a set of clock patches that I'd like to
+merge via the Tegra tree because of a runtime dependency, so it'd be
+easy to apply these on top of that.
 
-OK
+Thierry
 
->  It's there something I can do in the future to communicate this better?
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Nah it is a complicated process, things need to be done manually
-at times, overly obsessing with process is counterproductive.
+-----BEGIN PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2nIq8ACgkQ3SOs138+
+s6GKPg//XbFKPZrgCH3A4swB3MFOPVjalYqN2cVsMYZH/R73AJYSjqvMPnj44UM1
+ecM/LKBu0RC/xZ9C6mU2DDKEbRDDLDSVIrNLhjh9tulMl267gWIqyCE5tqrkVnjy
+3S50icwwg+Sxs4mgdnox6ZoPPWiCQrfq4bvv+03OMMZqgXISEKzegvOETGziIhaL
+FANIUKkpZ8Kv+9+egwIcjCM32611IfpNAub/KuRpmZghvib1SV/SxgpLZ1hc3jND
+ZkpzmUmAuwZbB/sco/f17FlfZ16+cIRE5D0NSlWH1cTt9YHfhuD1Rv/o4C9HLHly
+rpXCJC/WHmevNz7RqheqKwXMc8ixqTcWeNoRpKFDiYfscGB0rR73uzmTMlRXdbch
+JDD+Xa5BYBZrneP6GfIVHdouiDD3DhPkHoDvXdmyWmnrpZwQG6465b4+TAgEpR/o
+uXmaYn4HtjGic6mYpbPUopYCg5awM7u4Of4PQdJLZcDI45UJzlpNVTXMS+pRpbkZ
+YHPbcvPDL+jRE9Jnbl/rxHu+KQV/UmmKV5JPIEyoQKSaVkw/cFnXSyqARqaWds56
+QJ2vZ7kZ2O08MkWzMamVcVqbdx8U1FX//09377bHHFbWhRsrAMcAX6keNq7hz7ZM
+/a2zZszFLhQnisBXpX9RMUW37jiFYFn4rZYFM1feQZ/E+rtvIJ8=
+=td2z
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
