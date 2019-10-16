@@ -2,150 +2,136 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13B6ECE59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3E4ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0262054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57442064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="spCA93Ua"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QD0lc7HX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389840AbfJPAU7 (ORCPT
+        id S2389968AbfJPAWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:20:59 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35346 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387839AbfJPAU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:20:58 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p30so13155117pgl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 17:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FArNhP5DErG1Ml8KyApc8sefVsVeEkXB1R/x3hburN4=;
-        b=spCA93UaswCGNF4+9dxS76ppeuge4nCJObXdAVsO+DyOAjtvUhxuUh2UED/IGfCjRH
-         93J+lDuNj0qTeQPUQjazdhSJGko8AmpP9WCUNFdRRKtKTeniyybLertUuZbphTNtzmt8
-         WYxa7hSzDwEjn+pW9BaYyoCrx6LexNpNgsGvM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FArNhP5DErG1Ml8KyApc8sefVsVeEkXB1R/x3hburN4=;
-        b=TRjK1Pws+pNxW0++oCUg5pZUYga5Poh0xF5AqD8O6Ko9Xp5MpMt+wrcCXy0d+iI4vn
-         mSm0tYjkIA+w/HJWbPbq7GxTTalW7ZC3wEWjBFnPdiE+9LJWOBsx42Rbq53ssfbMYnOw
-         q+ZJmbHIAy3QS0tJIOQs4snk9LRMXqboC2HZPHvaJbyXmDggpmqSTdXU85XK+pSiTssl
-         6cDo4UPiXAxn6GluSqqaw+9mdPgagtLMIC1V7s4twXltaq1GwRYb6r6pUMA0ZZLf7QGU
-         RTlcBenWO6uri8nswXkkGzIgb6yctDt/M8wLpFrXL/j2dkZEVDPhxSBGgi8zJ7eNRo45
-         vB7w==
-X-Gm-Message-State: APjAAAXd1S6DcgrfFoV+NNPyU2mz3TJXinbtoczH1ceNKK3z+44I0RWv
-        Y164Kl1gyIN47FdBdHDYlbn9cQ==
-X-Google-Smtp-Source: APXvYqwnNKZGQBVQ9WkrFfzzoKhdSRhtNpejOOtqBzrGnaay9GKfue6bErrPcPWL5kfbVlibvqVDKQ==
-X-Received: by 2002:a17:90a:3608:: with SMTP id s8mr1480635pjb.44.1571185257717;
-        Tue, 15 Oct 2019 17:20:57 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l62sm24553103pfl.167.2019.10.15.17.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 17:20:56 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 20:20:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        primiano@google.com, rsavitski@google.com, jeffv@google.com,
-        kernel-team@android.com, James Morris <jmorris@namei.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v2] perf_event: Add support for LSM and SELinux checks
-Message-ID: <20191016002055.GA176924@google.com>
-References: <20191014170308.70668-1-joel@joelfernandes.org>
- <20191015083008.GC2311@hirez.programming.kicks-ass.net>
+        Tue, 15 Oct 2019 20:22:17 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52317 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387839AbfJPAWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 20:22:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tCfW6rWQz9sPJ;
+        Wed, 16 Oct 2019 11:22:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571185334;
+        bh=fICVJGuNS3bs+KiWjPO5lU2cScptU1yWcytJuD4e3jM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QD0lc7HXYcvqED72HzmtPQmlz9qHGn8KzxyzRF+2HqZHiobpwEywt9Fp1eG0j7/Oq
+         H9C6GQRugZDTQLxv6rAuYHk1ySuUS/NxA4fZZmnGnJZk73/EuE+4QqeBCBhTp+o3+7
+         FcSjTcsja8dZ3FlhtRENOwL/qPaFMRAsqbWnCw90qDRoJPKvJqnYGVTyKm/I5Rb3FX
+         fO4bfC+GP1/JcexG2LF3QXwooWsF9K4hGyZozXM+PIviaKcKpOTLSMMpcLybKjoiqJ
+         iTqNBtfxyvscYGpUUFCdmpCqeGPa16K//5P78zUHVxOVVKpz70A0xjn/K1gETOMOyh
+         dj++ekFbDcqKg==
+Date:   Wed, 16 Oct 2019 11:22:07 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huang Rui <ray.huang@amd.com>, Sam Ravnborg <sam@ravnborg.org>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20191016112207.1ade14af@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015083008.GC2311@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/b45Yv514vY6HvJhcejDLP60";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 10:30:08AM +0200, Peter Zijlstra wrote:
-> On Mon, Oct 14, 2019 at 01:03:08PM -0400, Joel Fernandes (Google) wrote:
-> > In current mainline, the degree of access to perf_event_open(2) system
-> > call depends on the perf_event_paranoid sysctl.  This has a number of
-> > limitations:
-> > 
-> > 1. The sysctl is only a single value. Many types of accesses are controlled
-> >    based on the single value thus making the control very limited and
-> >    coarse grained.
-> > 2. The sysctl is global, so if the sysctl is changed, then that means
-> >    all processes get access to perf_event_open(2) opening the door to
-> >    security issues.
-> > 
-> > This patch adds LSM and SELinux access checking which will be used in
-> > Android to access perf_event_open(2) for the purposes of attaching BPF
-> > programs to tracepoints, perf profiling and other operations from
-> > userspace. These operations are intended for production systems.
-> > 
-> > 5 new LSM hooks are added:
-> > 1. perf_event_open: This controls access during the perf_event_open(2)
-> >    syscall itself. The hook is called from all the places that the
-> >    perf_event_paranoid sysctl is checked to keep it consistent with the
-> >    systctl. The hook gets passed a 'type' argument which controls CPU,
-> >    kernel and tracepoint accesses (in this context, CPU, kernel and
-> >    tracepoint have the same semantics as the perf_event_paranoid sysctl).
-> >    Additionally, I added an 'open' type which is similar to
-> >    perf_event_paranoid sysctl == 3 patch carried in Android and several other
-> >    distros but was rejected in mainline [1] in 2016.
-> > 
-> > 2. perf_event_alloc: This allocates a new security object for the event
-> >    which stores the current SID within the event. It will be useful when
-> >    the perf event's FD is passed through IPC to another process which may
-> >    try to read the FD. Appropriate security checks will limit access.
-> > 
-> > 3. perf_event_free: Called when the event is closed.
-> > 
-> > 4. perf_event_read: Called from the read(2) and mmap(2) syscalls for the event.
-> > 
-> > 5. perf_event_write: Called from the ioctl(2) syscalls for the event.
-> > 
-> > [1] https://lwn.net/Articles/696240/
-> > 
-> > Since Peter had suggest LSM hooks in 2016 [1], I am adding his
-> > Suggested-by tag below.
-> 
-> Thanks, I've queued the patch!
+--Sig_/b45Yv514vY6HvJhcejDLP60
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
+Hi all,
 
-> > To use this patch, we set the perf_event_paranoid sysctl to -1 and then
-> > apply selinux checking as appropriate (default deny everything, and then
-> > add policy rules to give access to domains that need it). In the future
-> > we can remove the perf_event_paranoid sysctl altogether.
-> 
-> This I'm not sure about; the sysctl is only redundant when you actually
-> use a security thingy, not everyone is. I always find them things to be
-> mightily unfriendly.
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Right. I was just stating the above for the folks who use the security
-controls.
+drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c:23:10: fatal error: drm/drmP.h: No =
+such file or directory
+   23 | #include <drm/drmP.h>
+      |          ^~~~~~~~~~~~
 
-thanks,
+Caused by commit
 
- - Joel
+  4e98f871bcff ("drm: delete drmP.h + drm_os_linux.h")
 
+interacting with commit
+
+  8b8c294c5d37 ("drm/amdgpu: add function to check tmz capability (v4)")
+
+from the amdgpu tree.
+
+I applied the following merge fix patch for today (which should also
+apply to the amdgpu tree).
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 16 Oct 2019 11:17:32 +1100
+Subject: [PATCH] drm/amdgpu: fix up for amdgpu_tmz.c and removal of drm/drm=
+P.h
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c b/drivers/gpu/drm/amd/=
+amdgpu/amdgpu_tmz.c
+index 14a55003dd81..823527a0fa47 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c
+@@ -20,7 +20,10 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+=20
+-#include <drm/drmP.h>
++#include <linux/device.h>
++
++#include <drm/amd_asic_type.h>
++
+ #include "amdgpu.h"
+ #include "amdgpu_tmz.h"
+=20
+--=20
+2.23.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/b45Yv514vY6HvJhcejDLP60
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2mYq8ACgkQAVBC80lX
+0GzbvAgAjVrdaS3BxJgL/ZhI6W5Dl4/de02drOW58MW77Z9y4KLI+Uo+Cr2Ewx67
+vAszj64+9rKq7M9IDbtmAmf3GFEC+YdrUFawA6uQwCsywLgmPy+7SLk2N4WMBAYX
+Grc35svjMzCgMRDZB9ZFqRxp5ik2i+loP3yc23ZL0DEs0aYb+Ybg3LCggjmZ/uRu
+ePZjdDp3qzEIhMNl6roeLyrgF7IPeUVuKhsIVlCGnfbGTDJSvawuvTcChgmAtfDg
+S1LMtTmdPW1nPkaY/6IAe+WgN4GplhE1j7neo/gH2iH0FmmZfz1Z/HZ0wDuVtEfb
+TFaOm1Akog2c1oS+Kmbisy7Nwld/TA==
+=f+bE
+-----END PGP SIGNATURE-----
+
+--Sig_/b45Yv514vY6HvJhcejDLP60--
