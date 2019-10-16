@@ -2,89 +2,52 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B2ECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A383DECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4BC2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gkk5uU1Q"
+	by mail.kernel.org (Postfix) with ESMTP id 79B322067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388572AbfJPAnE (ORCPT
+        id S2390304AbfJPAnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:43:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:45358 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbfJPAnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:43:04 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9G0dqH2003599;
-        Wed, 16 Oct 2019 00:42:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=RO+XrYrDaeBDBxb1QAxo3QY1K6pbqEr9rfJZhor0FR0=;
- b=gkk5uU1QPz3pbW3mvR/PL+XZDaVfWIA3KgJD1tICgkTq04qP2LRQ4b9QQTxGdfae+vbD
- MWqnAiZ1yKyo09CvbtkuXG5osuKUNnzs0mr9+qLxSM55L7THOJW+XGdDmIfCOoYKrn6Q
- uBNh2sj6j9clhaoSjcDM3PmbUJqdr4BM70dnGctX09WWasq9eTEBiT1bOwP4Sosbi3lz
- WU3ndcM4/66BpxDL9LLiaYQJFh879sJ3LTlrXWyJtzB4VSh7YYDcfYcDI3a++8tbhoWC
- bYDy4CEiqjMBLaRonpcjNxWYqAdjnwb17XxqauDmvnQzoHXlAhofSFJ8FnT+/z9MXk2l +g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vk6sqkfmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 00:42:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9G0dKZL099099;
-        Wed, 16 Oct 2019 00:40:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2vnf7s7m4s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 00:40:35 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9G0eZvr007898;
-        Wed, 16 Oct 2019 00:40:35 GMT
-Received: from dhcp-10-132-91-76.usdhcp.oraclecorp.com (/10.132.91.76)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Oct 2019 00:40:35 +0000
-Subject: Re: [PATCH 2/4] KVM: VMX: Setup MSR bitmap only when has msr_bitmap
- capability
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191015164033.87276-1-xiaoyao.li@intel.com>
- <20191015164033.87276-3-xiaoyao.li@intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <05ff009e-5f60-54ff-a371-111763a1cb7f@oracle.com>
-Date:   Tue, 15 Oct 2019 17:40:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Tue, 15 Oct 2019 20:43:10 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10490 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfJPAnJ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 20:43:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 17:43:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,301,1566889200"; 
+   d="scan'208";a="370639667"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.98]) ([10.239.196.98])
+  by orsmga005.jf.intel.com with ESMTP; 15 Oct 2019 17:43:06 -0700
+Subject: Re: [PATCH] perf stat: Support --all-kernel/--all-user
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+References: <20191011050545.3899-1-yao.jin@linux.intel.com>
+ <20191014144208.GC9700@krava> <20191014162339.GN19627@kernel.org>
+ <2672b8ea-06f2-d828-3da0-da0e59f2eb9d@linux.intel.com>
+ <20191015151121.GD25820@kernel.org>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <cb21485a-cb69-c417-b584-49dde33442e0@linux.intel.com>
+Date:   Wed, 16 Oct 2019 08:43:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015164033.87276-3-xiaoyao.li@intel.com>
+In-Reply-To: <20191015151121.GD25820@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910160002
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910160002
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -92,88 +55,149 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
-> Move the MSR bitmap setup codes to vmx_vmcs_setup() and only setup them
-> when hardware has msr_bitmap capability.
->
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->   arch/x86/kvm/vmx/vmx.c | 39 ++++++++++++++++++++-------------------
->   1 file changed, 20 insertions(+), 19 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 58b77a882426..7051511c27c2 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4164,12 +4164,30 @@ static void ept_set_mmio_spte_mask(void)
->   static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->   {
->   	int i;
-> +	unsigned long *msr_bitmap;
+On 10/15/2019 11:11 PM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Oct 15, 2019 at 09:57:33AM +0800, Jin, Yao escreveu:
+>>
+>>
+>> On 10/15/2019 12:23 AM, Arnaldo Carvalho de Melo wrote:
+>>> Em Mon, Oct 14, 2019 at 04:42:08PM +0200, Jiri Olsa escreveu:
+>>>> On Fri, Oct 11, 2019 at 01:05:45PM +0800, Jin Yao wrote:
+>>>>> perf record has supported --all-kernel / --all-user to configure all
+>>>>> used events to run in kernel space or run in user space. But perf
+>>>>> stat doesn't support these options.
+>>>>>
+>>>>> It would be useful to support these options in perf-stat too to keep
+>>>>> the same semantics.
+>>>>>
+>>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>>>>
+>>>> Acked-by: Jiri Olsa <jolsa@kernel.org>
+>>>
+>>> What happens if one asks for both? From the patch only the --all-kernel
+>>> will stick, right? Is that the behaviour for 'perf record'? Lemme see,
+>>> as I recall having this discussion at that time...
+>>>
+>>> Yeah, same thing, and looking at that I wonder why we dong use
+>>> perf_evsel__config() in 'perf stat'...
+>>>
+>>> Ok, I'm going to apply it.
+>>>
+>>
+>> Hi Arnaldo,
+>>
+>> If we specify both, we will see the error.
+> 
+> Cool, I looked for this code and couldn't quickly spot it nor tried
+> running with both to see what happened, my bad, thanks for replying and
+> making sure that that is the behaviour.
 >   
->   	if (nested)
->   		nested_vmx_vmcs_setup();
+>> root@kbl:~# perf stat --all-kernel --all-user -a -- sleep 1
+>>   Error: option `all-user' cannot be used with all-kernel
+>>
+>> root@kbl:~# perf record --all-kernel --all-user -a -- sleep 1
+>>   Error: option `all-user' cannot be used with all-kernel
+>>
+>> For why I don't set them in perf_evsel__config, because perf_evsel__config
+>> is called in record but not called in stat.
+> 
+> Ok, at some point we should try and check if we could make 'perf stat'
+> use perf_evsel__config(), even if we have to separate what is shared
+> into some __perf_evsel__config() that then gets called by 'perf stat'
+> while the preexisting perf_evsel__config() calls it and does things
+> that don't make sense for 'perf stat'.
 >   
-> -	if (cpu_has_vmx_msr_bitmap())
-> -		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
-> +	if (cpu_has_vmx_msr_bitmap()) {
-> +		msr_bitmap = vmx->vmcs01.msr_bitmap;
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
 
-vmx_disable_intercept_for_msr() also calls cpu_has_vmx_msr_bitmap(), 
-which means we are repeating the check. A cleaner approach is to remove 
-the call to cpu_has_vmx_msr_bitmap()  from 
-vmx_disable_intercept_for_msr()  and let its callers do the check just 
-like you are doing here.
+Yes, fully agree, that should be better. If we reconstruct the 
+perf_evsel__config() and make it be shared by perf stat, perf record and 
+others, that would be nice. :)
 
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
-> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
-> +		if (kvm_cstate_in_guest(vmx->vcpu.kvm)) {
-> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
-> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
-> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
-> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
-> +		}
-> +
-> +		vmcs_write64(MSR_BITMAP, __pa(msr_bitmap));
-> +	}
-> +	vmx->msr_bitmap_mode = 0;
->   
->   	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
->   
-> @@ -6697,7 +6715,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->   {
->   	int err;
->   	struct vcpu_vmx *vmx;
-> -	unsigned long *msr_bitmap;
->   	int cpu;
->   
->   	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
-> @@ -6754,22 +6771,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->   	if (err < 0)
->   		goto free_msrs;
->   
-> -	msr_bitmap = vmx->vmcs01.msr_bitmap;
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
-> -	if (kvm_cstate_in_guest(kvm)) {
-> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
-> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
-> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
-> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
-> -	}
-> -	vmx->msr_bitmap_mode = 0;
-> -
->   	vmx->loaded_vmcs = &vmx->vmcs01;
->   	cpu = get_cpu();
->   	vmx_vcpu_load(&vmx->vcpu, cpu);
+Thanks
+Jin Yao
 
+>> Thanks for reviewing and applying this patch.
+> 
+> You're welcome!
+> 
+> - Arnaldo
+>   
+>> Thanks
+>> Jin Yao
+>>
+>>>> thanks,
+>>>> jirka
+>>>>
+>>>>> ---
+>>>>>    tools/perf/Documentation/perf-stat.txt |  6 ++++++
+>>>>>    tools/perf/builtin-stat.c              |  6 ++++++
+>>>>>    tools/perf/util/stat.c                 | 10 ++++++++++
+>>>>>    tools/perf/util/stat.h                 |  2 ++
+>>>>>    4 files changed, 24 insertions(+)
+>>>>>
+>>>>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>>>>> index 930c51c01201..a9af4e440e80 100644
+>>>>> --- a/tools/perf/Documentation/perf-stat.txt
+>>>>> +++ b/tools/perf/Documentation/perf-stat.txt
+>>>>> @@ -323,6 +323,12 @@ The output is SMI cycles%, equals to (aperf - unhalted core cycles) / aperf
+>>>>>    Users who wants to get the actual value can apply --no-metric-only.
+>>>>> +--all-kernel::
+>>>>> +Configure all used events to run in kernel space.
+>>>>> +
+>>>>> +--all-user::
+>>>>> +Configure all used events to run in user space.
+>>>>> +
+>>>>>    EXAMPLES
+>>>>>    --------
+>>>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>>>>> index 468fc49420ce..c88d4e118409 100644
+>>>>> --- a/tools/perf/builtin-stat.c
+>>>>> +++ b/tools/perf/builtin-stat.c
+>>>>> @@ -803,6 +803,12 @@ static struct option stat_options[] = {
+>>>>>    	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
+>>>>>    		     "monitor specified metrics or metric groups (separated by ,)",
+>>>>>    		     parse_metric_groups),
+>>>>> +	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
+>>>>> +			 "Configure all used events to run in kernel space.",
+>>>>> +			 PARSE_OPT_EXCLUSIVE),
+>>>>> +	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
+>>>>> +			 "Configure all used events to run in user space.",
+>>>>> +			 PARSE_OPT_EXCLUSIVE),
+>>>>>    	OPT_END()
+>>>>>    };
+>>>>> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+>>>>> index ebdd130557fb..6822e4ffe224 100644
+>>>>> --- a/tools/perf/util/stat.c
+>>>>> +++ b/tools/perf/util/stat.c
+>>>>> @@ -490,6 +490,16 @@ int create_perf_stat_counter(struct evsel *evsel,
+>>>>>    	if (config->identifier)
+>>>>>    		attr->sample_type = PERF_SAMPLE_IDENTIFIER;
+>>>>> +	if (config->all_user) {
+>>>>> +		attr->exclude_kernel = 1;
+>>>>> +		attr->exclude_user   = 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (config->all_kernel) {
+>>>>> +		attr->exclude_kernel = 0;
+>>>>> +		attr->exclude_user   = 1;
+>>>>> +	}
+>>>>> +
+>>>>>    	/*
+>>>>>    	 * Disabling all counters initially, they will be enabled
+>>>>>    	 * either manually by us or by kernel via enable_on_exec
+>>>>> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+>>>>> index edbeb2f63e8d..081c4a5113c6 100644
+>>>>> --- a/tools/perf/util/stat.h
+>>>>> +++ b/tools/perf/util/stat.h
+>>>>> @@ -106,6 +106,8 @@ struct perf_stat_config {
+>>>>>    	bool			 big_num;
+>>>>>    	bool			 no_merge;
+>>>>>    	bool			 walltime_run_table;
+>>>>> +	bool			 all_kernel;
+>>>>> +	bool			 all_user;
+>>>>>    	FILE			*output;
+>>>>>    	unsigned int		 interval;
+>>>>>    	unsigned int		 timeout;
+>>>>> -- 
+>>>>> 2.17.1
+>>>>>
+>>>
+> 
