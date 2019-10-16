@@ -2,102 +2,125 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D62FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA43ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2371E2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117102168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264621;
-	bh=nc5ULy0TFrTcGfOM1GDNpdTbbJKQWQYLHky46hqyIBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aX9MHBd3dNkHwNHfA5SG0RU8Jtw7aMWFLqMIuvhp38ZIzCT8xOWiAvgM69T/qp5Th
-	 2pIYrMGRDpC9WsStLz9rheNZEUHx1XzIQGFJImBlqVt8DHoh8tuxSlyaSE+R28jai4
-	 m+ShRbbE/Z4G0gr1GvFFbnRbLkIiLWeas3BQF71M=
+	s=default; t=1571265328;
+	bh=71cxs0SO4TFyvUYxs7QZ7B28Lrrx3IgLfsy0m4r/p8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P03clMdL89Bup5QIDbI/BHA6xkBrhoY19+ijs+BbdZdNUCaMqKPZ2biNZJHCuFitY
+	 vDl6cdWNcNA3E8Rg010V2FhyfZhXBihSBmUlvv+5L2jD78bFEBCpLo4xbVQ+xK0CQJ
+	 JZlnIFVipg/Z9PwflshhRNOJ6uiUTOrbglsfpOVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436951AbfJPVwy (ORCPT
+        id S2391798AbfJPWfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436896AbfJPVww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:52:52 -0400
-Received: from localhost (unknown [192.55.54.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC420218DE;
-        Wed, 16 Oct 2019 21:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262771;
-        bh=nc5ULy0TFrTcGfOM1GDNpdTbbJKQWQYLHky46hqyIBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PAyu9tOMTlt5jCJ6JxDIA92pVFw6YWJqcryYEQp6qsQgeNSzmQWvkq0kKICgcY9Uh
-         F0RhaLKZxzUOSgL7zmMOt6fALybOhyCf1rHyFI0glUh/xnkBmxbA/eD8a9pcQegpQS
-         1yTbQ7LecidbgmjgQ+sIqLoTEyGdBFPUVdjPTsyU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/79] ima: always return negative code for error
-Date:   Wed, 16 Oct 2019 14:49:47 -0700
-Message-Id: <20191016214741.083694872@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
-References: <20191016214729.758892904@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 16 Oct 2019 18:35:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60262 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfJPWfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 18:35:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=X6Sf04ArD7jN+fMhh6LgGi0CQBGg138wDjt0wx/X6YQ=; b=nPOPzYG2BZgfRlCTsM1Tw9T/f
+        1+5ByqsJqcq2PpoevodlkHfjpX3svIy4yaebHYxPSOm7dB/LKY9dmOGDmAwVjzql0xRcmuzMcqo66
+        eF6rHeN3PyN+rGA6knH5G1AAvWUgHF4JXP/CUugqDvXRDieF0tz73AOB4o2y6dgROksrY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iKrt1-0006P1-O3; Wed, 16 Oct 2019 22:35:19 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id C841B274325C; Wed, 16 Oct 2019 23:35:18 +0100 (BST)
+Date:   Wed, 16 Oct 2019 23:35:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Richard Leitner <richard.leitner@skidata.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
+Message-ID: <20191016223518.GC11473@sirena.co.uk>
+References: <20191016214844.038848564@linuxfoundation.org>
+ <20191016214907.599726506@linuxfoundation.org>
+ <20191016220044.GB11473@sirena.co.uk>
+ <20191016221025.GA990599@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Content-Disposition: inline
+In-Reply-To: <20191016221025.GA990599@kroah.com>
+X-Cookie: Auction:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
+--ALfTUftag+2gvp1h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-integrity_kernel_read() returns the number of bytes read. If this is
-a short read then this positive value is returned from
-ima_calc_file_hash_atfm(). Currently this is only indirectly called from
-ima_calc_file_hash() and this function only tests for the return value
-being zero or nonzero and also doesn't forward the return value.
-Nevertheless there's no point in returning a positive value as an error,
-so translate a short read into -EINVAL.
+On Wed, Oct 16, 2019 at 03:10:25PM -0700, Greg Kroah-Hartman wrote:
+> On Wed, Oct 16, 2019 at 11:00:44PM +0100, Mark Brown wrote:
+> > On Wed, Oct 16, 2019 at 02:51:44PM -0700, Greg Kroah-Hartman wrote:
+> > > From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- security/integrity/ima/ima_crypto.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> > > commit 694b14554d75f2a1ae111202e71860d58b434a21 upstream.
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index a29209fa56746..5c87baaefafb6 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -298,8 +298,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
- 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
- 		rc = integrity_kernel_read(file, offset, rbuf[active],
- 					   rbuf_len);
--		if (rc != rbuf_len)
-+		if (rc != rbuf_len) {
-+			if (rc >= 0)
-+				rc = -EINVAL;
- 			goto out3;
-+		}
- 
- 		if (rbuf[1] && offset) {
- 			/* Using two buffers, and it is not the first
--- 
-2.20.1
+> > > This control mute/unmute the ADC input of SGTL5000
+> > > using its CHIP_ANA_CTRL register.
 
+> > This seems like a new feature and not an obvious candidate for stable?
 
+> there was a long email from Richard that said:
+> 	Upstream commit 631bc8f0134a ("ASoC: sgtl5000: Fix of unmute
+> 	outputs on probe"), which is e9f621efaebd in v5.3 replaced
+> 	snd_soc_component_write with snd_soc_component_update_bits and
+> 	therefore no longer cleared the MUTE_ADC flag. This caused the
+> 	ADC to stay muted and recording doesn't work any longer. This
+> 	patch fixes this problem by adding a Switch control for
+> 	MUTE_ADC.
 
+> That's why I took this.  If this isn't true, I'll be glad to drop this.
+
+That's probably not an appropriate fix for stable - it's going to add a
+new control which users will need to manually set (or hope their
+userspace automatically figures out that it should set for them, more
+advanced userspaces like PulseAudio should) which isn't a drop in fix.=20
+You could either drop the backport that was done for zero cross or take
+a new patch that clears the MUTE_ADC flag (rather than punting to
+userspace to do so), or just be OK with what you've got at the minute
+which might be fine given the lack of user reports.
+
+--ALfTUftag+2gvp1h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2nmyUACgkQJNaLcl1U
+h9DWfwf+K0fc88QLIuGcWpAJ3DwOZiSnXrA9pkmrlSQ4aR8OEk+t2JiTrfCySwH8
+F6FczIz+0Zu3FHrozTsnmaB/QTl8PprwARpVQitGnY7h/U4ULv4WRiuMZGA2azXG
+nzcm/7hCpE+WqFCGcwU2crKtn01HZ3xHMaizHW0xJqoQAP8gXeEz/B6+HGercbkX
+v/FzDuyaispEy48+7/ktcWkQOj0xCZl/newEY1Z6B+PvfteUgoKaa440Vo01WzM3
+PBB7x1rz54Z0ws/z+tFJY9RykpE4t16j2hjIMlhKdsZQMA2kJzEjI7dn4shL4uKV
+oPkSvOU4E3YPneqh4cxbBxAcwezFnA==
+=kUz1
+-----END PGP SIGNATURE-----
+
+--ALfTUftag+2gvp1h--
