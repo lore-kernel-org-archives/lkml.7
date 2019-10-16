@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46BDECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810D5FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566F1207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEAE207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263813;
-	bh=MVS3ZYedu1IAIl/uddecrHRA4F2h8So+xOjCtwAkoeU=;
+	s=default; t=1571263815;
+	bh=AyP47DE0aOW3YdRHBv28szmli6vQ7mQ8OQ0KpvCpmzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kh+WRolleieRvLXQD8Jt74NqPLHJK659UTaypiBkosdJpfhAnaYv7SFK8ir7ohk6n
-	 y2rHbjYNkCBJt2Q61U6h253TMlrm6srEZZDC2DYeG4ZrnIkjJkh7OVKAzH2k741jli
-	 38ULeBYws74qDu1vN9PKaCS5O1gyyexaSEyp9Z+8=
+	b=CRCn6FZc4GyDLGRSJQAE7a+FDoI1LUX3Fo90szKLRbX60Av9Ze15SJXtLlYfADx8n
+	 MqezXpUvY2jq+5GzoG8J2HMcY/INCYeADcYwmbaO1dupB0J1huA+lznlk7YWmRaTF2
+	 b2JU9MRBihln/P1OwQ7hXChkMz3RVdqkF5D5LNDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439177AbfJPWKM (ORCPT
+        id S2437986AbfJPV5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49870 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391747AbfJPV5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:20 -0400
+        id S2390510AbfJPV4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:42 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C15B20872;
-        Wed, 16 Oct 2019 21:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744D621D7A;
+        Wed, 16 Oct 2019 21:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263039;
-        bh=MVS3ZYedu1IAIl/uddecrHRA4F2h8So+xOjCtwAkoeU=;
+        s=default; t=1571263001;
+        bh=AyP47DE0aOW3YdRHBv28szmli6vQ7mQ8OQ0KpvCpmzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0a9Dy+FCYpDYCD5TVyaBos4WJgDIfq8+zaXbchfKxYSi3d8EnsPNpb6BXFxhHp957
-         l7BNxwpJthRqmwXpRNdv5Z44C3uyhyC1aDENcb4FiM0ECzImyz4qftTtMp2WyAta0f
-         93B2Etgm36ECuqV1w9mg4IHaXuNskBAQ/UvbvX40=
+        b=XgnpMCiZsrQXwmpmYnXjhUluIYGv9F1z8EhJpjT9GT6DqMcHNibDZFxqu7BbnDrYp
+         S5wbKAg/STipsMW80bmPHMCZep69AU5uEGTOmdzldsDruJoFvFI/PfSPRZVLhBp2SS
+         U9OfNolwCpu827wWyqHnVgo2xmjcn3ZZh2ta7GrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Schmidt <jan@centricular.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 09/81] xhci: Prevent device initiated U1/U2 link pm if exit latency is too long
-Date:   Wed, 16 Oct 2019 14:50:20 -0700
-Message-Id: <20191016214814.829300005@linuxfoundation.org>
+        stable@vger.kernel.org, David Frey <dpfrey@gmail.com>,
+        Andreas Dannenberg <dannenberg@ti.com>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 42/65] iio: light: opt3001: fix mutex unlock race
+Date:   Wed, 16 Oct 2019 14:50:56 -0700
+Message-Id: <20191016214832.459532926@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: David Frey <dpfrey@gmail.com>
 
-commit cd9d9491e835a845c1a98b8471f88d26285e0bb9 upstream.
+commit 82f3015635249a8c8c45bac303fd84905066f04f upstream.
 
-If host/hub initiated link pm is prevented by a driver flag we still must
-ensure that periodic endpoints have longer service intervals than link pm
-exit latency before allowing device initiated link pm.
+When an end-of-conversion interrupt is received after performing a
+single-shot reading of the light sensor, the driver was waking up the
+result ready queue before checking opt->ok_to_ignore_lock to determine
+if it should unlock the mutex. The problem occurred in the case where
+the other thread woke up and changed the value of opt->ok_to_ignore_lock
+to false prior to the interrupt thread performing its read of the
+variable. In this case, the mutex would be unlocked twice.
 
-Fix this by continue walking and checking endpoint service interval if
-xhci_get_timeout_no_hub_lpm() returns anything else than USB3_LPM_DISABLED
-
-While at it fix the split line error message
-
-Tested-by: Jan Schmidt <jan@centricular.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-3-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: David Frey <dpfrey@gmail.com>
+Reviewed-by: Andreas Dannenberg <dannenberg@ti.com>
+Fixes: 94a9b7b1809f ("iio: light: add support for TI's opt3001 light sensor")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/iio/light/opt3001.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4747,10 +4747,12 @@ static u16 xhci_calculate_lpm_timeout(st
- 		if (intf->dev.driver) {
- 			driver = to_usb_driver(intf->dev.driver);
- 			if (driver && driver->disable_hub_initiated_lpm) {
--				dev_dbg(&udev->dev, "Hub-initiated %s disabled "
--						"at request of driver %s\n",
--						state_name, driver->name);
--				return xhci_get_timeout_no_hub_lpm(udev, state);
-+				dev_dbg(&udev->dev, "Hub-initiated %s disabled at request of driver %s\n",
-+					state_name, driver->name);
-+				timeout = xhci_get_timeout_no_hub_lpm(udev,
-+								      state);
-+				if (timeout == USB3_LPM_DISABLED)
-+					return timeout;
- 			}
+--- a/drivers/iio/light/opt3001.c
++++ b/drivers/iio/light/opt3001.c
+@@ -695,6 +695,7 @@ static irqreturn_t opt3001_irq(int irq,
+ 	struct iio_dev *iio = _iio;
+ 	struct opt3001 *opt = iio_priv(iio);
+ 	int ret;
++	bool wake_result_ready_queue = false;
+ 
+ 	if (!opt->ok_to_ignore_lock)
+ 		mutex_lock(&opt->lock);
+@@ -729,13 +730,16 @@ static irqreturn_t opt3001_irq(int irq,
  		}
+ 		opt->result = ret;
+ 		opt->result_ready = true;
+-		wake_up(&opt->result_ready_queue);
++		wake_result_ready_queue = true;
+ 	}
+ 
+ out:
+ 	if (!opt->ok_to_ignore_lock)
+ 		mutex_unlock(&opt->lock);
+ 
++	if (wake_result_ready_queue)
++		wake_up(&opt->result_ready_queue);
++
+ 	return IRQ_HANDLED;
+ }
  
 
 
