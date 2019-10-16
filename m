@@ -7,53 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0972FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB60FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85B421928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C4321925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263129;
-	bh=HdPM/9FoLj8uItAc5KmRuQ+e5lvgdJjgzjajg0U+Q1k=;
+	s=default; t=1571263133;
+	bh=Ck7Qxf1I86oSI9qJ6PU0dWKBQw+DaL5W0bIa78RXrRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1puzf+1JVxS30oAaKh6E9+m0B3PU9StJqXprLuRVhnjRe63/1BMkhdwtIl2gKXek
-	 3hHyFryfD/ennGSG+FxpTEaWnQhR8ZDS9bT0IQLYwiYyCOq1GKVp5EOLMqi7iG6e3E
-	 knyPtQiqSZXJ5ve7dvPS9fSJbIMcCEMwIZb+9Fl8=
+	b=vGng3oiR1yjT8dnar4YppO6HzdFNq2d76nGbd0moJ/4oi8VghJBlealH6Lonxf9ba
+	 5A3gqLWC4M+CfeEKFkO6i1GuokEviwhy2hEy93SQJ3cY7NiK8Fb/HW65cqA3Q5oYQX
+	 OThrGpXASXctxjFqqFZXYpzNbFKaUyiCBi6W198c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438274AbfJPV6s (ORCPT
+        id S2438300AbfJPV6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51128 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438096AbfJPV6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:00 -0400
+        id S2438109AbfJPV6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:02 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4825621D7A;
-        Wed, 16 Oct 2019 21:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00620222C1;
+        Wed, 16 Oct 2019 21:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263080;
-        bh=HdPM/9FoLj8uItAc5KmRuQ+e5lvgdJjgzjajg0U+Q1k=;
+        s=default; t=1571263082;
+        bh=Ck7Qxf1I86oSI9qJ6PU0dWKBQw+DaL5W0bIa78RXrRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzdD3NqeijYb5YZeeX0qxAgTRrGPpbzwmeD/hB4huX2ySJgcayS6gVYP1tHSWZ177
-         5+yU53onJfr64MY1jjpRfS/Bu1XErOUxbRaAD01WCS6PZlozUFOkalEf5ldAgHrhbJ
-         ByP8bUM/aaiF5PW52ekL7Sx8towTwC401UYrg+1Y=
+        b=YIwnO5hgvG5nwx6A9xOG5SzVh/mGG6lc75rSZNuQx/K0URSYTHh1jWcsB9GFwsADt
+         NZR/aX1jpRb7eZ8O9pPzugbdfTbWynM/Vb3bY5x6Pi81JXyps2jLgjCDsqpe16iGAR
+         6kDNvVTX4g2DNokN7mRYEAADeuA1RhkBcVeZW9hs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        stable@vger.kernel.org, Mark-PK Tsai <mark-pk.tsai@mediatek.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alix Wu <alix.wu@mediatek.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 79/81] x86/asm: Fix MWAITX C-state hint value
-Date:   Wed, 16 Oct 2019 14:51:30 -0700
-Message-Id: <20191016214848.545954452@linuxfoundation.org>
+        YJ Chiang <yj.chiang@mediatek.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: [PATCH 4.19 81/81] perf/hw_breakpoint: Fix arch_hw_breakpoint use-before-initialization
+Date:   Wed, 16 Oct 2019 14:51:32 -0700
+Message-Id: <20191016214848.807683440@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -66,64 +70,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+From: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 
-commit 454de1e7d970d6bc567686052329e4814842867c upstream.
+commit 310aa0a25b338b3100c94880c9a69bec8ce8c3ae upstream.
 
-As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
-and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
-of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
+If we disable the compiler's auto-initialization feature, if
+-fplugin-arg-structleak_plugin-byref or -ftrivial-auto-var-init=pattern
+are disabled, arch_hw_breakpoint may be used before initialization after:
 
-Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
-this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
+  9a4903dde2c86 ("perf/hw_breakpoint: Split attribute parse and commit")
 
-This hasn't had any implications so far because setting reserved bits in
-EAX is simply ignored by the CPU.
+On our ARM platform, the struct step_ctrl in arch_hw_breakpoint, which
+used to be zero-initialized by kzalloc(), may be used in
+arch_install_hw_breakpoint() without initialization.
 
- [ bp: Fixup comment in delay_mwaitx() and massage. ]
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
+Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alix Wu <alix.wu@mediatek.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+Cc: YJ Chiang <yj.chiang@mediatek.com>
+Link: https://lkml.kernel.org/r/20190906060115.9460-1-mark-pk.tsai@mediatek.com
+[ Minor edits. ]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/mwait.h |    2 +-
- arch/x86/lib/delay.c         |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kernel/events/hw_breakpoint.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -21,7 +21,7 @@
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_LOOPS		((u32)-1)
--#define MWAITX_DISABLE_CSTATES		0xf
-+#define MWAITX_DISABLE_CSTATES		0xf0
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -426,7 +426,7 @@ static int hw_breakpoint_parse(struct pe
  
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long _
- 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
+ int register_perf_hw_breakpoint(struct perf_event *bp)
+ {
+-	struct arch_hw_breakpoint hw;
++	struct arch_hw_breakpoint hw = { };
+ 	int err;
  
- 		/*
--		 * AMD, like Intel, supports the EAX hint and EAX=0xf
--		 * means, do not enter any deep C-state and we use it
-+		 * AMD, like Intel's MWAIT version, supports the EAX hint and
-+		 * EAX=0xf0 means, do not enter any deep C-state and we use it
- 		 * here in delay() to minimize wakeup latency.
- 		 */
- 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
+ 	err = reserve_bp_slot(bp);
+@@ -474,7 +474,7 @@ int
+ modify_user_hw_breakpoint_check(struct perf_event *bp, struct perf_event_attr *attr,
+ 			        bool check)
+ {
+-	struct arch_hw_breakpoint hw;
++	struct arch_hw_breakpoint hw = { };
+ 	int err;
+ 
+ 	err = hw_breakpoint_parse(bp, attr, &hw);
 
 
