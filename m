@@ -2,136 +2,215 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC26FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD2FFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066BA20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yecjHGNG"
+	by mail.kernel.org (Postfix) with ESMTP id D9B5D2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405457AbfJPNsX (ORCPT
+        id S2405493AbfJPNs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:48:23 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:36349 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbfJPNsX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:48:23 -0400
-Received: by mail-ua1-f65.google.com with SMTP id r25so7238744uam.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZczhRha9z1nsec5k7tudbJLt03HyH3VxjWdRdQFLkMs=;
-        b=yecjHGNGAegoANYaWXbjqNsxcZY98ad90xKhK31I9DOTyeJZgCUmotpz3V/jznGqMn
-         BYwrnpPhpWg1KxznTTq9FC6jFcYA0rKQX03A/vleQ9gsU/CJTA3St5eHCNU9xSuzJ5zK
-         VgN60//LyDCJC7PzthpL510PVbOTU5Nl4UH2gAWH6mirijPOEdf/Va7Hc+ORzkX3Gnfs
-         XsiPI00qHFIJEMK71BJcmZZefHq9zDpTo1TPIoXz4Az2/AcG/JZjZr7WdHlgDAswXIx6
-         UMbregCoRGbVJZ8FCsiKkrAwNRyNk1y98nSx43akPsDVkiWEtjIFwUJinGbTKLOQsgmJ
-         FP6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZczhRha9z1nsec5k7tudbJLt03HyH3VxjWdRdQFLkMs=;
-        b=tKlUNNwgSOSDo+ZR23btNLoQ2q6g6wXWxnKYwL8Qyh0O4Rje6BG6G7DzwjtLPpPyq7
-         cvRM32wm42dI8Zk5qAvtFLWolYizERYaTYXmcQv2k/6HzJVEaVuaWwhT2JMVvaJsMbXq
-         BsQbfJcw5seu3sN/VRBPER7uYJCvz+rcZVo6LT7H49InRjZk87MgCPYc9POpI6Ft/aXX
-         Mon4HgZj1y1vcWp2YXvaa4/kk9DB/qTJ0vIOL8KwKxhzbnFiSDvJocUGR78WdmjyC1Pm
-         fr5/nSSEKCOokpwTg/UDAYGuidyWBPRSbobJJ/FW7ZVJ8zLgmBd6ALEcxQs4wMu5d1GS
-         BuOw==
-X-Gm-Message-State: APjAAAXUSNLUzw7sRZmADtKGj2SKNoRoevufApscJrotKN7gI+eIls8q
-        AVvi2WwC/wwapaFL0Cs8L5g9s7J5miS2wu48AKUYFw==
-X-Google-Smtp-Source: APXvYqzDpJmGjL9BnoWGF8QRrB89KcB9r2ZCwEdZLc2zqHnhS1q/w4C+c6uMpxQU2nrpu5EyekFHa9wkYoswYcXPv3s=
-X-Received: by 2002:ab0:5a97:: with SMTP id w23mr16874006uae.129.1571233701097;
- Wed, 16 Oct 2019 06:48:21 -0700 (PDT)
+        Wed, 16 Oct 2019 09:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbfJPNs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:48:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2AE20663;
+        Wed, 16 Oct 2019 13:48:55 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 09:48:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
+        pmladek@suse.com, joe.lawrence@redhat.com,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        shuah@kernel.org, kamalesh@linux.vnet.ibm.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] ftrace: Introduce PERMANENT ftrace_ops flag
+Message-ID: <20191016094853.3913f5ae@gandalf.local.home>
+In-Reply-To: <20191016113316.13415-2-mbenes@suse.cz>
+References: <20191016113316.13415-1-mbenes@suse.cz>
+        <20191016113316.13415-2-mbenes@suse.cz>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
- <20190927044239.589e7c4c@oasis.local.home> <20191001163542.GB87296@google.com>
- <CAPDyKFrYqeoiSG5-KaBDt_G4kPtCxRO7+5fRa-HSWjuPPmAheQ@mail.gmail.com> <20191015171937.GO87296@google.com>
-In-Reply-To: <20191015171937.GO87296@google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 16 Oct 2019 15:47:44 +0200
-Message-ID: <CAPDyKFpE0LoxXAR=2JvPi8pvb-6_q4rgs-A4D6OU7XuP1XEtbg@mail.gmail.com>
-Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 at 19:19, Matthias Kaehlcke <mka@chromium.org> wrote:
+On Wed, 16 Oct 2019 13:33:13 +0200
+Miroslav Benes <mbenes@suse.cz> wrote:
+
+> Livepatch uses ftrace for redirection to new patched functions. It means
+> that if ftrace is disabled, all live patched functions are disabled as
+> well. Toggling global 'ftrace_enabled' sysctl thus affect it directly.
+> It is not a problem per se, because only administrator can set sysctl
+> values, but it still may be surprising.
+> 
+> Introduce PERMANENT ftrace_ops flag to amend this. If the
+> FTRACE_OPS_FL_PERMANENT is set on any ftrace ops, the tracing cannot be
+> disabled by disabling ftrace_enabled. Equally, a callback with the flag
+> set cannot be registered if ftrace_enabled is disabled.
+> 
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> ---
 >
-> Hi Ulf,
->
-> On Tue, Oct 15, 2019 at 02:37:42PM +0200, Ulf Hansson wrote:
-> > On Tue, 1 Oct 2019 at 18:35, Matthias Kaehlcke <mka@chromium.org> wrote:
-> > >
-> > > On Fri, Sep 27, 2019 at 04:42:39AM -0400, Steven Rostedt wrote:
-> > > > On Thu, 26 Sep 2019 15:04:38 -0700
-> > > > Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > >
-> > > > > Define genpd_power_on/off and genpd_set_performance_state
-> > > > > tracepoints and use them.
-> > > >
-> > > > I agree with Greg about adding a "why" you need this. But, in case
-> > > > there's a good reason to have this, I have comments about the code
-> > > > below.
-> > >
-> > > Thanks Greg and Steven for your comments.
-> > >
-> > > How about this instead:
-> > >
-> > >   Add tracepoints for genpd_power_on, genpd_power_off and
-> > >   genpd_set_performance_state. The tracepoints can help with
-> > >   understanding power domain behavior of a given device, which
-> > >   may be particularly interesting for battery powered devices
-> > >   and suspend/resume.
-> >
-> > Apologize for the delay, no excuse!
-> >
-> > I don't mind adding trace events, as long as it's for good reasons -
-> > and to me, that seems a bit questionable here.
-> >
-> > According to the above, I believe the information you need is already
-> > available via genpd's debugfs interface, no?
->
-> Not in all cases, e.g. you can't peek at sysfs while the device is
-> suspended.
 
-Not sure I get this right. If a device that is attached to a genpd
-that is runtime suspended, for sure you can have a look at the genpd
-debugfs to see its current status.
+I pulled in this patch as is, but then I realized we have a race. This
+race has been there before this patch series, and actually, been there
+since the dawn of ftrace.
 
-> Also sysfs doesn't help much with seeing that a PD is
-> toggling between on an off for some (possibly legitimate) reason.
+I realized that the user can modify ftrace_enabled out of lock context.
+That is, the ftrace_enabled is modified directly from the sysctl code,
+without taking the ftrace_lock mutex. Which means if the user was
+starting and stopping function tracing while playing with the
+ftrace_enabled switch, it could potentially cause an accounting failure.
 
-Well, you could look at the "active_time" and the "total_idle_time"
-nodes for the genpd in question. Those should change accordingly.
+I'm going to apply this patch on top of yours. It reverses the role of
+how ftrace_enabled is set in the sysctl handler. Instead of having it
+directly modify ftrace_enabled, I have it modify a new variable called
+sysctl_ftrace_enabled. I no longer need the last_ftrace_enabled. This
+way we only need to set or disable ftrace_enabled on a change and if
+all conditions are met.
 
->
-> At this point I don't need this information badly, just thought it
-> could be useful. No problem if it is decided to hold back on it for
-> now.
+Thoughts?
 
-Okay, thanks!
+-- Steve
 
-Kind regards
-Uffe
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 8385cafe4f9f..aa2e2c7cef9e 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -79,6 +79,7 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
+ #ifdef CONFIG_FUNCTION_TRACER
+ 
+ extern int ftrace_enabled;
++extern int sysctl_ftrace_enabled;
+ extern int
+ ftrace_enable_sysctl(struct ctl_table *table, int write,
+ 		     void __user *buffer, size_t *lenp,
+@@ -638,6 +639,7 @@ static inline void tracer_disable(void)
+ {
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	ftrace_enabled = 0;
++	sysctl_ftrace_enabled = 0;
+ #endif
+ }
+ 
+@@ -651,6 +653,7 @@ static inline int __ftrace_enabled_save(void)
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	int saved_ftrace_enabled = ftrace_enabled;
+ 	ftrace_enabled = 0;
++	sysctl_ftrace_enabled = 0;
+ 	return saved_ftrace_enabled;
+ #else
+ 	return 0;
+@@ -661,6 +664,7 @@ static inline void __ftrace_enabled_restore(int enabled)
+ {
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	ftrace_enabled = enabled;
++	sysctl_ftrace_enabled = enabled;
+ #endif
+ }
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 00fcea236eba..773fdfc6c645 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -648,7 +648,7 @@ static struct ctl_table kern_table[] = {
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	{
+ 		.procname	= "ftrace_enabled",
+-		.data		= &ftrace_enabled,
++		.data		= &sysctl_ftrace_enabled,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= ftrace_enable_sysctl,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index dacb8b50a263..b55c9a4e2b5b 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -88,7 +88,7 @@ struct ftrace_ops ftrace_list_end __read_mostly = {
+ 
+ /* ftrace_enabled is a method to turn ftrace on or off */
+ int ftrace_enabled __read_mostly;
+-static int last_ftrace_enabled;
++int sysctl_ftrace_enabled __read_mostly;
+ 
+ /* Current function tracing op */
+ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
+@@ -6221,7 +6221,7 @@ void __init ftrace_init(void)
+ 	pr_info("ftrace: allocating %ld entries in %ld pages\n",
+ 		count, count / ENTRIES_PER_PAGE + 1);
+ 
+-	last_ftrace_enabled = ftrace_enabled = 1;
++	sysctl_ftrace_enabled = ftrace_enabled = 1;
+ 
+ 	ret = ftrace_process_locs(NULL,
+ 				  __start_mcount_loc,
+@@ -6265,6 +6265,7 @@ struct ftrace_ops global_ops = {
+ static int __init ftrace_nodyn_init(void)
+ {
+ 	ftrace_enabled = 1;
++	sysctl_ftrace_enabled = 1;
+ 	return 0;
+ }
+ core_initcall(ftrace_nodyn_init);
+@@ -6714,6 +6715,7 @@ void ftrace_kill(void)
+ {
+ 	ftrace_disabled = 1;
+ 	ftrace_enabled = 0;
++	sysctl_ftrace_enabled = 0;
+ 	ftrace_trace_function = ftrace_stub;
+ }
+ 
+@@ -6796,10 +6798,12 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+ 
+ 	ret = proc_dointvec(table, write, buffer, lenp, ppos);
+ 
+-	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
++	if (ret || !write || (ftrace_enabled == !!sysctl_ftrace_enabled))
+ 		goto out;
+ 
+-	if (ftrace_enabled) {
++	if (sysctl_ftrace_enabled) {
++
++		ftrace_enabled = true;
+ 
+ 		/* we are starting ftrace again */
+ 		if (rcu_dereference_protected(ftrace_ops_list,
+@@ -6810,19 +6814,21 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+ 
+ 	} else {
+ 		if (is_permanent_ops_registered()) {
+-			ftrace_enabled = true;
+ 			ret = -EBUSY;
+ 			goto out;
+ 		}
+ 
++		ftrace_enabled = false;
++
+ 		/* stopping ftrace calls (just send to ftrace_stub) */
+ 		ftrace_trace_function = ftrace_stub;
+ 
+ 		ftrace_shutdown_sysctl();
+ 	}
+ 
+-	last_ftrace_enabled = !!ftrace_enabled;
+  out:
++	sysctl_ftrace_enabled = ftrace_enabled;
++
+ 	mutex_unlock(&ftrace_lock);
+ 	return ret;
+ }
