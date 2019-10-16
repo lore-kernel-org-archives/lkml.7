@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE62ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09585FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39F921928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D279521928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263366;
-	bh=sWYa0PMEECtgIN2NOVbH131fBrFTFGRjDsy2EkvUyVw=;
+	s=default; t=1571263370;
+	bh=ChMHuqbRpVaU38KyVFzayEkPa1F0rqMRKTeJBwbhPE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uQDM20aO67Zh87bJFyYG4acyvLYAF5vTdwwZVd97N/d7sMegshUFfsnvPT8maxf6C
-	 GrtDva0lzEPIDNFtRetXrzPKYmt9XA5OzqRaD8JHz7SaxxIqFT3en1uMUcEDiFnw9P
-	 l7/t+W32Nb3AT7o3vLRd8MNveMM4fxipVc1/AgPo=
+	b=r7iGTY6cWEv151qHQjyvzeU0LleNv/nUgmachB9eto/aldj9WNBQGFnQIfi4lovSx
+	 J1kTW3P3FVSo/JDtGZnRoa5sWPxoAuPvrkfdnP1PFX99SUnd453mn7sR25nwGQBKUx
+	 TF47rXoZko00uDFPd/uA9ymSSbYxAVxm64rM5TmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438562AbfJPV7g (ORCPT
+        id S2439038AbfJPWCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52344 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438213AbfJPV6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:39 -0400
+        id S2438555AbfJPV7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:36 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C76E321E6F;
-        Wed, 16 Oct 2019 21:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D20C218DE;
+        Wed, 16 Oct 2019 21:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263118;
-        bh=sWYa0PMEECtgIN2NOVbH131fBrFTFGRjDsy2EkvUyVw=;
+        s=default; t=1571263175;
+        bh=ChMHuqbRpVaU38KyVFzayEkPa1F0rqMRKTeJBwbhPE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1om5Ycm1sLKElE1Xe9/gBwIjF+SKedrkOS8BvJp5WS16cPjR7GY+U6HrYxHXVMGx
-         FEhoaxElrsfwqE4iw4d3kxGcYERpRinVWAKWZgKT3rza2wIKrzNbcE/Ch9VURHAWOy
-         4dyLUrKCNUIKPb/kQ1BQ94QvRU8UMHf8bewa7XBE=
+        b=Utfm8B3gejHh3j28hQya7XKgJrSZ8e5Y4jTm7JFOfBJJJP/vcXzCF/VF7vq7ndxiX
+         B/OIvTwTT8Hu/6kaKK8J3CqESZIcfOKGGOOh2lbSpE17jWlsM+D3Ow/hdgRCW0wD3D
+         l0c1MaJX+f+Gl1oH5CeMZIGG1NANIYKSUI4EvjxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 041/112] USB: legousbtower: fix potential NULL-deref on disconnect
-Date:   Wed, 16 Oct 2019 14:50:33 -0700
-Message-Id: <20191016214854.410237321@linuxfoundation.org>
+        stable@vger.kernel.org, Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.3 102/112] arm64/sve: Fix wrong free for task->thread.sve_state
+Date:   Wed, 16 Oct 2019 14:51:34 -0700
+Message-Id: <20191016214906.694759736@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -58,140 +62,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-commit cd81e6fa8e033e7bcd59415b4a65672b4780030b upstream.
+commit 4585fc59c0e813188d6a4c5de1f6976fce461fc2 upstream.
 
-The driver is using its struct usb_device pointer as an inverted
-disconnected flag, but was setting it to NULL before making sure all
-completion handlers had run. This could lead to a NULL-pointer
-dereference in a number of dev_dbg and dev_err statements in the
-completion handlers which relies on said pointer.
+The system which has SVE feature crashed because of
+the memory pointed by task->thread.sve_state was destroyed
+by someone.
 
-Fix this by unconditionally stopping all I/O and preventing
-resubmissions by poisoning the interrupt URBs at disconnect and using a
-dedicated disconnected flag.
+That is because sve_state is freed while the forking the
+child process. The child process has the pointer of sve_state
+which is same as the parent's because the child's task_struct
+is copied from the parent's one. If the copy_process()
+fails as an error on somewhere, for example, copy_creds(),
+then the sve_state is freed even if the parent is alive.
+The flow is as follows.
 
-This also makes sure that all I/O has completed by the time the
-disconnect callback returns.
+copy_process
+        p = dup_task_struct
+            => arch_dup_task_struct
+                *dst = *src;  // copy the entire region.
+:
+        retval = copy_creds
+        if (retval < 0)
+                goto bad_fork_free;
+:
+bad_fork_free:
+...
+        delayed_free_task(p);
+          => free_task
+             => arch_release_task_struct
+                => fpsimd_release_task
+                   => __sve_free
+                      => kfree(task->thread.sve_state);
+                         // free the parent's sve_state
 
-Fixes: 9d974b2a06e3 ("USB: legousbtower.c: remove err() usage")
-Fixes: fef526cae700 ("USB: legousbtower: remove custom debug macro")
-Fixes: 4dae99638097 ("USB: legotower: remove custom debug macro and module parameter")
-Cc: stable <stable@vger.kernel.org>     # 3.5
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190919083039.30898-4-johan@kernel.org
+Move child's sve_state = NULL and clearing TIF_SVE flag
+to arch_dup_task_struct() so that the child doesn't free the
+parent's one.
+There is no need to wait until copy_process() to clear TIF_SVE for
+dst, because the thread flags for dst are initialized already by
+copying the src task_struct.
+This change simplifies the code, so get rid of comments that are no
+longer needed.
+
+As a note, arm64 used to have thread_info on the stack. So it
+would not be possible to clear TIF_SVE until the stack is initialized.
+>From commit c02433dd6de3 ("arm64: split thread_info from task stack"),
+the thread_info is part of the task, so it should be valid to modify
+the flag from arch_dup_task_struct().
+
+Cc: stable@vger.kernel.org # 4.15.x-
+Fixes: bc0ee4760364 ("arm64/sve: Core task context handling")
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Suggested-by: Dave Martin <Dave.Martin@arm.com>
+Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+Tested-by: Julien Grall <julien.grall@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/legousbtower.c |   26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ arch/arm64/kernel/process.c |   32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -190,6 +190,7 @@ struct lego_usb_tower {
- 	unsigned char		minor;		/* the starting minor number for this device */
- 
- 	int			open_count;	/* number of times this port has been opened */
-+	unsigned long		disconnected:1;
- 
- 	char*			read_buffer;
- 	size_t			read_buffer_length; /* this much came in */
-@@ -289,8 +290,6 @@ static inline void lego_usb_tower_debug_
-  */
- static inline void tower_delete (struct lego_usb_tower *dev)
- {
--	tower_abort_transfers (dev);
--
- 	/* free data structures */
- 	usb_free_urb(dev->interrupt_in_urb);
- 	usb_free_urb(dev->interrupt_out_urb);
-@@ -430,7 +429,8 @@ static int tower_release (struct inode *
- 		retval = -ENODEV;
- 		goto unlock_exit;
- 	}
--	if (dev->udev == NULL) {
-+
-+	if (dev->disconnected) {
- 		/* the device was unplugged before the file was released */
- 
- 		/* unlock here as tower_delete frees dev */
-@@ -466,10 +466,9 @@ static void tower_abort_transfers (struc
- 	if (dev->interrupt_in_running) {
- 		dev->interrupt_in_running = 0;
- 		mb();
--		if (dev->udev)
--			usb_kill_urb (dev->interrupt_in_urb);
-+		usb_kill_urb(dev->interrupt_in_urb);
- 	}
--	if (dev->interrupt_out_busy && dev->udev)
-+	if (dev->interrupt_out_busy)
- 		usb_kill_urb(dev->interrupt_out_urb);
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -323,22 +323,27 @@ void arch_release_task_struct(struct tas
+ 	fpsimd_release_task(tsk);
  }
  
-@@ -505,7 +504,7 @@ static __poll_t tower_poll (struct file
+-/*
+- * src and dst may temporarily have aliased sve_state after task_struct
+- * is copied.  We cannot fix this properly here, because src may have
+- * live SVE state and dst's thread_info may not exist yet, so tweaking
+- * either src's or dst's TIF_SVE is not safe.
+- *
+- * The unaliasing is done in copy_thread() instead.  This works because
+- * dst is not schedulable or traceable until both of these functions
+- * have been called.
+- */
+ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ {
+ 	if (current->mm)
+ 		fpsimd_preserve_current_state();
+ 	*dst = *src;
  
- 	dev = file->private_data;
- 
--	if (!dev->udev)
-+	if (dev->disconnected)
- 		return EPOLLERR | EPOLLHUP;
- 
- 	poll_wait(file, &dev->read_wait, wait);
-@@ -552,7 +551,7 @@ static ssize_t tower_read (struct file *
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->udev == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		pr_err("No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -638,7 +637,7 @@ static ssize_t tower_write (struct file
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->udev == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		pr_err("No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -748,7 +747,7 @@ static void tower_interrupt_in_callback
- 
- resubmit:
- 	/* resubmit if we're still running */
--	if (dev->interrupt_in_running && dev->udev) {
-+	if (dev->interrupt_in_running) {
- 		retval = usb_submit_urb (dev->interrupt_in_urb, GFP_ATOMIC);
- 		if (retval)
- 			dev_err(&dev->udev->dev,
-@@ -813,6 +812,7 @@ static int tower_probe (struct usb_inter
- 
- 	dev->udev = udev;
- 	dev->open_count = 0;
-+	dev->disconnected = 0;
- 
- 	dev->read_buffer = NULL;
- 	dev->read_buffer_length = 0;
-@@ -938,6 +938,10 @@ static void tower_disconnect (struct usb
- 	/* give back our minor and prevent further open() */
- 	usb_deregister_dev (interface, &tower_class);
- 
-+	/* stop I/O */
-+	usb_poison_urb(dev->interrupt_in_urb);
-+	usb_poison_urb(dev->interrupt_out_urb);
++	/* We rely on the above assignment to initialize dst's thread_flags: */
++	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
 +
- 	mutex_lock(&dev->lock);
++	/*
++	 * Detach src's sve_state (if any) from dst so that it does not
++	 * get erroneously used or freed prematurely.  dst's sve_state
++	 * will be allocated on demand later on if dst uses SVE.
++	 * For consistency, also clear TIF_SVE here: this could be done
++	 * later in copy_process(), but to avoid tripping up future
++	 * maintainers it is best not to leave TIF_SVE and sve_state in
++	 * an inconsistent state, even temporarily.
++	 */
++	dst->thread.sve_state = NULL;
++	clear_tsk_thread_flag(dst, TIF_SVE);
++
+ 	return 0;
+ }
  
- 	/* if the device is not opened, then we clean up right now */
-@@ -945,7 +949,7 @@ static void tower_disconnect (struct usb
- 		mutex_unlock(&dev->lock);
- 		tower_delete (dev);
- 	} else {
--		dev->udev = NULL;
-+		dev->disconnected = 1;
- 		/* wake up pollers */
- 		wake_up_interruptible_all(&dev->read_wait);
- 		wake_up_interruptible_all(&dev->write_wait);
+@@ -352,13 +357,6 @@ int copy_thread(unsigned long clone_flag
+ 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
+ 
+ 	/*
+-	 * Unalias p->thread.sve_state (if any) from the parent task
+-	 * and disable discard SVE state for p:
+-	 */
+-	clear_tsk_thread_flag(p, TIF_SVE);
+-	p->thread.sve_state = NULL;
+-
+-	/*
+ 	 * In case p was allocated the same task_struct pointer as some
+ 	 * other recently-exited task, make sure p is disassociated from
+ 	 * any cpu that may have run that now-exited task recently.
 
 
