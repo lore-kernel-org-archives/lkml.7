@@ -2,115 +2,103 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51639FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52CDFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA3E218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4EF20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ClJJXg/Z";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ClJJXg/Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjQk+up0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436711AbfJPTKe (ORCPT
+        id S2390889AbfJPTLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:10:34 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:35082 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732084AbfJPTKd (ORCPT
+        Wed, 16 Oct 2019 15:11:24 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55554 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728944AbfJPTLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:10:33 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 7838D8EE0CC;
-        Wed, 16 Oct 2019 12:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571253032;
-        bh=pZvAVmDqMp56efKKwit5bs7uRqUQsjVTFJozEct6wvU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ClJJXg/ZVGUv+nH7L2Plg7+hQNHIidZPswodVDriX2adntBmJVShn1Hck6smY7GPI
-         4SIfWp+esnM5gawAtRrAIu4tHPIHDPA7EH9LSDbx3nqSqZB5B4mNhumvgovOHIPXN5
-         fBnxmGSn/rxr/5/10m3EOjyZb870ftman3umiOnE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FHHZIyJXfYlB; Wed, 16 Oct 2019 12:10:32 -0700 (PDT)
-Received: from [9.232.197.57] (unknown [129.33.253.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2BF048EE02B;
-        Wed, 16 Oct 2019 12:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571253032;
-        bh=pZvAVmDqMp56efKKwit5bs7uRqUQsjVTFJozEct6wvU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ClJJXg/ZVGUv+nH7L2Plg7+hQNHIidZPswodVDriX2adntBmJVShn1Hck6smY7GPI
-         4SIfWp+esnM5gawAtRrAIu4tHPIHDPA7EH9LSDbx3nqSqZB5B4mNhumvgovOHIPXN5
-         fBnxmGSn/rxr/5/10m3EOjyZb870ftman3umiOnE=
-Message-ID: <1571253029.17520.5.camel@HansenPartnership.com>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Wed, 16 Oct 2019 15:10:29 -0400
-In-Reply-To: <20191016162543.GB6279@linux.intel.com>
-References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
-         <20191007000520.GA17116@linux.intel.com>
-         <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
-         <20191008234935.GA13926@linux.intel.com>
-         <20191008235339.GB13926@linux.intel.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
-         <20191014190033.GA15552@linux.intel.com>
-         <1571081397.3728.9.camel@HansenPartnership.com>
-         <20191016110031.GE10184@linux.intel.com>
-         <1571229252.3477.7.camel@HansenPartnership.com>
-         <20191016162543.GB6279@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Wed, 16 Oct 2019 15:11:24 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a6so4081627wma.5;
+        Wed, 16 Oct 2019 12:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CC/Oz8bKqaGFSofX6Ax5x3Ge+1uAz440v/0zTckEN3g=;
+        b=PjQk+up0muRoEZm4raHETsvdsjk4FbkAun42jKLH+uLOAJAw+Bh2BQ3SbsPrDeefmI
+         LTkSNcd/ZyX7K+q9vjMZoH251ChO6HT7+7XZirypTea2B1FSn1a9SV7MzNNyhRpTK8JT
+         MdmWMvlfk7hnWp0Wrly9wHDzQ5sWFb8LTiQYEAcF3JgyE2knomthyb1xoo0p4so+XGRC
+         thfaxRbLE+XQKXMtuz8gXlpoZuHt2Nb8VfHAJMNztIzGFHo6s8ggZpYPQ0RT2GVOaqX1
+         ukRzQEi5uOjoQaHBbZ89GgTNG6zFY/chlde5A9cDWOH4006/iMZqQueEz7xYPJB4s4Pq
+         kOHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CC/Oz8bKqaGFSofX6Ax5x3Ge+1uAz440v/0zTckEN3g=;
+        b=jKHCuCiOB/dbWi/3NvJMKWojWy9+F1/gISl3ZRLaxvrgRBrskXhBe1reIm8+Ktg2mO
+         UfG6wjCT3MhSkklnn8Fz+67xZJIyHCCMD1zjVEe1DJ1e8L67CzXMWN5bxbrhW6pBBb6L
+         aBe1kCsScjJ8lAlnUdW0dwBDZGzac1O4mM7zofzw+w+RZByfzZDnPQcbqR4M9KwAgxDt
+         xrT4dOwMz45wBWjd/FjgAGUCzE5HXjG/zMSu79ZgxHa/N2PtNApXl9yaMHo1hIu/dnCV
+         ZXVpV1gBqr5Mr/DQbwVL9yGkKd3cF14BOR9sq04qpZKLwyOVM3igYR0zVdMHmDO4Nh9v
+         PcpA==
+X-Gm-Message-State: APjAAAVQJR7LCXdlW2lxtUscDfh/2yn3ptuVbN/gezwWA3L8Z7QvUUle
+        RNqUWO2JrZGGwUhJ/8dRyxSKqj4d
+X-Google-Smtp-Source: APXvYqwaF/88nLS0U5WgEhPgecpK0qKCac/hZu7LHmhAbGjUxlhqT7dfA8sHHKd9H3fXqtnKA/KsJA==
+X-Received: by 2002:a1c:f00a:: with SMTP id a10mr4927172wmb.89.1571253081847;
+        Wed, 16 Oct 2019 12:11:21 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f26:6400:d1a1:ef77:d584:db28? (p200300EA8F266400D1A1EF77D584DB28.dip0.t-ipconnect.de. [2003:ea:8f26:6400:d1a1:ef77:d584:db28])
+        by smtp.googlemail.com with ESMTPSA id u11sm3155473wmd.32.2019.10.16.12.11.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 12:11:20 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: Fix "link partner" information disappear
+ issue
+To:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
+        andrew@lunn.ch
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, shiju.jose@huawei.com
+References: <1571193039-36228-1-git-send-email-liuyonglong@huawei.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <df0878a8-3961-072d-5812-4bb7d249eab8@gmail.com>
+Date:   Wed, 16 Oct 2019 21:11:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1571193039-36228-1-git-send-email-liuyonglong@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-16 at 19:25 +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
-> > reversible ciphers are generally frowned upon in random number
-> > generation, that's why the krng uses chacha20.  In general I think
-> > we shouldn't try to code our own mixing and instead should get the
-> > krng to do it for us using whatever the algorithm du jour that the
-> > crypto guys have blessed is.  That's why I proposed adding the TPM
-> > output to the krng as entropy input and then taking the output of
-> > the krng.
+On 16.10.2019 04:30, Yonglong Liu wrote:
+> Some drivers just call phy_ethtool_ksettings_set() to set the
+> links, for those phy drivers that use genphy_read_status(), if
+> autoneg is on, and the link is up, than execute "ethtool -s
+> ethx autoneg on" will cause "link partner" information disappear.
 > 
-> It is already registered as hwrng. What else?
+> The call trace is phy_ethtool_ksettings_set()->phy_start_aneg()
+> ->linkmode_zero(phydev->lp_advertising)->genphy_read_status(),
+> the link didn't change, so genphy_read_status() just return, and
+> phydev->lp_advertising is zero now.
+> 
+> This patch moves the clear operation of lp_advertising from
+> phy_start_aneg() to genphy_read_lpa()/genphy_c45_read_lpa(), and
+> if autoneg on and autoneg not complete, just clear what the
+> generic functions care about.
+> 
+> Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> ---
 
-It only contributes entropy once at start of OS.
-
->  Was the issue that it is only used as seed when the rng is init'd
-> first? I haven't at this point gone to the internals of krng.
-
-Basically it was similar to your xor patch except I got the kernel rng
-to do the mixing, so it would use the chacha20 cipher at the moment
-until they decide that's unsafe and change it to something else:
-
-https://lore.kernel.org/linux-crypto/1570227068.17537.4.camel@HansenPartnership.com/
-
-It uses add_hwgenerator_randomness() to do the mixing.  It also has an
-unmixed source so that read of the TPM hwrng device works as expected.
-
-James
-
-
-
-
-
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
