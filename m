@@ -2,557 +2,136 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB62FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF309FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF2A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40A72067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXVD9nR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404949AbfJPMMk (ORCPT
+        id S2405023AbfJPMNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:12:40 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49960 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403786AbfJPMMj (ORCPT
+        Wed, 16 Oct 2019 08:13:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54290 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392915AbfJPMNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:12:39 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iKiAK-0007Zv-Hm; Wed, 16 Oct 2019 12:12:32 +0000
-Date:   Wed, 16 Oct 2019 13:12:32 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>, linux-arch@vger.kernel.org
-Subject: [RFC] change of calling conventions for arch_futex_atomic_op_inuser()
-Message-ID: <20191016121232.GA28742@ZenIV.linux.org.uk>
-References: <20191010195504.GI26530@ZenIV.linux.org.uk>
- <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
- <20191011001104.GJ26530@ZenIV.linux.org.uk>
- <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
- <20191013181333.GK26530@ZenIV.linux.org.uk>
- <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
- <20191013191050.GL26530@ZenIV.linux.org.uk>
- <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
- <20191013195949.GM26530@ZenIV.linux.org.uk>
- <20191015180846.GA31707@ZenIV.linux.org.uk>
+        Wed, 16 Oct 2019 08:13:17 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p7so2656800wmp.4;
+        Wed, 16 Oct 2019 05:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Z5f0yIHlY12I4Q0pn5WdnGvacnYGRlqyDdoVhSRxe6w=;
+        b=KXVD9nR2ME+vjiKCYNNlVGSIEL/PKns1EI1ssBfrfHxMZ717aw8ibU2cG4R4m6NSqN
+         p3OmoJyT2lcjfH44LwfVR/VmCVbdH3GYLFw+V32nkyf8EcGxcvnqQpSRj0LQ3r10ocjB
+         8y5GPTJalQIciPmxHp4zSqM5VCiZEYK6BEnUw90H5439Tjy6JrHed1S+Pms/1sS/iH52
+         YCShR+vFhVmyMDOor5kVy3Tirlhg61IVASfyCzxIunRQdNrff4w8wb16pDV2veZUaH19
+         6zb+Q6HaZjq0dcc+V+f+wTmgUTvAfV8xRNZu7TeFl8ElKDDGLLdLHb+gYvtA8b2MkZlg
+         1UqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Z5f0yIHlY12I4Q0pn5WdnGvacnYGRlqyDdoVhSRxe6w=;
+        b=sxgLkyTOmXWL5jCRND3AAm1+LbjJWKtITXxbjgfQwArjECW7xLdbuYYWoIkRxo6vLZ
+         ulMJq7lKNYjqK9YaUQUw4ZzNp40L6mNZV0zjFQRbxqmaLYmvyjYxzH0M33SCPONpi0H/
+         DAtxXSTUx7nHmsjD5pZ+LOMTFKcms3JKGyc/V08b+QYFXDqmFGJBMWX2HJCPPWfheL5u
+         mJJKvECfqG32lgS4QfZFYaUwPiJbOfAlXYQVznfDuem6r/SjDiaWbOl4n05iMOw34KhZ
+         GM6DusNFunCP7EIT3dCp1RDXtW+8tS7dNWU15KjubJw4EKudcBJe8kuoTMLPh9r/eI7k
+         Fxfg==
+X-Gm-Message-State: APjAAAV/CBnDkP3jyhY4ZhKtPaBwUWgbnaCH2NHn0Tms6GSB+sOhfW59
+        1OBKvv43RSsnXgOktOx6NEs=
+X-Google-Smtp-Source: APXvYqyeVI+HFQYVT9eZ+9AlMthA0eXmjO4czOYpC+SavUTyCKX+/KdD9iVqXyFN9hlGr/yH4Fa32g==
+X-Received: by 2002:a1c:9a03:: with SMTP id c3mr3230806wme.109.1571227994744;
+        Wed, 16 Oct 2019 05:13:14 -0700 (PDT)
+Received: from jimi (bzq-82-81-225-244.cablep.bezeqint.net. [82.81.225.244])
+        by smtp.gmail.com with ESMTPSA id d193sm2995178wmd.0.2019.10.16.05.13.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 05:13:14 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 15:13:07 +0300
+From:   Eyal Birger <eyal.birger@gmail.com>
+To:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, shmulik.ladkani@gmail.com
+Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
+ ingress redirection
+Message-ID: <20191016151307.40f63896@jimi>
+In-Reply-To: <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
+References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
+        <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
+        <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015180846.GA31707@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 07:08:46PM +0100, Al Viro wrote:
-> [futex folks and linux-arch Cc'd]
+Hi,
 
-> Another question: right now we have
->         if (!access_ok(uaddr, sizeof(u32)))
->                 return -EFAULT;
-> 
->         ret = arch_futex_atomic_op_inuser(op, oparg, &oldval, uaddr);
->         if (ret)
->                 return ret;
-> in kernel/futex.c.  Would there be any objections to moving access_ok()
-> inside the instances and moving pagefault_disable()/pagefault_enable() outside?
-> 
-> Reasons:
-> 	* on x86 that would allow folding access_ok() with STAC into
-> user_access_begin().  The same would be doable on other usual suspects
-> (arm, arm64, ppc, riscv, s390), bringing access_ok() next to their
-> STAC counterparts.
-> 	* pagefault_disable()/pagefault_enable() pair is universal on
-> all architectures, really meant to by the nature of the beast and
-> lifting it into kernel/futex.c would get the same situation as with
-> futex_atomic_cmpxchg_inatomic().  Which also does access_ok() inside
-> the primitive (also foldable into user_access_begin(), at that).
-> 	* access_ok() would be closer to actual memory access (and
-> out of the generic code).
-> 
-> Comments?
+On Wed, 16 Oct 2019 01:22:01 +0800
+Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
 
-FWIW, completely untested patch follows; just the (semimechanical) conversion
-of calling conventions, no per-architecture followups included.  Could futex
-folks ACK/NAK that in principle?
+> On 2019/10/15 1:57 =E4=B8=8A=E5=8D=88, Cong Wang wrote:
+> > On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
+> > <zhiyuan2048@linux.alibaba.com> wrote: =20
+> >> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+> >> index 9ce073a05414..6108a64c0cd5 100644
+> >> --- a/net/sched/act_mirred.c
+> >> +++ b/net/sched/act_mirred.c
+> >> @@ -18,6 +18,7 @@
+> >>   #include <linux/gfp.h>
+> >>   #include <linux/if_arp.h>
+> >>   #include <net/net_namespace.h>
+> >> +#include <net/dst.h>
+> >>   #include <net/netlink.h>
+> >>   #include <net/pkt_sched.h>
+> >>   #include <net/pkt_cls.h>
+> >> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff
+> >> *skb, const struct tc_action *a,
+> >>
+> >>          if (!want_ingress)
+> >>                  err =3D dev_queue_xmit(skb2);
+> >> -       else
+> >> +       else {
+> >> +               skb_dst_drop(skb2);
+> >>                  err =3D netif_receive_skb(skb2);
+> >> +       } =20
 
-commit 7babb6ad28cb3e80977fb6bd0405e3f81a943161
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Tue Oct 15 16:54:41 2019 -0400
+> > Good catch!
 
-    arch_futex_atomic_op_inuser(): move access_ok() in and pagefault_disable() - out
-    
-    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Indeed! Thanks for fixing this!
 
-diff --git a/arch/alpha/include/asm/futex.h b/arch/alpha/include/asm/futex.h
-index bfd3c01038f8..da67afd578fd 100644
---- a/arch/alpha/include/asm/futex.h
-+++ b/arch/alpha/include/asm/futex.h
-@@ -31,7 +31,8 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- {
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -53,8 +54,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/arc/include/asm/futex.h b/arch/arc/include/asm/futex.h
-index 9d0d070e6c22..607d1c16d4dd 100644
---- a/arch/arc/include/asm/futex.h
-+++ b/arch/arc/include/asm/futex.h
-@@ -75,10 +75,12 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- {
- 	int oldval = 0, ret;
- 
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
-+
- #ifndef CONFIG_ARC_HAS_LLSC
- 	preempt_disable();	/* to guarantee atomic r-m-w of futex op */
- #endif
--	pagefault_disable();
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -101,7 +103,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
- #ifndef CONFIG_ARC_HAS_LLSC
- 	preempt_enable();
- #endif
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index 83c391b597d4..e133da303a98 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -134,10 +134,12 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret, tmp;
- 
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
-+
- #ifndef CONFIG_SMP
- 	preempt_disable();
- #endif
--	pagefault_disable();
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -159,7 +161,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
- #ifndef CONFIG_SMP
- 	preempt_enable();
- #endif
-diff --git a/arch/arm64/include/asm/futex.h b/arch/arm64/include/asm/futex.h
-index 6cc26a127819..97f6a63810ec 100644
---- a/arch/arm64/include/asm/futex.h
-+++ b/arch/arm64/include/asm/futex.h
-@@ -48,7 +48,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
- 	int oldval = 0, ret, tmp;
- 	u32 __user *uaddr = __uaccess_mask_ptr(_uaddr);
- 
--	pagefault_disable();
-+	if (!access_ok(_uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -75,8 +76,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/hexagon/include/asm/futex.h b/arch/hexagon/include/asm/futex.h
-index cb635216a732..8693dc5ae9ec 100644
---- a/arch/hexagon/include/asm/futex.h
-+++ b/arch/hexagon/include/asm/futex.h
-@@ -36,7 +36,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -62,8 +63,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/ia64/include/asm/futex.h b/arch/ia64/include/asm/futex.h
-index 2e106d462196..1db26b432d8c 100644
---- a/arch/ia64/include/asm/futex.h
-+++ b/arch/ia64/include/asm/futex.h
-@@ -50,7 +50,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -74,8 +75,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/microblaze/include/asm/futex.h b/arch/microblaze/include/asm/futex.h
-index 8c90357e5983..86131ed84c9a 100644
---- a/arch/microblaze/include/asm/futex.h
-+++ b/arch/microblaze/include/asm/futex.h
-@@ -34,7 +34,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -56,8 +57,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/mips/include/asm/futex.h b/arch/mips/include/asm/futex.h
-index b83b0397462d..86f224548651 100644
---- a/arch/mips/include/asm/futex.h
-+++ b/arch/mips/include/asm/futex.h
-@@ -88,7 +88,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -115,8 +116,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/nds32/include/asm/futex.h b/arch/nds32/include/asm/futex.h
-index 5213c65c2e0b..60b7ab74ed92 100644
---- a/arch/nds32/include/asm/futex.h
-+++ b/arch/nds32/include/asm/futex.h
-@@ -66,8 +66,9 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret;
- 
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
--	pagefault_disable();
- 	switch (op) {
- 	case FUTEX_OP_SET:
- 		__futex_atomic_op("move	%0, %3", ret, oldval, tmp, uaddr,
-@@ -93,8 +94,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/openrisc/include/asm/futex.h b/arch/openrisc/include/asm/futex.h
-index fe894e6331ae..865e9cd0d97b 100644
---- a/arch/openrisc/include/asm/futex.h
-+++ b/arch/openrisc/include/asm/futex.h
-@@ -35,7 +35,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -57,8 +58,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/parisc/include/asm/futex.h b/arch/parisc/include/asm/futex.h
-index 50662b6cb605..6e2e4d10e3c8 100644
---- a/arch/parisc/include/asm/futex.h
-+++ b/arch/parisc/include/asm/futex.h
-@@ -40,11 +40,10 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	u32 tmp;
- 
- 	_futex_spin_lock_irqsave(uaddr, &flags);
--	pagefault_disable();
- 
- 	ret = -EFAULT;
- 	if (unlikely(get_user(oldval, uaddr) != 0))
--		goto out_pagefault_enable;
-+		goto out_unlock;
- 
- 	ret = 0;
- 	tmp = oldval;
-@@ -72,8 +71,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	if (ret == 0 && unlikely(put_user(tmp, uaddr) != 0))
- 		ret = -EFAULT;
- 
--out_pagefault_enable:
--	pagefault_enable();
-+out_unlock:
- 	_futex_spin_unlock_irqrestore(uaddr, &flags);
- 
- 	if (!ret)
-diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
-index eea28ca679db..d6e32b32f452 100644
---- a/arch/powerpc/include/asm/futex.h
-+++ b/arch/powerpc/include/asm/futex.h
-@@ -35,8 +35,9 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- {
- 	int oldval = 0, ret;
- 
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 	allow_write_to_user(uaddr, sizeof(*uaddr));
--	pagefault_disable();
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -58,8 +59,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	*oval = oldval;
- 
- 	prevent_write_to_user(uaddr, sizeof(*uaddr));
-diff --git a/arch/riscv/include/asm/futex.h b/arch/riscv/include/asm/futex.h
-index 4ad6409c4647..84574acfb927 100644
---- a/arch/riscv/include/asm/futex.h
-+++ b/arch/riscv/include/asm/futex.h
-@@ -40,7 +40,8 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
- 	int oldval = 0, ret = 0;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -67,8 +68,6 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/s390/include/asm/futex.h b/arch/s390/include/asm/futex.h
-index 5e97a4353147..3c18a48baf44 100644
---- a/arch/s390/include/asm/futex.h
-+++ b/arch/s390/include/asm/futex.h
-@@ -28,8 +28,10 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 	int oldval = 0, newval, ret;
- 	mm_segment_t old_fs;
- 
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
-+
- 	old_fs = enable_sacf_uaccess();
--	pagefault_disable();
- 	switch (op) {
- 	case FUTEX_OP_SET:
- 		__futex_atomic_op("lr %2,%5\n",
-@@ -54,7 +56,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 	default:
- 		ret = -ENOSYS;
- 	}
--	pagefault_enable();
- 	disable_sacf_uaccess(old_fs);
- 
- 	if (!ret)
-diff --git a/arch/sh/include/asm/futex.h b/arch/sh/include/asm/futex.h
-index 3190ec89df81..b39cda09fb95 100644
---- a/arch/sh/include/asm/futex.h
-+++ b/arch/sh/include/asm/futex.h
-@@ -34,8 +34,6 @@ static inline int arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval,
- 	u32 oldval, newval, prev;
- 	int ret;
- 
--	pagefault_disable();
--
- 	do {
- 		ret = get_user(oldval, uaddr);
- 
-@@ -67,8 +65,6 @@ static inline int arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval,
- 		ret = futex_atomic_cmpxchg_inatomic(&prev, uaddr, oldval, newval);
- 	} while (!ret && prev != oldval);
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/sparc/include/asm/futex_64.h b/arch/sparc/include/asm/futex_64.h
-index 0865ce77ec00..72de967318d7 100644
---- a/arch/sparc/include/asm/futex_64.h
-+++ b/arch/sparc/include/asm/futex_64.h
-@@ -38,8 +38,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 	if (unlikely((((unsigned long) uaddr) & 0x3UL)))
- 		return -EINVAL;
- 
--	pagefault_disable();
--
- 	switch (op) {
- 	case FUTEX_OP_SET:
- 		__futex_cas_op("mov\t%4, %1", ret, oldval, uaddr, oparg);
-@@ -60,8 +58,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/x86/include/asm/futex.h b/arch/x86/include/asm/futex.h
-index 13c83fe97988..6bcd1c1486d9 100644
---- a/arch/x86/include/asm/futex.h
-+++ b/arch/x86/include/asm/futex.h
-@@ -47,7 +47,8 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- {
- 	int oldval = 0, ret, tem;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -70,8 +71,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/arch/xtensa/include/asm/futex.h b/arch/xtensa/include/asm/futex.h
-index 0c4457ca0a85..271cfcf8a841 100644
---- a/arch/xtensa/include/asm/futex.h
-+++ b/arch/xtensa/include/asm/futex.h
-@@ -72,7 +72,8 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- #if XCHAL_HAVE_S32C1I || XCHAL_HAVE_EXCLUSIVE
- 	int oldval = 0, ret;
- 
--	pagefault_disable();
-+	if (!access_ok(uaddr, sizeof(u32)))
-+		return -EFAULT;
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
-@@ -99,8 +100,6 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
- 		ret = -ENOSYS;
- 	}
- 
--	pagefault_enable();
--
- 	if (!ret)
- 		*oval = oldval;
- 
-diff --git a/include/asm-generic/futex.h b/include/asm-generic/futex.h
-index 02970b11f71f..f4c3470480c7 100644
---- a/include/asm-generic/futex.h
-+++ b/include/asm-generic/futex.h
-@@ -34,7 +34,6 @@ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
- 	u32 tmp;
- 
- 	preempt_disable();
--	pagefault_disable();
- 
- 	ret = -EFAULT;
- 	if (unlikely(get_user(oldval, uaddr) != 0))
-@@ -67,7 +66,6 @@ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
- 		ret = -EFAULT;
- 
- out_pagefault_enable:
--	pagefault_enable();
- 	preempt_enable();
- 
- 	if (ret == 0)
-diff --git a/kernel/futex.c b/kernel/futex.c
-index bd18f60e4c6c..2cc8a35109da 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -1662,10 +1662,9 @@ static int futex_atomic_op_inuser(unsigned int encoded_op, u32 __user *uaddr)
- 		oparg = 1 << oparg;
- 	}
- 
--	if (!access_ok(uaddr, sizeof(u32)))
--		return -EFAULT;
--
-+	pagefault_disable();
- 	ret = arch_futex_atomic_op_inuser(op, oparg, &oldval, uaddr);
-+	pagefault_enable();
- 	if (ret)
- 		return ret;
- 
+> >
+> > I don't want to be picky, but it seems this is only needed
+> > when redirecting from egress to ingress, right? That is,
+> > ingress to ingress, or ingress to egress is okay? If not,
+> > please fix all the cases while you are on it? =20
+> Sure. But I think this patch is also needed when redirecting from
+> ingress to ingress. Because we cannot assure that a skb has null dst
+> in ingress redirection path. For example, if redirecting a skb from
+> loopback's ingress to other device's ingress, the skb will take a
+> dst.
+>=20
+> As commit logs point out, skb with valid dst cannot be made routing
+> decision in following process. original dst may cause skb loss or
+> other unexpected behavior.
+
+On the other hand, removing the dst on ingress-to-ingress redirection
+may remove LWT information on incoming packets, which may be undesired.
+
+Eyal.
