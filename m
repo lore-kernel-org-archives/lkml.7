@@ -2,80 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553AEFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE55FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341222067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C607D2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NnGUwC3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394112AbfJPOc6 (ORCPT
+        id S2394117AbfJPOea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:32:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:41494 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392232AbfJPOc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:32:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2492D142F;
-        Wed, 16 Oct 2019 07:32:57 -0700 (PDT)
-Received: from arrakis.emea.arm.com (unknown [10.1.196.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C5453F68E;
-        Wed, 16 Oct 2019 07:32:54 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 15:32:52 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Jia He <justin.he@arm.com>, Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
-        Kaly Xin <Kaly.Xin@arm.com>, nd@arm.com
-Subject: Re: [PATCH v12 0/4] fix double page fault in cow_user_page for pfn
- mapping
-Message-ID: <20191016143252.GJ49619@arrakis.emea.arm.com>
-References: <20191011140939.6115-1-justin.he@arm.com>
- <20191015001834.wwkd46t6dwicta7n@willie-the-truck>
+        Wed, 16 Oct 2019 10:34:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58688 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731987AbfJPOea (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:34:30 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GEYOuC002057;
+        Wed, 16 Oct 2019 09:34:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571236464;
+        bh=sL1OOfBP4VKCoJ3rIFCH/P3XqaR9GzNKjyDtWXF3MBU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NnGUwC3NzS3mrMrBSxIGGpbjHNlwiEZWnY5lgWZUj6A9VgA7Sg0q7OmFkPEz25Zwi
+         VKLwtoJQ2y+ySJgAFd+itQkKTpJK8aU7z+/MCUYYFfMsXMlGBvBgQi3BtLvldS9mb8
+         zCdBMHRTDIsYfyTrvr97VwO3BDic79QEy6LijNnM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GEYOv4096679
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 09:34:24 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 09:34:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 09:34:17 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GEYOln020144;
+        Wed, 16 Oct 2019 09:34:24 -0500
+Subject: Re: [PATCH v2] leds: an30259a: add a check for devm_regmap_init_i2c
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191016125403.23359-1-hslester96@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1f4282aa-edb2-2683-bfff-8805a972710b@ti.com>
+Date:   Wed, 16 Oct 2019 09:33:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015001834.wwkd46t6dwicta7n@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191016125403.23359-1-hslester96@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:18:34AM +0100, Will Deacon wrote:
-> On Fri, Oct 11, 2019 at 10:09:35PM +0800, Jia He wrote:
-> > When we tested pmdk unit test vmmalloc_fork TEST1 in arm64 guest, there
-> > will be a double page fault in __copy_from_user_inatomic of cow_user_page.
-> > 
-> > As told by Catalin: "On arm64 without hardware Access Flag, copying from
-> > user will fail because the pte is old and cannot be marked young. So we
-> > always end up with zeroed page after fork() + CoW for pfn mappings. we
-> > don't always have a hardware-managed access flag on arm64."
-> > 
-> > -Changes
-> > v12:
-> >     refine PATCH 01, remove the !! since C languages can convert unsigned
-> >     to bool (Catalin)
-> 
-> Thanks. I think it's a bit late to take something like this for 5.4 now,
-> especially as the current behaviour has always been there. Hopefully
-> somebody can queue it for 5.5 instead.
+Chuhong
 
-I can queue this through the arm64 tree for 5.5 if I get an ack on the
-x86 patch (3/4) or I don't hear any complaints.
+On 10/16/19 7:54 AM, Chuhong Yuan wrote:
+> an30259a_probe misses a check for devm_regmap_init_i2c and may cause
+> problems.
+> Add a check and print errors like other leds drivers.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v2:
+>    - Use goto exit instead of return to destroy the mutex when failed.
+>
+>   drivers/leds/leds-an30259a.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
+> index 250dc9d6f635..82350a28a564 100644
+> --- a/drivers/leds/leds-an30259a.c
+> +++ b/drivers/leds/leds-an30259a.c
+> @@ -305,6 +305,13 @@ static int an30259a_probe(struct i2c_client *client)
+>   
+>   	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
+>   
+> +	if (IS_ERR(chip->regmap)) {
+> +		err = PTR_ERR(chip->regmap);
+> +		dev_err(&client->dev, "Failed to allocate register map: %d\n",
+> +			err);
+> +		goto exit;
+> +	}
+> +
 
--- 
-Catalin
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+
+
+>   	for (i = 0; i < chip->num_leds; i++) {
+>   		struct led_init_data init_data = {};
+>   
