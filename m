@@ -2,95 +2,96 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A1EFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D575FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B60C2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70192067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571236277;
+	bh=tK6PEB/vdqs3D5dK7xuBVC/lJ+4FHfCBB+s4yE3ld+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mu14/gF7udy4SK/UGakGCnwMXyWF86eD6/bzduq8nhlqeHW5zMfC9IO8JZDBLFzPo
+	 zMQJAI1JVgKpheTtojc+4te4EmWeylhNHycOoabJBHJDCkIxMMA2l1OfRn7SVG+rgI
+	 IUB3cTrAKOw7gpcZLS5hqWNdwJS+AN6aUkWxVa5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394087AbfJPObF (ORCPT
+        id S2394097AbfJPObP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:31:05 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:56936 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392471AbfJPObE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:31:04 -0400
-Received: from ramsan ([84.194.98.4])
-        by michel.telenet-ops.be with bizsmtp
-        id EEX22100F05gfCL06EX2rS; Wed, 16 Oct 2019 16:31:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iKkKM-0003mx-Ee; Wed, 16 Oct 2019 16:31:02 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iKkKM-0007UF-C8; Wed, 16 Oct 2019 16:31:02 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] spi: rspi: Use platform_get_irq_byname_optional() for optional irqs
-Date:   Wed, 16 Oct 2019 16:31:01 +0200
-Message-Id: <20191016143101.28738-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 16 Oct 2019 10:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727167AbfJPObP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:31:15 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64E2E20650;
+        Wed, 16 Oct 2019 14:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571236274;
+        bh=tK6PEB/vdqs3D5dK7xuBVC/lJ+4FHfCBB+s4yE3ld+I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TkTD/cTAgZVUpecgbl5rcJGUqwspFVHGHQ85pwloVeiHDEP+ZjGU4NWtpoBNyPXN0
+         xLdLRKj53+aT8+MFBw9Ib+vH1bZxV9DoT0DOdUukov23iaba3oOGlRmtL/GH+iMU2i
+         cyVp5wcaxcov0DtfVkAkGiRWEP4B0p1voXlWsMF4=
+Date:   Wed, 16 Oct 2019 10:31:13 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20191016143113.GS31224@sasha-vm>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190829205631.uhz6jdboneej3j3c@pali>
+ <184209.1567120696@turing-police>
+ <20190829233506.GT5281@sasha-vm>
+ <20190830075647.wvhrx4asnkrfkkwk@pali>
+ <20191016140353.4hrncxa5wkx47oau@pali>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016140353.4hrncxa5wkx47oau@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platform_get_irq_byname() now prints an error when the interrupt
-does not exist, scary warnings may be printed for optional interrupts:
+On Wed, Oct 16, 2019 at 04:03:53PM +0200, Pali Rohár wrote:
+>On Friday 30 August 2019 09:56:47 Pali Rohár wrote:
+>> On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
+>> > With regards to missing specs/docs/whatever - our main concern with this
+>> > release was that we want full interoperability, which is why the spec
+>> > was made public as-is without modifications from what was used
+>> > internally. There's no "secret sauce" that Microsoft is hiding here.
+>>
+>> Ok, if it was just drop of "current version" of documentation then it
+>> makes sense.
+>>
+>> > How about we give this spec/code time to get soaked and reviewed for a
+>> > bit, and if folks still feel (in a month or so?) that there are missing
+>> > bits of information related to exfat, I'll be happy to go back and try
+>> > to get them out as well.
+>
+>Hello Sasha!
+>
+>Now one month passed, so do you have some information when missing parts
+>of documentation like TexFAT would be released to public?
 
-    renesas_spi e6b10000.spi: IRQ rx not found
-    renesas_spi e6b10000.spi: IRQ mux not found
+Sure, I'll see if I can get an approval to open it up.
 
-Fix this by calling platform_get_irq_byname_optional() instead.
-Remove the no longer needed printing of platform_get_irq errors, as the
-remaining calls to platform_get_irq() and platform_get_irq_byname() take
-care of that.
+Can I assume you will be implementing TexFAT support once the spec is
+available?
 
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This is a fix for v5.4.
----
- drivers/spi/spi-rspi.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 15f5723d9f9524d9..7222c7689c3c4cea 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -1257,9 +1257,9 @@ static int rspi_probe(struct platform_device *pdev)
- 	ctlr->flags = ops->flags;
- 	ctlr->dev.of_node = pdev->dev.of_node;
- 
--	ret = platform_get_irq_byname(pdev, "rx");
-+	ret = platform_get_irq_byname_optional(pdev, "rx");
- 	if (ret < 0) {
--		ret = platform_get_irq_byname(pdev, "mux");
-+		ret = platform_get_irq_byname_optional(pdev, "mux");
- 		if (ret < 0)
- 			ret = platform_get_irq(pdev, 0);
- 		if (ret >= 0)
-@@ -1270,10 +1270,6 @@ static int rspi_probe(struct platform_device *pdev)
- 		if (ret >= 0)
- 			rspi->tx_irq = ret;
- 	}
--	if (ret < 0) {
--		dev_err(&pdev->dev, "platform_get_irq error\n");
--		goto error2;
--	}
- 
- 	if (rspi->rx_irq == rspi->tx_irq) {
- 		/* Single multiplexed interrupt */
 -- 
-2.17.1
-
+Thanks,
+Sasha
