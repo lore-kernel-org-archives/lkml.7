@@ -2,52 +2,51 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FFCFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1FBFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A52721D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3F821D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262838;
-	bh=4PRr/WjD56JOyIXFFF9MLjhZ3i2W8e6bDo2POCKbhnQ=;
+	s=default; t=1571262842;
+	bh=XzCMom3IC3SYUResNnRRzR+p0658IoGw/WlSDIjtbrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kM+ylm2wefanGhHYixoLLvZammoF7N0bp9AVGZ3q5UiS4WUcgbXXkms2PVY8iOBXF
-	 mdSx7dNGttkKgQRhKK5+8a0wr5JpUyA7oCyYMhSU7x4FEJgx3rquX6cdtoGeEHl9oz
-	 M9ExrvOACYyxVBkHlwxi1wUOIwiwHYYAy/9C120M=
+	b=GY7H+/4LSh3T+/11jrkvxUsuU3KDdRp8oXHkVImgJYbZqROIc2cUJvrRqNGLNwe4S
+	 HaAZE1LKbkMMITs/Kuurir4xER1cNSGJNY6QztdWen+61vctlYAZU64Ht9pYdc0784
+	 bPzqG8wnGqFXkVOqyxvIc6l9RZkmZkEfpDbTZ4H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394928AbfJPVx5 (ORCPT
+        id S2437641AbfJPVyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394907AbfJPVxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:52 -0400
+        id S2437591AbfJPVxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:54 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D75321925;
-        Wed, 16 Oct 2019 21:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047A0218DE;
+        Wed, 16 Oct 2019 21:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262832;
-        bh=4PRr/WjD56JOyIXFFF9MLjhZ3i2W8e6bDo2POCKbhnQ=;
+        s=default; t=1571262834;
+        bh=XzCMom3IC3SYUResNnRRzR+p0658IoGw/WlSDIjtbrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFaQ4otZ29Ke1Sz1eshYYyCH60veluCPPn7icPW7YvnqFKsfXUHzsXMVJIiaMQX0W
-         w6KF1fTMGgxSeaelMYOPwsHIY3O2zZmJ/2fSysvK9VRR8TELVS1Y5FlY/72pnqhGzy
-         znMXk90lGLnip1IsGqavdi5naUMM6s9UJjLDvQ0g=
+        b=0PcJ/0cXyoBYt/fznVeFZNdqAlhBmyge0+wIDWmMSO5BZ0mv5ooaoYlO6GjXWz2Lv
+         rQ5KCgO6ikCl2NUvvIw4ZzPZR477xGsNdhv/GG+Tx5jhSIDhlVu7tAuvEcZfMvjr46
+         ta0cisCyeeKR/Obg0ahfNR825eZ/ggx06CzRmIh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 75/79] CIFS: Force revalidate inode when dentry is stale
-Date:   Wed, 16 Oct 2019 14:50:50 -0700
-Message-Id: <20191016214833.436582478@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.4 77/79] tracing: Get trace_array reference for available_tracers files
+Date:   Wed, 16 Oct 2019 14:50:52 -0700
+Message-Id: <20191016214834.008090257@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -60,65 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit c82e5ac7fe3570a269c0929bf7899f62048e7dbc ]
+commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
 
-Currently the client indicates that a dentry is stale when inode
-numbers or type types between a local inode and a remote file
-don't match. If this is the case attributes is not being copied
-from remote to local, so, it is already known that the local copy
-has stale metadata. That's why the inode needs to be marked for
-revalidation in order to tell the VFS to lookup the dentry again
-before openning a file. This prevents unexpected stale errors
-to be returned to the user space when openning a file.
+As instances may have different tracers available, we need to look at the
+trace_array descriptor that shows the list of the available tracers for the
+instance. But there's a race between opening the file and an admin
+deleting the instance. The trace_array_get() needs to be called before
+accessing the trace_array.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/cifs/inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/trace/trace.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 3d3c66fcb5ee6..0a219545940d9 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -405,6 +405,7 @@ int cifs_get_inode_info_unix(struct inode **pinode,
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*pinode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -412,6 +413,7 @@ int cifs_get_inode_info_unix(struct inode **pinode,
- 		/* if filetype is different, return error */
- 		if (unlikely(((*pinode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -887,6 +889,7 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
-@@ -894,6 +897,7 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
- 		/* if filetype is different, return error */
- 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
--- 
-2.20.1
-
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3370,9 +3370,14 @@ static int show_traces_open(struct inode
+ 	if (tracing_disabled)
+ 		return -ENODEV;
+ 
++	if (trace_array_get(tr) < 0)
++		return -ENODEV;
++
+ 	ret = seq_open(file, &show_traces_seq_ops);
+-	if (ret)
++	if (ret) {
++		trace_array_put(tr);
+ 		return ret;
++	}
+ 
+ 	m = file->private_data;
+ 	m->private = tr;
+@@ -3380,6 +3385,14 @@ static int show_traces_open(struct inode
+ 	return 0;
+ }
+ 
++static int show_traces_release(struct inode *inode, struct file *file)
++{
++	struct trace_array *tr = inode->i_private;
++
++	trace_array_put(tr);
++	return seq_release(inode, file);
++}
++
+ static ssize_t
+ tracing_write_stub(struct file *filp, const char __user *ubuf,
+ 		   size_t count, loff_t *ppos)
+@@ -3410,8 +3423,8 @@ static const struct file_operations trac
+ static const struct file_operations show_traces_fops = {
+ 	.open		= show_traces_open,
+ 	.read		= seq_read,
+-	.release	= seq_release,
+ 	.llseek		= seq_lseek,
++	.release	= show_traces_release,
+ };
+ 
+ static ssize_t
 
 
