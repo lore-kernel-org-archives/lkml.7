@@ -2,268 +2,152 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33A4FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F07FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A97412067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6852067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="GVeTVCLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392536AbfJPPQw (ORCPT
+        id S2392807AbfJPPTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:16:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:43070 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730806AbfJPPQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:16:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B25BA142F;
-        Wed, 16 Oct 2019 08:16:50 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F416A3F68E;
-        Wed, 16 Oct 2019 08:16:45 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:16:43 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, npiggin@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org, tglx@linutronix.de,
-        will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20191016151643.GC46264@lakrids.cambridge.arm.com>
-References: <20191016083959.186860-1-elver@google.com>
- <20191016083959.186860-2-elver@google.com>
+        Wed, 16 Oct 2019 11:19:01 -0400
+Received: from mail-eopbgr00099.outbound.protection.outlook.com ([40.107.0.99]:40845
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731530AbfJPPTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:19:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HYsE/ok0KioF7v3ireCmnIPqBJz5Djx7fPu9yhG22ztd89/2Dl47w6ZYsAVWqV6qsKcg0fsq3T9s7xG5ZNTqeBRYMmnlAjahVVvbBMXRvdg9A8/5XftDpc4uIiQvd/DAn24gcOqKPPlKP33cMToOZ5lWb5bsZdPPeeGhwCqyqyKkhGatURS6AbT3NBxN8pGPBTDdSsOedx9ehztdTETPS/IT1blCfRLY5FdrSNj37TF7xXcTI6VadNtXz1wE8wgxSsGZgPyqcghQ3pBs9nzq8lj6O1nd1o3sdqQQ9Bw7WhJeKaW/9vMFjMsgwaVDEo2iTeKJ7dvl0qTmhpBs7J5q2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CyvfE9aZcj1WEjogcTar2E/Ibkcd5rlpyHpxPjHoEpI=;
+ b=eXngvdeSMVc27ROyeQA3AWiXJp30v7S6zzwhKde4TVivd2vX+uLUiKH1JlpQdq1UeH+zCOaoUOQRRa/gbWsBf3RUfD7urdLOCXYP5VJA7YLcOUWl51ZLv3RD/f9rfURQEClcf+qlSz0Ba2DBF2raKu/r8ydA7a7cAchXWJkDrBZRfcyNqPD64JEeZgBwoW+TeWNUbHyJ/YVF2GKd+KXfVkVb55AE6wEPqOHDu//UOVl3L1g63O+ZCjdQ9h5K6UMS4ZATi3trveiimqi5d8Jvx1/sR2ZlVemCgLGIeebtXhVB9LaRem2vaXEqegT0dfCHg9oOar+xMWqAgeRCoJg8AQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CyvfE9aZcj1WEjogcTar2E/Ibkcd5rlpyHpxPjHoEpI=;
+ b=GVeTVCLkjPyIENsrQyHbk+675Fai+pGmvUAnNc4bGrNffE4RSTaAkmKy4P6uYmasAKosCloC9YMB0qlGJZ38Fh3bjj0TdT6SrgwCdC4wzcBAeKUyNQXtRtBUZrJsyPk2cftf4QRRxr3vyHoFRRL5HTVmfpCgumo7m1jjopTny1s=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.19.20) by
+ VI1PR0502MB2989.eurprd05.prod.outlook.com (10.175.21.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Wed, 16 Oct 2019 15:18:56 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::f427:26bb:85cf:abad]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::f427:26bb:85cf:abad%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 15:18:56 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+CC:     Max Krummenacher <max.krummenacher@toradex.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH v1 1/3] tty: serial: lpuart: Remove unnecessary code from
+ set_mctrl
+Thread-Topic: [PATCH v1 1/3] tty: serial: lpuart: Remove unnecessary code from
+ set_mctrl
+Thread-Index: AQHVhDUGhND3HaeiCUSQsk6nHPAtXA==
+Date:   Wed, 16 Oct 2019 15:18:56 +0000
+Message-ID: <20191016151845.15859-1-philippe.schenker@toradex.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR10CA0029.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::39) To VI1PR0502MB3965.eurprd05.prod.outlook.com
+ (2603:10a6:803:26::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f57edf93-9b66-4535-b6a1-08d7524c2958
+x-ms-traffictypediagnostic: VI1PR0502MB2989:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0502MB2989AB9B69AEF8BCF6D10B22F4920@VI1PR0502MB2989.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0192E812EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(376002)(39850400004)(136003)(366004)(189003)(199004)(81156014)(2906002)(5660300002)(44832011)(476003)(486006)(8936002)(14454004)(110136005)(50226002)(2501003)(2616005)(8676002)(66066001)(1076003)(54906003)(316002)(81166006)(86362001)(3846002)(478600001)(6116002)(25786009)(66556008)(6436002)(66946007)(66476007)(66446008)(26005)(6512007)(36756003)(107886003)(6486002)(305945005)(52116002)(71200400001)(71190400001)(99286004)(64756008)(4326008)(186003)(7736002)(386003)(102836004)(256004)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB2989;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cDNXwlJilr6RA4BmprV8JrfzQ7LQGGfq09RjmzYjP+sya4eHEfU1fbKz3Yf6swSx+RogGT4zYysd5iZYP9a7V9912H4aCkhaRHXKmi/ZjsjJc+OiQqiBlem6Y/tAyHS0Kn1ixFhx3EmMgELdwsUp/d8tIsxtc9MH2WcwTBZqtHvRPLzDPUvtr4WxADd4xZktcKWA8tG1ixY0lglG6WTcHfouwXYQjNB9iPdkP45VZIu2b14lLn2EwUC8FegHJW8xAwJLamvFfZtrZuHn/CST98sC3SQcTHjgcCWiz8rN3S3BKLmqZWEsRzjkvLG47J6LWoNrLLnniE+wn4WYv7SgfJyjfhbd2F9u632Syaw7pWWVnesZdQ8r2L1RCFhUGSUDGDma0rVVHMveA7S/vvcIKiUx/5uHRtifAEqsPSzUH8g=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016083959.186860-2-elver@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f57edf93-9b66-4535-b6a1-08d7524c2958
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 15:18:56.5623
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fsMB7pDkkufbjPAPnFaUizVa+AQfxV542lEdW3sihwbKj2EzvqNeN0SVC1BF7yZUYXCcz6cBHpX5te+zLu+3I8f/I3C2LAeOZc6alofgOMg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB2989
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:39:52AM +0200, Marco Elver wrote:
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 2c2e56bd8913..34a1d9310304 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1171,6 +1171,13 @@ struct task_struct {
->  #ifdef CONFIG_KASAN
->  	unsigned int			kasan_depth;
->  #endif
-> +#ifdef CONFIG_KCSAN
-> +	/* See comments at kernel/kcsan/core.c: struct cpu_state. */
-> +	int				kcsan_disable;
-> +	int				kcsan_atomic_next;
-> +	int				kcsan_atomic_region;
-> +	bool				kcsan_atomic_region_flat;
-> +#endif
+Currently flow control is not working due to lpuart32_set_mctrl that is
+clearing TXCTSE bit in all cases. This bit gets earlier setup by
+lpuart32_set_termios.
 
-Should these be unsigned?
+As I read in Documentation set_mctrl is also not meant for hardware
+flow control rather than gpio setting and clearing a RTS signal.
+Therefore I guess it is safe to remove the whole code in
+lpuart32_set_mctrl.
 
-> +/*
-> + * Per-CPU state that should be used instead of 'current' if we are not in a
-> + * task.
-> + */
-> +struct cpu_state {
-> +	int disable; /* disable counter */
-> +	int atomic_next; /* number of following atomic ops */
-> +
-> +	/*
-> +	 * We use separate variables to store if we are in a nestable or flat
-> +	 * atomic region. This helps make sure that an atomic region with
-> +	 * nesting support is not suddenly aborted when a flat region is
-> +	 * contained within. Effectively this allows supporting nesting flat
-> +	 * atomic regions within an outer nestable atomic region. Support for
-> +	 * this is required as there are cases where a seqlock reader critical
-> +	 * section (flat atomic region) is contained within a seqlock writer
-> +	 * critical section (nestable atomic region), and the "mismatching
-> +	 * kcsan_end_atomic()" warning would trigger otherwise.
-> +	 */
-> +	int atomic_region;
-> +	bool atomic_region_flat;
-> +};
-> +static DEFINE_PER_CPU(struct cpu_state, this_state) = {
-> +	.disable = 0,
-> +	.atomic_next = 0,
-> +	.atomic_region = 0,
-> +	.atomic_region_flat = 0,
-> +};
+This was tested with console on a i.MX8QXP SoC.
 
-These are the same as in task_struct, so I think it probably makes sense
-to have a common structure for these, e.g.
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
 
-| struct kcsan_ctx {
-| 	int	disable;
-| 	int	atomic_next;
-| 	int	atomic_region;
-| 	bool	atomic_region_flat;
-| };
+ drivers/tty/serial/fsl_lpuart.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-... which you then place within task_struct, e.g.
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuar=
+t.c
+index 537896c4d887..f3271857621c 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1333,18 +1333,7 @@ static void lpuart_set_mctrl(struct uart_port *port,=
+ unsigned int mctrl)
+=20
+ static void lpuart32_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ {
+-	unsigned long temp;
+-
+-	temp =3D lpuart32_read(port, UARTMODIR) &
+-			~(UARTMODIR_RXRTSE | UARTMODIR_TXCTSE);
+-
+-	if (mctrl & TIOCM_RTS)
+-		temp |=3D UARTMODIR_RXRTSE;
+-
+-	if (mctrl & TIOCM_CTS)
+-		temp |=3D UARTMODIR_TXCTSE;
+=20
+-	lpuart32_write(port, temp, UARTMODIR);
+ }
+=20
+ static void lpuart_break_ctl(struct uart_port *port, int break_state)
+--=20
+2.23.0
 
-| #ifdef CONFIG_KCSAN
-| 	struct kcsan_ctx	kcsan_ctx;
-| #endif
-
-... and here, e.g.
-
-| static DEFINE_PER_CPU(struct kcsan_ctx, kcsan_cpu_ctx);
-
-That would simplify a number of cases below where you have to choose one
-or the other, as you can choose the pointer, then handle the rest in a
-common way.
-
-e.g. for:
-
-> +static inline bool is_atomic(const volatile void *ptr)
-> +{
-> +	if (in_task()) {
-> +		if (unlikely(current->kcsan_atomic_next > 0)) {
-> +			--current->kcsan_atomic_next;
-> +			return true;
-> +		}
-> +		if (unlikely(current->kcsan_atomic_region > 0 ||
-> +			     current->kcsan_atomic_region_flat))
-> +			return true;
-> +	} else { /* interrupt */
-> +		if (unlikely(this_cpu_read(this_state.atomic_next) > 0)) {
-> +			this_cpu_dec(this_state.atomic_next);
-> +			return true;
-> +		}
-> +		if (unlikely(this_cpu_read(this_state.atomic_region) > 0 ||
-> +			     this_cpu_read(this_state.atomic_region_flat)))
-> +			return true;
-> +	}
-> +
-> +	return kcsan_is_atomic(ptr);
-> +}
-
-... you could have something like:
-
-| struct kcsan_ctx *kcsan_get_ctx(void)
-| {
-| 	return in_task() ? &current->kcsan_ctx : this_cpu_ptr(kcsan_cpu_ctx);
-| }
-|
-| static inline bool is_atomic(const volatile void *ptr)
-| {
-| 	struct kcsan_ctx *ctx = kcsan_get_ctx();
-|	if (unlikely(ctx->atomic_next > 0) {
-|		--ctx->atomic_next;
-| 		return true;
-| 	}
-| 	if (unlikely(ctx->atomic_region > 0 || ctx->atomic_region_flat))
-| 		return true;
-|
-| 	return kcsan_is_atomic(ptr);
-| }
-
-... avoiding duplicating the checks for task/irq contexts.
-
-It's not clear to me how either that or the original code works if a
-softirq is interrupted by a hardirq. IIUC most of the fields should
-remain stable over that window, since the hardirq should balance most
-changes it makes before returning, but I don't think that's true for
-atomic_next. Can't that be corrupted from the PoV of the softirq
-handler?
-
-[...]
-
-> +void kcsan_begin_atomic(bool nest)
-> +{
-> +	if (nest) {
-> +		if (in_task())
-> +			++current->kcsan_atomic_region;
-> +		else
-> +			this_cpu_inc(this_state.atomic_region);
-> +	} else {
-> +		if (in_task())
-> +			current->kcsan_atomic_region_flat = true;
-> +		else
-> +			this_cpu_write(this_state.atomic_region_flat, true);
-> +	}
-> +}
-
-Assuming my suggestion above wasn't bogus, this can be:
-
-| void kcsan_begin_atomic(boot nest)
-| {
-| 	struct kcsan_ctx *ctx = kcsan_get_ctx();
-| 	if (nest)
-| 		ctx->atomic_region++;
-| 	else
-| 		ctx->atomic_region_flat = true;
-| }
-
-> +void kcsan_end_atomic(bool nest)
-> +{
-> +	if (nest) {
-> +		int prev =
-> +			in_task() ?
-> +				current->kcsan_atomic_region-- :
-> +				(this_cpu_dec_return(this_state.atomic_region) +
-> +				 1);
-> +		if (prev == 0) {
-> +			kcsan_begin_atomic(true); /* restore to 0 */
-> +			kcsan_disable_current();
-> +			WARN(1, "mismatching %s", __func__);
-> +			kcsan_enable_current();
-> +		}
-> +	} else {
-> +		if (in_task())
-> +			current->kcsan_atomic_region_flat = false;
-> +		else
-> +			this_cpu_write(this_state.atomic_region_flat, false);
-> +	}
-> +}
-
-... similarly:
-
-| void kcsan_end_atomic(bool nest)
-| {
-| 	struct kcsan_ctx *ctx = kcsan_get_ctx();
-| 
-| 	if (nest)
-| 		if (ctx->kcsan_atomic_region--) {
-| 			kcsan_begin_atomic(true); /* restore to 0 */
-| 			kcsan_disable_current();
-| 			WARN(1, "mismatching %s"\ __func__);
-| 			kcsan_enable_current();
-| 		}
-| 	} else {
-| 		ctx->atomic_region_flat = true;
-| 	}
-| }
-
-> +void kcsan_atomic_next(int n)
-> +{
-> +	if (in_task())
-> +		current->kcsan_atomic_next = n;
-> +	else
-> +		this_cpu_write(this_state.atomic_next, n);
-> +}
-
-... and:
-
-| void kcsan_atomic_nextint n)
-| {
-| 	kcsan_get_ctx()->atomic_next = n;
-| }
-
-Thanks,
-Mark.
