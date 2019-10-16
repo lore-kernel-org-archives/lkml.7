@@ -2,179 +2,140 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AC3FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBA1FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E959421835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F82B21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406555AbfJPRBW (ORCPT
+        id S2436483AbfJPRB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:01:22 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:42254 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2406545AbfJPRBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:01:21 -0400
-Received: (qmail 2878 invoked by uid 2102); 16 Oct 2019 13:01:20 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 16 Oct 2019 13:01:20 -0400
-Date:   Wed, 16 Oct 2019 13:01:20 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        USB list <linux-usb@vger.kernel.org>,
-        <linux-block@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
-In-Reply-To: <20191013181116.GA3858@lazy.lzy>
-Message-ID: <Pine.LNX.4.44L0.1910161258081.1304-100000@iolanthe.rowland.org>
+        Wed, 16 Oct 2019 13:01:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45608 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406545AbfJPRB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:01:27 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6D0457FDF6
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 17:01:26 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id j7so12048544wrx.14
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:01:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=upYwB/N4xOr/Zf5KHa95URT+5bIQEUVNJJQrCk7v8M8=;
+        b=iXH475cr5wlwzmbU88FIx4i0VtrKkSgjdi42Dg20+BdWYilbuBgU2FFgd9Xo+4dveE
+         lvWtpNDSf61lhsHIjwFGuaN9CYEwqPkJbplIz+m0uQ/GraNaSrAzhu80ZRVN1U+udnbg
+         Xb6mOS3pV/H1X9tdEfL69329WVXKWkwPTLHThYeQGzwnaVspVObokCttbJbFHKd6i4w/
+         ycC06BZ0iJ5vWDk2kAp5BwXpvqPpDtTyn6egsypvh00kMZdEOHyP1kMlWKjI4SU7DJf+
+         9bQcng+/FXW6BhFrdBvgGVyqEau/ZYfeq3pB5biDdEnMjjAvZE/6dSuru4+roFNWTMYo
+         2V3w==
+X-Gm-Message-State: APjAAAXaPyLn2gR3v5xuU82IVkH1GPi71n/GHcgka5uXqAHmm8/66Cno
+        p0Iws0BSqIb1qgBlG2syLAJLtFnBoDcBJ6Y4Uc9lUEWFfY/39xlZrinpfQ6+p6jQ/lg/kySQDOu
+        uOM5Z4dSad45r5SIkJvneS4yY
+X-Received: by 2002:adf:e488:: with SMTP id i8mr3608234wrm.302.1571245285026;
+        Wed, 16 Oct 2019 10:01:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzGJ1RJa5XRkUof+e00QM01ARDkvGSCrkuV55PLQw4Jq3hOnJV0Ei3CilXy8Sl4JrmzhL4Nuw==
+X-Received: by 2002:adf:e488:: with SMTP id i8mr3608206wrm.302.1571245284676;
+        Wed, 16 Oct 2019 10:01:24 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d001:591b:c73b:6c41? ([2001:b07:6468:f312:d001:591b:c73b:6c41])
+        by smtp.gmail.com with ESMTPSA id v6sm4038429wma.24.2019.10.16.10.01.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 10:01:24 -0700 (PDT)
+Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
+ vmx.c exit handlers
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-13-aarcange@redhat.com>
+ <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
+ <20191015164952.GE331@redhat.com>
+ <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
+ <20191015203516.GF331@redhat.com>
+ <f375049a-6a45-c0df-a377-66418c8eb7e8@redhat.com>
+ <20191015234229.GC6487@redhat.com>
+ <27cc0d6b-6bd7-fcaf-10b4-37bb566871f8@redhat.com>
+ <20191016165057.GJ6487@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <0e290a9d-9d26-d24a-ba01-9fda4826a5ac@redhat.com>
+Date:   Wed, 16 Oct 2019 19:01:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20191016165057.GJ6487@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 13 Oct 2019, Piergiorgio Sartor wrote:
-
-> On Mon, Sep 30, 2019 at 08:25:01PM +0200, Piergiorgio Sartor wrote:
-> > On Sun, Sep 29, 2019 at 09:01:48PM -0400, Alan Stern wrote:
-> > > On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
-> > > 
-> > > > On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
-> > > > > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
-> > > > > 
-> > > > > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
-> > > > > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
-> > > > > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
-> > > > > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
-> > > > > > > > > > Let's bring this to the attention of some more people.
-> > > > > > > > > > 
-> > > > > > > > > > It looks like the bug that was supposed to be fixed by commit
-> > > > > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
-> > > > > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
-> > > > > > > > > > the bug still occurs.
-> > > > > > > > > 
-> > > > > > > > > Piergiorgio,
-> > > > > > > > > 
-> > > > > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
-> > > > > > > > > device and send that to this thread?
-> > > > > > > > 
-> > > > > > > > Hi all,
-> > > > > > > > 
-> > > > > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
-> > > > > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
-> > > > > > > > for USB storage devices (2.0 and 3.0).
-> > > > > > > > 
-> > > > > > > > This is for the PC showing the issue.
-> > > > > > > > 
-> > > > > > > > In an other PC, which does not show the issus at the moment,
-> > > > > > > > the values are 120, for USB2.0, and 256, for USB3.0.
-> > > 
-> > > > > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
-> > > > > to 5.2.8.  If you can identify a particular commit which caused the
-> > > > > problem to start, that would help.
-> > > > 
-> > > > OK, I tried a bisect (2 days compilations...).
-> > > > Assuming I've done everything correctly (how to
-> > > > test this? How to remove the guilty patch?), this
-> > > > was the result:
-> > > > 
-> > > > 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
-> > > > commit 09324d32d2a0843e66652a087da6f77924358e62
-> > > > Author: Christoph Hellwig <hch@lst.de>
-> > > > Date:   Tue May 21 09:01:41 2019 +0200
-> > > > 
-> > > >     block: force an unlimited segment size on queues with a virt boundary
-> > > > 
-> > > >     We currently fail to update the front/back segment size in the bio when
-> > > >     deciding to allow an otherwise gappy segement to a device with a
-> > > >     virt boundary.  The reason why this did not cause problems is that
-> > > >     devices with a virt boundary fundamentally don't use segments as we
-> > > >     know it and thus don't care.  Make that assumption formal by forcing
-> > > >     an unlimited segement size in this case.
-> > > > 
-> > > >     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
-> > > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > >     Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> > > >     Reviewed-by: Hannes Reinecke <hare@suse.com>
-> > > >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > > > 
-> > > > :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
-> > > > 
-> > > > What to do now?
-> > > 
-> > > Here's how to verify that the bisection got a correct result.  First, 
-> > > do a git checkout of commit 09324d32d2a0, build the kernel, and make 
-> > > sure that it exhibits the problem.
-> > > 
-> > > Next, have git write out the contents of that commit in the form of a
-> > > patch (git show commit-id >patchfile), and revert it (git apply -R
-> > > patchfile).  Build the kernel from that tree, and make sure that it
-> > > does not exhibit the problem.  If it doesn't, you have definitely shown
-> > > that this commit is the cause (or at least, is _one_ of the causes).
-> > 
-> > I tried as suggested, i.e. jumping to commit
-> > 09324d32d2a0843e66652a087da6f77924358e62, testing,
-> > removing the patch, testing.
-> > The result was as expected.
-> > I was able to reproduce the issue with the commit,
-> > I was not able to reproduce it without.
-> > It seems this patch / commit is causing the problem.
-> > Directly or indirectly.
-> > 
-> > What are the next steps?
+On 16/10/19 18:50, Andrea Arcangeli wrote:
+>> It still doesn't add up.  0.3ms / 5 is 1/15000th of a second; 43us is
+>> 1/25000th of a second.  Do you have multiple vCPU perhaps?
 > 
-> Hi all,
+> Why would I run any test on UP guests? Rather then spending time doing
+> the math on my results, it's probably quicker that you run it yourself:
+
+I don't know, but if you don't say how many vCPUs you have, I cannot do
+the math and review the patch.
+
+>> The number of vmexits doesn't count (for HLT).  What counts is how long
+>> they take to be serviced, and as long as it's 1us or more the
+>> optimization is pointless.
+>
+> Please note the single_task_running() check which immediately breaks
+> the kvm_vcpu_check_block() loop if there's even a single other task
+> that can be scheduled in the runqueue of the host CPU.
 > 
-> I tested kernel 5.3.5 (Fedora kernel-5.3.5-200.fc30.x86_64),
-> with same problematic results.
+> What happen when the host is not idle is quoted below:
 > 
-> Again, what should be done now?
-> Could you please revert the patch?
+>          w/o optimization                   with optimization
+>          ----------------------             -------------------------
+> 0us      vmexit                             vmexit
+> 500ns    retpoline                          call vmexit handler directly
+> 600ns    retpoline                          kvm_vcpu_check_block()
+> 700ns    retpoline                          schedule()
+> 800ns    kvm_vcpu_check_block()
+> 900ns    schedule()
+> ...
 > 
-> Or is there something else to check?
+> Disclaimer: the numbers on the left are arbitrary and I just cut and
+> pasted them from yours, no idea how far off they are.
 
-Here is one more thing you can try.  I have no idea whether it will 
-make any difference, but the Changelog entry for the patch you 
-identified suggests that it might help.
+Yes, of course.  But the idea is the same: yes, because of the retpoline
+you run the guest for perhaps 300ns more before schedule()ing, but does
+that really matter?  300ns * 20000 times/second is a 0.6% performance
+impact, and 300ns is already very generous.  I am not sure it would be
+measurable at all.
 
-Alan Stern
+Paolo
 
-
-
-Index: usb-devel/drivers/usb/storage/scsiglue.c
-===================================================================
---- usb-devel.orig/drivers/usb/storage/scsiglue.c
-+++ usb-devel/drivers/usb/storage/scsiglue.c
-@@ -68,7 +68,6 @@ static const char* host_info(struct Scsi
- static int slave_alloc (struct scsi_device *sdev)
- {
- 	struct us_data *us = host_to_us(sdev->host);
--	int maxp;
- 
- 	/*
- 	 * Set the INQUIRY transfer length to 36.  We don't use any of
-@@ -78,15 +77,6 @@ static int slave_alloc (struct scsi_devi
- 	sdev->inquiry_len = 36;
- 
- 	/*
--	 * USB has unusual scatter-gather requirements: the length of each
--	 * scatterlist element except the last must be divisible by the
--	 * Bulk maxpacket value.  Fortunately this value is always a
--	 * power of 2.  Inform the block layer about this requirement.
--	 */
--	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
--	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
--
--	/*
- 	 * Some host controllers may have alignment requirements.
- 	 * We'll play it safe by requiring 512-byte alignment always.
- 	 */
+> To be clear, I would find it very reasonable to be requested to proof
+> the benefit of the HLT optimization with benchmarks specifics for that
+> single one liner, but until then, the idea that we can drop the
+> retpoline optimization from the HLT vmexit by just thinking about it,
+> still doesn't make sense to me, because by thinking about it I come to
+> the opposite conclusion.
+> 
+> The lack of single_task_running() in the guest driver is also why the
+> guest cpuidle haltpoll risks to waste some CPU with host overcommit or
+> with the host loaded at full capacity and why we may not assume it to
+> be universally enabled.
+> 
+> Thanks,
+> Andrea
+> 
 
