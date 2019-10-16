@@ -2,116 +2,99 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A98FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06417FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8852064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69592064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394014AbfJPO0G (ORCPT
+        id S2394022AbfJPO0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:26:06 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:41700 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392463AbfJPO0F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:26:05 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id EES22100P05gfCL01ES2kr; Wed, 16 Oct 2019 16:26:02 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iKkFW-0003ls-9s; Wed, 16 Oct 2019 16:26:02 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iKkFW-0007MT-88; Wed, 16 Oct 2019 16:26:02 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
-Date:   Wed, 16 Oct 2019 16:26:01 +0200
-Message-Id: <20191016142601.28255-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 16 Oct 2019 10:26:13 -0400
+Received: from mga14.intel.com ([192.55.52.115]:27355 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387995AbfJPO0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:26:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 07:26:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
+   d="scan'208";a="370814655"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 16 Oct 2019 07:26:12 -0700
+Received: from [10.125.252.157] (abudanko-mobl.ccr.corp.intel.com [10.125.252.157])
+        by linux.intel.com (Postfix) with ESMTP id 7EBAD580375;
+        Wed, 16 Oct 2019 07:26:09 -0700 (PDT)
+Subject: [PATCH v3 2/4] perf/x86: install platform specific sync_task_ctx
+ adapter
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <792a98c7-ed89-6c35-f1d7-98ddc9c1a117@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <10e4fff9-851a-8b2f-07c5-f629a639ebdb@linux.intel.com>
+Date:   Wed, 16 Oct 2019 17:26:08 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <792a98c7-ed89-6c35-f1d7-98ddc9c1a117@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platform_get_irq() now prints an error when the interrupt does not
-exist, counting interrupts by looping until failure causes the printing
-of scary messages like:
 
-    sh-pfc e6060000.pin-controller: IRQ index 0 not found
+Bridge perf core and x86 sync_task_ctx() method calls.
 
-Fix this by using the platform_irq_count() helper instead.
-
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
-v2:
-  - Add Reviewed-by, Tested-by.
+ arch/x86/events/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Linus: Can you please take this one, as it is a fix for v5.4? Thx!
----
- drivers/pinctrl/sh-pfc/core.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-index 1745c0639932c7a7..a5a794cbf997f7a3 100644
---- a/drivers/pinctrl/sh-pfc/core.c
-+++ b/drivers/pinctrl/sh-pfc/core.c
-@@ -29,12 +29,12 @@
- static int sh_pfc_map_resources(struct sh_pfc *pfc,
- 				struct platform_device *pdev)
- {
--	unsigned int num_windows, num_irqs;
- 	struct sh_pfc_window *windows;
- 	unsigned int *irqs = NULL;
-+	unsigned int num_windows;
- 	struct resource *res;
- 	unsigned int i;
--	int irq;
-+	int num_irqs;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 15b90b1a8fb1..2c293bbd093f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2243,6 +2243,12 @@ static void x86_pmu_sched_task(struct perf_event_context *ctx, bool sched_in)
+ 		x86_pmu.sched_task(ctx, sched_in);
+ }
  
- 	/* Count the MEM and IRQ resources. */
- 	for (num_windows = 0;; num_windows++) {
-@@ -42,17 +42,13 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
- 		if (!res)
- 			break;
- 	}
--	for (num_irqs = 0;; num_irqs++) {
--		irq = platform_get_irq(pdev, num_irqs);
--		if (irq == -EPROBE_DEFER)
--			return irq;
--		if (irq < 0)
--			break;
--	}
--
- 	if (num_windows == 0)
- 		return -EINVAL;
- 
-+	num_irqs = platform_irq_count(pdev);
-+	if (num_irqs < 0)
-+		return num_irqs;
++static void x86_pmu_sync_task_ctx(void *one, void *another)
++{
++	if (x86_pmu.sync_task_ctx)
++		x86_pmu.sync_task_ctx(one, another);
++}
 +
- 	/* Allocate memory windows and IRQs arrays. */
- 	windows = devm_kcalloc(pfc->dev, num_windows, sizeof(*windows),
- 			       GFP_KERNEL);
+ void perf_check_microcode(void)
+ {
+ 	if (x86_pmu.check_microcode)
+@@ -2297,6 +2303,7 @@ static struct pmu pmu = {
+ 	.event_idx		= x86_pmu_event_idx,
+ 	.sched_task		= x86_pmu_sched_task,
+ 	.task_ctx_size          = sizeof(struct x86_perf_task_context),
++	.sync_task_ctx		= x86_pmu_sync_task_ctx,
+ 	.check_period		= x86_pmu_check_period,
+ 
+ 	.aux_output_match	= x86_pmu_aux_output_match,
 -- 
-2.17.1
+2.20.1
 
