@@ -2,191 +2,82 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5DAFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09292FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B1D2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B87205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEr0OsMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392804AbfJPLd2 (ORCPT
+        id S1727349AbfJPLiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:33:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35654 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391089AbfJPLdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:33:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0EBDCB18D;
-        Wed, 16 Oct 2019 11:33:20 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
-        jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        shuah@kernel.org, kamalesh@linux.vnet.ibm.com,
-        linux-kselftest@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH v3 3/3] selftests/livepatch: Test interaction with ftrace_enabled
-Date:   Wed, 16 Oct 2019 13:33:15 +0200
-Message-Id: <20191016113316.13415-4-mbenes@suse.cz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016113316.13415-1-mbenes@suse.cz>
-References: <20191016113316.13415-1-mbenes@suse.cz>
+        Wed, 16 Oct 2019 07:38:21 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40182 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfJPLiV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:38:21 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f23so1679967lfk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 04:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x1A3+tqNV7AYA4a59t+LdEpQ+YRhTrtSX/lkWTCc5aA=;
+        b=gEr0OsMUO42QmRud/vzrOlYanxa4sfjkAyxLCKgvsdqUfqXAoUt+tiS1TPireqKriE
+         ws4vPwfAN77DItT9lQbR6Fap+9iRmyAtBB6T3aKJudnGliLlZQ/iww6wOwaemWC4JKJq
+         p8s4akWudtEYtlkDL5kIqBSOlt8M/Kii6KiiJzuaeWIBykPNF0Y58XJCgGr6a5rV43G4
+         zKlTZWFZIYw2zRHKkC0yDLyNk9DqmDpu/1qcfXYULl94N40t5dJD1SsVuVG168GgGI5w
+         VIPcvQZPkQTBT6Itvy1co5UiD0KG14To3UCosSI4lN8Lm+Pbg+N08g2/G+NId08GcpLQ
+         KEBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x1A3+tqNV7AYA4a59t+LdEpQ+YRhTrtSX/lkWTCc5aA=;
+        b=TgqHCGEjbNDexSI/R/a7P3DAiU9Yg6A1VBffFf3/NVh7ZNohMZS49ebaN2xTUfF+SA
+         VyQyunrnlEVbWoiAxgb6q3uyY98hdDW822bOpEcqgeo05Qa04D0PZys3UKL0O4EvZA7H
+         /ZPNjCBB5HyjwcszYN43FM8+eZpEzW9gfWUHWZexPUNB7qru8jMwuOf6qqQaWOBDur2D
+         k9pOsh+lBeWlOl2Py3upTBBHdzOnKsjf9x0bP42rOze43b/xz8FMWj6KxaTRq3V1tf1c
+         5MHv7RWlm3OYNJXRsN3eSKBWo9WfHeOub5yfj9++OPpRT2lNj08eci36zHUeP0VgY7du
+         4ZYg==
+X-Gm-Message-State: APjAAAVhtN2oUgo5cXIs5ZzwKr8M9EeFB2NtmZJz6MMJnnBG2zOSd0fB
+        83cbBsa+1PW6I7liD7W0t8O2AbjUBo9TqBFQkCgsj6lV
+X-Google-Smtp-Source: APXvYqz4VZ8pkIj/84BAbLEZVxdaC1MBP7u2OgExYYc5cBJj+teQam9Hko5lojbIWznirNWs14DOf9zwkzW+TpAGXGw=
+X-Received: by 2002:ac2:43c2:: with SMTP id u2mr1918135lfl.61.1571225897295;
+ Wed, 16 Oct 2019 04:38:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <66d373ddee61e8be2fcef49aac5e80bd58f14915.1570596606.git.baolin.wang@linaro.org>
+In-Reply-To: <66d373ddee61e8be2fcef49aac5e80bd58f14915.1570596606.git.baolin.wang@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 13:38:05 +0200
+Message-ID: <CACRpkdZbEjWVK5-VN9jPvA8iNmgkGfyq4c9vDnpVMxkP7ENQGQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sprd: Add PIN_CONFIG_BIAS_DISABLE configuration support
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Lawrence <joe.lawrence@redhat.com>
+On Wed, Oct 9, 2019 at 6:53 AM Baolin Wang <baolin.wang@linaro.org> wrote:
 
-Since livepatching depends upon ftrace handlers to implement "patched"
-code functionality, verify that the ftrace_enabled sysctl value
-interacts with livepatch registration as expected.  At the same time,
-ensure that ftrace_enabled is set and part of the test environment
-configuration that is saved and restored when running the selftests.
+> Add PIN_CONFIG_BIAS_DISABLE configuration support for Spreadtrum pin
+> controller.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
----
- tools/testing/selftests/livepatch/Makefile    |  3 +-
- .../testing/selftests/livepatch/functions.sh  | 14 +++-
- .../selftests/livepatch/test-ftrace.sh        | 65 +++++++++++++++++++
- 3 files changed, 80 insertions(+), 2 deletions(-)
- create mode 100755 tools/testing/selftests/livepatch/test-ftrace.sh
+Patch applied.
 
-diff --git a/tools/testing/selftests/livepatch/Makefile b/tools/testing/selftests/livepatch/Makefile
-index fd405402c3ff..1886d9d94b88 100644
---- a/tools/testing/selftests/livepatch/Makefile
-+++ b/tools/testing/selftests/livepatch/Makefile
-@@ -4,6 +4,7 @@ TEST_PROGS_EXTENDED := functions.sh
- TEST_PROGS := \
- 	test-livepatch.sh \
- 	test-callbacks.sh \
--	test-shadow-vars.sh
-+	test-shadow-vars.sh \
-+	test-ftrace.sh
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-index b7e5a67ae434..31eb09e38729 100644
---- a/tools/testing/selftests/livepatch/functions.sh
-+++ b/tools/testing/selftests/livepatch/functions.sh
-@@ -32,12 +32,16 @@ function die() {
- function push_config() {
- 	DYNAMIC_DEBUG=$(grep '^kernel/livepatch' /sys/kernel/debug/dynamic_debug/control | \
- 			awk -F'[: ]' '{print "file " $1 " line " $2 " " $4}')
-+	FTRACE_ENABLED=$(sysctl --values kernel.ftrace_enabled)
- }
- 
- function pop_config() {
- 	if [[ -n "$DYNAMIC_DEBUG" ]]; then
- 		echo -n "$DYNAMIC_DEBUG" > /sys/kernel/debug/dynamic_debug/control
- 	fi
-+	if [[ -n "$FTRACE_ENABLED" ]]; then
-+		sysctl kernel.ftrace_enabled="$FTRACE_ENABLED" &> /dev/null
-+	fi
- }
- 
- function set_dynamic_debug() {
-@@ -47,12 +51,20 @@ function set_dynamic_debug() {
- 		EOF
- }
- 
-+function set_ftrace_enabled() {
-+	local sysctl="$1"
-+	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
-+	echo "livepatch: $result" > /dev/kmsg
-+}
-+
- # setup_config - save the current config and set a script exit trap that
- #		 restores the original config.  Setup the dynamic debug
--#		 for verbose livepatching output.
-+#		 for verbose livepatching output and turn on
-+#		 the ftrace_enabled sysctl.
- function setup_config() {
- 	push_config
- 	set_dynamic_debug
-+	set_ftrace_enabled 1
- 	trap pop_config EXIT INT TERM HUP
- }
- 
-diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
-new file mode 100755
-index 000000000000..e2a76887f40a
---- /dev/null
-+++ b/tools/testing/selftests/livepatch/test-ftrace.sh
-@@ -0,0 +1,65 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2019 Joe Lawrence <joe.lawrence@redhat.com>
-+
-+. $(dirname $0)/functions.sh
-+
-+MOD_LIVEPATCH=test_klp_livepatch
-+
-+setup_config
-+
-+
-+# TEST: livepatch interaction with ftrace_enabled sysctl
-+# - turn ftrace_enabled OFF and verify livepatches can't load
-+# - turn ftrace_enabled ON and verify livepatch can load
-+# - verify that ftrace_enabled can't be turned OFF while a livepatch is loaded
-+
-+echo -n "TEST: livepatch interaction with ftrace_enabled sysctl ... "
-+dmesg -C
-+
-+set_ftrace_enabled 0
-+load_failing_mod $MOD_LIVEPATCH
-+
-+set_ftrace_enabled 1
-+load_lp $MOD_LIVEPATCH
-+if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
-+	echo -e "FAIL\n\n"
-+	die "livepatch kselftest(s) failed"
-+fi
-+
-+set_ftrace_enabled 0
-+if [[ "$(cat /proc/cmdline)" != "$MOD_LIVEPATCH: this has been live patched" ]] ; then
-+	echo -e "FAIL\n\n"
-+	die "livepatch kselftest(s) failed"
-+fi
-+disable_lp $MOD_LIVEPATCH
-+unload_lp $MOD_LIVEPATCH
-+
-+check_result "livepatch: kernel.ftrace_enabled = 0
-+% modprobe $MOD_LIVEPATCH
-+livepatch: enabling patch '$MOD_LIVEPATCH'
-+livepatch: '$MOD_LIVEPATCH': initializing patching transition
-+livepatch: failed to register ftrace handler for function 'cmdline_proc_show' (-16)
-+livepatch: failed to patch object 'vmlinux'
-+livepatch: failed to enable patch '$MOD_LIVEPATCH'
-+livepatch: '$MOD_LIVEPATCH': canceling patching transition, going to unpatch
-+livepatch: '$MOD_LIVEPATCH': completing unpatching transition
-+livepatch: '$MOD_LIVEPATCH': unpatching complete
-+modprobe: ERROR: could not insert '$MOD_LIVEPATCH': Device or resource busy
-+livepatch: kernel.ftrace_enabled = 1
-+% modprobe $MOD_LIVEPATCH
-+livepatch: enabling patch '$MOD_LIVEPATCH'
-+livepatch: '$MOD_LIVEPATCH': initializing patching transition
-+livepatch: '$MOD_LIVEPATCH': starting patching transition
-+livepatch: '$MOD_LIVEPATCH': completing patching transition
-+livepatch: '$MOD_LIVEPATCH': patching complete
-+livepatch: sysctl: setting key \"kernel.ftrace_enabled\": Device or resource busy kernel.ftrace_enabled = 0
-+% echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
-+livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
-+livepatch: '$MOD_LIVEPATCH': starting unpatching transition
-+livepatch: '$MOD_LIVEPATCH': completing unpatching transition
-+livepatch: '$MOD_LIVEPATCH': unpatching complete
-+% rmmod $MOD_LIVEPATCH"
-+
-+
-+exit 0
--- 
-2.23.0
-
+Yours,
+Linus Walleij
