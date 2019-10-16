@@ -2,184 +2,106 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EA0FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28898FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F96218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BDC218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtzSFNoF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6bOoh9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393973AbfJPOZm (ORCPT
+        id S2394003AbfJPOZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:25:42 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34810 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfJPOZl (ORCPT
+        Wed, 16 Oct 2019 10:25:55 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34721 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731887AbfJPOZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:25:41 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 3so36434566qta.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:25:39 -0700 (PDT)
+        Wed, 16 Oct 2019 10:25:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k20so7052187pgi.1;
+        Wed, 16 Oct 2019 07:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y4EQYL75ejH4E6buXrBDGLhTfNE3a0xcUuB5fdXMSbo=;
-        b=rtzSFNoFtdbPX0n8kfiZENC2xSjazQH8VXjl9lodLsafn/bABXG9TXSs0/kdUUx49A
-         gNRnTmxQDl5DnoqzJqNKjWxGYsTf69VTnLEEIElF0SWvSQMRXcMa2EC6AeT7iQG6hnio
-         GYrSQXmF43e2/8JQ/5Zspa043MM34PVWSLfg2BlolIhRENpR04W2mgjKM5X3zld8l6Z9
-         4nLiL5fZ6CmzKmatDtB/QRcSi3HcW5owvdGVfm1uDdTz+x4S3/loVNC27Y5rTX0KMYMm
-         mO8f2Z7Rx4xoMttbjtqI6Uk5XPLVc3IGIJTDf7IRoBc02J7/IpLRQYAwGDZOiGRW/7vP
-         jjvw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujGILVS8EOVsDFzbe0iajn+DjkCITaKLgBibceQs4Qk=;
+        b=a6bOoh9WX6DTprd6X00EX+6JfgBs7ui/aqTCQjRQtKjuicevk+q6uytkW0NbwJxVil
+         cSBlwFT21oiOer9Khli6iBMoxHsCgyGRBpGjpJk+lxnhnrKW/ZqNrJhL9TEF3OvzcsFR
+         4MQ15Eo/+o+PGv428dqqGP0V5khaisyqzTNF0ePtA5zZcOq4h2o+ArfnRMwqnyVgJgZ9
+         GQKSOxEck+QcA6uHMJtr4lU8JpWTf3MEMjBXLCsmoDLa2SxUtFNM1kvXrDsValCbcDC9
+         siH/D7L3PtTo1yqpzChH0dcb4/Ewf2aS6tyPau+NaSijx8sqvyai1t05WTVlsIi1VrC1
+         nRMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y4EQYL75ejH4E6buXrBDGLhTfNE3a0xcUuB5fdXMSbo=;
-        b=lR76+F5blb4eroMoFROG3aY8JTesz4jhLpKCl64JgGGUODGJK3+IfxM850lkQAXvqZ
-         Wa5MfDjdITLy2XL2NFjPTz9+hsbLIBpJZG9eooRY3+sNmOc+2rLMn/eRSZFQmO6v48Vy
-         U/pkzafgQQKd9NKj6G3xoPgf5Mj2VkcRcI+0br7DLdfH+7bzDcGkfXdeyR7TpbomuFjU
-         Mku25/rOTHnW+sf0iM3AL3ZWdXHGWj2oadZHQoyLtjtrOfqnOCs24kisdRCglb46Sl5V
-         mtwQ751E/sgpyL1AP5gZaxuH1T7Uq8c0RPBRVl06T15waHP5aExobagF/XMGC5xJKd7m
-         TqgQ==
-X-Gm-Message-State: APjAAAUSKJlq+ddXvk7f7Dd96otojqeMh1e96Ewv7Y4ZrjrMi7u7L1HA
-        AiSiKpZqeODNyoiTctdVUWE=
-X-Google-Smtp-Source: APXvYqzD1v6TJW8bih7yFjzHROo8CWUW8NXrkF/wDyyIyq5kgr0wRo7Dk7CzVMWeZevM2jxfVnOOrQ==
-X-Received: by 2002:a0c:bf45:: with SMTP id b5mr41462664qvj.150.1571235938895;
-        Wed, 16 Oct 2019 07:25:38 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id r55sm13644479qtj.86.2019.10.16.07.25.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujGILVS8EOVsDFzbe0iajn+DjkCITaKLgBibceQs4Qk=;
+        b=q/vQbfY5EijazxjCafMWsD3B4qV/ZYQ8NTZMmZj22ETE2i9lxHPPdOWl7LffGrMQ3k
+         4dE9xrENftN6KLowvU4kwb1G3M1vkgdHnCvyqwAgf16HYkbwYWsM9nQOBqgQ9ELOzjNW
+         zBE2jX2enHibj35eHBX6ijZ8487PiVyEE1Ig3kg2d/PKs5kmYvsB4T0ZafN1Jd/82k6M
+         m5sr5H4ipCIEq42afoUDlp4UhbZ9x0xAulrO/JByEhcu9YZr9lmusm3c/0ar93WFtBvB
+         vn1rlRAnqV5N/lftJVbcTOanyIvwE4mYa82WKw9w303j4KrO6bJdys4cKx7jUgdRbd6K
+         sktg==
+X-Gm-Message-State: APjAAAVc/FZ+8cc5kXiav+ylpUlF5wN2V9kYiMJelPi9XsCaDig4wRHp
+        vuqcmN6Wo9JZXesvC6ya+44=
+X-Google-Smtp-Source: APXvYqxIYy2Qv9i2kyVFd/IvVJK02XNDYI0j0LNVdMEsCydz62Z+SlEJeTndXygi/WhaU4LEtTD7PA==
+X-Received: by 2002:a63:3f86:: with SMTP id m128mr910929pga.404.1571235954263;
+        Wed, 16 Oct 2019 07:25:54 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id i1sm30371683pfg.2.2019.10.16.07.25.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 07:25:38 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3C2554DD66; Wed, 16 Oct 2019 11:25:36 -0300 (-03)
-Date:   Wed, 16 Oct 2019 11:25:36 -0300
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, john.garry@huawei.com, ak@linux.intel.com,
-        lukemujica@google.com, kan.liang@linux.intel.com,
-        yuzenghui@huawei.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        hushiyuan@huawei.com, linfeilong@huawei.com
-Subject: Re: [PATCH v2] perf jevents: Fix resource leak in process_mapfile()
- and main()
-Message-ID: <20191016142536.GH22835@kernel.org>
-References: <d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com>
+        Wed, 16 Oct 2019 07:25:53 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] staging: iio: ad9834: add a check for devm_clk_get
+Date:   Wed, 16 Oct 2019 22:25:40 +0800
+Message-Id: <20191016142540.26450-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Oct 16, 2019 at 09:50:17PM +0800, Yunfeng Ye escreveu:
-> There are memory leaks and file descriptor resource leaks in
-> process_mapfile() and main().
-> 
-> Fix this by adding free(), fclose() and free_arch_std_events()
-> on the error paths.
-> 
-> Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-> Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
-> Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
+ad9834_probe misses a check for devm_clk_get and may cause problems.
+Add a check like what ad9832 does to fix it.
 
-Nice, thanks for adding the fixes line, I looked at those three patches
-and indeed they were leaky, thanks for the fixes, we shouldn't have
-those leaks even if that, for now, makes the tool to end anyway.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/staging/iio/frequency/ad9834.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-- Arnaldo
-
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> ---
-> v1 -> v2:
->  - add free(eventsfp) to fix eventsfp resource leaks
->  - add free_arch_std_events() on the error path
-> 
->  tools/perf/pmu-events/jevents.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index e2837260ca4d..99e3fd04a5cb 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
->  	char *line, *p;
->  	int line_num;
->  	char *tblname;
-> +	int ret = 0;
-> 
->  	pr_info("%s: Processing mapfile %s\n", prog, fpath);
-> 
-> @@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
->  	if (!mapfp) {
->  		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
->  				fpath);
-> +		free(line);
->  		return -1;
->  	}
-> 
-> @@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
->  			/* TODO Deal with lines longer than 16K */
->  			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
->  					prog, fpath, line_num);
-> -			return -1;
-> +			ret = -1;
-> +			goto out;
->  		}
->  		line[strlen(line)-1] = '\0';
-> 
-> @@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
-> 
->  out:
->  	print_mapping_table_suffix(outfp);
-> -	return 0;
-> +	fclose(mapfp);
-> +	free(line);
-> +	return ret;
->  }
-> 
->  /*
-> @@ -1122,6 +1127,7 @@ int main(int argc, char *argv[])
->  		goto empty_map;
->  	} else if (rc < 0) {
->  		/* Make build fail */
-> +		fclose(eventsfp);
->  		free_arch_std_events();
->  		return 1;
->  	} else if (rc) {
-> @@ -1134,6 +1140,7 @@ int main(int argc, char *argv[])
->  		goto empty_map;
->  	} else if (rc < 0) {
->  		/* Make build fail */
-> +		fclose(eventsfp);
->  		free_arch_std_events();
->  		return 1;
->  	} else if (rc) {
-> @@ -1151,6 +1158,8 @@ int main(int argc, char *argv[])
->  	if (process_mapfile(eventsfp, mapfile)) {
->  		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
->  		/* Make build fail */
-> +		fclose(eventsfp);
-> +		free_arch_std_events();
->  		return 1;
->  	}
-> 
-> -- 
-> 2.7.4.3
-
+diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
+index 038d6732c3fd..23026978a5a5 100644
+--- a/drivers/staging/iio/frequency/ad9834.c
++++ b/drivers/staging/iio/frequency/ad9834.c
+@@ -417,6 +417,10 @@ static int ad9834_probe(struct spi_device *spi)
+ 	st = iio_priv(indio_dev);
+ 	mutex_init(&st->lock);
+ 	st->mclk = devm_clk_get(&spi->dev, NULL);
++	if (IS_ERR(st->mclk)) {
++		ret = PTR_ERR(st->mclk);
++		goto error_disable_reg;
++	}
+ 
+ 	ret = clk_prepare_enable(st->mclk);
+ 	if (ret) {
 -- 
+2.20.1
 
-- Arnaldo
