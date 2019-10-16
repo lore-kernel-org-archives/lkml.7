@@ -2,84 +2,172 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D101ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0B5ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D2120854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sum1X28F"
+	by mail.kernel.org (Postfix) with ESMTP id A62B7218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571255890;
+	bh=KnWKox1ckFoEimqememAveWk3yHSqDBp0C3b6PADDAk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=m/LDiUMiNjT/fd0ERU5UNAjbGxr0UcW0sjiBunmdGXFYFezAoEh1zuPci26L2f5Qw
+	 yWGmu6HUzWIDfcMvN89KV30//9g8MiHR7yw1XWV6y+aF0OD2LDdbZ0sEzh3Ru4x1EY
+	 NmsZfQ3a1EwBKPl16I/PEtSY+/XOJusW6qclWb5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394606AbfJPT4H (ORCPT
+        id S2394617AbfJPT6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:56:07 -0400
-Received: from mail-il1-f179.google.com ([209.85.166.179]:41613 "EHLO
-        mail-il1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730603AbfJPT4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:56:07 -0400
-Received: by mail-il1-f179.google.com with SMTP id z10so3884240ilo.8;
-        Wed, 16 Oct 2019 12:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=h/P3JA46kWkR1ok83p5Cbw7TV2607e8IBxUrOI+c/JY=;
-        b=Sum1X28FKUFNIoD0TNCMnYgp67D/UN5XOavrIbFzvM2OhQqxcIp0ZcOU/WPmuTG97l
-         WrFb0fodakzC54W5Ff73sJr/YUykiA4jcILXc/kv0/7pBCt6XjQQvcQShAf2pTNkF6o+
-         b21vOXJhCIT/oiuwPd8iHKE9yOGo6CLKbT7sHkiElIe0Ryqnh8hmtoj9j8xxRU9s/HGz
-         VNKIigtDHhmedxxSla4gD2d/jwbsRQ7Vw1mIAq+CgTUZHQ9iG/79+BjXsZWv/g+GnZI2
-         R0JgYpjCuJqBF0TpAMWyBzyc69+1ffJpaxnK5gNrSrnGa8HFzJgBp3IxJvIozwH83w5Z
-         DDHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=h/P3JA46kWkR1ok83p5Cbw7TV2607e8IBxUrOI+c/JY=;
-        b=AfSmZEQyMxvq1y/NNvDbPdMMdroMIi5xLNgWDEPsZdtCKUJ1IYJvxSJW7D1fQEL7Mu
-         Bs+h8+jEeyj/PXn6t87yAuGwiE5WcvlW9i7y2MvQTcDADGK3XIyGMbT13zfhWgV7xuKu
-         wT7h3zyRYYf8xrZA1PEUg15SWrvmRacQSpdf+/RQGZPp1T7hX7zd8AepML1lup0RDXWt
-         /UbuNjbwO9ML3jbu3o7DeLB8P7txiqI7UdSppOGmvkLM3fCJYeDDhLkrCzUGjSTbvSPz
-         tFNre2OR/B4QQ3fiU6iLB0+ZGw/1sdx/aZx7NtGXcuIFPCJNLvLz7Sxos198Oq5q8grT
-         NEFQ==
-X-Gm-Message-State: APjAAAVAnbT/7c/r6k1FHiPOLp4X5rkKgUjbg85QuipIvBBxWmf74WXx
-        b7prxy1tP5GSoOpFyNgd413c1NOD779y/6vWU/U=
-X-Google-Smtp-Source: APXvYqwWRSTsjGSsfAbBn3FBmQk3IwJ5gHMMJQp1jBBJhZxZT6EEM6o0ey+7Uxf6QgNXcqBvjgCmILXp3weYahkWuSM=
-X-Received: by 2002:a92:5b98:: with SMTP id c24mr13115016ilg.158.1571255766169;
- Wed, 16 Oct 2019 12:56:06 -0700 (PDT)
-MIME-Version: 1.0
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 16 Oct 2019 14:55:54 -0500
-Message-ID: <CAHCN7xJSz+QhOb4vE6b67jh5jnSOHnw79EyX8RW91TqPkD__Lw@mail.gmail.com>
-Subject: pwm_bl on i.MX6Q broken on 5.4-RC1+
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 16 Oct 2019 15:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730603AbfJPT6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 15:58:09 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85AE620854;
+        Wed, 16 Oct 2019 19:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571255888;
+        bh=KnWKox1ckFoEimqememAveWk3yHSqDBp0C3b6PADDAk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JcFfPNPUEDTlHB46sojRDjODfA6KVQxSZAMf8CX8m5/CiOctAi3wbkuR+pCJmdQRh
+         bnoZ4Ecgoa0nUZ0rGeiBH3XA6ifS6v4yIj4ZhhPteeLXtSSzgepnHBXSTCCYUJke13
+         cQ/i5RXMj1YV8Y4BV2wpH2daQnVto/GcWtE2u730=
+From:   Will Deacon <will@kernel.org>
+To:     linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andreyknvl@google.com,
+        Will Deacon <will@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
+Subject: [RESEND PATCH] media: uvc: Avoid cyclic entity chains due to malformed USB descriptors
+Date:   Wed, 16 Oct 2019 20:58:00 +0100
+Message-Id: <20191016195800.22099-1-will@kernel.org>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have an i.MX6Q with an LCD and PWM controlled backlight.  On 5.4-RC1
-through the current master (16 Oct 2019), the backlight does not come
-on by default.  I can get it come on by manually setting the
-brightness, but any video activity seems to blank the screen again
-until I change the brightness again.
+Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
+up the following WARNING from the UVC chain scanning code:
 
-I bisected the patch to 01ccf903edd6 ("pwm: Let pwm_get_state() return
-the last implemented state")
+  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
+  | next=ffff880067d22298.
+  | ------------[ cut here ]------------
+  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
+  | Modules linked in:
+  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
+  | 4.14.0-rc2-42613-g1488251d1a98 #238
+  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+  | Workqueue: usb_hub_wq hub_event
+  | task: ffff88006b01ca40 task.stack: ffff880064358000
+  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
+  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
+  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
+  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
+  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
+  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
+  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
+  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
+  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
+  | Call Trace:
+  |  __list_add ./include/linux/list.h:59
+  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
+  |  uvc_scan_chain_forward.isra.8+0x373/0x416
+  | drivers/media/usb/uvc/uvc_driver.c:1471
+  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
+  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
+  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
 
-If I revert this patch on 5.4-rc3, the issue goes away.
+Looking into the output from usbmon, the interesting part is the
+following data packet:
 
-I was hoping someone might have a suggestion on how to fix it to play
-nicely with the iMX6Q PWM or revert if no solution can be found.
+  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
+  00090403 00000e01 00000924 03000103 7c003328 010204db
 
-thank you,
+If we drop the lead configuration and interface descriptors, we're left
+with an output terminal descriptor describing a generic display:
 
-adam
+  /* Output terminal descriptor */
+  buf[0]	09
+  buf[1]	24
+  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
+  buf[3]	00	/* ID */
+  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
+  buf[5]	03
+  buf[6]	7c
+  buf[7]	00	/* source ID refers to self! */
+  buf[8]	33
+
+The problem with this descriptor is that it is self-referential: the
+source ID of 0 matches itself! This causes the 'struct uvc_entity'
+representing the display to be added to its chain list twice during
+'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
+processed directly from the 'dev->entities' list and then again
+immediately afterwards when trying to follow the source ID in
+'uvc_scan_chain_forward()'
+
+Add a check before adding an entity to a chain list to ensure that the
+entity is not already part of a chain.
+
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Cc: <stable@vger.kernel.org>
+Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+
+Resending since I don't think any material changes are required to address
+the comments on the previous posting:
+
+http://lkml.kernel.org/r/20191002112753.21630-1-will@kernel.org
+
+ drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 66ee168ddc7e..e24420b1750a 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
+ 			break;
+ 		if (forward == prev)
+ 			continue;
++		if (forward->chain.next || forward->chain.prev) {
++			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++				"entity %d already in chain.\n", forward->id);
++			return -EINVAL;
++		}
+ 
+ 		switch (UVC_ENTITY_TYPE(forward)) {
+ 		case UVC_VC_EXTENSION_UNIT:
+@@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
+ 				return -1;
+ 			}
+ 
++			if (term->chain.next || term->chain.prev) {
++				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++					"entity %d already in chain.\n",
++					term->id);
++				return -EINVAL;
++			}
++
+ 			if (uvc_trace_param & UVC_TRACE_PROBE)
+ 				printk(KERN_CONT " %d", term->id);
+ 
+-- 
+2.23.0.700.g56cf767bdb-goog
+
