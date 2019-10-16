@@ -7,53 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BEEECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80E3ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC6C218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DED620872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263036;
-	bh=HdPM/9FoLj8uItAc5KmRuQ+e5lvgdJjgzjajg0U+Q1k=;
+	s=default; t=1571263041;
+	bh=8Em2bsmIAcI/tf3Ihod02Uq15PYbjOQsMAOdNwSUvTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fGDwrTwdfVuzOi2gFKEYmLPusUp30R6Hu/R2E+hIj/G0iw97SsWh1QpsAZLHnAZQP
-	 Dm+F+YCUYZCke0+ZMSEV+gxIVMk6fni9PwXy0XpzgiEVhGBKeyZl91iFyFqFsOg1Vc
-	 HCH34Z3Cw98gqeNWrBKoLrPRvfE6bFRkr8Hzy5QM=
+	b=1CNVOJ4sjZBaAZuTfmdSgkJhbxX7Xxtx8EeUzXvZxW0d9GNoOvnOJQkvKgWUZsPij
+	 BwrD2rEgxcKBNZotHauNMGKTkeMoj6jqQILvXmCrUfWn8XODXGn+H/4moJgplSk79e
+	 cEF8L/s41tE6Te2xte9ZUQtctRAwRiUE9zeRzZFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389689AbfJPV5P (ORCPT
+        id S2395462AbfJPV5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395383AbfJPV4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:36 -0400
+        id S2395417AbfJPV4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:44 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B9B521928;
-        Wed, 16 Oct 2019 21:56:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1E8A21D7D;
+        Wed, 16 Oct 2019 21:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262996;
-        bh=HdPM/9FoLj8uItAc5KmRuQ+e5lvgdJjgzjajg0U+Q1k=;
+        s=default; t=1571263003;
+        bh=8Em2bsmIAcI/tf3Ihod02Uq15PYbjOQsMAOdNwSUvTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W2cSUzU8pdtPnso8oTLhtVu50l9vtRSMvr59EFHY2kLDZeonRgqJNWGmVH2OwHkSg
-         PVrajj8RRZ4UUx9uZdVWHXV/iMCnWzeFpNVuJXyo6AZ3eHGQ5bZrFN9QVNe2JTp0nT
-         TVYNTXSWyrHbvURn+9VjpnDRwrJ4wGckhlbB9n+4=
+        b=HcPXBAAKzTiqlPdXsQ6seV/3ICMFLT4Qpban1IyigTKtBzCfgt5P65YO37F3O3v7L
+         115jhdnO1eOvCapNQ9BaQqyro7pZpDiSZHsimnEjBD2DlbvkVt3NAF4Lug3PEgGRwn
+         a/Nxgs84SkUIknWDgtafhvNOTO2ig+7SHUOFlD0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        stable@vger.kernel.org, Scott Talbert <swt@techie.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
         Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 64/65] x86/asm: Fix MWAITX C-state hint value
-Date:   Wed, 16 Oct 2019 14:51:18 -0700
-Message-Id: <20191016214840.468371204@linuxfoundation.org>
+Subject: [PATCH 4.14 43/65] efivar/ssdt: Dont iterate over EFI vars if no SSDT override was specified
+Date:   Wed, 16 Oct 2019 14:50:57 -0700
+Message-Id: <20191016214832.914076532@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -66,64 +72,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 454de1e7d970d6bc567686052329e4814842867c upstream.
+commit c05f8f92b701576b615f30aac31fabdc0648649b upstream.
 
-As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
-and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
-of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
+The kernel command line option efivar_ssdt= allows the name to be
+specified of an EFI variable containing an ACPI SSDT table that should
+be loaded into memory by the OS, and treated as if it was provided by
+the firmware.
 
-Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
-this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
+Currently, that code will always iterate over the EFI variables and
+compare each name with the provided name, even if the command line
+option wasn't set to begin with.
 
-This hasn't had any implications so far because setting reserved bits in
-EAX is simply ignored by the CPU.
+So bail early when no variable name was provided. This works around a
+boot regression on the 2012 Mac Pro, as reported by Scott.
 
- [ bp: Fixup comment in delay_mwaitx() and massage. ]
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
+Tested-by: Scott Talbert <swt@techie.net>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Fixes: 475fb4e8b2f4 ("efi / ACPI: load SSTDs from EFI variables")
+Link: https://lkml.kernel.org/r/20191002165904.8819-3-ard.biesheuvel@linaro.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/mwait.h |    2 +-
- arch/x86/lib/delay.c         |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/efi.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -21,7 +21,7 @@
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_LOOPS		((u32)-1)
--#define MWAITX_DISABLE_CSTATES		0xf
-+#define MWAITX_DISABLE_CSTATES		0xf0
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -266,6 +266,9 @@ static __init int efivar_ssdt_load(void)
+ 	void *data;
+ 	int ret;
  
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long _
- 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
++	if (!efivar_ssdt[0])
++		return 0;
++
+ 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
  
- 		/*
--		 * AMD, like Intel, supports the EAX hint and EAX=0xf
--		 * means, do not enter any deep C-state and we use it
-+		 * AMD, like Intel's MWAIT version, supports the EAX hint and
-+		 * EAX=0xf0 means, do not enter any deep C-state and we use it
- 		 * here in delay() to minimize wakeup latency.
- 		 */
- 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
+ 	list_for_each_entry_safe(entry, aux, &entries, list) {
 
 
