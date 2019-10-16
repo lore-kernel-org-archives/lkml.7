@@ -2,56 +2,52 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379D6ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C970AECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD4C218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A130E218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263294;
-	bh=HCHL/0b7wsmiqEtQgSxAV7TiQ81FqSzff9r9X6rGXcU=;
+	s=default; t=1571263296;
+	bh=u/Y53TAPxRLJPRHjG5gc+qtkO7jxIITbVNG7+QLOzPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5mfOALAm/69bbHpaMQkOH8EBkDhIB3i6zwB5bf6/S6PuqPi0fNaqXG7JjhWo8wv0
-	 Zwi0kTw8P/vkVXgzBag0qGs/OButdpgjoivHwNCNLjt83yXvuXpjPJuzW8yPJNxIBj
-	 ZfdbTYsF1/DhrZPHU98um9KB0bdsnPDx5r3eIP2s=
+	b=yC7uyvwg+2ZNCYPXAodJqJx33pLOtsNQAf24WtWUA2glKN5HS3bDVZzb6u47df2vh
+	 Le+M6vkAnNmVJ1RbhJs1siVYB0w2CPO+Omrstz3qux8mAtBkGybz3GQn6wCn+PrkiZ
+	 MDxDwgrOXlXWKzki29TWxSxKhnVUIp+3a1vtqM60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438847AbfJPWAk (ORCPT
+        id S2438838AbfJPWAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438521AbfJPV73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:29 -0400
+        id S2438493AbfJPV7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:24 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38610218DE;
-        Wed, 16 Oct 2019 21:59:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F14A218DE;
+        Wed, 16 Oct 2019 21:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263169;
-        bh=HCHL/0b7wsmiqEtQgSxAV7TiQ81FqSzff9r9X6rGXcU=;
+        s=default; t=1571263163;
+        bh=u/Y53TAPxRLJPRHjG5gc+qtkO7jxIITbVNG7+QLOzPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ecYO2DUNllefL2QgnUUuXp+/B2AdMHl/onEUGWDoMbqmof7sYIhmh37WghTe7y9cJ
-         GhdmK5sXYnvw+Keki4hMd69HcAfImtqVVE13KkmNrLYMW2nxNrMSD+8YGqMIzrY0im
-         VllLuaiuLJHhuM8qnaQkFoPCxH45ZBpEoO7QpKd8=
+        b=hZQv0HEes7lwb8e81mw+06sO0ygrQXskqI0Dms+hkADHRO/w8yCi0CFhet06H/Pv/
+         1vwGuF7l+at8YG9fHXFxPqgzn5LMDkfeAM9mPwR2wAGNqrUE+PI2fZ5KkgRLMhfhiE
+         pQ7G8gFUUT6C+lTpXkm3qUoCx/NYZaOPPOU1GV98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Leho Kraav <leho@kraav.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.3 097/112] drm/i915: Bump skl+ max plane width to 5k for linear/x-tiled
-Date:   Wed, 16 Oct 2019 14:51:29 -0700
-Message-Id: <20191016214906.115287254@linuxfoundation.org>
+        stable@vger.kernel.org, Meng Zhuo <mengzhuo1203@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>
+Subject: [PATCH 5.3 091/112] MIPS: elf_hwcap: Export userspace ASEs
+Date:   Wed, 16 Oct 2019 14:51:23 -0700
+Message-Id: <20191016214905.514353521@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -64,75 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-commit dc7890995e04bacb45ab21e0daaeae1e7c803eb3 upstream.
+commit 38dffe1e4dde1d3174fdce09d67370412843ebb5 upstream.
 
-The officially validated plane width limit is 4k on skl+, however
-we already had people using 5k displays before we started to enforce
-the limit. Also it seems Windows allows 5k resolutions as well
-(though not sure if they do it with one plane or two).
+A Golang developer reported MIPS hwcap isn't reflecting instructions
+that the processor actually supported so programs can't apply optimized
+code at runtime.
 
-According to hw folks 5k should work with the possible
-exception of the following features:
-- Ytile (already limited to 4k)
-- FP16 (already limited to 4k)
-- render compression (already limited to 4k)
-- KVMR sprite and cursor (don't care)
-- horizontal panning (need to verify this)
-- pipe and plane scaling (need to verify this)
+Thus we export the ASEs that can be used in userspace programs.
 
-So apart from last two items on that list we are already
-fine. We should really verify what happens with those last
-two items but I don't have a 5k display on hand atm so it'll
-have to wait.
-
-In the meantime let's just bump the limit back up to 5k since
-several users have already been using it without apparent issues.
-At least we'll be no worse off than we were prior to lowering
-the limits.
-
-Cc: stable@vger.kernel.org
-Cc: Sean Paul <sean@poorly.run>
-Cc: José Roberto de Souza <jose.souza@intel.com>
-Tested-by: Leho Kraav <leho@kraav.com>
-Fixes: 372b9ffb5799 ("drm/i915: Fix skl+ max plane width")
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111501
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190905135044.2001-1-ville.syrjala@linux.intel.com
-Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-(cherry picked from commit bed34ef544f9ab37ab349c04cf4142282c4dcf5d)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reported-by: Meng Zhuo <mengzhuo1203@gmail.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: <stable@vger.kernel.org> # 4.14+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/display/intel_display.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/mips/include/uapi/asm/hwcap.h |   11 +++++++++++
+ arch/mips/kernel/cpu-probe.c       |   33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -3291,7 +3291,20 @@ static int skl_max_plane_width(const str
- 	switch (fb->modifier) {
- 	case DRM_FORMAT_MOD_LINEAR:
- 	case I915_FORMAT_MOD_X_TILED:
--		return 4096;
-+		/*
-+		 * Validated limit is 4k, but has 5k should
-+		 * work apart from the following features:
-+		 * - Ytile (already limited to 4k)
-+		 * - FP16 (already limited to 4k)
-+		 * - render compression (already limited to 4k)
-+		 * - KVMR sprite and cursor (don't care)
-+		 * - horizontal panning (TODO verify this)
-+		 * - pipe and plane scaling (TODO verify this)
-+		 */
-+		if (cpp == 8)
-+			return 4096;
-+		else
-+			return 5120;
- 	case I915_FORMAT_MOD_Y_TILED_CCS:
- 	case I915_FORMAT_MOD_Yf_TILED_CCS:
- 		/* FIXME AUX plane? */
+--- a/arch/mips/include/uapi/asm/hwcap.h
++++ b/arch/mips/include/uapi/asm/hwcap.h
+@@ -6,5 +6,16 @@
+ #define HWCAP_MIPS_R6		(1 << 0)
+ #define HWCAP_MIPS_MSA		(1 << 1)
+ #define HWCAP_MIPS_CRC32	(1 << 2)
++#define HWCAP_MIPS_MIPS16	(1 << 3)
++#define HWCAP_MIPS_MDMX     (1 << 4)
++#define HWCAP_MIPS_MIPS3D   (1 << 5)
++#define HWCAP_MIPS_SMARTMIPS (1 << 6)
++#define HWCAP_MIPS_DSP      (1 << 7)
++#define HWCAP_MIPS_DSP2     (1 << 8)
++#define HWCAP_MIPS_DSP3     (1 << 9)
++#define HWCAP_MIPS_MIPS16E2 (1 << 10)
++#define HWCAP_LOONGSON_MMI  (1 << 11)
++#define HWCAP_LOONGSON_EXT  (1 << 12)
++#define HWCAP_LOONGSON_EXT2 (1 << 13)
+ 
+ #endif /* _UAPI_ASM_HWCAP_H */
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -2198,6 +2198,39 @@ void cpu_probe(void)
+ 		elf_hwcap |= HWCAP_MIPS_MSA;
+ 	}
+ 
++	if (cpu_has_mips16)
++		elf_hwcap |= HWCAP_MIPS_MIPS16;
++
++	if (cpu_has_mdmx)
++		elf_hwcap |= HWCAP_MIPS_MDMX;
++
++	if (cpu_has_mips3d)
++		elf_hwcap |= HWCAP_MIPS_MIPS3D;
++
++	if (cpu_has_smartmips)
++		elf_hwcap |= HWCAP_MIPS_SMARTMIPS;
++
++	if (cpu_has_dsp)
++		elf_hwcap |= HWCAP_MIPS_DSP;
++
++	if (cpu_has_dsp2)
++		elf_hwcap |= HWCAP_MIPS_DSP2;
++
++	if (cpu_has_dsp3)
++		elf_hwcap |= HWCAP_MIPS_DSP3;
++
++	if (cpu_has_mips16e2)
++		elf_hwcap |= HWCAP_MIPS_MIPS16E2;
++
++	if (cpu_has_loongson_mmi)
++		elf_hwcap |= HWCAP_LOONGSON_MMI;
++
++	if (cpu_has_loongson_ext)
++		elf_hwcap |= HWCAP_LOONGSON_EXT;
++
++	if (cpu_has_loongson_ext2)
++		elf_hwcap |= HWCAP_LOONGSON_EXT2;
++
+ 	if (cpu_has_vz)
+ 		cpu_probe_vz(c);
+ 
 
 
