@@ -2,111 +2,162 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232A8FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D672FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043C120854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476CE20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392619AbfJPLK1 (ORCPT
+        id S2392630AbfJPLKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:10:27 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:62450 "EHLO 1wt.eu"
+        Wed, 16 Oct 2019 07:10:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34354 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbfJPLK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:10:26 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x9GBA9bk013439;
-        Wed, 16 Oct 2019 13:10:09 +0200
-Date:   Wed, 16 Oct 2019 13:10:09 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191016111009.GE13154@1wt.eu>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
+        id S1730377AbfJPLKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:10:45 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 017B810DCC8A;
+        Wed, 16 Oct 2019 11:10:45 +0000 (UTC)
+Received: from [10.36.118.23] (unknown [10.36.118.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 26D916046B;
+        Wed, 16 Oct 2019 11:10:41 +0000 (UTC)
+Subject: Re: [PATCH] mm/page_alloc: Make alloc_gigantic_page() available for
+ general use
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <1571211293-29974-1-git-send-email-anshuman.khandual@arm.com>
+ <c7ac9f99-a34f-c553-b216-b847d093cae9@redhat.com>
+ <20191016085123.GO317@dhcp22.suse.cz>
+ <679b5c66-8f1b-ec4d-64dd-13fbc440917d@redhat.com>
+ <20191016110831.GV317@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <eb2406d5-1327-1365-be0e-ee319ab92088@redhat.com>
+Date:   Wed, 16 Oct 2019 13:10:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20191016110831.GV317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Wed, 16 Oct 2019 11:10:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vegard,
+On 16.10.19 13:08, Michal Hocko wrote:
+> On Wed 16-10-19 10:56:16, David Hildenbrand wrote:
+>> On 16.10.19 10:51, Michal Hocko wrote:
+>>> On Wed 16-10-19 10:08:21, David Hildenbrand wrote:
+>>>> On 16.10.19 09:34, Anshuman Khandual wrote:
+>>> [...]
+>>>>> +static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
+>>>>> +				   unsigned long nr_pages)
+>>>>> +{
+>>>>> +	unsigned long i, end_pfn = start_pfn + nr_pages;
+>>>>> +	struct page *page;
+>>>>> +
+>>>>> +	for (i = start_pfn; i < end_pfn; i++) {
+>>>>> +		page = pfn_to_online_page(i);
+>>>>> +		if (!page)
+>>>>> +			return false;
+>>>>> +
+>>>>> +		if (page_zone(page) != z)
+>>>>> +			return false;
+>>>>> +
+>>>>> +		if (PageReserved(page))
+>>>>> +			return false;
+>>>>> +
+>>>>> +		if (page_count(page) > 0)
+>>>>> +			return false;
+>>>>> +
+>>>>> +		if (PageHuge(page))
+>>>>> +			return false;
+>>>>> +	}
+>>>>
+>>>> We might still try to allocate a lot of ranges that contain unmovable data
+>>>> (we could avoid isolating a lot of page blocks in the first place). I'd love
+>>>> to see something like pfn_range_movable() (similar, but different to
+>>>> is_mem_section_removable(), which uses has_unmovable_pages()).
+>>>
+>>> Just to make sure I understand. Do you want has_unmovable_pages to be
+>>> called inside pfn_range_valid_contig?
+>>
+>> I think this requires more thought, as has_unmovable_pages() works on
+>> pageblocks only AFAIK. If you try to allocate < MAX_ORDER - 1, you could get
+>> a lot of false positives.
+>>
+>> E.g., if a free "MAX_ORDER - 1" page spans two pageblocks and you only test
+>> the second pageblock, you might detect "unmovable" if not taking proper care
+>> of the "bigger" free page. (alloc_contig_range() properly works around that
+>> issue)
+> 
+> OK, I see your point. You are right that false positives are possible. I
+> would deal with those in a separate patch though.
+> 
+>>> [...]
+>>>>> +struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
+>>>>> +				int nid, nodemask_t *nodemask)
+>>>>> +{
+>>>>> +	unsigned long ret, pfn, flags;
+>>>>> +	struct zonelist *zonelist;
+>>>>> +	struct zone *zone;
+>>>>> +	struct zoneref *z;
+>>>>> +
+>>>>> +	zonelist = node_zonelist(nid, gfp_mask);
+>>>>> +	for_each_zone_zonelist_nodemask(zone, z, zonelist,
+>>>>> +					gfp_zone(gfp_mask), nodemask) {
+>>>>
+>>>> One important part is to never use the MOVABLE zone here (otherwise
+>>>> unmovable data would end up on the movable zone). But I guess the caller is
+>>>> responsible for that (not pass GFP_MOVABLE) like gigantic pages do.
+>>>
+>>> Well, if the caller uses GFP_MOVABLE then the movability should be
+>>> implemented in some form. If that is not the case then it is a bug on
+>>> the caller behalf.
+>>>
+>>>>> +		spin_lock_irqsave(&zone->lock, flags);
+>>>>> +
+>>>>> +		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
+>>>>
+>>>> This alignment does not make too much sense when allowing passing in !power
+>>>> of two orders. Maybe the caller should specify the requested alignment
+>>>> instead? Or should we enforce this to be aligned to make our life easier for
+>>>> now?
+>>>
+>>> Are there any usecases that would require than the page alignment?
+>>
+>> Gigantic pages have to be aligned AFAIK.
+> 
+> Aligned to what? I do not see any guarantee like that in the existing
+> code.
+> 
 
-On Wed, Oct 16, 2019 at 12:22:54PM +0200, Vegard Nossum wrote:
-> (cross-posted to git, LKML, and the kernel workflows mailing lists.)
-> 
-> Hi all,
-> 
-> I've been following Konstantin Ryabitsev's quest for better development
-> and communication tools for the kernel [1][2][3], and I would like to
-> propose a relatively straightforward idea which I think could bring a
-> lot to the table.
-> 
-> Step 1:
-> 
-> * git send-email needs to include parent SHA1s and generally all the
->   information needed to perfectly recreate the commit when applied so
->   that all the SHA1s remain the same
-> 
-> * git am (or an alternative command) needs to recreate the commit
->   perfectly when applied, including applying it to the correct parent
-> 
-> Having these two will allow a perfect mapping between email and git;
-> essentially email just becomes a transport for git. There are a lot of
-> advantages to this, particularly that you have a stable way to refer to
-> a patch or commit (despite it appearing on a mailing list), and there
-> is no need for "changeset IDs" or whatever, since you can just use the
-> git SHA1 which is unique, unambiguous, and stable.
+pfn = ALIGN(zone->zone_start_pfn, nr_pages);
 
-I agree this would be great and have been missing this a number of times,
-eventhough I'm aware of git-send-pack/git-receive-pack. The text format
-is way more convenient for a lot of reasons. It could also help with
-Greg's idea of using the commit IDs to reference bugs, as such IDs could
-remain stable within a series before it is merged, and as such referenced
-in subsequent commit messages. It could also be useful to avoid losing
-notes related to a patch once it's merged.
+-- 
 
-> Step 3:
-> 
-> * Instead of describing a patchset in a separate introduction email, we
->   can create a merge commit between the parent of the first commit in
->   the series and the last and put the patchset description in the merge
->   commit [5]. This means the patchset description also gets to be part
->   of git history.
-> 
->   (This would require support for git send-email/am to be able to send
->   and apply merge commits -- at least those which have the same tree as
->   one of the parents. This is _not_ yet supported in my proposed git
->   patches.)
+Thanks,
 
-That's a good idea, as we've all seen long series with a very detailed
-description in patch 0 and much less context in subsequent patches, thus
-losing the context once merged.
-
-> * stable SHA1s means we can refer to previous versions of a patchset by
->   SHA1 rather than archive links. I propose a new changelog tag for
->   this, maybe "Previous:" or maybe even a full list of "v1:", "v2:",
->   etc. with a SHA1 or ref. Note that these SHA1s do *not* need to exist
->   in Linus's repo, but those who want can pull those branches from the
->   bot-maintained repo on git.kernel.org.
-
-For me this mainly brings the benefit of finally having a unique identifier
-for multiple iterations of a patchset. It then becomes easier to use this
-identifier to designate the functional work, regardless of the number of
-updates it gets. Of course it's never that black and white since such work
-may itself merge multiple other patchsets but for most use cases it can
-help.
-
-Willy
+David / dhildenb
