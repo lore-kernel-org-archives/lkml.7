@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1FBFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDAAECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3F821D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D6321D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262842;
-	bh=XzCMom3IC3SYUResNnRRzR+p0658IoGw/WlSDIjtbrk=;
+	s=default; t=1571262845;
+	bh=0pRgjxjxcQutTSf8K2BeQpWt/9VHQ1dqxNGgKWkcSAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GY7H+/4LSh3T+/11jrkvxUsuU3KDdRp8oXHkVImgJYbZqROIc2cUJvrRqNGLNwe4S
-	 HaAZE1LKbkMMITs/Kuurir4xER1cNSGJNY6QztdWen+61vctlYAZU64Ht9pYdc0784
-	 bPzqG8wnGqFXkVOqyxvIc6l9RZkmZkEfpDbTZ4H4=
+	b=mgwC2qxJrnjvCbzihith4W9RYdMxJjanVETne7n3YgsFeY+geY7cg2OKcYDo/RiAh
+	 7uSQnIqmIzp7J9yFh99BfxErKLw7PSrSQ9sYsh71zZof2QqZzDDzUjttjXBV3GFbZ2
+	 MWo7kUXFhSCdB40vSHuWZHQ7dO/JahTo7w/Sw3Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437641AbfJPVyB (ORCPT
+        id S2437662AbfJPVyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437591AbfJPVxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:54 -0400
+        id S2394931AbfJPVx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:57 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 047A0218DE;
-        Wed, 16 Oct 2019 21:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11CF821925;
+        Wed, 16 Oct 2019 21:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262834;
-        bh=XzCMom3IC3SYUResNnRRzR+p0658IoGw/WlSDIjtbrk=;
+        s=default; t=1571262837;
+        bh=0pRgjxjxcQutTSf8K2BeQpWt/9VHQ1dqxNGgKWkcSAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0PcJ/0cXyoBYt/fznVeFZNdqAlhBmyge0+wIDWmMSO5BZ0mv5ooaoYlO6GjXWz2Lv
-         rQ5KCgO6ikCl2NUvvIw4ZzPZR477xGsNdhv/GG+Tx5jhSIDhlVu7tAuvEcZfMvjr46
-         ta0cisCyeeKR/Obg0ahfNR825eZ/ggx06CzRmIh0=
+        b=NSWR96jlQyJm2h6JnIy0YEj0+PuelceXGt5K3Y1YUVwWBfiWpHNL0JcEGIqCVM9RP
+         CNocMGsNBTh8YaUydBNvDB8ANfblYHoWIvQ4SkqtdbFbCBo9oqwt3dB/ExM4AksIjV
+         92S5EnY+lwhkwm3HggTEmBdqtrmfMqLlFM9aJFP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.4 77/79] tracing: Get trace_array reference for available_tracers files
-Date:   Wed, 16 Oct 2019 14:50:52 -0700
-Message-Id: <20191016214834.008090257@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH 4.4 79/79] xfs: clear sb->s_fs_info on mount failure
+Date:   Wed, 16 Oct 2019 14:50:54 -0700
+Message-Id: <20191016214834.705602853@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,67 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Dave Chinner <dchinner@redhat.com>
 
-commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
+commit c9fbd7bbc23dbdd73364be4d045e5d3612cf6e82 upstream.
 
-As instances may have different tracers available, we need to look at the
-trace_array descriptor that shows the list of the available tracers for the
-instance. But there's a race between opening the file and an admin
-deleting the instance. The trace_array_get() needs to be called before
-accessing the trace_array.
+We recently had an oops reported on a 4.14 kernel in
+xfs_reclaim_inodes_count() where sb->s_fs_info pointed to garbage
+and so the m_perag_tree lookup walked into lala land.
 
-Cc: stable@vger.kernel.org
-Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Essentially, the machine was under memory pressure when the mount
+was being run, xfs_fs_fill_super() failed after allocating the
+xfs_mount and attaching it to sb->s_fs_info. It then cleaned up and
+freed the xfs_mount, but the sb->s_fs_info field still pointed to
+the freed memory. Hence when the superblock shrinker then ran
+it fell off the bad pointer.
+
+With the superblock shrinker problem fixed at teh VFS level, this
+stale s_fs_info pointer is still a problem - we use it
+unconditionally in ->put_super when the superblock is being torn
+down, and hence we can still trip over it after a ->fill_super
+call failure. Hence we need to clear s_fs_info if
+xfs-fs_fill_super() fails, and we need to check if it's valid in
+the places it can potentially be dereferenced after a ->fill_super
+failure.
+
+Signed-Off-By: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/trace/trace.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_super.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3370,9 +3370,14 @@ static int show_traces_open(struct inode
- 	if (tracing_disabled)
- 		return -ENODEV;
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1572,6 +1572,7 @@ xfs_fs_fill_super(
+  out_close_devices:
+ 	xfs_close_devices(mp);
+  out_free_fsname:
++	sb->s_fs_info = NULL;
+ 	xfs_free_fsname(mp);
+ 	kfree(mp);
+  out:
+@@ -1589,6 +1590,10 @@ xfs_fs_put_super(
+ {
+ 	struct xfs_mount	*mp = XFS_M(sb);
  
-+	if (trace_array_get(tr) < 0)
-+		return -ENODEV;
++	/* if ->fill_super failed, we have no mount to tear down */
++	if (!sb->s_fs_info)
++		return;
 +
- 	ret = seq_open(file, &show_traces_seq_ops);
--	if (ret)
-+	if (ret) {
-+		trace_array_put(tr);
- 		return ret;
-+	}
- 
- 	m = file->private_data;
- 	m->private = tr;
-@@ -3380,6 +3385,14 @@ static int show_traces_open(struct inode
- 	return 0;
+ 	xfs_notice(mp, "Unmounting Filesystem");
+ 	xfs_filestream_unmount(mp);
+ 	xfs_unmountfs(mp);
+@@ -1598,6 +1603,8 @@ xfs_fs_put_super(
+ 	xfs_destroy_percpu_counters(mp);
+ 	xfs_destroy_mount_workqueues(mp);
+ 	xfs_close_devices(mp);
++
++	sb->s_fs_info = NULL;
+ 	xfs_free_fsname(mp);
+ 	kfree(mp);
+ }
+@@ -1617,6 +1624,9 @@ xfs_fs_nr_cached_objects(
+ 	struct super_block	*sb,
+ 	struct shrink_control	*sc)
+ {
++	/* Paranoia: catch incorrect calls during mount setup or teardown */
++	if (WARN_ON_ONCE(!sb->s_fs_info))
++		return 0;
+ 	return xfs_reclaim_inodes_count(XFS_M(sb));
  }
  
-+static int show_traces_release(struct inode *inode, struct file *file)
-+{
-+	struct trace_array *tr = inode->i_private;
-+
-+	trace_array_put(tr);
-+	return seq_release(inode, file);
-+}
-+
- static ssize_t
- tracing_write_stub(struct file *filp, const char __user *ubuf,
- 		   size_t count, loff_t *ppos)
-@@ -3410,8 +3423,8 @@ static const struct file_operations trac
- static const struct file_operations show_traces_fops = {
- 	.open		= show_traces_open,
- 	.read		= seq_read,
--	.release	= seq_release,
- 	.llseek		= seq_lseek,
-+	.release	= show_traces_release,
- };
- 
- static ssize_t
 
 
