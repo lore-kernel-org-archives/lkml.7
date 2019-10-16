@@ -2,94 +2,73 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDB7C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0055CC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F9C2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D698821835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403979AbfJPHxH (ORCPT
+        id S2390174AbfJPHzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:53:07 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2771 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfJPHxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:53:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 00:53:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="194765822"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Oct 2019 00:53:01 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iKe7A-0006HQ-Vb; Wed, 16 Oct 2019 10:53:00 +0300
-Date:   Wed, 16 Oct 2019 10:53:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 05/14] software node: clean up
- property_copy_string_array()
-Message-ID: <20191016075300.GO32742@smile.fi.intel.com>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-6-dmitry.torokhov@gmail.com>
- <20191015120726.GG32742@smile.fi.intel.com>
- <20191015181211.GD105649@dtor-ws>
+        Wed, 16 Oct 2019 03:55:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48674 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfJPHzX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:55:23 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iKe9R-0007yC-2j; Wed, 16 Oct 2019 09:55:21 +0200
+Date:   Wed, 16 Oct 2019 09:55:21 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 10/34] m68k/coldfire: Use CONFIG_PREEMPTION
+Message-ID: <20191016075520.eauiemlvbo5a37d4@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-11-bigeasy@linutronix.de>
+ <39d20c16-50a4-34f5-f98c-979138bf1a29@linux-m68k.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191015181211.GD105649@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <39d20c16-50a4-34f5-f98c-979138bf1a29@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 11:12:11AM -0700, Dmitry Torokhov wrote:
-> On Tue, Oct 15, 2019 at 03:07:26PM +0300, Andy Shevchenko wrote:
-> > On Fri, Oct 11, 2019 at 04:07:12PM -0700, Dmitry Torokhov wrote:
-> > > Because property_copy_string_array() stores the newly allocated pointer in the
-> > > destination property, we have an awkward code in property_entry_copy_data()
-> > > where we fetch the new pointer from dst.
+On 2019-10-16 10:50:41 [+1000], Greg Ungerer wrote:
+> Hi Sebastian,
+Hi Greg,
+
+> On 16/10/19 5:17 am, Sebastian Andrzej Siewior wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de>
 > > 
-> > I don't see a problem in this function.
+> > CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+> > Both PREEMPT and PREEMPT_RT require the same functionality which today
+> > depends on CONFIG_PREEMPT.
 > > 
-> > Rather 'awkward code' is a result of use property_set_pointer() which relies on
-> > data type.
+> > Switch the entry code over to use CONFIG_PREEMPTION.
+> > 
+> > Cc: Greg Ungerer <gerg@linux-m68k.org>
 > 
-> No, the awkwardness is that we set the pointer once in
-> property_copy_string_array(), then fetch it in
-> property_entry_copy_data() only to set it again via
-> property_set_pointer().
+> Acked-by: Greg Ungerer <gerg@linux-m68k.org>
 
-Yes, since property_set_pointer is called independently
-on the type of the value.
+Thank you.
 
+> Do you want me to take this via the m68knommu git tree?
+> Or are you taking the whole series via some other tree?
 
-> This is confising and awkward and I believe it
-> is cleaner for property_copy_string_array() to give a pointer to a copy
-> of a string array, and then property_entry_copy_data() use it when
-> handling the destination structure.
+It is up to you. You have all the dependencies so you can either add it
+to your -next branch or leave it and we will pick it up for you.
 
-We probably need a 3rd opinion here.
+> Regards
+> Greg
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sebastian
