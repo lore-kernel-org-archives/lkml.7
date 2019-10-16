@@ -2,126 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F059AECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEB1ECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28F7217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82878217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571205495;
+	bh=ptLr0TOYMFKLBYe15U23+xjSz09tfCCDviZntLEmAUQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ysPnqeMcA3Q+bd2HSEUMfKA5S0+fuaSRK7VYWOLslaKnbTJqKbNBqQkhbQWZlc3gG
+	 pVHgO2sGVN4HgggsDjRJHEa85Bqj+Vn71371In3lM0YkG5ahbeexHU7DB2nRdnDfY5
+	 2fxbbRpR6oGzqGr7LNkJESp7imtaI768zvu3TdX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfJPF4T (ORCPT
+        id S2388011AbfJPF6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 01:56:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:27078 "EHLO mga11.intel.com"
+        Wed, 16 Oct 2019 01:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387456AbfJPF4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 01:56:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 22:56:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,302,1566889200"; 
-   d="scan'208";a="397057384"
-Received: from fyin-mobl.ccr.corp.intel.com (HELO [10.239.204.241]) ([10.239.204.241])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Oct 2019 22:56:18 -0700
-Subject: Re: [PATCH v2] ACPI / processor_idle: use ndelay instead of io port
- access for wait
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191015080404.6013-1-fengwei.yin@intel.com>
- <c9f3f4f93bb946f790fce4709253b359@AcuMS.aculab.com>
-From:   "Yin, Fengwei" <fengwei.yin@intel.com>
-Message-ID: <2b3ce9e9-e805-1b8d-86c3-c8f498a4d3dd@intel.com>
-Date:   Wed, 16 Oct 2019 13:56:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2387906AbfJPF6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 01:58:14 -0400
+Received: from localhost (unknown [171.76.123.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6CF20872;
+        Wed, 16 Oct 2019 05:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571205493;
+        bh=ptLr0TOYMFKLBYe15U23+xjSz09tfCCDviZntLEmAUQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZJU+JUtVqjvjeez2HGwwKzRhpDVTvYem3TbV8OWVdCZpr+T+nt9ueYhnid90yQQku
+         FEqL0qhpY0pkZbWLnwEc9kFOEOJTLC+MbRAwINHnt6kOjq1gqzIzNPOJiQdevOcXCM
+         dYVas/tRwUcmsvDi+M2MkYZPfUrfpzjffWEN1sUM=
+Date:   Wed, 16 Oct 2019 11:28:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm remoteproc dependencies
+Message-ID: <20191016055808.GD2654@vkoul-mobl>
+References: <20191009001442.15719-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <c9f3f4f93bb946f790fce4709253b359@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009001442.15719-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-On 10/15/2019 7:48 PM, David Laight wrote:
-> From: Yin Fengwei
->> Sent: 15 October 2019 09:04
->> In function acpi_idle_do_entry(), an ioport access is used for dummy
->> wait to guarantee hardware behavior. But it could trigger unnecessary
->> vmexit in virtualization environment.
->>
->> If we run linux as guest and export all available native C state to
->> guest, we did see many PM timer access triggered VMexit when guest
->> enter deeper C state in our environment (We used ACRN hypervisor
->> instead of kvm or xen which has PM timer emulated and exports all
->> native C state to guest).
->>
->> According to the original comments of this part of code, io port
->> access is only for dummy wait. We could use busy wait instead of io
->> port access to guarantee hardware behavior and avoid unnecessary
->> VMexit.
+On 08-10-19, 17:14, Bjorn Andersson wrote:
+> Enable the the power domains, reset controllers and remote block device
+> memory access drivers necessary to boot the Audio, Compute and Modem
+> DSPs on Qualcomm SDM845.
 > 
-> You need some hard synchronisation instruction(s) after the inb()
-> and before any kind of delay to ensure your delay code is executed
-> after the inb() completes.
-> 
-> I'm pretty sure that inb() is only synchronised with memory reads.
-Thanks a lot for the comments.
+> None of the power domains are system critical, but needs to be builtin
+> as the driver core prohibits probe deferal past late initcall.
 
-I didn't find the common serializing instructions API in kernel (only
-memory  barrier which is used to make sure of memory access). For Intel
-x86, cpuid could be used as serializing instruction. But it's not
-suitable for common code here. Do you have any suggestion?
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
 
 > 
-> ...
->> +	/* profiling the time used for dummy wait op */
->> +	ktime_get_real_ts64(&ts0);
->> +	inl(acpi_gbl_FADT.xpm_timer_block.address);
->> +	ktime_get_real_ts64(&ts1);
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/configs/defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> That could be dominated by the cost of ktime_get_real_ts64().
-> It also need synchronising instructions.
-I did some testing. ktime_get_real_ts64() takes much less time than io
-port access.
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index c9a867ac32d4..42f042ba1039 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -732,10 +732,13 @@ CONFIG_RPMSG_QCOM_GLINK_SMEM=m
+>  CONFIG_RPMSG_QCOM_SMD=y
+>  CONFIG_RASPBERRYPI_POWER=y
+>  CONFIG_IMX_SCU_SOC=y
+> +CONFIG_QCOM_AOSS_QMP=y
+>  CONFIG_QCOM_COMMAND_DB=y
+>  CONFIG_QCOM_GENI_SE=y
+>  CONFIG_QCOM_GLINK_SSR=m
+> +CONFIG_QCOM_RMTFS_MEM=m
+>  CONFIG_QCOM_RPMH=y
+> +CONFIG_QCOM_RPMHPD=y
+>  CONFIG_QCOM_SMEM=y
+>  CONFIG_QCOM_SMD_RPM=y
+>  CONFIG_QCOM_SMP2P=y
+> @@ -780,6 +783,8 @@ CONFIG_PWM_ROCKCHIP=y
+>  CONFIG_PWM_SAMSUNG=y
+>  CONFIG_PWM_SUN4I=m
+>  CONFIG_PWM_TEGRA=m
+> +CONFIG_RESET_QCOM_AOSS=y
+> +CONFIG_RESET_QCOM_PDC=m
+>  CONFIG_RESET_TI_SCI=y
+>  CONFIG_PHY_XGENE=y
+>  CONFIG_PHY_SUN4I_USB=y
+> -- 
+> 2.18.0
 
-The test code is like:
-1.
-	local_irq_save(flag);
-	ktime_get_real_ts64(&ts0);
-	inl(acpi_gbl_FADT.xpm_timer_block.address);
-	ktime_get_real_ts64(&ts1);
-	local_irq_restore(flag);
-
-2.
-	local_irq_save(flag);
-	ktime_get_real_ts64(&ts0);
-	ktime_get_real_ts64(&ts1);
-	local_irq_restore(flag);
-
-The delta in 1 is about 500000ns. And delta in 2 is about
-2000ns. The date is gotten on Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz.
-So I suppose the impact of ktime_get_real_ts64 is small.
-
-Regards
-Yin, Fengwei
-
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-
+-- 
+~Vinod
