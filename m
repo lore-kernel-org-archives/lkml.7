@@ -2,59 +2,60 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD051FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D38FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CCE21A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C2321925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B2sryJVM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NwwamYdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405093AbfJPLcS (ORCPT
+        id S2405071AbfJPLcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:32:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37026 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405078AbfJPLcQ (ORCPT
+        Wed, 16 Oct 2019 07:32:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34160 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405057AbfJPLcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:32:16 -0400
+        Wed, 16 Oct 2019 07:32:12 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GBWEZ7050056;
-        Wed, 16 Oct 2019 06:32:14 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GBWAP6081806;
+        Wed, 16 Oct 2019 06:32:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571225534;
-        bh=LaDHmzMFRFZZi0cfbucYtOjAncJhlSl2As2VSimU6go=;
+        s=ti-com-17Q1; t=1571225530;
+        bh=/o6Slw7qh/eWJym+d8XdAleakSiFor57TxNgXcKEnZI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=B2sryJVMqLWeFyw7KN7Q4ld1wlJuDrNDeA5/DWKT074d0w+X0X5677AlR6RcTqe/t
-         zsjOv1JI5PT0H0jjaxhZW359azg4O2wbkPMQ0HkDgeTZ/ZTscScsigImosWL5crsD+
-         XVHRTqmtHed9VFcA3t/FPW3ZsPrO9YUeHAmDuc+E=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GBWEo1081322;
-        Wed, 16 Oct 2019 06:32:14 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        b=NwwamYdjaPW+Fxm2m1B0EF87mYZSRdDjb8c5WGyRP94tyvNb9i6sh3wSwaF9jC5UP
+         ZLMyFyvrt7osJOcVkOxwrzuzIIuEsWkpIkK10h4OFKzKSXBKC+iLuHgsmqqUxEOY51
+         MUSrksaKsmnOxLUEiOK5xAinqO0HtCufzsi0u3Kw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GBWAxA081261;
+        Wed, 16 Oct 2019 06:32:10 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 06:32:07 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 06:32:03 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 06:32:07 -0500
+ Frontend Transport; Wed, 16 Oct 2019 06:32:09 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GBVkmF097485;
-        Wed, 16 Oct 2019 06:32:12 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GBVkmD097485;
+        Wed, 16 Oct 2019 06:32:07 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
 CC:     Anil Varughese <aniljoy@cadence.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH 11/13] phy: cadence: Sierra: Set cmn_refclk/cmn_refclk1 frequency to 25MHz
-Date:   Wed, 16 Oct 2019 17:01:15 +0530
-Message-ID: <20191016113117.12370-12-kishon@ti.com>
+Subject: [PATCH 09/13] phy: cadence: Sierra: Check for PLL lock during PHY power on
+Date:   Wed, 16 Oct 2019 17:01:13 +0530
+Message-ID: <20191016113117.12370-10-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191016113117.12370-1-kishon@ti.com>
 References: <20191016113117.12370-1-kishon@ti.com>
@@ -66,72 +67,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set cmn_refclk/cmn_refclk1 frequency to 25MHz as specified in
-"Common Module Clock Configurations" of the Cadence Sierra 16FFC
-Multi-Protocol PHYPMA Specification. It is set to 25MHz since
-the only user of Cadence Sierra SERDES, TI J721E SoC provides
-input clock frequency of 100MHz. For other frequencies,
-cmn_refclk/cmn_refclk1 should be configured based on the
-"Common Module Clock Configurations".
+Check for PLL lock during PHY power on.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/phy/cadence/phy-cadence-sierra.c | 33 +++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index dd54a0ab89b7..affede8c4368 100644
+index 2648a01f90b3..82f7617b2dac 100644
 --- a/drivers/phy/cadence/phy-cadence-sierra.c
 +++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -196,6 +196,8 @@ struct cdns_sierra_phy {
+@@ -54,6 +54,7 @@
+ #define SIERRA_PLLCTRL_SUBRATE_PREG			0x03A
+ #define SIERRA_PLLCTRL_GEN_D_PREG			0x03E
+ #define SIERRA_PLLCTRL_CPGAIN_MODE_PREG			0x03F
++#define SIERRA_PLLCTRL_STATUS_PREG			0x044
+ #define SIERRA_CLKPATH_BIASTRIM_PREG			0x04B
+ #define SIERRA_DFE_BIASTRIM_PREG			0x04C
+ #define SIERRA_DRVCTRL_ATTEN_PREG			0x06A
+@@ -139,11 +140,14 @@
+ 
+ #define SIERRA_MACRO_ID					0x00007364
+ #define SIERRA_MAX_LANES				4
++#define PLL_LOCK_TIME					100000
+ 
+ static const struct reg_field macro_id_type =
+ 				REG_FIELD(SIERRA_MACRO_ID_REG, 0, 15);
+ static const struct reg_field phy_pll_cfg_1 =
+ 				REG_FIELD(SIERRA_PHY_PLL_CFG, 1, 1);
++static const struct reg_field pllctrl_lock =
++				REG_FIELD(SIERRA_PLLCTRL_STATUS_PREG, 0, 0);
+ 
+ struct cdns_sierra_inst {
+ 	struct phy *phy;
+@@ -190,6 +194,7 @@ struct cdns_sierra_phy {
+ 	struct regmap *regmap_common_cdb;
+ 	struct regmap_field *macro_id_type;
  	struct regmap_field *phy_pll_cfg_1;
- 	struct regmap_field *pllctrl_lock[SIERRA_MAX_LANES];
++	struct regmap_field *pllctrl_lock[SIERRA_MAX_LANES];
  	struct clk *clk;
-+	struct clk *cmn_refclk;
-+	struct clk *cmn_refclk1;
  	int nsubnodes;
- 	u32 num_lanes;
  	bool autoconf;
-@@ -277,6 +279,8 @@ static int cdns_sierra_phy_init(struct phy *gphy)
- 	if (phy->autoconf)
- 		return 0;
+@@ -289,10 +294,25 @@ static int cdns_sierra_phy_init(struct phy *gphy)
  
-+	clk_set_rate(phy->cmn_refclk, 25000000);
-+	clk_set_rate(phy->cmn_refclk1, 25000000);
- 	if (ins->phy_type == PHY_TYPE_PCIE) {
- 		num_cmn_regs = phy->init_data->pcie_cmn_regs;
- 		num_ln_regs = phy->init_data->pcie_ln_regs;
-@@ -466,6 +470,7 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int i, ret, node = 0;
- 	void __iomem *base;
-+	struct clk *clk;
- 	struct device_node *dn = dev->of_node, *child;
+ static int cdns_sierra_phy_on(struct phy *gphy)
+ {
++	struct cdns_sierra_phy *sp = dev_get_drvdata(gphy->dev.parent);
+ 	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
++	struct device *dev = sp->dev;
++	u32 val;
++	int ret;
  
- 	if (of_get_child_count(dn) == 0)
-@@ -521,6 +526,22 @@ static int cdns_sierra_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(sp->apb_rst);
+ 	/* Take the PHY lane group out of reset */
+-	return reset_control_deassert(ins->lnk_rst);
++	ret = reset_control_deassert(ins->lnk_rst);
++	if (ret) {
++		dev_err(dev, "Failed to take the PHY lane out of reset\n");
++		return ret;
++	}
++
++	ret = regmap_field_read_poll_timeout(sp->pllctrl_lock[ins->mlane],
++					     val, val, 1000, PLL_LOCK_TIME);
++	if (ret < 0)
++		dev_err(dev, "PLL lock of lane failed\n");
++
++	return ret;
+ }
+ 
+ static int cdns_sierra_phy_off(struct phy *gphy)
+@@ -349,6 +369,7 @@ static int cdns_regfield_init(struct cdns_sierra_phy *sp)
+ 	struct device *dev = sp->dev;
+ 	struct regmap_field *field;
+ 	struct regmap *regmap;
++	int i;
+ 
+ 	regmap = sp->regmap_common_cdb;
+ 	field = devm_regmap_field_alloc(dev, regmap, macro_id_type);
+@@ -366,6 +387,16 @@ static int cdns_regfield_init(struct cdns_sierra_phy *sp)
  	}
+ 	sp->phy_pll_cfg_1 = field;
  
-+	clk = devm_clk_get_optional(dev, "cmn_refclk");
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "core_ref_clk clock not found\n");
-+		ret = PTR_ERR(clk);
-+		return ret;
++	for (i = 0; i < SIERRA_MAX_LANES; i++) {
++		regmap = sp->regmap_lane_cdb[i];
++		field = devm_regmap_field_alloc(dev, regmap, pllctrl_lock);
++		if (IS_ERR(field)) {
++			dev_err(dev, "P%d_ENABLE reg field init failed\n", i);
++			return PTR_ERR(field);
++		}
++		sp->pllctrl_lock[i] =  field;
 +	}
-+	sp->cmn_refclk = clk;
 +
-+	clk = devm_clk_get_optional(dev, "cmn_refclk1");
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "core_ref_clk clock not found\n");
-+		ret = PTR_ERR(clk);
-+		return ret;
-+	}
-+	sp->cmn_refclk1 = clk;
-+
- 	ret = clk_prepare_enable(sp->clk);
- 	if (ret)
- 		return ret;
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
