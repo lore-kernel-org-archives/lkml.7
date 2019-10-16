@@ -2,184 +2,193 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3001FFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC57FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AE621848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:39:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uLYg2csW"
+	by mail.kernel.org (Postfix) with ESMTP id C2B66205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571229576;
+	bh=mj5WsNm9zjatXEtFvEvg0QZ/Wf0AqG4dY1SSmXX3o6E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xecpuMOYpeY4KiZLs3uV5CSO3pV/RnluBFJZpkf15F3xc7pz6papw89+2Oo6DhgMQ
+	 MqTdE7fGw7P4vbiXrc4blW9XTEhgY0qZR5qXHHWKchMQLHfN8qHASL8+Ch85/AHIXF
+	 RUJZCzgMP3coMrMd4HU3UF9yxmMMvSzlPW+yUvIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393126AbfJPMjW (ORCPT
+        id S2393139AbfJPMjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:39:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55562 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfJPMjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:39:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pkoFAp1KGg4BJ4QfEMtMcBjJr9mldI0trPnE+09Cq5Q=; b=uLYg2csWDUnlpjPXgqJIWxLCJ
-        2L1Nak/OCP6JcXDxapqqd2+fAnuKHF2Kv5wQdtUjS7HCfmzD+Lo4owUp6hoEyXXTn+c/tZGDMb05o
-        ILCg+IHO50EEypz6L4oPvZWESEga8XaxD1dqeB1GIH9YNUzdMLqOn9RMBHOarbqlggt6r68x5shkD
-        bsav+SlPTRjVTXrGdzEdLVqaVkW/lrWk7J1Ma5olkmZRyyLzhTITKlhRke1o85sovlGQ4bRlavkO8
-        AlgcOBnmCWB7VZwgeCq1Ajvh97N218dlp/i9TohEPk1iiQwtfeibQIVwkhlxTT0SfbxpX5k4E5omG
-        GRtujYMMg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKia5-0000wv-9J; Wed, 16 Oct 2019 12:39:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73672303C1E;
-        Wed, 16 Oct 2019 14:38:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 588562042784E; Wed, 16 Oct 2019 14:39:06 +0200 (CEST)
-Date:   Wed, 16 Oct 2019 14:39:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20191016123906.GR2328@hirez.programming.kicks-ass.net>
-References: <20191010091956.48fbcf42@gandalf.local.home>
- <20191010140513.GT2311@hirez.programming.kicks-ass.net>
- <20191010115449.22044b53@gandalf.local.home>
- <20191010172819.GS2328@hirez.programming.kicks-ass.net>
- <20191011125903.GN2359@hirez.programming.kicks-ass.net>
- <20191015130739.GA23565@linux-8ccs>
- <20191015135634.GK2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
- <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
- <alpine.LSU.2.21.1910160843420.7750@pobox.suse.cz>
+        Wed, 16 Oct 2019 08:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbfJPMjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:39:35 -0400
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB97F205F4;
+        Wed, 16 Oct 2019 12:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571229574;
+        bh=mj5WsNm9zjatXEtFvEvg0QZ/Wf0AqG4dY1SSmXX3o6E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y31L2fAjcOjOt2+MGpHexpF1WV8RDkdapU7Pk2zmBLBx5xzM7oSPSPEkUVhOULWFj
+         MKOO5NlTfpoZ4Hip87mpA8fU/CpSNwM/6AFrL1rWULXy2n1/Q/dB2PnIBSVyzyFnEV
+         kur0MKAule2YxXdnrrGR4G7hGZGsW7Id1rUW6Mn4=
+Received: by mail-lf1-f43.google.com with SMTP id u16so4771384lfq.3;
+        Wed, 16 Oct 2019 05:39:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAUpmDED6NyPgYUnJHkt7iljZLWiJ6F/gXVyseDhkDzMp+xp4zYS
+        39C/dm8GLh1eswdvYeb7QfRNzlabPAtaePaNy1w=
+X-Google-Smtp-Source: APXvYqyYy2rtlW10V22SOn04X4VTrR/pYnl5tunFa5HNmu+gYjPAYmneFKctgrNqN61CrHvgkH92kNZxeIy3bdUFZWU=
+X-Received: by 2002:ac2:4845:: with SMTP id 5mr24190084lfy.191.1571229572131;
+ Wed, 16 Oct 2019 05:39:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1910160843420.7750@pobox.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191014141427.30708-1-ribalda@kernel.org> <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
+ <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com> <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
+In-Reply-To: <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Wed, 16 Oct 2019 14:39:15 +0200
+X-Gmail-Original-Message-ID: <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
+Message-ID: <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
+Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:51:27AM +0200, Miroslav Benes wrote:
-> On Tue, 15 Oct 2019, Joe Lawrence wrote:
-> 
-> > On 10/15/19 10:13 AM, Miroslav Benes wrote:
-> > > Yes, it does. klp_module_coming() calls module_disable_ro() on all
-> > > patching modules which patch the coming module in order to call
-> > > apply_relocate_add(). New (patching) code for a module can be relocated
-> > > only when the relevant module is loaded.
-> > 
-> > FWIW, would the LPC blue-sky2 model (ie, Steve's suggestion @ plumber's where
-> > livepatches only patch a single object and updates are kept on disk to handle
-> > coming module updates as they are loaded) eliminate those outstanding
-> > relocations and the need to perform this late permission flipping?
-> 
-> Yes, it should, but we don't have to wait for it. PeterZ proposed a 
-> different solution to this specific issue in 
-> https://lore.kernel.org/lkml/20191015141111.GP2359@hirez.programming.kicks-ass.net/
-> 
-> It should not be a problem to create a live patch module like that and the 
-> code in kernel/livepatch/ is almost ready. Something like 
-> module_section_disable_ro(mod, section) (and similar for X protection) 
-> should be enough. Module reloads would still require juggling with the 
-> protections, but I think it is all feasible.
+Hi Hans:
 
-Something a little like so.. completely fresh of the keyboard.
+On Wed, Oct 16, 2019 at 2:32 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wro=
+te:
+>
+> On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
+> > Hi Hans
+> >
+> > Not that awkward, the user has to use the brand new
+> > v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
+> > change.
+>
+> Well, a struct v4l2_ctrl_config is typically a static const, so you can't=
+ use
+> v4l2_ctrl_ptr_create().
+>
+> Hmm, perhaps it is as easy as:
+>
+> static const struct v4l2_area def_area =3D {
+>         ...
+> };
+>
+> static const struct v4l2_ctrl_config ctrl =3D {
+>         ...
+>
+>         .p_def.p_area =3D &def_area,
+>         ...
+> };
+>
+> Can you do a quick compile check that I am not overlooking anything?
+>
+> If this works, then I'll take this patch.
 
----
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -853,6 +853,18 @@ static inline void module_enable_ro(cons
- static inline void module_disable_ro(const struct module *mod) { }
- #endif
- 
-+#if defined(CONFIG_STRICT_MODULE_RWX) && defined(CONFIG_LIVEPATCH)
-+extern void module_section_disable_ro(struct module *mod, const char *sec);
-+extern void module_section_enable_ro(struct module *mod, const char *sec);
-+extern void module_section_disable_x(struct module *mod, const char *sec);
-+extern void module_section_enable_x(struct module *mod, const char *sec);
-+#else
-+static inline void module_section_disable_ro(struct module *mod, const char *sec) { }
-+static inline void module_section_enable_ro(struct module *mod, const char *sec) { }
-+static inline void module_section_disable_x(struct module *mod, const char *sec) { }
-+static inline void module_section_enable_x(struct module *mod, const char *sec) { }
-+#endif
-+
- #ifdef CONFIG_GENERIC_BUG
- void module_bug_finalize(const Elf_Ehdr *, const Elf_Shdr *,
- 			 struct module *);
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2107,6 +2107,54 @@ static void free_module_elf(struct modul
- 	kfree(mod->klp_info->secstrings);
- 	kfree(mod->klp_info);
- }
-+
-+#ifdef CONFIG_STRICT_MODULE_RWX
-+
-+static void __frob_section(struct Elf_Shdr *sec, int (*set_memory)(unsigned long start, int num_pages))
-+{
-+	BUG_ON((unsigned long)sec->sh_addr & (PAGE_SIZE-1));
-+	BUG_ON((unsigned long)sec->sh_size & (PAGE_SIZE-1));
-+	set_memory((unsigned long)sec->sh_addr, sec->sh_size >> PAGE_SHIFT);
-+}
-+
-+static void frob_section(struct module *mod, const char *section,
-+			 int (*set_memory)(unsigned long start, int num_pages))
-+{
-+	struct klp_modinfo *info = mod->klp_info;
-+	const char *secname;
-+	Elf_Shdr *s;
-+
-+	for (s = info->sechdrs; s < info->sechdrs + info->hdr.e_shnum; s++) {
-+		secname = mod->klp_info->secstrings + s->sh_name;
-+		if (strcmp(secname, section))
-+			continue;
-+
-+		__frob_section(s, set_memory);
-+	}
-+}
-+
-+void module_section_disable_ro(struct module *mod, const char *section)
-+{
-+	frob_section(mod, section, set_memory_rw);
-+}
-+
-+void module_section_enable_ro(struct module *mod, const char *section)
-+{
-+	frob_section(mod, section, set_memory_ro);
-+}
-+
-+void module_section_disable_x(struct module *mod, const char *section)
-+{
-+	frob_section(mod, section, set_memory_nx);
-+}
-+
-+void module_section_enable_x(struct module *mod, const char *section)
-+{
-+	frob_section(mod, section, set_memory_x);
-+}
-+
-+#endif /* ONFIG_STRICT_MODULE_RWX */
-+
- #else /* !CONFIG_LIVEPATCH */
- static int copy_module_elf(struct module *mod, struct load_info *info)
- {
+Testing with gcc 9.2.1
+
+This works fine, no warning/error:
+
+static struct v4l2_area unit_size =3D {
+.width =3D UNIT_SIZE,
+.height =3D UNIT_SIZE,
+};
+static struct v4l2_ctrl_config area_ctrl =3D {
+.type =3D V4L2_CTRL_TYPE_AREA,
+.flags =3D V4L2_CTRL_FLAG_READ_ONLY,
+.p_def.p_area =3D &unit_size,
+};
+
+but if unit_size is set as CONST:
+static const struct v4l2_area
+
+Then:
+drivers/qtec/qtec_sony.c: In function =E2=80=98qtec_sony_probe=E2=80=99:
+drivers/qtec/qtec_sony.c:3151:19: warning: initialization discards
+=E2=80=98const=E2=80=99 qualifier from pointer target type [-Wdiscarded-qua=
+lifiers]
+ 3151 |   .p_def.p_area =3D &unit_size,
+      |
+
+>
+> Regards,
+>
+>         Hans
+>
+> >
+> > Regards
+> >
+> > On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl>=
+ wrote:
+> >>
+> >> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
+> >>> This allows setting the default value on compound controls created vi=
+a
+> >>> v4l2_ctrl_new_custom.
+> >>>
+> >>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> >>> ---
+> >>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+> >>>  include/media/v4l2-ctrls.h           | 2 ++
+> >>>  2 files changed, 3 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l=
+2-core/v4l2-ctrls.c
+> >>> index bf50d37ef6c1..12cf38f73f7b 100644
+> >>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> >>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> >>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v=
+4l2_ctrl_handler *hdl,
+> >>>                       type, min, max,
+> >>>                       is_menu ? cfg->menu_skip_mask : step, def,
+> >>>                       cfg->dims, cfg->elem_size,
+> >>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
+> >>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
+> >>>       if (ctrl)
+> >>>               ctrl->is_private =3D cfg->is_private;
+> >>>       return ctrl;
+> >>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> >>> index 26205ba3a0a0..2fca5b823961 100644
+> >>> --- a/include/media/v4l2-ctrls.h
+> >>> +++ b/include/media/v4l2-ctrls.h
+> >>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
+> >>>   * @max:     The control's maximum value.
+> >>>   * @step:    The control's step value for non-menu controls.
+> >>>   * @def:     The control's default value.
+> >>> + * @p_def:   The control's default value for compound controls.
+> >>>   * @dims:    The size of each dimension.
+> >>>   * @elem_size:       The size in bytes of the control.
+> >>>   * @flags:   The control's flags.
+> >>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
+> >>>       s64 max;
+> >>>       u64 step;
+> >>>       s64 def;
+> >>> +     union v4l2_ctrl_ptr p_def;
+> >>>       u32 dims[V4L2_CTRL_MAX_DIMS];
+> >>>       u32 elem_size;
+> >>>       u32 flags;
+> >>>
+> >>
+> >> I'm not sure about this. It might be a bit awkward to initialize p_def=
+ given that it is a union.
+> >>
+> >> Perhaps a simple void pointer would be easier?
+> >>
+> >> Regards,
+> >>
+> >>         Hans
+>
