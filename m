@@ -2,101 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FB0FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D81FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3D121A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MG8kkB/m"
+	by mail.kernel.org (Postfix) with ESMTP id 5B4A121925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389882AbfJPR6L (ORCPT
+        id S2394184AbfJPR6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:58:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34968 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfJPR6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:58:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y21so3759018wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=nFz4T0vFX9I/roldji38Wknwl/JNJ6KhqR7kFUGrr+8=;
-        b=MG8kkB/maSXdkwrwZNVgc+Xt3j8g2HWexcftmSC0vzdBO837oFQKzV2Hlniy6PE0yH
-         WI40Q0LAOwT9M9yDnx6e0NCvpSy4g4fh8iUCaLzH/ciRPfS9YHMPj6bgX234D+yhGdse
-         ZYMPpMe5M3HTAg6sMw0/Jw/gVWMTJCypdNTDrqjnLixFJIQT3uvbrEfcWCHPxuFfMcwi
-         kRwt4w2lZLppVnDv6jcrUjfbaaRIZFEqlJj/qA0AazdcIEf8bOsvGhUCdpB2RRrexIMC
-         PlRL465867YiyQtZ8NfvBTsriVq6F11OzW1hvwIB/JKliHP5V8RHHXIpJjyolospeWtQ
-         r9Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=nFz4T0vFX9I/roldji38Wknwl/JNJ6KhqR7kFUGrr+8=;
-        b=aeK4g1hRebGXezNzwDvxZvhkGo+rOJG3gQrlHhzECBDD0EzhsBMpvV/T7EKDnwgkFF
-         yBRAZKWz3JR7gMsdhxguRet4W2X9mnGfTbiV3cNB7X0gpQKPQDcIDKNEtB59meCquI9d
-         1pLdM2rMrbTTv7Nn2hode140a9rhGj0UZ8PRXYTVtzYiIMJPDsei7/l255mqd0rIZpNv
-         KNADfAILtRYtoEQgs0MZ33UFumuR7lx4/OJbPbJ0Z/Z8UW7ia5Z8Z4PS+VG6ezcZIe/r
-         snCf1GJkayprAiP8TkqtPD1h8HXk8Q7MjAVj5scKM6QSnnhRUwKyPZbolOhBVj9S+QPy
-         NHkA==
-X-Gm-Message-State: APjAAAWdGEFKPqsfpwrPKZxU3Vmbk+yPQEotKr+gYhw2Or51WrBDHvOW
-        dQUxuhFk3CuYSu3k4TZk7w==
-X-Google-Smtp-Source: APXvYqzhSei8ojosNKz5bE95s1ODgdjfle9rj/9SqQgQEUrQ7Cy8VxXIGgT84Tsi1e8CY5tQ6SuylQ==
-X-Received: by 2002:a1c:e455:: with SMTP id b82mr4444588wmh.41.1571248687904;
-        Wed, 16 Oct 2019 10:58:07 -0700 (PDT)
-Received: from ninjabhubz.org (host-2-102-13-201.as13285.net. [2.102.13.201])
-        by smtp.gmail.com with ESMTPSA id 143sm4430952wmb.33.2019.10.16.10.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 10:58:06 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
-Date:   Wed, 16 Oct 2019 18:57:42 +0100 (BST)
-To:     Julia Lawall <julia.lawall@lip6.fr>
-cc:     Jules Irenge <jbi.octave@gmail.com>,
-        outreachy-kernel@googlegroups.com, eric@anholt.net,
-        wahrenst@gmx.net, gregkh@linuxfoundation.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: vc04_services: fix line over
- 80 characters checks warning
-In-Reply-To: <alpine.DEB.2.21.1910160713140.2732@hadrien>
-Message-ID: <alpine.LFD.2.21.1910161855320.8071@ninjahub.org>
-References: <20191015225716.10563-1-jbi.octave@gmail.com> <alpine.DEB.2.21.1910160713140.2732@hadrien>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 16 Oct 2019 13:58:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:46972 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbfJPR6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:58:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8612F28;
+        Wed, 16 Oct 2019 10:58:46 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A1D43F6C4;
+        Wed, 16 Oct 2019 10:58:44 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 18:58:42 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Will Deacon <will.deacon@arm.com>, Torsten Duwe <duwe@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
+Message-ID: <20191016175841.GF46264@lakrids.cambridge.arm.com>
+References: <20190208150826.44EBC68DD2@newverein.lst.de>
+ <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
+ <20190311114945.GA5625@lst.de>
+ <20190408153628.GL6139@lakrids.cambridge.arm.com>
+ <20190409175238.GE9255@fuggles.cambridge.arm.com>
+ <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
+ <20190724161500.GG2624@lakrids.cambridge.arm.com>
+ <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Wed, 16 Oct 2019, Julia Lawall wrote:
-
-> >  #ifndef VCHI_BULK_GRANULARITY
-> >  #   if __VCCOREVER__ >= 0x04000000
-> > -#       define VCHI_BULK_GRANULARITY 32 // Allows for the need to do cache cleans
-> > +#	define VCHI_BULK_GRANULARITY 32 // Allows for the need of cache cleans
-> >  #   else
-> >  #       define VCHI_BULK_GRANULARITY 16
-> >  #   endif
+On Wed, Oct 16, 2019 at 01:42:59PM +0200, Jiri Kosina wrote:
+> On Wed, 24 Jul 2019, Mark Rutland wrote:
 > 
-> The branches should be indented to the same degree.
+> > > > > > So what's the status now? Besides debatable minor style
+> > > > > > issues there were no more objections to v8. Would this
+> > > > > > go through the ARM repo or via the ftrace repo?
+> > > > >
+> > > > > Sorry agains for the delay on this. I'm now back in the office and in
+> > > > > front of a computer daily, so I can spend a bit more time on this.
+> > > > >
+> > > > > Regardless of anything else, I think that we should queue the first
+> > > > > three patches now. I've poked the relevant maintainers for their acks so
+> > > > > that those can be taken via the arm64 tree.
+> > > > >
+> > > > > I'm happy to do the trivial cleanups on the last couple of patches (e.g.
+> > > > > s/lr/x30), and I'm actively looking at the API rework I requested.
+> > > >
+> > > > Ok, I've picked up patches 1-3 and I'll wait for you to spin updates to the
+> > > > last two.
+> > > 
+> > > Ok, I see that patches 1-3 are picked up and are already present in recent
+> > > kernels.
+> > > 
+> > > Is there any progress on remaining two patches?
+> > 
+> > I'm afraid that I've been distracted on other fronts, so I haven't made
+> > progress there.
+> > 
+> > > Any help required?
+> > 
+> > If you'd be happy to look at the cleanup I previously suggested for the
+> > core, that would be great. When I last looked, it was simple to rework
+> > things so that arch code doesn't have to define MCOUNT_ADDR, but I
+> > hadn't figured out exactly how to split the core mcount assumptions from
+> > the important state machine bits.
+> > 
+> > I'll take another look and see if I can provide more detail. :)
 > 
-> julia
-> 
-> -- 
+> Hi Mark,
 
-Thanks, I have just  updated. 
+Hi Jiri,
+
+> has any progress been made on any front? Feels like this got stuck a bit.
+
+Sorry about this; I've been a bit distracted.
+
+I've just done the core (non-arm64) bits today, and pushed that out:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/ftrace-with-regs
+
+... I'll fold the remainging bits of patches 4 and 5 together tomorrow
+atop of that.
+
+Thanks,
+Mark.
