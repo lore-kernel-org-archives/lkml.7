@@ -2,186 +2,114 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1D1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96698FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E8A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B9721848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="y4VFtabE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rbWocP/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405162AbfJPMOS (ORCPT
+        id S2392918AbfJPMPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:14:18 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3954 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405083AbfJPMOP (ORCPT
+        Wed, 16 Oct 2019 08:15:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41308 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729700AbfJPMPp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:14:15 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9GC6eeM026519;
-        Wed, 16 Oct 2019 14:14:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=1cUGDzXXsUx288sdgvJBcP5wG3KT3Z/CAWtG2DDFRX8=;
- b=y4VFtabEqag3ebZopFcaDl19V4SDZwYfmLCIo4cJ+42pXl14X9M383+pHket7csx8INo
- UNCIOQQKE4aBqZpHSj9aiRxY2OmN3jjbHk6ePxiZf706JJ3W23II1k2HAvYMNGO9GrBf
- jF4tIdnuELg5TGQUU/fHxbWkz9T54WsSlsn/c6Cu25x255cTWYQ9GlP/Eo/gCG8R2uzW
- Qj5pXwHIyLvzJ+2GEyW4TUT36tXLIFxvQ4TtklzSthhVtpU53ImqJB98f/ZD4nMk/Y1W
- 1TaThyDhUCko4SVOc3sgdie9CcbumEl0B68goDArW44iy4Vql3F0Uudd9TQyP7QTb6yu mQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4kx60eu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Oct 2019 14:14:01 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7A8ED10002A;
-        Wed, 16 Oct 2019 14:14:00 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CAEB20A92D;
-        Wed, 16 Oct 2019 14:14:00 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct
- 2019 14:14:00 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct 2019 14:13:59
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 2/2] mailbox: stm32-ipcc: Update wakeup management
-Date:   Wed, 16 Oct 2019 14:13:49 +0200
-Message-ID: <1571228029-31652-3-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571228029-31652-1-git-send-email-fabien.dessenne@st.com>
-References: <1571228029-31652-1-git-send-email-fabien.dessenne@st.com>
+        Wed, 16 Oct 2019 08:15:45 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GCFeI1060048;
+        Wed, 16 Oct 2019 07:15:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571228140;
+        bh=wKieuGRLvabSjHqoDmCuf3EOS6/B7AT44LWOVpIWWSk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rbWocP/cCJ35PiwrODNVJT6UIxprruGA7w5KlUufch+W1YKxtaXJkHBhD9PdBE57r
+         FBhphP90YDRSP6TAbIhQjccQ9uIUiMx9KPKynlWRQsn+ICILE9xXIADrBzwQ8ZK14I
+         03koi9WPlYuCwNxZcNBMgfiWNAZrwkbfBuNR1Jys=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GCFe23011353
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 07:15:40 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 07:15:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 07:15:33 -0500
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GCFb4j082576;
+        Wed, 16 Oct 2019 07:15:38 -0500
+Subject: Re: [RFC] mmc: cqhci: commit descriptors before setting the doorbell
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <asutoshd@codeaurora.org>,
+        <riteshh@codeaurora.org>, <venkatg@codeaurora.org>
+References: <20191014183849.14864-1-faiz_abbas@ti.com>
+ <fac9ad28-dbc3-3948-d99c-742420f3e651@ti.com>
+ <ca62cbaa-111c-4546-afd5-aad70eb98993@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <2275bfdc-ff30-719e-ae78-8c8bd20b8c80@ti.com>
+Date:   Wed, 16 Oct 2019 17:46:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-16_04:2019-10-16,2019-10-16 signatures=0
+In-Reply-To: <ca62cbaa-111c-4546-afd5-aad70eb98993@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wakeup specific IRQ management is no more needed to wake up the stm32
-plaform. A relationship has been established between the EXTI and
-the RX IRQ, just need to declare the EXTI interrupt instead of the
-IPCC RX IRQ.
+Adrian,
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- drivers/mailbox/stm32-ipcc.c | 36 +++++++-----------------------------
- 1 file changed, 7 insertions(+), 29 deletions(-)
+On 15/10/19 7:15 PM, Adrian Hunter wrote:
+> On 15/10/19 10:55 AM, Faiz Abbas wrote:
+>> Hi,
+>>
+>> On 15/10/19 12:08 AM, Faiz Abbas wrote:
+>>> Add a write memory barrier to make sure that descriptors are actually
+>>> written to memory before ringing the doorbell.
+>>>
+>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>> ---
+>>>
+>>> This patch fixes a very infrequent ADMA error (1 out of 100 times) that
+>>> I have been seeing after enabling command queuing for J721e.
+>>> Also looking at memory-barriers.txt and this commit[1],
+>>> it looks like we should be doing this before any descriptor write
+>>> followed by a doorbell ring operation. It'll be nice if someone with more
+>>> expertise in memory barriers can comment.
+>>>
+>>> [1] ad1a1b9cd67a ("scsi: ufs: commit descriptors before setting the
+>>>     doorbell")
+>>
+>> So I see that cqhci_readl/writel() use readl/writel_relaxed() which
+>> seems to be causing this issue. Should I just fix this by converting
+>> those to readl/writel with memory barriers instead?
+> 
+> Perhaps we could do both changes i.e. add wmb() and convert to non-relaxed
+> readl/writel
+> 
 
-diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
-index 5c2d1e1..ef96688 100644
---- a/drivers/mailbox/stm32-ipcc.c
-+++ b/drivers/mailbox/stm32-ipcc.c
-@@ -52,7 +52,6 @@ struct stm32_ipcc {
- 	struct clk *clk;
- 	spinlock_t lock; /* protect access to IPCC registers */
- 	int irqs[IPCC_IRQ_NUM];
--	int wkp;
- 	u32 proc_id;
- 	u32 n_chans;
- 	u32 xcr;
-@@ -282,16 +281,9 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 
- 	/* wakeup */
- 	if (of_property_read_bool(np, "wakeup-source")) {
--		ipcc->wkp = platform_get_irq_byname(pdev, "wakeup");
--		if (ipcc->wkp < 0) {
--			if (ipcc->wkp != -EPROBE_DEFER)
--				dev_err(dev, "could not get wakeup IRQ\n");
--			ret = ipcc->wkp;
--			goto err_clk;
--		}
--
- 		device_set_wakeup_capable(dev, true);
--		ret = dev_pm_set_dedicated_wake_irq(dev, ipcc->wkp);
-+
-+		ret = dev_pm_set_wake_irq(dev, ipcc->irqs[IPCC_IRQ_RX]);
- 		if (ret) {
- 			dev_err(dev, "Failed to set wake up irq\n");
- 			goto err_init_wkp;
-@@ -334,10 +326,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_irq_wkp:
--	if (ipcc->wkp)
-+	if (of_property_read_bool(np, "wakeup-source"))
- 		dev_pm_clear_wake_irq(dev);
- err_init_wkp:
--	device_init_wakeup(dev, false);
-+	device_set_wakeup_capable(dev, false);
- err_clk:
- 	clk_disable_unprepare(ipcc->clk);
- 	return ret;
-@@ -345,27 +337,17 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 
- static int stm32_ipcc_remove(struct platform_device *pdev)
- {
--	struct stm32_ipcc *ipcc = platform_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
- 
--	if (ipcc->wkp)
-+	if (of_property_read_bool(dev->of_node, "wakeup-source"))
- 		dev_pm_clear_wake_irq(&pdev->dev);
- 
--	device_init_wakeup(&pdev->dev, false);
-+	device_set_wakeup_capable(dev, false);
- 
- 	return 0;
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static void stm32_ipcc_set_irq_wake(struct device *dev, bool enable)
--{
--	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
--	unsigned int i;
--
--	if (device_may_wakeup(dev))
--		for (i = 0; i < IPCC_IRQ_NUM; i++)
--			irq_set_irq_wake(ipcc->irqs[i], enable);
--}
--
- static int stm32_ipcc_suspend(struct device *dev)
- {
- 	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
-@@ -373,8 +355,6 @@ static int stm32_ipcc_suspend(struct device *dev)
- 	ipcc->xmr = readl_relaxed(ipcc->reg_proc + IPCC_XMR);
- 	ipcc->xcr = readl_relaxed(ipcc->reg_proc + IPCC_XCR);
- 
--	stm32_ipcc_set_irq_wake(dev, true);
--
- 	return 0;
- }
- 
-@@ -382,8 +362,6 @@ static int stm32_ipcc_resume(struct device *dev)
- {
- 	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
- 
--	stm32_ipcc_set_irq_wake(dev, false);
--
- 	writel_relaxed(ipcc->xmr, ipcc->reg_proc + IPCC_XMR);
- 	writel_relaxed(ipcc->xcr, ipcc->reg_proc + IPCC_XCR);
- 
--- 
-2.7.4
+readl is implemented as  readl_relaxed(); __rmb();
+and
+writel is implemented as wmb(); writel_relaxed();
 
+I think another wmb() before writel will be redundant.
+
+Maybe this patch is good enough in itself.
+
+Thanks,
+Faiz
