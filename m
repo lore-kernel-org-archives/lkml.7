@@ -2,51 +2,52 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C97FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FFCFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0B1222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A52721D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262833;
-	bh=OyUlPjNeANd8E09a9byU60G74exCztVEBMkvSlrpIsQ=;
+	s=default; t=1571262838;
+	bh=4PRr/WjD56JOyIXFFF9MLjhZ3i2W8e6bDo2POCKbhnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zm/DTa/LpfPwMunqsUALRInTBDNP4zHeLL70Ya08tZyjygdCTfRX8HMGzEiat7LPq
-	 HljRpsb0IaC0WbsG4JAGk/oMMBetqM+OmPw1/OWn1+J2L7ZPfkuhHNM5qphufdxXpc
-	 mTZRyLT1Kr780A+3gV+7Z54UyzSG1/aF9pTezd4k=
+	b=kM+ylm2wefanGhHYixoLLvZammoF7N0bp9AVGZ3q5UiS4WUcgbXXkms2PVY8iOBXF
+	 mdSx7dNGttkKgQRhKK5+8a0wr5JpUyA7oCyYMhSU7x4FEJgx3rquX6cdtoGeEHl9oz
+	 M9ExrvOACYyxVBkHlwxi1wUOIwiwHYYAy/9C120M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437610AbfJPVxv (ORCPT
+        id S2394928AbfJPVx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437591AbfJPVxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:47 -0400
+        id S2394907AbfJPVxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:52 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBDD021925;
-        Wed, 16 Oct 2019 21:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D75321925;
+        Wed, 16 Oct 2019 21:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262827;
-        bh=OyUlPjNeANd8E09a9byU60G74exCztVEBMkvSlrpIsQ=;
+        s=default; t=1571262832;
+        bh=4PRr/WjD56JOyIXFFF9MLjhZ3i2W8e6bDo2POCKbhnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oo41bmgC68295rCBeCLhKDjro6BYJUSgndSnwWnqxN70aY3cUal0td5gg9KqJ+l32
-         Z76b0aztjAANSWLJM73HkrtvTMck22fuUDQGM0RJD1YdwFSO2IlOLOTeWVAc22F6EP
-         KTWGURBbq2R1cse82Yc/PHfGXwPa8673vOv4sJXY=
+        b=qFaQ4otZ29Ke1Sz1eshYYyCH60veluCPPn7icPW7YvnqFKsfXUHzsXMVJIiaMQX0W
+         w6KF1fTMGgxSeaelMYOPwsHIY3O2zZmJ/2fSysvK9VRR8TELVS1Y5FlY/72pnqhGzy
+         znMXk90lGLnip1IsGqavdi5naUMM6s9UJjLDvQ0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.4 69/79] CIFS: Force reval dentry if LOOKUP_REVAL flag is set
-Date:   Wed, 16 Oct 2019 14:50:44 -0700
-Message-Id: <20191016214827.621573775@linuxfoundation.org>
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 75/79] CIFS: Force revalidate inode when dentry is stale
+Date:   Wed, 16 Oct 2019 14:50:50 -0700
+Message-Id: <20191016214833.436582478@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -61,51 +62,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit 0b3d0ef9840f7be202393ca9116b857f6f793715 upstream.
+[ Upstream commit c82e5ac7fe3570a269c0929bf7899f62048e7dbc ]
 
-Mark inode for force revalidation if LOOKUP_REVAL flag is set.
-This tells the client to actually send a QueryInfo request to
-the server to obtain the latest metadata in case a directory
-or a file were changed remotely. Only do that if the client
-doesn't have a lease for the file to avoid unneeded round
-trips to the server.
+Currently the client indicates that a dentry is stale when inode
+numbers or type types between a local inode and a remote file
+don't match. If this is the case attributes is not being copied
+from remote to local, so, it is already known that the local copy
+has stale metadata. That's why the inode needs to be marked for
+revalidation in order to tell the VFS to lookup the dentry again
+before openning a file. This prevents unexpected stale errors
+to be returned to the user space when openning a file.
 
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/dir.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/cifs/inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/cifs/dir.c
-+++ b/fs/cifs/dir.c
-@@ -830,10 +830,16 @@ lookup_out:
- static int
- cifs_d_revalidate(struct dentry *direntry, unsigned int flags)
- {
-+	struct inode *inode;
-+
- 	if (flags & LOOKUP_RCU)
- 		return -ECHILD;
- 
- 	if (d_really_is_positive(direntry)) {
-+		inode = d_inode(direntry);
-+		if ((flags & LOOKUP_REVAL) && !CIFS_CACHE_READ(CIFS_I(inode)))
-+			CIFS_I(inode)->time = 0; /* force reval */
-+
- 		if (cifs_revalidate_dentry(direntry))
- 			return 0;
- 		else {
-@@ -844,7 +850,7 @@ cifs_d_revalidate(struct dentry *direntr
- 			 * attributes will have been updated by
- 			 * cifs_revalidate_dentry().
- 			 */
--			if (IS_AUTOMOUNT(d_inode(direntry)) &&
-+			if (IS_AUTOMOUNT(inode) &&
- 			   !(direntry->d_flags & DCACHE_NEED_AUTOMOUNT)) {
- 				spin_lock(&direntry->d_lock);
- 				direntry->d_flags |= DCACHE_NEED_AUTOMOUNT;
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 3d3c66fcb5ee6..0a219545940d9 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -405,6 +405,7 @@ int cifs_get_inode_info_unix(struct inode **pinode,
+ 		/* if uniqueid is different, return error */
+ 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
+ 		    CIFS_I(*pinode)->uniqueid != fattr.cf_uniqueid)) {
++			CIFS_I(*pinode)->time = 0; /* force reval */
+ 			rc = -ESTALE;
+ 			goto cgiiu_exit;
+ 		}
+@@ -412,6 +413,7 @@ int cifs_get_inode_info_unix(struct inode **pinode,
+ 		/* if filetype is different, return error */
+ 		if (unlikely(((*pinode)->i_mode & S_IFMT) !=
+ 		    (fattr.cf_mode & S_IFMT))) {
++			CIFS_I(*pinode)->time = 0; /* force reval */
+ 			rc = -ESTALE;
+ 			goto cgiiu_exit;
+ 		}
+@@ -887,6 +889,7 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
+ 		/* if uniqueid is different, return error */
+ 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
+ 		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
++			CIFS_I(*inode)->time = 0; /* force reval */
+ 			rc = -ESTALE;
+ 			goto cgii_exit;
+ 		}
+@@ -894,6 +897,7 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
+ 		/* if filetype is different, return error */
+ 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
+ 		    (fattr.cf_mode & S_IFMT))) {
++			CIFS_I(*inode)->time = 0; /* force reval */
+ 			rc = -ESTALE;
+ 			goto cgii_exit;
+ 		}
+-- 
+2.20.1
+
 
 
