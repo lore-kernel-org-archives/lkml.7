@@ -2,291 +2,267 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BF0FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF23FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5E121835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8AD21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406488AbfJPQwF (ORCPT
+        id S2406497AbfJPQwh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:52:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49790 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406438AbfJPQwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:52:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 06556AC2C;
-        Wed, 16 Oct 2019 16:51:59 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     rubini@gnudd.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     hch@infradead.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH] x86/PCI: sta2x11: use default DMA address translation ops
-Date:   Wed, 16 Oct 2019 18:51:37 +0200
-Message-Id: <20191016165138.24636-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 12:52:37 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:39412 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfJPQwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:52:37 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iKmXE-0003u2-SI; Wed, 16 Oct 2019 10:52:28 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iKmXD-0006Rl-ON; Wed, 16 Oct 2019 10:52:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     lijiang <lijiang@redhat.com>
+Cc:     Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com, vgoyal@redhat.com,
+        kexec@lists.infradead.org
+References: <20191012022140.19003-1-lijiang@redhat.com>
+        <20191012022140.19003-4-lijiang@redhat.com>
+        <87d0f22oi5.fsf@x220.int.ebiederm.org>
+        <20191012121625.GA11587@dhcp-128-65.nay.redhat.com>
+        <87zhi51ers.fsf@x220.int.ebiederm.org>
+        <72edff0b-9778-2e83-224b-7fe70dfb8d73@redhat.com>
+        <8736fu1d8k.fsf@x220.int.ebiederm.org>
+        <93e6713a-8027-3a7a-4445-9bee56b19f62@redhat.com>
+Date:   Wed, 16 Oct 2019 11:51:33 -0500
+In-Reply-To: <93e6713a-8027-3a7a-4445-9bee56b19f62@redhat.com> (lijiang's
+        message of "Wed, 16 Oct 2019 22:30:15 +0800")
+Message-ID: <87eezczl9m.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1iKmXD-0006Rl-ON;;;mid=<87eezczl9m.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+UqLKJeXTL8k7QmDIJbylA80uUSDQ/w/E=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/3 v3] x86/kdump: clean up all the code related to the backup region
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The devices found behind this PCIe chip have unusual DMA mapping
-constraints as there is an AMBA interconnect placed in between them and
-the different PCI endpoints. The offset between physical memory
-addresses and AMBA's view is provided by reading a PCI config register,
-which is saved and used whenever DMA mapping is needed.
+lijiang <lijiang@redhat.com> writes:
 
-It turns out that this DMA setup can be represented by properly setting
-'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
-enable fixup. And ultimately allows us to get rid of this device's
-custom DMA functions.
+> 在 2019年10月15日 19:04, Eric W. Biederman 写道:
+>> lijiang <lijiang@redhat.com> writes:
+>> 
+>>> 在 2019年10月13日 11:54, Eric W. Biederman 写道:
+>>>> Dave Young <dyoung@redhat.com> writes:
+>>>>
+>>>>> Hi Eric,
+>>>>>
+>>>>> On 10/12/19 at 06:26am, Eric W. Biederman wrote:
+>>>>>> Lianbo Jiang <lijiang@redhat.com> writes:
+>>>>>>
+>>>>>>> When the crashkernel kernel command line option is specified, the
+>>>>>>> low 1MiB memory will always be reserved, which makes that the memory
+>>>>>>> allocated later won't fall into the low 1MiB area, thereby, it's not
+>>>>>>> necessary to create a backup region and also no need to copy the first
+>>>>>>> 640k content to a backup region.
+>>>>>>>
+>>>>>>> Currently, the code related to the backup region can be safely removed,
+>>>>>>> so lets clean up.
+>>>>>>>
+>>>>>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>>>>>>> ---
+>>>>>>
+>>>>>>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>>>>>>> index eb651fbde92a..cc5774fc84c0 100644
+>>>>>>> --- a/arch/x86/kernel/crash.c
+>>>>>>> +++ b/arch/x86/kernel/crash.c
+>>>>>>> @@ -173,8 +173,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>>>>>>>  
+>>>>>>>  #ifdef CONFIG_KEXEC_FILE
+>>>>>>>  
+>>>>>>> -static unsigned long crash_zero_bytes;
+>>>>>>> -
+>>>>>>>  static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+>>>>>>>  {
+>>>>>>>  	unsigned int *nr_ranges = arg;
+>>>>>>> @@ -234,9 +232,15 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>>>>>>>  {
+>>>>>>>  	struct crash_mem *cmem = arg;
+>>>>>>>  
+>>>>>>> -	cmem->ranges[cmem->nr_ranges].start = res->start;
+>>>>>>> -	cmem->ranges[cmem->nr_ranges].end = res->end;
+>>>>>>> -	cmem->nr_ranges++;
+>>>>>>> +	if (res->start >= SZ_1M) {
+>>>>>>> +		cmem->ranges[cmem->nr_ranges].start = res->start;
+>>>>>>> +		cmem->ranges[cmem->nr_ranges].end = res->end;
+>>>>>>> +		cmem->nr_ranges++;
+>>>>>>> +	} else if (res->end > SZ_1M) {
+>>>>>>> +		cmem->ranges[cmem->nr_ranges].start = SZ_1M;
+>>>>>>> +		cmem->ranges[cmem->nr_ranges].end = res->end;
+>>>>>>> +		cmem->nr_ranges++;
+>>>>>>> +	}
+>>>>>>
+>>>>>> What is going on with this chunk?  I can guess but this needs a clear
+>>>>>> comment.
+>>>>>
+>>>>> Indeed it needs some code comment, this is based on some offline
+>>>>> discussion.  cat /proc/vmcore will give a warning because ioremap is
+>>>>> mapping the system ram.
+>>>>>
+>>>>> We pass the first 1M to kdump kernel in e820 as system ram so that 2nd
+>>>>> kernel can use the low 1M memory because for example the trampoline
+>>>>> code.
+>>>>>
+>>>>>>
+>>>>>>>  
+>>>>>>>  	return 0;
+>>>>>>>  }
+>>>>>>
+>>>>>>> @@ -356,9 +337,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+>>>>>>>  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
+>>>>>>>  	cmd.params = params;
+>>>>>>>  
+>>>>>>> -	/* Add first 640K segment */
+>>>>>>> -	ei.addr = image->arch.backup_src_start;
+>>>>>>> -	ei.size = image->arch.backup_src_sz;
+>>>>>>> +	/*
+>>>>>>> +	 * Add the low memory range[0x1000, SZ_1M], skip
+>>>>>>> +	 * the first zero page.
+>>>>>>> +	 */
+>>>>>>> +	ei.addr = PAGE_SIZE;
+>>>>>>> +	ei.size = SZ_1M - PAGE_SIZE;
+>>>>>>>  	ei.type = E820_TYPE_RAM;
+>>>>>>>  	add_e820_entry(params, &ei);
+>>>>>>
+>>>>>> Likewise here.  Why do we need a special case?
+>>>>>> Why the magic with PAGE_SIZE?
+>>>>>
+>>>>> Good catch, the zero page part is useless, I think no other special
+>>>>> reason, just assumed zero page is not usable, but it should be ok to
+>>>>> remove the special handling, just pass 0 - 1M is good enough.
+>>>>
+>>>> But if we have stopped special casing the low 1M.  Why do we need a
+>>>> special case here at all?
+>>>>
+>>> Here, need to pass the low memory range to kdump kernel, which will guarantee
+>>> the availability of low memory in kdump kernel, otherwise, kdump kernel won't
+>>> use the low memory region.
+>>>
+>>>> If you need the special case it is almost certainly wrong to say you
+>>>> have ram above 640KiB and below 1MiB.  That is the legacy ROM and video
+>>>> MMIO area.
+>>>>
+>>>> There is a reason the original code said 640KiB.
+>>>>
+>>> Do you mean that the 640k region is good enough here instead of 1MiB?
+>> 
+>> Reading through the code of crash_setup_memap_entries I see that what
+>> the code is doing now.  The code is repeating the e820 memory map with
+>> the memory areas that were not reserved for the crash kernel removed.
+>> 
+>> In which case what the code needs to be doing something like:
+>> 
+>> 	cmd.type = E820_TYPE_RAM;
+>> 	flags = IORESOURCE_MEM;
+>> 	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, 1024*1024, &cmd,
+>> 			       memmap_entry_callback);
+>> 
+> The above code does not get the results what we expected, it gets the reserved
+> memory marked as 'IORES_DESC_RESERVED' in the low 1MiB range.
+>
+> Finally, kdump kernel happened the panic as follow:
+> ......
+> [    3.555662] Kernel panic - not syncing: Real mode trampoline was not allocated
+> [    3.556660] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3+ #4
+> [    3.556660] Hardware name: AMD Corporation Speedway/Speedway, BIOS RSW1009C 07/27/2018
+> [    3.556660] Call Trace:
+> [    3.556660]  dump_stack+0x46/0x60
+> [    3.556660]  panic+0xfb/0x2d7
+> [    3.556660]  ? hv_init_spinlocks+0x7f/0x7f
+> [    3.556660]  init_real_mode+0x27/0x1fa
+> [    3.556660]  ? hv_init_spinlocks+0x7f/0x7f
+> [    3.556660]  ? do_one_initcall+0x46/0x1e4
+> [    3.556660]  ? proc_register+0xd0/0x130
+> [    3.556660]  ? kernel_init_freeable+0xe2/0x242
+> [    3.556660]  ? rest_init+0xaa/0xaa
+> [    3.556660]  ? kernel_init+0xa/0x106
+> [    3.556660]  ? ret_from_fork+0x22/0x40
+> [    3.556660] Rebooting in 10 seconds..
+> [    3.556660] ACPI MEMORY or I/O RESET_REG.
+>
+> I modified the above code, and tested it. This can find out the system ram in
+> the low 1MiB range. And it worked well.
+>
+> @@ -356,11 +338,11 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+>         memset(&cmd, 0, sizeof(struct crash_memmap_data));
+>         cmd.params = params;
+>  
+> +       /* Add the low 1MiB */
+> +       cmd.type = E820_TYPE_RAM;
+> +       flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> +       walk_iomem_res_desc(IORES_DESC_NONE, flags, 0, 1024*1024 - 1, &cmd,
+> +                       memmap_entry_callback);
+>
 
-Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() is
-moved to avoid warnings whenever CONFIG_PM is not enabled.
+That looks like a very reasonable fix.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+>> Depending on which bugs exist it might make sense to limit this to
+>> the low 640KiB.  But finding something the kernel already recognizes
+>> as RAM should prevent most of those problems already.  Barring bugs
+>> I admit it doesn't make sense to repeat the work that someone else
+>> has already done.
+>> 
+>> This bit:
+>> 	/* Add e820 reserved ranges */
+>> 	cmd.type = E820_TYPE_RESERVED;
+>> 	flags = IORESOURCE_MEM;
+>> 	walk_iomem_res_desc(IORES_DESC_RESERVED, flags, 0, -1, &cmd,
+>> 			   memmap_entry_callback);
+>> 
+>> Should probably start at 1MiB instead of 0.  Just so we don't report the
+> If so, it can not find out the reserved memory marked as 'IORES_DESC_RESERVED' in
+> the low 1MiB range, finally, it doesn't pass the reserved memory in the low 1MiB to
+> kdump kernel, which could cause some problems, such as SME or PCI MMCONFIG issue.
 
-Note: This was only compile tested.
+Good point. For some reason I was thinking IORESOURCE_MEM and
+IORESOURCE_SYSTEM_RAM were the same thing.  It has been way to long
+since I have been in that part of the code.
 
- arch/x86/Kconfig              |   1 -
- arch/x86/include/asm/device.h |   3 -
- arch/x86/pci/sta2x11-fixup.c  | 135 +++++++---------------------------
- 3 files changed, 25 insertions(+), 114 deletions(-)
+So yes let's leave that part alone.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index abe822d52167..9c2a51e1cb59 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -708,7 +708,6 @@ config X86_SUPPORTS_MEMORY_FAILURE
- config STA2X11
- 	bool "STA2X11 Companion Chip Support"
- 	depends on X86_32_NON_STANDARD && PCI
--	select ARCH_HAS_PHYS_TO_DMA
- 	select SWIOTLB
- 	select MFD_STA2X11
- 	select GPIOLIB
-diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-index a8f6c809d9b1..5e12c63b47aa 100644
---- a/arch/x86/include/asm/device.h
-+++ b/arch/x86/include/asm/device.h
-@@ -6,9 +6,6 @@ struct dev_archdata {
- #if defined(CONFIG_INTEL_IOMMU) || defined(CONFIG_AMD_IOMMU)
- 	void *iommu; /* hook for IOMMU specific extension */
- #endif
--#ifdef CONFIG_STA2X11
--	bool is_sta2x11;
--#endif
- };
- 
- #if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
-diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
-index 6269a175385d..db46d4dfe58a 100644
---- a/arch/x86/pci/sta2x11-fixup.c
-+++ b/arch/x86/pci/sta2x11-fixup.c
-@@ -30,7 +30,6 @@ struct sta2x11_ahb_regs { /* saved during suspend */
- };
- 
- struct sta2x11_mapping {
--	u32 amba_base;
- 	int is_suspended;
- 	struct sta2x11_ahb_regs regs[STA2X11_NR_FUNCS];
- };
-@@ -92,18 +91,6 @@ static int sta2x11_pdev_to_ep(struct pci_dev *pdev)
- 	return pdev->bus->number - instance->bus0;
- }
- 
--static struct sta2x11_mapping *sta2x11_pdev_to_mapping(struct pci_dev *pdev)
--{
--	struct sta2x11_instance *instance;
--	int ep;
--
--	instance = sta2x11_pdev_to_instance(pdev);
--	if (!instance)
--		return NULL;
--	ep = sta2x11_pdev_to_ep(pdev);
--	return instance->map + ep;
--}
--
- /* This is exported, as some devices need to access the MFD registers */
- struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev)
- {
-@@ -111,39 +98,6 @@ struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL(sta2x11_get_instance);
- 
--
--/**
-- * p2a - Translate physical address to STA2x11 AMBA address,
-- *       used for DMA transfers to STA2x11
-- * @p: Physical address
-- * @pdev: PCI device (must be hosted within the connext)
-- */
--static dma_addr_t p2a(dma_addr_t p, struct pci_dev *pdev)
--{
--	struct sta2x11_mapping *map;
--	dma_addr_t a;
--
--	map = sta2x11_pdev_to_mapping(pdev);
--	a = p + map->amba_base;
--	return a;
--}
--
--/**
-- * a2p - Translate STA2x11 AMBA address to physical address
-- *       used for DMA transfers from STA2x11
-- * @a: STA2x11 AMBA address
-- * @pdev: PCI device (must be hosted within the connext)
-- */
--static dma_addr_t a2p(dma_addr_t a, struct pci_dev *pdev)
--{
--	struct sta2x11_mapping *map;
--	dma_addr_t p;
--
--	map = sta2x11_pdev_to_mapping(pdev);
--	p = a - map->amba_base;
--	return p;
--}
--
- /* At setup time, we use our own ops if the device is a ConneXt one */
- static void sta2x11_setup_pdev(struct pci_dev *pdev)
- {
-@@ -151,70 +105,12 @@ static void sta2x11_setup_pdev(struct pci_dev *pdev)
- 
- 	if (!instance) /* either a sta2x11 bridge or another ST device */
- 		return;
--	pci_set_consistent_dma_mask(pdev, STA2X11_AMBA_SIZE - 1);
--	pci_set_dma_mask(pdev, STA2X11_AMBA_SIZE - 1);
--	pdev->dev.archdata.is_sta2x11 = true;
- 
- 	/* We must enable all devices as master, for audio DMA to work */
- 	pci_set_master(pdev);
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_STMICRO, PCI_ANY_ID, sta2x11_setup_pdev);
- 
--/*
-- * The following three functions are exported (used in swiotlb: FIXME)
-- */
--/**
-- * dma_capable - Check if device can manage DMA transfers (FIXME: kill it)
-- * @dev: device for a PCI device
-- * @addr: DMA address
-- * @size: DMA size
-- */
--bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
--{
--	struct sta2x11_mapping *map;
--
--	if (!dev->archdata.is_sta2x11) {
--		if (!dev->dma_mask)
--			return false;
--		return addr + size - 1 <= *dev->dma_mask;
--	}
--
--	map = sta2x11_pdev_to_mapping(to_pci_dev(dev));
--
--	if (!map || (addr < map->amba_base))
--		return false;
--	if (addr + size >= map->amba_base + STA2X11_AMBA_SIZE) {
--		return false;
--	}
--
--	return true;
--}
--
--/**
-- * __phys_to_dma - Return the DMA AMBA address used for this STA2x11 device
-- * @dev: device for a PCI device
-- * @paddr: Physical address
-- */
--dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
--{
--	if (!dev->archdata.is_sta2x11)
--		return paddr;
--	return p2a(paddr, to_pci_dev(dev));
--}
--
--/**
-- * dma_to_phys - Return the physical address used for this STA2x11 DMA address
-- * @dev: device for a PCI device
-- * @daddr: STA2x11 AMBA DMA address
-- */
--phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
--{
--	if (!dev->archdata.is_sta2x11)
--		return daddr;
--	return a2p(daddr, to_pci_dev(dev));
--}
--
--
- /*
-  * At boot we must set up the mappings for the pcie-to-amba bridge.
-  * It involves device access, and the same happens at suspend/resume time
-@@ -234,12 +130,20 @@ phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
- /* At probe time, enable mapping for each endpoint, using the pdev */
- static void sta2x11_map_ep(struct pci_dev *pdev)
- {
--	struct sta2x11_mapping *map = sta2x11_pdev_to_mapping(pdev);
-+	struct sta2x11_instance *instance = sta2x11_pdev_to_instance(pdev);
-+	struct device *dev = &pdev->dev;
-+	u32 amba_base;
- 	int i;
- 
--	if (!map)
-+	if (!instance)
- 		return;
--	pci_read_config_dword(pdev, AHB_BASE(0), &map->amba_base);
-+
-+	pci_read_config_dword(pdev, AHB_BASE(0), &amba_base);
-+	dev->dma_pfn_offset = PFN_DOWN(-amba_base);
-+	dev->bus_dma_mask = amba_base + STA2X11_AMBA_SIZE - 1;
-+
-+	pci_set_consistent_dma_mask(pdev, amba_base + STA2X11_AMBA_SIZE - 1);
-+	pci_set_dma_mask(pdev, amba_base + STA2X11_AMBA_SIZE - 1);
- 
- 	/* Configure AHB mapping */
- 	pci_write_config_dword(pdev, AHB_PEXLBASE(0), 0);
-@@ -252,14 +156,25 @@ static void sta2x11_map_ep(struct pci_dev *pdev)
- 		pci_write_config_dword(pdev, AHB_CRW(i), 0);
- 
- 	dev_info(&pdev->dev,
--		 "sta2x11: Map EP %i: AMBA address %#8x-%#8x\n",
--		 sta2x11_pdev_to_ep(pdev),  map->amba_base,
--		 map->amba_base + STA2X11_AMBA_SIZE - 1);
-+		 "sta2x11: Map EP %i: AMBA address %#8x-%#8llx\n",
-+		 sta2x11_pdev_to_ep(pdev), amba_base, dev->bus_dma_mask);
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_STMICRO, PCI_ANY_ID, sta2x11_map_ep);
- 
- #ifdef CONFIG_PM /* Some register values must be saved and restored */
- 
-+static struct sta2x11_mapping *sta2x11_pdev_to_mapping(struct pci_dev *pdev)
-+{
-+	struct sta2x11_instance *instance;
-+	int ep;
-+
-+	instance = sta2x11_pdev_to_instance(pdev);
-+	if (!instance)
-+		return NULL;
-+	ep = sta2x11_pdev_to_ep(pdev);
-+	return instance->map + ep;
-+}
-+
- static void suspend_mapping(struct pci_dev *pdev)
- {
- 	struct sta2x11_mapping *map = sta2x11_pdev_to_mapping(pdev);
--- 
-2.23.0
+>> memory below 1MiB as unconditionally reserved.   I don't properly
+>> understand the IORES_DESC_RESERVED flag, and how that differs from
+> I found three commits about 'IORES_DESC_RESERVED' flag, hope this helps.
+> 1.ae9e13d621d6 ("x86/e820, ioport: Add a new I/O resource descriptor IORES_DESC_RESERVED")
+> 2.5da04cc86d12 ("x86/mm: Rework ioremap resource mapping determination")
+> 3.980621daf368 ("x86/crash: Add e820 reserved ranges to kdump kernel's e820 table")
+>
+>> flags.  So please test my suggestions to verify the code works as
+>> expected.
+>> 
+> I have tested the two changes that you mentioned, please refer to the
+> reply above.
+
+Thank you.  It looks like you have figured out how these things should
+work.
+
+Eric
 
