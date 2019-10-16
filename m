@@ -2,57 +2,51 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0EAECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AFCECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4378B21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004B821A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262786;
-	bh=qWfBUTlJZjz1IqhkpVnjzoy7Ub2LpDcTgsvcw0X1Oxc=;
+	s=default; t=1571262789;
+	bh=0TygEq0obD9yYFXBpeYVPtjciUgfWD7m0vV61+y6fIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VqZoQ8ywX2oegtt8nCdbqUcPEHJPWkfeBoNAU6szvy//MrtGIOQ4eAwOM9L6nJEdX
-	 WKFzUJPvh/GL10P/jXYzA3UWv4coHKogTyZclcBuLb2ZDZkAZn92THdXLU4NzdEI/h
-	 je7ZWmqBVbuKOwyLiHM6SP1ucgwlm1mZ2xj3kIA4=
+	b=mG4BGxDLDeYXVCdvy5YwgXhxMPP3MzU/1hreAHxNGCa48i4+MHPJp9nS13AWyiCud
+	 WOcfU1FNDa1fFvDPygm5tUnLDsJzCkwayVpKHyOZ9LyFdGvsLlDAgn6LeQxSVLaw9I
+	 GTIy0fXx40fGJlvyaeCL4fF1hyj77O64GPhyKp0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbfJPVxF (ORCPT
+        id S2394830AbfJPVxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41526 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437220AbfJPVxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:01 -0400
+        id S2394799AbfJPVxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:03 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B5B3218DE;
-        Wed, 16 Oct 2019 21:53:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6591521A49;
+        Wed, 16 Oct 2019 21:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262780;
-        bh=qWfBUTlJZjz1IqhkpVnjzoy7Ub2LpDcTgsvcw0X1Oxc=;
+        s=default; t=1571262782;
+        bh=0TygEq0obD9yYFXBpeYVPtjciUgfWD7m0vV61+y6fIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNaxBVNek4OCkRJ8HXN61x9axQn1KKiGI4gX2QNgp2ldiuV2J7lYoaupQutNOgE4p
-         I+3ADeB4ZZ7fLZDRCNVskfRQAk/AQajmC9CCg45AsA09RuvmcSX78rt2ZUEaHPRWMd
-         m8CtQuEXg6SIEczwAlEOykxcvbYy7Lf1pMypRJcg=
+        b=G1D17U8myz+1/o2Am/Ol4aaMCx5AvJiSBqMFtjPLZ7IdR1+WJt1oN34ja4sgjQLVw
+         u4vQsJQro1LcuoLnPO170/4nHgeYXO77kRwk8Tk/adX7VzRWt77zu88xhH4xse8hPQ
+         pU0EC6GO79nl81FsXhuvUMFJ3ZW+R6vrHVg9Hbr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 21/79] tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
-Date:   Wed, 16 Oct 2019 14:49:56 -0700
-Message-Id: <20191016214750.099225959@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+Subject: [PATCH 4.4 23/79] crypto: caam - fix concurrency issue in givencrypt descriptor
+Date:   Wed, 16 Oct 2019 14:49:58 -0700
+Message-Id: <20191016214752.249557377@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -65,56 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Horia Geantă <horia.geanta@nxp.com>
 
-[ Upstream commit e0d2615856b2046c2e8d5bfd6933f37f69703b0b ]
+commit 48f89d2a2920166c35b1c0b69917dbb0390ebec7 upstream.
 
-If the re-allocation of tep->cmdlines succeeds, then the previous
-allocation of tep->cmdlines will be freed. If we later fail in
-add_new_comm(), we must not free cmdlines, and also should assign
-tep->cmdlines to the new allocation. Otherwise when freeing tep, the
-tep->cmdlines will be pointing to garbage.
+IV transfer from ofifo to class2 (set up at [29][30]) is not guaranteed
+to be scheduled before the data transfer from ofifo to external memory
+(set up at [38]:
 
-Fixes: a6d2a61ac653a ("tools lib traceevent: Remove some die() calls")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-trace-devel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190828191819.970121417@goodmis.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[29] 10FA0004           ld: ind-nfifo (len=4) imm
+[30] 81F00010               <nfifo_entry: ofifo->class2 type=msg len=16>
+[31] 14820004           ld: ccb2-datasz len=4 offs=0 imm
+[32] 00000010               data:0x00000010
+[33] 8210010D    operation: cls1-op aes cbc init-final enc
+[34] A8080B04         math: (seqin + math0)->vseqout len=4
+[35] 28000010    seqfifold: skip len=16
+[36] A8080A04         math: (seqin + math0)->vseqin len=4
+[37] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
+[38] 69300000   seqfifostr: msg len=vseqoutsz
+[39] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+
+If ofifo -> external memory transfer happens first, DECO will hang
+(issuing a Watchdog Timeout error, if WDOG is enabled) waiting for
+data availability in ofifo for the ofifo -> c2 ififo transfer.
+
+Make sure IV transfer happens first by waiting for all CAAM internal
+transfers to end before starting payload transfer.
+
+New descriptor with jump command inserted at [37]:
+
+[..]
+[36] A8080A04         math: (seqin + math0)->vseqin len=4
+[37] A1000401         jump: jsl1 all-match[!nfifopend] offset=[01] local->[38]
+[38] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
+[39] 69300000   seqfifostr: msg len=vseqoutsz
+[40] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+
+[Note: the issue is present in the descriptor from the very beginning
+(cf. Fixes tag). However I've marked it v4.19+ since it's the oldest
+maintained kernel that the patch applies clean against.]
+
+Cc: <stable@vger.kernel.org> # v4.19+
+Fixes: 1acebad3d8db8 ("crypto: caam - faster aead implementation")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[Horia: backport to v4.4, v4.9]
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/lib/traceevent/event-parse.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/crypto/caam/caamalg.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index df3c73e9dea49..9954b069b3ca2 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -265,10 +265,10 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	pevent->cmdlines = cmdlines;
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -75,7 +75,7 @@
+ #define DESC_AEAD_BASE			(4 * CAAM_CMD_SZ)
+ #define DESC_AEAD_ENC_LEN		(DESC_AEAD_BASE + 11 * CAAM_CMD_SZ)
+ #define DESC_AEAD_DEC_LEN		(DESC_AEAD_BASE + 15 * CAAM_CMD_SZ)
+-#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 9 * CAAM_CMD_SZ)
++#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 10 * CAAM_CMD_SZ)
  
- 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
- 	if (!cmdlines[pevent->cmdline_count].comm) {
--		free(cmdlines);
- 		errno = ENOMEM;
- 		return -1;
- 	}
-@@ -279,7 +279,6 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
- 		pevent->cmdline_count++;
+ /* Note: Nonce is counted in enckeylen */
+ #define DESC_AEAD_CTR_RFC3686_LEN	(4 * CAAM_CMD_SZ)
+@@ -437,6 +437,7 @@ static int aead_set_sh_desc(struct crypt
+ 	u32 geniv, moveiv;
+ 	u32 ctx1_iv_off = 0;
+ 	u32 *desc;
++	u32 *wait_cmd;
+ 	const bool ctr_mode = ((ctx->class1_alg_type & OP_ALG_AAI_MASK) ==
+ 			       OP_ALG_AAI_CTR_MOD128);
+ 	const bool is_rfc3686 = alg->caam.rfc3686;
+@@ -702,6 +703,14 @@ copy_iv:
  
- 	qsort(cmdlines, pevent->cmdline_count, sizeof(*cmdlines), cmdline_cmp);
--	pevent->cmdlines = cmdlines;
- 
- 	return 0;
- }
--- 
-2.20.1
-
+ 	/* Will read cryptlen */
+ 	append_math_add(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
++
++	/*
++	 * Wait for IV transfer (ofifo -> class2) to finish before starting
++	 * ciphertext transfer (ofifo -> external memory).
++	 */
++	wait_cmd = append_jump(desc, JUMP_JSL | JUMP_TEST_ALL | JUMP_COND_NIFP);
++	set_jump_tgt_here(desc, wait_cmd);
++
+ 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_BOTH | KEY_VLF |
+ 			     FIFOLD_TYPE_MSG1OUT2 | FIFOLD_TYPE_LASTBOTH);
+ 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | KEY_VLF);
 
 
