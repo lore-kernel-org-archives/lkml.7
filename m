@@ -2,87 +2,90 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2562BFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB79FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0D721848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571233180;
-	bh=dDExEC2557cmtq3X/4XRJPOkG/r/cnDMPOGXwrWXLoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VzV/TR0lCT2VZwn1XvKC/ilIDYXCeLcFynKZBdE49pV+XDx3INF1WTJK0gUSLu681
-	 E4+QB1OJOXJsIbvJYmr0FGaxBXUlVIGVzuMxSEa2abGjQkcxgNbEQdADxyYa1AC2UM
-	 ZYA5yogsNgRO5wervUJPrsvqcw/H3mtBC6kV21r0=
+	by mail.kernel.org (Postfix) with ESMTP id 3D8B6218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393641AbfJPNji (ORCPT
+        id S2393672AbfJPNmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 09:42:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56674 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391938AbfJPNji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:39:38 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387665AbfJPNmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:42:44 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75D5D2168B;
-        Wed, 16 Oct 2019 13:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571233178;
-        bh=dDExEC2557cmtq3X/4XRJPOkG/r/cnDMPOGXwrWXLoM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L+FbZCkdkd9GpK7nEZefieerlnRs7S6ZXE6J7iRlAmUzCy5s6bxANCkhxRUWZGaKI
-         sBeLWzxWO4IglbGp0fJVwJQB3DSlTbZ+iVw1IhX0xQvB+Uno4HRiWKjmkaYR9jpDX0
-         yX5gKWGo/5MvUHFZt7/oeBJu1lkFh0OKHV7dWFbY=
-Date:   Wed, 16 Oct 2019 15:39:35 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/4] crypto: add sun8i-ss driver for Allwinner Security
- System
-Message-ID: <20191016133935.e67kevjyugxn5rki@gilmour>
-References: <20191016133345.9076-1-clabbe.montjoie@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id BB4EF10CC211;
+        Wed, 16 Oct 2019 13:42:44 +0000 (UTC)
+Received: from work (ovpn-204-131.brq.redhat.com [10.40.204.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8393A66A07;
+        Wed, 16 Oct 2019 13:42:42 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 15:42:38 +0200
+From:   Lukas Czerner <lczerner@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: Handle fs_param_neg_with_empty
+Message-ID: <20191016134238.mzzmrn3wucgjqdvz@work>
+References: <157122227425.17182.1135743644487819585.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016133345.9076-1-clabbe.montjoie@gmail.com>
+In-Reply-To: <157122227425.17182.1135743644487819585.stgit@warthog.procyon.org.uk>
 User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Wed, 16 Oct 2019 13:42:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:33:41PM +0200, Corentin Labbe wrote:
-> Hello
->
-> This patch serie adds support for the second version of Allwinner Security System.
-> The first generation of the Security System is already handled by the sun4i-ss driver.
-> Due to major change, the first driver cannot handle the second one.
-> This new Security System is present on A80 and A83T SoCs.
->
-> For the moment, the driver support only DES3/AES in ECB/CBC mode.
-> Patchs for CTR/CTS, RSA and RNGs will came later.
->
-> This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
-> and tested on:
-> sun8i-a83t-bananapi-m3
-> sun9i-a80-cubieboard4
->
-> This serie is based on top of the "crypto: add sun8i-ce driver for
-> Allwinner crypto engine" serie.
+On Wed, Oct 16, 2019 at 11:37:54AM +0100, David Howells wrote:
+> Make fs_param_neg_with_empty work.  It says that a parameter with no value
+> or and empty value should be marked as negated.
+> 
+> This is intended for use with ext4, which hadn't yet been converted.
 
-For the crypto part,
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Hi David,
 
-I'll apply patches 3 and 4 once Herbert will have merged the patches 1 and 2
+thanks for the fix, this seems to be working fine for me. However this
+will only work for fs_param_is_string, not anything else. I do not need
+anything else, but unless you want to make it work for all the value types
+some changes in documentation might be needed as well.
 
 Thanks!
-Maxime
+-Lukas
+
+> 
+> Fixes: 31d921c7fb96 ("vfs: Add configuration parser helpers")
+> Reported-by: Lukas Czerner <lczerner@redhat.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  fs/fs_parser.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+> index d1930adce68d..f95997a76738 100644
+> --- a/fs/fs_parser.c
+> +++ b/fs/fs_parser.c
+> @@ -129,6 +129,11 @@ int fs_parse(struct fs_context *fc,
+>  	case fs_param_is_string:
+>  		if (param->type != fs_value_is_string)
+>  			goto bad_value;
+> +		if ((p->flags & fs_param_neg_with_empty) &&
+> +		    (!result->has_value || !param->string[0])) {
+> +			result->negated = true;
+> +			goto okay;
+> +		}
+>  		if (!result->has_value) {
+>  			if (p->flags & fs_param_v_optional)
+>  				goto okay;
+> 
