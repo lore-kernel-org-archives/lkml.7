@@ -3,129 +3,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF48FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC26FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048BB20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066BA20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwNXWdee"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yecjHGNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393693AbfJPNqe (ORCPT
+        id S2405457AbfJPNsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:46:34 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44497 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732469AbfJPNqe (ORCPT
+        Wed, 16 Oct 2019 09:48:23 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:36349 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfJPNsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:46:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e10so10344346pgd.11;
-        Wed, 16 Oct 2019 06:46:34 -0700 (PDT)
+        Wed, 16 Oct 2019 09:48:23 -0400
+Received: by mail-ua1-f65.google.com with SMTP id r25so7238744uam.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ncCyY5ytiHiEAR1np3tL8iphuGviQnsLSxNouTgbLyM=;
-        b=MwNXWdee7Y6s3miaadCIFDLNyyt03avG08rzXRJCgbM0qQ8jjkewPCC7TOyA2SEdEm
-         w4Q537UpPEJ97LQRLM1Zm2hEaqCcfcwfbUi7ybJEkbWSiqRA/gtyHjlbCjnk5csr+CNQ
-         twMTTrk8JQRdHsOjyBPQwdoVL8ev1WAvoTUPJjls0blRzNWLeQtz9whid01WWG5JAm9+
-         ctLuVZJMQn0M4HUG35gLMAoNZDLFo9ewXziTYE/B+MiFYVN/NTNpk5zsyIIiyWzhn3y9
-         eOKGLN2hyZq7m4S+B3+wS1OqehaWyIZiQTJP4xBCD0aRHqHM5yoNLEkgjqWnISv8OBUT
-         YekQ==
+        bh=ZczhRha9z1nsec5k7tudbJLt03HyH3VxjWdRdQFLkMs=;
+        b=yecjHGNGAegoANYaWXbjqNsxcZY98ad90xKhK31I9DOTyeJZgCUmotpz3V/jznGqMn
+         BYwrnpPhpWg1KxznTTq9FC6jFcYA0rKQX03A/vleQ9gsU/CJTA3St5eHCNU9xSuzJ5zK
+         VgN60//LyDCJC7PzthpL510PVbOTU5Nl4UH2gAWH6mirijPOEdf/Va7Hc+ORzkX3Gnfs
+         XsiPI00qHFIJEMK71BJcmZZefHq9zDpTo1TPIoXz4Az2/AcG/JZjZr7WdHlgDAswXIx6
+         UMbregCoRGbVJZ8FCsiKkrAwNRyNk1y98nSx43akPsDVkiWEtjIFwUJinGbTKLOQsgmJ
+         FP6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ncCyY5ytiHiEAR1np3tL8iphuGviQnsLSxNouTgbLyM=;
-        b=G+LGVInUpo1ONmccGnJeJ9XHcHLyHIGsYCGya60wz6I9HY+fVqmCYVdnBgJz7Tyck+
-         0WY5fMDuIhlzpv9Sf2Gsmb5WpdN0nK86n0rgSiForzpLNMH/PtYBh+3bQ/cDAWykuJWW
-         SZz8zvLTs65RyXdptuByVFcd3Z8jQib7TxYKlGaH1ChZ9kDEvZ1vwbjXQCk1pH5xuYoV
-         xlW/iV4CY13vj5B5B0xyLmdU+mybC7/vfSFxMrjr/1W7agqSGLYk9Cna+U7Le2it6rzS
-         xiA4rK4cYVWBuCYvxwUE5HnKSdf2n2AmEA5vgOKnznMi2T68m6KKyZvyLSLIPHndaSmQ
-         Bp2g==
-X-Gm-Message-State: APjAAAVnHtEPrBTCuw+IwM3pQESTmgVy5p9T6Zd32+DHC+loV5Rujyfi
-        wJhMJZ0gRwb88c8iKwYyulw+Ckdi0vmR2j6w9ow=
-X-Google-Smtp-Source: APXvYqzV40mPGZJzdonw39l4l21zPDDUEjEkouQFfk1omtfrghJB7x7udeFVF+D+HDvDN9+9bYAlrmkWMprQ4RT9pC4=
-X-Received: by 2002:aa7:8b02:: with SMTP id f2mr43669555pfd.151.1571233593607;
- Wed, 16 Oct 2019 06:46:33 -0700 (PDT)
+        bh=ZczhRha9z1nsec5k7tudbJLt03HyH3VxjWdRdQFLkMs=;
+        b=tKlUNNwgSOSDo+ZR23btNLoQ2q6g6wXWxnKYwL8Qyh0O4Rje6BG6G7DzwjtLPpPyq7
+         cvRM32wm42dI8Zk5qAvtFLWolYizERYaTYXmcQv2k/6HzJVEaVuaWwhT2JMVvaJsMbXq
+         BsQbfJcw5seu3sN/VRBPER7uYJCvz+rcZVo6LT7H49InRjZk87MgCPYc9POpI6Ft/aXX
+         Mon4HgZj1y1vcWp2YXvaa4/kk9DB/qTJ0vIOL8KwKxhzbnFiSDvJocUGR78WdmjyC1Pm
+         fr5/nSSEKCOokpwTg/UDAYGuidyWBPRSbobJJ/FW7ZVJ8zLgmBd6ALEcxQs4wMu5d1GS
+         BuOw==
+X-Gm-Message-State: APjAAAXUSNLUzw7sRZmADtKGj2SKNoRoevufApscJrotKN7gI+eIls8q
+        AVvi2WwC/wwapaFL0Cs8L5g9s7J5miS2wu48AKUYFw==
+X-Google-Smtp-Source: APXvYqzDpJmGjL9BnoWGF8QRrB89KcB9r2ZCwEdZLc2zqHnhS1q/w4C+c6uMpxQU2nrpu5EyekFHa9wkYoswYcXPv3s=
+X-Received: by 2002:ab0:5a97:: with SMTP id w23mr16874006uae.129.1571233701097;
+ Wed, 16 Oct 2019 06:48:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191004214334.149976-1-swboyd@chromium.org> <20191004214334.149976-2-swboyd@chromium.org>
- <CAHp75Vebn48hbzqKWzV3aj4NEBCta_Fn7zOQHzsznW4=6cXLsQ@mail.gmail.com>
- <5da4e084.1c69fb81.567f9.4b9c@mx.google.com> <CAHp75Vcht2S7j64vUGw+DQdSEAyxuyBJ9oVwHyXxnL9bM1-wFA@mail.gmail.com>
- <5da64b37.1c69fb81.fbe6e.51ad@mx.google.com>
-In-Reply-To: <5da64b37.1c69fb81.fbe6e.51ad@mx.google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 16 Oct 2019 16:46:22 +0300
-Message-ID: <CAHp75VfZU-s2+cY5kpRTSDjc0TC1Xe4hnmY3bLBUPFqWMmo4wA@mail.gmail.com>
-Subject: Re: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Riku Voipio <riku.voipio@iki.fi>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>
+References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+ <20190927044239.589e7c4c@oasis.local.home> <20191001163542.GB87296@google.com>
+ <CAPDyKFrYqeoiSG5-KaBDt_G4kPtCxRO7+5fRa-HSWjuPPmAheQ@mail.gmail.com> <20191015171937.GO87296@google.com>
+In-Reply-To: <20191015171937.GO87296@google.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 16 Oct 2019 15:47:44 +0200
+Message-ID: <CAPDyKFpE0LoxXAR=2JvPi8pvb-6_q4rgs-A4D6OU7XuP1XEtbg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 1:42 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> Quoting Andy Shevchenko (2019-10-15 02:02:01)
-> > On Mon, Oct 14, 2019 at 11:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > Quoting Andy Shevchenko (2019-10-14 10:50:06)
-> > > > On Sat, Oct 5, 2019 at 12:47 AM Stephen Boyd <swboyd@chromium.org> wrote:
-
-> > > > Also, I'm thinking that following may help to clean a lot of the i2c
-> > > > client drivers
-> > > >
-> > > > static inline // perhaps no
-> > > > const void *i2c_device_get_match_data(struct i2c_client *client, const
-> > > > struct i2c_device_id *id)
-> > > > {
-> > > >   if (id)
-> > > >     return (const void *)id->driver_data;
-> > > >   return device_get_match_data(&client->dev);
-> > > > }
-> > > >
-> > >
-> > > Looks alright to me. Maybe device_get_match_data() can look at the bus
-> > > and call some bus op if the firmware match isn't present? Then we can
-> > > replace a bunch of these calls with device_get_match_data() and it will
-> > > "do the right thing" regardless of what bus or firmware the device is
-> > > running on.
-> >
-> > It will be something ugly like
-> >
-> > buses {
-> > #ifdef I2C
-> > &i2c_bus_type,
-> > #endif
-> > ...
-> > }
-> >
-> > in the code. I won't do this.
-> >
-> > See generic_match_buses[] for example.
+On Tue, 15 Oct 2019 at 19:19, Matthias Kaehlcke <mka@chromium.org> wrote:
 >
-> Why is it like generic_match_buses[]? I thought it would look at
-> struct device::of_node or struct device::fw_node and try to extract
-> device data out that and if that fails it would fallback to some new
-> function like struct bus_type::get_match_data() that does the right
-> thing for the bus. In the case of i2c it would extract the i2c_client's
-> i2c_device_id pointer and return it onwards.
+> Hi Ulf,
+>
+> On Tue, Oct 15, 2019 at 02:37:42PM +0200, Ulf Hansson wrote:
+> > On Tue, 1 Oct 2019 at 18:35, Matthias Kaehlcke <mka@chromium.org> wrote:
+> > >
+> > > On Fri, Sep 27, 2019 at 04:42:39AM -0400, Steven Rostedt wrote:
+> > > > On Thu, 26 Sep 2019 15:04:38 -0700
+> > > > Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > >
+> > > > > Define genpd_power_on/off and genpd_set_performance_state
+> > > > > tracepoints and use them.
+> > > >
+> > > > I agree with Greg about adding a "why" you need this. But, in case
+> > > > there's a good reason to have this, I have comments about the code
+> > > > below.
+> > >
+> > > Thanks Greg and Steven for your comments.
+> > >
+> > > How about this instead:
+> > >
+> > >   Add tracepoints for genpd_power_on, genpd_power_off and
+> > >   genpd_set_performance_state. The tracepoints can help with
+> > >   understanding power domain behavior of a given device, which
+> > >   may be particularly interesting for battery powered devices
+> > >   and suspend/resume.
+> >
+> > Apologize for the delay, no excuse!
+> >
+> > I don't mind adding trace events, as long as it's for good reasons -
+> > and to me, that seems a bit questionable here.
+> >
+> > According to the above, I believe the information you need is already
+> > available via genpd's debugfs interface, no?
+>
+> Not in all cases, e.g. you can't peek at sysfs while the device is
+> suspended.
 
-Can you send a patch for review?
+Not sure I get this right. If a device that is attached to a genpd
+that is runtime suspended, for sure you can have a look at the genpd
+debugfs to see its current status.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Also sysfs doesn't help much with seeing that a PD is
+> toggling between on an off for some (possibly legitimate) reason.
+
+Well, you could look at the "active_time" and the "total_idle_time"
+nodes for the genpd in question. Those should change accordingly.
+
+>
+> At this point I don't need this information badly, just thought it
+> could be useful. No problem if it is decided to hold back on it for
+> now.
+
+Okay, thanks!
+
+Kind regards
+Uffe
