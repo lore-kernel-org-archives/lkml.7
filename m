@@ -2,172 +2,345 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F048C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4449C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4D920650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB51E20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391992AbfJPJ3U (ORCPT
+        id S1732713AbfJPJdA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:29:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49396 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730336AbfJPJ3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:29:19 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iKfc9-0001Vt-Q1; Wed, 16 Oct 2019 11:29:05 +0200
-Date:   Wed, 16 Oct 2019 11:29:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 16 Oct 2019 05:33:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:33820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbfJPJdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:33:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C777142F;
+        Wed, 16 Oct 2019 02:32:59 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 178203F6C4;
+        Wed, 16 Oct 2019 02:32:57 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 10:32:48 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-In-Reply-To: <20190925180931.GG31852@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1910161038210.2046@nanos.tec.linutronix.de>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de> <20190925180931.GG31852@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Julien Grall <julien.grall@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>, tglx@linutronix.de
+Subject: Re: [PATCH REPOST] lib/ubsan: Don't seralize UBSAN report
+Message-ID: <20191016103248.3d5f1d4f@donnerap.cambridge.arm.com>
+In-Reply-To: <20191010163616.qon4ppmhf74l4fix@linutronix.de>
+References: <20191010163616.qon4ppmhf74l4fix@linutronix.de>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean,
+On Thu, 10 Oct 2019 18:36:16 +0200
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-On Wed, 25 Sep 2019, Sean Christopherson wrote:
+Hi,
 
-sorry for the late reply. This got lost in travel/conferencing/vacation
-induced backlog.
+you seem to be me missing the "From:" line here, to keep Julien as the author. If you have this patch in a git repo, you could use:
+$ git commit --amend --author "Julien Grall <julien.grall@arm.com>"
+so that git keeps the authorship, which should be translated into the proper email form (From: ...) by git send-email.
 
-> On Wed, Jun 26, 2019 at 11:47:40PM +0200, Thomas Gleixner wrote:
-> > So only one of the CPUs will win the cmpxchg race, set te variable to 1 and
-> > warn, the other and any subsequent AC on any other CPU will not warn
-> > either. So you don't need WARN_ONCE() at all. It's redundant and confusing
-> > along with the atomic_set().
-> > 
-> > Whithout reading that link [1], what Ingo proposed was surely not the
-> > trainwreck which you decided to put into that debugfs thing.
+And what is the reason for the repost anyway?
+
+Cheers,
+Andre.
+
+> At the moment, UBSAN report will be serialized using a spin_lock(). On
+> RT-systems, spinlocks are turned to rt_spin_lock and may sleep. This will
+> result to the following splat if the undefined behavior is in a context
+> that can not sleep:
 > 
-> We're trying to sort out the trainwreck, but there's an additional wrinkle
-> that I'd like your input on.
+> | BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
+> | in_atomic(): 1, irqs_disabled(): 128, pid: 3447, name: make
+> | 1 lock held by make/3447:
+> |  #0: 000000009a966332 (&mm->mmap_sem){++++}, at: do_page_fault+0x140/0x4f8
+> | Preemption disabled at:
+> | [<ffff000011324a4c>] rt_mutex_futex_unlock+0x4c/0xb0
+> | CPU: 3 PID: 3447 Comm: make Tainted: G        W         5.2.14-rt7-01890-ge6e057589653 #911
+> | Call trace:
+> …
+> |  ___might_sleep+0x154/0x210
+> |  rt_spin_lock+0x68/0xa0
+> |  ubsan_prologue+0x30/0x68
+> |  handle_overflow+0x64/0xe0
+> |  __ubsan_handle_add_overflow+0x10/0x18
 > 
-> We overlooked the fact that MSR_TEST_CTRL is per-core, i.e. shared by
-> sibling hyperthreads.
-
-You must be kidding. It took 9 revisions of trainwreck engineering to
-find that out.
-
-> This is especially problematic for KVM, as loading MSR_TEST_CTRL during
-> VM-Enter could cause spurious #AC faults in the kernel and bounce
-> MSR_TEST_CTRL.split_lock.
->
-> E.g. if CPU0 and CPU1 are siblings and CPU1 is running a KVM guest with
-> MSR_TEST_CTRL.split_lock=1, hitting an #AC on CPU0 in the host kernel will
-> lead to suprious #AC faults and constant toggling of of the MSR.
->
-> My thought to handle this:
+> The spin_lock() will protect against multiple CPUs to output a report
+> together, I guess to prevent them to be interleaved. However, they can
+> still interleave with other messages (and even splat from __migth_sleep).
 > 
->   - Remove the per-cpu cache.
->
->   - Rework the atomic variable to differentiate between "disabled globally"
->     and "disabled by kernel (on some CPUs)".
-
-Under the assumption that the kernel should never trigger #AC anyway, that
-should be good enough.
-
->   - Modify the #AC handler to test/set the same atomic variable as the
->     sysfs knob.  This is the "disabled by kernel" flow.
-
-That's the #AC in kernel handler, right?
- 
->   - Modify the debugfs/sysfs knob to only allow disabling split-lock
->     detection.  This is the "disabled globally" path, i.e. sends IPIs to
->     clear MSR_TEST_CTRL.split_lock on all online CPUs.
-
-Why only disable? What's wrong with reenabling it? The shiny new driver you
-are working on is triggering #AC. So in order to test the fix, you need to
-reboot the machine instead of just unloading the module, reenabling #AC and
-then loading the fixed one?
-
->   - Modify the resume/init flow to clear MSR_TEST_CTRL.split_lock if it's
->     been disabled on *any* CPU via #AC or via the knob.
-
-Fine.
-
->   - Remove KVM loading of MSR_TEST_CTRL, i.e. KVM *never* writes the CPU's
->     actual MSR_TEST_CTRL.  KVM still emulates MSR_TEST_CTRL so that the
->     guest can do WRMSR and handle its own #AC faults, but KVM doesn't
->     change the value in hardware.
+> So the lock usefulness seems pretty limited. Rather than trying to
+> accomodate RT-system by switching to a raw_spin_lock(), the lock is now
+> completely dropped.
 > 
->       * Allowing guest to enable split-lock detection can induce #AC on
->         the host after it has been explicitly turned off, e.g. the sibling
->         hyperthread hits an #AC in the host kernel, or worse, causes a
->         different process in the host to SIGBUS.
->
->       * Allowing guest to disable split-lock detection opens up the host
->         to DoS attacks.
+> Link: https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
+> Reported-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: 
+> Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> Repost of
+>   https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
+> 
+>  lib/ubsan.c | 64 +++++++++++++++++++----------------------------------
+>  1 file changed, 23 insertions(+), 41 deletions(-)
+> 
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index e7d31735950de..39d5952c42733 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -140,25 +140,21 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
+>  	}
+>  }
+>  
+> -static DEFINE_SPINLOCK(report_lock);
+> -
+> -static void ubsan_prologue(struct source_location *location,
+> -			unsigned long *flags)
+> +static void ubsan_prologue(struct source_location *location)
+>  {
+>  	current->in_ubsan++;
+> -	spin_lock_irqsave(&report_lock, *flags);
+>  
+>  	pr_err("========================================"
+>  		"========================================\n");
+>  	print_source_location("UBSAN: Undefined behaviour in", location);
+>  }
+>  
+> -static void ubsan_epilogue(unsigned long *flags)
+> +static void ubsan_epilogue(void)
+>  {
+>  	dump_stack();
+>  	pr_err("========================================"
+>  		"========================================\n");
+> -	spin_unlock_irqrestore(&report_lock, *flags);
+> +
+>  	current->in_ubsan--;
+>  }
+>  
+> @@ -167,14 +163,13 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
+>  {
+>  
+>  	struct type_descriptor *type = data->type;
+> -	unsigned long flags;
+>  	char lhs_val_str[VALUE_LENGTH];
+>  	char rhs_val_str[VALUE_LENGTH];
+>  
+>  	if (suppress_report(&data->location))
+>  		return;
+>  
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  
+>  	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
+>  	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
+> @@ -186,7 +181,7 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
+>  		rhs_val_str,
+>  		type->type_name);
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  
+>  void __ubsan_handle_add_overflow(struct overflow_data *data,
+> @@ -214,20 +209,19 @@ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
+>  void __ubsan_handle_negate_overflow(struct overflow_data *data,
+>  				void *old_val)
+>  {
+> -	unsigned long flags;
+>  	char old_val_str[VALUE_LENGTH];
+>  
+>  	if (suppress_report(&data->location))
+>  		return;
+>  
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  
+>  	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
+>  
+>  	pr_err("negation of %s cannot be represented in type %s:\n",
+>  		old_val_str, data->type->type_name);
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
+>  
+> @@ -235,13 +229,12 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
+>  void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+>  				void *lhs, void *rhs)
+>  {
+> -	unsigned long flags;
+>  	char rhs_val_str[VALUE_LENGTH];
+>  
+>  	if (suppress_report(&data->location))
+>  		return;
+>  
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  
+>  	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
+>  
+> @@ -251,58 +244,52 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
+>  	else
+>  		pr_err("division by zero\n");
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  EXPORT_SYMBOL(__ubsan_handle_divrem_overflow);
+>  
+>  static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
+>  {
+> -	unsigned long flags;
+> -
+>  	if (suppress_report(data->location))
+>  		return;
+>  
+> -	ubsan_prologue(data->location, &flags);
+> +	ubsan_prologue(data->location);
+>  
+>  	pr_err("%s null pointer of type %s\n",
+>  		type_check_kinds[data->type_check_kind],
+>  		data->type->type_name);
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  
+>  static void handle_misaligned_access(struct type_mismatch_data_common *data,
+>  				unsigned long ptr)
+>  {
+> -	unsigned long flags;
+> -
+>  	if (suppress_report(data->location))
+>  		return;
+>  
+> -	ubsan_prologue(data->location, &flags);
+> +	ubsan_prologue(data->location);
+>  
+>  	pr_err("%s misaligned address %p for type %s\n",
+>  		type_check_kinds[data->type_check_kind],
+>  		(void *)ptr, data->type->type_name);
+>  	pr_err("which requires %ld byte alignment\n", data->alignment);
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  
+>  static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
+>  					unsigned long ptr)
+>  {
+> -	unsigned long flags;
+> -
+>  	if (suppress_report(data->location))
+>  		return;
+>  
+> -	ubsan_prologue(data->location, &flags);
+> +	ubsan_prologue(data->location);
+>  	pr_err("%s address %p with insufficient space\n",
+>  		type_check_kinds[data->type_check_kind],
+>  		(void *) ptr);
+>  	pr_err("for an object of type %s\n", data->type->type_name);
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  
+>  static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
+> @@ -351,25 +338,23 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
+>  
+>  void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
+>  {
+> -	unsigned long flags;
+>  	char index_str[VALUE_LENGTH];
+>  
+>  	if (suppress_report(&data->location))
+>  		return;
+>  
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  
+>  	val_to_string(index_str, sizeof(index_str), data->index_type, index);
+>  	pr_err("index %s is out of range for type %s\n", index_str,
+>  		data->array_type->type_name);
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
+>  
+>  void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+>  					void *lhs, void *rhs)
+>  {
+> -	unsigned long flags;
+>  	struct type_descriptor *rhs_type = data->rhs_type;
+>  	struct type_descriptor *lhs_type = data->lhs_type;
+>  	char rhs_str[VALUE_LENGTH];
+> @@ -378,7 +363,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+>  	if (suppress_report(&data->location))
+>  		return;
+>  
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  
+>  	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
+>  	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
+> @@ -401,18 +386,16 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
+>  			lhs_str, rhs_str,
+>  			lhs_type->type_name);
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
+>  
+>  
+>  void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
+>  {
+> -	unsigned long flags;
+> -
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  	pr_err("calling __builtin_unreachable()\n");
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  	panic("can't return from __builtin_unreachable()");
+>  }
+>  EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+> @@ -420,19 +403,18 @@ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
+>  void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
+>  				void *val)
+>  {
+> -	unsigned long flags;
+>  	char val_str[VALUE_LENGTH];
+>  
+>  	if (suppress_report(&data->location))
+>  		return;
+>  
+> -	ubsan_prologue(&data->location, &flags);
+> +	ubsan_prologue(&data->location);
+>  
+>  	val_to_string(val_str, sizeof(val_str), data->type, val);
+>  
+>  	pr_err("load of value %s is not a valid value for type %s\n",
+>  		val_str, data->type->type_name);
+>  
+> -	ubsan_epilogue(&flags);
+> +	ubsan_epilogue();
+>  }
+>  EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
 
-Wasn't this discussed before and agreed on that if the host has AC enabled
-that the guest should not be able to force disable it? I surely lost track
-of this completely so my memory might trick me.
-
-The real question is what you do when the host has #AC enabled and the
-guest 'disabled' it and triggers #AC. Is that going to be silently ignored
-or is the intention to kill the guest in the same way as we kill userspace?
-
-The latter would be the right thing, but given the fact that the current
-kernels easily trigger #AC today, that would cause a major wreckage in
-hosting scenarios. So I fear we need to bite the bullet and have a knob
-which defaults to 'handle silently' and allows to enable the kill mechanics
-on purpose. 'Handle silently' needs some logging of course, at least a per
-guest counter which can be queried and a tracepoint.
-
->   - KVM advertises split-lock detection to guest/userspace if and only if
->     split_lock_detect_disabled is zero.
-
-Assuming that the host kernel is clean, fine. If the sysadmin disables it
-after boot and after starting guests, it's his problem.
-
->   - Add a pr_warn_once() in KVM that triggers if split locks are disabled
->     after support has been advertised to a guest.
-
-The pr_warn() is more or less redundant, but no strong opinion here.
-
-> The question at the forefront of my mind is: why not have the #AC handler
-> send a fire-and-forget IPI to online CPUs to disable split-lock detection
-> on all CPUs?  Would the IPI be problematic?  Globally disabling split-lock
-> on any #AC would (marginally) simplify the code and would eliminate the
-> oddity of userspace process (and KVM guest) #AC behavior varying based on
-> the physical CPU it's running on.
-
-I'm fine with the IPI under the assumption that the kernel should never
-trigger it at all in production.
-
-Thanks,
-
-	tglx
