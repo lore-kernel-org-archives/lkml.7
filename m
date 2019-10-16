@@ -2,100 +2,95 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D05FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC6CFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBD8205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:44:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDFFMc4s"
+	by mail.kernel.org (Postfix) with ESMTP id ED240205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731480AbfJPLob (ORCPT
+        id S1732002AbfJPLp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:44:31 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34462 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728578AbfJPLob (ORCPT
+        Wed, 16 Oct 2019 07:45:26 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:49635 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731586AbfJPLp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:44:31 -0400
-Received: by mail-il1-f195.google.com with SMTP id c12so2258582ilm.1;
-        Wed, 16 Oct 2019 04:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9rzJpZ/HcxH5TEm+aJfkTf0wd0cfT+dxcCtHXvrqpcY=;
-        b=PDFFMc4s/lwX18Vk+hPzEDGpDQ3h47O+UWMuWS49bHhoyM6mM/fjxovdm6PCjkKAnG
-         MVZMfm2/x4nbcaTqPzyni6bO2SNJeI1cIVUc70BFj36w6pZY69qvlqL7wKyj091nCNkp
-         /Ec00BI9wZmhz6tbD2yV2+4Ajpsb81v7Ef+i/0HpGX2q93r9h5FIqA+df8fEyaLExcJA
-         tmOZaBqhvrQ8HQSs4YaYm9QgOU4/dMg1G/pB+ue8CmddgqcjZKZak+EZg1iA8+mOQKnZ
-         4LUQtq0Vd8vt4fzVdfpJioxlu9N/Mx+DndRyYTzAUpc8Yi41inEdvAuvmt5TF5QJjjKD
-         WAiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9rzJpZ/HcxH5TEm+aJfkTf0wd0cfT+dxcCtHXvrqpcY=;
-        b=c+g5jF8GR4d+u/1JhzgKJ4t1KZ5tSaN93uDOVKWbQnlWNcvSkiDWoYiwIAHZhx5CZv
-         DekC9R7eYDYhE5ckhDWGQ1lNtV3oZo5u+ASBCcXJIO4mpec7HY+Eq2UvCu52f2K0wi96
-         qxTcCsBDJ0IBq6LON80lGcbo5Id8C5yShU4IDXDt6YdOE5+Uoi0ocay4Rq30AxPvxcgx
-         9enyNWp8ja2gMMygrTRFTrfcQ9tp3LDmplE7lKD4GTu7jc9rx3JeJecTGfQWfHuGimDc
-         n++CLwcSx63Hx1Aunlv9LOQm3nvnR8kRmV13MIgNNWG2X9/o1ylssdC0H5IRYC5K7U/v
-         oVhQ==
-X-Gm-Message-State: APjAAAW5Dlb5v3wLdasCmRa45oiN/B6LldjRooPIXmUmofqz0qF1KZR7
-        i9JMHIvpmvIL1lk5yBHCk5v2XLaNMpQ+rLUEcPI=
-X-Google-Smtp-Source: APXvYqyxv7TzerJeMw6nTSB+UeqDuw41lCw0ERreleWN40C0AUydIYPur8vywHaxYsreWEALTqx1BPxv9Rd1EjwEScI=
-X-Received: by 2002:a92:6701:: with SMTP id b1mr5510418ilc.181.1571226269872;
- Wed, 16 Oct 2019 04:44:29 -0700 (PDT)
+        Wed, 16 Oct 2019 07:45:26 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKhjx-00062v-JZ; Wed, 16 Oct 2019 12:45:17 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKhjw-000281-Ug; Wed, 16 Oct 2019 12:45:16 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: inside-secure - fix unexported warnings
+Date:   Wed, 16 Oct 2019 12:45:12 +0100
+Message-Id: <20191016114512.8138-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <7933ce8f-ca1b-6ed8-14b9-59679130dc47@web.de> <CA+Ln22GpcMF5e8wjwoRH0wExyoGfta4n3YuaOBNDE+rfqhSZjg@mail.gmail.com>
- <285fab33-0513-8a6b-f30d-f602c4e5108e@web.de>
-In-Reply-To: <285fab33-0513-8a6b-f30d-f602c4e5108e@web.de>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Wed, 16 Oct 2019 20:44:18 +0900
-Message-ID: <CA+Ln22Ft47yJx5hO0YNOobJDGtg7t0_DPdeBif3LmMcn8gyykw@mail.gmail.com>
-Subject: Re: clk: samsung: Checking a kmemdup() call in _samsung_clk_register_pll()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Aditya Pakki <pakki001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8816=E6=97=A5(=E6=B0=B4) 19:55 Markus Elfring <Markus=
-.Elfring@web.de>:
->
-> >> * Is there a need to adjust the error handling here?
-> >
-> > No, there isn't much that can be done if we fail the allocation at
-> > such an early stage.
->
-> Can it matter to perform the setting =E2=80=9Cpll->rate_count=E2=80=9D on=
-ly according
-> to a null pointer check for the variable =E2=80=9Cpll->rate_table=E2=80=
-=9D
-> because of the function call =E2=80=9Ckmemdup=E2=80=9D?
+The safexcel_pci_remove, pcireg_rc and ofreg_rc are
+not exported or declared externally so make them static.
 
-It would be a good practice indeed, but looking from the code,
-pll->rate_table is checked elsewhere, not pll->rate_count.
+This avoids the following sparse warnings:
 
-Best regards,
-Tomasz
+drivers/crypto/inside-secure/safexcel.c:1760:6: warning: symbol 'safexcel_pci_remove' was not declared. Should it be static?
+drivers/crypto/inside-secure/safexcel.c:1794:5: warning: symbol 'pcireg_rc' was not declared. Should it be static?
+drivers/crypto/inside-secure/safexcel.c:1797:5: warning: symbol 'ofreg_rc' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Antoine Tenart <antoine.tenart@bootlin.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/crypto/inside-secure/safexcel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
+index 4ab1bde8dd9b..223d1bfdc7e6 100644
+--- a/drivers/crypto/inside-secure/safexcel.c
++++ b/drivers/crypto/inside-secure/safexcel.c
+@@ -1757,7 +1757,7 @@ static int safexcel_pci_probe(struct pci_dev *pdev,
+ 	return rc;
+ }
+ 
+-void safexcel_pci_remove(struct pci_dev *pdev)
++static void safexcel_pci_remove(struct pci_dev *pdev)
+ {
+ 	struct safexcel_crypto_priv *priv = pci_get_drvdata(pdev);
+ 	int i;
+@@ -1791,10 +1791,10 @@ static struct pci_driver safexcel_pci_driver = {
+ 
+ /* Unfortunately, we have to resort to global variables here */
+ #if IS_ENABLED(CONFIG_PCI)
+-int pcireg_rc = -EINVAL; /* Default safe value */
++static int pcireg_rc = -EINVAL; /* Default safe value */
+ #endif
+ #if IS_ENABLED(CONFIG_OF)
+-int ofreg_rc = -EINVAL; /* Default safe value */
++static int ofreg_rc = -EINVAL; /* Default safe value */
+ #endif
+ 
+ static int __init safexcel_init(void)
+-- 
+2.23.0
+
