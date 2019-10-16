@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE25ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59F6FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174EB222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7889D21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263084;
-	bh=yfKx3VWq8AufLebFFeZh5Y6tRVVHGP2MGGjwAkjkM2c=;
+	s=default; t=1571263090;
+	bh=jlGR3XPRL+NAmC7s4hIpPBFodatK9NRysbSifcG7A+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXmA3xM0DFPurmVTHyrbqPBJjLImt0IBuOOa3sbTGTLUR2UvzEYYiQSVyw7TV5vql
-	 jBXTZoIrPp9HI/Lp1b7qQSw4cv977zJS2cxEb2AkAm3FZwlcpjlJaTfNrLJQsBKdCK
-	 Xa5n915TqhZdXcZe30aMM3abjnnMbolVIbeA3V/4=
+	b=EV2dA/UoDXAwfSRgraB5JxEu4vNpYM0j1U6QB/qKbDEb22obsEHeN45vBHc8nMGf/
+	 ndlRlu6PuElVoJWphQ9s1UrVP2lHO4fpgHmb3teUyS3SgmRQ9z/lxZlXLpz8KejNa8
+	 4ZdZXMNLQcuIwSzEifp1SVcUzw/u9xSxgAowHrfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438111AbfJPV6C (ORCPT
+        id S2438119AbfJPV6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391375AbfJPV5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:12 -0400
+        id S1727241AbfJPV5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:15 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF23D21D7A;
-        Wed, 16 Oct 2019 21:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A301921928;
+        Wed, 16 Oct 2019 21:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263032;
-        bh=yfKx3VWq8AufLebFFeZh5Y6tRVVHGP2MGGjwAkjkM2c=;
+        s=default; t=1571263034;
+        bh=jlGR3XPRL+NAmC7s4hIpPBFodatK9NRysbSifcG7A+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytVA1r1bacMwwU+9PmYvlYm4T0A6oBnZD7mns43JJPo17X7Ne9pIBy8P7y4u4COck
-         fObTsMnqgxzJ6PnuWjih2lOweAe0vdtfceM7rs66WWfDdi+Y44Tjjo+SpZqRBy8uAe
-         ehd3zJRTeDl7BxjD1TDvGupoFm3oS6c/oJmXK5s8=
+        b=fQZYx3YRpx1IQFrNG/mLdlGEQjhCwBpuklaAH0C+hwOEclZ5mVVlrTNC1WAr/J46d
+         xWPXCz7Eg/HPHEn8lLaQNIZessT/VxkF9H9cLAKTJHzJnbSViSQTekGezJLD6c3j0V
+         DZ1GPysR3XNu6xo2ol4QN6cd0U/Z9Zsa7+GgFXEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.19 33/81] usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt,wedge}()
-Date:   Wed, 16 Oct 2019 14:50:44 -0700
-Message-Id: <20191016214833.888463334@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Tomoki Sekiyama <tomoki.sekiyama@gmail.com>,
+        syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 04/81] USB: yurex: Dont retry on unexpected errors
+Date:   Wed, 16 Oct 2019 14:50:15 -0700
+Message-Id: <20191016214808.920844358@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -59,36 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 1aae1394294cb71c6aa0bc904a94a7f2f1e75936 upstream.
+commit 32a0721c6620b77504916dac0cea8ad497c4878a upstream.
 
-The commit 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-had added a usbhsg_pipe_disable() calling into
-__usbhsg_ep_set_halt_wedge() accidentally. But, this driver should
-not call the usbhsg_pipe_disable() because the function discards
-all queues. So, this patch removes it.
+According to Greg KH, it has been generally agreed that when a USB
+driver encounters an unknown error (or one it can't handle directly),
+it should just give up instead of going into a potentially infinite
+retry loop.
 
-Fixes: 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-Cc: <stable@vger.kernel.org> # v3.1+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1569924633-322-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
+The three codes -EPROTO, -EILSEQ, and -ETIME fall into this category.
+They can be caused by bus errors such as packet loss or corruption,
+attempting to communicate with a disconnected device, or by malicious
+firmware.  Nowadays the extent of packet loss or corruption is
+negligible, so it should be safe for a driver to give up whenever one
+of these errors occurs.
+
+Although the yurex driver handles -EILSEQ errors in this way, it
+doesn't do the same for -EPROTO (as discovered by the syzbot fuzzer)
+or other unrecognized errors.  This patch adjusts the driver so that
+it doesn't log an error message for -EPROTO or -ETIME, and it doesn't
+retry after any errors.
+
+Reported-and-tested-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Tomoki Sekiyama <tomoki.sekiyama@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1909171245410.1590-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/renesas_usbhs/mod_gadget.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/usb/misc/yurex.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -722,8 +722,6 @@ static int __usbhsg_ep_set_halt_wedge(st
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
- 	unsigned long flags;
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -132,6 +132,7 @@ static void yurex_interrupt(struct urb *
+ 	switch (status) {
+ 	case 0: /*success*/
+ 		break;
++	/* The device is terminated or messed up, give up */
+ 	case -EOVERFLOW:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - overflow with length %d, actual length is %d\n",
+@@ -140,12 +141,13 @@ static void yurex_interrupt(struct urb *
+ 	case -ENOENT:
+ 	case -ESHUTDOWN:
+ 	case -EILSEQ:
+-		/* The device is terminated, clean up */
++	case -EPROTO:
++	case -ETIME:
+ 		return;
+ 	default:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - unknown status received: %d\n", __func__, status);
+-		goto exit;
++		return;
+ 	}
  
--	usbhsg_pipe_disable(uep);
--
- 	dev_dbg(dev, "set halt %d (pipe %d)\n",
- 		halt, usbhs_pipe_number(pipe));
+ 	/* handle received message */
+@@ -177,7 +179,6 @@ static void yurex_interrupt(struct urb *
+ 		break;
+ 	}
  
+-exit:
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
 
 
