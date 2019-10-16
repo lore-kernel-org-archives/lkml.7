@@ -2,134 +2,120 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A818FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1C0FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790D720854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD86A20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393449AbfJPNJb (ORCPT
+        id S2393462AbfJPNJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:09:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23340 "EHLO mga02.intel.com"
+        Wed, 16 Oct 2019 09:09:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37918 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391745AbfJPNJb (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:09:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S2391745AbfJPNJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:09:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:09:30 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:09:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="195595361"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.210.124]) ([10.254.210.124])
-  by fmsmga007.fm.intel.com with ESMTP; 16 Oct 2019 06:09:27 -0700
-Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
- block for stdio
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191015053350.13909-1-yao.jin@linux.intel.com>
- <20191015053350.13909-4-yao.jin@linux.intel.com>
- <20191015084102.GA10951@krava>
- <6882f3ae-0f8d-5a01-7fd5-5b9f9c93f9ac@linux.intel.com>
- <20191016101543.GC15580@krava>
- <456b8e97-dc50-449c-9999-0bddef0e9c4c@linux.intel.com>
- <20191016125325.GA10222@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <3085326b-c3f1-7475-7e43-db46a749aa37@linux.intel.com>
-Date:   Wed, 16 Oct 2019 21:09:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+   d="scan'208";a="208407779"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 16 Oct 2019 06:09:56 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 16 Oct 2019 16:09:54 +0300
+Date:   Wed, 16 Oct 2019 16:09:54 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     pumahsu <pumahsu@google.com>
+Cc:     gregkh@linuxfoundation.org, badhri@google.com, kyletso@google.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: Add sysfs node to show cc orientation
+Message-ID: <20191016130954.GD17542@kuha.fi.intel.com>
+References: <20191016034314.231363-1-pumahsu@google.com>
+ <20191016125846.GC17542@kuha.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016125325.GA10222@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016125846.GC17542@kuha.fi.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/16/2019 8:53 PM, Jiri Olsa wrote:
-> On Wed, Oct 16, 2019 at 06:51:07PM +0800, Jin, Yao wrote:
->>
->>
->> On 10/16/2019 6:15 PM, Jiri Olsa wrote:
->>> On Tue, Oct 15, 2019 at 10:53:18PM +0800, Jin, Yao wrote:
->>>
->>> SNIP
->>>
->>>>>> +static struct block_header_column{
->>>>>> +	const char *name;
->>>>>> +	int width;
->>>>>> +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
->>>>>> +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
->>>>>> +		.name = "Sampled Cycles%",
->>>>>> +		.width = 15,
->>>>>> +	},
->>>>>> +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
->>>>>> +		.name = "Sampled Cycles",
->>>>>> +		.width = 14,
->>>>>> +	},
->>>>>> +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
->>>>>> +		.name = "Avg Cycles%",
->>>>>> +		.width = 11,
->>>>>> +	},
->>>>>> +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
->>>>>> +		.name = "Avg Cycles",
->>>>>> +		.width = 10,
->>>>>> +	},
->>>>>> +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
->>>>>> +		.name = "[Program Block Range]",
->>>>>> +		.width = 70,
->>>>>> +	},
->>>>>> +	[PERF_HPP_REPORT__BLOCK_DSO] = {
->>>>>> +		.name = "Shared Object",
->>>>>> +		.width = 20,
->>>>>> +	}
->>>>>>     };
->>>>>
->>>>> so we already have support for multiple columns,
->>>>> why don't you add those as 'struct sort_entry' objects?
->>>>>
->>>>
->>>> For 'struct sort_entry' objects, do you mean I should reuse the "sort_dso"
->>>> which has been implemented yet in util/sort.c?
->>>>
->>>> For other columns, it looks we can't reuse the existing sort_entry objects.
->>>
->>> I did not mean reuse, just add new sort entries
->>> to current sort framework
->>>
->>
->> Does it seem like what the c2c does?
+On Wed, Oct 16, 2019 at 03:58:50PM +0300, Heikki Krogerus wrote:
+> On Wed, Oct 16, 2019 at 11:43:14AM +0800, pumahsu wrote:
+> > Export the Type-C cc orientation so that user space can
+> > get this information.
 > 
-> well c2c has its own data output with multiline column titles,
-> hence it has its own separate dimension stuff, but your code
-> output is within the standard perf report right? single column
-> output.. why couldn't you use just sort_entry ?
+> For what do you need this information in user space? I'm guessing you
+> have something else in mind besides exposing this as just generic
+> information, or debugging purposes, no?
 > 
-> jirka
+> Please keep in mind that we do not always know the cable orientation.
+> UCSI for example does not give any clues about which way the cable
+> plug was connected to the connector. That means this sysfs file will
+> most likely need to be hidden in those cases, which I guess is
+> acceptable, but definitely not ideal.
 > 
+> > Signed-off-by: pumahsu <pumahsu@google.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-typec |  7 +++++++
+> >  drivers/usb/typec/class.c                   | 11 +++++++++++
+> >  2 files changed, 18 insertions(+)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> > index d7647b258c3c..419f952c991d 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > @@ -108,6 +108,13 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> >  Description:
+> >  		Revision number of the supported USB Type-C specification.
+> >  
+> > +What:		/sys/class/typec/<port>/cc_orientation
+> > +Date:		September 2019
+> > +Contact:	Puma Hsu <pumahsu@google.com>
+> > +Description:
+> > +		Indicates which cc orientation is active now, or 0 when
+> > +		nothing is connected.
+> 
+> cc_orientation is a bit cryptic. I think if this is part of the port
+> ABI, then we should talk about something like "connector_orientation".
+> 
+> >  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+> >  
+> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> > index 7d8805d9bf37..00edae63da8e 100644
+> > --- a/drivers/usb/typec/class.c
+> > +++ b/drivers/usb/typec/class.c
+> > @@ -1238,6 +1238,16 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+> >  }
+> >  static DEVICE_ATTR_RO(usb_power_delivery_revision);
+> >  
+> > +static ssize_t cc_orientation_show(struct device *dev,
+> > +						struct device_attribute *attr,
+> > +						char *buf)
+> > +{
+> > +	struct typec_port *p = to_typec_port(dev);
+> > +
+> > +	return sprintf(buf, "%d\n", typec_get_orientation(p));
+> > +}
+> > +static DEVICE_ATTR_RO(cc_orientation);
+> 
+> Now you are returning 0, 1 or 2 which to me is not ideal. This really
+> should return a string, something like "normal" / "reversed", and in
+> case the orientation is TYPEC_ORIENTATION_NONE, empty string.
 
-No, my output is probably not within standard perf report. They are
-totally 6 columns but only one column ('Sampled Cycles%') needs to be 
-sorted. Other columns are not sorted. They only output some information.
+Or maybe TYPEC_ORIENTATION_NONE could be handle with "unknown" string.
+That way we may not need to hide the file.
 
-For sort_entry, maybe the sorted column ('Sampled Cycles%') can use 
-sort_entry, but others may not need it. So I don't know if I really need 
-the sort_entry for my case.
+thanks,
 
-I just feel maybe I still misunderstand what you have suggested. :(
-
-Thanks
-Jin Yao
+-- 
+heikki
