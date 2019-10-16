@@ -2,102 +2,136 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5021EFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CCFFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2806521925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E072218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YFoZ+P9H"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bCMHAt5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393055AbfJPM16 (ORCPT
+        id S2393060AbfJPM2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:27:58 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37550 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387949AbfJPM15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:27:57 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n17so16398020qtr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RiitUgtPHWYB471TBDHiVHPPALR+DVcpaO06JHpx/Ks=;
-        b=YFoZ+P9HHoSoLVHZecxRW+Z7+f5LggWJqYiP/+udF6k8cZBRCQRsm8W8AwvIMcyD6J
-         zTw6j4UEPKQKVMpk2gJnDJoOksG/VEM42AGDsdK/YZyvHpkkYyC8SKShI7Agk6xfypfJ
-         k0nLAPhKyNxQWeYBhOEk7LuzIHr8mqN/lTDSJFSLPoXiSfAlJVCewPyLfZD8+7j+5AAN
-         FEY34BuDnOTiVkBk1hYZCoocdavCaQCeBlt8eW+zStBLnFGieKwX13ennTtwM4s0iYje
-         F3DBnl5Fg6qyga8kRN1/JGplByRpdSwo3UHi51A8RpphiOx14cymS/FA0PVlTS33uYb9
-         KGTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RiitUgtPHWYB471TBDHiVHPPALR+DVcpaO06JHpx/Ks=;
-        b=GYUebov9JiK+ye7bZSwhtnSwtV3hV71H2nhC7O5xHTTqoA5NlX+cSdcN3WHUKkIpMZ
-         a5w+ZJMhWgRtVfFFmS/s5/flkF7sn+dbTRy51aGDPWGba2EjmMJNy0td/3wMK0ZJlsR1
-         reDZkdqSkZeTC6cxrZ9EfSJgVQIC5QAKBfWfRHkVBNSR3FT9kxBklDKilxXEJ13SKT7s
-         LLOk1foLccO/NhI9Qu+wX0KbPVOepZftbhpvpT5Qa0HF+OoFXWjmCq9u0LBPHEMaSPlD
-         qcOQt1CCvXIVeNMMSuQxa34xHJmWSgInZyuVCNWF27DpH+SqCkTV4RyGWg7PwdRxq/zC
-         OWcA==
-X-Gm-Message-State: APjAAAU9IukFqIoCpsdQ85A0SinP2DSDJiulw4Fyx5Dim5UGWZX80blX
-        YtlKFLISwXqUkaCO/bub0uypwcER9X8FQOaTXvGbDw==
-X-Google-Smtp-Source: APXvYqzDHm0kSmPDqed4NoHcllkNpwqptCmh2deQ0fBpLLPQJG+ftMU1r99mU527MOglkMOMQ/pVQl9DwOdDGZP4UzM=
-X-Received: by 2002:aed:2462:: with SMTP id s31mr45321050qtc.40.1571228876746;
- Wed, 16 Oct 2019 05:27:56 -0700 (PDT)
+        Wed, 16 Oct 2019 08:28:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35093 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbfJPM2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:28:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tWmZ1H2hz9sPT;
+        Wed, 16 Oct 2019 23:28:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1571228910;
+        bh=zy552ubPLEsREybng5yyRj8M9/b2s2rupYBl2LF3oTc=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=bCMHAt5NbQsRJswiloLS3BOMtt5ozH95akKYDF6rl/hufXVy+LHqqh/fqsjrfF+3z
+         Alet/wZMxFgDW8KadWsXJTA0jeN+2Zdkh9XybwAMoSY29aEywv5tdejZ9Qsrv9XOty
+         sEuw2h4sMcPBOoPFygj1lmCyE1KhQLZMMmcCm3OnfAW+s0UfdxMkNDgQDZfo65iEBc
+         Ayib6bC0jO1+iOBlp22lb66OFocUOhlpDv6LjB3iF+uyMZnhNPQ5a8Jt/9SyNFiYAb
+         dG1LdmqIZVEf8EoaCY5/te9lPxv+l5L9BKm++npzrJ3CyxemLqh9zRs1MWThBC/8WT
+         4l2wEZN3JDAGg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, keescook@chromium.org,
+        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usercopy: Avoid soft lockups in test_check_nonzero_user()
+In-Reply-To: <20191011094333.7hovhhacrvlf6uq6@wittgenstein>
+References: <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com> <20191011022447.24249-1-mpe@ellerman.id.au> <20191011034810.xkmz3e4l5ezxvq57@yavin.dot.cyphar.com> <20191011094333.7hovhhacrvlf6uq6@wittgenstein>
+Date:   Wed, 16 Oct 2019 23:28:20 +1100
+Message-ID: <87a7a0ub6j.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org> <20191015173026.9962-2-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20191015173026.9962-2-manivannan.sadhasivam@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 14:27:44 +0200
-Message-ID: <CACRpkdY3OC675EjZ4PYhYxnk1XWh4EO-a3JJBha2rdBttySUNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: gpio: Add devicetree binding for RDA
- Micro GPIO controller
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-unisoc@lists.infradead.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 7:30 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-
-> Add YAML devicetree binding for RDA Micro GPIO controller.
+Christian Brauner <christian.brauner@ubuntu.com> writes:
+> On Fri, Oct 11, 2019 at 02:48:10PM +1100, Aleksa Sarai wrote:
+>> On 2019-10-11, Michael Ellerman <mpe@ellerman.id.au> wrote:
+>> > On a machine with a 64K PAGE_SIZE, the nested for loops in
+>> > test_check_nonzero_user() can lead to soft lockups, eg:
+>> > 
+>> >   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
+>> >   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum virtio_balloon ip_tables x_tables autofs4
+>> >   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gcc-8.2.0-00001-gf5a1a536fa14-dirty #1151
+>> >   ...
+>> >   NIP __might_sleep+0x20/0xc0
+>> >   LR  __might_fault+0x40/0x60
+>> >   Call Trace:
+>> >     check_zeroed_user+0x12c/0x200
+>> >     test_user_copy_init+0x67c/0x1210 [test_user_copy]
+>> >     do_one_initcall+0x60/0x340
+>> >     do_init_module+0x7c/0x2f0
+>> >     load_module+0x2d94/0x30e0
+>> >     __do_sys_finit_module+0xc8/0x150
+>> >     system_call+0x5c/0x68
+>> > 
+>> > Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
+>> > tweak it to only scan a 1024 byte region, but make it cross the
+>> > page boundary.
+>> > 
+>> > Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+>> > Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
+>> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> > ---
+>> >  lib/test_user_copy.c | 23 ++++++++++++++++++++---
+>> >  1 file changed, 20 insertions(+), 3 deletions(-)
+>> > 
+>> > How does this look? It runs in < 1s on my machine here.
+>> > 
+>> > cheers
+>> > 
+>> > diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+>> > index 950ee88cd6ac..9fb6bc609d4c 100644
+>> > --- a/lib/test_user_copy.c
+>> > +++ b/lib/test_user_copy.c
+>> > @@ -47,9 +47,26 @@ static bool is_zeroed(void *from, size_t size)
+>> >  static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+>> >  {
+>> >  	int ret = 0;
+>> > -	size_t start, end, i;
+>> > -	size_t zero_start = size / 4;
+>> > -	size_t zero_end = size - zero_start;
+>> > +	size_t start, end, i, zero_start, zero_end;
+>> > +
+>> > +	if (test(size < 1024, "buffer too small"))
+>> > +		return -EINVAL;
+>> > +
+>> > +	/*
+>> > +	 * We want to cross a page boundary to exercise the code more
+>> > +	 * effectively. We assume the buffer we're passed has a page boundary at
+>> > +	 * size / 2. We also don't want to make the size we scan too large,
+>> > +	 * otherwise the test can take a long time and cause soft lockups. So
+>> > +	 * scan a 1024 byte region across the page boundary.
+>> > +	 */
+>> > +	start = size / 2 - 512;
+>> > +	size = 1024;
+>> 
+>> I don't think it's necessary to do "size / 2" here -- you can just use
+>> PAGE_SIZE directly and check above that "size == 2*PAGE_SIZE" (not that
+>> this check is exceptionally necessary -- since there's only one caller
+>> of this function and it's in the same file).
 >
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Michael, in case you resend, can you make my life a little easier and do
+> it on top of
+> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
+> please. I have a fix from Aleksa sitting in there laready that _might_
+> cause a conflict otherwise.
 
-First: this looks awesome to me,
+No worries, done.
 
-Second: since this is kind of a first... could we move the standard GPIOchip
-YAML business into a generic gpiochip .yaml file?
-
-We currently only have pl061-gpio.yaml and this would duplicate a lot
-of the stuff from that yaml file.
-
-If you look at how
-display/panel/panel-common.yaml
-is used from say
-display/panel/ti,nspire.yaml
-
-Could we do something similar and lift out all the generics from
-gpio-pl061.yaml to
-gpio-common.yaml
-and reference that also in the new binding?
-
-If it seems hard, tell me and I can take a stab at it.
-
-Yours,
-Linus Walleij
+cheers
