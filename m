@@ -2,85 +2,149 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E5BECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA6ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9116E2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082AA21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571212993;
+	bh=wM/nUTK3S5psgEypnAz0OtgZ+jpM99/JuUjxmXaJLbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oTudtvyQ89pxWIR/BGaeNP1Q+lZROTB3JOGw0mQGtatVgAXNaJmKMP1lBtabSxHgn
+	 TfcMa7S7tYFeaqHo52LwDpfLApgDdOM2bcgorS/JRGy34VEtp41DHg5IUHQYaMWcIE
+	 WsBJtViyXyH12WztfF6k95xuW0p4wwk1kZxcMm5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391413AbfJPIC2 (ORCPT
+        id S2391422AbfJPIDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:02:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:4761 "EHLO mga01.intel.com"
+        Wed, 16 Oct 2019 04:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730874AbfJPIC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:02:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 01:02:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="186079660"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 16 Oct 2019 01:02:25 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iKeGG-0006Wq-9i; Wed, 16 Oct 2019 11:02:24 +0300
-Date:   Wed, 16 Oct 2019 11:02:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 00/14] software node: add support for reference
- properties
-Message-ID: <20191016080224.GR32742@smile.fi.intel.com>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191014073837.GI32742@smile.fi.intel.com>
- <20191014235747.GA105649@dtor-ws>
+        id S2390608AbfJPIDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:03:11 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F022168B;
+        Wed, 16 Oct 2019 08:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571212990;
+        bh=wM/nUTK3S5psgEypnAz0OtgZ+jpM99/JuUjxmXaJLbI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QCPGi1WVH+6Crkf1iDbM7YIS4z1GKzHDuhctLzfeInuMMn5u5nDXy5q+iDHNmXvrb
+         M2GYnuqAUqL+5tCNIq8sknLo9+qH3E7ER6Gi7uJGEPEhb4YoZL80odrE/w5vwRzqYJ
+         KnYL7dFRNfLvSpXT4Csnnc3JMz0IYoC5vjRwliAg=
+Date:   Wed, 16 Oct 2019 10:03:06 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+Message-ID: <20191016080306.44pmo3rfmtnkgosq@gilmour>
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com>
+ <20191007105708.raxavxk4n7bvxh7x@gilmour>
+ <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="daxw7i7armk2zq3y"
 Content-Disposition: inline
-In-Reply-To: <20191014235747.GA105649@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 04:57:47PM -0700, Dmitry Torokhov wrote:
-> On Mon, Oct 14, 2019 at 10:38:37AM +0300, Andy Shevchenko wrote:
-> > On Fri, Oct 11, 2019 at 04:07:07PM -0700, Dmitry Torokhov wrote:
-> > > These series implement "references" properties for software nodes as true
-> > > properties, instead of managing them completely separately.
-> > > 
-> > > The first 10 patches are generic cleanups and consolidation and
-> > > unification of the existing code; patch #11 implements moving of small
-> > > properties inline when copying property entries; patch #12 implements
-> > > PROPERTY_ENTRY_REF() and friends; patch #13 converts the user of
-> > > references to the property syntax, and patch #14 removes the remains of
-> > > references as entities that are managed separately.
-> > 
-> > Can we get some test cases?
-> 
-> Something like this? (I'll beef it up if we decide KUnit is OK for
-> this).
 
-As a starter, yes.
+--daxw7i7armk2zq3y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
+> On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> > > Add MIPI DSI pipeline for Allwinner A64.
+> > >
+> > > - dsi node, with A64 compatible since it doesn't support
+> > >   DSI_SCLK gating unlike A33
+> > > - dphy node, with A64 compatible with A33 fallback since
+> > >   DPHY on A64 and A33 is similar
+> > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > index 69128a6dfc46..ad4170b8aee0 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > @@ -382,6 +382,12 @@
+> > >                                       #address-cells = <1>;
+> > >                                       #size-cells = <0>;
+> > >                                       reg = <1>;
+> > > +
+> > > +                                     tcon0_out_dsi: endpoint@1 {
+> > > +                                             reg = <1>;
+> > > +                                             remote-endpoint = <&dsi_in_tcon0>;
+> > > +                                             allwinner,tcon-channel = <1>;
+> > > +                                     };
+> > >                               };
+> > >                       };
+> > >               };
+> > > @@ -1003,6 +1009,38 @@
+> > >                       status = "disabled";
+> > >               };
+> > >
+> > > +             dsi: dsi@1ca0000 {
+> > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
+> > > +                     reg = <0x01ca0000 0x1000>;
+> > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> > > +                     clock-names = "bus";
+> >
+> > This won't validate with the bindings you have either here, since it
+> > still expects bus and mod.
+> >
+> > I guess in that cas, we can just drop clock-names, which will require
+> > a bit of work on the driver side as well.
+>
+> Okay.
+> mod clock is not required for a64, ie reason we have has_mod_clk quirk
+> patch. Adjust the clock-names: on dt-bindings would make sense here,
+> what do you think?
 
+I'm confused, what are you suggesting?
 
+Maxime
+
+--daxw7i7armk2zq3y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXabOugAKCRDj7w1vZxhR
+xaRxAQCMC8f5R5O0x3PDOXjho8DhgMeHnD0ME5PLyqwkpk557QD+JbRITmjTlYf0
+FHZLWNsA4avNld7ActyJrkctTuut3AM=
+=aBRs
+-----END PGP SIGNATURE-----
+
+--daxw7i7armk2zq3y--
