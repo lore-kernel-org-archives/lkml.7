@@ -2,51 +2,55 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009D5FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133FFFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C473B218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7E9218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263399;
-	bh=Zzo8yMFoA1prS3xWp7Xq1gA2nAOj7saQWS884tzy5h4=;
+	s=default; t=1571263406;
+	bh=jphSXo0H1nebo1iEBpk4uSYr10SEphXsBJeMQa/Sj7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HaRxH6/uHKAWNQcFFgZ4TFHyMOmrQHFUvwOCwiHE97344MDlC9XNO9fLdhqV2fMM2
-	 FxvLIAZlU/cvVEoKlLJw+KLFVzzxyEGlIwhDb8j7+sH0XKcyrr1wcbC2GiHlXSfn2V
-	 A4dqn5A4e8ZW3f/M5SOP2utDdu5Scepua8JhxUxI=
+	b=eIWCqcv3svqsnuUor0thBwwXqKMGWJeUkKfMcGimKzqK1YiSDIE9NXYXY7TJXAV9n
+	 yw2JFoxelvbMNpaY1IAYTBJjgDyIR4mwc/zuXMqbs0sNUYyLQP2z5bxPKJobtEnmrj
+	 /S7Zo6oQX/fd10pLunlZcWxj3kn90FbGdQ3ddx9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406792AbfJPWDP (ORCPT
+        id S2406808AbfJPWDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:03:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438519AbfJPV73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:29 -0400
+        id S2438509AbfJPV71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:27 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CCBB21928;
-        Wed, 16 Oct 2019 21:59:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B577222C4;
+        Wed, 16 Oct 2019 21:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263168;
-        bh=Zzo8yMFoA1prS3xWp7Xq1gA2nAOj7saQWS884tzy5h4=;
+        s=default; t=1571263166;
+        bh=jphSXo0H1nebo1iEBpk4uSYr10SEphXsBJeMQa/Sj7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hy5AuoxbyU8/g0/KwS4KTrWkBOMY61XTcACtyTwFEIJ6FqH2vfrkUaHk7rwlSLACC
-         dFOMjrtShiLBVVTV42dYfbsMrf2yQFHFmvoakwMxz17/jRZYhCux/NywwhFuCRjbZP
-         HUmQrFnkRmhdSgbt1K1dmNHoBz+nCfVI6bNr+xKQ=
+        b=eGjPv8ORLePAQGE8i7hsA5SEdvSP6KpHcPpvCAmjihe+6bfJt3jzEhNIQ0Ys7onqj
+         OsFm1XUZ/f7PgyTV3Zbynpx9M4lJisCwNhsW54IyjiC7ZCB8pc5/cmpR/5HkbR80gu
+         6LLqB7NUCnQlIHUZT/X5M6BCBGpmTBAPLlKGC5Io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhengbin (A)" <zhengbin13@huawei.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.3 096/112] Fix the locking in dcache_readdir() and friends
-Date:   Wed, 16 Oct 2019 14:51:28 -0700
-Message-Id: <20191016214905.994291404@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Will Deacon <will@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 094/112] arm64: topology: Use PPTT to determine if PE is a thread
+Date:   Wed, 16 Oct 2019 14:51:26 -0700
+Message-Id: <20191016214905.788832630@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -59,222 +63,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Jeremy Linton <jeremy.linton@arm.com>
 
-commit d4f4de5e5ef8efde85febb6876cd3c8ab1631999 upstream.
+Commit 98dc19902a0b2e5348e43d6a2c39a0a7d0fc639e upstream.
 
-There are two problems in dcache_readdir() - one is that lockless traversal
-of the list needs non-trivial cooperation of d_alloc() (at least a switch
-to list_add_rcu(), and probably more than just that) and another is that
-it assumes that no removal will happen without the directory locked exclusive.
-Said assumption had always been there, never had been stated explicitly and
-is violated by several places in the kernel (devpts and selinuxfs).
+ACPI 6.3 adds a thread flag to represent if a CPU/PE is
+actually a thread. Given that the MPIDR_MT bit may not
+represent this information consistently on homogeneous machines
+we should prefer the PPTT flag if its available.
 
-        * replacement of next_positive() with different calling conventions:
-it returns struct list_head * instead of struct dentry *; the latter is
-passed in and out by reference, grabbing the result and dropping the original
-value.
-        * scan is under ->d_lock.  If we run out of timeslice, cursor is moved
-after the last position we'd reached and we reschedule; then the scan continues
-from that place.  To avoid livelocks between multiple lseek() (with cursors
-getting moved past each other, never reaching the real entries) we always
-skip the cursors, need_resched() or not.
-        * returned list_head * is either ->d_child of dentry we'd found or
-->d_subdirs of parent (if we got to the end of the list).
-        * dcache_readdir() and dcache_dir_lseek() switched to new helper.
-dcache_readdir() always holds a reference to dentry passed to dir_emit() now.
-Cursor is moved to just before the entry where dir_emit() has failed or into
-the very end of the list, if we'd run out.
-        * move_cursor() eliminated - it had sucky calling conventions and
-after fixing that it became simply list_move() (in lseek and scan_positives)
-or list_move_tail() (in readdir).
-
-        All operations with the list are under ->d_lock now, and we do not
-depend upon having all file removals done with parent locked exclusive
-anymore.
-
-Cc: stable@vger.kernel.org
-Reported-by: "zhengbin (A)" <zhengbin13@huawei.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Robert Richter <rrichter@marvell.com>
+[will: made acpi_cpu_is_threaded() return 'bool']
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/libfs.c |  134 +++++++++++++++++++++++++++++++------------------------------
- 1 file changed, 69 insertions(+), 65 deletions(-)
+ arch/arm64/kernel/topology.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -89,58 +89,47 @@ int dcache_dir_close(struct inode *inode
- EXPORT_SYMBOL(dcache_dir_close);
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 0825c4a856e33..6106c49f84bc8 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -340,17 +340,28 @@ void remove_cpu_topology(unsigned int cpu)
+ }
  
- /* parent is locked at least shared */
--static struct dentry *next_positive(struct dentry *parent,
--				    struct list_head *from,
--				    int count)
-+/*
-+ * Returns an element of siblings' list.
-+ * We are looking for <count>th positive after <p>; if
-+ * found, dentry is grabbed and passed to caller via *<res>.
-+ * If no such element exists, the anchor of list is returned
-+ * and *<res> is set to NULL.
-+ */
-+static struct list_head *scan_positives(struct dentry *cursor,
-+					struct list_head *p,
-+					loff_t count,
-+					struct dentry **res)
+ #ifdef CONFIG_ACPI
++static bool __init acpi_cpu_is_threaded(int cpu)
++{
++	int is_threaded = acpi_pptt_cpu_is_thread(cpu);
++
++	/*
++	 * if the PPTT doesn't have thread information, assume a homogeneous
++	 * machine and return the current CPU's thread state.
++	 */
++	if (is_threaded < 0)
++		is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
++
++	return !!is_threaded;
++}
++
+ /*
+  * Propagate the topology information of the processor_topology_node tree to the
+  * cpu_topology array.
+  */
+ static int __init parse_acpi_topology(void)
  {
--	unsigned *seq = &parent->d_inode->i_dir_seq, n;
--	struct dentry *res;
--	struct list_head *p;
--	bool skipped;
--	int i;
-+	struct dentry *dentry = cursor->d_parent, *found = NULL;
+-	bool is_threaded;
+ 	int cpu, topology_id;
  
--retry:
--	i = count;
--	skipped = false;
--	n = smp_load_acquire(seq) & ~1;
--	res = NULL;
--	rcu_read_lock();
--	for (p = from->next; p != &parent->d_subdirs; p = p->next) {
-+	spin_lock(&dentry->d_lock);
-+	while ((p = p->next) != &dentry->d_subdirs) {
- 		struct dentry *d = list_entry(p, struct dentry, d_child);
--		if (!simple_positive(d)) {
--			skipped = true;
--		} else if (!--i) {
--			res = d;
--			break;
-+		// we must at least skip cursors, to avoid livelocks
-+		if (d->d_flags & DCACHE_DENTRY_CURSOR)
-+			continue;
-+		if (simple_positive(d) && !--count) {
-+			spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_NESTED);
-+			if (simple_positive(d))
-+				found = dget_dlock(d);
-+			spin_unlock(&d->d_lock);
-+			if (likely(found))
-+				break;
-+			count = 1;
-+		}
-+		if (need_resched()) {
-+			list_move(&cursor->d_child, p);
-+			p = &cursor->d_child;
-+			spin_unlock(&dentry->d_lock);
-+			cond_resched();
-+			spin_lock(&dentry->d_lock);
- 		}
- 	}
--	rcu_read_unlock();
--	if (skipped) {
--		smp_rmb();
--		if (unlikely(*seq != n))
--			goto retry;
--	}
--	return res;
--}
+-	is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
 -
--static void move_cursor(struct dentry *cursor, struct list_head *after)
--{
--	struct dentry *parent = cursor->d_parent;
--	unsigned n, *seq = &parent->d_inode->i_dir_seq;
--	spin_lock(&parent->d_lock);
--	for (;;) {
--		n = *seq;
--		if (!(n & 1) && cmpxchg(seq, n, n + 1) == n)
--			break;
--		cpu_relax();
--	}
--	__list_del(cursor->d_child.prev, cursor->d_child.next);
--	if (after)
--		list_add(&cursor->d_child, after);
--	else
--		list_add_tail(&cursor->d_child, &parent->d_subdirs);
--	smp_store_release(seq, n + 2);
--	spin_unlock(&parent->d_lock);
-+	spin_unlock(&dentry->d_lock);
-+	dput(*res);
-+	*res = found;
-+	return p;
- }
+ 	for_each_possible_cpu(cpu) {
+ 		int i, cache_id;
  
- loff_t dcache_dir_lseek(struct file *file, loff_t offset, int whence)
-@@ -158,17 +147,28 @@ loff_t dcache_dir_lseek(struct file *fil
- 			return -EINVAL;
- 	}
- 	if (offset != file->f_pos) {
-+		struct dentry *cursor = file->private_data;
-+		struct dentry *to = NULL;
-+		struct list_head *p;
-+
- 		file->f_pos = offset;
--		if (file->f_pos >= 2) {
--			struct dentry *cursor = file->private_data;
--			struct dentry *to;
--			loff_t n = file->f_pos - 2;
--
--			inode_lock_shared(dentry->d_inode);
--			to = next_positive(dentry, &dentry->d_subdirs, n);
--			move_cursor(cursor, to ? &to->d_child : NULL);
--			inode_unlock_shared(dentry->d_inode);
-+		inode_lock_shared(dentry->d_inode);
-+
-+		if (file->f_pos > 2) {
-+			p = scan_positives(cursor, &dentry->d_subdirs,
-+					   file->f_pos - 2, &to);
-+			spin_lock(&dentry->d_lock);
-+			list_move(&cursor->d_child, p);
-+			spin_unlock(&dentry->d_lock);
-+		} else {
-+			spin_lock(&dentry->d_lock);
-+			list_del_init(&cursor->d_child);
-+			spin_unlock(&dentry->d_lock);
- 		}
-+
-+		dput(to);
-+
-+		inode_unlock_shared(dentry->d_inode);
- 	}
- 	return offset;
- }
-@@ -190,25 +190,29 @@ int dcache_readdir(struct file *file, st
- {
- 	struct dentry *dentry = file->f_path.dentry;
- 	struct dentry *cursor = file->private_data;
--	struct list_head *p = &cursor->d_child;
--	struct dentry *next;
--	bool moved = false;
-+	struct list_head *anchor = &dentry->d_subdirs;
-+	struct dentry *next = NULL;
-+	struct list_head *p;
+@@ -358,7 +369,7 @@ static int __init parse_acpi_topology(void)
+ 		if (topology_id < 0)
+ 			return topology_id;
  
- 	if (!dir_emit_dots(file, ctx))
- 		return 0;
- 
- 	if (ctx->pos == 2)
--		p = &dentry->d_subdirs;
--	while ((next = next_positive(dentry, p, 1)) != NULL) {
-+		p = anchor;
-+	else
-+		p = &cursor->d_child;
-+
-+	while ((p = scan_positives(cursor, p, 1, &next)) != anchor) {
- 		if (!dir_emit(ctx, next->d_name.name, next->d_name.len,
- 			      d_inode(next)->i_ino, dt_type(d_inode(next))))
- 			break;
--		moved = true;
--		p = &next->d_child;
- 		ctx->pos++;
- 	}
--	if (moved)
--		move_cursor(cursor, p);
-+	spin_lock(&dentry->d_lock);
-+	list_move_tail(&cursor->d_child, p);
-+	spin_unlock(&dentry->d_lock);
-+	dput(next);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(dcache_readdir);
+-		if (is_threaded) {
++		if (acpi_cpu_is_threaded(cpu)) {
+ 			cpu_topology[cpu].thread_id = topology_id;
+ 			topology_id = find_acpi_cpu_topology(cpu, 1);
+ 			cpu_topology[cpu].core_id   = topology_id;
+-- 
+2.20.1
+
 
 
