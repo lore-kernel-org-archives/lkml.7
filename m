@@ -2,181 +2,139 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB510FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F11FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA1121D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD8621D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fPxPUbFP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Up4tCXps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbfJPSKP (ORCPT
+        id S2389716AbfJPSNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:10:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56414 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfJPSKO (ORCPT
+        Wed, 16 Oct 2019 14:13:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34131 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfJPSNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:10:14 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GI3TB5114038;
-        Wed, 16 Oct 2019 18:10:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=A1msIco8vn35mUi9RwRz5PHZjiwBQKtO5H+Zka1OE08=;
- b=fPxPUbFPaYNfQI2v3Ik1BWWnMkTDegFEHNEvu6kyTPlGbiNA9NNLJN5RRtQMnx9efY3I
- YjNVg03lg2XmuS2U7+nyB1ZaukKvEEdWB3ED6gduu2Sy8hyHo+f82SpkqnMX8DjINtq9
- eDm/mO2XwitmRjwIlEdsM3SvOWkYlAfPFZ+zwF+WtG7Y6yeC+M3vmTia77iNhzqXUwiE
- T9f+AGw/1FL9xFJ+b8YdPuKZOJsN/UhUh8U4QQaP1k0T/l+Acce4lcZxNmaWBLeBW8oU
- XrDav+T7uNx6LH/RXosAf8IbWxFwDTpFnOxtsZw42q23GHYeQ41cFywiWpH0Q9sQqvG7 Eg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vk6sqru58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 18:10:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GI48xP041255;
-        Wed, 16 Oct 2019 18:10:02 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vp70nc4fb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 18:10:02 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9GIA0PO004509;
-        Wed, 16 Oct 2019 18:10:00 GMT
-Received: from [10.159.134.52] (/10.159.134.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Oct 2019 18:09:59 +0000
-Subject: Re: [PATCH 1/4] KVM: VMX: rename {vmx,nested_vmx}_vcpu_setup
- functions
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191015164033.87276-1-xiaoyao.li@intel.com>
- <20191015164033.87276-2-xiaoyao.li@intel.com>
- <82a41967-98ca-1bc8-fce3-77aaf18b0c1a@oracle.com>
- <7d4f2202-d200-f24c-d4cb-dcdfdda7f3b7@intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <2cb1e187-c633-e11c-985c-24ad1e5434c2@oracle.com>
-Date:   Wed, 16 Oct 2019 11:09:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 16 Oct 2019 14:13:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k20so7405953pgi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Wk3hvOL8LxJ403Uu8ih4ctFo+HR4RFi1ji6yQZRZrc=;
+        b=Up4tCXps8fEJXhg3ptr4mnd5E+6YUCp8JTpF1K3zztrikjaOVy65TuMzCHSBHNV6mo
+         UIK6sLQSzZV9hyc9gSWkrYcOAr+yNtSi9CQKQRfk2YASsSivWkYBrjBWH7FT+KqGvxdz
+         0yuoSEoOVx15VDosuM8chSZZ+GBqrCjGp1b5A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Wk3hvOL8LxJ403Uu8ih4ctFo+HR4RFi1ji6yQZRZrc=;
+        b=A4dzioPayQnx8Os0OTkeZMRzjUh68aQnKaAOrK0rO7BcZqdTsErGjGgVzId6fbA69J
+         RLB8u8m7QwolfH+xhBLxoSn+0LVyFOCZ2X5083mA/CM9EBRxHf0KipjoTgeiPk7RR4OU
+         rK4f2GVLIxDGEmadFQyjJrLP4UhvlQ8FjQMP4+z2YAEgUDXxpNNazZr/zTFVKNFj6bQR
+         GrTKt/T2oIn0NLDT3Af3agls6Lt17AjJKM/jSaAe6aWvCqokGI6VqSiAL1we22n2jRBn
+         eRcaVLZhzIMiBiY3XcjqXdmK0Ue34r4WUmxCpJD5cuhq24hp5diFzdMNzQe12mP59muN
+         I0CA==
+X-Gm-Message-State: APjAAAWyEFAkZO35Nzf+qjR3omFul++FQoTdBzUv+PaEOKTc0SK7VS59
+        WYEAZPgkc/9dKTe359tJttIRAM6asjE=
+X-Google-Smtp-Source: APXvYqx7apK+WUTs5X4UNquaQO/4GTaUMXKIUkyWCbK/F6iBsGmHob40rFdKOAjYyLlaCE+33joEUw==
+X-Received: by 2002:aa7:86cb:: with SMTP id h11mr47417728pfo.59.1571249601340;
+        Wed, 16 Oct 2019 11:13:21 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x10sm9929361pgl.53.2019.10.16.11.13.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 11:13:19 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 11:13:17 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
+Message-ID: <20191016181317.GP87296@google.com>
+References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+ <20190927044239.589e7c4c@oasis.local.home>
+ <20191001163542.GB87296@google.com>
+ <CAPDyKFrYqeoiSG5-KaBDt_G4kPtCxRO7+5fRa-HSWjuPPmAheQ@mail.gmail.com>
+ <20191015171937.GO87296@google.com>
+ <CAPDyKFpE0LoxXAR=2JvPi8pvb-6_q4rgs-A4D6OU7XuP1XEtbg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7d4f2202-d200-f24c-d4cb-dcdfdda7f3b7@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910160150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910160150
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFpE0LoxXAR=2JvPi8pvb-6_q4rgs-A4D6OU7XuP1XEtbg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 03:47:44PM +0200, Ulf Hansson wrote:
+> On Tue, 15 Oct 2019 at 19:19, Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Hi Ulf,
+> >
+> > On Tue, Oct 15, 2019 at 02:37:42PM +0200, Ulf Hansson wrote:
+> > > On Tue, 1 Oct 2019 at 18:35, Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > >
+> > > > On Fri, Sep 27, 2019 at 04:42:39AM -0400, Steven Rostedt wrote:
+> > > > > On Thu, 26 Sep 2019 15:04:38 -0700
+> > > > > Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > >
+> > > > > > Define genpd_power_on/off and genpd_set_performance_state
+> > > > > > tracepoints and use them.
+> > > > >
+> > > > > I agree with Greg about adding a "why" you need this. But, in case
+> > > > > there's a good reason to have this, I have comments about the code
+> > > > > below.
+> > > >
+> > > > Thanks Greg and Steven for your comments.
+> > > >
+> > > > How about this instead:
+> > > >
+> > > >   Add tracepoints for genpd_power_on, genpd_power_off and
+> > > >   genpd_set_performance_state. The tracepoints can help with
+> > > >   understanding power domain behavior of a given device, which
+> > > >   may be particularly interesting for battery powered devices
+> > > >   and suspend/resume.
+> > >
+> > > Apologize for the delay, no excuse!
+> > >
+> > > I don't mind adding trace events, as long as it's for good reasons -
+> > > and to me, that seems a bit questionable here.
+> > >
+> > > According to the above, I believe the information you need is already
+> > > available via genpd's debugfs interface, no?
+> >
+> > Not in all cases, e.g. you can't peek at sysfs while the device is
+> > suspended.
+> 
+> Not sure I get this right. If a device that is attached to a genpd
+> that is runtime suspended, for sure you can have a look at the genpd
+> debugfs to see its current status.
 
-On 10/15/19 6:27 PM, Xiaoyao Li wrote:
-> On 10/16/2019 6:05 AM, Krish Sadhukhan wrote:
->>
->>
->> On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
->>> Rename {vmx,nested_vmx}_vcpu_setup to {vmx,nested_vmx}_vmcs_setup,
->>> to match what they really do.
->>>
->>> No functional change.
->>>
->>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->>> ---
->>>   arch/x86/kvm/vmx/nested.c | 2 +-
->>>   arch/x86/kvm/vmx/nested.h | 2 +-
->>>   arch/x86/kvm/vmx/vmx.c    | 9 +++------
->>>   3 files changed, 5 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->>> index 5e231da00310..7935422d311f 100644
->>> --- a/arch/x86/kvm/vmx/nested.c
->>> +++ b/arch/x86/kvm/vmx/nested.c
->>> @@ -5768,7 +5768,7 @@ static int vmx_set_nested_state(struct 
->>> kvm_vcpu *vcpu,
->>>       return ret;
->>>   }
->>> -void nested_vmx_vcpu_setup(void)
->>> +void nested_vmx_vmcs_setup(void)
->>>   {
->>>       if (enable_shadow_vmcs) {
->>>           vmcs_write64(VMREAD_BITMAP, __pa(vmx_vmread_bitmap));
->>> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
->>> index 187d39bf0bf1..2be1ba7482c9 100644
->>> --- a/arch/x86/kvm/vmx/nested.h
->>> +++ b/arch/x86/kvm/vmx/nested.h
->>> @@ -11,7 +11,7 @@ void nested_vmx_setup_ctls_msrs(struct 
->>> nested_vmx_msrs *msrs, u32 ept_caps,
->>>                   bool apicv);
->>>   void nested_vmx_hardware_unsetup(void);
->>>   __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct 
->>> kvm_vcpu *));
->>> -void nested_vmx_vcpu_setup(void);
->>> +void nested_vmx_vmcs_setup(void);
->>>   void nested_vmx_free_vcpu(struct kvm_vcpu *vcpu);
->>>   int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool 
->>> from_vmentry);
->>>   bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 
->>> exit_reason);
->>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->>> index e660e28e9ae0..58b77a882426 100644
->>> --- a/arch/x86/kvm/vmx/vmx.c
->>> +++ b/arch/x86/kvm/vmx/vmx.c
->>> @@ -4161,15 +4161,12 @@ static void ept_set_mmio_spte_mask(void)
->>>   #define VMX_XSS_EXIT_BITMAP 0
->>> -/*
->>> - * Sets up the vmcs for emulated real mode.
->>> - */
->>> -static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->>> +static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
->>>   {
->>>       int i;
->>>       if (nested)
->>> -        nested_vmx_vcpu_setup();
->>> +        nested_vmx_vmcs_setup();
->>>       if (cpu_has_vmx_msr_bitmap())
->>>           vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
->>> @@ -6777,7 +6774,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct 
->>> kvm *kvm, unsigned int id)
->>>       cpu = get_cpu();
->>>       vmx_vcpu_load(&vmx->vcpu, cpu);
->>>       vmx->vcpu.cpu = cpu;
->>> -    vmx_vcpu_setup(vmx);
->>> +    vmx_vmcs_setup(vmx);
->>>       vmx_vcpu_put(&vmx->vcpu);
->>>       put_cpu();
->>>       if (cpu_need_virtualize_apic_accesses(&vmx->vcpu)) {
->>
->> May be we should rename vmx_vcpu_reset() to vmx_vmcs_reset()  as well  ?
->
-> Not really. vmx_vcpu_reset() not only resets vmcs but also the 
-> emulated field of vmx vcpu.
+Sorry, I used an ambiguous terminology by talking about 'the device',
+I was referring to system suspend.
 
-It would be a better organization of the code if the resetting of the 
-VMCS fields were placed in a separate function.
+> > Also sysfs doesn't help much with seeing that a PD is
+> > toggling between on an off for some (possibly legitimate) reason.
+> 
+> Well, you could look at the "active_time" and the "total_idle_time"
+> nodes for the genpd in question. Those should change accordingly.
 
-
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-
+Ok, thanks for the pointer!
