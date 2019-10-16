@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D93FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE62ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAB020872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39F921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263363;
-	bh=ISLKsaq/FqtvBASq4WxtSQF4p5xLaOZAWFmz4fOgPG8=;
+	s=default; t=1571263366;
+	bh=sWYa0PMEECtgIN2NOVbH131fBrFTFGRjDsy2EkvUyVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBnlaGEBPxvC+1zunuf/bxcfXPsaXGOmH8IYIDvtVIaEXvTYg8ek9JUQx3LUQEc8P
-	 hCLNqT7+ogXKE52owTSac52RNIjp9/oGw8ISk3hkxmA0PpamKchcoi5VjhsqHoX4PF
-	 5D1Zkp/ykwphSVfWymykGmqd4CchzTUykhAuczK4=
+	b=uQDM20aO67Zh87bJFyYG4acyvLYAF5vTdwwZVd97N/d7sMegshUFfsnvPT8maxf6C
+	 GrtDva0lzEPIDNFtRetXrzPKYmt9XA5OzqRaD8JHz7SaxxIqFT3en1uMUcEDiFnw9P
+	 l7/t+W32Nb3AT7o3vLRd8MNveMM4fxipVc1/AgPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439028AbfJPWCm (ORCPT
+        id S2438562AbfJPV7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438572AbfJPV7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:38 -0400
+        id S2438213AbfJPV6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:39 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C63121D7E;
-        Wed, 16 Oct 2019 21:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C76E321E6F;
+        Wed, 16 Oct 2019 21:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263177;
-        bh=ISLKsaq/FqtvBASq4WxtSQF4p5xLaOZAWFmz4fOgPG8=;
+        s=default; t=1571263118;
+        bh=sWYa0PMEECtgIN2NOVbH131fBrFTFGRjDsy2EkvUyVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWLt+QWCftWkKUxJlwf8PzDyDyMWRCsD2Kb0PsxJ896U7vYC/U4vM5F/prRparhFF
-         b+nyY7HzMW+InWwkJOBCzp4xk2Qpb3smUgMkn2kVoLBe+o36Du9Q/jLsHVDyIuJ3Wj
-         5gX8gHfxnPqReDamIPezCG9DjENDgk2mZK557yoE=
+        b=f1om5Ycm1sLKElE1Xe9/gBwIjF+SKedrkOS8BvJp5WS16cPjR7GY+U6HrYxHXVMGx
+         FEhoaxElrsfwqE4iw4d3kxGcYERpRinVWAKWZgKT3rza2wIKrzNbcE/Ch9VURHAWOy
+         4dyLUrKCNUIKPb/kQ1BQ94QvRU8UMHf8bewa7XBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.3 105/112] ftrace: Get a reference counter for the trace_array on filter files
-Date:   Wed, 16 Oct 2019 14:51:37 -0700
-Message-Id: <20191016214907.043942126@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 041/112] USB: legousbtower: fix potential NULL-deref on disconnect
+Date:   Wed, 16 Oct 2019 14:50:33 -0700
+Message-Id: <20191016214854.410237321@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -59,103 +58,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9ef16693aff8137faa21d16ffe65bb9832d24d71 upstream.
+commit cd81e6fa8e033e7bcd59415b4a65672b4780030b upstream.
 
-The ftrace set_ftrace_filter and set_ftrace_notrace files are specific for
-an instance now. They need to take a reference to the instance otherwise
-there could be a race between accessing the files and deleting the instance.
+The driver is using its struct usb_device pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg and dev_err statements in the
+completion handlers which relies on said pointer.
 
-It wasn't until the :mod: caching where these file operations started
-referencing the trace_array directly.
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
 
-Cc: stable@vger.kernel.org
-Fixes: 673feb9d76ab3 ("ftrace: Add :mod: caching infrastructure to trace_array")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
+
+Fixes: 9d974b2a06e3 ("USB: legousbtower.c: remove err() usage")
+Fixes: fef526cae700 ("USB: legousbtower: remove custom debug macro")
+Fixes: 4dae99638097 ("USB: legotower: remove custom debug macro and module parameter")
+Cc: stable <stable@vger.kernel.org>     # 3.5
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190919083039.30898-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c |   27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ drivers/usb/misc/legousbtower.c |   26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3540,21 +3540,22 @@ ftrace_regex_open(struct ftrace_ops *ops
- 	struct ftrace_hash *hash;
- 	struct list_head *mod_head;
- 	struct trace_array *tr = ops->private;
--	int ret = 0;
-+	int ret = -ENOMEM;
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -190,6 +190,7 @@ struct lego_usb_tower {
+ 	unsigned char		minor;		/* the starting minor number for this device */
  
- 	ftrace_ops_init(ops);
+ 	int			open_count;	/* number of times this port has been opened */
++	unsigned long		disconnected:1;
  
- 	if (unlikely(ftrace_disabled))
- 		return -ENODEV;
- 
-+	if (tr && trace_array_get(tr) < 0)
-+		return -ENODEV;
+ 	char*			read_buffer;
+ 	size_t			read_buffer_length; /* this much came in */
+@@ -289,8 +290,6 @@ static inline void lego_usb_tower_debug_
+  */
+ static inline void tower_delete (struct lego_usb_tower *dev)
+ {
+-	tower_abort_transfers (dev);
+-
+ 	/* free data structures */
+ 	usb_free_urb(dev->interrupt_in_urb);
+ 	usb_free_urb(dev->interrupt_out_urb);
+@@ -430,7 +429,8 @@ static int tower_release (struct inode *
+ 		retval = -ENODEV;
+ 		goto unlock_exit;
+ 	}
+-	if (dev->udev == NULL) {
 +
- 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
- 	if (!iter)
--		return -ENOMEM;
-+		goto out;
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
  
--	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX)) {
--		kfree(iter);
--		return -ENOMEM;
--	}
-+	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX))
-+		goto out;
- 
- 	iter->ops = ops;
- 	iter->flags = flag;
-@@ -3584,13 +3585,13 @@ ftrace_regex_open(struct ftrace_ops *ops
- 
- 		if (!iter->hash) {
- 			trace_parser_put(&iter->parser);
--			kfree(iter);
--			ret = -ENOMEM;
- 			goto out_unlock;
- 		}
- 	} else
- 		iter->hash = hash;
- 
-+	ret = 0;
-+
- 	if (file->f_mode & FMODE_READ) {
- 		iter->pg = ftrace_pages_start;
- 
-@@ -3602,7 +3603,6 @@ ftrace_regex_open(struct ftrace_ops *ops
- 			/* Failed */
- 			free_ftrace_hash(iter->hash);
- 			trace_parser_put(&iter->parser);
--			kfree(iter);
- 		}
- 	} else
- 		file->private_data = iter;
-@@ -3610,6 +3610,13 @@ ftrace_regex_open(struct ftrace_ops *ops
-  out_unlock:
- 	mutex_unlock(&ops->func_hash->regex_lock);
- 
-+ out:
-+	if (ret) {
-+		kfree(iter);
-+		if (tr)
-+			trace_array_put(tr);
-+	}
-+
- 	return ret;
+ 		/* unlock here as tower_delete frees dev */
+@@ -466,10 +466,9 @@ static void tower_abort_transfers (struc
+ 	if (dev->interrupt_in_running) {
+ 		dev->interrupt_in_running = 0;
+ 		mb();
+-		if (dev->udev)
+-			usb_kill_urb (dev->interrupt_in_urb);
++		usb_kill_urb(dev->interrupt_in_urb);
+ 	}
+-	if (dev->interrupt_out_busy && dev->udev)
++	if (dev->interrupt_out_busy)
+ 		usb_kill_urb(dev->interrupt_out_urb);
  }
  
-@@ -5037,6 +5044,8 @@ int ftrace_regex_release(struct inode *i
+@@ -505,7 +504,7 @@ static __poll_t tower_poll (struct file
  
- 	mutex_unlock(&iter->ops->func_hash->regex_lock);
- 	free_ftrace_hash(iter->hash);
-+	if (iter->tr)
-+		trace_array_put(iter->tr);
- 	kfree(iter);
+ 	dev = file->private_data;
  
- 	return 0;
+-	if (!dev->udev)
++	if (dev->disconnected)
+ 		return EPOLLERR | EPOLLHUP;
+ 
+ 	poll_wait(file, &dev->read_wait, wait);
+@@ -552,7 +551,7 @@ static ssize_t tower_read (struct file *
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -638,7 +637,7 @@ static ssize_t tower_write (struct file
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -748,7 +747,7 @@ static void tower_interrupt_in_callback
+ 
+ resubmit:
+ 	/* resubmit if we're still running */
+-	if (dev->interrupt_in_running && dev->udev) {
++	if (dev->interrupt_in_running) {
+ 		retval = usb_submit_urb (dev->interrupt_in_urb, GFP_ATOMIC);
+ 		if (retval)
+ 			dev_err(&dev->udev->dev,
+@@ -813,6 +812,7 @@ static int tower_probe (struct usb_inter
+ 
+ 	dev->udev = udev;
+ 	dev->open_count = 0;
++	dev->disconnected = 0;
+ 
+ 	dev->read_buffer = NULL;
+ 	dev->read_buffer_length = 0;
+@@ -938,6 +938,10 @@ static void tower_disconnect (struct usb
+ 	/* give back our minor and prevent further open() */
+ 	usb_deregister_dev (interface, &tower_class);
+ 
++	/* stop I/O */
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&dev->lock);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+@@ -945,7 +949,7 @@ static void tower_disconnect (struct usb
+ 		mutex_unlock(&dev->lock);
+ 		tower_delete (dev);
+ 	} else {
+-		dev->udev = NULL;
++		dev->disconnected = 1;
+ 		/* wake up pollers */
+ 		wake_up_interruptible_all(&dev->read_wait);
+ 		wake_up_interruptible_all(&dev->write_wait);
 
 
