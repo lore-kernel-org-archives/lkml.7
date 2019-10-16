@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD55FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DB2ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9AA207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15328207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264429;
-	bh=GQe8EeLqG6PpoebDlvdKElf1ra2zPi7pDl6tBmXa50E=;
+	s=default; t=1571264432;
+	bh=1jVPydfX6NfuF1vIHVw5QsO6jZeojRd9TjpsMwdNFwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQE8yKdi+mofZaPrICfbUrVvxj/rf54qenLzUdZFu7rxoGl4TMWkuh3QV0wVSBW7x
-	 kmV6k5PFNtvwMxQAXXogarOL+VKyPKfsOhw+l715+jWSrVdl5ceJc7YmQ6N1A7G+EC
-	 BLrWaW1OKUz/bOpvKkkO4Pmry3AuP/xvfR/FljZk=
+	b=vVAEh4Vrp3PEOlbqVCmYgGxe534Q7N1xrbBg89zLDKfFLHobXp01SbLoBXWNcEhmM
+	 zu6VYEGPhJAPw0CR/rMEXQnxrr4VJzb4SQFBNVOz0VZtiJoXh/ZzVq3aRZyTqkrRAX
+	 ft6EBRmB8dD36RI+H5MosIK0OyBSDizFJCb1IkyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394901AbfJPVxt (ORCPT
+        id S2407499AbfJPWUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42880 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:20:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437575AbfJPVxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:44 -0400
+        id S2390778AbfJPVxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:48 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCDDA20872;
-        Wed, 16 Oct 2019 21:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C579120872;
+        Wed, 16 Oct 2019 21:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262824;
-        bh=GQe8EeLqG6PpoebDlvdKElf1ra2zPi7pDl6tBmXa50E=;
+        s=default; t=1571262827;
+        bh=1jVPydfX6NfuF1vIHVw5QsO6jZeojRd9TjpsMwdNFwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAl4zB3iX7g08QTsvGt+6/Cx0gb5qmqHgzufW8tSM7PwpUHIfzkz4dV49WHnz54x1
-         5taDWxW/MuJqNi/E0jQo553QfmkklANerCgFQ6JTk5zsWIvnqlL0hvMaKMo2tQsQiy
-         tj1oxgGYrrZR77UEIVvKsjqtrhk38OjBVXelVUEI=
+        b=F9OoP8ReSsHKlTlF8oeaB4SSbr/jT31pu4GQl8rvxq7xjoQkyJ+50n+PO7TFuWx3z
+         rwweauVXFCWFzBEcQMlRiXrn0+LHDE/FDWXXrJ+X+GTShmgvOvAQQ/lNIZTmf5qRhx
+         TzVtuFdrrUi+2gc/GTI6J60CQo1KNFSPu8vs0Q1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 67/79] perf llvm: Dont access out-of-scope array
-Date:   Wed, 16 Oct 2019 14:50:42 -0700
-Message-Id: <20191016214826.803890383@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 70/79] kernel/sysctl.c: do not override max_threads provided by userspace
+Date:   Wed, 16 Oct 2019 14:50:45 -0700
+Message-Id: <20191016214828.569213016@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -65,55 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Michal Hocko <mhocko@suse.com>
 
-commit 7d4c85b7035eb2f9ab217ce649dcd1bfaf0cacd3 upstream.
+commit b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40 upstream.
 
-The 'test_dir' variable is assigned to the 'release' array which is
-out-of-scope 3 lines later.
+Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe
+limits") because the patch is causing a regression to any workload which
+needs to override the auto-tuning of the limit provided by kernel.
 
-Extend the scope of the 'release' array so that an out-of-scope array
-isn't accessed.
+set_max_threads is implementing a boot time guesstimate to provide a
+sensible limit of the concurrently running threads so that runaways will
+not deplete all the memory.  This is a good thing in general but there
+are workloads which might need to increase this limit for an application
+to run (reportedly WebSpher MQ is affected) and that is simply not
+possible after the mentioned change.  It is also very dubious to
+override an admin decision by an estimation that doesn't have any direct
+relation to correctness of the kernel operation.
 
-Bug detected by clang's address sanitizer.
+Fix this by dropping set_max_threads from sysctl_max_threads so any
+value is accepted as long as it fits into MAX_THREADS which is important
+to check because allowing more threads could break internal robust futex
+restriction.  While at it, do not use MIN_THREADS as the lower boundary
+because it is also only a heuristic for automatic estimation and admin
+might have a good reason to stop new threads to be created even when
+below this limit.
 
-Fixes: 07bc5c699a3d ("perf tools: Make fetch_kernel_version() publicly available")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/20190926220018.25402-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+This became more severe when we switched x86 from 4k to 8k kernel
+stacks.  Starting since 6538b8ea886e ("x86_64: expand kernel stack to
+16K") (3.16) we use THREAD_SIZE_ORDER = 2 and that halved the auto-tuned
+value.
+
+In the particular case
+
+  3.12
+  kernel.threads-max = 515561
+
+  4.4
+  kernel.threads-max = 200000
+
+Neither of the two values is really insane on 32GB machine.
+
+I am not sure we want/need to tune the max_thread value further.  If
+anything the tuning should be removed altogether if proven not useful in
+general.  But we definitely need a way to override this auto-tuning.
+
+Link: http://lkml.kernel.org/r/20190922065801.GB18814@dhcp22.suse.cz
+Fixes: 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/llvm-utils.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/fork.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -214,14 +214,14 @@ static int detect_kbuild_dir(char **kbui
- 	const char *prefix_dir = "";
- 	const char *suffix_dir = "";
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2152,7 +2152,7 @@ int sysctl_max_threads(struct ctl_table
+ 	struct ctl_table t;
+ 	int ret;
+ 	int threads = max_threads;
+-	int min = MIN_THREADS;
++	int min = 1;
+ 	int max = MAX_THREADS;
  
-+	/* _UTSNAME_LENGTH is 65 */
-+	char release[128];
-+
- 	char *autoconf_path;
+ 	t = *table;
+@@ -2164,7 +2164,7 @@ int sysctl_max_threads(struct ctl_table
+ 	if (ret || !write)
+ 		return ret;
  
- 	int err;
+-	set_max_threads(threads);
++	max_threads = threads;
  
- 	if (!test_dir) {
--		/* _UTSNAME_LENGTH is 65 */
--		char release[128];
--
- 		err = fetch_kernel_version(NULL, release,
- 					   sizeof(release));
- 		if (err)
+ 	return 0;
+ }
 
 
