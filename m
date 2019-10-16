@@ -2,199 +2,213 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D1CECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C18FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329692064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00E6218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U7NFsQMF"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hOK40AHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391069AbfJPTeU (ORCPT
+        id S2394411AbfJPTgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:34:20 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46966 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389320AbfJPTeT (ORCPT
+        Wed, 16 Oct 2019 15:36:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45013 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394365AbfJPTgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:34:19 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 89so21186799oth.13
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:34:18 -0700 (PDT)
+        Wed, 16 Oct 2019 15:36:15 -0400
+Received: by mail-qt1-f194.google.com with SMTP id u40so37838622qth.11
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RXr4UV4kEHsq0yeWfqjzxiqcNiJQEejUfsbyhCIH4rQ=;
-        b=U7NFsQMFohcPs28AZ7A+6GhhiEGUKgu+5pnJk2F9HrfSIYZCF5qXVKvKhW5L+RoOHB
-         jqP0typxYPq6W5WuAp2s6t9gy8ue0IU9qaNy4j1gM5uq+Qeq1W1+L+X+MHRTfN2uCOcV
-         uYAeJEYyAMziJ0JNWN0sw/aeCFN1uSv0dzQ7r0bIHjXvNLjLLlaipqpEUWVxI908shfo
-         s0snQyTNsaYOQ06/yoSQNXPmDX4JhRWOBTdrA4MJAs0i/4AGDjE7OzTnwubKSQUdOlty
-         scrRf9IM2XIfHvmJqZAaKmV46KAR/82a8OhMDL3dHf6x5PKKodh18mYX/2rhl3tYtP+s
-         cfCQ==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=XhqMtTtPjnVHf4MRHyu9Wk/DTVhF7/1js0A5sMaNbck=;
+        b=hOK40AHG6hoyWk6NBAz2XfgAPBqvAp13pna631Lkde03m88/78GnIofVEDcr1P/ucp
+         G6oBH+OmrTAjAl2iYjxAQOlyc009wVkN4HEj5R8fdvcUfQsHebq2sGXGo5Llb5rQuc2L
+         4UptALhBX8nbkyGFxrjfHL+daCAmRkuAEcGMIfSaQ+1g2bqEslI1ffIAeJK0t1BZ7Awx
+         g78NJxGcLcfDyh9BskoPPEx6mYsrZK4nKCquIKMiWvP6YFxIBTgeLC5u6gmM4nfmG/w0
+         m9DwEMqjt5OFen4Qgh+s0+dC6XQJo61xS4hg9aEImR/El7ASEy258i+I/9hQL4u+3y62
+         GQrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RXr4UV4kEHsq0yeWfqjzxiqcNiJQEejUfsbyhCIH4rQ=;
-        b=q6RdBrZTv+yB9bxtiys48Cok+sokEIOaPXPOIBPnEeIhdlFHA/2O+9n/TRacBuh+Vs
-         128htdmRzumQHDRRgCdGmDjDSVPDEEdrSeL9yN+UQNt6lz6nJI1WHCaIL9KkYGOcHKpj
-         hEblEDHg+yp5tf6yYabaGpi1qRBHeNfFKYWG5rfvD7RYu6iTCV8OxHaXR8rVvrtZQ+C8
-         gmFwqU+1yaTFPp9FHHwclJ7bcM78Z3UC0WSiSQYhsFuYjPt2RbCAm9MDMjRIHj2k07q3
-         DhtrUlVzbFHlKb9fsXpYwryj1wFZIHvRd2uRy4qFZOx1CaknrJd2lUGaBsO6QfPju91g
-         yjBg==
-X-Gm-Message-State: APjAAAV4UmeGOm3NNqWbzPHrX+c+MpVVDulxREmpJxGLS0X4IxUShiGg
-        xTH/bsC5HHca4Gh+YV3ANoNm0HoAHpTfpSssxWbImA==
-X-Google-Smtp-Source: APXvYqyqs6Tx0r7D3LhzsgcxEVO4XgI1nK8AQjvDBJBM9adnKIKx1Vz8ue7z1QVFQNbxwHJobnt3PfeMbB8stLkt8vM=
-X-Received: by 2002:a9d:6d89:: with SMTP id x9mr31120620otp.17.1571254457140;
- Wed, 16 Oct 2019 12:34:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016083959.186860-1-elver@google.com> <20191016083959.186860-2-elver@google.com>
- <20191016184346.GT2328@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191016184346.GT2328@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 16 Oct 2019 21:34:05 +0200
-Message-ID: <CANpmjNP4b9Eo3ZKE6maBs4ANS7K7sLiVB2CbebQnCH09TB+hZQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XhqMtTtPjnVHf4MRHyu9Wk/DTVhF7/1js0A5sMaNbck=;
+        b=G+3ThRCcYSAgX2IPV/yKEuWLC8Pw2+Odn3GTJUlaoagFzN3uTwZWgNflzXvnZRxKkW
+         G3tO0SP9K54Kxg8T0YsOGq+qcpcrnDCAKl3s7siXurV+2PcX4LSicz1cmvIPteHhoimG
+         DG0ODIRXUkWT7PgeLCxjPRuxKRQqLqkYpGugie2Kfk8Sg8igFgbvUctNdR4tqsLYLbAf
+         dtzZOpapeORCHgq/oYQGA6uxKW2seu9hDeT8gdmwY7jDymRkaWuxwdjXS6FKGs+RwNse
+         q4+Mc+UDsYvFcxd18bg7qisme0Ksh07veqMdRNWQ3F9AwlRiwCRzhp3zTMEWADQWNpNz
+         hZgQ==
+X-Gm-Message-State: APjAAAU4/P8e0rN29PNb8uhPPBdSkUTzgl25pUEQxYeRTF5gMfq6M7Es
+        VnxCSy+VE9lCQ/CpMqZ/iJIaXw==
+X-Google-Smtp-Source: APXvYqzExMDPAiqvQe8gflBCuAA9bzOOm0S0zX93+2/lQbsLQM0TdLICSfJFn1e4q54HbgnVQgxgVw==
+X-Received: by 2002:a0c:8731:: with SMTP id 46mr44133352qvh.141.1571254574271;
+        Wed, 16 Oct 2019 12:36:14 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 139sm12852406qkf.14.2019.10.16.12.36.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 12:36:13 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        don.brace@microsemi.com, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        jejb@linux.ibm.com, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] iommu/amd: fix a warning in increase_address_space
+Date:   Wed, 16 Oct 2019 15:35:42 -0400
+Message-Id: <1571254542-13998-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 at 20:44, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Oct 16, 2019 at 10:39:52AM +0200, Marco Elver wrote:
->
-> > +bool __kcsan_check_watchpoint(const volatile void *ptr, size_t size,
-> > +                           bool is_write)
-> > +{
-> > +     atomic_long_t *watchpoint;
-> > +     long encoded_watchpoint;
-> > +     unsigned long flags;
-> > +     enum kcsan_report_type report_type;
-> > +
-> > +     if (unlikely(!is_enabled()))
-> > +             return false;
-> > +
-> > +     watchpoint = find_watchpoint((unsigned long)ptr, size, !is_write,
-> > +                                  &encoded_watchpoint);
-> > +     if (watchpoint == NULL)
-> > +             return true;
-> > +
-> > +     flags = user_access_save();
->
-> Could use a comment on why find_watchpoint() is save to call without
-> user_access_save() on.
+After the commit 754265bcab78 ("iommu/amd: Fix race in
+increase_address_space()"), it could still possible trigger a race
+condition under some heavy memory pressure below. The race to trigger a
+warning is,
 
-Thanks, will add a comment for v2.
+CPU0:				CPU1:
+in alloc_pte():		in increase_address_space():
+while (address > PM_LEVEL_SIZE(domain->mode)) [1]
 
-> > +     if (!try_consume_watchpoint(watchpoint, encoded_watchpoint)) {
-> > +             /*
-> > +              * The other thread may not print any diagnostics, as it has
-> > +              * already removed the watchpoint, or another thread consumed
-> > +              * the watchpoint before this thread.
-> > +              */
-> > +             kcsan_counter_inc(kcsan_counter_report_races);
-> > +             report_type = kcsan_report_race_check_race;
-> > +     } else {
-> > +             report_type = kcsan_report_race_check;
-> > +     }
-> > +
-> > +     /* Encountered a data-race. */
-> > +     kcsan_counter_inc(kcsan_counter_data_races);
-> > +     kcsan_report(ptr, size, is_write, raw_smp_processor_id(), report_type);
-> > +
-> > +     user_access_restore(flags);
-> > +     return false;
-> > +}
-> > +EXPORT_SYMBOL(__kcsan_check_watchpoint);
-> > +
-> > +void __kcsan_setup_watchpoint(const volatile void *ptr, size_t size,
-> > +                           bool is_write)
-> > +{
-> > +     atomic_long_t *watchpoint;
-> > +     union {
-> > +             u8 _1;
-> > +             u16 _2;
-> > +             u32 _4;
-> > +             u64 _8;
-> > +     } expect_value;
-> > +     bool is_expected = true;
-> > +     unsigned long ua_flags = user_access_save();
-> > +     unsigned long irq_flags;
-> > +
-> > +     if (!should_watch(ptr))
-> > +             goto out;
-> > +
-> > +     if (!check_encodable((unsigned long)ptr, size)) {
-> > +             kcsan_counter_inc(kcsan_counter_unencodable_accesses);
-> > +             goto out;
-> > +     }
-> > +
-> > +     /*
-> > +      * Disable interrupts & preemptions, to ignore races due to accesses in
-> > +      * threads running on the same CPU.
-> > +      */
-> > +     local_irq_save(irq_flags);
-> > +     preempt_disable();
->
-> Is there a point to that preempt_disable() here?
+				spin_lock_irqsave(&domain->lock
+				domain->mode    += 1;
+				spin_unlock_irqrestore(&domain->lock
 
-We want to avoid being preempted while the watchpoint is set up;
-otherwise, we would report data-races for CPU-local data, which is
-incorrect. An alternative would be adding the source CPU to the
-watchpoint, and checking that the CPU != this_cpu. There are several
-problems with that alternative:
-1. We do not want to steal more bits from the watchpoint encoding for
-things other than read/write, size, and address, as not only does it
-affect accuracy, it would also increase performance overhead in the
-fast-path.
-2. As a consequence, if we get a preemption and run a task on the same
-CPU, and there *is* a genuine data-race, we would *not* report it; and
-since this is the common case (and not accesses to CPU-local data), it
-makes more sense (from a data-race detection PoV) to simply disable
-preemptions and ensure that all tasks are run on other CPUs as well as
-avoid the problem of point (1).
+in increase_address_space():
+spin_lock_irqsave(&domain->lock
+if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
 
-I can add a comment to that effect here for v2.
+[1] domain->mode = 5
 
-Thanks,
--- Marco
+It is unclear the triggering of the warning is the root cause of the
+smartpqi offline yet, but let's fix it first by lifting the locking.
+
+WARNING: CPU: 57 PID: 124314 at drivers/iommu/amd_iommu.c:1474
+iommu_map_page+0x718/0x7e0
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec0000 flags=0x0010]
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec1000 flags=0x0010]
+CPU: 57 PID: 124314 Comm: oom01 Tainted: G           O
+Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+07/10/2019
+RIP: 0010:iommu_map_page+0x718/0x7e0
+Code: 88 a5 70 ff ff ff e9 5d fa ff ff 48 8b b5 70 ff ff ff 4c 89 ef e8
+08 32 2f 00 41 80 fc 01 0f 87 b7 3d 00 00 41 83 e4 01 eb be <0f> 0b 48
+8b b5 70 ff ff ff 4c 89 ef e8 e7 31 2f 00 eb dd 0f 0b 48
+RSP: 0018:ffff888da4816cb8 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffff8885fe689000 RCX: ffffffff96f4a6c4
+RDX: 0000000000000007 RSI: dffffc0000000000 RDI: ffff8885fe689124
+RBP: ffff888da4816da8 R08: ffffed10bfcd120e R09: ffffed10bfcd120e
+R10: ffffed10bfcd120d R11: ffff8885fe68906b R12: 0000000000000000
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec1a00 flags=0x0010]
+R13: ffff8885fe689068 R14: ffff8885fe689124 R15: 0000000000000000
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec1e00 flags=0x0010]
+FS:  00007f29722ba700(0000) GS:ffff88902f880000(0000)
+knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f27f82d8000 CR3: 000000102ed9c000 CR4: 00000000003406e0
+Call Trace:
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec2000 flags=0x0010]
+ map_sg+0x1ce/0x2f0
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec2400 flags=0x0010]
+ scsi_dma_map+0xd7/0x160
+ pqi_raid_submit_scsi_cmd_with_io_request+0x1b8/0x420 [smartpqi]
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec2800 flags=0x0010]
+ pqi_scsi_queue_command+0x8ab/0xe00 [smartpqi]
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec2c00 flags=0x0010]
+ scsi_queue_rq+0xd19/0x1360
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec3000 flags=0x0010]
+ __blk_mq_try_issue_directly+0x295/0x3f0
+smartpqi 0000:23:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000
+address=0xffffffffffec3400 flags=0x0010]
+AMD-Vi: Event logged [IO_PAGE_FAULT device=23:00.0 domain=0x0000
+address=0xffffffffffec3800 flags=0x0010]
+ blk_mq_request_issue_directly+0xb5/0x100
+AMD-Vi: Event logged [IO_PAGE_FAULT device=23:00.0 domain=0x0000
+address=0xffffffffffec3c00 flags=0x0010]
+ blk_mq_try_issue_list_directly+0xa9/0x160
+ blk_mq_sched_insert_requests+0x228/0x380
+ blk_mq_flush_plug_list+0x448/0x7e0
+ blk_flush_plug_list+0x1eb/0x230
+ blk_finish_plug+0x43/0x5d
+ shrink_node_memcg+0x9c5/0x1550
+smartpqi 0000:23:00.0: controller is offline: status code 0x14803
+smartpqi 0000:23:00.0: controller offline
+
+Fixes: 754265bcab78 ("iommu/amd: Fix race in increase_address_space()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+BTW, Joerg, this line from the commit "iommu/amd: Remove domain->updated" looks
+suspicious. Not sure what the purpose of it.
+
+*updated = increase_address_space(domain, gfp) || *updated;
+
+ drivers/iommu/amd_iommu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 2369b8af81f3..a5754068aa29 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1465,12 +1465,9 @@ static void free_pagetable(struct protection_domain *domain)
+ static bool increase_address_space(struct protection_domain *domain,
+ 				   gfp_t gfp)
+ {
+-	unsigned long flags;
+ 	bool ret = false;
+ 	u64 *pte;
+ 
+-	spin_lock_irqsave(&domain->lock, flags);
+-
+ 	if (WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
+ 		/* address space already 64 bit large */
+ 		goto out;
+@@ -1487,8 +1484,6 @@ static bool increase_address_space(struct protection_domain *domain,
+ 	ret = true;
+ 
+ out:
+-	spin_unlock_irqrestore(&domain->lock, flags);
+-
+ 	return ret;
+ }
+ 
+@@ -1499,14 +1494,19 @@ static u64 *alloc_pte(struct protection_domain *domain,
+ 		      gfp_t gfp,
+ 		      bool *updated)
+ {
++	unsigned long flags;
+ 	int level, end_lvl;
+ 	u64 *pte, *page;
+ 
+ 	BUG_ON(!is_power_of_2(page_size));
+ 
++	spin_lock_irqsave(&domain->lock, flags);
++
+ 	while (address > PM_LEVEL_SIZE(domain->mode))
+ 		*updated = increase_address_space(domain, gfp) || *updated;
+ 
++	spin_unlock_irqrestore(&domain->lock, flags);
++
+ 	level   = domain->mode - 1;
+ 	pte     = &domain->pt_root[PM_LEVEL_INDEX(level, address)];
+ 	address = PAGE_SIZE_ALIGN(address, page_size);
+-- 
+1.8.3.1
+
