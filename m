@@ -2,122 +2,120 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EADC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ADEC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53B920854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A732082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D45DQTXR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJliqJj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbfJPG7y (ORCPT
+        id S1732565AbfJPHCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:59:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:47001 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387777AbfJPG7x (ORCPT
+        Wed, 16 Oct 2019 03:02:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43842 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfJPHCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:59:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so26566140wrv.13;
-        Tue, 15 Oct 2019 23:59:50 -0700 (PDT)
+        Wed, 16 Oct 2019 03:02:15 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n14so22760370ljj.10;
+        Wed, 16 Oct 2019 00:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=diX73upTDH+Le9kcw7/XCVjA0EDthPi0kI1j7qCDE7U=;
-        b=D45DQTXRZHpHqmNV1ZHx/1jV+zI72KyaocnL5qI5Bhvrm4gLEuEFtVXPXUYWHUfG35
-         fLqAhBs2BjHNKQ05KN9EFlH1euiZStEoZRRO7IMq2A9pM2HV115cXo36Eb4MAh9aOKTu
-         rbYX09lp4sO4fuO/YdzCEurFqJQduJanR1vYdAVt4095ahIb3hjimbmyLZJyo/QPn0V5
-         PQ1E02E0nlbssAYBvHNoZHIu2+ahFhCHowIj/ClyCk2I2DI5+URuXjr7+bHBt1Jl7BN5
-         Y1Yex9kIG9e0r9el3lhHv5C9AJ8x9RIGOQARUt1X7CSZGRdtqFTvMuBsWMSVKiHMjZhy
-         VnzQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5oSsDNvXvsGV6CzNkWpdPR+sTK76BWHvlu1tQbUWenU=;
+        b=pJliqJj64q2dRIoPcClE+AKzJFpZlbmkvfy5sjO/7USN43uZ47HdcEYAeAtnQECfL3
+         wgmK1rauj0x2vPU2brvz55VTz7lZO1Q3F4V0GCPsEsxVpNuCdeo+Hsa8NYkbMma8xIjX
+         Kk44SeE70U0hXSaGXBw4protPvwTB6oDJWS+vHRX3YNkdUWoAlzi0LXXTClPaMtzz7Dk
+         4JOv8oyk9i0bWXdWb1zopBh4p5f8IlvM41UQuMP54HmYfQrWY3kbOAuO79zdmzxqfUCU
+         sZV+qyv7ElkFbzHPCpV3FmE40cJBvzK52Be2EBTYaiz1wtKlcmkz9AC3OFt5N4Relo8V
+         rp6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=diX73upTDH+Le9kcw7/XCVjA0EDthPi0kI1j7qCDE7U=;
-        b=sebAGfZkICGwEQOY4/BVZnAM2x144+Hc7F661/9JM536h39VTvRuGon9hQHqCscden
-         P/jDLoEtYN7bH7xO5u5ANeBF/UOWzWTWx1GkEzFi1NMFL4M7cjMupTZa1i6YaUr/9n5u
-         MWvYVacea97VBaz+cH1+ZPxB6ZTcnKJFDE9/22uUYBFnyvmGJg5NiI3S9rj7f5xCt6Ry
-         L5RLXiTNaiF92VJyDRANZ9gg/vTJCuMcH1K+SHh0lW++zCOuD4r0HEWevQiBs7hiR9iX
-         NV624b97Umn6rw+AI9mrcVlVGlpuP/3e5ogMNxtluuNa/pvVBNKdXI+NQNi9NCocjAJY
-         xqbA==
-X-Gm-Message-State: APjAAAX2q0t+w1Vi6uRHWqk9GT6VhYOlSr3X93FfwW4D6MCxZjBI9UpO
-        GqCh5/bbpYrYPFp4y1Ia52I=
-X-Google-Smtp-Source: APXvYqzw7i7UVTV7xJwRgPRf9mHmCqNLbvW5Tm4FhWaG2fTixmFPnl/QWZqe/Xpc2GrgzM2xBXPoUg==
-X-Received: by 2002:adf:fa87:: with SMTP id h7mr1308017wrr.304.1571209189718;
-        Tue, 15 Oct 2019 23:59:49 -0700 (PDT)
-Received: from localhost ([46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id k24sm6060907wmi.1.2019.10.15.23.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 23:59:47 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 08:59:45 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
-        alexandre.torgue@st.com, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: pwm-stm32: document pinctrl sleep
- state
-Message-ID: <20191016065945.GA1296874@ulmo>
-References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
- <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5oSsDNvXvsGV6CzNkWpdPR+sTK76BWHvlu1tQbUWenU=;
+        b=mtrWsQV9CxGES3QXxJ80SjynuX+18A+Q11yCnWuLcVJWTnXF/7Blt/1SpUzqEZEJM4
+         jcC5JSpktoK58iTjsfgb41+MhJBB02cCkHHzMxlK01XtyBgZgE/PX4xJIwfZ6lxANiT8
+         k7shEm3KozBf/ppqe5KkNucRiosNJJsTSBI9b/lVNu1Y5DiN662Pjw3tWZbLu5vAtPX1
+         ZrwVd3rkG0hlG3JcIHRTGzPytl96jeoDcbORpqplOIrkWI+5IVVg1ziQu0SOX7Zx0Y23
+         /HBl26HOpm9tnGauKFaiQ/fKrKkUIlwIYErVEgSBTlGKfPa10B4dGVGIzW8RcKp8ud3L
+         21tA==
+X-Gm-Message-State: APjAAAWUCckMv2LlGIfFE+JY/pIjS1P6NZNBYmIxKWbppmc72yzKrQpX
+        H+PQ/HFX+sH0Ks17mMcUnwnweZXMjQ1bUlYJTQw=
+X-Google-Smtp-Source: APXvYqw80yFTdCAtYRGvXllj9QyFwE19YDrz7m13QpjqE/GKfXA7OePux1S0wjWsqMGUvqIsOf8UIyo2S0YtsI2r1M8=
+X-Received: by 2002:a2e:8197:: with SMTP id e23mr25431233ljg.228.1571209333102;
+ Wed, 16 Oct 2019 00:02:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Content-Disposition: inline
-In-Reply-To: <1570193633-6600-2-git-send-email-fabrice.gasnier@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
+From:   Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Wed, 16 Oct 2019 10:02:01 +0300
+Message-ID: <CAE=NcraH_6nDe4Ax9axsbsrMf+EggCQFibY3dpNNgGm7NYTtJQ@mail.gmail.com>
+Subject: Re: [PATCH] tpm: Salt tpm_get_random() result with get_random_bytes()
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        David Safford <david.safford@ge.com>,
+        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 15, 2019 at 3:50 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> Salt the result that comes from the TPM RNG with random bytes from the
+> kernel RNG. This will allow to use tpm_get_random() as a substitute for
+> get_random_bytes().  TPM could have a bug (making results predicatable),
+> backdoor or even an inteposer in the bus. Salting gives protections
+> against these concerns.
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The current issue in the randomness from my point of view is that
+encrypted filesystems, ima etc in common deployments require high
+quality entropy just few seconds after the system has powered on for
+the first time. It is likely that people want to keep their keys
+device specific, so the keys need to be generated on the first boot
+before any of the filesystems mount.
 
-On Fri, Oct 04, 2019 at 02:53:51PM +0200, Fabrice Gasnier wrote:
-> Add documentation for pinctrl sleep state that can be used by
-> STM32 timers PWM.
->=20
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+Issue is wider than the tpm alone. Tpm is not generally present in the
+mobile (or even embedded-) systems, but the kernel entropy pool is.
+Kernel entropy pool on the other hand normally takes ages to
+initialize, and it is initialized from a source (interrupt timestamps)
+that does not classify as high-quality entropy. Thus, in the default
+configurations the first boot cannot proceed as there is no entropy to
+generate keys from and the boot cannot be paused or the entropy
+collection ends. I have a hunch that to get past this deadlock many
+people end up using very, very low quality entropy present at the krng
+at that time. Solving this properly should be in everyone's interests.
+This is a bad trap.
 
-Applied, thanks.
+I'm personally working around this by using multiple entropy sources
+to feed the kernel entropy pool directly from the hwrng driver
+initialization function(s) before we enter the userspace. Maybe we
+could create a KConfig option that forces people to consciously choose
+from the trust sources present in the system which ones are to be used
+to feed the krng before we enter the userspace. It would be mandatory
+to choose one or more sources rather than us silently running them
+into a trap. During the boot some sort of message should be displayed
+telling the user how the krng actually got initialized. There is lot
+of junk happening on the console early on, but this absolutely vital
+piece of information is completely hidden - that you have to read from
+the source.
 
-Thierry
 
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2mv98ACgkQ3SOs138+
-s6HF3BAAmYT8qlTIl02DuYkZiIEEQt9hsB26Q0G5lb9hNoOoKx6lZQ+fH6rl2YGG
-4qNTgV7tO6d2L3ip18Khcwjix/qAMIquiQS7X98cRjYA72kq3zwY5hj6pRxwF0Z5
-qdY0aTeeN2YpT9rhOR0vjmMfVGDgds9wfCLZXvkYGJ1eIHlrWD7MTDBcQeResxLk
-IGpnF6avlEnIlnaVKhUExslBOfivCtPho2GT8mXRQwR2UEjT2hQwJf+Sx98retQ9
-C9rrKMP900bMgeyBzQ0AZbZk1/U6wW1yeJaIITR0wJFLN+Gg+FMS+lb/fhGYMKwu
-9uQUNAYK03J0FUEZp8Esp1W36ua2XVlmEd+7meqo1OQXBG3uVPpIwTJrBmbPON7s
-Q5wHH96B8zjwGdwaVXi/opEDrRezm5c3Ek2bE5cuKfE1grspT0TIqrxmfKnJjzEY
-p12kGLnyp7UCaRV8EpUlVDo74koFoMtsCJMNB+PkeZfJEcpoAE1P+gJtt7mWzrXa
-dH/ZR6ezffrGbHvH9xKqWLoYSBv1r6PbAiNTJLFCzfWUGBujwQut3bTMNJQoEC4Y
-cYPLZnLDnw4Sv7tRoF3nlz3zI5RmQy6qQ0ycz/0CXNv1+W5LVgBa1izwHJ5g1Civ
-+vcMdBtQEl6PC4APpHq3jfKFRnO/LOfYRuh8YFl0IwUa9dURl2Q=
-=xIm6
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+--
+Janne
