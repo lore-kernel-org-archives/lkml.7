@@ -2,47 +2,97 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA78FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E47FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA61C2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D12E21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406348AbfJPQgO (ORCPT
+        id S2406351AbfJPQiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:36:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:45190 "EHLO foss.arm.com"
+        Wed, 16 Oct 2019 12:38:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47716 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404745AbfJPQgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:36:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A93C628;
-        Wed, 16 Oct 2019 09:36:13 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80C143F68E;
-        Wed, 16 Oct 2019 09:36:12 -0700 (PDT)
-Subject: Re: "Convert the AMD iommu driver to the dma-iommu api" is buggy
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>
-Cc:     iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
-        Tom Murphy <murphyt7@tcd.ie>, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>
-References: <1571237707.5937.58.camel@lca.pw>
- <1571237982.5937.60.camel@lca.pw> <20191016153112.GF4695@suse.de>
- <1571241213.5937.64.camel@lca.pw> <20191016160314.GH4695@suse.de>
- <a85f264c-3b74-b92b-ac03-aeba3a56946f@arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <fc510899-4e8b-827f-4c5f-2fe89145ac30@arm.com>
-Date:   Wed, 16 Oct 2019 17:36:11 +0100
+        id S1731480AbfJPQit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:38:49 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 07E69C0546D5
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:38:49 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id i10so11969140wrb.20
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:38:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vjbKDvVFPL0th2krdx8wMvub7uxuN9FX2tXsWBpSZGA=;
+        b=WZKn6sCBQ24KO019zMjKMvll4v7PAVBBtxOG3Sq5o2E8+81FXvQJL/Nrzun4UVxZPa
+         /gSzjuTpA1GZC3aSHXZ4jhc4lNfGgZvg8EZ9HlWaAA73L7eH4p1gh9aCTfQALr3/uBWp
+         UshYEgWtvrx0dVdiM3jf2yJcFiiI7+4c4BQd/Ai9Jh5t1CU6Ix0em018g24AE2TkTdII
+         gCj6mPo/2s3QJY8a3ED6R/4r4dGpSXEckdPsGzLWL97rtS7Z1zzEH7FXVngZ8FKewJcQ
+         +hsWia8dcMlXR2nM/Vc848Q0p/uw/1VBTHoolLGeYzTACKP6+7o39V/OO9HfB2j6Hbt8
+         CNWQ==
+X-Gm-Message-State: APjAAAU/rpLYhT39d6HUpO5Kh6AcuK3+i8rJatAChrNyddDaMcincsBn
+        NlUUa1XAvKlPfqLMIs5cjakbJVyAl+hD5a1kI0G61Bql8k11/tQQw9jbpv5HLT+h3bSou/HzqKn
+        Am8mQsaR6IphUANzUDdG1luE8
+X-Received: by 2002:a1c:1bc5:: with SMTP id b188mr4397254wmb.88.1571243927616;
+        Wed, 16 Oct 2019 09:38:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyTRKkY7xojuOdJ8XLJRUq8YBcEngwDEOfnwMsHIoBx2ccVCj7UoQkvx5J80rejnnTYAPIXcw==
+X-Received: by 2002:a1c:1bc5:: with SMTP id b188mr4397221wmb.88.1571243927350;
+        Wed, 16 Oct 2019 09:38:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d001:591b:c73b:6c41? ([2001:b07:6468:f312:d001:591b:c73b:6c41])
+        by smtp.gmail.com with ESMTPSA id b62sm4008159wmc.13.2019.10.16.09.38.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 09:38:46 -0700 (PDT)
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+ <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+ <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+ <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+ <bea889c5-1599-1eb8-ff3a-3bde1e58afa3@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f9735fb8-650e-c263-36a7-61390ccbb662@redhat.com>
+Date:   Wed, 16 Oct 2019 18:38:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <a85f264c-3b74-b92b-ac03-aeba3a56946f@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <bea889c5-1599-1eb8-ff3a-3bde1e58afa3@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,45 +100,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
-
-On 16/10/2019 17:09, Robin Murphy wrote:
-> On 16/10/2019 17:03, Joerg Roedel wrote:
->> On Wed, Oct 16, 2019 at 11:53:33AM -0400, Qian Cai wrote:
->>> On Wed, 2019-10-16 at 17:31 +0200, Joerg Roedel wrote:
+On 16/10/19 18:25, Xiaoyao Li wrote:
 >>
->>> The x86 one might just be a mistake.
->>>
->>> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
->>> index ad05484d0c80..63c4b894751d 100644
->>> --- a/drivers/iommu/amd_iommu.c
->>> +++ b/drivers/iommu/amd_iommu.c
->>> @@ -2542,7 +2542,7 @@ static int amd_iommu_map(struct iommu_domain *dom,
->>> unsigned long iova,
->>>          if (iommu_prot & IOMMU_WRITE)
->>>                  prot |= IOMMU_PROT_IW;
->>> -       ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
->>> +       ret = iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
+>>    3 | Y         |     Y       |  N  |   Y     |   x   | Switch
+>> MSR_TEST_CTRL on
+>>      |           |             |     |         |       | enter/exit,
+>> plus:
+>>      |           |             |     |         |       | A) #AC
+>> forwarded to guest.
+>>      |           |             |     |         |       | B) SIGBUS or
+>> KVM exit code
 >>
->> Yeah, that is a bug, I spotted that too.
->>
->>> @@ -1185,7 +1185,7 @@ static struct iommu_dma_msi_page
->>> *iommu_dma_get_msi_page(struct device *dev,
->>>          if (!iova)
->>>                  goto out_free_page;
->>> -       if (iommu_map(domain, iova, msi_addr, size, prot))
->>> +       if (iommu_map_atomic(domain, iova, msi_addr, size, prot))
->>>                  goto out_free_iova;
->>
->> Not so sure this is a bug, this code is only about setting up MSIs on
->> ARM. It probably doesn't need to be atomic.
-> Right, since the iommu_dma_prepare_msi() operation was broken out to happen at 
-> MSI domain setup time, I don't think the comment in there applies any more, so 
-> we can probably stop disabling irqs around the iommu_dma_get_msi_page() call.
+> 
+> I just want to get confirmed that in (3), we should split into 2 case:
+> 
+> a) if host has it enabled, still apply the constraint that guest is
+> forcibly enabled? so we don't switch MSR_TEST_CTL.
+> 
+> b) if host has it disabled, we can switch MSR_TEST_CTL on enter/exit.
 
-Yes, I agree that it does not need to be atomic anymore.
+That's doable, yes.
 
-Cheers,
-
--- 
-Julien Grall
+Paolo
