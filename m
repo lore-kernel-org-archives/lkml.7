@@ -2,101 +2,69 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D6AFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BD5FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1ECA20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:56:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eB0K7G6a"
+	by mail.kernel.org (Postfix) with ESMTP id 4C8A420659
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390547AbfJPK4U (ORCPT
+        id S2392273AbfJPK4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:56:20 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42130 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730251AbfJPK4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:56:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so14482389pff.9;
-        Wed, 16 Oct 2019 03:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gvBJmdm/y0qneuBUivymKny+YKAZ1hnIBVUrDzRfAMY=;
-        b=eB0K7G6aSD0aLTiq84kb+arRKYxrikpQEExHPmvnHAVCgkrTQhC8t3ejGB9jZSfUy5
-         Rq+ByXYHgvaX3HGYV+sXCgUuuBfXL7u0S2Wfv50wyd1AeE/zLGBQoLks6l9oq2ubPSU9
-         tf8yvtHBWuNDtuYNoKvhXZkY354bsu+oliCnbkThAR7p1npgU7HxmMIIq4lgDNYNSOjO
-         OK4XaH074YjHhO6y80ESh7+LmKzYr1BezfeVah6S8Pc7hYlTD9BoX719RjmK9L8Bh+tm
-         S1YKnGlI+O0IzO7ppyncZ2AzUjbUPSe2bk4uuCb2eVnpA5N01yYDDFuHkteGAi5jop57
-         VbKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gvBJmdm/y0qneuBUivymKny+YKAZ1hnIBVUrDzRfAMY=;
-        b=Wx4sDFJRG8zpsH0DJDzbCdRBJt37zT8yD/yc05vT6gzjGirTg+oz8GaozCaMJsKsHK
-         UQcPyJorhq5eFXpaE6z6RS5aMqw4xwZBTaCObh+uKRTnZrO56BMjx81PmYtPKmjnltgy
-         Nu1d4XLL6dER4zzgIgtzGNuRUmI8Dr3fpx/ga+JsBMFkpwQ+4UUJLHQz5HxcG52qqUaW
-         J7C6lswPfL5520BeJybEFMSTDxsnS+lOxUnyNhlhowODZlcKbI3LdJb/c/uXTZUSntqm
-         ZVvF8F4Wg82AUtM5Y/QRn0JuCT5AkJ6B1oC6KUOcXd8t7YuAUcBYPvJDt4dy5NBSuAQe
-         v11Q==
-X-Gm-Message-State: APjAAAXowJ+tTWEjh3vI2GW8DctR8OYqsKNFiWYnQci/jbNYWn6L7afn
-        doQz5r7n3SPudxx/hG+JNb4=
-X-Google-Smtp-Source: APXvYqzzapAlCLligsGVrbR/hk0VUwWMKMZiilQtFQXYsYcTFiLZ8eXPGVUihvj4/sYjRN2T6As1dg==
-X-Received: by 2002:a63:3304:: with SMTP id z4mr44315923pgz.225.1571223379149;
-        Wed, 16 Oct 2019 03:56:19 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id t68sm23055026pgt.61.2019.10.16.03.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 03:56:18 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mickael Guene <mickael.guene@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: st-mipid02: add a check for devm_gpiod_get_optional
-Date:   Wed, 16 Oct 2019 18:56:04 +0800
-Message-Id: <20191016105604.8036-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 16 Oct 2019 06:56:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:44164 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbfJPK4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:56:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 03:56:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="189643967"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.130])
+  by orsmga008.jf.intel.com with ESMTP; 16 Oct 2019 03:56:32 -0700
+Date:   Wed, 16 Oct 2019 13:56:31 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] efi/tpm: return -EINVAL when determining tpm final
+ events log size fails
+Message-ID: <20191016105631.GD10184@linux.intel.com>
+References: <20191014172145.9669-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014172145.9669-1-jsnitsel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mipid02_probe misses a check for devm_gpiod_get_optional and may miss
-the failure.
-Add a check to fix the problem.
+On Mon, Oct 14, 2019 at 10:21:45AM -0700, Jerry Snitselaar wrote:
+> Currently nothing checks the return value of efi_tpm_eventlog_init,
+> but in case that changes in the future make sure an error is
+> returned when it fails to determine the tpm final events log
+> size.
+> 
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: linux-efi@vger.kernel.org
+> Cc: linux-integrity@vger.kernel.org
+> Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/media/i2c/st-mipid02.c | 3 +++
- 1 file changed, 3 insertions(+)
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
-index 81285b8d5cfb..d38e888b0a43 100644
---- a/drivers/media/i2c/st-mipid02.c
-+++ b/drivers/media/i2c/st-mipid02.c
-@@ -971,6 +971,9 @@ static int mipid02_probe(struct i2c_client *client)
- 	bridge->reset_gpio = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_HIGH);
- 
-+	if (IS_ERR(bridge->reset_gpio))
-+		return PTR_ERR(bridge->reset_gpio);
-+
- 	ret = mipid02_get_regulators(bridge);
- 	if (ret) {
- 		dev_err(dev, "failed to get regulators %d", ret);
--- 
-2.20.1
-
+/Jarkko
