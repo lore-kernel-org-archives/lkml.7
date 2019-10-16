@@ -2,150 +2,173 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAA5FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D0CFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A7121848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4D72082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571223573;
+	bh=MH1lAOLAmOqimzjmC01RwPih+47UvtVHbjzbGIk6qjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FWyZUtq8nra+rOzN5pgnqTvdpJQJM6WRBh3gTSqhL58AFbviI24AR01N1myHN/3JS
+	 FW9ZEqM0qa76uy8xvLjbfsEhvioWQWNKghB/8P7gqttTQwXv9uiX67R6rzbSzzEkgW
+	 KfWv72Mk5OPCbbRzxYNqIbXVKOakQeGZL+WSJG+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404707AbfJPK7L (ORCPT
+        id S2404756AbfJPK7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:59:11 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33390 "EHLO huawei.com"
+        Wed, 16 Oct 2019 06:59:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42988 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726083AbfJPK7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:59:11 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 453AB4BF490C4069A344;
-        Wed, 16 Oct 2019 18:59:09 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 18:59:01 +0800
-Subject: Re: [PATCH] perf jevents: Fix resource leak in process_mapfile()
-To:     John Garry <john.garry@huawei.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <ak@linux.intel.com>,
-        <lukemujica@google.com>, <kan.liang@linux.intel.com>,
-        <yuzenghui@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
-        <linfeilong@huawei.com>
-References: <bf113089-e3cd-50f9-f7ed-17d07512a702@huawei.com>
- <87e66585-1564-3523-59f6-cab15b7e1717@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <0cd0d259-e806-effd-5e44-fccd13842697@huawei.com>
-Date:   Wed, 16 Oct 2019 18:58:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726083AbfJPK7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:59:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C182DAE4B;
+        Wed, 16 Oct 2019 10:59:29 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 12:59:28 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 1/3] mm/vmalloc: remove preempt_disable/enable when do
+ preloading
+Message-ID: <20191016105928.GS317@dhcp22.suse.cz>
+References: <20191016095438.12391-1-urezki@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87e66585-1564-3523-59f6-cab15b7e1717@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016095438.12391-1-urezki@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 16-10-19 11:54:36, Uladzislau Rezki (Sony) wrote:
+> Some background. The preemption was disabled before to guarantee
+> that a preloaded object is available for a CPU, it was stored for.
 
+Probably good to be explicit that this has been achieved by combining
+the disabling the preemption and taking the spin lock while the
+ne_fit_preload_node is checked resp. repopulated, right?
 
-On 2019/10/16 18:40, John Garry wrote:
-> On 16/10/2019 08:47, Yunfeng Ye wrote:
->> There are memory leaks and file descriptor resource leaks in
->> process_mapfile().
->>
->> Fix this by adding free() and fclose() on the error paths.
->>
->> Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->>  tools/perf/pmu-events/jevents.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->> index e2837260ca4d..6e60d4cff592 100644
->> --- a/tools/perf/pmu-events/jevents.c
->> +++ b/tools/perf/pmu-events/jevents.c
->> @@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
->>      char *line, *p;
->>      int line_num;
->>      char *tblname;
->> +    int ret = 0;
->>
->>      pr_info("%s: Processing mapfile %s\n", prog, fpath);
->>
->> @@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
->>      if (!mapfp) {
->>          pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
->>                  fpath);
->> +        free(line);
->>          return -1;
->>      }
->>
->> @@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
->>              /* TODO Deal with lines longer than 16K */
->>              pr_info("%s: Mapfile %s: line %d too long, aborting\n",
->>                      prog, fpath, line_num);
->> -            return -1;
->> +            ret = -1;
->> +            goto out;
+> The aim was to not allocate in atomic context when spinlock
+> is taken later, for regular vmap allocations. But that approach
+> conflicts with CONFIG_PREEMPT_RT philosophy. It means that
+> calling spin_lock() with disabled preemption is forbidden
+> in the CONFIG_PREEMPT_RT kernel.
 > 
-> There's a subtle change of behaviour here, i.e. now calling print_mapping_table_suffix(), but I don't think that it makes any difference.
-> 
-yes, I know that "goto out" will run print_mapping_table_suffix(outfp), because the error path before is done like this.
-so I think it should be use "goto out" to run run print_mapping_table_suffix(outfp).
+> Therefore, get rid of preempt_disable() and preempt_enable() when
+> the preload is done for splitting purpose. As a result we do not
+> guarantee now that a CPU is preloaded, instead we minimize the
+> case when it is not, with this change.
 
-> However, does outfp remain open also in this case:
-> 
-Because it has a comment that "Make build fail", so I am not handle the outfp, only modify the process_mapfile() function.
+by populating the per cpu preload pointer under the vmap_area_lock.
+This implies that at least each caller which has done the preallocation
+will not fallback to an atomic allocation later. It is possible that the
+preallocation would be pointless or that no preallocation is done
+because of the race but your data shows that this is really rare.
 
-> main(int argc, char *argv[])
-> {
-> ...
+> For example i run the special test case that follows the preload
+> pattern and path. 20 "unbind" threads run it and each does
+> 1000000 allocations. Only 3.5 times among 1000000 a CPU was
+> not preloaded. So it can happen but the number is negligible.
 > 
-> if (process_mapfile(eventsfp, mapfile)) {
->     pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
->     /* Make build fail */
->     return 1;
-> }
+> V2 - > V3:
+>     - update the commit message
 > 
-> return 0;
+> V1 -> V2:
+>   - move __this_cpu_cmpxchg check when spin_lock is taken,
+>     as proposed by Andrew Morton
+>   - add more explanation in regard of preloading
+>   - adjust and move some comments
 > 
-> empty_map:
->     fclose(eventsfp);
->     ...
-> }
-> 
-> I think that this code works on the basis that the program exits on any sort of error and releases resources automatically. Having said that, it is a good practice to tidy up.
-> 
-I agree with you, when program exits, it will releases resources automatically. It's just to make the program clearer and more correct.
+> Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Acked-by: Daniel Wagner <dwagner@suse.de>
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-> John
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/vmalloc.c | 37 ++++++++++++++++++++-----------------
+>  1 file changed, 20 insertions(+), 17 deletions(-)
 > 
->>          }
->>          line[strlen(line)-1] = '\0';
->>
->> @@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
->>
->>  out:
->>      print_mapping_table_suffix(outfp);
->> -    return 0;
->> +    fclose(mapfp);
->> +    free(line);
->> +    return ret;
->>  }
->>
->>  /*
->>
-> 
-> 
-> 
-> .
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index e92ff5f7dd8b..b7b443bfdd92 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1078,31 +1078,34 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  
+>  retry:
+>  	/*
+> -	 * Preload this CPU with one extra vmap_area object to ensure
+> -	 * that we have it available when fit type of free area is
+> -	 * NE_FIT_TYPE.
+> +	 * Preload this CPU with one extra vmap_area object. It is used
+> +	 * when fit type of free area is NE_FIT_TYPE. Please note, it
+> +	 * does not guarantee that an allocation occurs on a CPU that
+> +	 * is preloaded, instead we minimize the case when it is not.
+> +	 * It can happen because of cpu migration, because there is a
+> +	 * race until the below spinlock is taken.
+>  	 *
+>  	 * The preload is done in non-atomic context, thus it allows us
+>  	 * to use more permissive allocation masks to be more stable under
+> -	 * low memory condition and high memory pressure.
+> +	 * low memory condition and high memory pressure. In rare case,
+> +	 * if not preloaded, GFP_NOWAIT is used.
+>  	 *
+> -	 * Even if it fails we do not really care about that. Just proceed
+> -	 * as it is. "overflow" path will refill the cache we allocate from.
+> +	 * Set "pva" to NULL here, because of "retry" path.
+>  	 */
+> -	preempt_disable();
+> -	if (!__this_cpu_read(ne_fit_preload_node)) {
+> -		preempt_enable();
+> -		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+> -		preempt_disable();
+> +	pva = NULL;
+>  
+> -		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
+> -			if (pva)
+> -				kmem_cache_free(vmap_area_cachep, pva);
+> -		}
+> -	}
+> +	if (!this_cpu_read(ne_fit_preload_node))
+> +		/*
+> +		 * Even if it fails we do not really care about that.
+> +		 * Just proceed as it is. If needed "overflow" path
+> +		 * will refill the cache we allocate from.
+> +		 */
+> +		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+>  
+>  	spin_lock(&vmap_area_lock);
+> -	preempt_enable();
+> +
+> +	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
+> +		kmem_cache_free(vmap_area_cachep, pva);
+>  
+>  	/*
+>  	 * If an allocation fails, the "vend" address is
+> -- 
+> 2.20.1
 > 
 
+-- 
+Michal Hocko
+SUSE Labs
