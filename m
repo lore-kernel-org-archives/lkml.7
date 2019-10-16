@@ -2,109 +2,148 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939BBFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E451DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5E5218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46BA21D71
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f0n+et9v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2Li+8fG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392273AbfJPPBh (ORCPT
+        id S2392374AbfJPPBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:01:37 -0400
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:55690 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392186AbfJPPBh (ORCPT
+        Wed, 16 Oct 2019 11:01:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54984 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392187AbfJPPBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 11:01:37 -0400
-Received: by mail-wr1-f73.google.com with SMTP id o10so11839706wrm.22
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:01:34 -0700 (PDT)
+Received: by mail-wm1-f67.google.com with SMTP id p7so3287039wmp.4;
+        Wed, 16 Oct 2019 08:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=rhvfW/MCKGI2uxeEW6Nn+IuXscNU7+I/egjWinp71uE=;
-        b=f0n+et9vXhAXbCHqu0gWhPEK6MCzXc906FFde3nnutVDBB1zo+n6ZsPhR/E5C53h6s
-         i/diHbdVgi/7rcsvxNtAsSMu3OrO6/KBl2CZB9cLTZU75Qw47nb8E9G+O44hiwbQxKSF
-         V2QZW4W9P6DCLu+hwxjI3i8PnB7sHnzxMc73vDMXYPSRGF1Ta2OacJbm/atVXMbQVfg4
-         u88i56zouDFSWDrgov598pS+yfNf9FyHwv+xAFyrKJ5fP35+/u6GAqqCimiSvUsP/UFQ
-         t+/7a8qZMhiVgk+ldhokMwdZRj5HJRXV+7oPbEn4gFQ7P1avlas5OINJLuGYzNdjNWFd
-         bVxA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VpdEp2zf81VBM+LhkWglZ2eMDIpA3da8iXPWPqvvAdE=;
+        b=u2Li+8fGwbUzcPJxxvOBpyqCzMizq522pSUKcGfpCAvPVCu/xb71Ztqe3MF8EHlkzi
+         C6Nw5hH7TGPzEgamiHkcD457loJHQ/duxoyhzL2Tga3I9niCXRQ+7pmFUmyaoCrBKprY
+         Q3u5EO2sgi8Td29J42iRStmS4OZEPWXiu/nl1tenbyXtxClgcjV/UfVPH8mNCXPEJdd4
+         jVQPJEl9tYPrcqzlpTEunFumnh90l7idaVo18Zec/sot0tX+APqKD8MRLeE44/yu3aZx
+         7qxdFrqKnLMRh58jYl16fYI8zyCeEEyW1e1YJrHdrZnZGG8lrJp3HCs3toFJYdTGKHmI
+         3LxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=rhvfW/MCKGI2uxeEW6Nn+IuXscNU7+I/egjWinp71uE=;
-        b=srM+8VbwXvmcCUEuneQyeEi+Vpkk2CjnR5+E1go0QHi29uzEXsYpCn6A3rqLLkkRUo
-         v3Rg5bK8HwgVpjOgOxAjnPmIBtOwm0bzVxlH3m9fgufTBSc1o97I5O3nkBRPG8WqHezl
-         8sZtc6Eht29wtD4wbAok+CwFceji6mWQ3ptdbe9LtJu01+f/whHUldKnBIeu8OBByHbQ
-         3NNkAmydrS/aPEvvUzsvLYIhgYii8F8Uqj85yeK6ACLAU4B4KjYMTSY1y0X7Se7IKZBA
-         l2VKyqYtZhkQc/+ZV+YXDnjenDgrMYcbxpPqrneKZE0nkil55lLK70I3TBFco60G1AQt
-         nejQ==
-X-Gm-Message-State: APjAAAUM0JIQj0lqVm5pyImTPlv249hCrIR9ZWxMk+Lk1menAwe72Kje
-        QB1VZtwlV9sDVhoh0jmKLQb/BLNPDw==
-X-Google-Smtp-Source: APXvYqzWLNszz1Nx7EBZhwr8CSMAeG/Ushr6nHeHKyszLYbN/KtaEJqXIILl35ZKwECUm9JFDurNyMR+fA==
-X-Received: by 2002:a5d:4dd2:: with SMTP id f18mr2996914wru.4.1571238093597;
- Wed, 16 Oct 2019 08:01:33 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 17:01:19 +0200
-In-Reply-To: <20191016150119.154756-1-jannh@google.com>
-Message-Id: <20191016150119.154756-2-jannh@google.com>
-Mime-Version: 1.0
-References: <20191016150119.154756-1-jannh@google.com>
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH 2/2] binder: Use common definition of SZ_1K
-From:   Jann Horn <jannh@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>, jannh@google.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VpdEp2zf81VBM+LhkWglZ2eMDIpA3da8iXPWPqvvAdE=;
+        b=YMCQTtDdBk1xmj7Ff8RoN3U5TTifeZEKRG3J1D8UbQ1e9ldHEvbG1VDtB0FBpR1O2c
+         TsTaKJJKeL917D6Drt5RF6NnAcjHtr6IsLtYkm7z0O2myrHfAAY3qnpc1FCR0x+LYTjt
+         VSH2NGp7N7pNOa7JV2QfOsnVgf9IfjdwZtDQ9KtS+MOUK01w/6PkrI3GOFi3qKoA4QWN
+         H/twLk+eemyUBr+LGi9i6NFd7cWX/GjyLYV3ix6qh/EUXHSaGQ4tU6h/w4ZFrTRRNV/I
+         zwzHP2i/dt/pbrkodYPq1wiHk7y2RpwfihnVYmTF14gnNRWskq0Bfd+2OAzalu8KR9QZ
+         gc0g==
+X-Gm-Message-State: APjAAAW2FRFgL+LeRF7Exl4nUpI0dToZQFaM9asubKiYbQZ+YUjH2va/
+        r//UtwO1J/W1nk/EsRFITWFP1drP
+X-Google-Smtp-Source: APXvYqyZvGmYe2ePerNhQGEy2ZE8TMHhSrtbEr+lxIT94scGpIIN6fF6fq+EUVbBPdZWbs/d/PHvUg==
+X-Received: by 2002:a1c:b4c1:: with SMTP id d184mr3583046wmf.37.1571238096285;
+        Wed, 16 Oct 2019 08:01:36 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id r18sm3215437wme.48.2019.10.16.08.01.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 08:01:35 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, will@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v5 01/11] crypto: Add allwinner subdirectory
+Date:   Wed, 16 Oct 2019 17:01:21 +0200
+Message-Id: <20191016150131.15430-2-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191016150131.15430-1-clabbe.montjoie@gmail.com>
+References: <20191016150131.15430-1-clabbe.montjoie@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SZ_1K has been defined in include/linux/sizes.h since v3.6. Get rid of the
-duplicate definition.
+Since a second Allwinner crypto driver will be added, it is better to
+create a dedicated subdirectory.
 
-Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/android/binder.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ MAINTAINERS                      | 6 ++++++
+ drivers/crypto/Kconfig           | 2 ++
+ drivers/crypto/Makefile          | 1 +
+ drivers/crypto/allwinner/Kconfig | 6 ++++++
+ 4 files changed, 15 insertions(+)
+ create mode 100644 drivers/crypto/allwinner/Kconfig
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 265d9dd46a5e..a606262da9d6 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -65,6 +65,7 @@
- #include <linux/ratelimit.h>
- #include <linux/syscalls.h>
- #include <linux/task_work.h>
-+#include <linux/sizes.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c7b48525822a..9153c02e1f63 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -690,6 +690,12 @@ L:	linux-crypto@vger.kernel.org
+ S:	Maintained
+ F:	drivers/crypto/sunxi-ss/
  
- #include <uapi/linux/android/binder.h>
- #include <uapi/linux/android/binderfs.h>
-@@ -92,11 +93,6 @@ static atomic_t binder_last_id;
- static int proc_show(struct seq_file *m, void *unused);
- DEFINE_SHOW_ATTRIBUTE(proc);
++ALLWINNER CRYPTO DRIVERS
++M:	Corentin Labbe <clabbe.montjoie@gmail.com>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/allwinner/
++
+ ALLWINNER VPU DRIVER
+ M:	Maxime Ripard <mripard@kernel.org>
+ M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 3e51bae191ec..610bb52d77d6 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -11,6 +11,8 @@ menuconfig CRYPTO_HW
  
--/* This is only defined in include/asm-arm/sizes.h */
--#ifndef SZ_1K
--#define SZ_1K                               0x400
--#endif
--
- #define FORBIDDEN_MMAP_FLAGS                (VM_WRITE)
+ if CRYPTO_HW
  
- enum {
++source "drivers/crypto/allwinner/Kconfig"
++
+ config CRYPTO_DEV_PADLOCK
+ 	tristate "Support for VIA PadLock ACE"
+ 	depends on X86 && !UML
+diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+index afc4753b5d28..90d60eff5ecc 100644
+--- a/drivers/crypto/Makefile
++++ b/drivers/crypto/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CRYPTO_DEV_ALLWINNER) += allwinner/
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_AES) += atmel-aes.o
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_SHA) += atmel-sha.o
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_TDES) += atmel-tdes.o
+diff --git a/drivers/crypto/allwinner/Kconfig b/drivers/crypto/allwinner/Kconfig
+new file mode 100644
+index 000000000000..0c8a99f7959d
+--- /dev/null
++++ b/drivers/crypto/allwinner/Kconfig
+@@ -0,0 +1,6 @@
++config CRYPTO_DEV_ALLWINNER
++	bool "Support for Allwinner cryptographic offloader"
++	depends on ARCH_SUNXI || COMPILE_TEST
++	default y if ARCH_SUNXI
++	help
++	  Say Y here to get to see options for Allwinner hardware crypto devices
 -- 
-2.23.0.700.g56cf767bdb-goog
+2.21.0
 
