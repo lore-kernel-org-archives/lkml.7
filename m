@@ -2,148 +2,111 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DA1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FCDFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5839F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="am4nu+nn"
+	by mail.kernel.org (Postfix) with ESMTP id 56D1C2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394152AbfJPP3U (ORCPT
+        id S2394159AbfJPPaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:29:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34603 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391940AbfJPP3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:29:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y135so4936695wmc.1;
-        Wed, 16 Oct 2019 08:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S/1dqToA8XGpZkcCxFWkcVVyKMmf6kZjWcs4ANWYCn4=;
-        b=am4nu+nn4TwbCTLJcWb+upIfcpLvxM3QDO8JXWvqQJ+rW+TW2wBvxPphmPfkl/4Y3f
-         gELAl25n0/pCO2Aw5wNzaAeSqBJEZp22CTLHX4N6TshM8R2HjrTFzbAzRUAcCXWPUw4v
-         Er6zKKpBxCOdL1cP/jLPfQ08wBYAMZfgZk6MLNQsKM1X2G44OyjAqUo9pK0GxqvEX2Mq
-         YPu6hJ4BGbLJIooWvAvFBW1ClbNU44bI7DezWq4UjuDGYm8dvJmaFkrLy6X19NdlVn9o
-         99x4qgJc5ZDTdwWdOZVfuYnDOm/cBqaMtLbMCCwaVXhnCrasXQGafYRZh8m/M30ff3m7
-         E/NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S/1dqToA8XGpZkcCxFWkcVVyKMmf6kZjWcs4ANWYCn4=;
-        b=lWPi4zyij/a3u3WxHmGD2u7bHbDv9w2fC4ASZwX6V1D77fWmma9KVs3cMtOV2J5dJ7
-         ga5nKs6yBxYiZkdK8LApO0MWAR3+a7krwAQzi52EUM/RMmCI3tRPmc32YJqyz+m/1WsT
-         /uZgDf89IJFfr9PqzdWYWaBuBfhKL5uQ7IgttWKWXTQnG9MQrG8ZJOxRNURNWaCSI25Q
-         aDylsuHmiaTPxEA0sUzqGyzZMUNQv4EAqCCRqjj6YcmEFw7bI9qC3pIWpxjLm8rAUzrN
-         DPkW0uafR3iqBC4wPJtZ/lyPndwLi/h1KomsJvOoQwXkGLXZrz8aXbX95JaSE0OWWt+C
-         3e4Q==
-X-Gm-Message-State: APjAAAWlgK5biwqJZnw2eRngG8sTgeNCfJAxZdYkdEnQeS2D+uvtgfPH
-        mxdGtASa9ekOFIpKYwCAZS4=
-X-Google-Smtp-Source: APXvYqw6EqT4M2clgLs8xjijQWocikRiSu7tOxNCKc20QmyqCO5u/WZHZnWR3u8dDHrm5IvLWAaeIA==
-X-Received: by 2002:a1c:9ecf:: with SMTP id h198mr3879322wme.45.1571239757635;
-        Wed, 16 Oct 2019 08:29:17 -0700 (PDT)
-Received: from debian ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id f18sm2959763wmh.43.2019.10.16.08.29.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 16 Oct 2019 08:29:16 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:29:14 +0100
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH] Input: walkera0701 - Fix possible NULL pointer
- dereference in walkera0701_detach
-Message-ID: <20191016152914.ubzaluipboeku5zz@debian>
-References: <20190423145637.35004-1-yuehaibing@huawei.com>
+        Wed, 16 Oct 2019 11:30:03 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:61477 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726332AbfJPPaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:30:03 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2a.mailbox.org (Postfix) with ESMTPS id F1804A1834;
+        Wed, 16 Oct 2019 17:29:59 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id kkkccsEGnCco; Wed, 16 Oct 2019 17:29:55 +0200 (CEST)
+Date:   Thu, 17 Oct 2019 02:29:46 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
+ operations
+Message-ID: <20191016152946.34j5x45ko5auhv3g@yavin.dot.cyphar.com>
+References: <20191012010539.6131-1-cyphar@cyphar.com>
+ <20191014154136.GF18794@devbig004.ftw2.facebook.com>
+ <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
+ <20191014163307.GG18794@devbig004.ftw2.facebook.com>
+ <20191016083218.ttsaqnxpjh5i5bgv@yavin.dot.cyphar.com>
+ <20191016142756.GN18794@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bvhtikaycjjwg76b"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xxhpmezvextnbaiz"
 Content-Disposition: inline
-In-Reply-To: <20190423145637.35004-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191016142756.GN18794@devbig004.ftw2.facebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---bvhtikaycjjwg76b
+--xxhpmezvextnbaiz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2019 at 10:56:37PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> KASAN report this:
+On 2019-10-16, Tejun Heo <tj@kernel.org> wrote:
+> Hello, Aleksa.
+>=20
+> On Wed, Oct 16, 2019 at 07:32:19PM +1100, Aleksa Sarai wrote:
+> > Maybe I'm misunderstanding Documentation/atomic_t.txt, but it looks to
+> > me like it's explicitly saying that I shouldn't use atomic64_t if I'm
+> > just using it for fetching and assignment.
+>=20
+> Hah, where is it saying that?
 
-<snip>
+Isn't that what this says:
 
->  
->  static void walkera0701_detach(struct parport *port)
->  {
->  	struct walkera_dev *w = &w_dev;
->  
-> -	if (!w->pardevice || w->parport->number != port->number)
-> +	if (!w->parport)
+> Therefore, if you find yourself only using the Non-RMW operations of
+> atomic_t, you do not in fact need atomic_t at all and are doing it
+> wrong.
 
-It doesn't look correct. This way the detach function will never know the
-port number to which it is attached, and as a result it will try to do
-detach() with all the ports in the system.
-Please check the attached patch and maybe (if possible) ask Hulk Robot
-to verify if it fixes the problem.
+Doesn't using just atomic64_read() and atomic64_set() fall under "only
+using the non-RMW operations of atomic_t"? But yes, I agree that any
+locking is overkill.
 
---
-Regards
-Sudip
+> > As for 64-bit on 32-bit machines -- that is a separate issue, but from
+> > [1] it seems to me like there are more problems that *_ONCE() fixes than
+> > just split reads and writes.
+>=20
+> Your explanations are too wishy washy.  If you wanna fix it, please do
+> it correctly.  R/W ONCE isn't the right solution here.
 
---bvhtikaycjjwg76b
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-Input-walkera0701-Fix-possible-NULL-pointer-derefere.patch"
+Sure, I will switch it to use atomic64_read() and atomic64_set() instead
+if that's what you'd prefer. Though I will mention that on quite a few
+architectures atomic64_read() is defined as:
 
-From 0338a89a873e7df57707852402f90bb0d6626f12 Mon Sep 17 00:00:00 2001
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date: Wed, 16 Oct 2019 16:08:43 +0100
-Subject: [PATCH] Input: walkera0701 - Fix possible NULL pointer dereference
+  #define atomic64_read(v)        READ_ONCE((v)->counter)
 
-If walkera0701_attach() fails and input_dev is made NULL then we are
-unregistering the pardevice but it still has the pointer to the dev
-which has now been released. And as a result in the walkera0701_detach()
-it will now try to do input_unregister_device() with a NULL pointer.
-We should mark the pardevice as NULL when it is unregistered.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Reported-by: Yue Haibing <yuehaibing@huawei.com>
-Fixes: 221bcb24c653 ("Input: walkera0701 - use parallel port device model")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/input/joystick/walkera0701.c | 1 +
- 1 file changed, 1 insertion(+)
+--xxhpmezvextnbaiz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/input/joystick/walkera0701.c b/drivers/input/joystick/walkera0701.c
-index 56abc8c6c763..d8ae1329bf00 100644
---- a/drivers/input/joystick/walkera0701.c
-+++ b/drivers/input/joystick/walkera0701.c
-@@ -275,6 +275,7 @@ static void walkera0701_attach(struct parport *pp)
- 	input_free_device(w->input_dev);
- err_unregister_device:
- 	parport_unregister_device(w->pardevice);
-+	w->pardevice = NULL;
- }
- 
- static void walkera0701_detach(struct parport *port)
--- 
-2.11.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXac3ZgAKCRCdlLljIbnQ
+EgBeAP40qsKIa/xjyp5QTDwPZUTxUPFnsAGGUbniwVLQeb2vXAEA+tT7cTDK410D
+c5RreKV4Dwzp3kNtNNHnA5BxvXioJAI=
+=kEi+
+-----END PGP SIGNATURE-----
 
---bvhtikaycjjwg76b--
+--xxhpmezvextnbaiz--
