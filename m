@@ -2,132 +2,103 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCADECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90A4ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF8820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746A020873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391055AbfJPElI (ORCPT
+        id S2391100AbfJPEoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 00:41:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55874 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfJPElI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 00:41:08 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 16 Oct 2019 00:44:44 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:59094 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389649AbfJPEon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 00:44:43 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46tKTN4W6Pz1rGRY;
+        Wed, 16 Oct 2019 06:44:40 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46tKTN2mm1z1qvrr;
+        Wed, 16 Oct 2019 06:44:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 1VfeJ8X47Ze6; Wed, 16 Oct 2019 06:44:38 +0200 (CEST)
+X-Auth-Info: xwmaVoZ2F5eRtD1d1oRFGlQX+Mzrz5/g6FC4U/BJzf0=
+Received: from [192.168.1.106] (unknown [81.0.126.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3E8CA8E1CED;
-        Wed, 16 Oct 2019 04:41:07 +0000 (UTC)
-Received: from [10.72.12.53] (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E7DDE5D9CD;
-        Wed, 16 Oct 2019 04:38:53 +0000 (UTC)
-Subject: Re: [PATCH V3 1/7] mdev: class id support
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-2-jasowang@redhat.com>
- <20191015103806.0538ccb2@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <3f6121a9-7d25-df8d-86ec-14443ab036f6@redhat.com>
-Date:   Wed, 16 Oct 2019 12:38:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 16 Oct 2019 06:44:38 +0200 (CEST)
+Reply-To: hs@denx.de
+Subject: Re: [PATCH 2/2] misc: add support for the cc1101 RF transceiver chip
+ from TI
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20190922060356.58763-1-hs@denx.de>
+ <20190922060356.58763-3-hs@denx.de> <20191011064342.GA1045420@kroah.com>
+From:   Heiko Schocher <hs@denx.de>
+Message-ID: <da8890e0-e727-ba2b-bc5e-faad327de4d8@denx.de>
+Date:   Wed, 16 Oct 2019 06:44:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-In-Reply-To: <20191015103806.0538ccb2@x1.home>
+In-Reply-To: <20191011064342.GA1045420@kroah.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 16 Oct 2019 04:41:08 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Greg,
 
-On 2019/10/16 上午12:38, Alex Williamson wrote:
-> On Fri, 11 Oct 2019 16:15:51 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->    
->> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
->> index b558d4cfd082..724e9b9841d8 100644
->> --- a/drivers/vfio/mdev/mdev_core.c
->> +++ b/drivers/vfio/mdev/mdev_core.c
->> @@ -45,6 +45,12 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
->>   }
->>   EXPORT_SYMBOL(mdev_set_drvdata);
->>   
->> +void mdev_set_class(struct mdev_device *mdev, u16 id)
->> +{
->> +	mdev->class_id = id;
->> +}
->> +EXPORT_SYMBOL(mdev_set_class);
+Am 11.10.2019 um 08:43 schrieb Greg Kroah-Hartman:
+> On Sun, Sep 22, 2019 at 08:03:56AM +0200, Heiko Schocher wrote:
+>> +struct __attribute__ ((packed)) msg_queue_user {
+>> +	int	type; /* CC1101_MSG_SET_ */
+>> +};
 >> +
->>   struct device *mdev_dev(struct mdev_device *mdev)
->>   {
->>   	return &mdev->dev;
->> @@ -135,6 +141,7 @@ static int mdev_device_remove_cb(struct device *dev, void *data)
->>    * mdev_register_device : Register a device
->>    * @dev: device structure representing parent device.
->>    * @ops: Parent device operation structure to be registered.
->> + * @id: class id.
->>    *
->>    * Add device to list of registered parent devices.
->>    * Returns a negative value on error, otherwise 0.
->> @@ -324,6 +331,9 @@ int mdev_device_create(struct kobject *kobj,
->>   	if (ret)
->>   		goto ops_create_fail;
->>   
->> +	if (!mdev->class_id)
-> This is a sanity test failure of the parent driver on a privileged
-> path, I think it's fair to print a warning when this occurs rather than
-> only return an errno to the user.  In fact, ret is not set to an error
-> value here, so it looks like this fails to create the device but
-> returns success.  Thanks,
->
-> Alex
+>> +/* CC1101_MSG_DEFINE_CONFIG */
+>> +struct __attribute__ ((packed)) config_param {
+>> +	char addr;
+>> +	char val;
+>> +};
+> 
+> {sigh}
 
+Sorry for that ...
 
-Will fix.
+> None of these structures are valid ones to be passing to/from
+> userspace/kernel at all.  Please fix them up to work properly (i.e. use
+> the correct types and such).  I think there's a "how to write a correct
+> ioctl" document in the documentation directory somewhere, you might want
+> to search for that.
 
-Thanks
+Ok, the driver does not use ioctl only read/write, but the overall
+question is, has this driver at all a chance to go into mainline?
 
+I searched for "write a correct" in Documentation but get:
 
->
->> +		goto class_id_fail;
->> +
->>   	ret = device_add(&mdev->dev);
->>   	if (ret)
->>   		goto add_fail;
->> @@ -340,6 +350,7 @@ int mdev_device_create(struct kobject *kobj,
->>   
->>   sysfs_fail:
->>   	device_del(&mdev->dev);
->> +class_id_fail:
->>   add_fail:
->>   	parent->ops->remove(mdev);
->>   ops_create_fail:
+$ grep -lr "write a correct" Documentation/
+$
+
+May "Documentation/ioctl/botching-up-ioctls.rst" helps, so I convert
+to use the __u* types, thanks!
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
