@@ -2,92 +2,125 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197B2FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93894FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA3E20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762D520650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392381AbfJPKXm (ORCPT
+        id S2392398AbfJPKXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:23:42 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:35599 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388923AbfJPKXm (ORCPT
+        Wed, 16 Oct 2019 06:23:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49609 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfJPKXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:23:42 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id CAB1124000F;
-        Wed, 16 Oct 2019 10:23:39 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     geert+renesas@glider.be
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: max9611: Defer probe on POR read
-Date:   Wed, 16 Oct 2019 12:25:20 +0200
-Message-Id: <20191016102520.124370-1-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 06:23:49 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iKgSw-0002ga-0Y; Wed, 16 Oct 2019 12:23:38 +0200
+Date:   Wed, 16 Oct 2019 12:23:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: RE: [PATCH v5 3/6] timekeeping: Add clocksource to
+ system_time_snapshot
+In-Reply-To: <HE1PR0801MB1676EC775B7BFA5FC7E4F9D5F4920@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+Message-ID: <alpine.DEB.2.21.1910161218020.2046@nanos.tec.linutronix.de>
+References: <20191015104822.13890-1-jianyong.wu@arm.com> <20191015104822.13890-4-jianyong.wu@arm.com> <9274d21c-2c43-2e0d-f086-6aaba3863603@redhat.com> <alpine.DEB.2.21.1910152212580.2518@nanos.tec.linutronix.de> <aa1ec910-b7b6-2568-4583-5fa47aac367f@redhat.com>
+ <alpine.DEB.2.21.1910160914230.2518@nanos.tec.linutronix.de> <HE1PR0801MB1676EC775B7BFA5FC7E4F9D5F4920@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The max9611 driver tests communications with the chip by reading the die
-temperature during the probe function. If the temperature register
-POR (power-on reset) value is returned from the test read, defer probe to
-give the chip a bit more time to properly exit from reset.
+Jianyong,
 
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+On Wed, 16 Oct 2019, Jianyong Wu (Arm Technology China) wrote:
 
----
-Geert,
-  I've not been able to reproduce the issue on my boards (M3-N
-Salvator-XS and M3-W Salvator-X). As you reported the issue you might be
-able to reproduce it, could you please test this?
+Please fix your mail client not to copy the full headers into the reply.
 
-Also, I opted for deferring probe instead of arbitrary repeat the
-temperature read. What's your opinion?
+> > On Wed, 16 Oct 2019, Paolo Bonzini wrote:
+> > > On 15/10/19 22:13, Thomas Gleixner wrote:
+> > That's a completely different beast, really.
+> > 
+> > The clocksource pointer is handed in by the caller and the core code validates
+> > if the clocksource is the same as the current system clocksource and not the
+> > other way round.
+> > 
+> > So there is no need for getting that pointer from the core code because the
+> > caller knows already which clocksource needs to be active to make.the whole
+> > cross device timestamp correlation work. And in that case it's the callers
+> > responsibility to ensure that the pointer is valid which is the case for the
+> > current use cases.
+> > 
+> I thinks there is something misunderstanding of my patch. See patch 4/6,
+> the reason why I add clocksource is that I want to check if the current
+> clocksouce is arm_arch_counter in virt/kvm/arm/psci.c and nothing to do
+> with get_device_system_crosststamp.
 
-Thanks
-   j
----
- drivers/iio/adc/max9611.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+There is no misunderstanding at all. Your patch is broken in several ways
+as I explained in detail.
 
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index da073d72f649..30ae5879252c 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -80,6 +80,7 @@
-  * The complete formula to calculate temperature is:
-  *     ((adc_read >> 7) * 1000) / (1 / 480 * 1000)
-  */
-+#define MAX9611_TEMP_POR		0x8000
- #define MAX9611_TEMP_MAX_POS		0x7f80
- #define MAX9611_TEMP_MAX_NEG		0xff80
- #define MAX9611_TEMP_MIN_NEG		0xd980
-@@ -480,8 +481,10 @@ static int max9611_init(struct max9611_dev *max9611)
- 	if (ret)
- 		return ret;
+> So I really need a mechanism to do that check.
+> 
+> Thanks
+> Jianyong
 
--	regval &= MAX9611_TEMP_MASK;
-+	if (regval == MAX9611_TEMP_POR)
-+		return -EPROBE_DEFER;
+So just by chance I scrolled further down and found more replies from
+you. Please trim the reply properly and add your 'Thanks Jianyong' to the
+end of the mail.
+ 
+> > From your other reply:
+> > 
+> > > Why add a global id?  ARM can add it to archdata similar to how x86
+> > > has vclock_mode.  But I still think the right thing to do is to
+> > > include the full system_counterval_t in the result of
+> > > ktime_get_snapshot.  (More in a second, feel free to reply to the other
+> > email only).
+> > 
+> > No, the clocksource pointer is not going to be exposed as there is no
+> > guarantee that it will be still around after the call returns.
+> > 
+> > It's not even guaranteed to be correct when the store happens in Wu's patch
+> > simply because the store is done outside of the seqcount protected region.
+> 
+> Yeah, all of the elements in system_time_snapshot should be captured in
+> consistency. So I think the consistency will be guaranteed if the store
+> ops added in the seqcount region.
 
-+	regval &= MAX9611_TEMP_MASK;
- 	if ((regval > MAX9611_TEMP_MAX_POS &&
- 	     regval < MAX9611_TEMP_MIN_NEG) ||
- 	     regval > MAX9611_TEMP_MAX_NEG) {
---
-2.23.0
+Again. While it is consistent in terms of storage, it's still wrong to
+expose a pointer to something which has no life time guarantee. Even if
+your use case is just to compare the pointer it's a bad idea to do that
+especially without any comment about the pointer validity at all.
 
+Thanks,
+
+	tglx
