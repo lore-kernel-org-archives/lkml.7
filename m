@@ -2,153 +2,136 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79F4FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01DCFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA6821928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:44:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR02Gxdt"
+	by mail.kernel.org (Postfix) with ESMTP id 8D44C218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393680AbfJPNoL (ORCPT
+        id S2404253AbfJPNpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:44:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51060 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729093AbfJPNoL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:44:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 5so3008679wmg.0;
-        Wed, 16 Oct 2019 06:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Bafgp4jYGnLo/xet8UtFIBOpzKesPTarPqBx8mm1ghI=;
-        b=PR02Gxdt3nLUj5CA3FhgPxpb2Pejo0uJv6oewhFi4gFnZfhfQLk1KDR6cRT5Bg1Y8G
-         b0Z8H6bCwhLBqk5nevl2yYyz3hmUxRfSO0R3TlgGrw3CLY/hcpwBPOgP9lX9wfc3GgV2
-         9oF7evBFpNZl8hoN5ENCFZ7nFmZNRJ2bSfKgR3P4NqbOKqz7XTgNkaa1w0fOZqroxfQy
-         FRpBjAUAO4h3dChpTRrnH6DYycnW8hLiOjGTgK5sHDL5oRtptBl6QspTY1ITso1CmtmR
-         58U2hXO6xsWqgSwp1aQt2TqWCNyDO2UX0pP6hPm7zLbV9oQp8M93Tq8VqCMREHy0toHv
-         PRsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Bafgp4jYGnLo/xet8UtFIBOpzKesPTarPqBx8mm1ghI=;
-        b=PJuxIPXRyEZ4JO71MwPtM4bTZpxqLVGwIe6ACVde8oESufeGLYxF/RQwA3SuevuZoG
-         HIKGs3yMOhPFhDR3j1dVYdhahHDMI0a9Bww/0fyyUx8SP/VEWWGUWnIHXtduD+7p3fLv
-         6jBAOB+jCTNQabivyLlM9UXTx0oisk1aH7VAOxABugPxlTUxN+LrtH8T6U6ux7i3QBPk
-         NtjWDcZvYECjGH1lXCH3khdCXhbdxqvBweVBjS85AQEOFr4jSWuJWy35HgTkW+B2CzgY
-         N3me44E+/Wx1DC0QiV8hPTOdooZiok5+KVxobXVpVUn/PPupJqsnxP5lifP2nUDMCzS7
-         zIMg==
-X-Gm-Message-State: APjAAAVh+zVIsk4uFTFRBDMX32qs1hWZ9se1fhqJAe05KS9pbQSCGtwD
-        9XqgHk7KMEMSmiTI6luR1cXGbfRgxjo=
-X-Google-Smtp-Source: APXvYqyB+z261XSi/xNHUTIkW7HCqAaCgNNk5jZlZTw9o+jzwNhtu889hivFUMlUicQi2ELvoiv9yA==
-X-Received: by 2002:a1c:c90f:: with SMTP id f15mr3723254wmb.127.1571233447045;
-        Wed, 16 Oct 2019 06:44:07 -0700 (PDT)
-Received: from arch-late (87-196-73-205.net.novis.pt. [87.196.73.205])
-        by smtp.gmail.com with ESMTPSA id r13sm37949311wrn.0.2019.10.16.06.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 06:44:06 -0700 (PDT)
-References: <20191015135915.6530-1-hslester96@gmail.com>
- <20191016090628.7l5u4ytdqr2jlasg@pengutronix.de>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Chuhong Yuan <hslester96@gmail.com>, devel@driverdev.osuosl.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v2] media: imx7-mipi-csis: Add a check for
- devm_regulator_get
-In-reply-to: <20191016090628.7l5u4ytdqr2jlasg@pengutronix.de>
-Date:   Wed, 16 Oct 2019 14:43:59 +0100
-Message-ID: <m336fsst40.fsf@gmail.com>
+        Wed, 16 Oct 2019 09:45:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43588 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729093AbfJPNpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:45:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ACD89B1E9;
+        Wed, 16 Oct 2019 13:45:08 +0000 (UTC)
+Subject: Re: [PATCH] drivers: mcb: use symbol namespaces
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Michael Moese <mmoese@suse.de>, Jessica Yu <jeyu@kernel.org>
+References: <20191016100158.1400-1-jthumshirn@suse.de>
+ <20191016125139.GA26497@kroah.com>
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <48f87640-d277-fdb6-3d6e-3f88b7623f22@suse.de>
+Date:   Wed, 16 Oct 2019 15:45:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191016125139.GA26497@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
-On Wed 16 Oct 2019 at 10:06, Marco Felsch wrote:
-> Hi Chuhong,
->
-> On 19-10-15 21:59, Chuhong Yuan wrote:
->> devm_regulator_get may return an error but mipi_csis_phy_init misses
->> a check for it.
->> This may lead to problems when regulator_set_voltage uses the unchecked
->> pointer.
->> This patch adds a check for devm_regulator_get to avoid potential risk.
+On 16/10/2019 14:51, Greg KH wrote:
+> On Wed, Oct 16, 2019 at 12:01:58PM +0200, Johannes Thumshirn wrote:
+>> Now that we have symbol namespaces, use them in MCB to not pollute the
+>> default namespace with MCB internals.
 >>
->> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>> Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
 >> ---
->> Changes in v2:
->>   - Add a check in mipi_csis_probe for the modified mipi_csis_phy_init.
->
-> Did you miss the check for -EPROBE_DEFER?
->
+>>  drivers/gpio/gpio-menz127.c            |  1 +
+>>  drivers/iio/adc/men_z188_adc.c         |  1 +
+>>  drivers/mcb/mcb-core.c                 | 28 ++++++++++++++--------------
+>>  drivers/mcb/mcb-lpc.c                  |  1 +
+>>  drivers/mcb/mcb-parse.c                |  2 +-
+>>  drivers/mcb/mcb-pci.c                  |  1 +
+>>  drivers/tty/serial/8250/8250_men_mcb.c |  1 +
+>>  drivers/tty/serial/men_z135_uart.c     |  1 +
+>>  drivers/watchdog/menz69_wdt.c          |  1 +
+>>  9 files changed, 22 insertions(+), 15 deletions(-)
+> 
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-I think nothing special is really needed to do in case of
-EPROBE_DEFER, or am I missing something?
-It just return to probe and probe returns also. I just talked
-about it because it was not cover in the original code.
+Btw do you want me to send it to you again shortly before the merge
+window opens or can you queue it up before?
 
----
-Cheers,
-	Rui
-
->
-> Regards,
->   Marco
->
->>
->>  drivers/staging/media/imx/imx7-mipi-csis.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
->> index 73d8354e618c..e8a6acaa969e 100644
->> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
->> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
->> @@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
->>  static int mipi_csis_phy_init(struct csi_state *state)
->>  {
->>  	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
->> +	if (IS_ERR(state->mipi_phy_regulator))
->> +		return PTR_ERR(state->mipi_phy_regulator);
->>
->>  	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
->>  				     1000000);
->> @@ -966,7 +968,10 @@ static int mipi_csis_probe(struct platform_device *pdev)
->>  		return ret;
->>  	}
->>
->> -	mipi_csis_phy_init(state);
->> +	ret = mipi_csis_phy_init(state);
->> +	if (ret < 0)
->> +		return ret;
->> +
->>  	mipi_csis_phy_reset(state);
->>
->>  	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> --
->> 2.20.1
->>
->>
->>
-
+Thanks,
+	Johannes
+-- 
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5
+90409 Nürnberg
+Germany
+(HRB 36809, AG Nürnberg)
+Geschäftsführer: Felix Imendörffer
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
