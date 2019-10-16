@@ -2,117 +2,126 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44CFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10E2FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD2720854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C7020854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571239959;
+	bh=RPHFakt8qph9Wb04jfbmvqI99+/VnGsa3iwgaOZOEsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lc9IKDp8TKTwXxhBmtY1Bqc5LRWTnAX+uC4d3tokEWqjM/xaBjcJsh8mTnRqcCtft
+	 Q5F+x9l+UtY9y7Uw38vBo7yJAJI6rf9ktTM2jOJ+fS3Xp63tA5aFsgrMxc/PDIIbNS
+	 BMgzeS+HXixKwR/J3mrMKBeykKoyCYbuVAuI8u1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404984AbfJPPcb (ORCPT
+        id S2405009AbfJPPci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:32:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:43458 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbfJPPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:32:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47089142F;
-        Wed, 16 Oct 2019 08:32:30 -0700 (PDT)
-Received: from bogus (unknown [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86B693F68E;
-        Wed, 16 Oct 2019 08:32:28 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:32:21 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
- cpu_psci_cpu_kill()
-Message-ID: <20191016153221.GA8978@bogus>
-References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
- <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
+        Wed, 16 Oct 2019 11:32:38 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34008 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbfJPPci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:32:38 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q203so23161583qke.1;
+        Wed, 16 Oct 2019 08:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=T9N8Qt/Q4T/fLDKFrE/yGjdsJz9c4IKV5iMQVuzGrps=;
+        b=uR+B/8KpPRzIhOBAr5vomaF58ezGmJX/eSypGMHunaNAhefJay3pXHyQMlfeT33DY2
+         E7CYU5KMl9Bvj6oHq9PBQ/vQ4QhvoLaD8r9wy3Id7EKa6ZnUkh9C8r0M1g82ZyAAcRsA
+         F8+Xxp3LqG/0rsTC+TCAaLPer+M4sVHPnYCFLSQ8AgEKp+5dkJ5KUf5oSjb4BDsB9VnN
+         LTdQU3BkzHyE+SgCrKzT8ogPqp79w2Z45xmDJ2QbmKgqdd1vmbWHGQW5kdpch5QSKCt5
+         9LN25GRra8d834gUX5t4Z/INq89v6v7FkHZNuYvqadr1h9sT7s7zYSlvpz+zY8zONofD
+         hXIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T9N8Qt/Q4T/fLDKFrE/yGjdsJz9c4IKV5iMQVuzGrps=;
+        b=TahZLGn8FfS68bbu4SCx9zK+NuY4PXmWieaqMVzW8thWVJo9cAmB79UgEAlf50cM9+
+         A9orCeUJ669l72Pj0cT5sD1J+Jr3C5hzO1Qs8RjrZtO+/jVYHl9ioLwSqT8JZFRQaY2k
+         pe8VRrKN3qJFnXfwsse3uo+9LPyg52GF7Dgensavu6mp+IMNxQYLfUfEYnKshBBhahZi
+         d8F5luQLGc94pWdlBFVIer1vT4S0ozto4+bwXIZwqL8OdKXTcTzYwcRh6DdaSx4IRLfb
+         ZM4xqIX5XQzUqEWWfzLOdiJTSujYm7NZxhELOcY+KHy87o0hRwkfjMobMHd6c+K+gPPn
+         0nzA==
+X-Gm-Message-State: APjAAAXg2NsYSXtnHBkticKPKQ+LKMyF+7FxlNxZ0TFD4RoY+8yC4Uia
+        aLBrVmW5SzJU1tdDPcU4MX0=
+X-Google-Smtp-Source: APXvYqzyFvjB0Qdu/707bwgi1BqkvK7HYcGOwQw/+HX2xBFJ+Ju9kRmlElS1taWq5eKHN+mn/sFduw==
+X-Received: by 2002:a37:4151:: with SMTP id o78mr38324867qka.263.1571239956891;
+        Wed, 16 Oct 2019 08:32:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:2d57])
+        by smtp.gmail.com with ESMTPSA id o14sm16778400qtk.52.2019.10.16.08.32.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 08:32:36 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 08:32:34 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
+ operations
+Message-ID: <20191016153234.GO18794@devbig004.ftw2.facebook.com>
+References: <20191012010539.6131-1-cyphar@cyphar.com>
+ <20191014154136.GF18794@devbig004.ftw2.facebook.com>
+ <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
+ <20191014163307.GG18794@devbig004.ftw2.facebook.com>
+ <20191016083218.ttsaqnxpjh5i5bgv@yavin.dot.cyphar.com>
+ <20191016142756.GN18794@devbig004.ftw2.facebook.com>
+ <20191016152946.34j5x45ko5auhv3g@yavin.dot.cyphar.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191016152946.34j5x45ko5auhv3g@yavin.dot.cyphar.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:45:16PM +0800, Yunfeng Ye wrote:
-> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
-> take so long in the right case. Use usleep_range() instead of msleep(),
-> reduce the waiting time, and give a chance to busy wait before sleep.
->
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> ---
-> V1->V2:
-> - use usleep_range() instead of udelay() after waiting for a while
->
->  arch/arm64/kernel/psci.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-> index c9f72b2..99b3122 100644
-> --- a/arch/arm64/kernel/psci.c
-> +++ b/arch/arm64/kernel/psci.c
-> @@ -82,6 +82,7 @@ static void cpu_psci_cpu_die(unsigned int cpu)
->  static int cpu_psci_cpu_kill(unsigned int cpu)
->  {
->  	int err, i;
-> +	unsigned long timeout;
->
->  	if (!psci_ops.affinity_info)
->  		return 0;
-> @@ -91,16 +92,24 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
->  	 * while it is dying. So, try again a few times.
->  	 */
->
-> -	for (i = 0; i < 10; i++) {
-> +	i = 0;
-> +	timeout = jiffies + msecs_to_jiffies(100);
-> +	do {
->  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
->  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
->  			pr_info("CPU%d killed.\n", cpu);
->  			return 0;
->  		}
->
-> -		msleep(10);
-> -		pr_info("Retrying again to check for CPU kill\n");
+Hello,
 
-You dropped this message, any particular reason ?
+On Thu, Oct 17, 2019 at 02:29:46AM +1100, Aleksa Sarai wrote:
+> > Hah, where is it saying that?
+> 
+> Isn't that what this says:
+> 
+> > Therefore, if you find yourself only using the Non-RMW operations of
+> > atomic_t, you do not in fact need atomic_t at all and are doing it
+> > wrong.
+> 
+> Doesn't using just atomic64_read() and atomic64_set() fall under "only
+> using the non-RMW operations of atomic_t"? But yes, I agree that any
+> locking is overkill.
 
-> -	}
-> +		/* busy-wait max 1ms */
-> +		if (i++ < 100) {
-> +			cond_resched();
-> +			udelay(10);
-> +			continue;
+Yeah, I mean, it's an overkill.  We can use seqlock or u64_stat here
+but it doesn't matter that much.
 
-Why can't it be simple like loop of 100 * msleep(1) instead of loop of
-10 * msleep(10). The above initial busy wait for 1 ms looks too much
-optimised for your setup where it takes 50-500us, what if it take just
-over 1 ms ?
+> > > As for 64-bit on 32-bit machines -- that is a separate issue, but from
+> > > [1] it seems to me like there are more problems that *_ONCE() fixes than
+> > > just split reads and writes.
+> > 
+> > Your explanations are too wishy washy.  If you wanna fix it, please do
+> > it correctly.  R/W ONCE isn't the right solution here.
+> 
+> Sure, I will switch it to use atomic64_read() and atomic64_set() instead
+> if that's what you'd prefer. Though I will mention that on quite a few
+> architectures atomic64_read() is defined as:
+> 
+>   #define atomic64_read(v)        READ_ONCE((v)->counter)
 
-We need more generic solution.
+Yeah, on archs which don't have split access on 64bits.  On the ones
+which do, it does something else.  The generic implementation is
+straight-up locking, I think.
 
---
-Regards,
-Sudeep
+Thanks.
+
+-- 
+tejun
