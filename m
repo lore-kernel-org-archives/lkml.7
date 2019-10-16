@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D215FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02F3FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB7321D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A8D21D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vb38/JCe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bmAcZo9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436600AbfJPSUG (ORCPT
+        id S2436612AbfJPSUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:20:06 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42952 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436572AbfJPST6 (ORCPT
+        Wed, 16 Oct 2019 14:20:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36950 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436553AbfJPSTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:19:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJvcL075102;
-        Wed, 16 Oct 2019 13:19:57 -0500
+        Wed, 16 Oct 2019 14:19:55 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJs5P082711;
+        Wed, 16 Oct 2019 13:19:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571249997;
-        bh=N5VSvwJ5qURebXf5FE2PesK5k+3jrpC1c7PgKk2mcmo=;
+        s=ti-com-17Q1; t=1571249994;
+        bh=qO1QBda1j09wFru/dRnYU6qoLbxJZvjOQKHQRIr6kD0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vb38/JCezQ0a4STiCxXt0ibuetSbnWBmKLCApQ0Dj6a0lg5oNKSsoWa5q61/fq4QA
-         f4CQplLtIBKtRXhBQ/TgpP0v6m5n9iIhpCtUaBBmaTwe1hnjwNiMm7LYXLghBgd68F
-         wNovl8gnA9zYcZj4IPqRNli5NLBsr69xRHsDuwhc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJvBw015494;
-        Wed, 16 Oct 2019 13:19:57 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        b=bmAcZo9wMxP3O2YDcSRNuC9jWb7Y+ezd+FCtDMePUQFM8xBruhNcM0Ae8qvF4qEgh
+         xvf7UVjrH8OQTb+IxuJev3Gp7jLTNwTnOOWF7NB7DXIVOaXS8CvzTpq66bzJsfi0o4
+         N9vUVS68wUjtPpZP+VxnQdpneGCoK5sSJDSMw2e0=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GIJsEE125496
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 13:19:54 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 13:19:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 13:19:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 13:19:50 -0500
+ Frontend Transport; Wed, 16 Oct 2019 13:19:54 -0500
 Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJvSs074733;
-        Wed, 16 Oct 2019 13:19:57 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIJsGN074684;
+        Wed, 16 Oct 2019 13:19:54 -0500
 Received: from localhost ([10.250.79.55])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GIJuZ07995;
-        Wed, 16 Oct 2019 13:19:56 -0500 (CDT)
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GIJrZ07934;
+        Wed, 16 Oct 2019 13:19:53 -0500 (CDT)
 From:   "Andrew F. Davis" <afd@ti.com>
 To:     Jiri Kosina <trivial@kernel.org>
 CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH 10/10] ath5k: Remove unneeded conversions to bool
-Date:   Wed, 16 Oct 2019 14:19:44 -0400
-Message-ID: <20191016181944.25106-7-afd@ti.com>
+Subject: [PATCH 08/10] i40e: Remove unneeded conversions to bool
+Date:   Wed, 16 Oct 2019 14:19:42 -0400
+Message-ID: <20191016181944.25106-5-afd@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191016181944.25106-1-afd@ti.com>
 References: <20191016181944.25106-1-afd@ti.com>
@@ -72,22 +73,22 @@ Found with scripts/coccinelle/misc/boolconv.cocci.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- drivers/net/wireless/ath/ath5k/ani.c | 2 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath5k/ani.c b/drivers/net/wireless/ath/ath5k/ani.c
-index 0624333f5430..850c608b43a3 100644
---- a/drivers/net/wireless/ath/ath5k/ani.c
-+++ b/drivers/net/wireless/ath/ath5k/ani.c
-@@ -501,7 +501,7 @@ ath5k_ani_calibration(struct ath5k_hw *ah)
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 6031223eafab..87a9f2b586d5 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -11435,7 +11435,7 @@ static int i40e_get_rss_aq(struct i40e_vsi *vsi, const u8 *seed,
+ 	}
  
- 	if (as->ofdm_errors > ofdm_high || as->cck_errors > cck_high) {
- 		/* too many PHY errors - we have to raise immunity */
--		bool ofdm_flag = as->ofdm_errors > ofdm_high ? true : false;
-+		bool ofdm_flag = as->ofdm_errors > ofdm_high;
- 		ath5k_ani_raise_immunity(ah, as, ofdm_flag);
- 		ath5k_ani_period_restart(as);
+ 	if (lut) {
+-		bool pf_lut = vsi->type == I40E_VSI_MAIN ? true : false;
++		bool pf_lut = vsi->type == I40E_VSI_MAIN;
  
+ 		ret = i40e_aq_get_rss_lut(hw, vsi->id, pf_lut, lut, lut_size);
+ 		if (ret) {
 -- 
 2.17.1
 
