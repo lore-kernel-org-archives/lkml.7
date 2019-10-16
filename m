@@ -2,102 +2,127 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FE5ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E76CECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C85A2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZcrc7dr"
+	by mail.kernel.org (Postfix) with ESMTP id 5DFB52168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391815AbfJPJGc (ORCPT
+        id S2391862AbfJPJGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:06:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36252 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbfJPJGc (ORCPT
+        Wed, 16 Oct 2019 05:06:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39375 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727399AbfJPJGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:06:32 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u16so4224191lfq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=3rHYjSn/fPz1RWaGjBzSPmxHyXb9HMcMJGjWVoGxGPI=;
-        b=dZcrc7drlitYAWv20+Jq+uoC3xeizi2y47hD+dcBI2t4uPjxpcp2vBpQlHoDF2Mtk0
-         ApHd8bnow5M64tUmafJ4NE16aNjESmPHQ7PRdmzIMK/l3uKLHUsmmCay9YyLMU+8ChGb
-         X/aIMvNuszj82rbR1lnz7ozOPesUo7C2MHpJg045uuFs8SCPlLzfyHoov7Qmu3M2rbNq
-         1/AqGNaDpIx898NzGen4hZhvULlOG+xzHUXPFNMPAqlvcfkrxgm/4mY87Cq105PUINXw
-         JqH0sIBaNqxewfqATCc+7CjF58hfRGq/bsfSrjBGxmOQwmOWZNvgSDIJIqHZfQ6+7Xud
-         kXPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3rHYjSn/fPz1RWaGjBzSPmxHyXb9HMcMJGjWVoGxGPI=;
-        b=IYdXHn9aq/ImWnYlPnD3ewUo/E84PDgHKpxzlhg9/SE1vKLYvqHzZ+WpXZ3QW+zbfh
-         tFY4zlhrWRuCP6Zm+iWoyOQByJZPcfubDWyWvZziuga6COa4KtCxJRz5mTDHBe0FGRn2
-         sWaU0n4Jf8URJS1MJ8AWhgBXcfU7kRvyv69H3wXdgGM2GKXC08sup1nyMWQSnmB2L8bv
-         LpuYZgeQCMyrzuxpNMJTS7fMz0KVuqZPJMdFnSL6OTF2DpmD1jQHwM9vbCufWU9vfTx+
-         hTYf+tdOPicrSNicWAunbwR8mtOZGt19mRJPA5xbQhp7AeVN0Cm6kWQWI1IHSyameSpO
-         8+Sg==
-X-Gm-Message-State: APjAAAVutr0ZC3lz3toQ5qApQMPRL3Suq2DoE1hBNpJS+kldw/73+ets
-        xvVLyJYJY5KRivcMhAdCMXqFRfCaXEJycQ==
-X-Google-Smtp-Source: APXvYqz3/NNjkhaIQyTJX9b35fU8jvLbes0EA17X2xo/PmZ8MWdseCUjfXMlz7gWyLq9Kpg4hqy9SQ==
-X-Received: by 2002:a19:c518:: with SMTP id w24mr5616642lfe.14.1571216789905;
-        Wed, 16 Oct 2019 02:06:29 -0700 (PDT)
-Received: from localhost ([78.133.233.210])
-        by smtp.gmail.com with ESMTPSA id v203sm215365lfa.25.2019.10.16.02.06.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 02:06:29 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 11:06:12 +0200
-From:   Marek Bykowski <marek.bykowski@gmail.com>
-To:     mark.rutland@arm.com, will.deacon@arm.com, pawel.moll@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 1/2] bus: arm-ccn: Enable stats for CCN-512
- interconnect
-Message-ID: <20191016110612.17381ad6@gmail.com>
-In-Reply-To: <1570454475-2848-1-git-send-email-marek.bykowski@gmail.com>
-References: <1570454475-2848-1-git-send-email-marek.bykowski@gmail.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 16 Oct 2019 05:06:48 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iKfGO-0005Bp-Li; Wed, 16 Oct 2019 11:06:36 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iKfGG-00081t-Jv; Wed, 16 Oct 2019 11:06:28 +0200
+Date:   Wed, 16 Oct 2019 11:06:28 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v2] media: imx7-mipi-csis: Add a check for
+ devm_regulator_get
+Message-ID: <20191016090628.7l5u4ytdqr2jlasg@pengutronix.de>
+References: <20191015135915.6530-1-hslester96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015135915.6530-1-hslester96@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:05:27 up 151 days, 15:23, 101 users,  load average: 0.19, 0.20,
+ 0.10
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible string for the ARM CCN-502 interconnect
+Hi Chuhong,
 
-Signed-off-by: Marek Bykowski <marek.bykowski@gmail.com>
-Signed-off-by: Boleslaw Malecki <boleslaw.malecki@tieto.com>
----
-Changelog v1->v2:
-- Change the subject to reflect where the driver got moved to (drivers/perf) from
-  (drivers/bus).
-- Add credit to my work mate that helped me validate the counts from
-  the interconnect.
----
- drivers/perf/arm-ccn.c | 1 +
- 1 file changed, 1 insertion(+)
+On 19-10-15 21:59, Chuhong Yuan wrote:
+> devm_regulator_get may return an error but mipi_csis_phy_init misses
+> a check for it.
+> This may lead to problems when regulator_set_voltage uses the unchecked
+> pointer.
+> This patch adds a check for devm_regulator_get to avoid potential risk.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v2:
+>   - Add a check in mipi_csis_probe for the modified mipi_csis_phy_init.
 
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 7dd850e02f19..b6e00f35a448 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -1545,6 +1545,7 @@ static int arm_ccn_remove(struct platform_device *pdev)
- static const struct of_device_id arm_ccn_match[] = {
-        { .compatible = "arm,ccn-502", },
-        { .compatible = "arm,ccn-504", },
-+       { .compatible = "arm,ccn-512", },
-        {},
- };
- MODULE_DEVICE_TABLE(of, arm_ccn_match);
+Did you miss the check for -EPROBE_DEFER?
+
+Regards,
+  Marco
+
+> 
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 73d8354e618c..e8a6acaa969e 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
+>  static int mipi_csis_phy_init(struct csi_state *state)
+>  {
+>  	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
+> +	if (IS_ERR(state->mipi_phy_regulator))
+> +		return PTR_ERR(state->mipi_phy_regulator);
+>  
+>  	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
+>  				     1000000);
+> @@ -966,7 +968,10 @@ static int mipi_csis_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	mipi_csis_phy_init(state);
+> +	ret = mipi_csis_phy_init(state);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	mipi_csis_phy_reset(state);
+>  
+>  	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -- 
+> 2.20.1
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
