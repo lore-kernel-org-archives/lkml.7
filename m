@@ -2,94 +2,139 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF2DFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D9DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D2421848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:49:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="meg7Kkdy"
+	by mail.kernel.org (Postfix) with ESMTP id 2B03F20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405541AbfJPNtz (ORCPT
+        id S2405548AbfJPNuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:49:55 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:39698 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405519AbfJPNtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:49:53 -0400
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-        by uho.ysoft.cz (Postfix) with ESMTP id 1EB01A26C9;
-        Wed, 16 Oct 2019 15:49:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1571233792;
-        bh=erasMNJVDzkpqE/Lkt54LFkKCs93IkeeRqS23J8cd9A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=meg7KkdydlXzbCYQcmxPojik1y6ceyJQoGpApWAA/mUpnuawE8vFM1G0D7J7Gopxa
-         afFlvNJ3+tzY9lmY6qJhqdWU/BoIhNZfZ5oHmnUhffw9YOjsAoZYK/emGI1H1F1e9m
-         fky2lG8YBZp8j0IHEkBVsG87PXIa29xFBaw+mVnU=
-From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH] ARM: dts: imx6dl-yapp4: Enable the I2C3 bus on all board variants
-Date:   Wed, 16 Oct 2019 15:49:49 +0200
-Message-Id: <1571233789-4491-1-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
+        Wed, 16 Oct 2019 09:50:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50354 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387953AbfJPNub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:50:31 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 793C74C11AFACF345F20;
+        Wed, 16 Oct 2019 21:50:29 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 21:50:19 +0800
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <john.garry@huawei.com>,
+        <ak@linux.intel.com>, <lukemujica@google.com>,
+        <yeyunfeng@huawei.com>, <kan.liang@linux.intel.com>,
+        <yuzenghui@huawei.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <hushiyuan@huawei.com>, <linfeilong@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH v2] perf jevents: Fix resource leak in process_mapfile() and
+ main()
+Message-ID: <d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com>
+Date:   Wed, 16 Oct 2019 21:50:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-imx6dl-yapp4 Draco and Ursa boards use the I2C3 bus to control some
-external devices through the /dev files.
+There are memory leaks and file descriptor resource leaks in
+process_mapfile() and main().
 
-So enable the I2C3 bus on all board variants, not just on Hydra.
+Fix this by adding free(), fclose() and free_arch_std_events()
+on the error paths.
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
+Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 ---
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
- arch/arm/boot/dts/imx6dl-yapp4-hydra.dts   | 4 ----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+v1 -> v2:
+ - add free(eventsfp) to fix eventsfp resource leaks
+ - add free_arch_std_events() on the error path
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index 663a72a96b6c..e2991a02f30f 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -308,7 +308,7 @@
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
--	status = "disabled";
-+	status = "okay";
- 
- 	oled: oled@3d {
- 		compatible = "solomon,ssd1305fb-i2c";
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts b/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
-index f97927064750..264f9271895d 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
-@@ -25,10 +25,6 @@
- 	status = "okay";
- };
- 
--&i2c3 {
--	status = "okay";
--};
--
- &leds {
- 	status = "okay";
- };
+ tools/perf/pmu-events/jevents.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index e2837260ca4d..99e3fd04a5cb 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	char *line, *p;
+ 	int line_num;
+ 	char *tblname;
++	int ret = 0;
+
+ 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
+
+@@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	if (!mapfp) {
+ 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
+ 				fpath);
++		free(line);
+ 		return -1;
+ 	}
+
+@@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 			/* TODO Deal with lines longer than 16K */
+ 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
+ 					prog, fpath, line_num);
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 		line[strlen(line)-1] = '\0';
+
+@@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
+
+ out:
+ 	print_mapping_table_suffix(outfp);
+-	return 0;
++	fclose(mapfp);
++	free(line);
++	return ret;
+ }
+
+ /*
+@@ -1122,6 +1127,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1134,6 +1140,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1151,6 +1158,8 @@ int main(int argc, char *argv[])
+ 	if (process_mapfile(eventsfp, mapfile)) {
+ 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+ 		/* Make build fail */
++		fclose(eventsfp);
++		free_arch_std_events();
+ 		return 1;
+ 	}
+
 -- 
-2.1.4
+2.7.4.3
 
