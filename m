@@ -2,146 +2,104 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A659FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0245FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B80021928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BFF21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tVc3cNAJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t4Eg8lp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394223AbfJPSDp (ORCPT
+        id S2436507AbfJPSFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:03:45 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:34319 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394193AbfJPSDm (ORCPT
+        Wed, 16 Oct 2019 14:05:41 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56200 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390992AbfJPSFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:03:42 -0400
-Received: by mail-lf1-f45.google.com with SMTP id r22so18274878lfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=AxiBOWwioKNOAlob2YOaqH2vPs3/2WKeZ6AlzDzO3Ww=;
-        b=tVc3cNAJCclzWoo3iBCEOhRu2E4JBW8wuhROHsr4Tre2nPuPcuANmoWFMVy9IAAmLi
-         lFH7VkaXHH9P97F5nreWNUMcOFNY4AMN3zaaSQ2wM2W6AtFbOYVY8LGtJLPWI89hPJi0
-         QFPbnXyFK0eK5yMD7pT32kR5po4rcBFD+99fWEMpPNO0ZykOcWG5yLtBGTMRTSwVN56v
-         2xikLtTUK81QhjAIizm/si+ZsR9SG/rWpoS9KuRgKXCnKoqUt75mjCpDFNz0jKLjl5FV
-         uFEzOjQluPvbiVXncZdWBwwzifvmQ7s8iCDjYHxDxPope7pyk3Egs5Cecm84MB/Y0Pj1
-         TZ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=AxiBOWwioKNOAlob2YOaqH2vPs3/2WKeZ6AlzDzO3Ww=;
-        b=eJrMYwebLtCDbYsvOjkCv5Wttzg1XK7GSDRRFuwhcNps4vH3BcwRo3OPtWqp4R5IHt
-         SoWkxAPn0M4iTy4io5R0912YjoxsykZEY9w4K31TCaqz1JUOMS1hP3akqwTLgTa9k9nV
-         8a6RGKqvX6MkPenxQnSrexAJ4Q5tP6j0kMlwuFrBNYOZyte+xgE4LAEJ5X1Tccau/RQv
-         wEw3ygCMmzZXTBU7yBfF03wgHwGME+wnnGK0eXrIrNOSkl81zCKN1AD4DewO/Hixvxqf
-         nNsREoGTxMlxgIuwu6GydR2zdlOqq57D8pvdwRXxS3l0rVp/3m4Yupxyvy9vTouNc3zw
-         RH6w==
-X-Gm-Message-State: APjAAAXDrGr8yfMJaaiOx8nuUrlxPpEiVsATENpo05eMzxa5ntCHWdJu
-        EWiaqgHTBCDZP7idCN69Tco/JcpQ7C1q73Kake5XjA==
-X-Google-Smtp-Source: APXvYqxjEqUK/3Y3Yt48nURJagxbHHrIDKovPqiIJQHoiHt+SO9AabUnFyGHOpj1JUlvjye3vJDF0C4fcXwDXSVbio4=
-X-Received: by 2002:ac2:4566:: with SMTP id k6mr7104996lfm.132.1571249019669;
- Wed, 16 Oct 2019 11:03:39 -0700 (PDT)
+        Wed, 16 Oct 2019 14:05:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GI5bPc024288;
+        Wed, 16 Oct 2019 13:05:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571249137;
+        bh=O/Wbj2F5tkZWFNGIP7N39PcXh3SJywRvUwjgfektGIM=;
+        h=From:To:CC:Subject:Date;
+        b=t4Eg8lp1413Gd1DQJDp95MMv6Wl/NWxlohDJu1oEwIhMRpvLXeriZvTBz0OquXNDY
+         q/y7zsWEXWiPglsH1gtBvjxbnCosPM1zmm6YSJFSjAracb4U3l4qw7k3gojKjH4wFw
+         UesW4S6nCttBZmz84ywx6ha+03tFxZJkDAHyUo9w=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GI5bwZ013949
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 13:05:37 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 13:05:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 13:05:30 -0500
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GI5bOF000515;
+        Wed, 16 Oct 2019 13:05:37 -0500
+Received: from localhost ([10.250.79.55])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GI5aZ22393;
+        Wed, 16 Oct 2019 13:05:36 -0500 (CDT)
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Jiri Kosina <trivial@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+CC:     <linux-fbdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH] omapfb/dss: remove unneeded conversions to bool
+Date:   Wed, 16 Oct 2019 14:04:24 -0400
+Message-ID: <20191016180424.23907-1-afd@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 16 Oct 2019 23:33:28 +0530
-Message-ID: <CA+G9fYv=OJOwat_KqDBRFRZbTWfgjuFA-X3F5ZuJXJ8yrr1Tyw@mail.gmail.com>
-Subject: linux-next: 20191016: remove_proc_entry: removing non-empty directory
- 'net/dev_snmp6', leaking at least 'lo'
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux next 20191016 booting on x86_64, arm and arm64 popping up kernel
-warning while booting. Please find full log link and kernel config.
+Found with scripts/coccinelle/misc/boolconv.cocci.
 
-Linux version 5.4.0-rc3-next-20191016 (oe-user@oe-host) (gcc version
-7.3.0 (GCC)) #1 SMP Wed Oct 16 05:26:04 UTC 2019
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-[    4.212923] ------------[ cut here ]------------
-[    4.217585] remove_proc_entry: removing non-empty directory
-'net/dev_snmp6', leaking at least 'lo'
-[    4.226560] WARNING: CPU: 1 PID: 1 at
-/usr/src/kernel/fs/proc/generic.c:682 remove_proc_entry+0x17a/0x190
-[    4.227544] Modules linked in:
-[    4.236693] usb 1-6: new high-speed USB device number 2 using xhci_hcd
-[    4.227544] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
-5.4.0-rc3-next-20191016 #1
-[    4.227544] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[    4.227544] RIP: 0010:remove_proc_entry+0x17a/0x190
-[    4.227544] Code: 00 f0 03 b6 48 c7 c7 20 2e 3b b6 48 0f 45 c2 49
-8b 94 24 a8 00 00 00 4c 8b 80 d0 00 00 00 48 8b 92 d0 00 00 00 e8 66
-bd d2 ff <0f> 0b e9 71 ff ff ff e8 1a c0 d2 ff 66 2e 0f 1f 84 00 00 00
-00 00
-[    4.227544] RSP: 0000:ffffa893c0027d90 EFLAGS: 00010282
-[    4.227544] RAX: 0000000000000000 RBX: ffff939fecba38b0 RCX: 0000000000000006
-[    4.227544] RDX: 000000000000023f RSI: ffff939feea38848 RDI: ffff939feea38000
-[    4.227544] RBP: ffffa893c0027dc0 R08: 0000000000000000 R09: 0000000000000000
-[    4.227544] R10: 0000000000000000 R11: 0000000000000000 R12: ffff939fecba3800
-[    4.227544] R13: ffff939feebea300 R14: ffffffffb6779028 R15: ffffffffb6852818
-[    4.227544] FS:  0000000000000000(0000) GS:ffff939fef880000(0000)
-knlGS:0000000000000000
-[    4.227544] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    4.227544] CR2: 0000000000000000 CR3: 000000021c610001 CR4: 00000000003606e0
-[    4.227544] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    4.227544] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    4.227544] Call Trace:
-[    4.227544]  ipv6_proc_exit_net+0x33/0x50
-[    4.227544]  ops_exit_list.isra.9+0x3b/0x70
-[    4.227544]  unregister_pernet_operations+0xd5/0x130
-[    4.372356] usb 1-6: New USB device found, idVendor=0781,
-idProduct=5567, bcdDevice= 1.27
-[    4.227544]  ? af_unix_init+0x53/0x53
-[    4.227544]  unregister_pernet_subsys+0x21/0x30
-[    4.227544]  ipv6_misc_proc_exit+0x15/0x20
-[    4.227544]  inet6_init+0x2e0/0x379
-[    4.227544]  do_one_initcall+0x61/0x2ea
-[    4.383957] usb 1-6: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[    4.227544]  ? set_debug_rodata+0x17/0x17
-[    4.227544]  ? rcu_read_lock_sched_held+0x4f/0x80
-[    4.227544]  kernel_init_freeable+0x1ce/0x261
-[    4.392145] usb 1-6: Product: Cruzer Blade
-[    4.227544]  ? rest_init+0x250/0x250
-[    4.227544]  kernel_init+0xe/0x110
-[    4.227544]  ret_from_fork+0x3a/0x50
-[    4.399727] usb 1-6: Manufacturer: SanDisk
-[    4.227544] irq event stamp: 1259654
-[    4.410691] usb 1-6: SerialNumber: 4C530012151025118543
-[    4.227544] hardirqs last  enabled at (1259653):
-[<ffffffffb4d6f4d8>] console_unlock+0x458/0x5c0
-[    4.227544] hardirqs last disabled at (1259654):
-[<ffffffffb4c01e3a>] trace_hardirqs_off_thunk+0x1a/0x20
-[    4.227544] softirqs last  enabled at (1259650):
-[<ffffffffb5e00338>] __do_softirq+0x338/0x43a
-[    4.420405] usb-storage 1-6:1.0: USB Mass Storage device detected
-[    4.227544] softirqs last disabled at (1259639):
-[<ffffffffb4cfe728>] irq_exit+0xb8/0xc0
-[    4.227544] ---[ end trace 7d85f17ab93457e2 ]---
-[    4.497490] scsi host8: usb-storage 1-6:1.0
-#
-[    4.523053] NET: Unregistered protocol family 10
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+index 376ee5bc3ddc..ce37da85cc45 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+@@ -1635,7 +1635,7 @@ static void dispc_ovl_set_scaling_uv(enum omap_plane plane,
+ {
+ 	int scale_x = out_width != orig_width;
+ 	int scale_y = out_height != orig_height;
+-	bool chroma_upscale = plane != OMAP_DSS_WB ? true : false;
++	bool chroma_upscale = plane != OMAP_DSS_WB;
+ 
+ 	if (!dss_has_feature(FEAT_HANDLE_UV_SEPARATE))
+ 		return;
+@@ -3100,9 +3100,9 @@ static bool _dispc_mgr_pclk_ok(enum omap_channel channel,
+ 		unsigned long pclk)
+ {
+ 	if (dss_mgr_is_lcd(channel))
+-		return pclk <= dispc.feat->max_lcd_pclk ? true : false;
++		return pclk <= dispc.feat->max_lcd_pclk;
+ 	else
+-		return pclk <= dispc.feat->max_tv_pclk ? true : false;
++		return pclk <= dispc.feat->max_tv_pclk;
+ }
+ 
+ bool dispc_mgr_timings_ok(enum omap_channel channel,
+-- 
+2.17.1
 
-Full test log:
-https://qa-reports.linaro.org/lkft/linux-next-oe-sanity/build/next-20191016/testrun/968688/log
-
-kernel config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/626/config
-
-- Naresh
