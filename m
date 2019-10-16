@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D40BECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34514FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049D92168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A62B2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263895;
-	bh=9hytf46pxJZwWd1KZSS2LwMH+F/2nbwdUj2HF2HtH7s=;
+	s=default; t=1571263902;
+	bh=jYQaEFMVCYMetkTCT+mdJkGMP6kuSVqEilUIlS73yjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b5uRJ0ae1rcP+UK7AOhmxORGUqOZSLuEkVO3NFFs6Gizo2AFCRtFr2gVLOxIn+ubn
-	 onD066DwNXJ2WW3/dZhmqfnRmFIRONhDpOBUjenDI9jP30qxOy4e73VX2pmC7Kxa3x
-	 fZ7wVwnRhq4viU9HxtMktdcfNrX2Zd2toVJqDzoQ=
+	b=KSqjKNAApfZH7Cp0/CYdifdNudnfS4k1G0fewHjK8M9FhGewcRHmWgxb1PF1fokZ/
+	 KEExKngzd/eh/GYy35HzYDF9zXjTxvLSWKs9raw2JlRdyurNVGid7LoZSd5/FMuH9M
+	 74SYT/Aa/DEqai2pxrBvMdu73WqdJ+nNb3y1QBms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407302AbfJPWLd (ORCPT
+        id S2407308AbfJPWLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:11:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48746 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395420AbfJPV4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:44 -0400
+        id S2395406AbfJPV4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:41 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6A0C21D7C;
-        Wed, 16 Oct 2019 21:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EE0E21D7C;
+        Wed, 16 Oct 2019 21:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263004;
-        bh=9hytf46pxJZwWd1KZSS2LwMH+F/2nbwdUj2HF2HtH7s=;
+        s=default; t=1571263000;
+        bh=jYQaEFMVCYMetkTCT+mdJkGMP6kuSVqEilUIlS73yjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nO5dxg5rW9EMkQwoX1lhOCDyOR7G3Sgq5PBgFgGXPjZT7ghnOHv6ZTtcCtkZSieUs
-         veF7Pdn5KHCQ0uRNEeh4g9hFawaOB334YQ3pbC3IoLV75iuX4JXJPrXx+Zn7k01/NY
-         7BOD+ZFkniZzZ9D2f0n0qjc7vbZZ1tBn7oRZglrU=
+        b=Ukeob/UB+nxPtTTpR7Lec0ukds0YMB72xv+NIIhAthxyg5URLPJeIbdM4E2mj7IDs
+         iZSMhN5WJDQL8eYFpKooY85uEaWli2igmaAHP+q8VeVYxjGZIHIxyQHDg3T+m1U+mT
+         +YNCH9adlQRqBf64X5Yba7pap/SZJVAq3lLSnaAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 44/65] perf llvm: Dont access out-of-scope array
-Date:   Wed, 16 Oct 2019 14:50:58 -0700
-Message-Id: <20191016214833.346302368@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 41/65] iio: adc: axp288: Override TS pin bias current for some models
+Date:   Wed, 16 Oct 2019 14:50:55 -0700
+Message-Id: <20191016214832.165243442@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -65,55 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 7d4c85b7035eb2f9ab217ce649dcd1bfaf0cacd3 upstream.
+commit 972917419a0ba25afbf69d5d8c9fa644d676f887 upstream.
 
-The 'test_dir' variable is assigned to the 'release' array which is
-out-of-scope 3 lines later.
+Since commit 9bcf15f75cac ("iio: adc: axp288: Fix TS-pin handling") we
+preserve the bias current set by the firmware at boot.  This fixes issues
+we were seeing on various models, but it seems our old hardcoded 80ųA bias
+current was working around a firmware bug on at least one model laptop.
 
-Extend the scope of the 'release' array so that an out-of-scope array
-isn't accessed.
+In order to both have our cake and eat it, this commit adds a dmi based
+list of models where we need to override the firmware set bias current and
+adds the one model we now know needs this to it: The Lenovo Ideapad 100S
+(11 inch version).
 
-Bug detected by clang's address sanitizer.
-
-Fixes: 07bc5c699a3d ("perf tools: Make fetch_kernel_version() publicly available")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/20190926220018.25402-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 9bcf15f75cac ("iio: adc: axp288: Fix TS-pin handling")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203829
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/llvm-utils.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/adc/axp288_adc.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -225,14 +225,14 @@ static int detect_kbuild_dir(char **kbui
- 	const char *prefix_dir = "";
- 	const char *suffix_dir = "";
+--- a/drivers/iio/adc/axp288_adc.c
++++ b/drivers/iio/adc/axp288_adc.c
+@@ -16,6 +16,7 @@
+  *
+  */
  
-+	/* _UTSNAME_LENGTH is 65 */
-+	char release[128];
++#include <linux/dmi.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/device.h>
+@@ -34,6 +35,11 @@
+ #define AXP288_ADC_EN_MASK				0xF0
+ #define AXP288_ADC_TS_ENABLE				0x01
+ 
++#define AXP288_ADC_TS_BIAS_MASK				GENMASK(5, 4)
++#define AXP288_ADC_TS_BIAS_20UA				(0 << 4)
++#define AXP288_ADC_TS_BIAS_40UA				(1 << 4)
++#define AXP288_ADC_TS_BIAS_60UA				(2 << 4)
++#define AXP288_ADC_TS_BIAS_80UA				(3 << 4)
+ #define AXP288_ADC_TS_CURRENT_ON_OFF_MASK		GENMASK(1, 0)
+ #define AXP288_ADC_TS_CURRENT_OFF			(0 << 0)
+ #define AXP288_ADC_TS_CURRENT_ON_WHEN_CHARGING		(1 << 0)
+@@ -194,10 +200,36 @@ static int axp288_adc_read_raw(struct ii
+ 	return ret;
+ }
+ 
++/*
++ * We rely on the machine's firmware to correctly setup the TS pin bias current
++ * at boot. This lists systems with broken fw where we need to set it ourselves.
++ */
++static const struct dmi_system_id axp288_adc_ts_bias_override[] = {
++	{
++		/* Lenovo Ideapad 100S (11 inch) */
++		.matches = {
++		  DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		  DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 100S-11IBY"),
++		},
++		.driver_data = (void *)(uintptr_t)AXP288_ADC_TS_BIAS_80UA,
++	},
++	{}
++};
 +
- 	char *autoconf_path;
+ static int axp288_adc_initialize(struct axp288_adc_info *info)
+ {
++	const struct dmi_system_id *bias_override;
+ 	int ret, adc_enable_val;
  
- 	int err;
- 
- 	if (!test_dir) {
--		/* _UTSNAME_LENGTH is 65 */
--		char release[128];
--
- 		err = fetch_kernel_version(NULL, release,
- 					   sizeof(release));
- 		if (err)
++	bias_override = dmi_first_match(axp288_adc_ts_bias_override);
++	if (bias_override) {
++		ret = regmap_update_bits(info->regmap, AXP288_ADC_TS_PIN_CTRL,
++					 AXP288_ADC_TS_BIAS_MASK,
++					 (uintptr_t)bias_override->driver_data);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * Determine if the TS pin is enabled and set the TS current-source
+ 	 * accordingly.
 
 
