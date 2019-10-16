@@ -2,104 +2,176 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F299CECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B64CECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C9420854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7AD20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oj2M5fdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390353AbfJPCRr (ORCPT
+        id S1729508AbfJPCXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 22:17:47 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39850 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732007AbfJPCRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 22:17:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1EF0E200923;
-        Wed, 16 Oct 2019 04:17:44 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 30C8D20093E;
-        Wed, 16 Oct 2019 04:17:27 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7911F40342;
-        Wed, 16 Oct 2019 10:17:09 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        jun.li@nxp.com, ping.bai@nxp.com, daniel.baluta@nxp.com,
-        leonard.crestez@nxp.com, daniel.lezcano@linaro.org,
-        l.stach@pengutronix.de, ccaione@baylibre.com, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, jon@solid-run.com, baruch@tkos.co.il,
-        angus@akkea.ca, pavel@ucw.cz, agx@sigxcpu.org,
-        troy.kisky@boundarydevices.com, gary.bisson@boundarydevices.com,
-        dafna.hirschfeld@collabora.com, richard.hu@technexion.com,
-        andradanciu1997@gmail.com, manivannan.sadhasivam@linaro.org,
-        aisheng.dong@nxp.com, peng.fan@nxp.com, fugang.duan@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 5/5] ARM: dts: imx7ulp: Move usdhc clocks assignment to board DT
-Date:   Wed, 16 Oct 2019 10:14:27 +0800
-Message-Id: <1571192067-19600-5-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
-References: <1571192067-19600-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 15 Oct 2019 22:23:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59192 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfJPCXb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 22:23:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=U6gaGl4ZpC5LRRX8VCe49mQAXDRUM7YNegWSvt2a6Nw=; b=oj2M5fdiWUVpDzruitqkaKM6L
+        PLKBc9Ih//6M4s43x3qh7GhD7w+5P0pYRFnOyYMTy3qHb2ltzB7C74PyOIO+2+iLRk4l6ordEuGGV
+        ray5zedAvjAxHJlTZr4JChgVKPr1yP/pKs6IkWfS6PTRKh+EX4bd6MbxcWDBolXuil6uURtWFbRsE
+        AkgrknERX5kOEP54gV+STCh/jVfAEHMHT/4CzRQt71A21rK+6CG6G0m4jVmYEdJlx9u4ay3qHSFfr
+        WMjRe/NhU3AmMJvt7L6yvd1avTL0qHKYU3U6nZ/cK43GuROapC0ir7kDB0Y8NUU8PPqeqHFucmyCG
+        YlQgfXRyw==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKYyH-00068Z-PW; Wed, 16 Oct 2019 02:23:29 +0000
+Subject: Re: [PATCH] :scripts: prune-kernel : prunning kernel generalize way
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bfields@fieldses.org
+References: <20191015145548.24165-1-unixbhaskar@gmail.com>
+ <c075bcce-0d6d-abee-7fb5-80821f2ae3a2@infradead.org>
+ <20191016013601.GA13621@Gentoo>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b6ad816a-c67e-f16c-3613-563a43b629ad@infradead.org>
+Date:   Tue, 15 Oct 2019 19:23:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191016013601.GA13621@Gentoo>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usdhc's clock rate is different according to different devices
-connected, so clock rate assignment should be placed in board
-DT according to different devices connected on each usdhc port.
+On 10/15/19 6:36 PM, Bhaskar Chowdhury wrote:
+> On 16:03 Tue 15 Oct 2019, Randy Dunlap wrote:
+>> Subject: s/prunning/pruning/
+>> Subject:  s/:scripts:/scripts:/
+>>
+>> On 10/15/19 7:55 AM, Bhaskar Chowdhury wrote:
+>>> This patch will remove old kernels from system selective way.
+>>
+>>                                                 in a selective way.
+>>
+>>>
+>>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>>> ---
+>>>  scripts/prune-kernel | 16 ++++++++--------
+>>>  1 file changed, 8 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+>>> index 74143f229f84..28fae6c91218 100755
+>>> --- a/scripts/prune-kernel
+>>> +++ b/scripts/prune-kernel
+>>> @@ -33,7 +33,7 @@ printf "\t\n Enlist the installed kernels \n\n\n"
+>>>  cd $boot_dir && pwd
+>>>
+>>>  #Bash experts not recomend to run ls inside script,but you can by running that too
+>>> -# ls -1 vmlinuz-*
+>>> +# ls -1 vmlinuz-*
+>>>
+>>>  #This is the recommended way , little complex but that's what people want to see!
+>>>
+>>> @@ -42,10 +42,10 @@ find $boot_dir -name "vmlinuz-*" -type f -print0 -exec ls -1 {} \;
+>>>  printf "\n\n\n Well, we need to purge some kernel to gain some space.\n\n\n"
+>>>
+>>>
+>>> -printf "Please give the kernel version to remove: %s"
+>>> +printf "Please give the kernel version to remove: %s"
+>>>  read kernel_version
+>>>
+>>> -remove_old_kernel
+>>> +remove_old_kernel
+>>>
+>>>  printf "\n\n Remove associated modules too ... \n\n"
+>>>
+>>> @@ -54,7 +54,7 @@ cd $modules_dir && pwd
+>>>  printf "\n\n\n Enlist the installed modules \n\n\n"
+>>>
+>>>  #This is (-1) minus one not l(el)
+>>> -# ls -1
+>>> +# ls -1
+>>>
+>>>  find $modules_dir -name "$kernel_version-*" -type f -print0 -exec ls -1 {} \;
+>>>
+>>> @@ -66,14 +66,14 @@ rm -rf $modules_version
+>>>  printf "\n\n Done \n\n"
+>>>
+>>>  printf "\n\n Want to remove another?[Yn] : %s"
+>>> -read response
+>>> +read response
+>>>
+>>>
+>>>  if [[ $response == "Y" ]]; then
+>>> - printf "Please give another version to remove : %s"
+>>> + printf "Please give another version to remove : %s"
+>>>   read kernel_version
+>>>
+>>> -remove_old_kernel
+>>> +remove_old_kernel
+>>>
+>>>  elif [[ $response == "n" ]]; then
+>>>
+>>> @@ -81,4 +81,4 @@ elif [[ $response == "n" ]]; then
+>>>
+>>>  fi
+>>>
+>>> -exit 0
+>>> +exit 0
+>>> -- 
+>>> 2.21.0
+>>>
+>>
+>> Trying to apply this patch with 'patch --verbose' says:
+>>
+>> checking file scripts/prune-kernel
+>> Using Plan A...
+>> Hunk #1 FAILED at 33.
+>> Hunk #2 FAILED at 42.
+>> Hunk #3 FAILED at 54.
+>> Hunk #4 FAILED at 66.
+>> Hunk #5 FAILED at 81.
+>> 5 out of 5 hunks FAILED
+>> Hmm...  Ignoring the trailing garbage.
+>> done
+>>
+>>
+>> Those + and - lines with the same content don't make any sense.
+>>
+>> And probably Cc: the author of the script:
+>> J. Bruce Fields <bfields@fieldses.org>
+>>
+>> -- 
+>> ~Randy
+> 
+> Thank you Randy, silly mistakes creeps in...my bad ...will correct that
+> and resend.
+> BTW I haven't found Bruce's name anywhere...where did you get it? Or did I
+> miss the obvious??
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx7ulp-evk.dts | 2 ++
- arch/arm/boot/dts/imx7ulp.dtsi    | 4 ----
- 2 files changed, 2 insertions(+), 4 deletions(-)
+It's in the git repository history for this file.
 
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
-index 4245b33..f1093d2 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -77,6 +77,8 @@
- };
- 
- &usdhc0 {
-+	assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
-+	assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc0>;
- 	cd-gpios = <&gpio_ptc 10 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index 25e6f09..d37a192 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -223,8 +223,6 @@
- 				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
- 				 <&pcc2 IMX7ULP_CLK_USDHC0>;
- 			clock-names = "ipg", "ahb", "per";
--			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
--			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
- 			bus-width = <4>;
- 			fsl,tuning-start-tap = <20>;
- 			fsl,tuning-step = <2>;
-@@ -239,8 +237,6 @@
- 				 <&scg1 IMX7ULP_CLK_NIC1_DIV>,
- 				 <&pcc2 IMX7ULP_CLK_USDHC1>;
- 			clock-names = "ipg", "ahb", "per";
--			assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC1>;
--			assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
- 			bus-width = <4>;
- 			fsl,tuning-start-tap = <20>;
- 			fsl,tuning-step = <2>;
+> Ran against get_maintainers and it only throw a open list , no other
+> names.So kinda, stump by that.> Time to redo it again...huh
+
+
 -- 
-2.7.4
-
+~Randy
