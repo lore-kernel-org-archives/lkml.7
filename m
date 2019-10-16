@@ -2,159 +2,144 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0934ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29361C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FBB2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F392021848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Do+e/YaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389453AbfJPHHm (ORCPT
+        id S2389559AbfJPHHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:07:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59028 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389242AbfJPHHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:07:41 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 227348666C
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:07:41 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id o10so11265408wrm.22
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:07:41 -0700 (PDT)
+        Wed, 16 Oct 2019 03:07:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41208 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389242AbfJPHHo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:07:44 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f5so22818178ljg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZhTgNjpKNQusZyPVoOQIc1FXI/m0QRLJulVFef76XX8=;
+        b=Do+e/YaGZ/1kWMOZw1D1T1VnuBALKM+/iodChqull8q+46Lag2kJ3nIo7vEhP38y5z
+         Yx/BSyBkRCVuh2n96BV0wQa7eiQhZ5cUKWivQV2hY6S4HKkKx/H/d/PUMMWgG3ijMTkd
+         FYzGq1f2k8UALpZUFtbNZnLTwxCcUN7lHYIXoZNUxbO8KeQaEDMPbhl+j0zXHFiR6+rE
+         7uH3DeWFbEeiHiVkSfzGwUCsOhj4OVpiJIsw+y6VTfTeBUUl9E3FK8ZI3X8d0ynXfjnA
+         3ieluyI+90fOxZE3q2V+qrlN/M0gdWB2+7TCVXM8WXSwLy8VbfZTLXMEAVgGe7ZaYvii
+         SU+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=N+9zhD6sQkjtyZn9LozIr63oV0xoTG40KqwCVlYDKHM=;
-        b=D9zr6l7JKbNusCi5zgJ6K9cD5+HgDlLIiUwtty+qEaLktej6uX/rdRwS7SYpYuoe8c
-         VC4dX12QmSSdlKjqaWuI0G6XNzyOzInedRseiEofEYjGz3me7CTCmQm4+x6aLNoEqqkd
-         9p+9bbEC6NknomSBB5EOtUsevqA6cltDa+I2F4SdiYCpGaS+/TveAwSDNoeBed3G+5+V
-         ZIfvFppKp3Xm9lR9sFwOqQhtFVe9ZhSjejSJQAKt8GshqGO/uJT2Z0zQxUhuY70saP1A
-         +fJ6vW+goGJ2xVynbsn9R2BCIbYRSTXewaxxlHhCm9f5p6sVWtuLMfz3zf833IDaYOGu
-         GHfw==
-X-Gm-Message-State: APjAAAWZeH6QhqsDkFhYTskJZhgkiFz1el/0U6E49nO6GaD1ZYiKBJxh
-        MXnP9ub2wQ/7tl7K1U9qWvUg0fxG/NYuzM139CyZ9sVHB2XXcIDESfIq9bkHx8dEYFql025boIE
-        +03JpFd8qVgOrSxBFbiiRPOJz
-X-Received: by 2002:adf:8295:: with SMTP id 21mr1239232wrc.14.1571209659471;
-        Wed, 16 Oct 2019 00:07:39 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxoZ2u9pyRAua6Ul/ChncLAqQBC2pUX3xcLpP8/GnoCUcKnPgyeub7C/seFKjjOj2y3m+oRsg==
-X-Received: by 2002:adf:8295:: with SMTP id 21mr1239207wrc.14.1571209659089;
-        Wed, 16 Oct 2019 00:07:39 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ddc7:c53c:581a:7f3e? ([2001:b07:6468:f312:ddc7:c53c:581a:7f3e])
-        by smtp.gmail.com with ESMTPSA id a9sm2047772wmf.14.2019.10.16.00.07.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2019 00:07:38 -0700 (PDT)
-Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
- vmx.c exit handlers
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20190928172323.14663-1-aarcange@redhat.com>
- <20190928172323.14663-13-aarcange@redhat.com>
- <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
- <20191015164952.GE331@redhat.com>
- <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
- <20191015203516.GF331@redhat.com>
- <f375049a-6a45-c0df-a377-66418c8eb7e8@redhat.com>
- <20191015234229.GC6487@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <27cc0d6b-6bd7-fcaf-10b4-37bb566871f8@redhat.com>
-Date:   Wed, 16 Oct 2019 09:07:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        bh=ZhTgNjpKNQusZyPVoOQIc1FXI/m0QRLJulVFef76XX8=;
+        b=FyWBOTBqA04Xda52TnVQT5J0arjRBzZ2VQ4PeECDSlSg57ex3ihIn81bJRZWlbDJK2
+         oX2xsUXvgf4TRBXiVlA+tNQ8hp5xyS0mjWFq7NMmt5N/8tHC/XKsmy2nx3OgFEqD0QMJ
+         3V4QNBjc6LhRjnREwDFdOAbn6HW5uzw+E38o179yc8NdoCN8H0lM/U2gLD2y2StCOsuO
+         arWFZcx1XX1/k3FAXpllkf3FiPFUXVeDawqJ0VDPgqO677H0rfYM44iW1jpCfuEc8teJ
+         WzJJwt5A3C4uxfuPId7p7ayXaY6Q10I/zW16P/aO/j7/mydWBp1FGLtYurUhFNTQEtpQ
+         84Jw==
+X-Gm-Message-State: APjAAAXam4fancr1E9pgIEFHJCsEtZBrp/wgBTXEFs0OEF2Lo6Sfy8oi
+        7/8g97HgUpir8T/IQt+4Dso=
+X-Google-Smtp-Source: APXvYqwClC2cQSENX+/5tnSvwIw58bgtoluNV+WC1Z1QqCdducKDlTv9sD/34p2DOfggOz109aI5SQ==
+X-Received: by 2002:a2e:957:: with SMTP id 84mr25058609ljj.23.1571209662571;
+        Wed, 16 Oct 2019 00:07:42 -0700 (PDT)
+Received: from localhost.localdomain (c213-102-65-51.bredband.comhem.se. [213.102.65.51])
+        by smtp.gmail.com with ESMTPSA id j191sm1361493lfj.49.2019.10.16.00.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 00:07:41 -0700 (PDT)
+From:   codekipper@gmail.com
+To:     mripard@kernel.org, wens@csie.org, linux-sunxi@googlegroups.com
+Cc:     linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, be17068@iperbole.bo.it,
+        Marcus Cooper <codekipper@gmail.com>
+Subject: [PATCH v6 0/7] ASoC: sun4i-i2s: Updates to the driver
+Date:   Wed, 16 Oct 2019 09:07:33 +0200
+Message-Id: <20191016070740.121435-1-codekipper@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191015234229.GC6487@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/10/19 01:42, Andrea Arcangeli wrote:
-> On Wed, Oct 16, 2019 at 12:22:31AM +0200, Paolo Bonzini wrote:
->> Oh come on.  0.9 is not 12-years old.  virtio 1.0 is 3.5 years old
->> (March 2016).  Anything older than 2017 is going to use 0.9.
-> 
-> Sorry if I got the date wrong, but still I don't see the point in
-> optimizing for legacy virtio. I can't justify forcing everyone to
-> execute that additional branch for inb/outb, in the attempt to make
-> legacy virtio faster that nobody should use in combination with
-> bleeding edge KVM in the host.
+From: Marcus Cooper <codekipper@gmail.com>
 
-Yet you would add CPUID to the list even though it is not even there in
-your benchmarks, and is *never* invoked in a hot path by *any* sane
-program? Some OSes have never gotten virtio 1.0 drivers.  OpenBSD only
-got it earlier this year.
+Hi All,
+To be able to add support for the Allwinner H6 I've changed some of the
+original reg fields into function calls as this made it easier to setup
+for multi-channel audio especially across different SoCs. I've also
+stripped out all the other patches unrelated to this which I will deliver
+after support for the H6 has gone in.
 
->> Your tables give:
->>
->> 	Samples	  Samples%  Time%     Min Time  Max time       Avg time
->> HLT     101128    75.33%    99.66%    0.43us    901000.66us    310.88us
->> HLT     118474    19.11%    95.88%    0.33us    707693.05us    43.56us
->>
->> If "avg time" means the average time to serve an HLT vmexit, I don't
->> understand how you can have an average time of 0.3ms (1/3000th of a
->> second) and 100000 samples per second.  Can you explain that to me?
-> 
-> I described it wrong, the bpftrace record was a sleep 5, not a sleep
-> 1. The pipe loop was sure a sleep 1.
+These other patches are required for HDMI audio which is driving this
+patchset and they can be found here
+https://github.com/codekipper/linux-sunxi/commits/upstream-i2s
+BR,
+CK
 
-It still doesn't add up.  0.3ms / 5 is 1/15000th of a second; 43us is
-1/25000th of a second.  Do you have multiple vCPU perhaps?
+---
+v6 changes compared to v5 are:
+- rebased onto the recent tdm delivery
+- stripped out patches not required for the H6 delivery
 
-> The issue is that in production you get a flood more of those with
-> hundred of CPUs, so the exact number doesn't move the needle.
-> This just needs to be frequent enough that the branch cost pay itself off,
-> but the sure thing is that HLT vmexit will not go away unless you execute
-> mwait in guest mode by isolating the CPU in the host.
+v5 changes compared to v4 are:
+- removed delivered patches.
+- Added more details to commit messages.
+- replaced some reg fields with function calls.
+- Added DSP_A and DSP_B support for H3 and later SoCs.
+- Added support for the Allwinner H6.
 
-The number of vmexits doesn't count (for HLT).  What counts is how long
-they take to be serviced, and as long as it's 1us or more the
-optimization is pointless.
+v4 changes compared to v3 are:
+- Moved patches around so that the more controversial of patches are
+  at the top of the stack.
+- Added more details to commit messages.
+- Fixed 20bit audio PCM format to use 4 bytes.
+- Reduced number of flags used to indicate a new SoC.
 
-Consider these pictures
+v3 changes compared to v2 are:
+ - added back slave mode changes
+ - added back the use of tdm properties
+ - changes to regmap and caching
+ - removed loopback functionality
+ - fixes to the channel offset mask
 
-         w/o optimization                   with optimization
-         ----------------------             -------------------------
-0us      vmexit                             vmexit
-500ns    retpoline                          call vmexit handler directly
-600ns    retpoline                          kvm_vcpu_check_block()
-700ns    retpoline                          kvm_vcpu_check_block()
-800ns    kvm_vcpu_check_block()             kvm_vcpu_check_block()
-900ns    kvm_vcpu_check_block()             kvm_vcpu_check_block()
-...
-39900ns  kvm_vcpu_check_block()             kvm_vcpu_check_block()
+v2 changes compared to v1 are:
+ - removed slave mode changes which didn't set mclk and bclk div.
+ - removed use of tdm and now use a dedicated property.
+ - fix commit message to better explain reason for sign extending
+ - add divider calculations for newer SoCs.
+ - add support for multi-lane i2s data output.
+ - add support for 20, 24 and 32 bit samples.
+ - add loopback property so blocks can be tested without a codec.
 
-                            <interrupt arrives>
+---
+Jernej Skrabec (2):
+  dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+  ASoC: sun4i-i2s: Add support for H6 I2S
 
-40000ns  kvm_vcpu_check_block()             kvm_vcpu_check_block()
+Marcus Cooper (5):
+  ASoC: sun4i-i2s: Move channel select offset
+  ASoC: sun4i-i2s: Add functions for RX and TX channel offsets
+  ASoC: sun4i-i2s: Add functions for RX and TX channel enables
+  ASoC: sun4i-i2s: Add functions for RX and TX channel selects
+  ASoC: sun4i-i2s: Add functions for RX and TX channel mapping
 
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   2 +
+ sound/soc/sunxi/sun4i-i2s.c                   | 337 ++++++++++++++++--
+ 2 files changed, 305 insertions(+), 34 deletions(-)
 
-Unless the interrupt arrives exactly in the few nanoseconds that it
-takes to execute the retpoline, a direct handling of HLT vmexits makes
-*absolutely no difference*.
+-- 
+2.23.0
 
->> Again: what is the real workload that does thousands of CPUIDs per second?
-> 
-> None, but there are always background CPUID vmexits while there are
-> never inb/outb vmexits.
-> 
-> So the cpuid retpoline removal has a slight chance to pay for the cost
-> of the branch, the inb/outb retpoline removal cannot pay off the cost
-> of the branch.
-
-Please stop considering only the exact configuration of your benchmarks.
- There are known, valid configurations where outb is a very hot vmexit.
-
-Thanks,
-
-Paolo
