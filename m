@@ -2,135 +2,83 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC73FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA62FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5BA20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571231016;
-	bh=Z78ULDNnjtEHNfa2EEEaBAQoxzgGn7F8+ZBCCPNh2bA=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=EGRnD1hamk0WUBImNf8hBIX7LjNeOXJrFGlEapvY1xQcla/oUj4w+mfrciIdHC9yu
-	 OMGgs32rCoRT11UuXfBf5iMNRCVs6dQm2xFKi+5uPGDT+u2vLuDUgYjk+KCUDiCi2C
-	 er4eD49R/gzlJMdkmPs4aQm5I4VGgJThXVyb8p3k=
+	by mail.kernel.org (Postfix) with ESMTP id 7041820854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393429AbfJPNDe (ORCPT
+        id S2393441AbfJPNDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393419AbfJPNDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:03:34 -0400
-Received: from localhost (unknown [209.136.236.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37E3E20854;
-        Wed, 16 Oct 2019 13:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571231013;
-        bh=Z78ULDNnjtEHNfa2EEEaBAQoxzgGn7F8+ZBCCPNh2bA=;
-        h=Date:From:To:Subject:From;
-        b=as7Kgd0bcsCi4b5BilhFTktF2yFC+9pGXXSIfHekPmFnSXe699KOKNz2vZkcwRwPi
-         KbelPulV4tBFxWyWNaNloq15lHx+lVKGKZXtAmKQDlgoLjy9u5arQTsx4BBzzzDEEz
-         2bX0JK6sBihEvJ6UenKjRa6K3MAusIDW3LckNRRs=
-Date:   Wed, 16 Oct 2019 06:03:32 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH] debugfs: remove return value of debugfs_create_atomic_t()
-Message-ID: <20191016130332.GA28240@kroah.com>
+        Wed, 16 Oct 2019 09:03:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42573 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393419AbfJPNDk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:03:40 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iKixV-0003BI-5q; Wed, 16 Oct 2019 13:03:21 +0000
+Date:   Wed, 16 Oct 2019 15:03:20 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     cyphar@cyphar.com, mingo@redhat.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, christian@brauner.io, keescook@chromium.org,
+        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usercopy: Avoid soft lockups in
+ test_check_nonzero_user()
+Message-ID: <20191016130319.vcc2mqac3ta5jjat@wittgenstein>
+References: <20191011022447.24249-1-mpe@ellerman.id.au>
+ <20191016122732.13467-1-mpe@ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191016122732.13467-1-mpe@ellerman.id.au>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No one checks the return value of debugfs_create_atomic_t(), as it's not
-needed, so make the return value void, so that no one tries to do so in
-the future.
+On Wed, Oct 16, 2019 at 11:27:32PM +1100, Michael Ellerman wrote:
+> On a machine with a 64K PAGE_SIZE, the nested for loops in
+> test_check_nonzero_user() can lead to soft lockups, eg:
+> 
+>   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
+>   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum virtio_balloon ip_tables x_tables autofs4
+>   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gcc-8.2.0-00001-gf5a1a536fa14-dirty #1151
+>   ...
+>   NIP __might_sleep+0x20/0xc0
+>   LR  __might_fault+0x40/0x60
+>   Call Trace:
+>     check_zeroed_user+0x12c/0x200
+>     test_user_copy_init+0x67c/0x1210 [test_user_copy]
+>     do_one_initcall+0x60/0x340
+>     do_init_module+0x7c/0x2f0
+>     load_module+0x2d94/0x30e0
+>     __do_sys_finit_module+0xc8/0x150
+>     system_call+0x5c/0x68
+> 
+> Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
+> tweak it to only scan a 1024 byte region, but make it cross the
+> page boundary.
+> 
+> Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+> Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/filesystems/debugfs.txt |  4 ++--
- fs/debugfs/file.c                     |  9 ++++-----
- include/linux/debugfs.h               | 13 ++++++-------
- 3 files changed, 12 insertions(+), 14 deletions(-)
+With Aleksa's Reviewed-by I've picked this up:
+https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
 
-diff --git a/Documentation/filesystems/debugfs.txt b/Documentation/filesystems/debugfs.txt
-index 4a7a477a73d3..b8e544f84a34 100644
---- a/Documentation/filesystems/debugfs.txt
-+++ b/Documentation/filesystems/debugfs.txt
-@@ -113,8 +113,8 @@ lower-case values, or 1 or 0.  Any other input will be silently ignored.
- 
- Also, atomic_t values can be placed in debugfs with:
- 
--    struct dentry *debugfs_create_atomic_t(const char *name, umode_t mode,
--				struct dentry *parent, atomic_t *value)
-+    void debugfs_create_atomic_t(const char *name, umode_t mode,
-+				 struct dentry *parent, atomic_t *value)
- 
- A read of this file will get atomic_t values, and a write of this file
- will set atomic_t values.
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 803b5aab31fc..a86cb0b1c69c 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -748,12 +748,11 @@ DEFINE_DEBUGFS_ATTRIBUTE(fops_atomic_t_wo, NULL, debugfs_atomic_t_set,
-  * @value: a pointer to the variable that the file should read to and write
-  *         from.
-  */
--struct dentry *debugfs_create_atomic_t(const char *name, umode_t mode,
--				 struct dentry *parent, atomic_t *value)
-+void debugfs_create_atomic_t(const char *name, umode_t mode,
-+			     struct dentry *parent, atomic_t *value)
- {
--	return debugfs_create_mode_unsafe(name, mode, parent, value,
--					&fops_atomic_t, &fops_atomic_t_ro,
--					&fops_atomic_t_wo);
-+	debugfs_create_mode_unsafe(name, mode, parent, value, &fops_atomic_t,
-+				   &fops_atomic_t_ro, &fops_atomic_t_wo);
- }
- EXPORT_SYMBOL_GPL(debugfs_create_atomic_t);
- 
-diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-index 578c35ecdab9..1bd7e1772534 100644
---- a/include/linux/debugfs.h
-+++ b/include/linux/debugfs.h
-@@ -117,8 +117,8 @@ void debugfs_create_x64(const char *name, umode_t mode, struct dentry *parent,
- 			u64 *value);
- void debugfs_create_size_t(const char *name, umode_t mode,
- 			   struct dentry *parent, size_t *value);
--struct dentry *debugfs_create_atomic_t(const char *name, umode_t mode,
--				     struct dentry *parent, atomic_t *value);
-+void debugfs_create_atomic_t(const char *name, umode_t mode,
-+			     struct dentry *parent, atomic_t *value);
- struct dentry *debugfs_create_bool(const char *name, umode_t mode,
- 				  struct dentry *parent, bool *value);
- 
-@@ -280,11 +280,10 @@ static inline void debugfs_create_size_t(const char *name, umode_t mode,
- 					 struct dentry *parent, size_t *value)
- { }
- 
--static inline struct dentry *debugfs_create_atomic_t(const char *name, umode_t mode,
--				     struct dentry *parent, atomic_t *value)
--{
--	return ERR_PTR(-ENODEV);
--}
-+static inline void debugfs_create_atomic_t(const char *name, umode_t mode,
-+					   struct dentry *parent,
-+					   atomic_t *value)
-+{ }
- 
- static inline struct dentry *debugfs_create_bool(const char *name, umode_t mode,
- 						 struct dentry *parent,
--- 
-2.23.0
-
+Thanks!
+Christian
