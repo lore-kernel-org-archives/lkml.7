@@ -2,185 +2,218 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36CBFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CCDFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E109205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4B205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GCbDGIfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393155AbfJPMk1 (ORCPT
+        id S2393172AbfJPMlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:40:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50953 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfJPMkZ (ORCPT
+        Wed, 16 Oct 2019 08:41:45 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37322 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390395AbfJPMlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:40:25 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iKibB-00066E-DR; Wed, 16 Oct 2019 14:40:17 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iKib9-0006aS-8m; Wed, 16 Oct 2019 14:40:15 +0200
-Date:   Wed, 16 Oct 2019 14:40:15 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] dt-bindings: net: dsa: qca,ar9331 switch
- documentation
-Message-ID: <20191016124015.joawodelm23xkzga@pengutronix.de>
-References: <20191014061549.3669-1-o.rempel@pengutronix.de>
- <20191014061549.3669-3-o.rempel@pengutronix.de>
- <20191016122152.GE4780@lunn.ch>
+        Wed, 16 Oct 2019 08:41:44 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u184so22580941qkd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qm75DokwzXjTKEsie0o+9Iq4HWwxwsH9v5bQoEbr1/o=;
+        b=GCbDGIfZj92w5Qr0xsU4UFCGnAPsKp2B0SiNcm4fP+CM+kqIY+pbss57O7snZ/Jb7u
+         p2qiS7Jr7qstgGUIAFsOvcZM3Rf6mEogb9Po9PUh3Dvni6D8KifmK5EFUraMLpG7XOpd
+         LbLUl93c+tyAA4l00tH09WvmkUDo6Wa+qLUXglL+/RbwD5H7DE/BrHT/qvB1FGuV/Suw
+         Ze2a8Aph6z4KM+O3/6CPiHRwfmWjJ8qS8SvURsTHjnO3O6Q33w21FEa6oE6QvnAO+RJl
+         Fp1bm83FJt4fMoxFEkftNFuuNpN7fPAjE+j3TRVHaP+sAkRtfw4Tbs4NgiQlgSYhsahl
+         XwZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qm75DokwzXjTKEsie0o+9Iq4HWwxwsH9v5bQoEbr1/o=;
+        b=s5d/G3KAuhUOht124Cwi+0Txa9fDjLsjUtjCo/Gtuu41EFJtd1zbGIYbl039aX2KAo
+         JM18U879O9zBjuUJNLPkoLsvZVdaGCp1W+ed+4ns0bqDufE7uCrmJee/QiUBXL4R5tDF
+         vqh4GWDn252dgY+/oSI92OVJngmF4YtTGOsVYVKNQQXn+cjwoBZr5STI+Uz6I8eX3ejv
+         gQ3r3WisDQu82oYAxU+G9Z4PDdUXiKuP8psaM0hNBygYu/LqY48CzTdDDOmL0ynz6GQQ
+         RJiHuK8fpYIFioFgYKX21X9eGs6+POiT1LsbJWpLadegtRHCptQzbvV+Kmk7uwGCTvV3
+         1Zmw==
+X-Gm-Message-State: APjAAAUUJbLCEKP2DVRO3WCKJ+q0+tZd9V9zE48g/M6D7Ohvj893cACw
+        ESog59qiCCzPpfmTQqCnI6PS1WUhsZZAT+CNVsoU2w==
+X-Google-Smtp-Source: APXvYqxJshG3708iZ8DdRzTqOCKqoWAZClhQq8BFfkn1xeAaY0P671YgWTPOt5msWwuM1JD2JtXAOJkXdiETud2QSVI=
+X-Received: by 2002:a05:620a:751:: with SMTP id i17mr39873356qki.340.1571229703313;
+ Wed, 16 Oct 2019 05:41:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191016122152.GE4780@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:34:15 up 151 days, 18:52, 100 users,  load average: 0.13, 0.06,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191015173026.9962-1-manivannan.sadhasivam@linaro.org> <20191015173026.9962-4-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20191015173026.9962-4-manivannan.sadhasivam@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 14:41:32 +0200
+Message-ID: <CACRpkdZRY138RAf8N2xGam89r66ik2vW44OZx0bDcCt4P2GBLA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] gpio: Add RDA Micro GPIO controller support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 02:21:52PM +0200, Andrew Lunn wrote:
-> On Mon, Oct 14, 2019 at 08:15:47AM +0200, Oleksij Rempel wrote:
-> > Atheros AR9331 has built-in 5 port switch. The switch can be configured
-> > to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
-> > ethernet controller or to be used directly by the switch over second ethernet
-> > controller.
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/net/dsa/ar9331.txt    | 155 ++++++++++++++++++
-> >  1 file changed, 155 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/dsa/ar9331.txt b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
-> > new file mode 100644
-> > index 000000000000..b0f95fd19584
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
-> > @@ -0,0 +1,155 @@
-> > +Atheros AR9331 built-in switch
-> > +=============================
-> > +
-> > +It is a switch built-in to Atheros AR9331 WiSoC and addressable over internal
-> > +MDIO bus. All PHYs are build-in as well. 
-> > +
-> > +Required properties:
-> > +
-> > + - compatible: should be: "qca,ar9331-switch" 
-> > + - reg: Address on the MII bus for the switch.
-> > + - resets : Must contain an entry for each entry in reset-names.
-> > + - reset-names : Must include the following entries: "switch"
-> > + - interrupt-parent: Phandle to the parent interrupt controller
-> > + - interrupts: IRQ line for the switch
-> > + - interrupt-controller: Indicates the switch is itself an interrupt
-> > +   controller. This is used for the PHY interrupts.
-> > + - #interrupt-cells: must be 1
-> > + - mdio: Container of PHY and devices on the switches MDIO bus.
-> > +
-> > +See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
-> > +required and optional properties.
-> > +Examples:
-> > +
-> > +eth0: ethernet@19000000 {
-> > +	compatible = "qca,ar9330-eth";
-> > +	reg = <0x19000000 0x200>;
-> > +	interrupts = <4>;
-> > +
-> > +	resets = <&rst 9>, <&rst 22>;
-> > +	reset-names = "mac", "mdio";
-> > +	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
-> > +	clock-names = "eth", "mdio";
-> > +
-> > +	phy-mode = "mii";
-> > +	phy-handle = <&phy_port4>;
-> 
-> This does not seem like a valid example. If phy_port4 is listed here,
-> i would expect switch_port 5 to be totally missing?
+Hi Manivannan!
 
-hm... right.
-phy4 can be used with switch_port 5 or eth0. Should i remove completely
-switch_port 5 node or it is enough to "disable" it.
+Thanks for your patch!
 
-> > +};
-> > +
-> > +eth1: ethernet@1a000000 {
-> > +	compatible = "qca,ar9330-eth";
-> > +	reg = <0x1a000000 0x200>;
-> > +	interrupts = <5>;
-> > +	resets = <&rst 13>, <&rst 23>;
-> > +	reset-names = "mac", "mdio";
-> > +	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
-> > +	clock-names = "eth", "mdio";
-> > +
-> > +	phy-mode = "gmii";
-> > +	phy-handle = <&switch_port0>;
-> > +
-> > +	fixed-link {
-> > +		speed = <1000>;
-> > +		full-duplex;
-> > +	};
-> 
-> You also cannot have both a fixed-link and a phy-handle.
+On Tue, Oct 15, 2019 at 7:30 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-ok.
+> Add support for GPIO controller from RDA Micro.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> 
-> > +
-> > +	mdio {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		switch10: switch@10 {
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +
-> > +			compatible = "qca,ar9331-switch";
-> > +			reg = <16>;
-> 
-> Maybe don't mix up hex and decimal? switch16: switch@16.
+Please use a little bit more verbose commit message, who
+made this hardware and what is it for. If you know!
 
-ok. will fix it. What is actually proper way to set the reg of switch?
-This switch is responding on range of phy addresses: any of two high bits of 5
-bit phy address.
+> +config GPIO_RDA
+> +       bool "RDA Micro GPIO controller support"
+> +       depends on ARCH_RDA || COMPILE_TEST
+> +       depends on OF_GPIO
+> +       select GPIOLIB_IRQCHIP
 
-Regards,
-Oleksij
+select GPIO_GENERIC
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> +#include <linux/bitops.h>
+
+Do you need this or just <linux/bits.h>?
+
+> +#define RDA_GPIO_OEN_VAL               0x00
+> +#define RDA_GPIO_OEN_SET_OUT           0x04
+> +#define RDA_GPIO_OEN_SET_IN            0x08
+> +#define RDA_GPIO_VAL                   0x0c
+> +#define RDA_GPIO_SET                   0x10
+> +#define RDA_GPIO_CLR                   0x14
+> +#define RDA_GPIO_INT_CTRL_SET          0x18
+> +#define RDA_GPIO_INT_CTRL_CLR          0x1c
+> +#define RDA_GPIO_INT_CLR               0x20
+> +#define RDA_GPIO_INT_STATUS            0x24
+
+This is a very clear cut MMIO GPIO so use GPIO_GENERIC with this
+hardware.
+
+> +static void rda_gpio_update(struct gpio_chip *chip, unsigned int offset,
+> +                           u16 reg, int val)
+
+Maybe keep this if it saves code from the IRQ callbacks,
+inline it to register writes if it doesn't get called much.
+
+> +static int rda_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+> +static int rda_gpio_direction_output(struct gpio_chip *chip,
+> +                                    unsigned int offset, int value)
+> +static int rda_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +static void rda_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+
+This can all be replaces by select GPIO_GENERIC and passing
+the right offsets into bgpio_init(). Look at for example
+gpio-ftgpio010.c and the documentation for bgpio_init()
+in gpio-mmio.c for help.
+
+This will also implement get/set_multiple for you for
+free!
+
+> +static void rda_gpio_irq_mask(struct irq_data *data)
+> +static void rda_gpio_irq_ack(struct irq_data *data)
+
+Looks good
+
+> +static int rda_gpio_set_irq(struct gpio_chip *chip, u32 offset,
+> +                           unsigned int flow_type)
+
+Maybe _setup_irq()? Not sure, just that the name doesn't
+obviously imply how it is used as it is called from two
+places.
+
+The rest of the IRQ code looks good!
+
+> +static int rda_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct gpio_irq_chip *irq_chip;
+
+Since irq_chip is the name of a struct in the kernel I usually
+just call this "girq" as in "GPIO irq chip".
+
+> +       struct rda_gpio *rda_gpio;
+> +       u32 ngpios;
+> +       int ret;
+
+Create a struct device *dev = &pdev->dev; helper variable
+to make the following code easier to read. (The pointer
+&pdev->dev is used in many places...)
+
+> +       /*
+> +        * Not all ports have interrupt capability. For instance, on
+> +        * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
+> +        * those also.
+> +        */
+> +       rda_gpio->irq = platform_get_irq(pdev, 0);
+> +
+> +       rda_gpio->base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(rda_gpio->base))
+> +               return PTR_ERR(rda_gpio->base);
+> +
+> +       spin_lock_init(&rda_gpio->lock);
+> +
+> +       rda_gpio->chip.label = dev_name(&pdev->dev);
+> +       rda_gpio->chip.ngpio = ngpios;
+> +       rda_gpio->chip.base = -1;
+> +       rda_gpio->chip.parent = &pdev->dev;
+> +       rda_gpio->chip.of_node = np;
+> +       rda_gpio->chip.get = rda_gpio_get;
+> +       rda_gpio->chip.set = rda_gpio_set;
+> +       rda_gpio->chip.direction_input = rda_gpio_direction_input;
+> +       rda_gpio->chip.direction_output = rda_gpio_direction_output;
+> +
+> +       if (rda_gpio->irq >= 0) {
+> +               rda_gpio->irq_chip.name = "rda-gpio",
+> +               rda_gpio->irq_chip.irq_ack = rda_gpio_irq_ack,
+> +               rda_gpio->irq_chip.irq_mask = rda_gpio_irq_mask,
+> +               rda_gpio->irq_chip.irq_unmask = rda_gpio_irq_unmask,
+> +               rda_gpio->irq_chip.irq_set_type = rda_gpio_irq_set_type,
+> +               rda_gpio->irq_chip.flags = IRQCHIP_SKIP_SET_WAKE,
+> +
+> +               irq_chip = &rda_gpio->chip.irq;
+> +               irq_chip->chip = &rda_gpio->irq_chip;
+> +               irq_chip->handler = handle_bad_irq;
+> +               irq_chip->default_type = IRQ_TYPE_NONE;
+> +               irq_chip->parent_handler = rda_gpio_irq_handler;
+> +               irq_chip->parent_handler_data = rda_gpio;
+> +               irq_chip->num_parents = 1;
+> +               irq_chip->parents = &rda_gpio->irq;
+
+That works but ... please devm_kzalloc() like the other drivers
+do:
+
+girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+                                     GFP_KERNEL);
+        if (!girq->parents) {
+                ret = -ENOMEM;
+(...)
+
+Unless you have a real good reason to optimize it. I just
+want it to follow the pattern since I want to minimize
+cognitive stress for the maintainers. (Me.)
+
+Yours,
+Linus Walleij
