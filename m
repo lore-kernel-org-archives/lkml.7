@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE1CECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8908FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96D7207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05F1207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263998;
-	bh=XYVh6+TMgEhP0g5409q+lNX4DMmBfqbBA05Q34b6kzo=;
+	s=default; t=1571264004;
+	bh=j6J6/XrfGH0dGCQ64DCTclHY+iBTFT8Fgdv2TEDikSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R1jrKDHT2nUttSSyQVysXrCsDmBSjr5qJSZdHn7TmK/weiNZy+uYmBABZBeCzSe/c
-	 oC9yhqvrRF/ssNn/+ordrzFgOz3456WTbF1OmTm+T1QqU+Awo98WCol7CcGMU6U3pg
-	 njJ9rMqXSc7aBycwnMyktVvmmz1/7GHKweofdxHM=
+	b=wu8lO9YuaSZwRpFyUzb7BH4nIA6PaNC/iWdJpMB7OFtsY8LVZRoRA4PSP0ClgRRQf
+	 CRmq2n8ogNcf3xIlXP+6DoX/umum8KfPqaleO4mLslvr2WbCqDjbGcD9RU7rpznZbM
+	 90vBWF08GwgaJCK4SDhdAtqZglntPwMceXtvB5lM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439308AbfJPWNR (ORCPT
+        id S2439315AbfJPWNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47118 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437864AbfJPVz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:58 -0400
+        id S2437843AbfJPVzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:54 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0594121925;
-        Wed, 16 Oct 2019 21:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5C4218DE;
+        Wed, 16 Oct 2019 21:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262957;
-        bh=XYVh6+TMgEhP0g5409q+lNX4DMmBfqbBA05Q34b6kzo=;
+        s=default; t=1571262953;
+        bh=j6J6/XrfGH0dGCQ64DCTclHY+iBTFT8Fgdv2TEDikSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NaI9VSBCmit/ikdIg964U+eNiKBNDAsDLZRvEeiCJ3635u6yJG9YXLil2Be9YauK3
-         8waL1NQyH2N6lIEzlD3fgYSoDEmC+91QoxrAb9Jdewu1yQ6HBBayQIYCeqeurlIliZ
-         cyiA2qcUEXbLBJCKDIc9TMICw32BsO6sWjrEP5rI=
+        b=sPsbSneWmjkLIL6ELXtQuK46gKUxmF2Z9PlO0E2VAhhxLVsB8U9UHEpsp/hDFJvtf
+         Lj4XQ/DZcKwxPAX58Tb77JAWQl8g4ZmKV4TYmM2/WuwEOJWVfOb3/iL4PSbnpf11sF
+         mgBe5rmVx/5eDZYFF9bl/J3yuCHdarwRa7SPnjs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 26/65] USB: serial: option: add Telit FN980 compositions
-Date:   Wed, 16 Oct 2019 14:50:40 -0700
-Message-Id: <20191016214822.564151333@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Peter Korsgaard <jacmet@sunsite.dk>
+Subject: [PATCH 4.14 23/65] serial: uartlite: fix exit path null pointer
+Date:   Wed, 16 Oct 2019 14:50:37 -0700
+Message-Id: <20191016214819.179163209@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -59,42 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-commit 5eb3f4b87a0e7e949c976f32f296176a06d1a93b upstream.
+commit a553add0846f355a28ed4e81134012e4a1e280c2 upstream.
 
-This patch adds the following Telit FN980 compositions:
+Call uart_unregister_driver() conditionally instead of
+unconditionally, only if it has been previously registered.
 
-0x1050: tty, adb, rmnet, tty, tty, tty, tty
-0x1051: tty, adb, mbim, tty, tty, tty, tty
-0x1052: rndis, tty, adb, tty, tty, tty, tty
-0x1053: tty, adb, ecm, tty, tty, tty, tty
+This uses driver.state, just as the sh-sci.c driver does.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Fixes this null pointer dereference in tty_unregister_driver(),
+since the 'driver' argument is null:
+
+  general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
+  RIP: 0010:tty_unregister_driver+0x25/0x1d0
+
+Fixes: 238b8721a554 ("[PATCH] serial uartlite driver")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: Peter Korsgaard <jacmet@sunsite.dk>
+Link: https://lore.kernel.org/r/9c8e6581-6fcc-a595-0897-4d90f5d710df@infradead.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/tty/serial/uartlite.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1157,6 +1157,14 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) | RSVD(3) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, TELIT_PRODUCT_LE922_USBCFG5, 0xff),
- 	  .driver_info = RSVD(0) | RSVD(1) | NCTRL(2) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1050, 0xff),	/* Telit FN980 (rmnet) */
-+	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1051, 0xff),	/* Telit FN980 (MBIM) */
-+	  .driver_info = NCTRL(0) | RSVD(1) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1052, 0xff),	/* Telit FN980 (RNDIS) */
-+	  .driver_info = NCTRL(2) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1053, 0xff),	/* Telit FN980 (ECM) */
-+	  .driver_info = NCTRL(0) | RSVD(1) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_ME910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_ME910_DUAL_MODEM),
+--- a/drivers/tty/serial/uartlite.c
++++ b/drivers/tty/serial/uartlite.c
+@@ -746,7 +746,8 @@ err_uart:
+ static void __exit ulite_exit(void)
+ {
+ 	platform_driver_unregister(&ulite_platform_driver);
+-	uart_unregister_driver(&ulite_uart_driver);
++	if (ulite_uart_driver.state)
++		uart_unregister_driver(&ulite_uart_driver);
+ }
+ 
+ module_init(ulite_init);
 
 
