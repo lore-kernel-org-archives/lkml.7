@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1B1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371DEECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73203218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2B321925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263523;
-	bh=XetBPANB7qMSie4eeolBAhW/CmuTR4aFTc+RdDPIpL4=;
+	s=default; t=1571263527;
+	bh=t8kCr9OERd06qMJrE5RDGH1pIt8S8DDPE6lr14OjXHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2l8yq28AHTcixiL5zbILKCi9tKs9wjtUtKsby+ViFJCYlpYBXoGlIuo5Jj/T4xo2g
-	 pImFTT0dnAEsmIJ3RSA6ufXEyGpMdQmKuSsT00SDeB4/bxIYRKVcNCEGACNaZjwxGN
-	 MfsEOFc/Yz+pVVckopAUR6+Ex6ieo1nOCKy4G8tA=
+	b=RXuxpJmJaMrWyiT4DLSjkthK72++vXURGQHYvyrSOxPWhkeFVHP+Lrg5FyP6Vrbgi
+	 pRxz9p2mm+ehrAhDSszoYF+otNLSAV/XMeq4L3dQtkW0HIuXmo7GLai+szoDVz8O7p
+	 p8gl9aYNymqujyh9ELaMzsSLIr6YryWKlPpTYgog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406913AbfJPWFW (ORCPT
+        id S2438290AbfJPV6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438289AbfJPV6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:52 -0400
+        id S2438107AbfJPV6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:02 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A0321A49;
-        Wed, 16 Oct 2019 21:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F33621D7C;
+        Wed, 16 Oct 2019 21:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263131;
-        bh=XetBPANB7qMSie4eeolBAhW/CmuTR4aFTc+RdDPIpL4=;
+        s=default; t=1571263081;
+        bh=t8kCr9OERd06qMJrE5RDGH1pIt8S8DDPE6lr14OjXHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDgbxe9k4I/tPlRtCIHKQAXfLuUbVQp8JQG9c+bTDFFpZRmeXTjLOYc+EUx1XS7AB
-         wizPVqx40H90laPqyeBsnoLYufDLAGTXZWFjowdktMXCZtduTTr6qB6pDO3VMzmwXt
-         Nhhh8Cys5qUfSCpeS/qFT3yyz+qxxjueKcktBDTQ=
+        b=F7BAikQlmoJtnkOStgReQ7nbsfixxshoK/A2XMEZVFUi4Ly4x2YPUHRA7y78H1Rj/
+         MGIcCDSO2Xeqk3sLi5W2Ups0xRUrkJ65y161OsNnOUSLHDmPXs1YhF8SFqhW1R+RiC
+         jYKmQK2/QLjKZuegqgKRMHzZzxou27DYTyT7XjHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.3 054/112] iio: adc: axp288: Override TS pin bias current for some models
-Date:   Wed, 16 Oct 2019 14:50:46 -0700
-Message-Id: <20191016214858.785104463@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>
+Subject: [PATCH 4.19 80/81] PCI: vmd: Fix config addressing when using bus offsets
+Date:   Wed, 16 Oct 2019 14:51:31 -0700
+Message-Id: <20191016214848.666862802@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
-References: <20191016214844.038848564@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,89 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-commit 972917419a0ba25afbf69d5d8c9fa644d676f887 upstream.
+commit e3dffa4f6c3612dea337c9c59191bd418afc941b upstream.
 
-Since commit 9bcf15f75cac ("iio: adc: axp288: Fix TS-pin handling") we
-preserve the bias current set by the firmware at boot.  This fixes issues
-we were seeing on various models, but it seems our old hardcoded 80ųA bias
-current was working around a firmware bug on at least one model laptop.
+VMD maps child device config spaces to the VMD Config BAR linearly
+regardless of the starting bus offset. Because of this, the config
+address decode must ignore starting bus offsets when mapping the BDF to
+the config space address.
 
-In order to both have our cake and eat it, this commit adds a dmi based
-list of models where we need to override the firmware set bias current and
-adds the one model we now know needs this to it: The Lenovo Ideapad 100S
-(11 inch version).
-
-Fixes: 9bcf15f75cac ("iio: adc: axp288: Fix TS-pin handling")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203829
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 2a5a9c9a20f9 ("PCI: vmd: Add offset to bus numbers if necessary")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/axp288_adc.c |   32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/pci/controller/vmd.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/iio/adc/axp288_adc.c
-+++ b/drivers/iio/adc/axp288_adc.c
-@@ -7,6 +7,7 @@
-  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -97,6 +97,7 @@ struct vmd_dev {
+ 	struct resource		resources[3];
+ 	struct irq_domain	*irq_domain;
+ 	struct pci_bus		*bus;
++	u8			busn_start;
  
-+#include <linux/dmi.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
-@@ -25,6 +26,11 @@
- #define AXP288_ADC_EN_MASK				0xF0
- #define AXP288_ADC_TS_ENABLE				0x01
- 
-+#define AXP288_ADC_TS_BIAS_MASK				GENMASK(5, 4)
-+#define AXP288_ADC_TS_BIAS_20UA				(0 << 4)
-+#define AXP288_ADC_TS_BIAS_40UA				(1 << 4)
-+#define AXP288_ADC_TS_BIAS_60UA				(2 << 4)
-+#define AXP288_ADC_TS_BIAS_80UA				(3 << 4)
- #define AXP288_ADC_TS_CURRENT_ON_OFF_MASK		GENMASK(1, 0)
- #define AXP288_ADC_TS_CURRENT_OFF			(0 << 0)
- #define AXP288_ADC_TS_CURRENT_ON_WHEN_CHARGING		(1 << 0)
-@@ -177,10 +183,36 @@ static int axp288_adc_read_raw(struct ii
- 	return ret;
- }
- 
-+/*
-+ * We rely on the machine's firmware to correctly setup the TS pin bias current
-+ * at boot. This lists systems with broken fw where we need to set it ourselves.
-+ */
-+static const struct dmi_system_id axp288_adc_ts_bias_override[] = {
-+	{
-+		/* Lenovo Ideapad 100S (11 inch) */
-+		.matches = {
-+		  DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		  DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 100S-11IBY"),
-+		},
-+		.driver_data = (void *)(uintptr_t)AXP288_ADC_TS_BIAS_80UA,
-+	},
-+	{}
-+};
-+
- static int axp288_adc_initialize(struct axp288_adc_info *info)
+ #ifdef CONFIG_X86_DEV_DMA_OPS
+ 	struct dma_map_ops	dma_ops;
+@@ -468,7 +469,8 @@ static char __iomem *vmd_cfg_addr(struct
+ 				  unsigned int devfn, int reg, int len)
  {
-+	const struct dmi_system_id *bias_override;
- 	int ret, adc_enable_val;
+ 	char __iomem *addr = vmd->cfgbar +
+-			     (bus->number << 20) + (devfn << 12) + reg;
++			     ((bus->number - vmd->busn_start) << 20) +
++			     (devfn << 12) + reg;
  
-+	bias_override = dmi_first_match(axp288_adc_ts_bias_override);
-+	if (bias_override) {
-+		ret = regmap_update_bits(info->regmap, AXP288_ADC_TS_PIN_CTRL,
-+					 AXP288_ADC_TS_BIAS_MASK,
-+					 (uintptr_t)bias_override->driver_data);
-+		if (ret)
-+			return ret;
-+	}
-+
+ 	if ((addr - vmd->cfgbar) + len >=
+ 	    resource_size(&vmd->dev->resource[VMD_CFGBAR]))
+@@ -591,7 +593,7 @@ static int vmd_enable_domain(struct vmd_
+ 	unsigned long flags;
+ 	LIST_HEAD(resources);
+ 	resource_size_t offset[2] = {0};
+-	resource_size_t membar2_offset = 0x2000, busn_start = 0;
++	resource_size_t membar2_offset = 0x2000;
+ 
  	/*
- 	 * Determine if the TS pin is enabled and set the TS current-source
- 	 * accordingly.
+ 	 * Shadow registers may exist in certain VMD device ids which allow
+@@ -633,14 +635,14 @@ static int vmd_enable_domain(struct vmd_
+ 		pci_read_config_dword(vmd->dev, PCI_REG_VMCONFIG, &vmconfig);
+ 		if (BUS_RESTRICT_CAP(vmcap) &&
+ 		    (BUS_RESTRICT_CFG(vmconfig) == 0x1))
+-			busn_start = 128;
++			vmd->busn_start = 128;
+ 	}
+ 
+ 	res = &vmd->dev->resource[VMD_CFGBAR];
+ 	vmd->resources[0] = (struct resource) {
+ 		.name  = "VMD CFGBAR",
+-		.start = busn_start,
+-		.end   = busn_start + (resource_size(res) >> 20) - 1,
++		.start = vmd->busn_start,
++		.end   = vmd->busn_start + (resource_size(res) >> 20) - 1,
+ 		.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED,
+ 	};
+ 
+@@ -708,8 +710,8 @@ static int vmd_enable_domain(struct vmd_
+ 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+ 	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
+ 
+-	vmd->bus = pci_create_root_bus(&vmd->dev->dev, busn_start, &vmd_ops,
+-				       sd, &resources);
++	vmd->bus = pci_create_root_bus(&vmd->dev->dev, vmd->busn_start,
++					&vmd_ops, sd, &resources);
+ 	if (!vmd->bus) {
+ 		pci_free_resource_list(&resources);
+ 		irq_domain_remove(vmd->irq_domain);
 
 
