@@ -2,210 +2,136 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AA4FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D219AFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D805E20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D8D20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404289AbfJPJlt (ORCPT
+        id S2404300AbfJPJly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:41:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:9173 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391934AbfJPJlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:41:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 02:41:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="200007842"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 16 Oct 2019 02:41:46 -0700
-Received: from [10.125.252.157] (abudanko-mobl.ccr.corp.intel.com [10.125.252.157])
-        by linux.intel.com (Postfix) with ESMTP id 476EC58048F;
-        Wed, 16 Oct 2019 02:41:44 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v2 0/4]: perf/core: fix restoring of Intel LBR call stack on a
- context switch
-Organization: Intel Corp.
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <5964c7e9-ab6f-c0d0-3dca-31196606e337@linux.intel.com>
-Date:   Wed, 16 Oct 2019 12:41:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 05:41:54 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:25405 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391934AbfJPJly (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:41:54 -0400
+X-UUID: 914f4b589fd545abb602e65304b77faf-20191016
+X-UUID: 914f4b589fd545abb602e65304b77faf-20191016
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <wen.su@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1791216656; Wed, 16 Oct 2019 17:41:41 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 16 Oct 2019 17:41:37 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 16 Oct 2019 17:41:37 +0800
+From:   Wen Su <Wen.Su@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>, <wen.su@mediatek.com>
+Subject: [PATCH 1/4] dt-bindings: regulator: Add document for MT6359 regulator
+Date:   Wed, 16 Oct 2019 17:39:43 +0800
+Message-ID: <1571218786-15073-2-git-send-email-Wen.Su@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1571218786-15073-1-git-send-email-Wen.Su@mediatek.com>
+References: <1571218786-15073-1-git-send-email-Wen.Su@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "wen.su" <wen.su@mediatek.com>
 
-Restore Intel LBR call stack from cloned inactive task perf context on
-a context switch. This change inherently addresses inconsistency in LBR 
-call stack data provided on a sample in record profiling mode:
+add dt-binding document for MediaTek MT6359 PMIC
 
-  $ perf record -N -B -T -R --call-graph lbr \
-         -e cpu/period=0xcdfe60,event=0x3c,name=\'CPU_CLK_UNHALTED.THREAD\'/Duk \
-         --clockid=monotonic_raw -- ./miniFE.x nx 25 ny 25 nz 25
-
-Let's assume threads A, B, C belonging to the same process. 
-B and C are siblings of A and their perf contexts are treated as equivalent.
-At some point B blocks on a futex (non preempt context switch).
-B's LBRs are preserved at B's perf context task_ctx_data and B's events 
-are removed from PMU and disabled. B's perf context becomes inactive.
-
-Later C gets on a cpu, runs, gets profiled and eventually switches to 
-the awaken but not yet running B. The optimized context switch path is 
-executed swapping B's and C's task_ctx_data pointers at perf event contexts.
-So C's task_ctx_data will refer preserved B's LBRs on the following 
-switch-in event.
-
-However, as far B's perf context is inactive there is no enabled events
-in there and B's task_ctx_data->lbr_callstack_users is equal to 0.
-When B gets on the cpu B's events reviving is skipped following
-the optimized context switch path and B's task_ctx_data->lbr_callstack_users
-remains 0. Thus B's LBR's are not restored by pmu sched_task() code called 
-in the end of perf context switch-in callback for B.
-
-In the report that manifests as having short fragments of B's
-call stack, still tracked by LBR's HW between adjacent samples,
-but the whole thread call tree doesn't aggregate.
-
-The fix has been evaluated when profiling miniFE [1] (C++, OpenMP)
-workload running 64 threads on Intel Skylake EP(64 core, 2 sockets):
-
-  $ perf report --call-graph callee,flat
-
-5.3.0-rc6+ (tip perf/core) - fixed
-
--   92.66%    82.64%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 69.14% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 21.89% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 1.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-
-5.0.13-300.fc30.x86_64 - no fix
-
--   90.29%    81.01%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 33.45% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     87.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 54.79% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-   - 9.18% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 41.28% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 15.77% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-   - 11.56% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 2.33% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     0.67% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_gather
-     0.57% __kmp_hardware_timestamp
-
-[1] https://www.hpcadvisorycouncil.com/pdf/miniFE_Analysis_and_Profiling.pdf
-
+Signed-off-by: wen.su <wen.su@mediatek.com>
 ---
-Alexey Budankov (4):
-  perf/core,x86: introduce sync_task_ctx() method at struct pmu
-  perf/x86: install platform specific sync_task_ctx adapter
-  perf/x86/intel: implement LBR callstacks context synchronization
-  perf/core,x86: synchronize PMU task contexts on optimized context
-    switches
+ .../bindings/regulator/mt6359-regulator.txt        | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6359-regulator.txt
 
- arch/x86/events/core.c       |  7 +++++++
- arch/x86/events/intel/core.c |  7 +++++++
- arch/x86/events/intel/lbr.c  |  9 +++++++++
- arch/x86/events/perf_event.h | 11 +++++++++++
- include/linux/perf_event.h   |  7 +++++++
- kernel/events/core.c         |  9 +++++++++
- 6 files changed, 50 insertions(+)
-
----
-Changes in v2:
-- implemented sync_task_ctx() method at perf,x86,intel pmu types;
-- employed the method on the optimized context switch path between 
-  equivalent perf event contexts;
-
+diff --git a/Documentation/devicetree/bindings/regulator/mt6359-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6359-regulator.txt
+new file mode 100644
+index 0000000..645ceb6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mt6359-regulator.txt
+@@ -0,0 +1,59 @@
++Mediatek MT6359 Regulator
++
++Required properties:
++- compatible: "mediatek,mt6359-regulator"
++- mt6359regulator: List of regulators provided by this controller. It is named
++  according to its regulator type, buck_<name> and ldo_<name>.
++  The definition for each of these nodes is defined using the standard binding
++  for regulators at Documentation/devicetree/bindings/regulator/regulator.txt.
++
++The valid names for regulators are::
++BUCK:
++  buck_vs1, buck_vgpu11, buck_vmodem, buck_vpu, buck_vcore, buck_vs2,
++  buck_vpa, buck_vproc2, buck_vproc1, buck_vcore_sshub
++LDO:
++  ldo_vaud18, ldo_vsim1, ldo_vibr, ldo_vrf12, ldo_vusb, ldo_vsram_proc2,
++  ldo_vio18, ldo_vcamio, ldo_vcn18, ldo_vfe28, ldo_vcn13, ldo_vcn33_1_bt,
++  ldo_vcn13_1_wifi, ldo_vaux18, ldo_vsram_others, ldo_vefuse, ldo_vxo22,
++  ldo_vrfck, ldo_vbif28, ldo_vio28, ldo_vemc, ldo_vcn33_2_bt, ldo_vcn33_2_wifi,
++  ldo_va12, ldo_va09, ldo_vrf18, ldo_vsram_md, ldo_vufs, ldo_vm18, ldo_vbbck,
++  ldo_vsram_proc1, ldo_vsim2, ldo_vsram_others_sshub
++
++Example:
++	pmic {
++		compatible = "mediatek,mt6359";
++
++		mt6359regulator: mt6359regulator {
++			compatible = "mediatek,mt6359-regulator";
++
++			mt6359_vs1_buck_reg: buck_vs1 {
++				regulator-name = "vs1";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <2200000>;
++				regulator-enable-ramp-delay = <0>;
++				regulator-always-on;
++			};
++			mt6359_vgpu11_buck_reg: buck_vgpu11 {
++				regulator-name = "vgpu11";
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1193750>;
++				regulator-enable-ramp-delay = <200>;
++				regulator-always-on;
++				regulator-allowed-modes = <0 1 2>;
++			};
++			mt6359_vaud18_ldo_reg: ldo_vaud18 {
++				compatible = "regulator-fixed";
++				regulator-name = "vaud18";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-enable-ramp-delay = <240>;
++			};
++			mt6359_vsim1_ldo_reg: ldo_vsim1 {
++				regulator-name = "vsim1";
++				regulator-min-microvolt = <1700000>;
++				regulator-max-microvolt = <3100000>;
++				regulator-enable-ramp-delay = <480>;
++			};
++		};
++	};
++
 -- 
-2.20.1
+1.9.1
 
