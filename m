@@ -6,106 +6,131 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E612FA372A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB59FA372B
 	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B3820854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDDC20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392847AbfJPLwX (ORCPT
+        id S2392858AbfJPLwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 16 Oct 2019 07:52:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41022 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:44740 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392811AbfJPLwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730622AbfJPLwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 07:52:12 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8F58CA3CD8A;
-        Wed, 16 Oct 2019 11:52:12 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D8FBE309321D;
+        Wed, 16 Oct 2019 11:52:11 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F7D460852;
-        Wed, 16 Oct 2019 11:52:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2EC219C68;
+        Wed, 16 Oct 2019 11:52:08 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 4D9FD31EA2; Wed, 16 Oct 2019 13:52:05 +0200 (CEST)
+        id E9B6B31E9A; Wed, 16 Oct 2019 13:52:04 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Gerd Hoffmann <kraxel@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Huang Rui <ray.huang@amd.com>,
+        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 10/11] drm/vram: drop verify_access
-Date:   Wed, 16 Oct 2019 13:52:02 +0200
-Message-Id: <20191016115203.20095-11-kraxel@redhat.com>
+Subject: [PATCH v4 07/11] drm/ttm: rename ttm_fbdev_mmap
+Date:   Wed, 16 Oct 2019 13:51:59 +0200
+Message-Id: <20191016115203.20095-8-kraxel@redhat.com>
 In-Reply-To: <20191016115203.20095-1-kraxel@redhat.com>
 References: <20191016115203.20095-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 11:52:12 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 16 Oct 2019 11:52:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not needed any more.
+Rename ttm_fbdev_mmap to ttm_bo_mmap_obj.  Move the vm_pgoff sanity
+check to amdgpu_bo_fbdev_mmap (only ttm_fbdev_mmap user in tree).
+
+The ttm_bo_mmap_obj function can now be used to map any buffer object.
+This allows to implement &drm_gem_object_funcs.mmap in gem ttm helpers.
+
+v3: patch added to series
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- drivers/gpu/drm/drm_gem_vram_helper.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+ include/drm/ttm/ttm_bo_api.h               | 10 ++++------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c |  5 ++++-
+ drivers/gpu/drm/ttm/ttm_bo_vm.c            |  8 ++------
+ 3 files changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-index ec868bf75333..b86fe0fa9d05 100644
---- a/drivers/gpu/drm/drm_gem_vram_helper.c
-+++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-@@ -552,13 +552,6 @@ static void drm_gem_vram_bo_driver_evict_flags(struct drm_gem_vram_object *gbo,
- 	*pl = gbo->placement;
+diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
+index 43c4929a2171..d2277e06316d 100644
+--- a/include/drm/ttm/ttm_bo_api.h
++++ b/include/drm/ttm/ttm_bo_api.h
+@@ -710,16 +710,14 @@ int ttm_bo_kmap(struct ttm_buffer_object *bo, unsigned long start_page,
+ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
+ 
+ /**
+- * ttm_fbdev_mmap - mmap fbdev memory backed by a ttm buffer object.
++ * ttm_bo_mmap_obj - mmap memory backed by a ttm buffer object.
+  *
+  * @vma:       vma as input from the fbdev mmap method.
+- * @bo:        The bo backing the address space. The address space will
+- * have the same size as the bo, and start at offset 0.
++ * @bo:        The bo backing the address space.
+  *
+- * This function is intended to be called by the fbdev mmap method
+- * if the fbdev address space is to be backed by a bo.
++ * Maps a buffer object.
+  */
+-int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
++int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
+ 
+ /**
+  * ttm_bo_mmap - mmap out of the ttm device address space.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+index 1fead0e8b890..6f0b789a0b49 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -1058,7 +1058,10 @@ void amdgpu_bo_fini(struct amdgpu_device *adev)
+ int amdgpu_bo_fbdev_mmap(struct amdgpu_bo *bo,
+ 			     struct vm_area_struct *vma)
+ {
+-	return ttm_fbdev_mmap(vma, &bo->tbo);
++	if (vma->vm_pgoff != 0)
++		return -EACCES;
++
++	return ttm_bo_mmap_obj(vma, &bo->tbo);
  }
  
--static int drm_gem_vram_bo_driver_verify_access(struct drm_gem_vram_object *gbo,
--						struct file *filp)
--{
--	return drm_vma_node_verify_access(&gbo->bo.base.vma_node,
--					  filp->private_data);
--}
--
- static void drm_gem_vram_bo_driver_move_notify(struct drm_gem_vram_object *gbo,
- 					       bool evict,
- 					       struct ttm_mem_reg *new_mem)
-@@ -823,20 +816,6 @@ static void bo_driver_evict_flags(struct ttm_buffer_object *bo,
- 	drm_gem_vram_bo_driver_evict_flags(gbo, placement);
+ /**
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index 53345c0854d5..1a9db691f954 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -479,14 +479,10 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
  }
+ EXPORT_SYMBOL(ttm_bo_mmap);
  
--static int bo_driver_verify_access(struct ttm_buffer_object *bo,
--				   struct file *filp)
--{
--	struct drm_gem_vram_object *gbo;
+-int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
++int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
+ {
+-	if (vma->vm_pgoff != 0)
+-		return -EACCES;
 -
--	/* TTM may pass BOs that are not GEM VRAM BOs. */
--	if (!drm_is_gem_vram(bo))
--		return -EINVAL;
+ 	ttm_bo_get(bo);
 -
--	gbo = drm_gem_vram_of_bo(bo);
--
--	return drm_gem_vram_bo_driver_verify_access(gbo, filp);
--}
--
- static void bo_driver_move_notify(struct ttm_buffer_object *bo,
- 				  bool evict,
- 				  struct ttm_mem_reg *new_mem)
-@@ -893,7 +872,6 @@ static struct ttm_bo_driver bo_driver = {
- 	.init_mem_type = bo_driver_init_mem_type,
- 	.eviction_valuable = ttm_bo_eviction_valuable,
- 	.evict_flags = bo_driver_evict_flags,
--	.verify_access = bo_driver_verify_access,
- 	.move_notify = bo_driver_move_notify,
- 	.io_mem_reserve = bo_driver_io_mem_reserve,
- 	.io_mem_free = bo_driver_io_mem_free,
+ 	ttm_bo_mmap_vma_setup(bo, vma);
+ 	return 0;
+ }
+-EXPORT_SYMBOL(ttm_fbdev_mmap);
++EXPORT_SYMBOL(ttm_bo_mmap_obj);
 -- 
 2.18.1
 
