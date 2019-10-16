@@ -2,168 +2,144 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FB3FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8C9FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DF62168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B612067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nyu.edu header.i=@nyu.edu header.b="eeOw7gMd";
-	dkim=pass (2048-bit key) header.d=nyu-edu.20150623.gappssmtp.com header.i=@nyu-edu.20150623.gappssmtp.com header.b="FZtT2DgP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2TT2wss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404904AbfJPPTw (ORCPT
+        id S2393282AbfJPPUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:19:52 -0400
-Received: from mx0a-00256a01.pphosted.com ([148.163.150.240]:2162 "EHLO
-        mx0b-00256a01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731530AbfJPPTw (ORCPT
+        Wed, 16 Oct 2019 11:20:21 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46835 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731530AbfJPPUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:19:52 -0400
-X-Greylist: delayed 2068 seconds by postgrey-1.27 at vger.kernel.org; Wed, 16 Oct 2019 11:19:51 EDT
-Received: from pps.filterd (m0094546.ppops.net [127.0.0.1])
-        by mx0b-00256a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9GEfsdp126517
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:45:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nyu.edu; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=20180315; bh=Z4cb3+GRXA9EqnJmXpWc8AtTCxFf8v08NwzkNafzhnA=;
- b=eeOw7gMdwRVxg7ksrGYu1MBX1C/Vo3u8vJ2ROJyF28UNw2PX/IH5BId1U/XQguclm758
- YEh7I1Ah5Q2JuVhVMv+bCi/Twd1U4kowlclW1PvPiBTM+kBTnDVKg3tMGI/b22Mgluc5
- ZR8/xqgl0VSCDkSO5FrD0DCRHanRloFvEqwlbZhcE9PQUktWryRem1+XasSUd/XrSJMr
- KZKqlgP+W+kIe8ts/SxT0/mmysr6atlLtFcxwCX8EeWvIbssCAqB87o/GjM+wFD9y4/x
- KxHW/GVnNYM6oNIsfCLd8lCoR+3dcDsRhUYfImkg1EoFxxEki1shOY6Jam26qZqlqJJl QQ== 
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mx0b-00256a01.pphosted.com with ESMTP id 2vnp4w3ur1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:45:22 -0400
-Received: by mail-qk1-f198.google.com with SMTP id b29so2927250qka.23
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:45:22 -0700 (PDT)
+        Wed, 16 Oct 2019 11:20:20 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k25so20334654oiw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nyu-edu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Z4cb3+GRXA9EqnJmXpWc8AtTCxFf8v08NwzkNafzhnA=;
-        b=FZtT2DgPvEk1dkdNAE/kX2k6ChkotaFixMGtcRbkpI1FXXd4CdCa7q82FdboZMcjus
-         4tQO6+ls9zVGEfZZEdhmiTKa8FKKfZ0euojGxBQ4ywgmccynSf55I0PrvObiXBoKSN0O
-         OcGsSuTN/8FNOTzndxikMia8wWCu8TmstMExVTXTdIFG11cAZQB0I5hZyQn411CUyjFb
-         i/e1z52/FXzPWFjcq/2vP1+zymZRCzTYtA3mPzXi1sjY//dFmh6U50ynfuPvMxTgYDQk
-         Vopum7uId5rLepOnzqpiYDmyJRrFQOzTtxXqkdxHaMpXOKm6FC2Y4p4rd4YnAtvEXb9i
-         LRyA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Hg//TZrhBsTy9D87m/T6t9gxtTCE+xcZuR7rP4e2SMY=;
+        b=H2TT2wssG/M4CGPptijE6fYDUwf6g02pfVhn2pLyGTct7/HPxBRUoc7o0wYy4masnz
+         puxOhemptI0TnB1Gk2dbdiI8v1Z1jhViNl/rhVYsWhNJauqCZcXyx/loBdg73ER910jF
+         9JI6iLelAXAgp/mqa0NsYUC6GAvq97L62s7oB1XeMtZ32mhjQPj/PFUjUo7y2AVvDd0n
+         QKJmLeVwWQ/UWIjxfakQD+LqvVt4nmGvLPGuM0n64E/BYo0+xneHRD0owdjiccLcAClN
+         2vMyt43umiFBp9GBuJxIN2X7YanifU34H1pCuNbYm17q+S/dUB8EYAU2s+mItkqu7Ux2
+         foSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z4cb3+GRXA9EqnJmXpWc8AtTCxFf8v08NwzkNafzhnA=;
-        b=VEKef6Rs6V35lX58vVnXIyZx/zNJle86tkl2rIE+Yzssxvs2SQk9rK+tgDb1la0hBl
-         bXcR6sCM2oZCzEaWLCUCYgdUxd2Mj7D1TlvmNXRhbbQl/pwyVdEoPMxQhVIlN9axGKnc
-         yYurcTsAQLRiK5LmJfVAUEu/7TMdNPNP4UlLUSS7euCwK2ujjFGrz+Aia/du9/LN7oLh
-         NeXR4Ad0ZtbV9F3UZj1kCk2tw7HxZxFSt2ODnSBgqopTtdjiE3+vzyJ+a49KvXQBVepB
-         5CquGbcq0hAX+P9VX7ZrcvOc7bw7+bEuIOs5cuBr8X5UJey/Pqezx3CPwX3xpHSa1Jkd
-         euOA==
-X-Gm-Message-State: APjAAAWvraC8bnUh50t8N9ZR6B1El5p7HhcsebXYOM62YjBEM/TqdXLa
-        b7KWql7GEJquLCcJiXmJLTKYfeLw9gnsMuR0Hc0jMhYQJ6d/wdnkF5F3Pnn9jgKnc73R3o6vvsz
-        akNQN1o5j2k4PC+Maoad4QQs=
-X-Received: by 2002:a0c:eda2:: with SMTP id h2mr41542109qvr.190.1571237121331;
-        Wed, 16 Oct 2019 07:45:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwthW6i4sYOEjqqa1DXH6trpqn8KkEK3rR31znEaiBCZutvDbhx1JX7Db1PsHhjbjJyGnuUmw==
-X-Received: by 2002:a0c:eda2:: with SMTP id h2mr41542092qvr.190.1571237121103;
-        Wed, 16 Oct 2019 07:45:21 -0700 (PDT)
-Received: from LykOS.localdomain (216-165-95-148.natpool.nyu.edu. [216.165.95.148])
-        by smtp.gmail.com with ESMTPSA id d127sm11208279qke.54.2019.10.16.07.45.19
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Hg//TZrhBsTy9D87m/T6t9gxtTCE+xcZuR7rP4e2SMY=;
+        b=rW+7W8qbSrKKApUTmngd8kDxaCQ0ajI09dDOYRDKC2N8XVT/feJySop7+UK76MDSJm
+         Vpi13vGXzxoHqEX12S6uV1GwCQT/zu+BHuj75vrnIAp/Kt/aM1fEadgzr4Oj1yPQf7Lk
+         YcxQe/gy6EScqWeqz5vm6xdIgbsk8NiY8N2DLIdqh7c8dv3CQh49UABygPxnss2ZRhfI
+         GUYUjyBtTi4Ltjn+Iy8zvDcxrXZ7VCu2HhWNYQPkP96L82wf/jQ1kS28IxOcXLUBurvS
+         xbgk6QsHmywjD1NAhcRC+8SMhVX00g+q3Gf0idwIoOkb/duFR9HsIEoHbnfD1nObxDbT
+         XSxg==
+X-Gm-Message-State: APjAAAXsDfAltmaekzrnYstikXQrh1AabuvwCAuCxDmPKT/9918Ln/Ov
+        O0a/0PUM0KQmWGMEyjmpyQ==
+X-Google-Smtp-Source: APXvYqw29TSLm5lXfqhgqJ4rgsbwSamu6EsD2YQAkOS+jHJBw4/SftqEt/3cn7iBZ7a/ahH0VVTfAQ==
+X-Received: by 2002:a54:4582:: with SMTP id z2mr4069134oib.140.1571239219494;
+        Wed, 16 Oct 2019 08:20:19 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id k2sm7449649oih.38.2019.10.16.08.20.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 07:45:20 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 10:45:19 -0400
-From:   Santiago Torres Arias <santiago@nyu.edu>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
-        workflows@vger.kernel.org, Git Mailing List <git@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Eric Wong <e@80x24.org>
-Subject: Re: email as a bona fide git transport
-Message-ID: <20191016144517.giwip4yuaxtcd64g@LykOS.localdomain>
-References: <b9fb52b8-8168-6bf0-9a72-1e6c44a281a5@oracle.com>
- <20191016111009.GE13154@1wt.eu>
+        Wed, 16 Oct 2019 08:20:18 -0700 (PDT)
+Received: from t560 (unknown [192.168.27.180])
+        by serve.minyard.net (Postfix) with ESMTPSA id 49C4A180056;
+        Wed, 16 Oct 2019 15:20:18 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 10:20:17 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, arnd@arndb.de,
+        gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        Alistair Popple <alistair@popple.id.au>
+Subject: Re: [PATCH -next] ipmi: bt-bmc: use devm_platform_ioremap_resource()
+ to simplify code
+Message-ID: <20191016152017.GO14232@t560>
+Reply-To: minyard@acm.org
+References: <20191016092131.23096-1-yuehaibing@huawei.com>
+ <20191016141936.GN14232@t560>
+ <789af3ff-9ed8-5869-05c4-9cfb2ac5e9d5@kaod.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mrjm34jdre4iu7ux"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191016111009.GE13154@1wt.eu>
-X-Orig-IP: 209.85.222.198
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=7 mlxlogscore=853 impostorscore=0
- adultscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910160128
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <789af3ff-9ed8-5869-05c4-9cfb2ac5e9d5@kaod.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 04:41:07PM +0200, Cédric Le Goater wrote:
+> On 16/10/2019 16:19, Corey Minyard wrote:
+> > On Wed, Oct 16, 2019 at 05:21:31PM +0800, YueHaibing wrote:
+> >> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> >> This is detected by coccinelle.
+> > 
+> > Adding the module author and others. I can't see a reason to not do
+> > this.
+> 
+> yes. Looks good to me.
+> 
+> Reviewed-by: Cédric Le Goater <clg@kaod.org>
 
---mrjm34jdre4iu7ux
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Queued for next merge window, unless someone protests.
 
-Hi Willy, Vegard.
+-corey
 
-On Wed, Oct 16, 2019 at 01:10:09PM +0200, Willy Tarreau wrote:
-> Hi Vegard,
->=20
-> On Wed, Oct 16, 2019 at 12:22:54PM +0200, Vegard Nossum wrote:
-> > (cross-posted to git, LKML, and the kernel workflows mailing lists.)
-> >=20
-> > Hi all,
-> >=20
-> > I've been following Konstantin Ryabitsev's quest for better development
-> > and communication tools for the kernel [1][2][3], and I would like to
-> > propose a relatively straightforward idea which I think could bring a
-> > lot to the table.
-> >=20
-> > Step 1:
-> >=20
-> > * git send-email needs to include parent SHA1s and generally all the
-> >   information needed to perfectly recreate the commit when applied so
-> >   that all the SHA1s remain the same
-> >=20
-> > * git am (or an alternative command) needs to recreate the commit
-> >   perfectly when applied, including applying it to the correct parent
-> >=20
-> > Having these two will allow a perfect mapping between email and git;
-> > essentially email just becomes a transport for git. There are a lot of
-> > advantages to this, particularly that you have a stable way to refer to
-> > a patch or commit (despite it appearing on a mailing list), and there
-> > is no need for "changeset IDs" or whatever, since you can just use the
-> > git SHA1 which is unique, unambiguous, and stable.
-
-I wonder if it'd be also possible to then embed gpg signatures over
-send-mail payloads so as they can be transparently transferred to the
-commit.
-
--Santiago
-
---mrjm34jdre4iu7ux
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkDurc2QOttZVM+/zRo8SLOgWIpUFAl2nLP0ACgkQRo8SLOgW
-IpUWCQ//UFA5stuXzMxzWIKHQD+H0TuHkdaljhkWkD/PJkKg38VK0qyxCwqszoVd
-wRfV3HZa/hoPkY6pnoqIm+VfqbuEnZ5K93I7mGvsKnY9lAOh7GXYjETV62XN0sT7
-goQPqxoBM+a9hEBYSccYARaq2EGmDHojhEYJjLIR2br4XXMn+Mrd0VQ90Kph2ozn
-WwwoBeqNQaA2gH2fBeYmWKfpuY+0yIRxQfX2gflOx7IDVQAm9NiPqV2FakfZ5Kq8
-W8QhGRIpDvIIzmqpGpuETPBtXt/eABENOyoa+E8iFviEM471N6ww3PVQAD6ZJ9k+
-LofGz4XhiNOgAHWRKIh4v6zYZgxXfXtIojAZLDR2TGSrfWDj4l9EJ0nNNI2pYspV
-1xFkCYEUwoLORs1BLo1Zn2mO4XhiAcsQvrJwRdHvT6MFDDOl59SpQQkCJ77udupr
-oCwHoJ4Ew/zHn8y+H7PRoNc9cIqhIUbBTqSJ9lNczOjOaliSBGDQ46CsEfEoT2eT
-hxtkOiZQBpLKifJ9oPxGKqD1yPRFI+mNYCkye/yx7BN8Mgo/wqei4ypu+pmdpai8
-LF41nXT1flRHt/ffTJSUP4JqpJXH96Kkz+PCUsBQ3x6zf0eMQNaVY59lXdXN44Wy
-TYRbjZx4va+x+wkmRl6Z+7WefkAqrL3H2l6XjBvTkXYfZneLuGg=
-=LpIO
------END PGP SIGNATURE-----
-
---mrjm34jdre4iu7ux--
+> 
+> Thanks,
+> 
+> C.
+> 
+> > -corey
+> > 
+> >>
+> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >> ---
+> >>  drivers/char/ipmi/bt-bmc.c | 4 +---
+> >>  1 file changed, 1 insertion(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+> >> index 40b9927..d36aeac 100644
+> >> --- a/drivers/char/ipmi/bt-bmc.c
+> >> +++ b/drivers/char/ipmi/bt-bmc.c
+> >> @@ -444,15 +444,13 @@ static int bt_bmc_probe(struct platform_device *pdev)
+> >>  
+> >>  	bt_bmc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> >>  	if (IS_ERR(bt_bmc->map)) {
+> >> -		struct resource *res;
+> >>  		void __iomem *base;
+> >>  
+> >>  		/*
+> >>  		 * Assume it's not the MFD-based devicetree description, in
+> >>  		 * which case generate a regmap ourselves
+> >>  		 */
+> >> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >> -		base = devm_ioremap_resource(&pdev->dev, res);
+> >> +		base = devm_platform_ioremap_resource(pdev, 0);
+> >>  		if (IS_ERR(base))
+> >>  			return PTR_ERR(base);
+> >>  
+> >> -- 
+> >> 2.7.4
+> >>
+> >>
+> 
