@@ -2,162 +2,292 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C1DFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9467FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0743620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B71C2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571233882;
+	bh=HCdRDuHYzMBbEO0nrbpBojXNDkZQrE3bThDnWnyflKg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dlbU9zbR1sc5i55xQeaMqMIsYE7hQpQUKX6p0fnhAONehN1oZbC9aC3KwOT8vPsVd
+	 sNl8LXm24ORJD3h5cD/+J1e3RlUCfcuF0ZxZ/rixvzk43nRq6dtw7VdQyNVFWxq9Vu
+	 g+5mhSNZBOfbae2lKIw1vQl5Q6JrptwtIfeZSvWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405562AbfJPNvL (ORCPT
+        id S2405582AbfJPNvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:51:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64160 "EHLO mga05.intel.com"
+        Wed, 16 Oct 2019 09:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405542AbfJPNvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:51:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:51:11 -0700
-X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
-   d="scan'208";a="186154129"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 06:51:07 -0700
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
- <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
- <20190925180931.GG31852@linux.intel.com>
- <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
- <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de>
- <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
-Date:   Wed, 16 Oct 2019 21:51:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2405567AbfJPNvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:51:21 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5235A21848;
+        Wed, 16 Oct 2019 13:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571233879;
+        bh=HCdRDuHYzMBbEO0nrbpBojXNDkZQrE3bThDnWnyflKg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hOWQm9ByS5ZORydHhQKZjVIUuZvxknqO/TwgDkO2NBEqM65WZlnKiWY8VjhFhVIs8
+         mL6HWiIAubrubhLSrrA6za5k4qFm4R6RNxX5NzVe38k3lJ32ceoQru8mgMNem/gfAr
+         pipS/Lzlmn0CI0rsl9rQs87gPXuAMAwgHmYZqUIo=
+Received: by mail-qk1-f173.google.com with SMTP id u184so22808767qkd.4;
+        Wed, 16 Oct 2019 06:51:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAVgJJL3X9w7PqNEJGGjjiHpsDcOt9sMj7s5Ao5T/UwvffGYiByb
+        htH2C8SQut4eIMwXv5EUhW6YaDzAOeB/uOhH3w==
+X-Google-Smtp-Source: APXvYqx7BlcygeKrIYBNjMW/BUKQN2ZxX5edXsFDWH7JF43qkfOVAIHn+CnzgtR4eQlWfHy/eyt61P4z/30Axgg7KSo=
+X-Received: by 2002:a37:2f81:: with SMTP id v123mr41956355qkh.254.1571233878318;
+ Wed, 16 Oct 2019 06:51:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191015162300.22024-1-brgl@bgdev.pl> <20191015162300.22024-2-brgl@bgdev.pl>
+ <CAL_JsqKhGr6QDWZFR6cq6MH-0vghb9oSgkCCdi7bhiKmvrkY_w@mail.gmail.com> <CAMRc=Mdb7T6p7xXWJBS2UXq0E-FD4WRtaP7H-AvRH0s6-MyJ8A@mail.gmail.com>
+In-Reply-To: <CAMRc=Mdb7T6p7xXWJBS2UXq0E-FD4WRtaP7H-AvRH0s6-MyJ8A@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 16 Oct 2019 08:51:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJZ9myO3Uwb6j_R3W8EpVtOaCZV6_tDfNAXwoaUZO+kNQ@mail.gmail.com>
+Message-ID: <CAL_JsqJZ9myO3Uwb6j_R3W8EpVtOaCZV6_tDfNAXwoaUZO+kNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/2019 7:58 PM, Paolo Bonzini wrote:
-> On 16/10/19 13:49, Thomas Gleixner wrote:
->> On Wed, 16 Oct 2019, Paolo Bonzini wrote:
->>> Yes it does.  But Sean's proposal, as I understand it, leads to the
->>> guest receiving #AC when it wasn't expecting one.  So for an old guest,
->>> as soon as the guest kernel happens to do a split lock, it gets an
->>> unexpected #AC and crashes and burns.  And then, after much googling and
->>> gnashing of teeth, people proceed to disable split lock detection.
->>
->> I don't think that this was what he suggested/intended.
-> 
-> Xiaoyao's reply suggests that he also understood it like that.
+On Wed, Oct 16, 2019 at 7:55 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
+> wt., 15 pa=C5=BA 2019 o 23:17 Rob Herring <robh+dt@kernel.org> napisa=C5=
+=82(a):
+> >
+> > On Tue, Oct 15, 2019 at 11:23 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> > >
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > Convert the binding document for MAX77650 core MFD module to YAML.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > ---
+> > >  .../devicetree/bindings/mfd/max77650.txt      | 47 +----------
+> > >  .../devicetree/bindings/mfd/max77650.yaml     | 83 +++++++++++++++++=
+++
+> > >  2 files changed, 84 insertions(+), 46 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.ya=
+ml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Doc=
+umentation/devicetree/bindings/mfd/max77650.txt
+> > > index b529d8d19335..080871686b3b 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/max77650.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/max77650.txt
+> > > @@ -1,46 +1 @@
+> > > -MAX77650 ultra low-power PMIC from Maxim Integrated.
+> > > -
+> > > -Required properties:
+> > > --------------------
+> > > -- compatible:          Must be "maxim,max77650"
+> > > -- reg:                 I2C device address.
+> > > -- interrupts:          The interrupt on the parent the controller is
+> > > -                       connected to.
+> > > -- interrupt-controller: Marks the device node as an interrupt contro=
+ller.
+> > > -- #interrupt-cells:    Must be <2>.
+> > > -
+> > > -- gpio-controller:     Marks the device node as a gpio controller.
+> > > -- #gpio-cells:         Must be <2>. The first cell is the pin number=
+ and
+> > > -                       the second cell is used to specify the gpio a=
+ctive
+> > > -                       state.
+> > > -
+> > > -Optional properties:
+> > > ---------------------
+> > > -gpio-line-names:       Single string containing the name of the GPIO=
+ line.
+> > > -
+> > > -The GPIO-controller module is represented as part of the top-level P=
+MIC
+> > > -node. The device exposes a single GPIO line.
+> > > -
+> > > -For device-tree bindings of other sub-modules (regulator, power supp=
+ly,
+> > > -LEDs and onkey) refer to the binding documents under the respective
+> > > -sub-system directories.
+> > > -
+> > > -For more details on GPIO bindings, please refer to the generic GPIO =
+DT
+> > > -binding document <devicetree/bindings/gpio/gpio.txt>.
+> > > -
+> > > -Example:
+> > > ---------
+> > > -
+> > > -       pmic@48 {
+> > > -               compatible =3D "maxim,max77650";
+> > > -               reg =3D <0x48>;
+> > > -
+> > > -               interrupt-controller;
+> > > -               interrupt-parent =3D <&gpio2>;
+> > > -               #interrupt-cells =3D <2>;
+> > > -               interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> > > -
+> > > -               gpio-controller;
+> > > -               #gpio-cells =3D <2>;
+> > > -               gpio-line-names =3D "max77650-charger";
+> > > -       };
+> > > +This file has been moved to max77650.yaml.
+> > > diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Do=
+cumentation/devicetree/bindings/mfd/max77650.yaml
+> > > new file mode 100644
+> > > index 000000000000..5186ad287ec7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
+> > > @@ -0,0 +1,83 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/max77650.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: MAX77650 ultra low-power PMIC from Maxim Integrated.
+> > > +
+> > > +maintainers:
+> > > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > +
+> > > +description: |
+> > > +  This document describes the DT properties of the core MFD controll=
+er.
+> > > +
+> > > +  The GPIO-controller module is represented as part of the top-level=
+ PMIC
+> > > +  node. The device exposes a single GPIO line.
+> > > +
+> > > +  For device-tree bindings of other sub-modules (regulator, power su=
+pply,
+> > > +  LEDs and onkey) refer to the binding documents under the respectiv=
+e
+> > > +  sub-system directories.
+> > > +
+> > > +  For more details on GPIO bindings, please refer to the generic GPI=
+O DT
+> > > +  binding document <devicetree/bindings/gpio/gpio.txt>.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: maxim,max77650
+> > > +
+> > > +  reg:
+> > > +    description:
+> > > +      I2C device address.
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    description:
+> > > +      The interrupt on the parent the controller is connected to.
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupt-controller: true
+> > > +
+> > > +  "#interrupt-cells":
+> > > +    const: 2
+> > > +    description:
+> > > +      The first cell is the IRQ number, the second cell is the trigg=
+er type.
+> > > +
+> > > +  gpio-controller: true
+> > > +
+> > > +  "#gpio-cells":
+> > > +    const: 2
+> > > +    description:
+> > > +      The first cell is the pin number and the second cell is used t=
+o specify
+> > > +      the gpio active state.
+> > > +
+> > > +  gpio-line-names:
+> > > +    $ref: '/schemas/types.yaml#/definitions/string-array'
+> > > +    maxItems: 1
+> > > +    description:
+> > > +      Single string containing the name of the GPIO line.
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - interrupt-controller
+> > > +  - "#interrupt-cells"
+> > > +  - gpio-controller
+> > > +  - "#gpio-cells"
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    pmic@48 {
+> > > +        compatible =3D "maxim,max77650";
+> > > +        reg =3D <0x48>;
+> > > +
+> > > +        interrupt-controller;
+> > > +        interrupt-parent =3D <&gpio2>;
+> > > +        #interrupt-cells =3D <2>;
+> > > +        interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> >
+> > Examples are built now. Run 'make dt_binding_check' on bindings before
+> > sending them:
+> >
+> > Error: Documentation/devicetree/bindings/mfd/max77650.example.dts:24.29=
+-30
+> > syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > scripts/Makefile.lib:321: recipe for target
+> > 'Documentation/devicetree/bindings/mfd/max77650.example.dt.yaml'
+> > failed
+> > make[1]: *** [Documentation/devicetree/bindings/mfd/max77650.example.dt=
+.yaml]
+> > Error 1
+> >
+> > You need to include any includes that you use.
+> >
+> > Rob
+>
+> Hi Rob,
+>
+> thanks for the review.
+>
+> I'm on v5.4-rc3 and when running dt_binding_check, the error I'm
+> getting is this:
+>
+> # make dt_binding_check
+> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/mfd/max77650.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+>   CHKDT   Documentation/devicetree/bindings/mfd/max77650.yaml
+> make[1]: *** No rule to make target
+> 'Documentation/devicetree/bindings/mfd/max77650.example.dt.yaml',
+> needed by '__build'.  Stop.
+> make: *** [Makefile:1263: dt_binding_check] Error 2
+>
+> Is this caused by the same issue or am I missing something?
 
-Actually, what I replied is a little different from what you stated 
-above that guest won't receive #AC when it wasn't expecting one but the 
-userspace receives this #AC.
+I believe that's because dtc needs to be built with libyaml support.
 
->>> In all of these cases, the common final result is that split-lock
->>> detection is disabled on the host.  So might as well go with the
->>> simplest one and not pretend to virtualize something that (without core
->>> scheduling) is obviously not virtualizable.
->>
->> You are completely ignoring any argument here and just leave it behind your
->> signature (instead of trimming your reply).
-> 
-> I am not ignoring them, I think there is no doubt that this is the
-> intended behavior.  I disagree that Sean's patches achieve it, however.
-> 
->>>> 1) Sane guest
->>>>
->>>> Guest kernel has #AC handler and you basically prevent it from
->>>> detecting malicious user space and killing it. You also prevent #AC
->>>> detection in the guest kernel which limits debugability.
->>
->> That's a perfectly fine situation. Host has #AC enabled and exposes the
->> availability of #AC to the guest. Guest kernel has a proper handler and
->> does the right thing. So the host _CAN_ forward #AC to the guest and let it
->> deal with it. For that to work you need to expose the MSR so you know the
->> guest state in the host.
->>
->> Your lazy 'solution' just renders #AC completely useless even for
->> debugging.
->>
->>>> 2) Malicious guest
->>>>
->>>> Trigger #AC to disable the host detection and then carry out the DoS
->>>> attack.
->>
->> With your proposal you render #AC useless even on hosts which have SMT
->> disabled, which is just wrong. There are enough good reasons to disable
->> SMT.
-> 
-> My lazy "solution" only applies to SMT enabled.  When SMT is either not
-> supported, or disabled as in "nosmt=force", we can virtualize it like
-> the posted patches have done so far.
-> 
-
-Do we really need to divide it into two cases of SMT enabled and SMT 
-disabled?
-
->> I agree that with SMT enabled the situation is truly bad, but we surely can
->> be smarter than just disabling it globally unconditionally and forever.
->>
->> Plus we want a knob which treats guests triggering #AC in the same way as
->> we treat user space, i.e. kill them with SIGBUS.
-> 
-> Yes, that's a valid alternative.  But if SMT is possible, I think the
-> only sane possibilities are global disable and SIGBUS.  SIGBUS (or
-> better, a new KVM_RUN exit code) can be acceptable for debugging guests too.
-
-If SIGBUS, why need to globally disable?
-
-When there is an #AC due to split-lock in guest, KVM only has below two 
-choices:
-1) inject back into guest.
-    - If kvm advertise this feature to guest, and guest kernel is 
-latest, and guest kernel must enable it too. It's the happy case that 
-guest can handler it on its own purpose.
-    - Any other cases, guest get an unexpected #AC and crash.
-2) report to userspace (I think the same like a SIGBUS)
-
-So for simplicity, we can do what Paolo suggested that don't advertise 
-this feature and report #AC to userspace when an #AC due to split-lock 
-in guest *but* we never disable the host's split-lock detection due to 
-guest's split-lock.
-
-> Paolo
-> 
+Rob
