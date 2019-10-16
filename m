@@ -2,193 +2,104 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54774ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4821EC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB7C21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B3A21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ezJ2leyw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pjvu+S9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403969AbfJPIfc (ORCPT
+        id S2391460AbfJPIgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:35:32 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46312 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391102AbfJPIfc (ORCPT
+        Wed, 16 Oct 2019 04:36:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32937 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387395AbfJPIgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:35:32 -0400
-Received: by mail-qk1-f194.google.com with SMTP id e66so1409272qkf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:35:31 -0700 (PDT)
+        Wed, 16 Oct 2019 04:36:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i76so13867654pgc.0;
+        Wed, 16 Oct 2019 01:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GmuC3zn8bALphH5r2b0Q1YLWOrBX5XjvTZ9/8xPZZN4=;
-        b=ezJ2leywNfinL5V540/jApDr2GEu4Od6OcnKeW75/FAlBxgP8+aMmrW3ENWC8EVwIK
-         bbUw8QHOWvqgI2Rn//zRyqpUTL/bgIoOrv05RXTa9DixIYgal1j03iYpAo+OCXxHXxtH
-         B8duz5djvIIx5kmVYxdveo8+w2jLJwZDXppqJReOWwEh8AeAClRF/5D52vfw2aGa3z0Y
-         vtbc65QrHG7hThQJpg36B1viWx0nFYWkAjoJuEQQ6gaP2+c5X7XDi1pgQdA82zDpOsVv
-         hgd4qZSz+RrWQucvq75ZkaN4bgVA8dU6IoKzIX419wej4sUDk/qe07R8NcEFU5ms2+tr
-         /bQg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UFOAm0KEEOL2hee760g8AZEKV489IZzr5TEqXGhsPJ0=;
+        b=Pjvu+S9cr1LuhjKwbTEv5zAdliS8WLrFYSV9ajCz3Q/g4wItEtxZ84LHPaBzLPQsQn
+         evHe1kYjcS468/RoFpq3ShSUZR4iGEFWGAI4h7GGFPZU0/qQkfM4wN8r/FOELtWUvHE4
+         Ax7xGEsXESpgj5OHeVJH19bSPDRHuVaTzWHZEGjWjCU0PbobeiVNYY0AIlAg/Ohf8y54
+         mJTsl+6XIAeKPy9Hp2gJpdXOrWmWj2ysOO/ErFYDFiMaTqYGtxD7rrBR4GHuVDUZdAz5
+         eqwy0LF+aVyOEVQCvkb6iOP8QiN0c5b88OV2VLvEQ1ipHgNu3x7h7zVB62tighmBqm+k
+         rkqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GmuC3zn8bALphH5r2b0Q1YLWOrBX5XjvTZ9/8xPZZN4=;
-        b=svlz7CQD7NORDEu1g/bhNPTvOME7MApZHbvnMzvzOndb7tT6VLq6ozWoyLK6AxDhaA
-         N3V3fgVuG1Xl6FwB7KgjjfLClLmVsXuNAwWrl6umWOaftgm+BfBcF0PWd86ytuysPcYT
-         3J3IKw3VMx54BlZ14SNaC0ahbFSH+mM1KbaG9fqrBMU+OZn51bCzOlPVfp20RHd5qVXg
-         HMo5Ktwg/ozYeVZIS+BK8hqmi+lFPyqFj36p4gj9eAIdPhNJnLOXUb0xhvZbStLj1sIY
-         4CbfF+xMmnPV65Hy3IqtbwwtaFKVBsD6IH5ZI9rwGgaI4RaX3McQSdZz6aDBew/dj5oR
-         r1+A==
-X-Gm-Message-State: APjAAAXb4tSU+R9EXF758kl/P/rDCp7ffNwEnlP1gu79Is9HKkpRZzqi
-        lzm+YdEvKFoEpIKI84uc0C6kzr9OZq2QLEYl9ftHQw==
-X-Google-Smtp-Source: APXvYqzGRMvNTAJKYa1IF/vPfb2c7W0O+r3HJGpQGbPndIgkhES6jDxA2LF0IZi6nk9B8YFGFFqvF/SXFonIwxR9VZo=
-X-Received: by 2002:a37:8806:: with SMTP id k6mr39103180qkd.127.1571214930602;
- Wed, 16 Oct 2019 01:35:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UFOAm0KEEOL2hee760g8AZEKV489IZzr5TEqXGhsPJ0=;
+        b=qYlG0qcfjmApDCq/WhTxgiLsIaC+HLvQHDIroOPrAJEAUuPBKBCseV5qPdXdrHxTIi
+         q2tC2yVfSvmVWa1b/u1qItwMlX2H1nHJrgqIN1wwJvEjHrOe1Ot1McCbn6pvi75LEDD6
+         iVukFt5cdY8LvA5cSzRac3v7fLAXKWXqbQ5fF+K+MwOxCG0grtNogNqqyTemLCCUGuiy
+         e2U31hzAvfw9ne6qoodmSuHBlshmLORpwceoEK+qYZ1GJrKd8Lv4Z77Pn51nXdgulY4d
+         e5Mp50KaIxHy0+bRF6qZJAr4n21f2k3zDtfJme/X2A+vtQjNr91qBUbTMuJhVp3d8Icp
+         fZMQ==
+X-Gm-Message-State: APjAAAUIXY8XuXZXUI2zO+SvC65oy6yzC9gBDzRKsy3AAG16PDDUfqUL
+        CeEC2iTq7kAvL/tQuVq2GjMxAfT1iKw=
+X-Google-Smtp-Source: APXvYqzqnCbOUwdGnLmvPGdh1jL4IXUNN4vHWxcPxg/XaX21u92gWdQkDPImbOFLonrO9o5MV8L1Dg==
+X-Received: by 2002:a63:2049:: with SMTP id r9mr5005744pgm.257.1571214965347;
+        Wed, 16 Oct 2019 01:36:05 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id y66sm23847751pgy.23.2019.10.16.01.36.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 01:36:04 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] USB: bcma: Add a check for devm_gpiod_get
+Date:   Wed, 16 Oct 2019 16:35:32 +0800
+Message-Id: <20191016083531.5734-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <cover.1571210269.git.amit.kucheria@linaro.org> <6e6c6da8-0948-581c-a4a3-7a2617ac5dd0@linaro.org>
-In-Reply-To: <6e6c6da8-0948-581c-a4a3-7a2617ac5dd0@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 16 Oct 2019 14:05:19 +0530
-Message-ID: <CAP245DXOoRoCogZzgG7ss-bVSmE-FfeP3fxV3Vrya+_c1ew7dA@mail.gmail.com>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 1:29 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 16/10/2019 09:33, Amit Kucheria wrote:
-> > Hi Thermal and MSM maintainers,
-> >
-> > I believe this series is now ready to be merged. The DT bindings and dr=
-iver
-> > changes should go through the thermal tree and the changes to the DT fi=
-les
-> > themselves should go through the MSM tree. There is no hard ordering
-> > dependency because we're adding a new property to the driver. It would =
-help
-> > to soak in linux-next for a few weeks to catch anything on kernelci.org=
-.
->
-> So the ones going to thermal are:
->
-> 1-7, 14, 15 right ?
+bcma_hcd_probe misses a check for devm_gpiod_get and may miss
+the error.
+Add a check for it and return the error if a failure occurs.
 
-1-4, 7, 14, 15 =3D> thermal tree
-5, 6, 8-13 =3D> msm tree
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/usb/host/bcma-hcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I guess I could have ordered it better for merging :-/
+diff --git a/drivers/usb/host/bcma-hcd.c b/drivers/usb/host/bcma-hcd.c
+index 2400a826397a..652fa29beb27 100644
+--- a/drivers/usb/host/bcma-hcd.c
++++ b/drivers/usb/host/bcma-hcd.c
+@@ -406,9 +406,12 @@ static int bcma_hcd_probe(struct bcma_device *core)
+ 		return -ENOMEM;
+ 	usb_dev->core = core;
+ 
+-	if (core->dev.of_node)
++	if (core->dev.of_node) {
+ 		usb_dev->gpio_desc = devm_gpiod_get(&core->dev, "vcc",
+ 						    GPIOD_OUT_HIGH);
++		if (IS_ERR(usb_dev->gpio_desc))
++			return PTR_ERR(usb_dev->gpio_desc);
++	}
+ 
+ 	switch (core->id.id) {
+ 	case BCMA_CORE_USB20_HOST:
+-- 
+2.20.1
 
-> > Changes since v4:
-> > - Change to of-thermal core[1] to force interrupts w/o changing polling=
--delay DT
-> >   parameter
-> > - Corresponding changes to DT files to remove the hunks setting the val=
-ues
-> >   to 0
-> > - Collected reviews and acks
-> >
-> > Changes since v3:
-> > - Fix up the YAML definitions based on Rob's review
-> >
-> > Changes since v2:
-> > - Addressed Stephen's review comment
-> > - Moved the dt-bindings to yaml (This throws up some new warnings in va=
-rious QCOM
-> > devicetrees. I'll send out a separate series to fix them up)
-> > - Collected reviews and acks
-> > - Added the dt-bindings to MAINTAINERS
-> >
-> > Changes since v1:
-> > - Collected reviews and acks
-> > - Addressed Stephen's review comments (hopefully I got them all).
-> > - Completely removed critical interrupt infrastructure from this series=
-.
-> >   Will post that separately.
-> > - Fixed a bug in sign-extension of temperature.
-> > - Fixed DT bindings to use the name of the interrupt e.g. "uplow" and u=
-se
-> >   platform_get_irq_byname().
-> >
-> > Add interrupt support to TSENS. The first 6 patches are general fixes a=
-nd
-> > cleanups to the driver before interrupt support is introduced.
-> >
-> > [1] https://lore.kernel.org/linux-arm-msm/1b53ef537203e629328285b4597a0=
-9e4a586d688.1571181041.git.amit.kucheria@linaro.org/
-> >
-> > Amit Kucheria (15):
-> >   drivers: thermal: tsens: Get rid of id field in tsens_sensor
-> >   drivers: thermal: tsens: Simplify code flow in tsens_probe
-> >   drivers: thermal: tsens: Add __func__ identifier to debug statements
-> >   drivers: thermal: tsens: Add debugfs support
-> >   arm: dts: msm8974: thermal: Add thermal zones for each sensor
-> >   arm64: dts: msm8916: thermal: Fixup HW ids for cpu sensors
-> >   dt-bindings: thermal: tsens: Convert over to a yaml schema
-> >   arm64: dts: sdm845: thermal: Add interrupt support
-> >   arm64: dts: msm8996: thermal: Add interrupt support
-> >   arm64: dts: msm8998: thermal: Add interrupt support
-> >   arm64: dts: qcs404: thermal: Add interrupt support
-> >   arm: dts: msm8974: thermal: Add interrupt support
-> >   arm64: dts: msm8916: thermal: Add interrupt support
-> >   drivers: thermal: tsens: Create function to return sign-extended
-> >     temperature
-> >   drivers: thermal: tsens: Add interrupt support
-> >
-> >  .../bindings/thermal/qcom-tsens.txt           |  55 --
-> >  .../bindings/thermal/qcom-tsens.yaml          | 168 ++++++
-> >  MAINTAINERS                                   |   1 +
-> >  arch/arm/boot/dts/qcom-msm8974.dtsi           |  92 +++
-> >  arch/arm64/boot/dts/qcom/msm8916.dtsi         |   6 +-
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +
-> >  arch/arm64/boot/dts/qcom/msm8998.dtsi         |   6 +-
-> >  arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +
-> >  drivers/thermal/qcom/tsens-8960.c             |   4 +-
-> >  drivers/thermal/qcom/tsens-common.c           | 529 ++++++++++++++++--
-> >  drivers/thermal/qcom/tsens-v0_1.c             |  11 +
-> >  drivers/thermal/qcom/tsens-v1.c               |  29 +
-> >  drivers/thermal/qcom/tsens-v2.c               |  13 +
-> >  drivers/thermal/qcom/tsens.c                  |  58 +-
-> >  drivers/thermal/qcom/tsens.h                  | 286 ++++++++--
-> >  16 files changed, 1102 insertions(+), 166 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsen=
-s.txt
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsen=
-s.yaml
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
