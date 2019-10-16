@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB60FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A8FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C4321925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2951121D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263133;
-	bh=Ck7Qxf1I86oSI9qJ6PU0dWKBQw+DaL5W0bIa78RXrRc=;
+	s=default; t=1571263135;
+	bh=8ypf+V3XnMZ5d4aOrmgay6KYQXAQYppW/pnkETnQXzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGng3oiR1yjT8dnar4YppO6HzdFNq2d76nGbd0moJ/4oi8VghJBlealH6Lonxf9ba
-	 5A3gqLWC4M+CfeEKFkO6i1GuokEviwhy2hEy93SQJ3cY7NiK8Fb/HW65cqA3Q5oYQX
-	 OThrGpXASXctxjFqqFZXYpzNbFKaUyiCBi6W198c=
+	b=wX4JXJImyGAcEVu8eHbIwoY5cGAyvP5e+dPa5GTvu5i31TUB83w+Ia6GX2ilWwKqa
+	 a0G/hFstQW3vxoBPAEaAb8wRi3fSiTIN0XIwwgee3gS6dX1tmGqGamMYtPqWSSO6/J
+	 dyGqB2A2E9LvVO8yoaY7fuwXVQYibYpTd4zK00Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438300AbfJPV6w (ORCPT
+        id S2438313AbfJPV6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438109AbfJPV6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:02 -0400
+        id S2395550AbfJPV6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:04 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00620222C1;
-        Wed, 16 Oct 2019 21:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F19222BD;
+        Wed, 16 Oct 2019 21:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263082;
-        bh=Ck7Qxf1I86oSI9qJ6PU0dWKBQw+DaL5W0bIa78RXrRc=;
+        s=default; t=1571263083;
+        bh=8ypf+V3XnMZ5d4aOrmgay6KYQXAQYppW/pnkETnQXzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIwnO5hgvG5nwx6A9xOG5SzVh/mGG6lc75rSZNuQx/K0URSYTHh1jWcsB9GFwsADt
-         NZR/aX1jpRb7eZ8O9pPzugbdfTbWynM/Vb3bY5x6Pi81JXyps2jLgjCDsqpe16iGAR
-         6kDNvVTX4g2DNokN7mRYEAADeuA1RhkBcVeZW9hs=
+        b=DDBDx5WsEDKpESjM+dgi1bqKTBeTUDWn0LexLnfOMW08B6+LeZe3uB27ZUb1BFFtG
+         lmabOlZYjoy5SyDh/OEhJFV0owXqAyzn5grVdPvlvh2r7aHECFbEdbDCgsZeM66pCF
+         uilhR+ZjCXcuK5cmgAgWFp41UVy51X+Qi35dL+Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark-PK Tsai <mark-pk.tsai@mediatek.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alix Wu <alix.wu@mediatek.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YJ Chiang <yj.chiang@mediatek.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Doug Anderson <dianders@chromium.org>
-Subject: [PATCH 4.19 81/81] perf/hw_breakpoint: Fix arch_hw_breakpoint use-before-initialization
-Date:   Wed, 16 Oct 2019 14:51:32 -0700
-Message-Id: <20191016214848.807683440@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.19 41/81] mei: avoid FW version request on Ibex Peak and earlier
+Date:   Wed, 16 Oct 2019 14:50:52 -0700
+Message-Id: <20191016214837.926708432@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -70,60 +60,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 310aa0a25b338b3100c94880c9a69bec8ce8c3ae upstream.
+commit f8204f0ddd62966a0e79c2804963a21e3540dd82 upstream.
 
-If we disable the compiler's auto-initialization feature, if
--fplugin-arg-structleak_plugin-byref or -ftrivial-auto-var-init=pattern
-are disabled, arch_hw_breakpoint may be used before initialization after:
+The fixed MKHI client on PCH 6 gen platforms
+does not support fw version retrieval.
+The error is not fatal, but it fills up the kernel logs and
+slows down the driver start.
+This patch disables requesting FW version on GEN6 and earlier platforms.
 
-  9a4903dde2c86 ("perf/hw_breakpoint: Split attribute parse and commit")
+Fixes warning:
+[   15.964298] mei mei::55213584-9a29-4916-badf-0fb7ed682aeb:01: Could not read FW version
+[   15.964301] mei mei::55213584-9a29-4916-badf-0fb7ed682aeb:01: version command failed -5
 
-On our ARM platform, the struct step_ctrl in arch_hw_breakpoint, which
-used to be zero-initialized by kzalloc(), may be used in
-arch_install_hw_breakpoint() without initialization.
-
-Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alix Wu <alix.wu@mediatek.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: YJ Chiang <yj.chiang@mediatek.com>
-Link: https://lkml.kernel.org/r/20190906060115.9460-1-mark-pk.tsai@mediatek.com
-[ Minor edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>
+Cc: <stable@vger.kernel.org> +v4.18
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191004181722.31374-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/hw_breakpoint.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/mei/bus-fixup.c |   14 +++++++++++---
+ drivers/misc/mei/hw-me.c     |   21 ++++++++++++++++++---
+ drivers/misc/mei/hw-me.h     |    8 ++++++--
+ drivers/misc/mei/mei_dev.h   |    4 ++++
+ drivers/misc/mei/pci-me.c    |   10 +++++-----
+ 5 files changed, 44 insertions(+), 13 deletions(-)
 
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -426,7 +426,7 @@ static int hw_breakpoint_parse(struct pe
- 
- int register_perf_hw_breakpoint(struct perf_event *bp)
+--- a/drivers/misc/mei/bus-fixup.c
++++ b/drivers/misc/mei/bus-fixup.c
+@@ -214,13 +214,21 @@ static void mei_mkhi_fix(struct mei_cl_d
  {
--	struct arch_hw_breakpoint hw;
-+	struct arch_hw_breakpoint hw = { };
- 	int err;
+ 	int ret;
  
- 	err = reserve_bp_slot(bp);
-@@ -474,7 +474,7 @@ int
- modify_user_hw_breakpoint_check(struct perf_event *bp, struct perf_event_attr *attr,
- 			        bool check)
- {
--	struct arch_hw_breakpoint hw;
-+	struct arch_hw_breakpoint hw = { };
- 	int err;
++	/* No need to enable the client if nothing is needed from it */
++	if (!cldev->bus->fw_f_fw_ver_supported &&
++	    !cldev->bus->hbm_f_os_supported)
++		return;
++
+ 	ret = mei_cldev_enable(cldev);
+ 	if (ret)
+ 		return;
  
- 	err = hw_breakpoint_parse(bp, attr, &hw);
+-	ret = mei_fwver(cldev);
+-	if (ret < 0)
+-		dev_err(&cldev->dev, "FW version command failed %d\n", ret);
++	if (cldev->bus->fw_f_fw_ver_supported) {
++		ret = mei_fwver(cldev);
++		if (ret < 0)
++			dev_err(&cldev->dev, "FW version command failed %d\n",
++				ret);
++	}
+ 
+ 	if (cldev->bus->hbm_f_os_supported) {
+ 		ret = mei_osver(cldev);
+--- a/drivers/misc/mei/hw-me.c
++++ b/drivers/misc/mei/hw-me.c
+@@ -1368,6 +1368,8 @@ static bool mei_me_fw_type_sps(struct pc
+ #define MEI_CFG_FW_SPS                           \
+ 	.quirk_probe = mei_me_fw_type_sps
+ 
++#define MEI_CFG_FW_VER_SUPP                     \
++	.fw_ver_supported = 1
+ 
+ #define MEI_CFG_ICH_HFS                      \
+ 	.fw_status.count = 0
+@@ -1405,31 +1407,41 @@ static const struct mei_cfg mei_me_ich10
+ 	MEI_CFG_ICH10_HFS,
+ };
+ 
+-/* PCH devices */
+-static const struct mei_cfg mei_me_pch_cfg = {
++/* PCH6 devices */
++static const struct mei_cfg mei_me_pch6_cfg = {
+ 	MEI_CFG_PCH_HFS,
+ };
+ 
++/* PCH7 devices */
++static const struct mei_cfg mei_me_pch7_cfg = {
++	MEI_CFG_PCH_HFS,
++	MEI_CFG_FW_VER_SUPP,
++};
++
+ /* PCH Cougar Point and Patsburg with quirk for Node Manager exclusion */
+ static const struct mei_cfg mei_me_pch_cpt_pbg_cfg = {
+ 	MEI_CFG_PCH_HFS,
++	MEI_CFG_FW_VER_SUPP,
+ 	MEI_CFG_FW_NM,
+ };
+ 
+ /* PCH8 Lynx Point and newer devices */
+ static const struct mei_cfg mei_me_pch8_cfg = {
+ 	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
+ };
+ 
+ /* PCH8 Lynx Point with quirk for SPS Firmware exclusion */
+ static const struct mei_cfg mei_me_pch8_sps_cfg = {
+ 	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
+ 	MEI_CFG_FW_SPS,
+ };
+ 
+ /* Cannon Lake and newer devices */
+ static const struct mei_cfg mei_me_pch12_cfg = {
+ 	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
+ 	MEI_CFG_DMA_128,
+ };
+ 
+@@ -1441,7 +1453,8 @@ static const struct mei_cfg *const mei_c
+ 	[MEI_ME_UNDEF_CFG] = NULL,
+ 	[MEI_ME_ICH_CFG] = &mei_me_ich_cfg,
+ 	[MEI_ME_ICH10_CFG] = &mei_me_ich10_cfg,
+-	[MEI_ME_PCH_CFG] = &mei_me_pch_cfg,
++	[MEI_ME_PCH6_CFG] = &mei_me_pch6_cfg,
++	[MEI_ME_PCH7_CFG] = &mei_me_pch7_cfg,
+ 	[MEI_ME_PCH_CPT_PBG_CFG] = &mei_me_pch_cpt_pbg_cfg,
+ 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
+ 	[MEI_ME_PCH8_SPS_CFG] = &mei_me_pch8_sps_cfg,
+@@ -1480,6 +1493,8 @@ struct mei_device *mei_me_dev_init(struc
+ 
+ 	mei_device_init(dev, &pdev->dev, &mei_me_hw_ops);
+ 	hw->cfg = cfg;
++	dev->fw_f_fw_ver_supported = cfg->fw_ver_supported;
++
+ 	return dev;
+ }
+ 
+--- a/drivers/misc/mei/hw-me.h
++++ b/drivers/misc/mei/hw-me.h
+@@ -32,11 +32,13 @@
+  * @fw_status: FW status
+  * @quirk_probe: device exclusion quirk
+  * @dma_size: device DMA buffers size
++ * @fw_ver_supported: is fw version retrievable from FW
+  */
+ struct mei_cfg {
+ 	const struct mei_fw_status fw_status;
+ 	bool (*quirk_probe)(struct pci_dev *pdev);
+ 	size_t dma_size[DMA_DSCR_NUM];
++	u32 fw_ver_supported:1;
+ };
+ 
+ 
+@@ -74,7 +76,8 @@ struct mei_me_hw {
+  * @MEI_ME_UNDEF_CFG:      Lower sentinel.
+  * @MEI_ME_ICH_CFG:        I/O Controller Hub legacy devices.
+  * @MEI_ME_ICH10_CFG:      I/O Controller Hub platforms Gen10
+- * @MEI_ME_PCH_CFG:        Platform Controller Hub platforms (Up to Gen8).
++ * @MEI_ME_PCH6_CFG:       Platform Controller Hub platforms (Gen6).
++ * @MEI_ME_PCH7_CFG:       Platform Controller Hub platforms (Gen7).
+  * @MEI_ME_PCH_CPT_PBG_CFG:Platform Controller Hub workstations
+  *                         with quirk for Node Manager exclusion.
+  * @MEI_ME_PCH8_CFG:       Platform Controller Hub Gen8 and newer
+@@ -89,7 +92,8 @@ enum mei_cfg_idx {
+ 	MEI_ME_UNDEF_CFG,
+ 	MEI_ME_ICH_CFG,
+ 	MEI_ME_ICH10_CFG,
+-	MEI_ME_PCH_CFG,
++	MEI_ME_PCH6_CFG,
++	MEI_ME_PCH7_CFG,
+ 	MEI_ME_PCH_CPT_PBG_CFG,
+ 	MEI_ME_PCH8_CFG,
+ 	MEI_ME_PCH8_SPS_CFG,
+--- a/drivers/misc/mei/mei_dev.h
++++ b/drivers/misc/mei/mei_dev.h
+@@ -422,6 +422,8 @@ struct mei_fw_version {
+  *
+  * @fw_ver : FW versions
+  *
++ * @fw_f_fw_ver_supported : fw feature: fw version supported
++ *
+  * @me_clients_rwsem: rw lock over me_clients list
+  * @me_clients  : list of FW clients
+  * @me_clients_map : FW clients bit map
+@@ -500,6 +502,8 @@ struct mei_device {
+ 
+ 	struct mei_fw_version fw_ver[MEI_MAX_FW_VER_BLOCKS];
+ 
++	unsigned int fw_f_fw_ver_supported:1;
++
+ 	struct rw_semaphore me_clients_rwsem;
+ 	struct list_head me_clients;
+ 	DECLARE_BITMAP(me_clients_map, MEI_CLIENTS_MAX);
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -70,13 +70,13 @@ static const struct pci_device_id mei_me
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICH10_3, MEI_ME_ICH10_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICH10_4, MEI_ME_ICH10_CFG)},
+ 
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_1, MEI_ME_PCH_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_2, MEI_ME_PCH_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_1, MEI_ME_PCH6_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_IBXPK_2, MEI_ME_PCH6_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CPT_1, MEI_ME_PCH_CPT_PBG_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_PBG_1, MEI_ME_PCH_CPT_PBG_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_1, MEI_ME_PCH_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_2, MEI_ME_PCH_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_3, MEI_ME_PCH_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_1, MEI_ME_PCH7_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_2, MEI_ME_PCH7_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_3, MEI_ME_PCH7_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_H, MEI_ME_PCH8_SPS_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_W, MEI_ME_PCH8_SPS_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_LP, MEI_ME_PCH8_CFG)},
 
 
