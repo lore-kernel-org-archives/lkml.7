@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F390CFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DC2ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1CE20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F16218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263507;
-	bh=IeRsk2HWGbFv8uv3A1Str9pHy63QzWlTLY98t1/iEXg=;
+	s=default; t=1571263510;
+	bh=oqYv0CdDEb9mnEpfZAfrAIcIQfo9/lGX7aRzmkFPVYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K03VXil7EBKHdXm2DaGyRQHOBEuBg5bppdb+NcTcvR4SLCbhubNQIP4/TJ6hehiLX
-	 amvNtIWlOJWJM9cnFSG84WnoD6CoEoEgn9xv3gu/mM6i2leTdXVDk1PXr3ShB5lr0b
-	 LU0gQf1S5AEMQ+22xzi7eSrw2X89/BGRsvrSGwwg=
+	b=1l39ORkbp7ep+em0y/VIgC8ifJ1ycrIG2DS2UHscVB+48OWxtMWk7xB+RYU+53qSU
+	 y1d0GULtaaTa6MxlAmfgL0/n4Y18NpW7kbUTLC5OAVk3FaVVkwHNlV0aKcTd/iSBTq
+	 DZTLhinWBVN9b9BjvbVeqdP41Xh02AYuZPnxnXUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438326AbfJPV64 (ORCPT
+        id S2406903AbfJPWFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51388 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390078AbfJPV6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:07 -0400
+        id S2438322AbfJPV6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:55 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C416F222C5;
-        Wed, 16 Oct 2019 21:58:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD7221928;
+        Wed, 16 Oct 2019 21:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263086;
-        bh=IeRsk2HWGbFv8uv3A1Str9pHy63QzWlTLY98t1/iEXg=;
+        s=default; t=1571263134;
+        bh=oqYv0CdDEb9mnEpfZAfrAIcIQfo9/lGX7aRzmkFPVYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ateqXMcYRXI/9VAo5j85c4IiPVcL5cSy6F2+Np9n/6JiZXURuNI3JjQMZ8tMj1R2l
-         LRNxodms3uI9STH+JHqmypEuHclbjw1Lb7NmM6eAcrgDb0leIP7zthBfZGv9nJ0g8c
-         0G+X3atbVF5sHl3JUYeXWAi9oxoOECKpDv3xZ3i4=
+        b=McThITfMvukO7Wv4tEY9NrLDKQQI4DThze1NoFi6lO+yQiqb7sWJ+zUKiJaUpA7K2
+         jQYoqc2vsZqZBQxFKDoyB6GoWozCwvsU18lE8TGuryb1zA4XpB6twy89b62/RD0yvy
+         fs+bujywQ2IoldrV3nesua2AAtHwY6COqqW2Upkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 45/81] iio: adc: hx711: fix bug in sampling of data
-Date:   Wed, 16 Oct 2019 14:50:56 -0700
-Message-Id: <20191016214839.304855343@linuxfoundation.org>
+Subject: [PATCH 5.3 058/112] iio: light: add missing vcnl4040 of_compatible
+Date:   Wed, 16 Oct 2019 14:50:50 -0700
+Message-Id: <20191016214859.789977592@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,75 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Klinger <ak@it-klinger.de>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 4043ecfb5fc4355a090111e14faf7945ff0fdbd5 upstream.
+commit 7fd1c2606508eb384992251e87d50591393a48d0 upstream.
 
-Fix bug in sampling function hx711_cycle() when interrupt occures while
-PD_SCK is high. If PD_SCK is high for at least 60 us power down mode of
-the sensor is entered which in turn leads to a wrong measurement.
+Commit 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040
+proximity and light sensor") added the support for the vcnl4040 but
+forgot to add the of_compatible. Fix this by adding it now.
 
-Switch off interrupts during a PD_SCK high period and move query of DOUT
-to the latest point of time which is at the end of PD_SCK low period.
-
-This bug exists in the driver since it's initial addition. The more
-interrupts on the system the higher is the probability that it happens.
-
-Fixes: c3b2fdd0ea7e ("iio: adc: hx711: Add IIO driver for AVIA HX711")
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Fixes: 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
+Reviewed-by: Angus Ainslie (Purism) angus@akkea.ca
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/hx711.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/iio/light/vcnl4000.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/iio/adc/hx711.c
-+++ b/drivers/iio/adc/hx711.c
-@@ -109,14 +109,14 @@ struct hx711_data {
- 
- static int hx711_cycle(struct hx711_data *hx711_data)
- {
--	int val;
-+	unsigned long flags;
- 
- 	/*
- 	 * if preempted for more then 60us while PD_SCK is high:
- 	 * hx711 is going in reset
- 	 * ==> measuring is false
- 	 */
--	preempt_disable();
-+	local_irq_save(flags);
- 	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
- 
- 	/*
-@@ -126,7 +126,6 @@ static int hx711_cycle(struct hx711_data
- 	 */
- 	ndelay(hx711_data->data_ready_delay_ns);
- 
--	val = gpiod_get_value(hx711_data->gpiod_dout);
- 	/*
- 	 * here we are not waiting for 0.2 us as suggested by the datasheet,
- 	 * because the oscilloscope showed in a test scenario
-@@ -134,7 +133,7 @@ static int hx711_cycle(struct hx711_data
- 	 * and 0.56 us for PD_SCK low on TI Sitara with 800 MHz
- 	 */
- 	gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
--	preempt_enable();
-+	local_irq_restore(flags);
- 
- 	/*
- 	 * make it a square wave for addressing cases with capacitance on
-@@ -142,7 +141,8 @@ static int hx711_cycle(struct hx711_data
- 	 */
- 	ndelay(hx711_data->data_ready_delay_ns);
- 
--	return val;
-+	/* sample as late as possible */
-+	return gpiod_get_value(hx711_data->gpiod_dout);
- }
- 
- static int hx711_read(struct hx711_data *hx711_data)
+--- a/drivers/iio/light/vcnl4000.c
++++ b/drivers/iio/light/vcnl4000.c
+@@ -409,6 +409,10 @@ static const struct of_device_id vcnl_40
+ 		.data = "VCNL4020",
+ 	},
+ 	{
++		.compatible = "vishay,vcnl4040",
++		.data = (void *)VCNL4040,
++	},
++	{
+ 		.compatible = "vishay,vcnl4200",
+ 		.data = "VCNL4200",
+ 	},
 
 
