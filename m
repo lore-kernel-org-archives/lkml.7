@@ -2,137 +2,128 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D87AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC92FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA4220650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBBF20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392354AbfJPKWK (ORCPT
+        id S2392363AbfJPKXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:22:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13622 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbfJPKWK (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:22:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 03:22:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="189637911"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.210.124]) ([10.254.210.124])
-  by orsmga008.jf.intel.com with ESMTP; 16 Oct 2019 03:22:07 -0700
-Subject: Re: [PATCH] perf list: Hide deprecated events by default
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191015025357.8708-1-yao.jin@linux.intel.com>
- <20191015091401.GE10951@krava>
- <627305a7-3aec-037a-1c36-6ca884f35d1d@linux.intel.com>
- <20191016072741.GA15031@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <2a1d1883-ca28-2dae-4ae3-fbae81174d55@linux.intel.com>
-Date:   Wed, 16 Oct 2019 18:22:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 06:23:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47100 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726394AbfJPKXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:23:02 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7BE6C3E9025F397CF751;
+        Wed, 16 Oct 2019 18:22:59 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 16 Oct 2019 18:22:53 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-ide@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, John Garry <john.garry@huawei.com>
+Subject: [PATCH] libata: Ensure ata_port probe has completed before detach
+Date:   Wed, 16 Oct 2019 18:19:52 +0800
+Message-ID: <1571221192-216909-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <20191016072741.GA15031@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
 
+[   23.452574] ------------[ cut here ]------------
+[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
+[   23.466047] Modules linked in:
+[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
+[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
+[   23.491065] pc : ata_host_detach+0x15c/0x168
+[   23.495322] lr : ata_host_detach+0x88/0x168
+[   23.499491] sp : ffff800011cabb50
+[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
+[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
+[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
+[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
+[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
+[   23.529286] x19: 0000000000000000 x18: 0000000000000004
+[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
+[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
+[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
+[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
+[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
+[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
+[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
+[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
+[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
+[   23.582272] Call trace:
+[   23.584706]  ata_host_detach+0x15c/0x168
+[   23.588616]  ata_pci_remove_one+0x10/0x18
+[   23.592615]  ahci_remove_one+0x20/0x40
+[   23.596356]  pci_device_remove+0x3c/0xe0
+[   23.600267]  really_probe+0xdc/0x3e0
+[   23.603830]  driver_probe_device+0x58/0x100
+[   23.608000]  device_driver_attach+0x6c/0x90
+[   23.612169]  __driver_attach+0x84/0xc8
+[   23.615908]  bus_for_each_dev+0x74/0xc8
+[   23.619730]  driver_attach+0x20/0x28
+[   23.623292]  bus_add_driver+0x148/0x1f0
+[   23.627115]  driver_register+0x60/0x110
+[   23.630938]  __pci_register_driver+0x40/0x48
+[   23.635199]  ahci_pci_driver_init+0x20/0x28
+[   23.639372]  do_one_initcall+0x5c/0x1b0
+[   23.643199]  kernel_init_freeable+0x1a4/0x24c
+[   23.647546]  kernel_init+0x10/0x108
+[   23.651023]  ret_from_fork+0x10/0x18
+[   23.654590] ---[ end trace 634a14b675b71c13 ]---
 
-On 10/16/2019 3:27 PM, Jiri Olsa wrote:
-> On Wed, Oct 16, 2019 at 08:59:13AM +0800, Jin, Yao wrote:
->>
->>
->> On 10/15/2019 5:14 PM, Jiri Olsa wrote:
->>> On Tue, Oct 15, 2019 at 10:53:57AM +0800, Jin Yao wrote:
->>>> There are some deprecated events listed by perf list. But we can't remove
->>>> them from perf list with ease because some old scripts may use them.
->>>>
->>>> Deprecated events are old names of renamed events.  When an event gets
->>>> renamed the old name is kept around for some time and marked with
->>>> Deprecated. The newer Intel event lists in the tree already have these
->>>> headers.
->>>>
->>>> So we need to keep them in the event list, but provide a new option to
->>>> show them. The new option is "--deprecated".
->>>>
->>>> With this patch, the deprecated events are hidden by default but they can
->>>> be displayed when option "--deprecated" is enabled.
->>>
->>> not sure it's wise to hide them, because people will not read man page
->>> to find --deprecated option, they will rather complain right away ;-)
->>>
->>> how about to display them as another topic, like:
->>>
->>> pipeline:
->>> 	...
->>> uncore:
->>> 	...
->>> deprecated:
->>> 	...
->>>
->>> jirka
->>>
->>
->> Hi Jiri,
->>
->> I don't know if we add a new topic "deprecated" in perf list output, does
->> the old script need to be modified as well?
->>
->> Say the events are moved to the "deprecated" section, I just guess the
->> script needs the modification.
->>
->> That's just my personal guess. :)
-> 
-> i did not mean adding new topic all the way down,
-> just to display the deprecated events like that
-> 
-> jirka
-> 
+With KASAN also enabled, we may also get many use-after-free reports.
 
-Sorry, maybe I misunderstood what you suggested. Correct me if my 
-understanding is wrong.
+The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
+attempt to detach the ata_port before it has been probed.
 
-Now the perf list output is like:
+This is because the ata_ports are async probed, meaning that there is no
+guarantee that the ata_port has probed prior to detach. When the ata_port
+does probe in this scenario, we get all sorts of issues as the detach may
+have already happened.
 
-pipeline:
-   event1
-   event2
-uncore:
-   event3
-   event4
+Fix by ensuring synchronisation with async_synchronize_full(). We could
+alternatively use the cookie returned from the ata_port probe
+async_schedule() call, but that means managing the cookie, so more
+complicated.
 
-My understanding for your suggestion is, we need to add "deprecated", 
-for example:
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+Note: This has only been boot tested and manual driver remove/add.
+         My system has no disk attached to the ahci host.
 
-pipeline:
-   event1
-   event2
-uncore:
-   event4
-deprecated:
-   event3
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 28c492be0a57..74c9b3032d46 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6708,6 +6708,9 @@ void ata_host_detach(struct ata_host *host)
+ {
+ 	int i;
+ 
++	/* Ensure ata_port probe has completed */
++	async_synchronize_full();
++
+ 	for (i = 0; i < host->n_ports; i++)
+ 		ata_port_detach(host->ports[i]);
+ 
+-- 
+2.17.1
 
-In above example, I assume the event3 is deprecated.
-
-So my worry is, the user's old script may not find the event3 if we move 
-it from "uncore" to "deprecated". Maybe I'm worried a lot. :(
-
-Thanks
-Jin Yao
