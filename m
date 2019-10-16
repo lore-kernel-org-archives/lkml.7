@@ -2,66 +2,150 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E154ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13B6ECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0202067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0262054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="spCA93Ua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388939AbfJPARW (ORCPT
+        id S2389840AbfJPAU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:17:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:50706 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388379AbfJPARV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:17:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 17:17:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,301,1566889200"; 
-   d="scan'208";a="189517714"
-Received: from ipsg-l-lixuzha.sh.intel.com ([10.239.153.12])
-  by orsmga008.jf.intel.com with ESMTP; 15 Oct 2019 17:17:19 -0700
-From:   Zhang Lixu <lixu.zhang@intel.com>
-To:     jikos@kernel.org, linux-input@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com,
-        benjamin.tissoires@redhat.com, Zhang Lixu <lixu.zhang@intel.com>
-Subject: [PATCH] hid: intel-ish-hid: fix wrong error handling in ishtp_cl_alloc_tx_ring()
-Date:   Wed, 16 Oct 2019 08:15:59 +0800
-Message-Id: <20191016001559.27947-1-lixu.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 15 Oct 2019 20:20:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35346 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387839AbfJPAU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 20:20:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p30so13155117pgl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 17:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FArNhP5DErG1Ml8KyApc8sefVsVeEkXB1R/x3hburN4=;
+        b=spCA93UaswCGNF4+9dxS76ppeuge4nCJObXdAVsO+DyOAjtvUhxuUh2UED/IGfCjRH
+         93J+lDuNj0qTeQPUQjazdhSJGko8AmpP9WCUNFdRRKtKTeniyybLertUuZbphTNtzmt8
+         WYxa7hSzDwEjn+pW9BaYyoCrx6LexNpNgsGvM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FArNhP5DErG1Ml8KyApc8sefVsVeEkXB1R/x3hburN4=;
+        b=TRjK1Pws+pNxW0++oCUg5pZUYga5Poh0xF5AqD8O6Ko9Xp5MpMt+wrcCXy0d+iI4vn
+         mSm0tYjkIA+w/HJWbPbq7GxTTalW7ZC3wEWjBFnPdiE+9LJWOBsx42Rbq53ssfbMYnOw
+         q+ZJmbHIAy3QS0tJIOQs4snk9LRMXqboC2HZPHvaJbyXmDggpmqSTdXU85XK+pSiTssl
+         6cDo4UPiXAxn6GluSqqaw+9mdPgagtLMIC1V7s4twXltaq1GwRYb6r6pUMA0ZZLf7QGU
+         RTlcBenWO6uri8nswXkkGzIgb6yctDt/M8wLpFrXL/j2dkZEVDPhxSBGgi8zJ7eNRo45
+         vB7w==
+X-Gm-Message-State: APjAAAXd1S6DcgrfFoV+NNPyU2mz3TJXinbtoczH1ceNKK3z+44I0RWv
+        Y164Kl1gyIN47FdBdHDYlbn9cQ==
+X-Google-Smtp-Source: APXvYqwnNKZGQBVQ9WkrFfzzoKhdSRhtNpejOOtqBzrGnaay9GKfue6bErrPcPWL5kfbVlibvqVDKQ==
+X-Received: by 2002:a17:90a:3608:: with SMTP id s8mr1480635pjb.44.1571185257717;
+        Tue, 15 Oct 2019 17:20:57 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l62sm24553103pfl.167.2019.10.15.17.20.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 17:20:56 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 20:20:55 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        primiano@google.com, rsavitski@google.com, jeffv@google.com,
+        kernel-team@android.com, James Morris <jmorris@namei.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Namhyung Kim <namhyung@kernel.org>, selinux@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v2] perf_event: Add support for LSM and SELinux checks
+Message-ID: <20191016002055.GA176924@google.com>
+References: <20191014170308.70668-1-joel@joelfernandes.org>
+ <20191015083008.GC2311@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015083008.GC2311@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When allocating tx ring buffers failed, should free tx buffers, not rx buffers.
+On Tue, Oct 15, 2019 at 10:30:08AM +0200, Peter Zijlstra wrote:
+> On Mon, Oct 14, 2019 at 01:03:08PM -0400, Joel Fernandes (Google) wrote:
+> > In current mainline, the degree of access to perf_event_open(2) system
+> > call depends on the perf_event_paranoid sysctl.  This has a number of
+> > limitations:
+> > 
+> > 1. The sysctl is only a single value. Many types of accesses are controlled
+> >    based on the single value thus making the control very limited and
+> >    coarse grained.
+> > 2. The sysctl is global, so if the sysctl is changed, then that means
+> >    all processes get access to perf_event_open(2) opening the door to
+> >    security issues.
+> > 
+> > This patch adds LSM and SELinux access checking which will be used in
+> > Android to access perf_event_open(2) for the purposes of attaching BPF
+> > programs to tracepoints, perf profiling and other operations from
+> > userspace. These operations are intended for production systems.
+> > 
+> > 5 new LSM hooks are added:
+> > 1. perf_event_open: This controls access during the perf_event_open(2)
+> >    syscall itself. The hook is called from all the places that the
+> >    perf_event_paranoid sysctl is checked to keep it consistent with the
+> >    systctl. The hook gets passed a 'type' argument which controls CPU,
+> >    kernel and tracepoint accesses (in this context, CPU, kernel and
+> >    tracepoint have the same semantics as the perf_event_paranoid sysctl).
+> >    Additionally, I added an 'open' type which is similar to
+> >    perf_event_paranoid sysctl == 3 patch carried in Android and several other
+> >    distros but was rejected in mainline [1] in 2016.
+> > 
+> > 2. perf_event_alloc: This allocates a new security object for the event
+> >    which stores the current SID within the event. It will be useful when
+> >    the perf event's FD is passed through IPC to another process which may
+> >    try to read the FD. Appropriate security checks will limit access.
+> > 
+> > 3. perf_event_free: Called when the event is closed.
+> > 
+> > 4. perf_event_read: Called from the read(2) and mmap(2) syscalls for the event.
+> > 
+> > 5. perf_event_write: Called from the ioctl(2) syscalls for the event.
+> > 
+> > [1] https://lwn.net/Articles/696240/
+> > 
+> > Since Peter had suggest LSM hooks in 2016 [1], I am adding his
+> > Suggested-by tag below.
+> 
+> Thanks, I've queued the patch!
 
-Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/hid/intel-ish-hid/ishtp/client-buffers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-index 1b0a0cc605e7..513d7a4a1b8a 100644
---- a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-@@ -84,7 +84,7 @@ int ishtp_cl_alloc_tx_ring(struct ishtp_cl *cl)
- 	return	0;
- out:
- 	dev_err(&cl->device->dev, "error in allocating Tx pool\n");
--	ishtp_cl_free_rx_ring(cl);
-+	ishtp_cl_free_tx_ring(cl);
- 	return	-ENOMEM;
- }
- 
--- 
-2.17.1
+> > To use this patch, we set the perf_event_paranoid sysctl to -1 and then
+> > apply selinux checking as appropriate (default deny everything, and then
+> > add policy rules to give access to domains that need it). In the future
+> > we can remove the perf_event_paranoid sysctl altogether.
+> 
+> This I'm not sure about; the sysctl is only redundant when you actually
+> use a security thingy, not everyone is. I always find them things to be
+> mightily unfriendly.
+
+Right. I was just stating the above for the folks who use the security
+controls.
+
+thanks,
+
+ - Joel
 
