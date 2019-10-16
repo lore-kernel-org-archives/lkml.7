@@ -4,118 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1C0FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D600AFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD86A20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B902921848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393462AbfJPNJ7 (ORCPT
+        id S2393473AbfJPNKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:09:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37918 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391745AbfJPNJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:09:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:09:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="208407779"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 16 Oct 2019 06:09:56 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 16 Oct 2019 16:09:54 +0300
-Date:   Wed, 16 Oct 2019 16:09:54 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     pumahsu <pumahsu@google.com>
-Cc:     gregkh@linuxfoundation.org, badhri@google.com, kyletso@google.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: Add sysfs node to show cc orientation
-Message-ID: <20191016130954.GD17542@kuha.fi.intel.com>
-References: <20191016034314.231363-1-pumahsu@google.com>
- <20191016125846.GC17542@kuha.fi.intel.com>
+        Wed, 16 Oct 2019 09:10:31 -0400
+Received: from www62.your-server.de ([213.133.104.62]:51438 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfJPNKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:10:31 -0400
+Received: from [2a02:120b:2c12:c120:71a0:62dd:894c:fd0e] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iKj4H-0002aC-34; Wed, 16 Oct 2019 15:10:21 +0200
+Date:   Wed, 16 Oct 2019 15:10:20 +0200
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bpf: add static in net/core/filter.c
+Message-ID: <20191016131020.GE21367@pc-63.home>
+References: <20191016110446.24622-1-ben.dooks@codethink.co.uk>
+ <20191016122605.GC21367@pc-63.home>
+ <e947b15d-1d70-39d9-3b28-0367a3f0f4c0@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191016125846.GC17542@kuha.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e947b15d-1d70-39d9-3b28-0367a3f0f4c0@codethink.co.uk>
 User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25604/Wed Oct 16 10:53:05 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 03:58:50PM +0300, Heikki Krogerus wrote:
-> On Wed, Oct 16, 2019 at 11:43:14AM +0800, pumahsu wrote:
-> > Export the Type-C cc orientation so that user space can
-> > get this information.
-> 
-> For what do you need this information in user space? I'm guessing you
-> have something else in mind besides exposing this as just generic
-> information, or debugging purposes, no?
-> 
-> Please keep in mind that we do not always know the cable orientation.
-> UCSI for example does not give any clues about which way the cable
-> plug was connected to the connector. That means this sysfs file will
-> most likely need to be hidden in those cases, which I guess is
-> acceptable, but definitely not ideal.
-> 
-> > Signed-off-by: pumahsu <pumahsu@google.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-typec |  7 +++++++
-> >  drivers/usb/typec/class.c                   | 11 +++++++++++
-> >  2 files changed, 18 insertions(+)
+On Wed, Oct 16, 2019 at 02:02:31PM +0100, Ben Dooks wrote:
+> On 16/10/2019 13:26, Daniel Borkmann wrote:
+> > On Wed, Oct 16, 2019 at 12:04:46PM +0100, Ben Dooks (Codethink) wrote:
+> > > There are a number of structs in net/core/filter.c
+> > > that are not exported or declared outside of the
+> > > file. Fix the following warnings by making these
+> > > all static:
+> > > 
+> > > net/core/filter.c:8465:31: warning: symbol 'sk_filter_verifier_ops' was not declared. Should it be static?
+> > > net/core/filter.c:8472:27: warning: symbol 'sk_filter_prog_ops' was not declared. Should it be static?
+> > [...]
+> > > net/core/filter.c:8935:27: warning: symbol 'sk_reuseport_prog_ops' was not declared. Should it be static?
+> > > 
+> > > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> > > ---
+> > > Cc: Alexei Starovoitov <ast@kernel.org>
+> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > > Cc: Martin KaFai Lau <kafai@fb.com>
+> > > Cc: Song Liu <songliubraving@fb.com>
+> > > Cc: Yonghong Song <yhs@fb.com>
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+> > > Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+> > > Cc: John Fastabend <john.fastabend@gmail.com>
+> > > Cc: netdev@vger.kernel.org
+> > > Cc: bpf@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > >   net/core/filter.c | 60 +++++++++++++++++++++++------------------------
+> > >   1 file changed, 30 insertions(+), 30 deletions(-)
+> > > 
+> > > diff --git a/net/core/filter.c b/net/core/filter.c
+> > > index ed6563622ce3..f7338fee41f8 100644
+> > > --- a/net/core/filter.c
+> > > +++ b/net/core/filter.c
+> > > @@ -8462,18 +8462,18 @@ static u32 sk_msg_convert_ctx_access(enum bpf_access_type type,
+> > >   	return insn - insn_buf;
+> > >   }
+> > > -const struct bpf_verifier_ops sk_filter_verifier_ops = {
+> > > +static const struct bpf_verifier_ops sk_filter_verifier_ops = {
+> > >   	.get_func_proto		= sk_filter_func_proto,
+> > >   	.is_valid_access	= sk_filter_is_valid_access,
+> > >   	.convert_ctx_access	= bpf_convert_ctx_access,
+> > >   	.gen_ld_abs		= bpf_gen_ld_abs,
+> > >   };
 > > 
-> > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
-> > index d7647b258c3c..419f952c991d 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-typec
-> > +++ b/Documentation/ABI/testing/sysfs-class-typec
-> > @@ -108,6 +108,13 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> >  Description:
-> >  		Revision number of the supported USB Type-C specification.
-> >  
-> > +What:		/sys/class/typec/<port>/cc_orientation
-> > +Date:		September 2019
-> > +Contact:	Puma Hsu <pumahsu@google.com>
-> > +Description:
-> > +		Indicates which cc orientation is active now, or 0 when
-> > +		nothing is connected.
+> > Big obvious NAK. I'm puzzled that you try to fix a compile warning, but without
+> > even bothering to compile the result after your patch ...
 > 
-> cc_orientation is a bit cryptic. I think if this is part of the port
-> ABI, then we should talk about something like "connector_orientation".
-> 
-> >  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
-> >  
-> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> > index 7d8805d9bf37..00edae63da8e 100644
-> > --- a/drivers/usb/typec/class.c
-> > +++ b/drivers/usb/typec/class.c
-> > @@ -1238,6 +1238,16 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
-> >  }
-> >  static DEVICE_ATTR_RO(usb_power_delivery_revision);
-> >  
-> > +static ssize_t cc_orientation_show(struct device *dev,
-> > +						struct device_attribute *attr,
-> > +						char *buf)
-> > +{
-> > +	struct typec_port *p = to_typec_port(dev);
-> > +
-> > +	return sprintf(buf, "%d\n", typec_get_orientation(p));
-> > +}
-> > +static DEVICE_ATTR_RO(cc_orientation);
-> 
-> Now you are returning 0, 1 or 2 which to me is not ideal. This really
-> should return a string, something like "normal" / "reversed", and in
-> case the orientation is TYPEC_ORIENTATION_NONE, empty string.
+> builds fine. maybe some effort to stop this happening again should be made.
 
-Or maybe TYPEC_ORIENTATION_NONE could be handle with "unknown" string.
-That way we may not need to hide the file.
+It doesn't build, because they are used/needed outside:
 
-thanks,
-
--- 
-heikki
+[...]
+  CC      net/core/dev_ioctl.o
+  CC      net/core/tso.o
+net/core/filter.c:8467:38: error: static declaration of ‘sk_filter_verifier_ops’ follows non-static declaration
+ 8467 | static const struct bpf_verifier_ops sk_filter_verifier_ops = {
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~
+In file included from ./include/linux/bpf-cgroup.h:5,
+                 from ./include/linux/cgroup-defs.h:22,
+                 from ./include/linux/cgroup.h:28,
+                 from ./include/net/netprio_cgroup.h:11,
+                 from ./include/linux/netdevice.h:42,
+                 from ./include/net/sock.h:46,
+                 from ./include/linux/sock_diag.h:8,
+                 from net/core/filter.c:25:
+./include/linux/bpf_types.h:5:44: note: previous declaration of ‘sk_filter_verifier_ops’ was here
+    5 | BPF_PROG_TYPE(BPF_PROG_TYPE_SOCKET_FILTER, sk_filter)
+      |                                            ^~~~~~~~~
+./include/linux/bpf.h:625:39: note: in definition of macro ‘BPF_PROG_TYPE’
+  625 |  extern const struct bpf_verifier_ops _name ## _verifier_ops;
+      |                                       ^~~~~
+[...] ( and more of the same errors ... )
