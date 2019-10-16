@@ -2,198 +2,100 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EBFECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AA3ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5AD2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rAGYy4mB"
+	by mail.kernel.org (Postfix) with ESMTP id 653D82053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436698AbfJPTVi (ORCPT
+        id S2403935AbfJPTXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:21:38 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3226 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403782AbfJPTVh (ORCPT
+        Wed, 16 Oct 2019 15:23:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39208 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732079AbfJPTXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:21:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5da76dc50000>; Wed, 16 Oct 2019 12:21:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 16 Oct 2019 12:21:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 16 Oct 2019 12:21:36 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 16 Oct
- 2019 19:21:36 +0000
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Wed, 16 Oct 2019 19:21:35 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 9AE2542807; Wed, 16 Oct 2019 22:21:33 +0300 (EEST)
-Date:   Wed, 16 Oct 2019 22:21:33 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-Message-ID: <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
-References: <20191015170015.1135-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191015170015.1135-1-digetx@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571253701; bh=nroN3FHoFwV3XA6q1YkfsgkTextLKDHjNycGp27ezdc=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=rAGYy4mB0DojFGY14D9t5hauU3YDyjKaDWJhazpYwapaylHOMWi9QJXublk3LJA2O
-         mVVV+r0Nq5wtadsbN1yC5THHsPkRxV35P/1gPPkEIEPBOajMwjafab7MIb4yzvq7CK
-         jzO2SzAWmwc5A+siqUD9bwWi5vFAyksQzsIQqveEFNBY8R3/g6+VYn2MbGHxR1sZ0l
-         55Tp5fjEsm4JXY9dyaXXsVGONqefshME6VNEKE7aJtww7vBcV6hg3LbJA49bg+qf5f
-         yHFE9vIT1X92IxipB6xxW8M1yZxMP93Ih8okg1l5odob8/z+SOI/qGlDLUXb8zJk98
-         H4FzTWA6TrQwA==
+        Wed, 16 Oct 2019 15:23:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v4so2174pff.6
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:23:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=yNrX5NxWK+qA1o6LaqqAm41/yReowE+lc1hULeA+iQo=;
+        b=ZohNnU5mT6F0h+ULa1wjD41vkkAVkv0+5NhFIu1833YdanBq3Fe7IUX2exPLORum/8
+         Hff+W4UnAkegM/V1w6wSaL9Y0ucnJkNgKdOq0vEr6ktR+BwZzPcxAz/lM9zIGQUgUJki
+         aAwtrMHnM8yiE0HSKFZVFdKPD0s33eTNY+qsxkkDsMSg0RcvKXVzaNI6kKA96Ml+76Tt
+         iFLsN6Z2RUTpmyWlR8iOzgETWLqxvfeS5KnaPF0bYtXRzTqqJjEyU7q6aQ7D52rWmlGX
+         Zk+U3B4mdzWaPUwm6Qod6TPAHCaXrjdwSD55edWkQAldu97cO25XtPBi98q5OFuVIHPU
+         JnYA==
+X-Gm-Message-State: APjAAAUHVKX42qfMTjXLiP4IpHeKE2eJsPUhcXRxrT/wTchswe1xBm8Z
+        wZ7isyCBy8RdMtgJM1VnblRFFw==
+X-Google-Smtp-Source: APXvYqxL7QA2f4fhE3Wl5GbWBvWdaQkuQMrMb1TNzwEQ1pCL0mnhlQdr9u9/Zf+Usvn7SVZWcaa+RA==
+X-Received: by 2002:a65:500c:: with SMTP id f12mr16812322pgo.233.1571253782761;
+        Wed, 16 Oct 2019 12:23:02 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id k6sm26188868pfg.162.2019.10.16.12.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 12:23:02 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 12:23:02 -0700 (PDT)
+X-Google-Original-Date: Wed, 16 Oct 2019 12:22:58 PDT (-0700)
+Subject:     Re: [PATCH v3 1/3] kasan: Archs don't check memmove if not support it.
+In-Reply-To: <c9fa9eb25a5c0b1f733494dfd439f056c6e938fd.1570514544.git.nickhu@andestech.com>
+CC:     alankao@andestech.com, Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, aryabinin@virtuozzo.com, glider@google.com,
+        dvyukov@google.com, corbet@lwn.net, alexios.zavras@intel.com,
+        allison@lohutok.net, Anup Patel <Anup.Patel@wdc.com>,
+        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        kstewart@linuxfoundation.org, linux-doc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        nickhu@andestech.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     nickhu@andestech.com
+Message-ID: <mhng-5f3ce9b5-2b64-48d7-a661-7bedf58c50a5@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 07:59:57PM +0300, Dmitry Osipenko wrote:
-> Hello,
-> 
-> This series does the following:
-> 
->   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->      into common drivers/cpuidle/ directory.
-> 
->   2. Enables CPU cluster power-down idling state on Tegra30.
-> 
-> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-> and of the Tegra's arch code in general. Please review, thanks!
-> 
-> Changelog:
-> 
-> v6: - Addressed request from Thierry Reding to change the way patches are
->       organized by making changes in a more incremental manner.
-> 
->     - tegra_sleep_cpu() now checks for the secondary CPUs to be offline
->       in the "Make outer_disable() open-coded" patch.
-> 
-> v5: - Rebased on a recent linux-next, fixed one minor conflict in Kconfig.
-> 
->     - Improved commit's message of the "Support CPU cluster power-down state
->       on Tegra30" patch.
-> 
->     - The "Support CPU cluster power-down state on Tegra30" patch is also
->       got split and now there is additional "Make outer_disable() open-coded"
->       patch.
-> 
->     - Made minor cosmetic changes to the "Introduce unified driver for
->       NVIDIA Tegra SoCs" patch by improving error message and renaming
->       one variable.
-> 
-> v4: - Fixed compilation with !CONFIG_CACHE_L2X0 (and tested that it still
->       works).
-> 
->     - Replaced ktime_compare() with ktime_before() in the new driver,
->       for consistency.
-> 
-> v3: - Addressed review comments that were made by Jon Hunter to v2 by
->       splitting patches into smaller (and simpler) chunks, better
->       documenting changes in the commit messages and using proper error
->       codes in the code.
-> 
->       Warnings are replaced with a useful error messages in the code of
->       "Introduce unified driver for NVIDIA Tegra SoCs" patch.
-> 
->       Secondary CPUs parking timeout increased to 100ms because I found
->       that it actually may happen to take more than 1ms if CPU is running
->       on a *very* low frequency.
-> 
->       Added diagnostic messages that are reporting Flow Controller state
->       when CPU parking fails.
-> 
->       Further polished cpuidle driver's code.
-> 
->       The coupled state entering is now aborted if there is a pending SGI
->       (Software Generated Interrupt) because it will be lost after GIC's
->       power-cycling. Like it was done by the old Tegra20 CPUIDLE driver.
-> 
-> v2: - Added patches to enable the new cpuidle driver in the defconfigs:
-> 
->         ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
->         ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-> 
->     - Dropped patches that removed CPUIDLE_FLAG_TIMER_STOP from the idling
->       states because that flag actually doesn't have any negative effects,
->       but still is correct for the case of a local CPU timer on older Tegra
->       SoCs:
-> 
->         cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from Tegra114/124 idle-state
->         cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from all states
-> 
->     - The "Add unified driver for NVIDIA Tegra SoCs" patch got more polish.
->       Tegra30 and Terga114 states are now squashed into a single common C7
->       state (following Parker TRM terminology, see 17.2.2.2 Power Management
->       States), more comments added, etc minor changes.
+On Mon, 07 Oct 2019 23:11:51 PDT (-0700), nickhu@andestech.com wrote:
+> Skip the memmove checking for those archs who don't support it.
+>
+> Signed-off-by: Nick Hu <nickhu@andestech.com>
+> ---
+>  mm/kasan/common.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 6814d6d6a023..897f9520bab3 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -107,6 +107,7 @@ void *memset(void *addr, int c, size_t len)
+>  	return __memset(addr, c, len);
+>  }
+>
+> +#ifdef __HAVE_ARCH_MEMMOVE
+>  #undef memmove
+>  void *memmove(void *dest, const void *src, size_t len)
+>  {
+> @@ -115,6 +116,7 @@ void *memmove(void *dest, const void *src, size_t len)
+>
+>  	return __memmove(dest, src, len);
+>  }
+> +#endif
+>
+>  #undef memcpy
+>  void *memcpy(void *dest, const void *src, size_t len)
 
-It would be useful to switch the power state terminology to the one used
-for later chips:
-
-LP0 becomes SC7
-LP1 becomes C1
-LP2 becomes CC7
-
-Meaning of these states is as follows
-
-C is a core state:
-
-C1 clock gating
-C2 not defined
-C3 not defined
-C4 not defined
-C5 not defined
-C6 not defined for ARM cores
-C7 power-gating
-
-CC is a CPU cluster C state:
-
-CC1 cluster clock gated
-CC2 not defined
-CC3 fmax@Vmin: not used prior to Tegra186
-CC4: cluster retention: no longer supported
-CC5: not defined
-CC6: cluster power gating
-CC7: cluster rail gating
-
-SC is a System C state:
-
-SC1: not defined
-SC2: not defined
-SC3: not defined
-SC4: not defined
-SC5: not defined
-SC6: not defined
-SC7: VDD_SOC off
-
-Cheers,
-
-Peter.
+I think this is backwards: we shouldn't be defining an arch-specific memmove 
+symbol when KASAN is enabled.  If we do it this way then we're defeating the 
+memmove checks, which doesn't seem like the right way to go.
