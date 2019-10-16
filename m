@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F126DECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E4CFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C393621D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C5321928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="DuqfqRWM"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TQPiVPXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436864AbfJPUAw (ORCPT
+        id S2436874AbfJPUAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:00:52 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36513 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436828AbfJPUAs (ORCPT
+        Wed, 16 Oct 2019 16:00:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:32995 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436861AbfJPUAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:00:48 -0400
-Received: by mail-qk1-f196.google.com with SMTP id y189so24012231qkc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:00:47 -0700 (PDT)
+        Wed, 16 Oct 2019 16:00:52 -0400
+Received: by mail-qk1-f195.google.com with SMTP id x134so24009917qkb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:00:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=MH284WpfdMmTT4sRM0t5AqX3XpYou6gu7tWPymm7DjQ=;
-        b=DuqfqRWMPOvEPNM2SwMz7BaMdbSnbr2AOXFceodEDGBgvpTPxvzCCJRKO0XMXLWKTh
-         p5mnTcTZu0KDFMwnKTHbaqAZXwXzW6PFYUveTxH/wBfPgzGiNCjn6GlWf+4Nvr1oufFO
-         6V5GE/32z3BR70juhuUHJ2Hz52ZWJMuLiPhG90YCqIEOJXq8wQx1xpZz76Bqv5Dcsx6P
-         6sZ/O1FIS2CgbuXRByzyFtw17uNhQjJiSkouOqEmo+3ol6GZE2Cc8gXwjti8Bt0HuDJd
-         jNPp9QaZq6Kdh5YZ6MEpUQ5Sad/E+JSdbx+Q59PlgQop26kj0b3Bg5LY8JloRVaBAb+J
-         YKdg==
+        bh=nna15T41FBOo8C0ScgrwWvHxD4xBB4A7rtr2LOcD0mg=;
+        b=TQPiVPXa6rC+kc21T5AmnzQtQWNyHeLwcYOGqGygHSZ+fqUC6+tQeXq3H2/srTI5dS
+         vEw9EaypNQQzPeKXsH3RHjmh5y5cLcTDAGhFTQsAIZKI0loaphdsKgusgX5SZkJWrqGS
+         uuLke5b1StwZolCe2CpSrX0/fu/GGKG4aO0epbNKb4IEVQ1gFJv03fvfP90Fhb8UHFko
+         DRJPJixDzGdMtrAvKc8A5+QSj0H2JImxJYrtOOTwV63s74TYwqaw5sEq9kOU/Rz6HwFX
+         J5ESQ9FSmQS2P3y4sK73jjdbXN3u3rRc4rk6pEcv618j9wqmw8xpOwqQuSsHU0s7+oDZ
+         B5xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MH284WpfdMmTT4sRM0t5AqX3XpYou6gu7tWPymm7DjQ=;
-        b=Jbg0LJIE55xj8V90cfDo6rBoN/EI4qOMoIwP49xgEYyw8hwKJc/0YTj3vlNqezyLK8
-         19ljQHz021YUD8qWs6b245J10Lh0gnr4/aWkyOZ5NnuzSsFu8UvywytoEUEEQBwwoKId
-         C5eaVKPx04QGowCoGvu6hXrk7QJa1LQlGqk/Pflm428aIC9zfOFInszvengR1DodwQ12
-         d57p03kgdkaoAaqMmgInSC1tK3QivTB8piIh/1/lPt/Sv4DovJhIhDPubjyfQ+EVyVn7
-         t36AAV4FH5R+dSL8r6E8366pRvBXif7H/+bmnww3hY4P+I0CYNjcP0aMHOENhLKKnWkI
-         8FqA==
-X-Gm-Message-State: APjAAAUnSqgM8SmShzQ0KuAR9H/kI9IG9n+DmUN0/XAB98t+SlBCxouM
-        +R718ty71NX4Y2TOnJrrlin1xw==
-X-Google-Smtp-Source: APXvYqwQfg+AMEijbvYInDKw1rQxmB6TO6d7tt0LCd8e4XMQCW2+/wCpDuDVQi3KUQIh6WJn1VFpNg==
-X-Received: by 2002:a37:c40d:: with SMTP id d13mr6599119qki.371.1571256047252;
-        Wed, 16 Oct 2019 13:00:47 -0700 (PDT)
+        bh=nna15T41FBOo8C0ScgrwWvHxD4xBB4A7rtr2LOcD0mg=;
+        b=F/aEHXUVNbO6e5q5Ph/+ujMVWqhCujV+yKUfcurKSl5aL0MPdMvgwWOM6MiZwjEupg
+         JZIzzyi8g54gb+KBvZiVjA46/VRi9wQW+CqahBgOtfLXiu3V1II1CvKIBpYLbMp3vO5j
+         aHrOSpUvmsJtHDuZCc8d8S0wbSprP/uisUCTsIFHdSa8sZRWLsDuCf6qba+RbVZgFOEv
+         a9rNLscnwEkxFQvHA8GmazGFr2kD+Co9mWmIVBR+tpQGcWxAEg6YHLOsBSdY958ZiREX
+         COrtsg+6b3Xs3abLjG4ioGmC+081D3/8sSK66w2FUA8M9t73kkPEnVinnLCQTbvQI+zp
+         WiVQ==
+X-Gm-Message-State: APjAAAVQnJ1KmTyh5Ck+XiuFyjbrQRxmuVF47DWpzfgOLaT5mYnh3tAq
+        iDvGv/e5bMztTFg058ChEV20nA==
+X-Google-Smtp-Source: APXvYqwwc0v2zGWdRcDisHGnJhHRf8p5mNSEZfi0uPD1ZI7/TTBqwIA/aASx5yQlegVlk/zNFWbPjg==
+X-Received: by 2002:a37:ef04:: with SMTP id j4mr43731174qkk.482.1571256051867;
+        Wed, 16 Oct 2019 13:00:51 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.00.45
+        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.00.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:00:46 -0700 (PDT)
+        Wed, 16 Oct 2019 13:00:51 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -66,9 +66,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
         tglx@linutronix.de
-Subject: [PATCH v7 06/25] arm64: hibernate: use get_safe_page directly
-Date:   Wed, 16 Oct 2019 16:00:15 -0400
-Message-Id: <20191016200034.1342308-7-pasha.tatashin@soleen.com>
+Subject: [PATCH v7 09/25] arm64: hibernate: add PUD_SECT_RDONLY
+Date:   Wed, 16 Oct 2019 16:00:18 -0400
+Message-Id: <20191016200034.1342308-10-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
 References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
@@ -79,91 +79,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-create_safe_exec_page() uses hibernate's allocator to create a set of page
-table to map a single page that will contain the relocation code.
-
-Remove the allocator related arguments, and use get_safe_page directly, as
-it is done in other local functions in this file to simplify function
-prototype.
-
-Removing this function pointer makes it easier to refactor the code later.
+There is PMD_SECT_RDONLY that is used in pud_* function which is confusing.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+Acked-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/kernel/hibernate.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+ arch/arm64/kernel/hibernate.c          | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+index 3df60f97da1f..756a1dfb4f55 100644
+--- a/arch/arm64/include/asm/pgtable-hwdef.h
++++ b/arch/arm64/include/asm/pgtable-hwdef.h
+@@ -110,6 +110,7 @@
+ #define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
+ #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
+ #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
++#define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
+ 
+ /*
+  * Level 2 descriptor (PMD).
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index ef46ce66d7e8..34297716643f 100644
+index 1ca8af685e96..ce60bceed357 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -196,9 +196,7 @@ EXPORT_SYMBOL(arch_hibernation_header_restore);
-  */
- static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
--				 phys_addr_t *phys_dst_addr,
--				 void *(*allocator)(gfp_t mask),
--				 gfp_t mask)
-+				 phys_addr_t *phys_dst_addr)
- {
- 	int rc = 0;
- 	pgd_t *trans_pgd;
-@@ -206,7 +204,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	pud_t *pudp;
- 	pmd_t *pmdp;
- 	pte_t *ptep;
--	unsigned long dst = (unsigned long)allocator(mask);
-+	unsigned long dst = get_safe_page(GFP_ATOMIC);
+@@ -436,7 +436,7 @@ static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+ 				return -ENOMEM;
+ 		} else {
+ 			set_pud(dst_pudp,
+-				__pud(pud_val(pud) & ~PMD_SECT_RDONLY));
++				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
+ 		}
+ 	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
  
- 	if (!dst) {
- 		rc = -ENOMEM;
-@@ -216,7 +214,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	memcpy((void *)dst, src_start, length);
- 	__flush_icache_range(dst, dst + length);
- 
--	trans_pgd = allocator(mask);
-+	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
- 	if (!trans_pgd) {
- 		rc = -ENOMEM;
- 		goto out;
-@@ -224,7 +222,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 
- 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
--		pudp = allocator(mask);
-+		pudp = (void *)get_safe_page(GFP_ATOMIC);
- 		if (!pudp) {
- 			rc = -ENOMEM;
- 			goto out;
-@@ -234,7 +232,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 
- 	pudp = pud_offset(pgdp, dst_addr);
- 	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = allocator(mask);
-+		pmdp = (void *)get_safe_page(GFP_ATOMIC);
- 		if (!pmdp) {
- 			rc = -ENOMEM;
- 			goto out;
-@@ -244,7 +242,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 
- 	pmdp = pmd_offset(pudp, dst_addr);
- 	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = allocator(mask);
-+		ptep = (void *)get_safe_page(GFP_ATOMIC);
- 		if (!ptep) {
- 			rc = -ENOMEM;
- 			goto out;
-@@ -530,8 +528,7 @@ int swsusp_arch_resume(void)
- 	 */
- 	rc = create_safe_exec_page(__hibernate_exit_text_start, exit_size,
- 				   (unsigned long)hibernate_exit,
--				   &phys_hibernate_exit,
--				   (void *)get_safe_page, GFP_ATOMIC);
-+				   &phys_hibernate_exit);
- 	if (rc) {
- 		pr_err("Failed to create safe executable page for hibernate_exit code.\n");
- 		goto out;
 -- 
 2.23.0
 
