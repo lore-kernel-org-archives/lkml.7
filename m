@@ -2,314 +2,118 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23F8FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98C3FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E102067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4FA2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="g2bSYGx4";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="AmsCPERP"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="djCl8ge6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405888AbfJPQLU (ORCPT
+        id S2405951AbfJPQLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:11:20 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:20440 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389848AbfJPQLT (ORCPT
+        Wed, 16 Oct 2019 12:11:31 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43961 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405917AbfJPQLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:11:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1571242278; x=1602778278;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9NLEpTSd3DwNRGX9knupUtmamLnIu1b4sMYIQufjAl8=;
-  b=g2bSYGx4N6zquG6D3bd1sk7wkG1etIkvYYS+j2Ip3qKFOq8GzsX38xpR
-   jb85dFnxFK6Q+sdR5vXFmrjOW5hSkgnE85h5yWFLQNOi90Z9j+CEdd9fi
-   CfuQmHsE3FxChCQoMl9s/9Cve3HxDLev3HfjqKpdMy73bc3YsecpAGlG2
-   WQSRUHf/IzCc7Urk8WNbqwbg/m5pxQuPl6zLmuaF+SK2RJJrm15Q0HLgb
-   shiPdys/+whsn4xw3vqgWi24oRLuFUmNZOIjmp2S7go46im+U5VIIHD2T
-   83a6OBGbv80nGLQCockNQKjtGY9uNFHUpQb63CQFwk2GyjeuaIEPqZtkG
-   g==;
-IronPort-SDR: BclVir97FPUcUGuzcOP61b+bsbrxfq0KdN6ksr+YOaL9pmp4NTCjEYleCF21nQHDlO9dslsTto
- 1kfgfsCIxLE5aH4qvs5TMjca3WfBgkX/4Qb9QD8V90vPhw33uaP1kSDzW0WIeTIZFLmb90orRU
- BZ75gmB1p69o9egpDt5aFYmk8JWK50ULxW/x3TqZ5smG/xlWk5MTfliCU30jRhUwmoNpmg/YIu
- p4239Dv9TdRg7pzG4ChOvH7NfpVVYdknZTL0sPdaG37b5SWJjD0CjsDQD5P6zB/gkec523DkmW
- PGo=
-X-IronPort-AV: E=Sophos;i="5.67,304,1566835200"; 
-   d="scan'208";a="120681143"
-Received: from mail-dm3nam03lp2053.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.53])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Oct 2019 00:11:17 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nsIFi1TZsVXdSXcJ6uv7/YQ/UNBJ7dzCdLJJ/lBJqDksmIn+jwQG/+KkTrgEqjHh7Xq7vE3CqT83cesClaKiYpnEPpFz+8wx1yPxFKyvCQq4ZgZyNIz5g+15f6uaJlV+jC7tXAabViAXch2P3KZidecXgc4a+uSO4cLUU0FcCCX7oQhS554MWqKbcO/fgFVBpuOpH/dfCdKpcsdiZ0rkjEkzApFyYU3a4yXrOb8+S5dkfUBmP6ULXLoI4Ng9e8QK2AmNraguZA7Yg8NuYL90LFi5ShL+1g320Go2KZnaDvgwI1aFty9nSSyekcpZqKJN5myXOjV8sluOdymj/kJmgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/6xgJ8z9NIBNFJ1HtOFxZsecF3MsJjCzCurmB/BMjEQ=;
- b=QpqJoPSjsacIRvJ8CMIwgxyxRhv7LSf3poJJQ0Ttyyd+NhzE2RXDkiA/gp9V0tylng65JI9W+0VS8QNRpSfn6yGUtcHclRHk3vLPs+MeJe1Sn7bSBaJTZxu1adLz2/y2wkIwfjb8PKLi62GO7hrPYPLZaRTE1lHvzEfjZ9hyrVMSRwrYAemjQQV2WBC89RAjmCWX58SM9G5Q+2pCa1F2uEfbTuKDRxH4WLkidaYZ5uo4oPc6jlAHp4dKrBicsVqef9yebfVzZ+HLnKno+YJH8vjaXdM7zuIHL/Awl6Zr8dTTzxfOI89SKu3jP75qsVCQ7bCO8/mc9X5w6vtvGx9rnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 16 Oct 2019 12:11:31 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t20so31562234qtr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:11:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/6xgJ8z9NIBNFJ1HtOFxZsecF3MsJjCzCurmB/BMjEQ=;
- b=AmsCPERPW4YbCvj7Ozkvo2LMUCnOBZbO1aXdL1AZ1SbB2ZnW2NNMWS+hMmCmC0yDDQhD56vZ8hu0U9gHrB+WGTFznfybJTd+hmKLDZvu4wuh1QjkWaU8ExD454YsfpyZWOQQ698FNEUjeZkMgptblg4gvvMW8PVpbBnJWzER24s=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6397.namprd04.prod.outlook.com (52.132.170.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.17; Wed, 16 Oct 2019 16:11:16 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::1454:87a:13b0:d3a]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::1454:87a:13b0:d3a%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 16:11:16 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v9 16/22] RISC-V: KVM: Add SBI v0.1 support
-Thread-Topic: [PATCH v9 16/22] RISC-V: KVM: Add SBI v0.1 support
-Thread-Index: AQHVhDxWJ0VHJHr1IES4nRmWNu2w7w==
-Date:   Wed, 16 Oct 2019 16:11:16 +0000
-Message-ID: <20191016160649.24622-17-anup.patel@wdc.com>
-References: <20191016160649.24622-1-anup.patel@wdc.com>
-In-Reply-To: <20191016160649.24622-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::16) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.27.162]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 74847ac9-1634-46a3-99e9-08d7525378b8
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: MN2PR04MB6397:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB63973759AB49C285C40466C68D920@MN2PR04MB6397.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(199004)(189003)(71190400001)(71200400001)(66556008)(66476007)(66446008)(64756008)(66946007)(6116002)(3846002)(14444005)(66066001)(76176011)(52116002)(256004)(99286004)(25786009)(7416002)(14454004)(4326008)(478600001)(7736002)(8676002)(305945005)(110136005)(476003)(54906003)(86362001)(2616005)(11346002)(446003)(316002)(102836004)(81166006)(486006)(55236004)(44832011)(5660300002)(50226002)(26005)(9456002)(186003)(8936002)(36756003)(1076003)(6436002)(6512007)(2906002)(6486002)(386003)(81156014)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6397;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FqIA5KhPQQcZ0XE18pAuArJwRzk35DNNZz7OBCW5FyBvql+++1+VVIMvfokVgeYz1IfN3T141KY3+PmAm7ljInwAbfJEOvqLtf4/Y4ltXdsmhlUqHD5CVIIDCfu0j0cLkHOqyNi1ZU+Uu7eyZMW85saNEsBpMX//b23zgtntrA9pZeiXvINPxVvkaatNfGlc0RjhKLO5hak64vODVwZlyaCfCrYcJD0x7ZbEP785IKOKvOtn8HKSfmHF9Z8rLmpMLtY4QjDiLKKo1PaCgKqB0eLHVDq14CuQnjqY8i6WlDntpv8s4HDBMNicZfq8IG03kIk0XMi54N6dwCqvneCT6JQzv9EshGGcTLbvWwgkW03h55bmmEi6/zJY2j1AhRfi9Xn7L3hpp7pCISmVh9UaZugHEipoSEJT2smmvLGntd4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74847ac9-1634-46a3-99e9-08d7525378b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 16:11:16.1159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2n/fj7+OlxJDYlFC3cLPWOgwb5Ykd32K7R0xiX5tRqeGAKTscJar9k25YvG6wybi9oDj9t+yjSplKm2H9Q3PcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6397
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=V5LpZROAelGKYa34xxex4t1vsbB4R8zCDB0bSSRCrdI=;
+        b=djCl8ge69vKY6bvWZDwrEev6a1m/Mo4WRCkutOLMT+ZKhCqtE2JReuB3/Z4QNbB9nh
+         ll8VYFbNtu8j+wzkkatFqhAH40MOxBl4CdmVQeaQjkcCEVrJTFaBWkMaQsxegdR/MFh8
+         EzqHh8t1B/Ekw7ErM9Wd1qfRDLqLIs56svyW12C6vu/FOnlZ/3P3dUi8WS/SNdbP95C2
+         0z7BVC/Friv3Cg80cAEvyUl/SDQanS7oXYPdwKwtngzf3Q+AQCfI+03afiTSto+/JUaQ
+         fcwwXf9RK8nNFCt3XITiYwd6Mn0OgL6U6j/5aDxtDQPd3qcUyiSxSurS7SkOEzApgyPk
+         OmVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=V5LpZROAelGKYa34xxex4t1vsbB4R8zCDB0bSSRCrdI=;
+        b=BIBEJtQuENI83xKLK9D+WeOx/iSgpk2x8YOKIHhvp/demKxm00DI947ksgnWneIv7U
+         Vn+tqur6318B3QVMlzNKEfqdgdQB6t48C7nSlr+aL2Nxdk2kqrFmnDVrzLEQVNyVls/6
+         I72u6UwiDSQZko9QDHhM4LUbw5/FGTOQUOEkgq07RnJOVvFPpqs/G6q/Yztr0O3ye/E/
+         3IjxllozMLy9hsFckd1O6ugU7uGstSAtcHpEigOhLOXM0ZKiOUzX8JizBWfGdYch1tbl
+         1yrI/8ZIBEeUhKfAk+NDIZ58cA7ryn44oplNH0D4MqILIaKsAVNsJ25jaG5JmiMkbTV7
+         o5Uw==
+X-Gm-Message-State: APjAAAWt/EFCujlFUfBAD7SK0gB1Rpm4lH+eCZ1Upkw0nddanVYBjo6X
+        oXhXynn8AgFx5I5LBbrLcwcxPA==
+X-Google-Smtp-Source: APXvYqzrpz9pCngh5tAZx5raOXdkrzSoKVIoogPFkTzIF7MxBL/2E8LGv672lfL8rdktSCqiKwM1JA==
+X-Received: by 2002:a0c:e2c9:: with SMTP id t9mr42079536qvl.22.1571242289809;
+        Wed, 16 Oct 2019 09:11:29 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y58sm14854019qta.1.2019.10.16.09.11.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 09:11:29 -0700 (PDT)
+Message-ID: <1571242287.5937.66.camel@lca.pw>
+Subject: Re: "Convert the AMD iommu driver to the dma-iommu api" is buggy
+From:   Qian Cai <cai@lca.pw>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Tom Murphy <murphyt7@tcd.ie>, Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Date:   Wed, 16 Oct 2019 12:11:27 -0400
+In-Reply-To: <20191016160314.GH4695@suse.de>
+References: <1571237707.5937.58.camel@lca.pw>
+         <1571237982.5937.60.camel@lca.pw> <20191016153112.GF4695@suse.de>
+         <1571241213.5937.64.camel@lca.pw> <20191016160314.GH4695@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+On Wed, 2019-10-16 at 18:03 +0200, Joerg Roedel wrote:
+> On Wed, Oct 16, 2019 at 11:53:33AM -0400, Qian Cai wrote:
+> > On Wed, 2019-10-16 at 17:31 +0200, Joerg Roedel wrote:
+> > The x86 one might just be a mistake.
+> > 
+> > diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> > index ad05484d0c80..63c4b894751d 100644
+> > --- a/drivers/iommu/amd_iommu.c
+> > +++ b/drivers/iommu/amd_iommu.c
+> > @@ -2542,7 +2542,7 @@ static int amd_iommu_map(struct iommu_domain *dom,
+> > unsigned long iova,
+> >         if (iommu_prot & IOMMU_WRITE)
+> >                 prot |= IOMMU_PROT_IW;
+> >  
+> > -       ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
+> > +       ret = iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
+> 
+> Yeah, that is a bug, I spotted that too.
+> 
+> > @@ -1185,7 +1185,7 @@ static struct iommu_dma_msi_page
+> > *iommu_dma_get_msi_page(struct device *dev,
+> >         if (!iova)
+> >                 goto out_free_page;
+> >  
+> > -       if (iommu_map(domain, iova, msi_addr, size, prot))
+> > +       if (iommu_map_atomic(domain, iova, msi_addr, size, prot))
+> >                 goto out_free_iova;
+> 
+> Not so sure this is a bug, this code is only about setting up MSIs on
+> ARM. It probably doesn't need to be atomic.
 
-The KVM host kernel running in HS-mode needs to handle SBI calls coming
-from guest kernel running in VS-mode.
+The patch "iommu: Add gfp parameter to iommu_ops::map" does this. It could be
+called from an atomic context as showed in the arm64 call traces,
 
-This patch adds SBI v0.1 support in KVM RISC-V. All the SBI calls are
-implemented correctly except remote tlb flushes. For remote TLB flushes,
-we are doing full TLB flush and this will be optimized in future.
-
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/riscv/include/asm/kvm_host.h |   2 +
- arch/riscv/kvm/Makefile           |   2 +-
- arch/riscv/kvm/vcpu_exit.c        |   4 ++
- arch/riscv/kvm/vcpu_sbi.c         | 107 ++++++++++++++++++++++++++++++
- 4 files changed, 114 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/kvm/vcpu_sbi.c
-
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm=
-_host.h
-index 8c7f947b31b6..58cb6789f502 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -250,4 +250,6 @@ bool kvm_riscv_vcpu_has_interrupts(struct kvm_vcpu *vcp=
-u, unsigned long mask);
- void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
- void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
-=20
-+int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run);
-+
- #endif /* __RISCV_KVM_HOST_H__ */
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index 3e0c7558320d..b56dc1650d2c 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -9,6 +9,6 @@ ccflags-y :=3D -Ivirt/kvm -Iarch/riscv/kvm
- kvm-objs :=3D $(common-objs-y)
-=20
- kvm-objs +=3D main.o vm.o vmid.o tlb.o mmu.o
--kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-+kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
-=20
- obj-$(CONFIG_KVM)	+=3D kvm.o
-diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-index 7507b859246b..0e9b0ffa169d 100644
---- a/arch/riscv/kvm/vcpu_exit.c
-+++ b/arch/riscv/kvm/vcpu_exit.c
-@@ -587,6 +587,10 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct =
-kvm_run *run,
- 		    (vcpu->arch.guest_context.hstatus & HSTATUS_STL))
- 			ret =3D stage2_page_fault(vcpu, run, scause, stval);
- 		break;
-+	case EXC_SUPERVISOR_SYSCALL:
-+		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-+			ret =3D kvm_riscv_vcpu_sbi_ecall(vcpu, run);
-+		break;
- 	default:
- 		break;
- 	};
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-new file mode 100644
-index 000000000000..3d0c33c94daf
---- /dev/null
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/kvm_host.h>
-+#include <asm/csr.h>
-+#include <asm/sbi.h>
-+#include <asm/kvm_vcpu_timer.h>
-+
-+#define SBI_VERSION_MAJOR			0
-+#define SBI_VERSION_MINOR			1
-+
-+static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu,
-+				    struct kvm_run *run, u32 type)
++int iommu_map(struct iommu_domain *domain, unsigned long iova,
++             phys_addr_t paddr, size_t size, int prot)
 +{
-+	int i;
-+	struct kvm_vcpu *tmp;
-+
-+	kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-+		tmp->arch.power_off =3D true;
-+	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-+
-+	memset(&run->system_event, 0, sizeof(run->system_event));
-+	run->system_event.type =3D type;
-+	run->exit_reason =3D KVM_EXIT_SYSTEM_EVENT;
++       might_sleep();
++       return __iommu_map(domain, iova, paddr, size, prot, GFP_KERNEL);
 +}
-+
-+int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
-+	int i, ret =3D 1;
-+	u64 next_cycle;
-+	struct kvm_vcpu *rvcpu;
-+	bool next_sepc =3D true;
-+	ulong hmask, ut_scause =3D 0;
-+	struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
-+
-+	if (!cp)
-+		return -EINVAL;
-+
-+	switch (cp->a7) {
-+	case SBI_EXT_0_1_SET_TIMER:
-+#if __riscv_xlen =3D=3D 32
-+		next_cycle =3D ((u64)cp->a1 << 32) | (u64)cp->a0;
-+#else
-+		next_cycle =3D (u64)cp->a0;
-+#endif
-+		kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
-+		break;
-+	case SBI_EXT_0_1_CLEAR_IPI:
-+		kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_S_SOFT);
-+		break;
-+	case SBI_EXT_0_1_SEND_IPI:
-+		hmask =3D kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
-+						   &ut_scause);
-+		if (ut_scause) {
-+			kvm_riscv_vcpu_trap_redirect(vcpu, ut_scause,
-+						     cp->a0);
-+			next_sepc =3D false;
-+		} else {
-+			for_each_set_bit(i, &hmask, BITS_PER_LONG) {
-+				rvcpu =3D kvm_get_vcpu_by_id(vcpu->kvm, i);
-+				kvm_riscv_vcpu_set_interrupt(rvcpu, IRQ_S_SOFT);
-+			}
-+		}
-+		break;
-+	case SBI_EXT_0_1_SHUTDOWN:
-+		kvm_sbi_system_shutdown(vcpu, run, KVM_SYSTEM_EVENT_SHUTDOWN);
-+		next_sepc =3D false;
-+		ret =3D 0;
-+		break;
-+	case SBI_EXT_0_1_REMOTE_FENCE_I:
-+		sbi_remote_fence_i(NULL);
-+		break;
-+	/*
-+	 * TODO: There should be a way to call remote hfence.bvma.
-+	 * Preferred method is now a SBI call. Until then, just flush
-+	 * all tlbs.
-+	 */
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA:
-+		/* TODO: Parse vma range. */
-+		sbi_remote_sfence_vma(NULL, 0, 0);
-+		break;
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID:
-+		/* TODO: Parse vma range for given ASID */
-+		sbi_remote_sfence_vma(NULL, 0, 0);
-+		break;
-+	default:
-+		/*
-+		 * For now, just return error to Guest.
-+		 * TODO: In-future, we will route unsupported SBI calls
-+		 * to user-space.
-+		 */
-+		cp->a0 =3D -ENOTSUPP;
-+		break;
-+	};
-+
-+	if (next_sepc)
-+		cp->sepc +=3D 4;
-+
-+	return ret;
-+}
---=20
-2.17.1
-
