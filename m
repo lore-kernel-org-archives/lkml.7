@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678C8FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3215CFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3553320872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F205921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262962;
-	bh=D7p1egD3uCx9qb4alD0rkTnmhpO0xomFFmgHLmj87RY=;
+	s=default; t=1571262966;
+	bh=uySbU/iStrpg7gYqVAO/jw0Lt6eyVT6b5EdH9JhGSaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2caEpblZ/8Xhb2i6lxMGINaUaAz7ESJ8eMw3Oozc8sYCAr5b209/Q5tB8reTD5FVq
-	 Hk/UL5L2mpGlY7lKj+DfIbnrXSMhAwyeUVmmCaeS8vCLGp/dw1oduB5BcgiTE3XzjA
-	 iyosOMCgXFuVx+CwcW/KBHfFpURA6uqdD79ToSrQ=
+	b=Dt5Ao426IpQG2mo5Ia1SetNzWI4HQb/iEWul8vl+VHaWddjcoQcroch37Pof4axjq
+	 LhxvppwduS6pFExY8CMevjKbtQpMBF+yWA5ZgEGgJywXe8uUWhJfGRyc698EXMgwTO
+	 npFDAs8lpG9JSwcgWBqBpratN9hDjBBIqPGQsz10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390199AbfJPV4A (ORCPT
+        id S2437897AbfJPV4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47066 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437858AbfJPVz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:56 -0400
+        id S2437873AbfJPVz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:59 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F12F20872;
-        Wed, 16 Oct 2019 21:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 195DC20872;
+        Wed, 16 Oct 2019 21:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262956;
-        bh=D7p1egD3uCx9qb4alD0rkTnmhpO0xomFFmgHLmj87RY=;
+        s=default; t=1571262959;
+        bh=uySbU/iStrpg7gYqVAO/jw0Lt6eyVT6b5EdH9JhGSaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BE7z7YK5XfzZqLDShyoFmkwpLdaq7NE/4AU2HR+wFqeqJXzzbS7SHJIvuwArZ7jaF
-         /JSFo5hhVVSCDAkGslikTRWdbzfmiDnFoKQuYuEunm/lh9evsZs3Hy5Xr+Y1+9z2EO
-         jXlwuyiViUIfNNQxb4FiH5ERzA56553HaPQHwKzQ=
+        b=S5kkhM88TQ7it11C+1bTTomBLucvBl4WIu5NzePt32kV5ulEjd3ZYmrKCz4Tt6Q6R
+         SoXHvBVlYRcWystPGZzKCOX6wYOFgqX1sKVhoCp7jRRj1Xe+faj9iZUNWKR9tIlNvc
+         xe28sBgU5tuRgCRbg53RYAT5TkTUxwxItO+pS+LM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Beni Mahler <beni.mahler@gmx.net>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 25/65] USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
-Date:   Wed, 16 Oct 2019 14:50:39 -0700
-Message-Id: <20191016214821.983489547@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 28/65] USB: serial: fix runtime PM after driver unbind
+Date:   Wed, 16 Oct 2019 14:50:42 -0700
+Message-Id: <20191016214823.576491359@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -59,65 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Beni Mahler <beni.mahler@gmx.net>
+From: Johan Hovold <johan@kernel.org>
 
-commit 357f16d9e0194cdbc36531ff88b453481560b76a upstream.
+commit d51bdb93ca7e71d7fb30a572c7b47ed0194bf3fe upstream.
 
-Both devices added here have a FTDI chip inside. The device from Echelon
-is called 'Network Interface' it is actually a LON network gateway.
+Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
+interface PM usage counter") USB drivers must always balance their
+runtime PM gets and puts, including when the driver has already been
+unbound from the interface.
 
- ID 0403:8348 Future Technology Devices International, Ltd
- https://www.eltako.com/fileadmin/downloads/de/datenblatt/Datenblatt_PL-SW-PROF.pdf
+Leaving the interface with a positive PM usage counter would prevent a
+later bound driver from suspending the device.
 
- ID 0920:7500 Network Interface
- https://www.echelon.com/products/u20-usb-network-interface
-
-Signed-off-by: Beni Mahler <beni.mahler@gmx.net>
+Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191001084908.2003-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ftdi_sio.c     |    3 +++
- drivers/usb/serial/ftdi_sio_ids.h |    9 +++++++++
- 2 files changed, 12 insertions(+)
+ drivers/usb/serial/usb-serial.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1025,6 +1025,9 @@ static const struct usb_device_id id_tab
- 	/* EZPrototypes devices */
- 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
- 	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
-+	/* Sienna devices */
-+	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
-+	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
- 	{ }					/* Terminating entry */
- };
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -314,10 +314,7 @@ static void serial_cleanup(struct tty_st
+ 	serial = port->serial;
+ 	owner = serial->type->driver.owner;
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -39,6 +39,9 @@
+-	mutex_lock(&serial->disc_mutex);
+-	if (!serial->disconnected)
+-		usb_autopm_put_interface(serial->interface);
+-	mutex_unlock(&serial->disc_mutex);
++	usb_autopm_put_interface(serial->interface);
  
- #define FTDI_LUMEL_PD12_PID	0x6002
- 
-+/* Sienna Serial Interface by Secyourit GmbH */
-+#define FTDI_SIENNA_PID		0x8348
-+
- /* Cyber Cortex AV by Fabulous Silicon (http://fabuloussilicon.com) */
- #define CYBER_CORTEX_AV_PID	0x8698
- 
-@@ -689,6 +692,12 @@
- #define BANDB_ZZ_PROG1_USB_PID	0xBA02
- 
- /*
-+ * Echelon USB Serial Interface
-+ */
-+#define ECHELON_VID		0x0920
-+#define ECHELON_U20_PID		0x7500
-+
-+/*
-  * Intrepid Control Systems (http://www.intrepidcs.com/) ValueCAN and NeoVI
-  */
- #define INTREPID_VID		0x093C
+ 	usb_serial_put(serial);
+ 	module_put(owner);
 
 
