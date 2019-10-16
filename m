@@ -2,206 +2,149 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB2CECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF334ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69E3217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="fNSVq1FB"
+	by mail.kernel.org (Postfix) with ESMTP id 9256B2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391220AbfJPE5w (ORCPT
+        id S1730840AbfJPFCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 00:57:52 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:61885 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391191AbfJPE5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 00:57:51 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46tKmX5gXcz9v04Q;
-        Wed, 16 Oct 2019 06:57:48 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=fNSVq1FB; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id EyIffbDFq4DK; Wed, 16 Oct 2019 06:57:48 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46tKmX4c9Gz9v04P;
-        Wed, 16 Oct 2019 06:57:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1571201868; bh=WcrWX5qIsyzBaUSqOCznfmSp4X0kJ50l49JIS7ShEs0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fNSVq1FBCpaoU2z6LyJxHgHAHyhr3tYNNlck/NyX9Ska5Upma4QucQAJWCLMVliQD
-         qnh5loE8VUquD92wiSEvXHzF6A65fuNiLR/2DahJjI3hImI4SS+ViieQ3Z5AeLLfB+
-         PeX7oDmo1KiowuO2ac2L9xfNG2yGCt1c05Uh5LSg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6DBC68B8B0;
-        Wed, 16 Oct 2019 06:57:49 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 52SVVMmInz53; Wed, 16 Oct 2019 06:57:49 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DEEA18B7C9;
-        Wed, 16 Oct 2019 06:57:48 +0200 (CEST)
-Subject: Re: [PATCH 03/34] powerpc: Use CONFIG_PREEMPTION
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Paul Mackerras <paulus@samba.org>, tglx@linutronix.de,
-        linuxppc-dev@lists.ozlabs.org
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-4-bigeasy@linutronix.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
-Date:   Wed, 16 Oct 2019 06:57:48 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 01:02:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31550 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726769AbfJPFCb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 01:02:31 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G51noV024524
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:02:30 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnva9rn5a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:02:29 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Wed, 16 Oct 2019 06:02:28 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 16 Oct 2019 06:02:24 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G52N2435061802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 05:02:23 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA45CA4051;
+        Wed, 16 Oct 2019 05:02:22 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E53EA404D;
+        Wed, 16 Oct 2019 05:02:21 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.124.35.18])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 16 Oct 2019 05:02:21 +0000 (GMT)
+Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
+To:     Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
+        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
+        pmladek@suse.com, joe.lawrence@redhat.com
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+References: <20191014105923.29607-1-mbenes@suse.cz>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Wed, 16 Oct 2019 10:32:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20191015191821.11479-4-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191014105923.29607-1-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101605-4275-0000-0000-000003727708
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101605-4276-0000-0000-000038858AF1
+Message-Id: <a39036e1-5235-9b5a-f847-12878538781e@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 15/10/2019 à 21:17, Sebastian Andrzej Siewior a écrit :
-> From: Thomas Gleixner <tglx@linutronix.de>
+On 10/14/19 4:29 PM, Miroslav Benes wrote:
+> Livepatch uses ftrace for redirection to new patched functions. It means
+> that if ftrace is disabled, all live patched functions are disabled as
+> well. Toggling global 'ftrace_enabled' sysctl thus affect it directly.
+> It is not a problem per se, because only administrator can set sysctl
+> values, but it still may be surprising.
 > 
-> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-> Both PREEMPT and PREEMPT_RT require the same functionality which today
-> depends on CONFIG_PREEMPT.
+> Introduce PERMANENT ftrace_ops flag to amend this. If the
+> FTRACE_OPS_FL_PERMANENT is set on any ftrace ops, the tracing cannot be
+> disabled by disabling ftrace_enabled. Equally, a callback with the flag
+> set cannot be registered if ftrace_enabled is disabled.
 > 
-> Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
-> output in __die().
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 
-powerpc doesn't select ARCH_SUPPORTS_RT, so this change is useless as 
-CONFIG_PREEMPT_RT cannot be selected.
+The patch looks good to me. A minor typo in flag description below.
 
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+
+[...]
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 8a8cb3c401b2..c2cad29dc557 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -142,6 +142,8 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
+>   * PID     - Is affected by set_ftrace_pid (allows filtering on those pids)
+>   * RCU     - Set when the ops can only be called when RCU is watching.
+>   * TRACE_ARRAY - The ops->private points to a trace_array descriptor.
+> + * PERMAMENT - Set when the ops is permanent and should not be affected by
+> + *             ftrace_enabled.
+>   */
+
+s/PERMAMENT/PERMANENT
+
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 62a50bf399d6..d2992ea29fe1 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6752,12 +6764,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
+>  		ftrace_startup_sysctl();
 > 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> [bigeasy: +traps.c, Kconfig]
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->   arch/powerpc/Kconfig           | 2 +-
->   arch/powerpc/kernel/entry_32.S | 4 ++--
->   arch/powerpc/kernel/entry_64.S | 4 ++--
->   arch/powerpc/kernel/traps.c    | 7 ++++++-
->   4 files changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 3e56c9c2f16ee..8ead8d6e1cbc8 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -106,7 +106,7 @@ config LOCKDEP_SUPPORT
->   config GENERIC_LOCKBREAK
->   	bool
->   	default y
-> -	depends on SMP && PREEMPT
-> +	depends on SMP && PREEMPTION
->   
->   config GENERIC_HWEIGHT
->   	bool
-> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-> index d60908ea37fb9..e1a4c39b83b86 100644
-> --- a/arch/powerpc/kernel/entry_32.S
-> +++ b/arch/powerpc/kernel/entry_32.S
-> @@ -897,7 +897,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
->   	bne-	0b
->   1:
->   
-> -#ifdef CONFIG_PREEMPT
-> +#ifdef CONFIG_PREEMPTION
->   	/* check current_thread_info->preempt_count */
->   	lwz	r0,TI_PREEMPT(r2)
->   	cmpwi	0,r0,0		/* if non-zero, just restore regs and return */
-> @@ -921,7 +921,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
->   	 */
->   	bl	trace_hardirqs_on
->   #endif
-> -#endif /* CONFIG_PREEMPT */
-> +#endif /* CONFIG_PREEMPTION */
->   restore_kuap:
->   	kuap_restore r1, r2, r9, r10, r0
->   
-> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-> index 6467bdab8d405..83733376533e8 100644
-> --- a/arch/powerpc/kernel/entry_64.S
-> +++ b/arch/powerpc/kernel/entry_64.S
-> @@ -840,7 +840,7 @@ _GLOBAL(ret_from_except_lite)
->   	bne-	0b
->   1:
->   
-> -#ifdef CONFIG_PREEMPT
-> +#ifdef CONFIG_PREEMPTION
->   	/* Check if we need to preempt */
->   	andi.	r0,r4,_TIF_NEED_RESCHED
->   	beq+	restore
-> @@ -871,7 +871,7 @@ _GLOBAL(ret_from_except_lite)
->   	li	r10,MSR_RI
->   	mtmsrd	r10,1		  /* Update machine state */
->   #endif /* CONFIG_PPC_BOOK3E */
-> -#endif /* CONFIG_PREEMPT */
-> +#endif /* CONFIG_PREEMPTION */
->   
->   	.globl	fast_exc_return_irq
->   fast_exc_return_irq:
-> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> index 82f43535e6867..23d2f20be4f2e 100644
-> --- a/arch/powerpc/kernel/traps.c
-> +++ b/arch/powerpc/kernel/traps.c
-> @@ -252,14 +252,19 @@ NOKPROBE_SYMBOL(oops_end);
->   
->   static int __die(const char *str, struct pt_regs *regs, long err)
->   {
-> +	const char *pr = "";
+>  	} else {
+> +		if (is_permanent_ops_registered()) {
+> +			ftrace_enabled = last_ftrace_enabled;
+> +			ret = -EBUSY;
+> +			goto out;
+> +		}
 > +
+>  		/* stopping ftrace calls (just send to ftrace_stub) */
+>  		ftrace_trace_function = ftrace_stub;
+> 
+>  		ftrace_shutdown_sysctl();
+>  	}
+> 
+> +	last_ftrace_enabled = !!ftrace_enabled;
 
-Please follow the same approach as already existing. Don't add a local 
-var for that.
+No strong feelings on last_ftrace_enabled placement, leaving it to
+your preference. 
 
->   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
->   
-> +	if (IS_ENABLED(CONFIG_PREEMPTION))
-> +		pr = IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
-> +
-
-drop
-
->   	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s%s %s\n",
-
-Add one %s
-
->   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
->   	       PAGE_SIZE / 1024,
->   	       early_radix_enabled() ? " MMU=Radix" : "",
->   	       early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ? " MMU=Hash" : "",
-> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
-
-Replace by: 	IS_ENABLED(CONFIG_PREEMPTION) ? " PREEMPT" : ""
-
-> +	       pr,
-
-add something like: IS_ENABLED(CONFIG_PREEMPT_RT) ? "_RT" : ""
-
->   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
->   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
->   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+>   out:
+>  	mutex_unlock(&ftrace_lock);
+>  	return ret;
 > 
 
-Christophe
+
+-- 
+Kamalesh
+
