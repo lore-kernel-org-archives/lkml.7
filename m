@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94E0ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3C8FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2621928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59EB21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264086;
-	bh=bqQD1JbQd7t0d/KBSwKHC0ES/WEKFwKh6Yj1/Q/t9aI=;
+	s=default; t=1571264093;
+	bh=6LrAYEbdMfC72hEYHwUkCFcp0eNshDeqxzc/E+tndRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FfCVLbSQRPII1evKHtGhrqYf6KTU7sza5E4vYkdGVCw24AnLO3N1aZaqwOik/8q/a
-	 9bzkSm5Sdjt9vpwq/p41IgmTLu6eVxvBlX5m1nhoL0Rtywx/rfGKfXvLmCuDwvu3+r
-	 J/zT06jOhH4nP/PpkIKjonmMi5yG0Mz/qSu+BhOw=
+	b=OCzllvHmKE5el6tIeccN3gBF2wWIxLhXZIzhBL3ymxW+WiVVZwuePnF21mgaLX3SX
+	 2aXgAhL1o5LVbfm+Deb0i+Jaxenzo5FFewaZjPAtJ6V7axgK0oVUpnQKa8cOb/A0ZE
+	 0+R+5cqjofoQuGjAMSG/zNCkal7GVQxmntJ1o4hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395285AbfJPVzj (ORCPT
+        id S2407424AbfJPWOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395244AbfJPVzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:32 -0400
+        id S2395281AbfJPVzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:38 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE951218DE;
-        Wed, 16 Oct 2019 21:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC2C21D7F;
+        Wed, 16 Oct 2019 21:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262931;
-        bh=bqQD1JbQd7t0d/KBSwKHC0ES/WEKFwKh6Yj1/Q/t9aI=;
+        s=default; t=1571262938;
+        bh=6LrAYEbdMfC72hEYHwUkCFcp0eNshDeqxzc/E+tndRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TI8Zi2JhBlk7LlNeTzFIi84UOMEmAdjB428qEKN20wIBjyeJpnAJ23RNI7f1WTUV
-         0W3yKiqdc0YjQDi0AFz4gjS1Wx9kFz4uHt2NuE1kj8OpDFs+9LKkls3J5NdG6ke+PG
-         gixUXh5LGW9dua7BPnCBvUreLiEsbP2ieXjAKdZM=
+        b=UKpMufj8OrFQfEP54cMdXsdjxjtGpwEUc2ssetCIUve8xQ5JDMEUsUTKPEX76xvJ0
+         NctE7qj6yNaMc0uFx6GkH/3NcGYI43WfLbGbFs0f1Txip9l1Z4xK4e1RjhvSAOO1W1
+         IncPUN3oA912Vqh+ulYo2pZRLuIvnYVhXDqv28gc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 91/92] x86/asm: Fix MWAITX C-state hint value
-Date:   Wed, 16 Oct 2019 14:51:04 -0700
-Message-Id: <20191016214848.802788649@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 50/92] USB: adutux: fix use-after-free on release
+Date:   Wed, 16 Oct 2019 14:50:23 -0700
+Message-Id: <20191016214836.037717890@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -66,64 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 454de1e7d970d6bc567686052329e4814842867c upstream.
+commit 123a0f125fa3d2104043697baa62899d9e549272 upstream.
 
-As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
-and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
-of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
+The driver was accessing its struct usb_device in its release()
+callback without holding a reference. This would lead to a
+use-after-free whenever the device was disconnected while the character
+device was still open.
 
-Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
-this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
-
-This hasn't had any implications so far because setting reserved bits in
-EAX is simply ignored by the CPU.
-
- [ bp: Fixup comment in delay_mwaitx() and massage. ]
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 66d4bc30d128 ("USB: adutux: remove custom debug macro")
+Cc: stable <stable@vger.kernel.org>     # 3.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009153848.8664-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/mwait.h |    2 +-
- arch/x86/lib/delay.c         |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/misc/adutux.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -19,7 +19,7 @@
- #define MWAIT_ECX_INTERRUPT_BREAK	0x1
- #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
- #define MWAITX_MAX_LOOPS		((u32)-1)
--#define MWAITX_DISABLE_CSTATES		0xf
-+#define MWAITX_DISABLE_CSTATES		0xf0
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -152,6 +152,7 @@ static void adu_delete(struct adu_device
+ 	kfree(dev->read_buffer_secondary);
+ 	kfree(dev->interrupt_in_buffer);
+ 	kfree(dev->interrupt_out_buffer);
++	usb_put_dev(dev->udev);
+ 	kfree(dev);
+ }
  
- static inline void __monitor(const void *eax, unsigned long ecx,
- 			     unsigned long edx)
---- a/arch/x86/lib/delay.c
-+++ b/arch/x86/lib/delay.c
-@@ -112,8 +112,8 @@ static void delay_mwaitx(unsigned long _
- 		__monitorx(raw_cpu_ptr(&cpu_tss), 0, 0);
+@@ -680,7 +681,7 @@ static int adu_probe(struct usb_interfac
  
- 		/*
--		 * AMD, like Intel, supports the EAX hint and EAX=0xf
--		 * means, do not enter any deep C-state and we use it
-+		 * AMD, like Intel's MWAIT version, supports the EAX hint and
-+		 * EAX=0xf0 means, do not enter any deep C-state and we use it
- 		 * here in delay() to minimize wakeup latency.
- 		 */
- 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
+ 	mutex_init(&dev->mtx);
+ 	spin_lock_init(&dev->buflock);
+-	dev->udev = udev;
++	dev->udev = usb_get_dev(udev);
+ 	init_waitqueue_head(&dev->read_wait);
+ 	init_waitqueue_head(&dev->write_wait);
+ 
 
 
