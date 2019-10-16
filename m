@@ -2,74 +2,76 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F4CFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39027FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0390F20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C46720872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391999AbfJPKiK (ORCPT
+        id S2392055AbfJPKik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:38:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12940 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727291AbfJPKiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:38:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 03:38:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="220735156"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.130])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Oct 2019 03:38:05 -0700
-Date:   Wed, 16 Oct 2019 13:38:05 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-integrity@vger.kernel.org,
-        David Safford <david.safford@ge.com>,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Salt tpm_get_random() result with get_random_bytes()
-Message-ID: <20191016103805.GA10184@linux.intel.com>
-References: <20191015124702.633-1-jarkko.sakkinen@linux.intel.com>
- <20191015170450.GB5444@ziepe.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015170450.GB5444@ziepe.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 16 Oct 2019 06:38:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39442 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfJPKik (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:38:40 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iKghC-0001KT-Ol; Wed, 16 Oct 2019 10:38:23 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     hpa@zytor.com, harry.pan@intel.com, feng.tang@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] x86/intel: Disable HPET on Intel Coffe Lake platforms
+Date:   Wed, 16 Oct 2019 18:38:16 +0800
+Message-Id: <20191016103816.30650-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 02:04:50PM -0300, Jason Gunthorpe wrote:
-> On Tue, Oct 15, 2019 at 03:47:02PM +0300, Jarkko Sakkinen wrote:
-> > Salt the result that comes from the TPM RNG with random bytes from the
-> > kernel RNG. This will allow to use tpm_get_random() as a substitute for
-> > get_random_bytes().  TPM could have a bug (making results predicatable),
-> > backdoor or even an inteposer in the bus. Salting gives protections
-> > against these concerns.
-> 
-> Seems like a dangerous use case, why would any kernel user that cared
-> about quality of randomness ever call a tpm_* API to get quality
-> random data?
+Some Coffee Lake platforms have skewed HPET timer once the SoCs entered
+PC10, and marked TSC as unstable clocksource as result.
 
-This is related to this discussion:
+Harry Pan identified it's a firmware bug [1].
 
-https://lore.kernel.org/linux-integrity/CAE=NcrY3BTvD-L2XP6bsO=9oAJLtSD0wYpUymVkAGAnYObsPzQ@mail.gmail.com/T/#t
+To prevent creating a circular dependency between HPET and TSC, let's
+disable HPET on affected platforms.
 
-I could also move this to the call site.
+[1]: https://lore.kernel.org/lkml/20190516090651.1396-1-harry.pan@intel.com/
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203183
 
-/Jarkko
+Cc: <stable@vger.kernel.org>
+Suggested-by: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ arch/x86/kernel/early-quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 6f6b1d04dadf..4cba91ec8049 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -710,6 +710,8 @@ static struct chipset early_qrk[] __initdata = {
+ 	 */
+ 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
+-- 
+2.17.1
+
