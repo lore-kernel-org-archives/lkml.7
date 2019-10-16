@@ -2,60 +2,56 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34D2FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16838ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F1D2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDCE2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264348;
-	bh=t5SabUBL58cN4oJLeCIcShWn59cDVugH9Hne/Pi4n7o=;
+	s=default; t=1571264352;
+	bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GAzsn2qXZIRO6K/LAJ5D/M5+Q5FxT8L4CjBHuPJyekB6HNa//GQ84uTmdQ2kk+Lvv
-	 p1v6wANO+PoZ7G+Q89cDTxuEnfVLieVjLk5woq/iAyZjRq1pnlmy1rK+9aPX6dpAFD
-	 0KAzl2+9aRc5q9tXGj6hPQuwJyu+jJJNeeMWWXQM=
+	b=Ydremj3s2cl2tBMWoteF08032ZwVie0rU06m8hKNmBmRf/pIs54SIaXkcNI2zzFzT
+	 mQjHw2/CskzbzE0aYZ1lwUGXoLSnT6ewhKhLIW8T4lsn/ymplWIjmP8jG98SnQbb12
+	 RHbXrCHn4gc2CUm1QS6m3Lg7/qCR0eoDZ17qbEsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394949AbfJPVyO (ORCPT
+        id S2395062AbfJPWTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:19:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437656AbfJPVyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:04 -0400
+        id S2394933AbfJPVyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:12 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A11F21D7A;
-        Wed, 16 Oct 2019 21:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B837521925;
+        Wed, 16 Oct 2019 21:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262843;
-        bh=t5SabUBL58cN4oJLeCIcShWn59cDVugH9Hne/Pi4n7o=;
+        s=default; t=1571262851;
+        bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zc1m7GtX/nqhoB4KdqfE9jlNHRZ8E292RLQbpBqTjDkPjRlfNOFuwvjC2rYdVVpLH
-         JWTpvFNa2e29GoRw6Va8a4o5wvoXHQURTsuStqS4PUrgqYcvKK3wILff/dEuJbHWXS
-         woWPMRsZshyTFc+MP0MPHIej1RjyLEe9x2P9xwtk=
+        b=baCBaLWv5SyZqr2mZ1kuaEJ39NoRcXZs47dh8zWQJgZl4SqJddayMqUT3kPxJ2g9v
+         LaGnoIC/0miq+EFUjDltKq3axR9cRvBk/NzRM7Egd+vMsm3s2Z3hf+1iRd1+ij5us9
+         y9lHFzAcgLCOSnntdW6Bv7yC7lNUydJdSbcKdIC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.9 01/92] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
-Date:   Wed, 16 Oct 2019 14:49:34 -0700
-Message-Id: <20191016214800.188301016@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/92] xen/pci: reserve MCFG areas earlier
+Date:   Wed, 16 Oct 2019 14:49:51 -0700
+Message-Id: <20191016214815.145078382@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,50 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
+[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
 
-If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-then there is certainly a bug in the calling userspace application.
-We check for wrong access registers, but only if the vCPU was already
-in the access register mode before (i.e. the SIE block has recorded
-it). The check is also buried somewhere deep in the calling chain (in
-the function ar_translation()), so this is somewhat hard to find.
+If MCFG area is not reserved in E820, Xen by default will defer its usage
+until Dom0 registers it explicitly after ACPI parser recognizes it as
+a reserved resource in DSDT. Having it reserved in E820 is not
+mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
+and firmware is free to keep a hole in E820 in that place. Xen doesn't know
+what exactly is inside this hole since it lacks full ACPI view of the
+platform therefore it's potentially harmful to access MCFG region
+without additional checks as some machines are known to provide
+inconsistent information on the size of the region.
 
-It's better to always report an error to the userspace in case this
-field is set wrong, and it's safer in the KVM code if we block wrong
-values here early instead of relying on a check somewhere deep down
-the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-directly.
+Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
+PCI enumeration starts exactly there as well. Trying to register a device
+prior to MCFG reservation causes multiple problems with PCIe extended
+capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
+no convenient hooks for us to subscribe to so register MCFG areas earlier
+upon the first invocation of xen_add_device(). It should be safe to do once
+since all the boot time buses must have their MCFG areas in MCFG table
+already and we don't support PCI bus hot-plug.
 
-We also should check that the "size" is non-zero here (thanks to Janosch
-Frank for the hint!). If we do not check the size, we could call vmalloc()
-with this 0 value, and this will cause a kernel warning.
-
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kvm/kvm-s390.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/pci.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3033,7 +3033,7 @@ static long kvm_s390_guest_mem_op(struct
- 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
- 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
+index 7494dbeb4409c..db58aaa4dc598 100644
+--- a/drivers/xen/pci.c
++++ b/drivers/xen/pci.c
+@@ -29,6 +29,8 @@
+ #include "../pci/pci.h"
+ #ifdef CONFIG_PCI_MMCONFIG
+ #include <asm/pci_x86.h>
++
++static int xen_mcfg_late(void);
+ #endif
  
--	if (mop->flags & ~supported_flags)
-+	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
- 		return -EINVAL;
+ static bool __read_mostly pci_seg_supported = true;
+@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
+ #ifdef CONFIG_PCI_IOV
+ 	struct pci_dev *physfn = pci_dev->physfn;
+ #endif
+-
++#ifdef CONFIG_PCI_MMCONFIG
++	static bool pci_mcfg_reserved = false;
++	/*
++	 * Reserve MCFG areas in Xen on first invocation due to this being
++	 * potentially called from inside of acpi_init immediately after
++	 * MCFG table has been finally parsed.
++	 */
++	if (!pci_mcfg_reserved) {
++		xen_mcfg_late();
++		pci_mcfg_reserved = true;
++	}
++#endif
+ 	if (pci_seg_supported) {
+ 		struct {
+ 			struct physdev_pci_device_add add;
+@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
+ arch_initcall(register_xen_pci_notifier);
  
- 	if (mop->size > MEM_OP_MAX_SIZE)
+ #ifdef CONFIG_PCI_MMCONFIG
+-static int __init xen_mcfg_late(void)
++static int xen_mcfg_late(void)
+ {
+ 	struct pci_mmcfg_region *cfg;
+ 	int rc;
+@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
+ 	}
+ 	return 0;
+ }
+-/*
+- * Needs to be done after acpi_init which are subsys_initcall.
+- */
+-subsys_initcall_sync(xen_mcfg_late);
+ #endif
+-- 
+2.20.1
+
 
 
