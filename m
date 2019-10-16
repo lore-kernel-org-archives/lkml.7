@@ -2,123 +2,101 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13145C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755F9ECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85FD2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Tap8MQ3g"
+	by mail.kernel.org (Postfix) with ESMTP id 5708720663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390944AbfJPDZU (ORCPT
+        id S2391020AbfJPDbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:25:20 -0400
-Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:32833
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390917AbfJPDZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:25:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kViF3jUByFRMzBPPh67sYrIchayv7H8Od732y1yNAomMoaOHslyhUCHL/2sFKjRfAqjlbB4T9q5iTaFkCufEZrkpoxSzTsK4adYBZM+7W2eDwh6Z9uGP9J6DL4mGkrHLf1qmaMJczwmkUMNHDECFNhuQCm38TNhZO5GGHBXRRoJNkQyBHBPbOnC7b8dzp91zjGTg5exeaX8R3mWVRnvF435mX2rZtputNXhPVlxIongcJMTKVs7RyptCFPbXkJIS0hQHqZ2rwhKIUyURMYwwSBNGqBbEdgxCb1G2y0VmWBZuqvu8X7pzjUt3gCeBCczgqOjvELv0ug9P7Irl0k60IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3J0Edr48mYO0h8oHxz5tnmEKIJxtso1t3vzY3ny4ejE=;
- b=n+3aSG2q/ftPuu+NFbx3iqETC/3sb/vHZ4jK2lUP1WyXOWeeq0flC26LPotJOl1oiZb/zORJKQhDIUIlUA/9Irr2c+uHdKKGC0aIqyKlIUrTLODthL2q32j7W82k8dRAE7gp8o669E6ynbE7/pjb1q0YRUrsUXzN5+9aoGduqfX+QBappNJ+CFqWR22NEc8Z9HLF7o6OJinQSpf+Pxpf518UrbzFCmff75rt070TgRSuaSuWBZ5u4cguHGbr1gL4c7yWRmTZh0NvCkJb7Lk48cvtwlj+0ZnuXD8EnbLMun7kFljq/D4wzPdpg3/3f7uT1IGRjzQKis8vdE3leYPc4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3J0Edr48mYO0h8oHxz5tnmEKIJxtso1t3vzY3ny4ejE=;
- b=Tap8MQ3gd1SyZvpsnUktqV5am42c1hc+VqA7wPHsACRd9enRWD4jnxg9AeZ9Ob7KQAe3WphYJ5FmxCLDgaPjvc36OBhWGIlHXgViLkNxgcjsBHUddaSIM12JmWZij+DfA/AOCD3+ormm/hkGECFaWo4DSIXqb0wlucmA5wQzIGw=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5148.eurprd04.prod.outlook.com (20.176.233.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Wed, 16 Oct 2019 03:25:11 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::7804:558a:eef9:cc11%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 03:25:11 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Peter Rosin <peda@axentia.se>, Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] Re: [v2,1/2] dt-bindings: i2c: add property idle-state
-Thread-Topic: [EXT] Re: [v2,1/2] dt-bindings: i2c: add property idle-state
-Thread-Index: AQHVgxVYqJHX3ILyNkyr9awgyttOV6db0HsAgADL5PA=
-Date:   Wed, 16 Oct 2019 03:25:11 +0000
-Message-ID: <DB7PR04MB4490AFF4CA990D3F2C2F51C38F920@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20191015044839.23746-1-biwen.li@nxp.com>
- <996277d6-1c0b-6080-4565-ce3aad77e09e@axentia.se>
-In-Reply-To: <996277d6-1c0b-6080-4565-ce3aad77e09e@axentia.se>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bb774d58-f53d-4dec-254b-08d751e873f0
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DB7PR04MB5148:|DB7PR04MB5148:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB51481C2F393D6A866044564B8F920@DB7PR04MB5148.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(37524003)(189003)(199004)(66066001)(81156014)(14444005)(2906002)(5660300002)(186003)(316002)(110136005)(54906003)(6246003)(55016002)(9686003)(6116002)(256004)(476003)(8936002)(76116006)(26005)(33656002)(11346002)(81166006)(66446008)(64756008)(66476007)(66946007)(52536014)(446003)(66556008)(99286004)(71200400001)(44832011)(4326008)(486006)(102836004)(7736002)(53546011)(4001150100001)(3846002)(6506007)(7696005)(71190400001)(6436002)(76176011)(2501003)(478600001)(86362001)(305945005)(8676002)(74316002)(229853002)(25786009)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5148;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KJpgPD2i9tQ/B+2wA8DnD59h47PGbLS9K+Sw+gtnjgL5PBSiPSXhrr+i+SiXfypTV5UFyJbB7NDpb6wY+N5BXcnhtHRFGqAQdFz0xOXuaafQz8s6ivxmvPKpOw6T2vB/rosM7d6rey+5zrIujFNexMqfvUxBmYMyBFvdUX+zFIl0rqzRaH4Ih7wuf5glc1iGQUZIsCuIRtnO8YJbBja7WW4cbTotJhY0oKvypfKWgp5Ba3U7rkVn+8gTH2GtwbLJPjg1WacnDDJKAhGDPRCD4lFdQrvVVFXU8/4Cs5RDpwkbJslVBJSBWJSWg7Tro0WJXVfZDajSh/scgBaEqHw+YKwkueKZFIhRQcC+CQg5eigUgWS704tdI8Dkw3F5hKAQ+5s+VLoWdMl+b4qjDqHg7AaJjY9nNszRPVljLVjPYpk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 15 Oct 2019 23:31:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55449 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730211AbfJPDbU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:31:20 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iKa1t-0008BG-Fb; Wed, 16 Oct 2019 03:31:17 +0000
+Date:   Wed, 16 Oct 2019 05:31:16 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v2 0/3] bpf: switch to new usercopy helpers
+Message-ID: <20191016033115.ljwiae2cfltbdoyo@wittgenstein>
+References: <20191009160907.10981-1-christian.brauner@ubuntu.com>
+ <20191016004138.24845-1-christian.brauner@ubuntu.com>
+ <CAADnVQ+JmXK4EGtt-6pm+KENPooewfikaRE5dZqi1pMBc_jdxw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb774d58-f53d-4dec-254b-08d751e873f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 03:25:11.4165
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zRA7Flq0tQHTaPpfDiZYE6Ap1D6//FkHBbVGuWkv8e8Drdv2zL5KmyXRprwWMICg+wKJavWcNzQnAxahGbSCtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5148
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQ+JmXK4EGtt-6pm+KENPooewfikaRE5dZqi1pMBc_jdxw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gT24gMjAxOS0xMC0xNSAwNjo0OCwgQml3ZW4gTGkgd3JvdGU6DQo+ID4gVGhpcyBhZGRz
-IHByb3BlcnR5IGlkbGUtc3RhdGUNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxi
-aXdlbi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZSBpbiB2MjoNCj4gPiAgICAgICAt
-IHVwZGF0ZSBzdWJqZWN0IGFuZCBkZXNjcmlwdGlvbg0KPiA+ICAgICAgIC0gYWRkIHByb3BlcnR5
-IGlkbGUtc3RhdGUNCj4gPg0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aTJjL2kyYy1tdXgtcGNhOTU0eC50eHQgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2kyYy9pMmMtbXV4LXBjYTk1NHgudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQNCj4gPiBpbmRleCAzMGFj
-NmE2MGYwNDEuLjJjNzg3NWQzMzhmYiAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQNCj4gPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtcGNhOTU0eC50eHQNCj4g
-PiBAQCAtMzQsNiArMzQsNyBAQCBPcHRpb25hbCBQcm9wZXJ0aWVzOg0KPiA+ICAgICAgLSBmaXJz
-dCBjZWxsIGlzIHRoZSBwaW4gbnVtYmVyDQo+ID4gICAgICAtIHNlY29uZCBjZWxsIGlzIHVzZWQg
-dG8gc3BlY2lmeSBmbGFncy4NCj4gPiAgICAgIFNlZSBhbHNvDQo+ID4gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ludGVycnVwdHMudHh0DQo+
-ID4gKyAgLSBpZGxlLXN0YXRlOiBQbGVhc2UgcmVmZXIgdG8NCj4gPiArIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdXgvbXV4LWNvbnRyb2xsZXIudHh0DQo+ID4NCj4gPiAgRXhh
-bXBsZToNCj4gPg0KPiA+DQo+IA0KPiBBcyBwZXIgbXkgY29tbWVudHMgb24gdGhlIGNvZGUsIHlv
-dSBzaG91bGQgbWVudGlvbiB0aGF0IGlkbGUtc3RhdGUsIGlmDQo+IHByZXNlbnQsIG92ZXJyaWRl
-cyBpMmMtbXV4LWlkbGUtZGlzY29ubmVjdC4gSSBhbHNvIHRoaW5rIHlvdSBzaG91bGQga2VlcA0K
-PiBpZGxlLXN0YXRlIGFuZCBpMmMtbXV4LWlkbGUtZGlzY29ubmVjdCByaWdodCBuZXh0IHRvIGVh
-Y2ggb3RoZXIuDQpHb3QgaXQsIEkgd2lsbCBhZGp1c3QgaXQgaW4gdjMuDQo+IA0KPiBDaGVlcnMs
-DQo+IFBldGVyDQo=
+On Tue, Oct 15, 2019 at 07:14:42PM -0700, Alexei Starovoitov wrote:
+> On Tue, Oct 15, 2019 at 5:41 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > Hey everyone,
+> >
+> > In v5.4-rc2 we added two new helpers check_zeroed_user() and
+> > copy_struct_from_user() including selftests (cf. [1]). It is a generic
+> > interface designed to copy a struct from userspace. The helpers will be
+> > especially useful for structs versioned by size of which we have quite a
+> > few.
+> 
+> Was it tested?
+> Either your conversion is incorrect or that generic helper is broken.
+> ./test_progs -n 2
+> and
+> ./test_btf
+> are catching the bug:
+> BTF prog info raw test[8] (line_info (No subprog. zero tailing
+> line_info): do_test_info_raw:6205:FAIL prog_fd:-1
+> expected_prog_load_failure:0 errno:7
+> nonzero tailing record in line_infoprocessed 0 insns (limit 1000000)
+> max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+
+Ugh, I misrememberd what the helper I helped design returns. The fix is:
+
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 5db9887a8f4c..0920593eacd0 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -78,11 +78,8 @@ int bpf_check_uarg_tail_zero(void __user *uaddr,
+                return 0;
+
+        err = check_zeroed_user(uaddr + expected_size, rest);
+-       if (err < 0)
+-               return err;
+-
+-       if (err)
+-               return -E2BIG;
++       if (err <= 0)
++               return err ?: -E2BIG;
+
+        return 0;
+ }
+
+aka check_zeroed_user() returns 0 if non-zero bytes are present, 1 if no
+non-zero bytes were present, and -errno on error.
+
+I'll send a fixed version. The tests pass for me with this.
+
+Christian
