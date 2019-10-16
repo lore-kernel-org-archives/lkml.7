@@ -2,81 +2,134 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6720C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBC2C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63C620650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E7121848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:15:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hi40LFlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404586AbfJPKPM (ORCPT
+        id S2392297AbfJPKPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:15:12 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:45673 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfJPKPM (ORCPT
+        Wed, 16 Oct 2019 06:15:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37471 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfJPKPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:15:12 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKgKf-00037D-3d; Wed, 16 Oct 2019 11:15:05 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKgKe-0008GZ-Dh; Wed, 16 Oct 2019 11:15:04 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ubifs: fix type of sup->hash_algo
-Date:   Wed, 16 Oct 2019 11:15:03 +0100
-Message-Id: <20191016101503.31731-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 06:15:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p14so27335868wro.4;
+        Wed, 16 Oct 2019 03:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xTYmNxIvoNbSeEdEWMDABklCOiul8eFwZIjECLgcPFY=;
+        b=Hi40LFlKax9B+XeWvVP0/JnhaYHwRhvlr6YXTC4eJn9m+4z17IVUEWl0G6GorzUZLg
+         O+XE5nKB+qqNsDp8msmr4jzzRRFIDs5LwAy3ksTxShmLNsN/qd9G4Kf/mQmfg1D8XdS2
+         vj8YGcUod1VrxOf6Fcpf8JIn18vHEp2xWliH9bVJehseKPJ37MbaPcHy7gLkrOKNY9WW
+         cO6imrQVkhyDUcysLMPNi3pyZiE0KsyY1aodZEAYfytTpwnJa2KfkJfY14rJQx2gQIwV
+         D4gcE49yUa47ZahBHiG4t7Uqc9UZJMnIyu5/fUvUiwIW2tqxE+4hyRa/3RIWOhlbIT8N
+         aRNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xTYmNxIvoNbSeEdEWMDABklCOiul8eFwZIjECLgcPFY=;
+        b=Tgegb25e+3HjUbokl2lm5tvvlI26OBWvbSB+H7p2K/K7Myn71UH3970UKYxO0BvLmk
+         AhFeYFQTVdgsWXoAduz035oTHwi4q2HjBqBJJwaKH8U5K4/HnNqd84fxrx0pF9rCOcwq
+         K/1X9RfRkEo6w8X9a4oYTXkQuYxwXszQYufv5ngKbIZIUj2mXH/WFIAKVBpSVaGJokZT
+         BcHiDsktBkDXaH9GF/5wha+NPwNHE9rE865k6GrYw6IAbGBVw5bYv0XRcgKC+pz0oA0r
+         tg3nUJ6HiyUx5jS6QAHa/+9uqF0+bW7mRZ2hgvFWxuYckURWugZtd8pKn6S1hYdqL9HU
+         XxZw==
+X-Gm-Message-State: APjAAAXmUIRpQTifxOQxe5pqIIp5wJjzL/omOhdTKrw+sMXJLVTI289u
+        ZMb5VWB7ihnicRLNhZcZqaXBX5VK
+X-Google-Smtp-Source: APXvYqznNwd3RlN6p9r/yjEk3JyywItZZxhIWwoJ/kLcelEjNkg8PVYZ5TH1+yBKm/h/VURE8dUmdA==
+X-Received: by 2002:adf:e8c6:: with SMTP id k6mr2000102wrn.78.1571220942038;
+        Wed, 16 Oct 2019 03:15:42 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id r18sm2282447wme.48.2019.10.16.03.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 03:15:40 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 12:15:39 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
+Message-ID: <20191016101539.GC1303817@ulmo>
+References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
+ <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WfZ7S8PLGjBY9Voh"
+Content-Disposition: inline
+In-Reply-To: <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sup->hash_algo is a __le16, and whilst 0xffff is
-the same in __le16 and u16, it would be better to use
-cpu_to_le16() anyway (which should deal with constants)
-and silence the following sparse warning:
 
-fs/ubifs/sb.c:187:32: warning: incorrect type in assignment (different base types)
-fs/ubifs/sb.c:187:32:    expected restricted __le16 [usertype] hash_algo
-fs/ubifs/sb.c:187:32:    got int
+--WfZ7S8PLGjBY9Voh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Artem Bityutskiy <dedekind1@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- fs/ubifs/sb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
+> Because period and duty cycle are defined as ints with units of
+> nanoseconds, the maximum time duration that can be set is limited to
+> ~2.147 seconds. Change their definitions to u64 so that higher durations
+> may be set.
+>=20
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+>  drivers/pwm/core.c  |  4 ++--
+>  drivers/pwm/sysfs.c | 10 +++++-----
+>  include/linux/pwm.h | 16 ++++++++--------
+>  3 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
-index a551eb3e9b89..2b7c04bf8983 100644
---- a/fs/ubifs/sb.c
-+++ b/fs/ubifs/sb.c
-@@ -184,7 +184,7 @@ static int create_default_filesystem(struct ubifs_info *c)
- 		if (err)
- 			goto out;
- 	} else {
--		sup->hash_algo = 0xffff;
-+		sup->hash_algo = cpu_to_le16(0xffff);
- 	}
- 
- 	sup->ch.node_type  = UBIFS_SB_NODE;
--- 
-2.23.0
+Actually, we can't do that without further preparatory work. The reason
+is that consumers use the period and duty_cycle members in computations
+of their own, which lead to errors such as this:
 
+	armv7l-unknown-linux-gnueabihf-ld: drivers/video/backlight/pwm_bl.o: in fu=
+nction `pwm_backlight_probe':
+	pwm_bl.c:(.text+0x3b0): undefined reference to `__aeabi_uldivmod'
+
+So I think we need to audit all consumers carefully and make sure that
+they use do_div() where necessary to avoid such errors.
+
+Thierry
+
+--WfZ7S8PLGjBY9Voh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2m7ckACgkQ3SOs138+
+s6E3vRAAnNeRoEkw1nWChlsRV2oFUeMV8EhmXTwbwrqtiCWmnOjb+/EOZEnMSemA
+hmjdlh2370rL41Gubfgw0xk8Y/ndu60GtgoaW0KMJvcgYrfxtb72ocoJ+LREDHTq
+YZOYVUaouvpqTqjRil81m6mSdOh+yuwTvL1Ey+rbiBP4FJ+tomPYqwXfIgr0ckxQ
+dQ0BUN6NcAph6j1IadOq3baRStp6Kh74lkLnMbHQ5J8l/EWlfx4sL9jim5E4B/pi
+umbV5HUo12yslZ9Rv991p9gk8H87tVgPzjUp6L1xdLQvevuTL5nDPmBjPlYCJPcT
+nhLNWQeXJoKT6smGRasNTA1YFIB52Zz0+2RnhzwhSo86xMs0Eo4GmLSFIB7kGY+i
+P8OXO68Ak3hcD5hwb0uftnTwleVDhmxhBzT1yvWG1cO9qzGPq54UuJQcJrjEslOm
+FrHkmIk7IkqVIQPCWYZTG2qqc1+mlksnJC1zJ5tZjVPdGnFnbUOACXF0WEyI83xO
+cUln72zQBf1cm06DNH+50zrUbjRyRK3poQaQ/RLYZvfGVICe2s1q5CzqJnpg5Ggb
+/pofEITAj7ehCarLCb0nnyK1pTWl3MLtIStJ3kitDnmEwMo5LahtG3/HN8JZupuL
+BIeelKTY8NqjYaOFFW+lw/x1JssudLHasSNVGX0MMb/5Y9oPYrg=
+=wQCl
+-----END PGP SIGNATURE-----
+
+--WfZ7S8PLGjBY9Voh--
