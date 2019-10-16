@@ -2,192 +2,99 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7941BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80DCECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A1F21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF7421835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LIpQPLqR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r/HUFUT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389838AbfJPIdH (ORCPT
+        id S2390055AbfJPId0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:33:07 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39400 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388364AbfJPIdG (ORCPT
+        Wed, 16 Oct 2019 04:33:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39292 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388676AbfJPId0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:33:06 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G8WSR3035081;
-        Wed, 16 Oct 2019 03:32:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571214748;
-        bh=s39FpZDsIVijRksoigZfypRpHO/kfg6d4vyQscJS4zg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LIpQPLqRojaXAO9e6h2CjCm6EfW3BMXspS/9xYx3A4KALSm/3UDMadNC/jHJ+JW3d
-         oz8i6my0ueNEkbJRnwRO1wIN7oXK9JDg3SJ6K+NdhJTDqGFwTk7szvxN8BTnjpEb1/
-         m/YZuQGEOOFhtM3zGDYHW4/jTkdakRyh2jXAUF1E=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G8WSmb033171
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 03:32:28 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 03:32:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 03:32:28 -0500
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G8WKU2052788;
-        Wed, 16 Oct 2019 03:32:22 -0500
-Subject: Re: [PATCH v3 2/3] mtd: spi-nor: cadence-quadspi: Disable the DAC for
- Intel LGM SoC
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <richard@nod.at>, <jwboyer@gmail.com>,
-        <boris.brezillon@free-electrons.com>, <cyrille.pitchen@atmel.com>,
-        <david.oberhollenzer@sigma-star.at>, <miquel.raynal@bootlin.com>,
-        <tudor.ambarus@gmail.com>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
-References: <20190909104733.14273-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190909104733.14273-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <85355c80-1344-db22-ae31-0f20f30b9754@ti.com>
-Date:   Wed, 16 Oct 2019 14:02:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 04:33:26 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 195so3764550lfj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JKOYOlw144swLoW1bASjxt+2YuF19IE2PHXVrwsgFxI=;
+        b=r/HUFUT2hHS1cmWHIYJbEY9FE8fC8Ukn4uYCeAkUEGRVmlhy+ASdQddcDde/8K7taB
+         LRB793fgb5pYk/lMH74TNXCvhVmTmm3sV9ww9tYtgdGoxRsu0kNCiba+hwdyaWD1CR8X
+         LGmf2ZZ0QrX3ZIkR52njFsp/wTNEJfQlxKJ2LY2WGGwM/FGGrYZHgTKohN9KoVrGiLAW
+         FU3IaLUNMAyW624zTk//zndh38HwJ8vaAVhtqYPITabahQmCw9ILH5q7qQfbhri1mD1x
+         h5+Kn+46MPImZ6j4sJzf67MFIp2WyhnuY/PlD8YPPhESNI0z9bbTzAK17NCsMaKSytzG
+         53ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JKOYOlw144swLoW1bASjxt+2YuF19IE2PHXVrwsgFxI=;
+        b=MX1cnfIPGVNHMn8aBC8HrzGQWTwmYHbJywZVtuxkqhYGDC3eFGO1uCwlUJMuYe2RBW
+         GIEXE1Jtwui1aLTqS7IjSewdgniA6BdER/AQKfT/4kHw1h9D9T/4+vKCrwVh9oKbqbW5
+         hfFzvJdJafvKTuqd49n5o9i3xF7YNrqFBV2V+Dh9dBPBqNjQwIttxJxZQN+fjq+C7iAc
+         7LC5BgabgFC34s5MGak7vNdNHvzOfE7GnUUwT83RbhcZIb8DEw7BKQhM5GoDG2thBo+f
+         Lmdb+9+4Y08mLFvockoL+pLFcK9WZoPWwX6vPkY2InPUEq+ZRQVgvytxKdqj6EzaOb7Y
+         vWFw==
+X-Gm-Message-State: APjAAAXdcWqejRg4wzAwchL1u+z6S4HyhTQUmlEjdKc+n0GmTE33Pdca
+        rMx0+JxgcXTdM9HgExlbmOipTJeiwsFzfaOTKpQYThv3Kv8=
+X-Google-Smtp-Source: APXvYqwE179jhrx68mdrGilTO9EwoaHUFNX6nGOxdvUMNXsKDUhHA6fr4aqNzUdV3wN7yf8HZ2tJuwJ0+7mxh/vy7a8=
+X-Received: by 2002:a19:ae05:: with SMTP id f5mr23355878lfc.165.1571214804829;
+ Wed, 16 Oct 2019 01:33:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190909104733.14273-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191004150738.6542-1-krzk@kernel.org>
+In-Reply-To: <20191004150738.6542-1-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 10:33:12 +0200
+Message-ID: <CACRpkdYSnnOJomJi=Db2nkrrdNQmBnNKny1c7ZpDj6KdmKD9Mg@mail.gmail.com>
+Subject: Re: [RFT 1/3] power: supply: ab8500: Cleanup probe in reverse order
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 4, 2019 at 5:07 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
+> It is logical to cleanup in probe's error path in reverse order to
+> previous actions.  It also makes easier to add additional goto labels
+> within this error path.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On 09/09/19 4:17 PM, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> on Intel's Lightning Mountain(LGM) SoCs QSPI controller do not use
+For all 3 patches:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-s/on/On
+The battery charging code is currently disabled on ux500 simply
+because no platforms with batteries were available for testing
+or supported by any device trees.
 
-> Direct Access Controller(DAC).
-> 
-> This patch introduces to properly disable the Direct Access Controller
+This is getting fix: PostmarketOS is brewing patches for enabling
+all Ux500-based Samsung phones, all with batteries. So we will
+soon be able to test and turn this on.
 
-"This patch adds a quirk to disable..." or something something similar
+The patches are fine to merge, however notice that we are
+refactoring all drivers using ADC through the IIO tree:
+https://lore.kernel.org/linux-iio/20191011071805.5554-4-linus.walleij@linaro.org/
+https://lore.kernel.org/linux-iio/20191011071805.5554-2-linus.walleij@linaro.org/
+https://lore.kernel.org/linux-iio/20191011071805.5554-3-linus.walleij@linaro.org/
 
-> for data transfer instead it uses indirect data transfer.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  drivers/mtd/spi-nor/Kconfig           |  2 +-
->  drivers/mtd/spi-nor/cadence-quadspi.c | 21 +++++++++++++++++++++
->  2 files changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-> index 6de83277ce8b..ba2e372ae514 100644
-> --- a/drivers/mtd/spi-nor/Kconfig
-> +++ b/drivers/mtd/spi-nor/Kconfig
-> @@ -34,7 +34,7 @@ config SPI_ASPEED_SMC
->  
->  config SPI_CADENCE_QUADSPI
->  	tristate "Cadence Quad SPI controller"
-> -	depends on OF && (ARM || ARM64 || COMPILE_TEST)
-> +	depends on OF && (ARM || ARM64 || COMPILE_TEST || X86)
->  	help
->  	  Enable support for the Cadence Quad SPI Flash controller.
->  
-> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-> index 67f15a1f16fd..73b9fbd1508a 100644
-> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
-> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-> @@ -33,6 +33,7 @@
->  
->  /* Quirks */
->  #define CQSPI_NEEDS_WR_DELAY		BIT(0)
-> +#define CQSPI_DISABLE_DAC_MODE		BIT(1)
->  
->  /* Capabilities mask */
->  #define CQSPI_BASE_HWCAPS_MASK					\
-> @@ -609,6 +610,13 @@ static int cqspi_write_setup(struct spi_nor *nor)
->  	struct cqspi_st *cqspi = f_pdata->cqspi;
->  	void __iomem *reg_base = cqspi->iobase;
->  
-> +	/* Disable direct access controller */
-> +	if (!f_pdata->use_direct_mode) {
-> +		reg = readl(reg_base + CQSPI_REG_CONFIG);
-> +		reg &= ~CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL;
-> +		writel(reg, reg_base + CQSPI_REG_CONFIG);
-> +	}
-> +
->  	/* Set opcode. */
->  	reg = nor->program_opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
->  	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
-> @@ -1328,6 +1336,7 @@ static int cqspi_probe(struct platform_device *pdev)
->  	struct resource *res_ahb;
->  	struct reset_control *rstc, *rstc_ocp;
->  	const struct cqspi_driver_platdata *ddata;
-> +	struct cqspi_flash_pdata *f_pdata;
->  	int ret;
->  	int irq;
->  
-> @@ -1436,6 +1445,9 @@ static int cqspi_probe(struct platform_device *pdev)
->  		goto probe_setup_failed;
->  	}
->  
-> +	if (ddata && (ddata->quirks & CQSPI_DISABLE_DAC_MODE))
-> +		f_pdata->use_direct_mode = false;
-> +
+It would be nice if we could avoid colissions.
 
-If you do this here, you will still end up acquiring a DMA channel in
-cqspi_request_mmap_dma() (called from cqspi_setup_flash()). So, please
-move the check to cqspi_setup_flash().
-
->  	return ret;
->  probe_setup_failed:
->  	cqspi_controller_enable(cqspi, 0);
-> @@ -1510,6 +1522,11 @@ static const struct cqspi_driver_platdata am654_ospi = {
->  	.quirks = CQSPI_NEEDS_WR_DELAY,
->  };
->  
-> +static const struct cqspi_driver_platdata intel_lgm_qspi = {
-> +	.hwcaps_mask = CQSPI_BASE_HWCAPS_MASK,
-> +	.quirks = CQSPI_DISABLE_DAC_MODE,
-> +};
-> +
->  static const struct of_device_id cqspi_dt_ids[] = {
->  	{
->  		.compatible = "cdns,qspi-nor",
-> @@ -1523,6 +1540,10 @@ static const struct of_device_id cqspi_dt_ids[] = {
->  		.compatible = "ti,am654-ospi",
->  		.data = &am654_ospi,
->  	},
-> +	{
-> +		.compatible = "intel,lgm-qspi",
-> +		.data = &intel_lgm_qspi,
-> +	},
->  	{ /* end of table */ }
->  };
->  
-> 
-
--- 
-Regards
-Vignesh
+Yours,
+Linus Walleij
