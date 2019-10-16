@@ -2,67 +2,86 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D01FECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DF0ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E1F2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDD320854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z9FEfEft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391189AbfJPHmZ (ORCPT
+        id S2391222AbfJPHmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:42:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3778 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728201AbfJPHmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:42:25 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 69F6FD40EE297C4244F5;
-        Wed, 16 Oct 2019 15:42:22 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 16 Oct 2019 15:42:14 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <zhongjiang@huawei.com>
-Subject: [PATCH] staging: rtl8723bs: remove an redundant null check before kfree()
-Date:   Wed, 16 Oct 2019 15:38:26 +0800
-Message-ID: <1571211506-19005-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 16 Oct 2019 03:42:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53938 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728201AbfJPHmb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:42:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HZk+bV3WLC0Kp3efq7J7NzYocbzHcIWk7+ZyTXdSxy4=; b=Z9FEfEftwdBAqYl5xGywYMCj1
+        Bu8Oxg35mWjPBwtU9Ct4ZiRdzAPHhfk0vd4uw++CYEesW7gV/J7HaflSLW1T71OJbz17o1SbEExsa
+        N9oqpDZ0qSleAu8M+IiDqv5N5wq2YXUeC2MRXhbHos7NmLflK8orqFlzz8GJ09J2CnuJxP5lkyXGP
+        aij33sW+4KbMkp/C+A+lQ/Tivg8eKonAQxoXddjAdaXeFbiCVwrDWNlOSOfUYUlDvsX0LtGXT3pkA
+        JxytniYK4UkZGipYAi0TbgSkgwDENkm30cTdP52UWF+0N6LFzBn3Ae7smd62Kdu/PxvL9JxVUg848
+        82MCo2gYg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKdwq-00085M-9S; Wed, 16 Oct 2019 07:42:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D65213032F8;
+        Wed, 16 Oct 2019 09:41:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A6F0820B972E4; Wed, 16 Oct 2019 09:42:17 +0200 (CEST)
+Date:   Wed, 16 Oct 2019 09:42:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191016074217.GL2328@hirez.programming.kicks-ass.net>
+References: <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015182705.1aeec284@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kfree() has taken null pointer into account. hence it is safe to remove
-the unnecessary check.
+> which are not compatible with livepatching. GCC upstream now has
+> -flive-patching option, which disables all those interfering optimizations.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Which, IIRC, has a significant performance impact and should thus really
+not be used...
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 7011c2a..4597f4f 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -2210,8 +2210,7 @@ void rtw_free_hwxmits(struct adapter *padapter)
- 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
- 
- 	hwxmits = pxmitpriv->hwxmits;
--	if (hwxmits)
--		kfree(hwxmits);
-+	kfree(hwxmits);
- }
- 
- void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
--- 
-1.7.12.4
-
+If distros ship that crap, I'm going to laugh at them the next time they
+want a single digit performance improvement because *important*.
