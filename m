@@ -2,59 +2,127 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA3CECE59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0688AECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBB82084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36382084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CmQSAX8a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbfJPBTi (ORCPT
+        id S1731867AbfJPBZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:19:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:42900 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbfJPBTh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:19:37 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1873511F5F798;
-        Tue, 15 Oct 2019 18:19:37 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 18:19:36 -0700 (PDT)
-Message-Id: <20191015.181936.1206475589133546355.davem@davemloft.net>
-To:     jgross@suse.com
-Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wei.liu@kernel.org, paul@xen.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 0/2] xen/netback: bug fix and cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191014090910.9701-1-jgross@suse.com>
-References: <20191014090910.9701-1-jgross@suse.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 18:19:37 -0700 (PDT)
+        Tue, 15 Oct 2019 21:25:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:42763 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726786AbfJPBZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 21:25:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tF3p3CZ5z9sPT;
+        Wed, 16 Oct 2019 12:25:42 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571189142;
+        bh=bTjtrEB3J5lTmvGUqm0ylcaGquTm3ZT+SXImEaf9J38=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CmQSAX8aLqs6Qvp8TT/JwVzKE8EIz1fNVLG0mwijGw8rgxbpXdXq/xnBPmGJ29lqX
+         /+QLs8Yzb3ghZnGEFEoLyg85gDVeMzH8VObrYLEG4d9H2pE2L2TCZHFr3eqlXESeL7
+         AdsCwGTNiSoUyTvYR+HuyeqdDuADj7NDBXhDqmrcpXLktfPNgBNKw9LPMBpqfy3g7+
+         5GdkTKolSqF31q9ifH2q4aZJFSdSjw5x/NMIyY4iSLKsyJBXdic8hC4ye29Kp526tE
+         vOX9qIiWsloaxQWccjvLwDyhgKNkVbaaHTnuUU4vaBLdqCpJnBEWDXn6sJk94vvqCv
+         JAAMPDoOTAGIg==
+Date:   Wed, 16 Oct 2019 12:25:41 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Herring <robherring2@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: linux-next: manual merge of the devicetree tree with Linus' tree
+Message-ID: <20191016122541.5ae0c637@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Mvn0upQUZuO8=vlaMu96w=v";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
-Date: Mon, 14 Oct 2019 11:09:08 +0200
+--Sig_/Mvn0upQUZuO8=vlaMu96w=v
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> One bugfix (patch 1) I stumbled over while doing a cleanup (patch 2)
-> of the xen-netback init/deinit code.
+Hi all,
 
-Please do not mix cleanups and genuine bug fixes.
+Today's linux-next merge of the devicetree tree got a conflict in:
 
-Submit the bug fix targetting the 'net' GIT tree, and once that eventually
-gets merged into 'net-next' you can submit the cleanup against that.
+  Documentation/devicetree/bindings/usb/generic-ehci.yaml
 
-Thanks.
+between commit:
+
+  3aa3c66aedef ("dt-bindings: usb: Bring back phy-names")
+
+from Linus' tree and commit:
+
+  02ceb12c20f5 ("dt-bindings: usb: generic-ehci: Add "companion" entry")
+
+from the devicetree tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/devicetree/bindings/usb/generic-ehci.yaml
+index 1ca64c85191a,ce8854bc8c84..000000000000
+--- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
++++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+@@@ -63,11 -63,12 +63,16 @@@ properties
+      description:
+        Set this flag to force EHCI reset after resume.
+ =20
++   companion:
++     $ref: /schemas/types.yaml#/definitions/phandle
++     description:
++      Phandle of a companion.
++=20
+ -  phys: true
+ +  phys:
+ +    description: PHY specifier for the USB PHY
+ +
+ +  phy-names:
+ +    const: usb
+ =20
+  required:
+    - compatible
+
+--Sig_/Mvn0upQUZuO8=vlaMu96w=v
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2mcZUACgkQAVBC80lX
+0Gz7Gwf9EVUFgqE50YyTpreAlZthY8VifrcIq+p1YUciSOIcZIg+kSyTpIpzYI/v
+BIKQd407pWw3SgRdRGMV6enN2HFXz2D0NHyC0kqlaerb45x1zyVmeDklO7KgcIku
+R8RC3qUAlivj9GD5q7MBeKgu33jbCGWr06gr03FVVAxdABoPoFWMGeCXWLcaEVX8
+Hm856dhrIspEI4QudC0a2WZcWyks69Wm5Df/pztjLk7h0+zINhZxZGH23vhbW89d
+JpDlrKcjEJKPwmJpIYst+q+eAm55+NVWE4pHSNGF2h5jPc2NMQBtt86tly+SAHOu
+tR8xdeXOLBedTHZr0kiGxD+5IkZEew==
+=/1Sh
+-----END PGP SIGNATURE-----
+
+--Sig_/Mvn0upQUZuO8=vlaMu96w=v--
