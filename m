@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D23DECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E2EECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D534321925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE27E21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263920;
-	bh=ZMCX9A9XKGm5q/+zflXd5y5AjLNg4mDznV7taU+wOc0=;
+	s=default; t=1571263924;
+	bh=sEtzKRnmJWXm1i7t+fTOk3/ruudXpNOfhncm3fa4dOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wvwqtjwTJOpFG/utBGH4JHC2RyqNkP8is85qjaOh5MjK0Ut+tOntHlkP7QpDNqBRo
-	 uZ0yJbXf6GVHtC48g+Vunq4qbF7oGf4JS1ow29/r8vbKsZb9K5JnB9rkMGa6inxydl
-	 TPULZ6vJQ7wi6hlg9frFs1oUIW7jvvwYeoADlg0s=
+	b=y+JAYnb7HriA3XOiR58zrFYMSPvlqfLx4Bxv6fTdZ6ffkuyC5F2FLv/UAURAJDuLS
+	 Ysqz74baOukJFpSp1S7ux6x1DIfBcGW3Zrrojwb2UvKDaUsbHvtmzgFOo0tqRSbTB/
+	 zrNAjgH76hD4ruHgQwe46EEwJWA/sbA1NIDw76zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439236AbfJPWMA (ORCPT
+        id S2439226AbfJPWL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395380AbfJPV4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:35 -0400
+        id S2391390AbfJPV4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:36 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD5D21A49;
-        Wed, 16 Oct 2019 21:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A58321A4C;
+        Wed, 16 Oct 2019 21:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262994;
-        bh=ZMCX9A9XKGm5q/+zflXd5y5AjLNg4mDznV7taU+wOc0=;
+        s=default; t=1571262995;
+        bh=sEtzKRnmJWXm1i7t+fTOk3/ruudXpNOfhncm3fa4dOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yNwZUPxiLSBgiWVmfxG2eb91nR3dw4jfFDQ1ZXDD35h1Q+ld3T7++wr9oKTy38jWd
-         98NfJuzp81OGyCUE2A6mqnp0YK9dYUPxOtxVvKX96YakaEbvYPr3ANtOSqAfCOuWO/
-         Q3pKuvtpaCtf9i+/aR5pRm4Tgjmei+3cSbQRskSU=
+        b=0ZDKWiFSQBwBicPwbXW+pEFgPFghgFYX1jpiWm6F11Y0XV4mg29A1FFTHUo3oue/Z
+         eeKsSirLrLqckftLYAo56u7+B6MzKc9rt4nXk7Hz7dU2hvQKu5mA/PieGDmB5QV912
+         KY7RO6oXvFLTKFNCgWOUbHiotlvCQFodAXMnHycI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 62/65] ftrace: Get a reference counter for the trace_array on filter files
-Date:   Wed, 16 Oct 2019 14:51:16 -0700
-Message-Id: <20191016214839.912090427@linuxfoundation.org>
+Subject: [PATCH 4.14 63/65] tracing: Get trace_array reference for available_tracers files
+Date:   Wed, 16 Oct 2019 14:51:17 -0700
+Message-Id: <20191016214840.268456520@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -61,101 +61,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 9ef16693aff8137faa21d16ffe65bb9832d24d71 upstream.
+commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
 
-The ftrace set_ftrace_filter and set_ftrace_notrace files are specific for
-an instance now. They need to take a reference to the instance otherwise
-there could be a race between accessing the files and deleting the instance.
-
-It wasn't until the :mod: caching where these file operations started
-referencing the trace_array directly.
+As instances may have different tracers available, we need to look at the
+trace_array descriptor that shows the list of the available tracers for the
+instance. But there's a race between opening the file and an admin
+deleting the instance. The trace_array_get() needs to be called before
+accessing the trace_array.
 
 Cc: stable@vger.kernel.org
-Fixes: 673feb9d76ab3 ("ftrace: Add :mod: caching infrastructure to trace_array")
+Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c |   27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ kernel/trace/trace.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3629,21 +3629,22 @@ ftrace_regex_open(struct ftrace_ops *ops
- 	struct ftrace_hash *hash;
- 	struct list_head *mod_head;
- 	struct trace_array *tr = ops->private;
--	int ret = 0;
-+	int ret = -ENOMEM;
- 
- 	ftrace_ops_init(ops);
- 
- 	if (unlikely(ftrace_disabled))
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4152,9 +4152,14 @@ static int show_traces_open(struct inode
+ 	if (tracing_disabled)
  		return -ENODEV;
  
-+	if (tr && trace_array_get(tr) < 0)
++	if (trace_array_get(tr) < 0)
 +		return -ENODEV;
 +
- 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
- 	if (!iter)
--		return -ENOMEM;
-+		goto out;
- 
--	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX)) {
--		kfree(iter);
--		return -ENOMEM;
--	}
-+	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX))
-+		goto out;
- 
- 	iter->ops = ops;
- 	iter->flags = flag;
-@@ -3673,13 +3674,13 @@ ftrace_regex_open(struct ftrace_ops *ops
- 
- 		if (!iter->hash) {
- 			trace_parser_put(&iter->parser);
--			kfree(iter);
--			ret = -ENOMEM;
- 			goto out_unlock;
- 		}
- 	} else
- 		iter->hash = hash;
- 
-+	ret = 0;
-+
- 	if (file->f_mode & FMODE_READ) {
- 		iter->pg = ftrace_pages_start;
- 
-@@ -3691,7 +3692,6 @@ ftrace_regex_open(struct ftrace_ops *ops
- 			/* Failed */
- 			free_ftrace_hash(iter->hash);
- 			trace_parser_put(&iter->parser);
--			kfree(iter);
- 		}
- 	} else
- 		file->private_data = iter;
-@@ -3699,6 +3699,13 @@ ftrace_regex_open(struct ftrace_ops *ops
-  out_unlock:
- 	mutex_unlock(&ops->func_hash->regex_lock);
- 
-+ out:
+ 	ret = seq_open(file, &show_traces_seq_ops);
+-	if (ret)
 +	if (ret) {
-+		kfree(iter);
-+		if (tr)
-+			trace_array_put(tr);
++		trace_array_put(tr);
+ 		return ret;
 +	}
-+
- 	return ret;
+ 
+ 	m = file->private_data;
+ 	m->private = tr;
+@@ -4162,6 +4167,14 @@ static int show_traces_open(struct inode
+ 	return 0;
  }
  
-@@ -5098,6 +5105,8 @@ int ftrace_regex_release(struct inode *i
++static int show_traces_release(struct inode *inode, struct file *file)
++{
++	struct trace_array *tr = inode->i_private;
++
++	trace_array_put(tr);
++	return seq_release(inode, file);
++}
++
+ static ssize_t
+ tracing_write_stub(struct file *filp, const char __user *ubuf,
+ 		   size_t count, loff_t *ppos)
+@@ -4192,8 +4205,8 @@ static const struct file_operations trac
+ static const struct file_operations show_traces_fops = {
+ 	.open		= show_traces_open,
+ 	.read		= seq_read,
+-	.release	= seq_release,
+ 	.llseek		= seq_lseek,
++	.release	= show_traces_release,
+ };
  
- 	mutex_unlock(&iter->ops->func_hash->regex_lock);
- 	free_ftrace_hash(iter->hash);
-+	if (iter->tr)
-+		trace_array_put(iter->tr);
- 	kfree(iter);
- 
- 	return 0;
+ static ssize_t
 
 
