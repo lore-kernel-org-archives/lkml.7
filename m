@@ -2,400 +2,260 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423B0FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CACFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C2020650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wATN8ipp";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wATN8ipp"
+	by mail.kernel.org (Postfix) with ESMTP id BCE2021848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404465AbfJPKCB (ORCPT
+        id S2404476AbfJPKCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:02:01 -0400
-Received: from mail-eopbgr10074.outbound.protection.outlook.com ([40.107.1.74]:49315
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Wed, 16 Oct 2019 06:02:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43714 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727167AbfJPKCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:02:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K8TRsqDwVZn08Mk6fOZCA70fgGESjA+hOWLPYRCiXto=;
- b=wATN8ippo+L3IIKTbleck138291Hh6xG9K51Pymsd0+9NCchG13HhVuVuppm50N3N4kCGgqWbzb9/X40dg03eAta0ypRaadGsSzgupJsHiYC6MC8X6hG503i4oxjvCu6hXtUqihvywMgpbEWXPfPwUD3kg2ck6quEkcRSqwjx5Q=
-Received: from HE1PR08CA0046.eurprd08.prod.outlook.com (2603:10a6:7:2a::17) by
- HE1PR0801MB1817.eurprd08.prod.outlook.com (2603:10a6:3:84::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.19; Wed, 16 Oct 2019 10:01:50 +0000
-Received: from DB5EUR03FT048.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::209) by HE1PR08CA0046.outlook.office365.com
- (2603:10a6:7:2a::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
- Transport; Wed, 16 Oct 2019 10:01:50 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT048.mail.protection.outlook.com (10.152.21.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Wed, 16 Oct 2019 10:01:47 +0000
-Received: ("Tessian outbound 6481c7fa5a3c:v33"); Wed, 16 Oct 2019 10:01:47 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 4b22b2b9039b.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.4.59])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9CAA2EE6-93E7-411B-99E7-1C0F982A53A8.1;
-        Wed, 16 Oct 2019 10:01:47 +0000
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com (mail-am5eur02lp2059.outbound.protection.outlook.com [104.47.4.59])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4b22b2b9039b.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 16 Oct 2019 10:01:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fzjzez7U/Za8jp0aP7kLDpg2aHNUGjrmrsYqcOZqgMTHn5cs86Oh8fZZBS/X618N8bHLz4u1EBY5pNl9CJ+58d6azB72T9X949ciaevXuAKPvkvhbEHv4B9wV71ERlFxgdXPHVawcWK2is9lC27QPQZpogJJhLORKs+Ov5wE0E/arQEweopq2WdhFcCRwtVUX1/0EK41xHQiv9xsq5P4nHXvCjx2ne/4YJHqnFxX6AEh7ycUSeOOinPVf6XEFXvUFwsXyguj9pb8V/BuY84k5nYQI2XFwH31cJW+rlwm8nrJH7oPcsSumy7tPCdIN5cP9ADQyKW9+qNP8WuH6dGqOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K8TRsqDwVZn08Mk6fOZCA70fgGESjA+hOWLPYRCiXto=;
- b=UDaQkwYVplz8O9Yw8eLAjtbB/L+90zEHa6leAlkKpmT8i+L5YMPQVO+d/0SnRBx5QXq0qULYlaQNBVehExNCbqELf5y3XclgJD2fTWeUUBVU+eg+1/ghtrAXB6gcuCXc0zcrPs9wtvWQ1XCjXhQuGbFTzEUdXV6Awu96YUZ1wuDt3b8pa9bJSGvg9aalXzM6JZYWuvkX1smRKVnOAR96zhK6y+4vOh61doPRkZs6j9/RBP6LZH8PF1ssrWLmgRbBAlPRPZ8kTALH2fSRTicHs6+pjqxlPItV4V9TkPulWzklB5ZKKzBeOEhm5h11MtXtwv+FGgTAtfeiauo8BvlLbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K8TRsqDwVZn08Mk6fOZCA70fgGESjA+hOWLPYRCiXto=;
- b=wATN8ippo+L3IIKTbleck138291Hh6xG9K51Pymsd0+9NCchG13HhVuVuppm50N3N4kCGgqWbzb9/X40dg03eAta0ypRaadGsSzgupJsHiYC6MC8X6hG503i4oxjvCu6hXtUqihvywMgpbEWXPfPwUD3kg2ck6quEkcRSqwjx5Q=
-Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) by
- HE1PR0801MB1865.eurprd08.prod.outlook.com (10.168.94.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Wed, 16 Oct 2019 10:01:38 +0000
-Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com
- ([fe80::b056:4113:e0bd:110d]) by HE1PR0801MB1676.eurprd08.prod.outlook.com
- ([fe80::b056:4113:e0bd:110d%6]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 10:01:38 +0000
-From:   "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: RE: [PATCH v5 3/6] timekeeping: Add clocksource to
- system_time_snapshot
-Thread-Topic: [PATCH v5 3/6] timekeeping: Add clocksource to
- system_time_snapshot
-Thread-Index: AQHVg0Y1dymHk2OcFEiql6VhclDWladcI0kAgADkGvA=
-Date:   Wed, 16 Oct 2019 10:01:38 +0000
-Message-ID: <HE1PR0801MB1676B967505C44D385F21E6DF4920@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-References: <20191015104822.13890-1-jianyong.wu@arm.com>
- <20191015104822.13890-4-jianyong.wu@arm.com>
- <alpine.DEB.2.21.1910152047490.2518@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1910152047490.2518@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 97110afe-7aa1-40f3-b592-beb9d63d0fb8.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Jianyong.Wu@arm.com; 
-x-originating-ip: [113.29.88.7]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 08660416-6194-44cb-51b5-08d7521fdbd0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-TrafficTypeDiagnostic: HE1PR0801MB1865:|HE1PR0801MB1865:|HE1PR0801MB1817:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR0801MB181791800C5843B9D45E7571F4920@HE1PR0801MB1817.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:3631;OLM:3631;
-x-forefront-prvs: 0192E812EC
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(54534003)(13464003)(189003)(199004)(9686003)(86362001)(6436002)(55016002)(316002)(3846002)(71200400001)(229853002)(11346002)(486006)(446003)(6116002)(66066001)(476003)(71190400001)(76176011)(186003)(55236004)(6506007)(99286004)(53546011)(54906003)(7696005)(256004)(102836004)(26005)(33656002)(14444005)(7736002)(7416002)(74316002)(305945005)(52536014)(5660300002)(25786009)(2906002)(6916009)(478600001)(8936002)(76116006)(66946007)(4326008)(66556008)(66446008)(64756008)(6246003)(14454004)(81166006)(66476007)(81156014)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1865;H:HE1PR0801MB1676.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 5rFsStGDx454gFQfOeewDLrIT/KDRNNAgij4zaGRt8E8CoI26BDxhI7vLUVQkU82v5jxAbYUfguyW9NXb7Kqf7GOedFEzEWv840pzNg7tn4qPRjek3T0cMyoSaSlIsKnJ757kEHQm9xDXU/IbGA7ARKymTGZ8t1BXGkLFkuQwKHyP27y/Tn96WjTFWxLZHOCLUvX/fgJxgO9zbOrh4Alw8Ow/6d71ScydieC6EejbtA4r6i+BewZQJSvi2UzDBMxZ6ID7mVwAM8m+bT6iv/ElKFH3P9xGmGut2mAnYs+fxWs9crQ4CHon9MV0LKjmM1mOmthi4dORJ+68eq2lVRdJMgkyFM4+AEK/rfLMUF6evfE9NYAZ3MQz4dbl9mrUUAFMniSAfvRmeQKruxhtn++FiQ58XzlamcRVTSfSkCNymU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1865
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jianyong.Wu@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT048.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(396003)(346002)(54534003)(13464003)(199004)(189003)(55016002)(22756006)(99286004)(52536014)(316002)(14444005)(356004)(97756001)(47776003)(8746002)(229853002)(9686003)(63350400001)(8936002)(6246003)(6862004)(14454004)(336012)(54906003)(446003)(11346002)(66066001)(2906002)(74316002)(6116002)(7696005)(76176011)(50466002)(23726003)(6506007)(186003)(53546011)(26005)(126002)(102836004)(3846002)(5660300002)(478600001)(25786009)(450100002)(26826003)(86362001)(81166006)(76130400001)(305945005)(70586007)(70206006)(33656002)(81156014)(476003)(8676002)(46406003)(7736002)(4326008)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1817;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 60e1eb18-e756-47a4-17b7-08d7521fd5dd
-NoDisclaimer: True
-X-Forefront-PRVS: 0192E812EC
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Rq2licjsffFNjjf6kaaGtEL8vk4TQ4OiW0Wonyb5zZGdZ94C1uYZCWAqtKOubFOkIpPh98JfewvHrDX1ZviA8MNh87HlxvhUDd9JCIdZggTSP4b7zR754sS5SCeo5JbCsguzy4ENT1HjHne+036kUDYCYqpuapKjoNh36flMp7RpVLdXzUeg4sAAYiTXzqEcs/K2uji/WvdOrijQaENoyskzvyLNTNmVrdgYnmb2Q4lTf7myO2zWISWQzz0MeqNBUGpYB2d7+e+2VyAIODobJE+L3/PhyCDxkmx2LlbCEsTXIqAJzjyYn0BBKzP3c6RZp5VbH09CaiDDD67mMYNbEwyXTFPSVdq/hgDpcjzmDabUYd9px1/yNgSpu99935rqyFNpDKRKZ6DSX+7oQ51ZzgeOL38csOuG3G1k4Gtg5vU=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2019 10:01:47.9459
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08660416-6194-44cb-51b5-08d7521fdbd0
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1817
+        id S1727167AbfJPKCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:02:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C9B13B024;
+        Wed, 16 Oct 2019 10:02:00 +0000 (UTC)
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Michael Moese <mmoese@suse.de>, Jessica Yu <jeyu@kernel.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>
+Subject: [PATCH] drivers: mcb: use symbol namespaces
+Date:   Wed, 16 Oct 2019 12:01:58 +0200
+Message-Id: <20191016100158.1400-1-jthumshirn@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi tglx,
+Now that we have symbol namespaces, use them in MCB to not pollute the
+default namespace with MCB internals.
 
-> -----Original Message-----
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Wednesday, October 16, 2019 4:13 AM
-> To: Jianyong Wu (Arm Technology China) <Jianyong.Wu@arm.com>
-> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
-> pbonzini@redhat.com; sean.j.christopherson@intel.com; maz@kernel.org;
-> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
-> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org; Steve Capper
-> <Steve.Capper@arm.com>; Kaly Xin (Arm Technology China)
-> <Kaly.Xin@arm.com>; Justin He (Arm Technology China)
-> <Justin.He@arm.com>; nd <nd@arm.com>
-> Subject: Re: [PATCH v5 3/6] timekeeping: Add clocksource to
-> system_time_snapshot
->=20
-> On Tue, 15 Oct 2019, Jianyong Wu wrote:
->=20
-> > Sometimes, we need check current clocksource outside of timekeeping
-> > area. Add clocksource to system_time_snapshot then we can get
-> > clocksource as well as system time.
->=20
-> This changelog is telling absolutely nothing WHY anything outside of the
-> timekeeping core code needs access to the current clocksource. Neither
-> does it tell why it is safe to provide the pointer to random callers.
->=20
-Really need more information.
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+---
+ drivers/gpio/gpio-menz127.c            |  1 +
+ drivers/iio/adc/men_z188_adc.c         |  1 +
+ drivers/mcb/mcb-core.c                 | 28 ++++++++++++++--------------
+ drivers/mcb/mcb-lpc.c                  |  1 +
+ drivers/mcb/mcb-parse.c                |  2 +-
+ drivers/mcb/mcb-pci.c                  |  1 +
+ drivers/tty/serial/8250/8250_men_mcb.c |  1 +
+ drivers/tty/serial/men_z135_uart.c     |  1 +
+ drivers/watchdog/menz69_wdt.c          |  1 +
+ 9 files changed, 22 insertions(+), 15 deletions(-)
 
-> > +/*
-> > + * struct system_time_snapshot - simultaneous raw/real time capture
-> with
-> > + *	counter value
-> > + * @sc:		Contains clocksource and clocksource counter value
-> to produce
-> > + * 	the system times
-> > + * @real:	Realtime system time
-> > + * @raw:	Monotonic raw system time
-> > + * @clock_was_set_seq:	The sequence number of clock was set
-> events
-> > + * @cs_was_changed_seq:	The sequence number of clocksource change
-> events
-> > + */
-> > +struct system_time_snapshot {
-> > +	struct system_counterval_t sc;
-> > +	ktime_t		real;
-> > +	ktime_t		raw;
-> > +	unsigned int	clock_was_set_seq;
-> > +	u8		cs_was_changed_seq;
-> > +};
-> > +
-> >  /*
-> >   * Get cross timestamp between system clock and device clock
-> >   */
-> > diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> > index 44b726bab4bd..66ff089605b3 100644
-> > --- a/kernel/time/timekeeping.c
-> > +++ b/kernel/time/timekeeping.c
-> > @@ -983,7 +983,8 @@ void ktime_get_snapshot(struct
-> system_time_snapshot *systime_snapshot)
-> >  		nsec_raw  =3D timekeeping_cycles_to_ns(&tk->tkr_raw, now);
-> >  	} while (read_seqcount_retry(&tk_core.seq, seq));
-> >
-> > -	systime_snapshot->cycles =3D now;
-> > +	systime_snapshot->sc.cycles =3D now;
-> > +	systime_snapshot->sc.cs =3D tk->tkr_mono.clock;
->=20
-> The clock pointer can change right after the store, the underlying data c=
-an be
-> freed .....
->=20
-
-Yeah, need put it into seqcount region.
-
-> Looking at the rest of the patch set the actual usage site is:
->=20
-> > +       case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
-> > +               ktime_get_snapshot(&systime_snapshot);
-> > +               if (!is_arm_arch_counter(systime_snapshot.sc.cs))
-> > +                       return kvm_psci_call(vcpu);
->=20
-> and that function does:
->=20
-> > +bool is_arm_arch_counter(void *cs)
->=20
-> void *? Type safety is overrated, right? The type is well known....
->=20
-> +{
-> +       return (struct clocksource *)cs =3D=3D &clocksource_counter;
->=20
-> That nonsensical typecast does not make up for that.
->=20
-
-It's really bad code and need fix.
-
-> +}
->=20
-> So while the access to the pointer is actually safe, this is not going to=
- happen
-> simply because you modify a generic interface in a way which will lead th=
-e
-> next developer to insane assumptions about the validity of that pointer.
->=20
-> While the kernel is pretty lax in terms of isolation due to the nature of=
- the
-> programming language, this does not justify to expose critical internals =
-of
-> core code to random callers. Guess why most of the timekeeping internals
-> are carefully shielded from external access.
->=20
-> Something like the completely untested (not even compiled) patch below
-> gives you access to the information you need and allows to reuse the
-> mechanism for other purposes without adding is_$FOO_timer() all over the
-> place.
->=20
-> Thanks,
->=20
-> 	tglx
->=20
-> 8<--------------
-> --- a/include/linux/clocksource.h
-> +++ b/include/linux/clocksource.h
-> @@ -9,6 +9,7 @@
->  #ifndef _LINUX_CLOCKSOURCE_H
->  #define _LINUX_CLOCKSOURCE_H
->=20
-> +#include <linux/clocksource_ids.h>
->  #include <linux/types.h>
->  #include <linux/timex.h>
->  #include <linux/time.h>
-> @@ -49,6 +50,10 @@ struct module;
->   *			400-499: Perfect
->   *				The ideal clocksource. A must-use where
->   *				available.
-> + * @id:			Defaults to CSID_GENERIC. The id value is
-> captured
-> + *			in certain snapshot functions to allow callers to
-> + *			validate the clocksource from which the snapshot
-> was
-> + *			taken.
->   * @read:		returns a cycle value, passes clocksource as argument
->   * @enable:		optional function to enable the clocksource
->   * @disable:		optional function to disable the clocksource
-> @@ -91,6 +96,7 @@ struct clocksource {
->  	const char *name;
->  	struct list_head list;
->  	int rating;
-> +	enum clocksource_ids id;
->  	int (*enable)(struct clocksource *cs);
->  	void (*disable)(struct clocksource *cs);
->  	unsigned long flags;
-> --- /dev/null
-> +++ b/include/linux/clocksource_ids.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_CLOCKSOURCE_IDS_H
-> +#define _LINUX_CLOCKSOURCE_IDS_H
-> +
-> +/* Enum to give clocksources a unique identifier */ enum
-> +clocksource_ids {
-> +	CSID_GENERIC		=3D 0,
-> +	CSID_ARM_ARCH_COUNTER,
-> +	CSID_MAX,
-> +};
-> +
-
-Does this mean I must add clocksource id for all kinds of ARCHs and update =
-all the code which have checked clocksource in the old way?
-
-Thanks
-Jianyong
-
-> +#endif
-> --- a/include/linux/timekeeping.h
-> +++ b/include/linux/timekeeping.h
-> @@ -2,6 +2,7 @@
->  #ifndef _LINUX_TIMEKEEPING_H
->  #define _LINUX_TIMEKEEPING_H
->=20
-> +#include <linux/clocksource_ids.h>
->  #include <linux/errno.h>
->=20
->  /* Included from linux/ktime.h */
-> @@ -228,15 +229,17 @@ extern void timekeeping_inject_sleeptime
->   * @cycles:	Clocksource counter value to produce the system times
->   * @real:	Realtime system time
->   * @raw:	Monotonic raw system time
-> + * @cs_id:	The id of the current clocksource which produced the
-> snapshot
->   * @clock_was_set_seq:	The sequence number of clock was set
-> events
->   * @cs_was_changed_seq:	The sequence number of clocksource change
-> events
->   */
->  struct system_time_snapshot {
-> -	u64		cycles;
-> -	ktime_t		real;
-> -	ktime_t		raw;
-> -	unsigned int	clock_was_set_seq;
-> -	u8		cs_was_changed_seq;
-> +	u64			cycles;
-> +	ktime_t			real;
-> +	ktime_t			raw;
-> +	enum clocksource_ids	cs_id;
-> +	unsigned int		clock_was_set_seq;
-> +	u8			cs_was_changed_seq;
->  };
->=20
->  /*
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -921,6 +921,9 @@ int __clocksource_register_scale(struct
->=20
->  	clocksource_arch_init(cs);
->=20
-> +	if (WARN_ON_ONCE((unsigned int)cs->id >=3D CSID_MAX))
-> +		cs->id =3D CSID_GENERIC;
-> +
->  	/* Initialize mult/shift and max_idle_ns */
->  	__clocksource_update_freq_scale(cs, scale, freq);
->=20
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -979,6 +979,7 @@ void ktime_get_snapshot(struct system_ti
->  	do {
->  		seq =3D read_seqcount_begin(&tk_core.seq);
->  		now =3D tk_clock_read(&tk->tkr_mono);
-> +		systime_snapshot->cs_id =3D tk->tkr_mono.clock->id;
->  		systime_snapshot->cs_was_changed_seq =3D tk-
-> >cs_was_changed_seq;
->  		systime_snapshot->clock_was_set_seq =3D tk-
-> >clock_was_set_seq;
->  		base_real =3D ktime_add(tk->tkr_mono.base,
->=20
->=20
+diff --git a/drivers/gpio/gpio-menz127.c b/drivers/gpio/gpio-menz127.c
+index 70fdb42a8e88..1e21c661d79d 100644
+--- a/drivers/gpio/gpio-menz127.c
++++ b/drivers/gpio/gpio-menz127.c
+@@ -211,3 +211,4 @@ MODULE_AUTHOR("Andreas Werner <andreas.werner@men.de>");
+ MODULE_DESCRIPTION("MEN 16z127 GPIO Controller");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("mcb:16z127");
++MODULE_IMPORT_NS(MCB);
+diff --git a/drivers/iio/adc/men_z188_adc.c b/drivers/iio/adc/men_z188_adc.c
+index 3b2fbb7ce431..196c8226381e 100644
+--- a/drivers/iio/adc/men_z188_adc.c
++++ b/drivers/iio/adc/men_z188_adc.c
+@@ -167,3 +167,4 @@ MODULE_AUTHOR("Johannes Thumshirn <johannes.thumshirn@men.de>");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("IIO ADC driver for MEN 16z188 ADC Core");
+ MODULE_ALIAS("mcb:16z188");
++MODULE_IMPORT_NS(MCB);
+diff --git a/drivers/mcb/mcb-core.c b/drivers/mcb/mcb-core.c
+index b72e82efaee5..38fbb3b59873 100644
+--- a/drivers/mcb/mcb-core.c
++++ b/drivers/mcb/mcb-core.c
+@@ -191,7 +191,7 @@ int __mcb_register_driver(struct mcb_driver *drv, struct module *owner,
+ 
+ 	return driver_register(&drv->driver);
+ }
+-EXPORT_SYMBOL_GPL(__mcb_register_driver);
++EXPORT_SYMBOL_NS_GPL(__mcb_register_driver, MCB);
+ 
+ /**
+  * mcb_unregister_driver() - Unregister a @mcb_driver from the system
+@@ -203,7 +203,7 @@ void mcb_unregister_driver(struct mcb_driver *drv)
+ {
+ 	driver_unregister(&drv->driver);
+ }
+-EXPORT_SYMBOL_GPL(mcb_unregister_driver);
++EXPORT_SYMBOL_NS_GPL(mcb_unregister_driver, MCB);
+ 
+ static void mcb_release_dev(struct device *dev)
+ {
+@@ -249,7 +249,7 @@ int mcb_device_register(struct mcb_bus *bus, struct mcb_device *dev)
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(mcb_device_register);
++EXPORT_SYMBOL_NS_GPL(mcb_device_register, MCB);
+ 
+ static void mcb_free_bus(struct device *dev)
+ {
+@@ -301,7 +301,7 @@ struct mcb_bus *mcb_alloc_bus(struct device *carrier)
+ 	kfree(bus);
+ 	return ERR_PTR(rc);
+ }
+-EXPORT_SYMBOL_GPL(mcb_alloc_bus);
++EXPORT_SYMBOL_NS_GPL(mcb_alloc_bus, MCB);
+ 
+ static int __mcb_devices_unregister(struct device *dev, void *data)
+ {
+@@ -323,7 +323,7 @@ void mcb_release_bus(struct mcb_bus *bus)
+ {
+ 	mcb_devices_unregister(bus);
+ }
+-EXPORT_SYMBOL_GPL(mcb_release_bus);
++EXPORT_SYMBOL_NS_GPL(mcb_release_bus, MCB);
+ 
+ /**
+  * mcb_bus_put() - Increment refcnt
+@@ -338,7 +338,7 @@ struct mcb_bus *mcb_bus_get(struct mcb_bus *bus)
+ 
+ 	return bus;
+ }
+-EXPORT_SYMBOL_GPL(mcb_bus_get);
++EXPORT_SYMBOL_NS_GPL(mcb_bus_get, MCB);
+ 
+ /**
+  * mcb_bus_put() - Decrement refcnt
+@@ -351,7 +351,7 @@ void mcb_bus_put(struct mcb_bus *bus)
+ 	if (bus)
+ 		put_device(&bus->dev);
+ }
+-EXPORT_SYMBOL_GPL(mcb_bus_put);
++EXPORT_SYMBOL_NS_GPL(mcb_bus_put, MCB);
+ 
+ /**
+  * mcb_alloc_dev() - Allocate a device
+@@ -371,7 +371,7 @@ struct mcb_device *mcb_alloc_dev(struct mcb_bus *bus)
+ 
+ 	return dev;
+ }
+-EXPORT_SYMBOL_GPL(mcb_alloc_dev);
++EXPORT_SYMBOL_NS_GPL(mcb_alloc_dev, MCB);
+ 
+ /**
+  * mcb_free_dev() - Free @mcb_device
+@@ -383,7 +383,7 @@ void mcb_free_dev(struct mcb_device *dev)
+ {
+ 	kfree(dev);
+ }
+-EXPORT_SYMBOL_GPL(mcb_free_dev);
++EXPORT_SYMBOL_NS_GPL(mcb_free_dev, MCB);
+ 
+ static int __mcb_bus_add_devices(struct device *dev, void *data)
+ {
+@@ -412,7 +412,7 @@ void mcb_bus_add_devices(const struct mcb_bus *bus)
+ {
+ 	bus_for_each_dev(&mcb_bus_type, NULL, NULL, __mcb_bus_add_devices);
+ }
+-EXPORT_SYMBOL_GPL(mcb_bus_add_devices);
++EXPORT_SYMBOL_NS_GPL(mcb_bus_add_devices, MCB);
+ 
+ /**
+  * mcb_get_resource() - get a resource for a mcb device
+@@ -428,7 +428,7 @@ struct resource *mcb_get_resource(struct mcb_device *dev, unsigned int type)
+ 	else
+ 		return NULL;
+ }
+-EXPORT_SYMBOL_GPL(mcb_get_resource);
++EXPORT_SYMBOL_NS_GPL(mcb_get_resource, MCB);
+ 
+ /**
+  * mcb_request_mem() - Request memory
+@@ -454,7 +454,7 @@ struct resource *mcb_request_mem(struct mcb_device *dev, const char *name)
+ 
+ 	return mem;
+ }
+-EXPORT_SYMBOL_GPL(mcb_request_mem);
++EXPORT_SYMBOL_NS_GPL(mcb_request_mem, MCB);
+ 
+ /**
+  * mcb_release_mem() - Release memory requested by device
+@@ -469,7 +469,7 @@ void mcb_release_mem(struct resource *mem)
+ 	size = resource_size(mem);
+ 	release_mem_region(mem->start, size);
+ }
+-EXPORT_SYMBOL_GPL(mcb_release_mem);
++EXPORT_SYMBOL_NS_GPL(mcb_release_mem, MCB);
+ 
+ static int __mcb_get_irq(struct mcb_device *dev)
+ {
+@@ -495,7 +495,7 @@ int mcb_get_irq(struct mcb_device *dev)
+ 
+ 	return __mcb_get_irq(dev);
+ }
+-EXPORT_SYMBOL_GPL(mcb_get_irq);
++EXPORT_SYMBOL_NS_GPL(mcb_get_irq, MCB);
+ 
+ static int mcb_init(void)
+ {
+diff --git a/drivers/mcb/mcb-lpc.c b/drivers/mcb/mcb-lpc.c
+index 8f1bde437a7e..506676754538 100644
+--- a/drivers/mcb/mcb-lpc.c
++++ b/drivers/mcb/mcb-lpc.c
+@@ -168,3 +168,4 @@ module_exit(mcb_lpc_exit);
+ MODULE_AUTHOR("Andreas Werner <andreas.werner@men.de>");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("MCB over LPC support");
++MODULE_IMPORT_NS(MCB);
+diff --git a/drivers/mcb/mcb-parse.c b/drivers/mcb/mcb-parse.c
+index 3b69e6aa3d88..0266bfddfbe2 100644
+--- a/drivers/mcb/mcb-parse.c
++++ b/drivers/mcb/mcb-parse.c
+@@ -253,4 +253,4 @@ int chameleon_parse_cells(struct mcb_bus *bus, phys_addr_t mapbase,
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(chameleon_parse_cells);
++EXPORT_SYMBOL_NS_GPL(chameleon_parse_cells, MCB);
+diff --git a/drivers/mcb/mcb-pci.c b/drivers/mcb/mcb-pci.c
+index 14866aa22f75..dc88232d9af8 100644
+--- a/drivers/mcb/mcb-pci.c
++++ b/drivers/mcb/mcb-pci.c
+@@ -131,3 +131,4 @@ module_pci_driver(mcb_pci_driver);
+ MODULE_AUTHOR("Johannes Thumshirn <johannes.thumshirn@men.de>");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("MCB over PCI support");
++MODULE_IMPORT_NS(MCB);
+diff --git a/drivers/tty/serial/8250/8250_men_mcb.c b/drivers/tty/serial/8250/8250_men_mcb.c
+index 02c5aff58a74..80a5c063ed70 100644
+--- a/drivers/tty/serial/8250/8250_men_mcb.c
++++ b/drivers/tty/serial/8250/8250_men_mcb.c
+@@ -174,3 +174,4 @@ MODULE_AUTHOR("Michael Moese <michael.moese@men.de");
+ MODULE_ALIAS("mcb:16z125");
+ MODULE_ALIAS("mcb:16z025");
+ MODULE_ALIAS("mcb:16z057");
++MODULE_IMPORT_NS(MCB);
+diff --git a/drivers/tty/serial/men_z135_uart.c b/drivers/tty/serial/men_z135_uart.c
+index e5d3ebab6dae..4f53a4caabf6 100644
+--- a/drivers/tty/serial/men_z135_uart.c
++++ b/drivers/tty/serial/men_z135_uart.c
+@@ -930,3 +930,4 @@ MODULE_AUTHOR("Johannes Thumshirn <johannes.thumshirn@men.de>");
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("MEN 16z135 High Speed UART");
+ MODULE_ALIAS("mcb:16z135");
++MODULE_IMPORT_NS(MCB);
+diff --git a/drivers/watchdog/menz69_wdt.c b/drivers/watchdog/menz69_wdt.c
+index ed18238c5407..8973f98bc6a5 100644
+--- a/drivers/watchdog/menz69_wdt.c
++++ b/drivers/watchdog/menz69_wdt.c
+@@ -168,3 +168,4 @@ module_mcb_driver(men_z069_driver);
+ MODULE_AUTHOR("Johannes Thumshirn <jth@kernel.org>");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("mcb:16z069");
++MODULE_IMPORT_NS(MCB);
+-- 
+2.16.4
 
