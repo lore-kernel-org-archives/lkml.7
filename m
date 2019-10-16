@@ -7,49 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D24FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F10ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE7A207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AE72168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264371;
-	bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
+	s=default; t=1571264378;
+	bh=IWbkgjFM4VUyv7V+rPvBS5sdHICp3mRmFkMFPqIWsbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qH4k2CmdQLW2YNwytDsokM3mJb/sws+NeNoODkqwySmxzohhtVyHe8m/7uiFItui4
-	 htl/0EChY39McctAr2ZfzKabOT9Q1Swlx2+FnqzCcNFYcWKTd6bxYw/gHApfO2Dr8u
-	 AU2kuhkTJGzrxIF+98Ru8pvWHI/gkmnpEDVI0HfI=
+	b=NU6NSWTZBgQ2/6eSpMjKqDYxskFTLzXmg0Wav1J8uCGFFNVBKWrQFtBMiuGTknSBw
+	 0NwhapfqUtfhweRcUILfmsenjJOVQK8Xd0M3oKeZsCLwAfs9JLI8frec/z2SvPu2Bo
+	 +KlwWzXOTjUK/BKV6lBTVsjHU7Zs4v4LmYqRi8TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404725AbfJPWTa (ORCPT
+        id S2437649AbfJPVyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43646 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437670AbfJPVyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:05 -0400
+        id S2394921AbfJPVx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:56 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2300221925;
-        Wed, 16 Oct 2019 21:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23BDC21928;
+        Wed, 16 Oct 2019 21:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262845;
-        bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
+        s=default; t=1571262836;
+        bh=IWbkgjFM4VUyv7V+rPvBS5sdHICp3mRmFkMFPqIWsbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPayCzK0HKBRhciMlugwbN+VCcLkj53gVRMtdgJ/V+GtE09Q3FyQPxp09H2u8Jw2N
-         wyLZ/EaiEX/XLgXtbSSxajkVd5Un7fNiH3DwWQdSjXzwS4ppvszHE0sq+wdHsWbq3z
-         MW63+rTVkpenEcW3N1BHyFrvOZu7d8AVrDMyqoUA=
+        b=kdmdzEcWCJ4XMQNLDvtMiwd/jFOXeE20VYiP9NkZFvTaOq+qqY1mjprjcPCOayVSb
+         SX9zm+5JFVexraZrEUx4ub6DJ1oEew9F255yhfjJzYyxFzoGFOnulZnCdww7hJbh7h
+         sQSIXXleG711awHkst7xrWPtulgrlrml4J0KT0TU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.9 03/92] s390/cio: avoid calling strlen on null pointer
-Date:   Wed, 16 Oct 2019 14:49:36 -0700
-Message-Id: <20191016214801.882895406@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 78/79] x86/asm: Fix MWAITX C-state hint value
+Date:   Wed, 16 Oct 2019 14:50:53 -0700
+Message-Id: <20191016214834.350008615@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
-References: <20191016214759.600329427@linuxfoundation.org>
+In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
+References: <20191016214729.758892904@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,55 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
 
-commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
+commit 454de1e7d970d6bc567686052329e4814842867c upstream.
 
-Fix the following kasan finding:
-BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
-Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
+As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
+and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
+of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
 
-CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
-Hardware name: IBM 3906 M04 704 (LPAR)
-Call Trace:
-([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
- [<0000000233826410>] dump_stack+0x1d0/0x218
- [<000000023216fac4>] print_address_description+0x64/0x380
- [<000000023216f5a8>] __kasan_report+0x138/0x168
- [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
- [<00000002332b618a>] group_store+0x3a/0x50
- [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
- [<00000002321d409a>] vfs_write+0x132/0x450
- [<00000002321d47da>] ksys_write+0x122/0x208
- [<0000000233877102>] system_call+0x2a6/0x2c8
+Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
+this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
 
-Triggered by:
-openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
-		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
-write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
+This hasn't had any implications so far because setting reserved bits in
+EAX is simply ignored by the CPU.
 
-The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
-buffer pointer to NULL and explicit check for that is required.
+ [ bp: Fixup comment in delay_mwaitx() and massage. ]
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "x86@kernel.org" <x86@kernel.org>
+Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/cio/ccwgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/mwait.h |    2 +-
+ arch/x86/lib/delay.c         |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/s390/cio/ccwgroup.c
-+++ b/drivers/s390/cio/ccwgroup.c
-@@ -369,7 +369,7 @@ int ccwgroup_create_dev(struct device *p
- 		goto error;
- 	}
- 	/* Check for trailing stuff. */
--	if (i == num_devices && strlen(buf) > 0) {
-+	if (i == num_devices && buf && strlen(buf) > 0) {
- 		rc = -EINVAL;
- 		goto error;
- 	}
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -19,7 +19,7 @@
+ #define MWAIT_ECX_INTERRUPT_BREAK	0x1
+ #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+-#define MWAITX_DISABLE_CSTATES		0xf
++#define MWAITX_DISABLE_CSTATES		0xf0
+ 
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -112,8 +112,8 @@ static void delay_mwaitx(unsigned long _
+ 		__monitorx(this_cpu_ptr(&cpu_tss), 0, 0);
+ 
+ 		/*
+-		 * AMD, like Intel, supports the EAX hint and EAX=0xf
+-		 * means, do not enter any deep C-state and we use it
++		 * AMD, like Intel's MWAIT version, supports the EAX hint and
++		 * EAX=0xf0 means, do not enter any deep C-state and we use it
+ 		 * here in delay() to minimize wakeup latency.
+ 		 */
+ 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
 
 
