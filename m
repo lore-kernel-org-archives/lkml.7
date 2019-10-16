@@ -2,125 +2,312 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD56FFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B47FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883A320854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3701621928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KgWCWfmO"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="QAnBmOys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394627AbfJPT6K (ORCPT
+        id S2436796AbfJPUAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:58:10 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50472 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731337AbfJPT6K (ORCPT
+        Wed, 16 Oct 2019 16:00:39 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44333 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfJPUAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:58:10 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 5so130480wmg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:58:08 -0700 (PDT)
+        Wed, 16 Oct 2019 16:00:38 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u22so23943357qkk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QwGBNF2mfPZCSaxVM5L9gL5V9TjNG0cRrtA4XmOd9ig=;
-        b=KgWCWfmOZGpSCZNWMRYQhncy0eSsPeH2NqSIWrW8U4soudxZrxYIUKF/yJ1A8BXJhW
-         HfTp/eXqF1pKVvAYqaC7aemOzRNKbIatlTsXU+nTfKYc8paWI/riU2Y2Q49gzcop2N/R
-         25AjagpuFiB+h1pWC0elrJSbnQIE7F10qziqA=
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IqH8GD3Cd2GfNpQCgBnwuc6fRbB8qbMWa3BEJprQXaA=;
+        b=QAnBmOys0ZwMGRtAqQLSdX+x1Hv6iwFJn+I5wRC3n3+cmMX5w8rr2RBFkuBa4n6MFN
+         kDc4wROKC3ZZkTuKKF3zbab+ZkSm/z8sWdo+BOs/7dO3DggsH4D7JV3nNzxy76Hbcun3
+         t9rsVYMPD6JgFuKJHGVxJ/kQ3kNM7BEK09ccCtmUJ5wES0l0VRDpYsnycXzMsoJ6y6Ll
+         AZN0O2QqGOGBr2D2PD11G++BMHx+DJs7PU2jvPntLCcwaryxdY0TrgbIs2948hJNVqtu
+         cgJzKFONaUt36BFYuaOTN17AH/OdY5ShCUrteEZI2qJKwpf72eihOqiU5lCf6tz90WH2
+         ocFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=QwGBNF2mfPZCSaxVM5L9gL5V9TjNG0cRrtA4XmOd9ig=;
-        b=PxnYfQkmAU89O81a8Xr5Phui9RSchkcObX+uUe0BRwyM4j9RXJrVTV82EbpJu4iD/i
-         8NKW1kagr7gtVLjX+qKztQmV6ugWLcGRkTAAN3ggMUUee+6eeDR9Gm+7ef8tPn9vuXsa
-         oBLXRRvn995Y0gASsyZXDjETIDmL2xndtf4/iXyld2Uuw0m1Ml8o659AaATRV6JCZr3a
-         IkN+V71PYGBg5aTXRManp5TTjAmspKG+CBa502SkEm3oRO5N5qQzxAN79W22To3N/uKO
-         wApDdDeejUX4fDK7HAlZc4UbtH3Cc+i1v77rVoEPb7pCAn4F9jIxhBKia1Lz/Edlkhv/
-         iqrA==
-X-Gm-Message-State: APjAAAV083FQ8aPTJI5C/E7mRENBDluxODBBomfMQhfHqVylq6mwGn0O
-        +7Jv4coY2+K8KVkvvZeSt4YQBg==
-X-Google-Smtp-Source: APXvYqxZwgDuBJqSQKKYZXwM7ec49oPND5H+SOWCdy5OpKj8FB3a3dMYc2MHsfEQE7nd+AiWGjbncA==
-X-Received: by 2002:a05:600c:40f:: with SMTP id q15mr4805361wmb.30.1571255887783;
-        Wed, 16 Oct 2019 12:58:07 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id z189sm5560530wmc.25.2019.10.16.12.58.06
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IqH8GD3Cd2GfNpQCgBnwuc6fRbB8qbMWa3BEJprQXaA=;
+        b=C3bhZzeBR8jnUSRtD5qX/HwVfz1sh8nNpmp7eR97TkFiuwoqaLjw1ZvVWmolhYo37P
+         G9iSJeIGIQ/dTwJZgtp8BZneAyI/16UEkwFzblQ4aKTKaVPG39gIA3cOij5SlVNu48R6
+         vt/lTXpifAP1DE79F9/1pX5ByZbAk4sPKtLPZMTdk8g3UWAXFue2Ee19d17suM/lpR91
+         gbrmaOLzNO96bHMDpFUYV3w6x0nf+9nc8ixaESc22jIk9tyF1ywBwxFP/rGeInE8t9e8
+         B+lJBkoZi3VeQxKGUqpCAQaNaef+E8op2LDxvoyCJUieH4nIX0Pq5Xddk/qex3fxqOC8
+         BBDQ==
+X-Gm-Message-State: APjAAAXJL/FH/yHAjrAlvEVsYo5wX75UW+yzDNN2Oe+LZpbgAl/aBjjZ
+        LD/pf4bmi0ODpYHGXDnTGlZwBA==
+X-Google-Smtp-Source: APXvYqxsFHm9SkZO4l1wV+owdXRmGtyXx4sBN9QKgwPEyJQCC/WH4TjxBmU+XbnIkEekoINkJ7ktZg==
+X-Received: by 2002:a37:9d85:: with SMTP id g127mr42524917qke.128.1571256037071;
+        Wed, 16 Oct 2019 13:00:37 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 12:58:07 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 21:58:05 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 28/34] drm/i810: Refer to `PREEMPTION' in comment
-Message-ID: <20191016195804.GT11828@phenom.ffwll.local>
-Mail-Followup-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-29-bigeasy@linutronix.de>
+        Wed, 16 Oct 2019 13:00:36 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
+        tglx@linutronix.de
+Subject: [PATCH v7 00/25] arm64: MMU enabled kexec relocation
+Date:   Wed, 16 Oct 2019 16:00:09 -0400
+Message-Id: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015191821.11479-29-bigeasy@linutronix.de>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 09:18:15PM +0200, Sebastian Andrzej Siewior wrote:
-> The dependency has been changed from `PREEMPT' to `PREEMPTION'. Reflect
-> this change in the comment.
-> 
-> Use `PREEMPTION' in the comment.
-> 
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Many changes compared to version 6, so I decided to send it out now.
+James Morse raised an important issue to which I do not have a solution
+yet. But would like to discuss it.
 
-Queued for 5.5 in drm-misc, thanks for your patch.
--Daniel
-> ---
->  drivers/gpu/drm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index e67c194c2acad..5f6dcbbeb0c1b 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -397,7 +397,7 @@ config DRM_R128
->  
->  config DRM_I810
->  	tristate "Intel I810"
-> -	# !PREEMPT because of missing ioctl locking
-> +	# !PREEMPTION because of missing ioctl locking
->  	depends on DRM && AGP && AGP_INTEL && (!PREEMPTION || BROKEN)
->  	help
->  	  Choose this option if you have an Intel I810 graphics card.  If M is
-> -- 
-> 2.23.0
-> 
+---
+https://lore.kernel.org/lkml/45a2f0b8-5bac-8b5d-d595-f92e9acb27ad@arm.com
+> +	/* Map relocation function va == pa */
+> +	rc = trans_pgd_map_page(&info, trans_ttbr0,  __va(kern_reloc),
+> +				kern_reloc, PAGE_KERNEL_EXEC);
+> +	if (rc)
+> +		return rc;
+James wrote:
+You can't do this with the page table helpers. We support platforms
+with no memory in range of TTBR0's VA space. See dd006da21646f
+
+You will need some idmapped memory to turn the MMU off on a system
+that booted at EL1. This will need to be in a set of page tables
+that the helpers can't easily touch - so it should only be a single
+page. (like the arch code's existing idmap - although that may
+have been overwritten).
+
+(I have a machine where this is a problem, if I get the time I will
+have a stab at making hibernate's safe page idmaped).
+---
+
+As I understand, there are platforms where TTBR0 cannot include all
+physical memory for idmap. However, kexec must have at least one page
+idmapped (kimage->control_code_page) to be able to relocate kernel
+while MMU is enabled:
+
+I am still trying to fully understand the problem:
+CONFIG_ARM64_VA_BITS must be smaller than 48 and physical memory must
+start at a high address for this problem to occur.
+
+Why can't we simply decrease T0SZ to cover all physical memory?
+
+Changelog:
+v7:
+	-- Addressed comments from James Morse
+	- arm64: hibernate: pass the allocated pgdp to ttbr0
+	  Removed "Fixes" tag, and added Added Reviewed-by: James Morse
+	- arm64: hibernate: check pgd table allocation
+	  Sent out as a standalone patch so it can be sent to stable
+	  Series applies on mainline + this patch
+	- arm64: hibernate: add trans_pgd public functions
+	  Remove second allocation of tmp_pg_dir in swsusp_arch_resume
+	  Added Reviewed-by: James Morse <james.morse@arm.com>
+	- arm64: kexec: move relocation function setup and clean up
+	  Fixed typo in commit log
+	  Changed kern_reloc to phys_addr_t types.
+	  Added explanation why kern_reloc is needed.
+	  Split into four patches:
+	  arm64: kexec: make dtb_mem always enabled
+	  arm64: kexec: remove unnecessary debug prints
+	  arm64: kexec: call kexec_image_info only once
+	  arm64: kexec: move relocation function setup
+	- arm64: kexec: add expandable argument to relocation function
+	  Changed types of new arguments from unsigned long to phys_addr_t.
+	  Changed offset prefix to KEXEC_*
+	  Split into four patches:
+	  arm64: kexec: cpu_soft_restart change argument types
+	  arm64: kexec: arm64_relocate_new_kernel clean-ups
+	  arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
+	  arm64: kexec: add expandable argument to relocation function
+	- arm64: kexec: configure trans_pgd page table for kexec
+	  Added invalid entries into EL2 vector table
+	  Removed KEXEC_EL2_VECTOR_TABLE_SIZE and KEXEC_EL2_VECTOR_TABLE_OFFSET
+	  Copy relocation functions and table into separate pages
+	  Changed types in kern_reloc_arg.
+	  Split into three patches:
+	  arm64: kexec: offset for relocation function
+	  arm64: kexec: kexec EL2 vectors
+	  arm64: kexec: configure trans_pgd page table for kexec
+	- arm64: kexec: enable MMU during kexec relocation
+	  Split into two patches:
+	  arm64: kexec: enable MMU during kexec relocation
+	  arm64: kexec: remove head from relocation argument
+v6:
+	- Sync with mainline tip
+	- Added Acked's from Dave Young
+v5:
+	- Addressed comments from Matthias Brugger: added review-by's, improved
+	  comments, and made cleanups to swsusp_arch_resume() in addition to
+	  create_safe_exec_page().
+	- Synced with mainline tip.
+v4:
+	- Addressed comments from James Morse.
+	- Split "check pgd table allocation" into two patches, and moved to
+	  the beginning of series  for simpler backport of the fixes.
+	  Added "Fixes:" tags to commit logs.
+	- Changed "arm64, hibernate:" to "arm64: hibernate:"
+	- Added Reviewed-by's
+	- Moved "add PUD_SECT_RDONLY" earlier in series to be with other
+	  clean-ups
+	- Added "Derived from:" to arch/arm64/mm/trans_pgd.c
+	- Removed "flags" from trans_info
+	- Changed .trans_alloc_page assumption to return zeroed page.
+	- Simplify changes to trans_pgd_map_page(), by keeping the old
+	  code.
+	- Simplify changes to trans_pgd_create_copy, by keeping the old
+	  code.
+	- Removed: "add trans_pgd_create_empty"
+	- replace init_mm with NULL, and keep using non "__" version of
+	  populate functions.
+v3:
+	- Split changes to create_safe_exec_page() into several patches for
+	  easier review as request by Mark Rutland. This is why this series
+	  has 3 more patches.
+	- Renamed trans_table to tans_pgd as agreed with Mark. The header
+	  comment in trans_pgd.c explains that trans stands for
+	  transitional page tables. Meaning they are used in transition
+	  between two kernels.
+v2:
+	- Fixed hibernate bug reported by James Morse
+	- Addressed comments from James Morse:
+	  * More incremental changes to trans_table
+	  * Removed TRANS_FORCEMAP
+	  * Added kexec reboot data for image with 380M in size.
+
+Enable MMU during kexec relocation in order to improve reboot performance.
+
+If kexec functionality is used for a fast system update, with a minimal
+downtime, the relocation of kernel + initramfs takes a significant portion
+of reboot.
+
+The reason for slow relocation is because it is done without MMU, and thus
+not benefiting from D-Cache.
+
+Performance data
+----------------
+For this experiment, the size of kernel plus initramfs is small, only 25M.
+If initramfs was larger, than the improvements would be greater, as time
+spent in relocation is proportional to the size of relocation.
+
+Previously:
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
+
+Relocation was taking: 58.2% of reboot time
+
+Now:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
+
+Now: Relocation takes 6.3% of reboot time
+
+Total reboot is x2.16 times faster.
+
+With bigger userland (fitImage 380M), the reboot time is improved by 3.57s,
+and is reduced from 3.9s down to 0.33s
+
+Previous approaches and discussions
+-----------------------------------
+https://lore.kernel.org/lkml/20191004185234.31471-1-pasha.tatashin@soleen.com
+version 6 of this series
+
+https://lore.kernel.org/lkml/20190923203427.294286-1-pasha.tatashin@soleen.com
+version 5 of this series
+
+https://lore.kernel.org/lkml/20190909181221.309510-1-pasha.tatashin@soleen.com
+version 4 of this series
+
+https://lore.kernel.org/lkml/20190821183204.23576-1-pasha.tatashin@soleen.com
+version 3 of this series
+
+https://lore.kernel.org/lkml/20190817024629.26611-1-pasha.tatashin@soleen.com
+version 2 of this series
+
+https://lore.kernel.org/lkml/20190801152439.11363-1-pasha.tatashin@soleen.com
+version 1 of this series
+
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+reserve space for kexec to avoid relocation, involves changes to generic code
+to optimize a problem that exists on arm64 only:
+
+https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+The first attempt to enable MMU, some bugs that prevented performance
+improvement. The page tables unnecessary configured idmap for the whole
+physical space.
+
+https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
+No linear copy, bug with EL2 reboots.
+
+Pavel Tatashin (25):
+  kexec: quiet down kexec reboot
+  kexec: add machine_kexec_post_load()
+  arm64: kexec: remove unnecessary debug prints
+  arm64: kexec: make dtb_mem always enabled
+  arm64: hibernate: pass the allocated pgdp to ttbr0
+  arm64: hibernate: use get_safe_page directly
+  arm64: hibernate: remove gotos as they are not needed
+  arm64: hibernate: rename dst to page in create_safe_exec_page
+  arm64: hibernate: add PUD_SECT_RDONLY
+  arm64: hibernate: add trans_pgd public functions
+  arm64: hibernate: move page handling function to new trans_pgd.c
+  arm64: trans_pgd: make trans_pgd_map_page generic
+  arm64: trans_pgd: pass allocator trans_pgd_create_copy
+  arm64: trans_pgd: pass NULL instead of init_mm to *_populate functions
+  arm64: kexec: move relocation function setup
+  arm64: kexec: call kexec_image_info only once
+  arm64: kexec: cpu_soft_restart change argument types
+  arm64: kexec: arm64_relocate_new_kernel clean-ups
+  arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
+  arm64: kexec: add expandable argument to relocation function
+  arm64: kexec: offset for relocation function
+  arm64: kexec: kexec EL2 vectors
+  arm64: kexec: configure trans_pgd page table for kexec
+  arm64: kexec: enable MMU during kexec relocation
+  arm64: kexec: remove head from relocation argument
+
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/kexec.h         |  47 ++++-
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_pgd.h     |  34 ++++
+ arch/arm64/kernel/asm-offsets.c        |  14 ++
+ arch/arm64/kernel/cpu-reset.S          |   8 +-
+ arch/arm64/kernel/cpu-reset.h          |  14 +-
+ arch/arm64/kernel/hibernate.c          | 255 ++++---------------------
+ arch/arm64/kernel/machine_kexec.c      | 186 ++++++++++++++----
+ arch/arm64/kernel/relocate_kernel.S    | 233 ++++++++++++----------
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_pgd.c              | 244 +++++++++++++++++++++++
+ kernel/kexec.c                         |   4 +
+ kernel/kexec_core.c                    |   8 +-
+ kernel/kexec_file.c                    |   4 +
+ kernel/kexec_internal.h                |   2 +
+ 16 files changed, 690 insertions(+), 369 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_pgd.h
+ create mode 100644 arch/arm64/mm/trans_pgd.c
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.23.0
+
