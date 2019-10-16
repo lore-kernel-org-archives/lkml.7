@@ -2,153 +2,126 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F97FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F66BFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAF0218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062062168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1iBpF2A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8ZUM76B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394169AbfJPQT3 (ORCPT
+        id S2394178AbfJPQTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:19:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37010 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfJPQT2 (ORCPT
+        Wed, 16 Oct 2019 12:19:33 -0400
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:53800 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404130AbfJPQTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:19:28 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f22so3437285wmc.2;
-        Wed, 16 Oct 2019 09:19:25 -0700 (PDT)
+        Wed, 16 Oct 2019 12:19:32 -0400
+Received: by mail-wm1-f51.google.com with SMTP id i16so3591727wmd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:19:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DePY+vd4CjRqNFClvgu0HEDLinybeEc/aYWJ2h0z7BU=;
-        b=E1iBpF2AGWUiFRx3XaIfiOP0Gt8lL91/ccFuACx91vHthjRam+9ld0bu/ojzEkqtgB
-         YqteocE9aoljJs/8AsW90LoWzAUGPlJ2pLBBG9QGer1+qmWjjaubAfx2qHUx+xeBI4ni
-         vW4YS5M/XA21+hrlJAVp4caPOuJe1B9m/T4aC2UNLW1mTsDo8Pp+ICVomxoCeCIVlIHk
-         MZzLsQsQr1ON5NGgaJZPBiTY87sMBvCt3TV7adw//O4wM8wkob+yGvGhehFZ163adqcG
-         JAryEidJaWF33Ye6mqvBlZFaPaJkakMI77atgkDo/ATylRLBdDKKv81aTOye0IO2i3Wl
-         qk4g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ClDQ27rib9gTJsQGXTTJRHusNU/eeaE+CiY63Jy96js=;
+        b=R8ZUM76BwybIlfHTtRwSrwoeTc0Mm9dKOaxg1WK0QsHiLZlUH+m6fN0gP9qidVD9UO
+         rt4KY3Z8S7I4b4fVvyHlt2c3Y5LEhzWqyoSrjgcXq3TPRDi/GDxJWxx8D0qVAksqziO6
+         LAXz+tbSR8VjMmLtGRWn0oL0rz/OXkks//cZD0Kpi9iohJ7ZRw3DkXqeqvMZWRTo1Sp9
+         IPbuJHaekq415jw2F+9KtXMCBZu/GcvpEYnRGPwT2tbab7MTuSBGt4WFKfFXQCvy3RFU
+         K5GcdUL+FW/vh8hltdoCQli7FCk42R7JNG0zQznhzQWbCnSXdgWUKfNakM7kQ0Y/f4JV
+         PDSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DePY+vd4CjRqNFClvgu0HEDLinybeEc/aYWJ2h0z7BU=;
-        b=lBDU3kK84Sm/CuP7W9hvgvQbNE4TKRhPTU3xvRQ9ZFHbF1qFewriAcc1mp757KcQNd
-         +SwpbjmoGux0dsRrS9fc+OFc+VOpAAcBzOWkoW3dgk9jPxv4MhHBZvm1vloyEB7qo1xa
-         JdDNrUOAWvUOe9ZSL3gpvXvm+5jH808gtnxBDGieBRYJrtMm8pmkyT6TFptCKD4lMs9R
-         cSVsfS7U8J3xySuc8+bBQDti0bbx4LZDXUe2qR8blQbC/QrCCwIHqWAptyffQzxVh9tG
-         ycsd77AdvJu2LLVQUax358Na6+BH5koua+MqCdxfgEE5iaZv9ruUAjZM97lFtNeSbw2f
-         erCg==
-X-Gm-Message-State: APjAAAU9R+PeLTKASizFGVnGVzb4H3DFUQ77s9tMnKiyecibNlkdrd/7
-        lZ1FvDLfzzYEmgkNSl/jmmI=
-X-Google-Smtp-Source: APXvYqzZfR0uIAdhsAhB1DocvPRZKquR4DWTYHM+2m9sDni/Be1CRMbNuYHuyf9JeRQcV75hbzbVNw==
-X-Received: by 2002:a1c:9e07:: with SMTP id h7mr4246374wme.96.1571242764842;
-        Wed, 16 Oct 2019 09:19:24 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id r13sm38495943wrn.0.2019.10.16.09.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 09:19:22 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 18:19:20 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        jonathanh@nvidia.com, andrew.murray@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 1/2] PCI: tegra: Fix CLKREQ dependency programming
-Message-ID: <20191016161920.GA2526111@ulmo>
-References: <20191005164212.3646-1-vidyas@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ClDQ27rib9gTJsQGXTTJRHusNU/eeaE+CiY63Jy96js=;
+        b=km6mmm7krUp+aUTH/RJxOAOFScxATnnAannW9hE1SyctJy/uX37eCOmp+Rc6TLwFHa
+         fhIsEmOIzNR2OqEVcORsQEemwZXmsx1sgaiQIqKDuHa05N4eJQxLzNi/vz5zroofnO2x
+         bj+6rX5/XEdhoLfgZ1mOrsMcS16acYd2ppeka9uRUUbFn/YsVSnGb+IuubVMB3TV77op
+         Nu/4L6QTvltNxWrk5WJjNqx+WOv6S2jzSPn9D+POQCmXqt8Kw2FV1dnJIwx0pq1Ft3Iq
+         tMb8NzqfthmImGzTMwn0bm1nzXzAh5OQaApztaesS1xt1alXHVClTNYXtWNkb63lbZ5V
+         3Xpw==
+X-Gm-Message-State: APjAAAWQ/Cn2+JsISHQm5SgXfwxMIiOiIxBL9MzOAsueH5LWMXBfgrJY
+        oGtNywv9U2ZoSaUmujYNpw0xESncOISyIMJXHClNkA==
+X-Google-Smtp-Source: APXvYqwh8+A8W2StIQF2g+j5jrtEm7yZmJlKM7cnB2ptXcCThx5FPhYGZlDdtFTcJ8UwxXhdehgQHSIszElU/Zr+g78=
+X-Received: by 2002:a7b:c395:: with SMTP id s21mr4085418wmj.102.1571242770235;
+ Wed, 16 Oct 2019 09:19:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <20191005164212.3646-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191016111541.20208-1-yuehaibing@huawei.com>
+In-Reply-To: <20191016111541.20208-1-yuehaibing@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 16 Oct 2019 12:19:15 -0400
+Message-ID: <CADnq5_MzELoYV2=Fzioy_YqxdyQg+RXQKL4CUwayGP3_RMRg3A@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amd/display: Make dc_link_detect_helper static
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
+        Eric Yang <Eric.Yang2@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Nikola Cornij <nikola.cornij@amd.com>,
+        Chris Park <Chris.Park@amd.com>,
+        Martin Leung <martin.leung@amd.com>, david.galiffi@amd.com,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 8:29 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fix sparse warning:
+>
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:746:6:
+>  warning: symbol 'dc_link_detect_helper' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied.  thanks!
 
-On Sat, Oct 05, 2019 at 10:12:11PM +0530, Vidya Sagar wrote:
-> Corrects the programming to provide REFCLK to the downstream device
-> when there is no CLKREQ sideband signal routing present from root port
-> to the endpont.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Alex
+
 > ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
-troller/dwc/pcie-tegra194.c
-> index f89f5acee72d..cbe95f0ea0ca 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -40,8 +40,6 @@
->  #define APPL_PINMUX_CLKREQ_OVERRIDE		BIT(3)
->  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN	BIT(4)
->  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE	BIT(5)
-> -#define APPL_PINMUX_CLKREQ_OUT_OVRD_EN		BIT(9)
-> -#define APPL_PINMUX_CLKREQ_OUT_OVRD		BIT(10)
-> =20
->  #define APPL_CTRL				0x4
->  #define APPL_CTRL_SYS_PRE_DET_STATE		BIT(6)
-> @@ -1193,8 +1191,8 @@ static int tegra_pcie_config_controller(struct tegr=
-a_pcie_dw *pcie,
-> =20
->  	if (!pcie->supports_clkreq) {
->  		val =3D appl_readl(pcie, APPL_PINMUX);
-> -		val |=3D APPL_PINMUX_CLKREQ_OUT_OVRD_EN;
-> -		val |=3D APPL_PINMUX_CLKREQ_OUT_OVRD;
-> +		val |=3D APPL_PINMUX_CLKREQ_OVERRIDE_EN;
-> +		val &=3D ~APPL_PINMUX_CLKREQ_OVERRIDE;
->  		appl_writel(pcie, val, APPL_PINMUX);
->  	}
-
-If we do support CLKREQ, do we have to explicitly set the OVERRIDE bit?
-Or clear the OVERRIDE_EN bit? Is it always guaranteed that the defaults
-(OVERRIDE_EN =3D 0) is applied at this point?
-
-That's an issue that's orthogonal to this patch, though, so for this
-one:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2nQwMACgkQ3SOs138+
-s6E8BQ/9G0VANNqYdS++3CnPnN8WpRzZ5X80eDfGsloeyXEpgMYt6+9yOAtm0JTO
-3LKUqhWTtoxqnN9FqF6rTVhrfI+m7Wm2clBufTkX9OfDuRkFN4OD9bXBvWcNm43T
-esUpA3PPPPPcjN+b2vGG7iSc95ZkbJdf6+9RpehqEe308SFcftIwHgMww4AFVVv8
-3zATGvVSqU9oOK8J5TTVvKjlJ6JatSniwIUWj6GM8JdKduvD3qcua5BHOmRqgYJh
-J+OApeTRDjRdeSRyPQuiTN8ByBp01Z228OBGoRsdTqnypLq5lNV5WGT4P9bywFVV
-4+D99VAgL1qtSNlaJqxLUBiNjTDIGrkK6Z/pc1sgUVQdotLPjD47Vfh8URTskzz4
-u2k2IRuowNPRpKV/7zto23j7PS10tOKCfTi63/+RVj+rahp4ACGAJy1Mn9dU3Zai
-3zorkVVE02mUOsj5VKB9JQIetrqoxt+LLf+cjOZDfr8H+ehtDWIsb9b4QWFXlm5Q
-4xgpPD9Uuw6pSfEd+qCT7VkudCwqYFsvyGjHVSfaL0/nHadHy+8cLGDb0tWBXUTY
-8pMI8klIWZ0OUn2j/KPTj+x+dWalfEmS/5Ez/fM8IZpxOzQSHgd1VJAwmZTuChUR
-vJhRao5glT/alH6W+G/yhGIKVpWDL1ZTeF35/ibVHqKOxi1JxV0=
-=schF
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+>  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+> index fb18681..9350536 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+> @@ -743,7 +743,8 @@ static bool wait_for_alt_mode(struct dc_link *link)
+>   * This does not create remote sinks but will trigger DM
+>   * to start MST detection if a branch is detected.
+>   */
+> -bool dc_link_detect_helper(struct dc_link *link, enum dc_detect_reason reason)
+> +static bool dc_link_detect_helper(struct dc_link *link,
+> +                                 enum dc_detect_reason reason)
+>  {
+>         struct dc_sink_init_data sink_init_data = { 0 };
+>         struct display_sink_capability sink_caps = { 0 };
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
