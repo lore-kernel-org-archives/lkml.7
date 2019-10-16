@@ -2,66 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A91FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647F7FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5311120872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A58D2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390537AbfJPRuG (ORCPT
+        id S2390992AbfJPRyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:50:06 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52296 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390071AbfJPRuF (ORCPT
+        Wed, 16 Oct 2019 13:54:52 -0400
+Received: from smtprelay0019.hostedemail.com ([216.40.44.19]:45224 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388804AbfJPRyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:50:05 -0400
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C43EB14239BEE;
-        Wed, 16 Oct 2019 10:50:04 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 13:50:03 -0400 (EDT)
-Message-Id: <20191016.135003.672960397161023411.davem@davemloft.net>
-To:     jakub.kicinski@netronome.com
-Cc:     tanhuazhong@huawei.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, salil.mehta@huawei.com,
-        yisen.zhuang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH net-next 00/12] net: hns3: add some bugfixes and
- optimizations
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191016101943.415d73cf@cakuba.netronome.com>
-References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
-        <20191016101943.415d73cf@cakuba.netronome.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 16 Oct 2019 13:54:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D6B2883E3;
+        Wed, 16 Oct 2019 17:54:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cap93_46fcf941bb85d
+X-Filterd-Recvd-Size: 3199
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 16 Oct 2019 17:54:47 +0000 (UTC)
+Message-ID: <e6d33109f7abad1f883764828311e9965d65dd9e.camel@perches.com>
+Subject: Re: [PATCH v3] x86, efi: never relocate kernel below lowest
+ acceptable address
+From:   Joe Perches <joe@perches.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Kairui Song <kasong@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Date:   Wed, 16 Oct 2019 10:54:46 -0700
+In-Reply-To: <20191016162757.GC6279@linux.intel.com>
+References: <20191012034421.25027-1-kasong@redhat.com>
+         <20191014101419.GA4715@zn.tnic> <20191014202111.GP15552@linux.intel.com>
+         <20191014211825.GJ4715@zn.tnic> <20191016152014.GC4261@linux.intel.com>
+         <fb0e7c13da405970d5cbd59c10005daaf970b8da.camel@perches.com>
+         <20191016162757.GC6279@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 16 Oct 2019 10:50:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-Date: Wed, 16 Oct 2019 10:19:43 -0700
-
-> On Wed, 16 Oct 2019 15:16:59 +0800, Huazhong Tan wrote:
->> This patch-set includes some bugfixes and code optimizations
->> for the HNS3 ethernet controller driver.
+On Wed, 2019-10-16 at 19:27 +0300, Jarkko Sakkinen wrote:
+> On Wed, Oct 16, 2019 at 08:23:56AM -0700, Joe Perches wrote:
+> > On Wed, 2019-10-16 at 18:20 +0300, Jarkko Sakkinen wrote: > > On Mon, Oct 14, 2019 at 11:18:25PM +0200, Borislav Petkov wrote:
+> > > > On Mon, Oct 14, 2019 at 11:21:11PM +0300, Jarkko Sakkinen wrote:
+> > > > > Was there a section in the patch submission documentation to point out
+> > > > > when people send patches with all the possible twists for an acronym?
+> > > > 
+> > > > I don't think so.
+> > > > 
+> > > > > This is giving me constantly gray hairs with TPM patches.
+> > > > 
+> > > > Well, I'm slowly getting tired of repeating the same crap over and over
+> > > > again about how important it is to document one's changes and to write
+> > > > good commit messages. The most repeated answers I'm simply putting into
+> > > > canned reply templates because, well, saying it once or twice is not
+> > > > enough anymore. :-\
+> > > > 
+> > > > And yeah, I see your pain. Same here, actually.
+> > > > 
+> > > > In the acronym case, I'd probably add a regex to my patch massaging
+> > > > script and convert those typos automatically and be done with it.
+> > > 
+> > > Wonder if checkpatch.pl could be extended to know acronyms e.g. have a
+> > > db of known acronyms.
+> > 
+> > ?  examples please.
+> > 
+> > checkpatch has a db for misspellings, I supposed another for
+> > acronyms could be added, but how would false positives be avoided?
 > 
-> The code LGTM, mostly, but it certainly seems like patches 2, 3 and 4
-> should be a separate series targeting the net tree :(
+> TPM should be always TPM, e.g. not tpm. EFI should be always, e.g.
+> not efi.
 
-Agreed, there are legitimate bug fixes.
+I think it's not possible to distinguish between
+proper and improper uses.  For instance:
 
-I have to say that I see this happening a lot, hns3 bug fixes targetting
-net-next in a larger series of cleanups and other kinds of changes.
+$ git grep -w tpm | wc -l
+328
+$ git grep -w TPM | wc -l
+566
 
-Please handle this delegation properly.  Send bug fixes as a series targetting
-'net', and send everything else targetting 'net-next'.
+$ git grep -w efi | wc -l
+851
+$ git grep -w EFI | wc -l
+915
+
+
