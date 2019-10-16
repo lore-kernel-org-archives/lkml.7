@@ -2,51 +2,52 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C495ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC32BFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9DA21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C352721848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264598;
-	bh=55pIYmCZVMIoqRNbdhjyORr7+NR7SE8xoBV2E7ain4k=;
+	s=default; t=1571264600;
+	bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cPHE/MBUyi4izNvmQnFc8DoI7CobXHYihh4HyGnSVp7TXLJMP4Le3AMv7xLATl9C
-	 T5SnBM/E3i8tx5t+j9UVGkmavPuIBGduhrHdp5d9zeO/f86RiHN8ffUbEmG5gGfbpl
-	 DYMJhGTlX2lPkfYyOAS1k5c7hG0epIxVD0UhZa4A=
+	b=g4KSm1Nc0QRnRlM7pKtIlqQstje4Kac9M29hvS7MntXNZwHguGzK5WWBS+jd69i5U
+	 Plx7/pQD5oakHjgtF15YalavNbp2OOoLgOhyMxqr8Ld3xjL/Zph4lmU/FKMJrgayK9
+	 CLNvCcHy2FCk8k/BrT2sF3PXm6ANtdGDu31bbW5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439411AbfJPWXR (ORCPT
+        id S2437083AbfJPVw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437114AbfJPVw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:52:59 -0400
+        id S2436896AbfJPVwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:52:54 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D4621D7C;
-        Wed, 16 Oct 2019 21:52:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 943B420872;
+        Wed, 16 Oct 2019 21:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262779;
-        bh=55pIYmCZVMIoqRNbdhjyORr7+NR7SE8xoBV2E7ain4k=;
+        s=default; t=1571262772;
+        bh=OBdtrm8pJtajj5WunNduBtqbGjzE7rTRWzKQSZySMEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+rnxRfu+MmPEofIN+Mqa7lsvp1PANV52EzjkL9G9WlZLFB3fwYY26zPZiASCohxF
-         Uaj7rIDdiUk2s4RKhi+FPL+A1N/0+B47oBrZsR0/+BtiBe4ZEkiGrdHFGv4P3VwmEE
-         9I/jIiAdI/2F5Zv6KiWHN6Y4Qx3T6YH9U9HbRhqo=
+        b=fHM4ujKbIn6mUCLxrYbvnoa8XJG8W2rBsVanOR5eRr88b+SU4tTueVGSKq3hj3Qvj
+         8Q54bCV/nLxG9W+WKhcNFfO0tx2JHbxMOaEQShEwAmUrMdTAafmedS3zynJ5SNxaiI
+         q6YQSz0HnvUNUJvc24+xHcTdoAil8cVeeYX09G/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.4 02/79] s390/topology: avoid firing events before kobjs are created
-Date:   Wed, 16 Oct 2019 14:49:37 -0700
-Message-Id: <20191016214732.696445726@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 13/79] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Wed, 16 Oct 2019 14:49:48 -0700
+Message-Id: <20191016214741.602462781@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,61 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit f3122a79a1b0a113d3aea748e0ec26f2cb2889de upstream.
+[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
 
-arch_update_cpu_topology is first called from:
-kernel_init_freeable->sched_init_smp->sched_init_domains
+In encode_attrs(), there is an if statement on line 1145 to check
+whether label is NULL:
+    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
 
-even before cpus has been registered in:
-kernel_init_freeable->do_one_initcall->s390_smp_init
+When label is NULL, it is used on lines 1178-1181:
+    *p++ = cpu_to_be32(label->lfs);
+    *p++ = cpu_to_be32(label->pi);
+    *p++ = cpu_to_be32(label->len);
+    p = xdr_encode_opaque_fixed(p, label->label, label->len);
 
-Do not trigger kobject_uevent change events until cpu devices are
-actually created. Fixes the following kasan findings:
+To fix these bugs, label is checked before being used.
 
-BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb40/0xee0
-Read of size 8 at addr 0000000000000020 by task swapper/0/1
+These bugs are found by a static analysis tool STCheck written by us.
 
-BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb36/0xee0
-Read of size 8 at addr 0000000000000018 by task swapper/0/1
-
-CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
-Hardware name: IBM 3906 M04 704 (LPAR)
-Call Trace:
-([<0000000143c6db7e>] show_stack+0x14e/0x1a8)
- [<0000000145956498>] dump_stack+0x1d0/0x218
- [<000000014429fb4c>] print_address_description+0x64/0x380
- [<000000014429f630>] __kasan_report+0x138/0x168
- [<0000000145960b96>] kobject_uevent_env+0xb36/0xee0
- [<0000000143c7c47c>] arch_update_cpu_topology+0x104/0x108
- [<0000000143df9e22>] sched_init_domains+0x62/0xe8
- [<000000014644c94a>] sched_init_smp+0x3a/0xc0
- [<0000000146433a20>] kernel_init_freeable+0x558/0x958
- [<000000014599002a>] kernel_init+0x22/0x160
- [<00000001459a71d4>] ret_from_fork+0x28/0x30
- [<00000001459a71dc>] kernel_thread_starter+0x0/0x10
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/topology.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/kernel/topology.c
-+++ b/arch/s390/kernel/topology.c
-@@ -291,7 +291,8 @@ int arch_update_cpu_topology(void)
- 		topology_update_polarization_simple();
- 	for_each_online_cpu(cpu) {
- 		dev = get_cpu_device(cpu);
--		kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-+		if (dev)
-+			kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 1cb50bb898b01..15cd9db6d616d 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1123,7 +1123,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
+ 		} else
+ 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
  	}
- 	return rc;
- }
+-	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
++	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
+ 		*p++ = cpu_to_be32(label->lfs);
+ 		*p++ = cpu_to_be32(label->pi);
+ 		*p++ = cpu_to_be32(label->len);
+-- 
+2.20.1
+
 
 
