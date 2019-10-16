@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D9FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0912ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637F5218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772A320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263264;
-	bh=YnmQfpc3QrCOIxozSRo+8pJdrIUK4QFjQ8mrgUYzdME=;
+	s=default; t=1571263266;
+	bh=QBtzNwCVrJp4cN4CQJnMzOVGUpLADOg3yzZ8Zb1kjw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsZq+m2l2CAIXX7X7TIbvB66gYqyLIRpPZ6aPj4z3U9koY5ohiTskSH0HMh3ryRVl
-	 F5EO4SHFg1aGnBxgQhtKF2QhkPLeMlwRZgTqqK7l1mO5tqseXTkFdN5GEOlMlrOHOC
-	 DxIZNAe33G7+s1stHaKdN9rrPugLzDyQvAUte8AI=
+	b=o6ICJPXRFTdj0Lz9jXYELT1L+sMMMOOiUoWCUqmPNI5pODsWAvkmSg7jKcXE3y38P
+	 mTEimAMcwyIb80INIylVMFpcRazHGwRTPRJZcD3Ysn3pQ8SQqwhkti810VFAWBLRTB
+	 YHg2UrvTJoa+IGpZO/uVaR/yxf9WXhtOIBmcDZvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438939AbfJPWBD (ORCPT
+        id S2438949AbfJPWBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54968 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438624AbfJPV7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:47 -0400
+        id S2438642AbfJPV7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:49 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09D6A21D80;
-        Wed, 16 Oct 2019 21:59:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA90A21D80;
+        Wed, 16 Oct 2019 21:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263186;
-        bh=YnmQfpc3QrCOIxozSRo+8pJdrIUK4QFjQ8mrgUYzdME=;
+        s=default; t=1571263188;
+        bh=QBtzNwCVrJp4cN4CQJnMzOVGUpLADOg3yzZ8Zb1kjw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlEmcumHJlOpW3TnJO/NXm2L9UyvpsHZpCDUdDW3LSSMwXd1F+pvQ7dJLk3sKOlOK
-         0HSNGKsIKcILnSQkS1zCti3z7xwtZsfi1UT97U8Yv426raTn8lnGAJYfnHVA4Jjvxw
-         oNhdhrw90LeVfr6MKBdTarFTLmmjmEhNbsEKGqfc=
+        b=GGZwQXdSVg0OaYgWMAt4W6+yLRyyQz++JlM4tA0aLuIFZYwJI48qkBK1ibw/td2lS
+         ANvdodFWQxFAl8uGYPRbOv9UHPzkE0p1fN1HRpBo7jPuTnZjjabrdpFyGvoq6CVZuE
+         YI7TDrsDNkn7ryvp57dBy3NNvqXaMUy0LvdXTD8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.3 073/112] CIFS: Force reval dentry if LOOKUP_REVAL flag is set
-Date:   Wed, 16 Oct 2019 14:51:05 -0700
-Message-Id: <20191016214903.754836231@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Wool <vitalywool@gmail.com>,
+        Markus Linnala <markus.linnala@gmail.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 076/112] mm/z3fold.c: claim page in the beginning of free
+Date:   Wed, 16 Oct 2019 14:51:08 -0700
+Message-Id: <20191016214904.150037983@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -59,53 +65,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Vitaly Wool <vitalywool@gmail.com>
 
-commit 0b3d0ef9840f7be202393ca9116b857f6f793715 upstream.
+commit 5b6807de11445c05b537df8324f5d7ab1c2782f9 upstream.
 
-Mark inode for force revalidation if LOOKUP_REVAL flag is set.
-This tells the client to actually send a QueryInfo request to
-the server to obtain the latest metadata in case a directory
-or a file were changed remotely. Only do that if the client
-doesn't have a lease for the file to avoid unneeded round
-trips to the server.
+There's a really hard to reproduce race in z3fold between z3fold_free()
+and z3fold_reclaim_page().  z3fold_reclaim_page() can claim the page
+after z3fold_free() has checked if the page was claimed and
+z3fold_free() will then schedule this page for compaction which may in
+turn lead to random page faults (since that page would have been
+reclaimed by then).
 
+Fix that by claiming page in the beginning of z3fold_free() and not
+forgetting to clear the claim in the end.
+
+[vitalywool@gmail.com: v2]
+  Link: http://lkml.kernel.org/r/20190928113456.152742cf@bigdell
+Link: http://lkml.kernel.org/r/20190926104844.4f0c6efa1366b8f5741eaba9@gmail.com
+Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+Reported-by: Markus Linnala <markus.linnala@gmail.com>
+Cc: Dan Streetman <ddstreet@ieee.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Markus Linnala <markus.linnala@gmail.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/dir.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ mm/z3fold.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/dir.c
-+++ b/fs/cifs/dir.c
-@@ -738,10 +738,16 @@ cifs_lookup(struct inode *parent_dir_ino
- static int
- cifs_d_revalidate(struct dentry *direntry, unsigned int flags)
- {
-+	struct inode *inode;
-+
- 	if (flags & LOOKUP_RCU)
- 		return -ECHILD;
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -998,9 +998,11 @@ static void z3fold_free(struct z3fold_po
+ 	struct z3fold_header *zhdr;
+ 	struct page *page;
+ 	enum buddy bud;
++	bool page_claimed;
  
- 	if (d_really_is_positive(direntry)) {
-+		inode = d_inode(direntry);
-+		if ((flags & LOOKUP_REVAL) && !CIFS_CACHE_READ(CIFS_I(inode)))
-+			CIFS_I(inode)->time = 0; /* force reval */
-+
- 		if (cifs_revalidate_dentry(direntry))
- 			return 0;
- 		else {
-@@ -752,7 +758,7 @@ cifs_d_revalidate(struct dentry *direntr
- 			 * attributes will have been updated by
- 			 * cifs_revalidate_dentry().
- 			 */
--			if (IS_AUTOMOUNT(d_inode(direntry)) &&
-+			if (IS_AUTOMOUNT(inode) &&
- 			   !(direntry->d_flags & DCACHE_NEED_AUTOMOUNT)) {
- 				spin_lock(&direntry->d_lock);
- 				direntry->d_flags |= DCACHE_NEED_AUTOMOUNT;
+ 	zhdr = handle_to_z3fold_header(handle);
+ 	page = virt_to_page(zhdr);
++	page_claimed = test_and_set_bit(PAGE_CLAIMED, &page->private);
+ 
+ 	if (test_bit(PAGE_HEADLESS, &page->private)) {
+ 		/* if a headless page is under reclaim, just leave.
+@@ -1008,7 +1010,7 @@ static void z3fold_free(struct z3fold_po
+ 		 * has not been set before, we release this page
+ 		 * immediately so we don't care about its value any more.
+ 		 */
+-		if (!test_and_set_bit(PAGE_CLAIMED, &page->private)) {
++		if (!page_claimed) {
+ 			spin_lock(&pool->lock);
+ 			list_del(&page->lru);
+ 			spin_unlock(&pool->lock);
+@@ -1044,13 +1046,15 @@ static void z3fold_free(struct z3fold_po
+ 		atomic64_dec(&pool->pages_nr);
+ 		return;
+ 	}
+-	if (test_bit(PAGE_CLAIMED, &page->private)) {
++	if (page_claimed) {
++		/* the page has not been claimed by us */
+ 		z3fold_page_unlock(zhdr);
+ 		return;
+ 	}
+ 	if (unlikely(PageIsolated(page)) ||
+ 	    test_and_set_bit(NEEDS_COMPACTING, &page->private)) {
+ 		z3fold_page_unlock(zhdr);
++		clear_bit(PAGE_CLAIMED, &page->private);
+ 		return;
+ 	}
+ 	if (zhdr->cpu < 0 || !cpu_online(zhdr->cpu)) {
+@@ -1060,10 +1064,12 @@ static void z3fold_free(struct z3fold_po
+ 		zhdr->cpu = -1;
+ 		kref_get(&zhdr->refcount);
+ 		do_compact_page(zhdr, true);
++		clear_bit(PAGE_CLAIMED, &page->private);
+ 		return;
+ 	}
+ 	kref_get(&zhdr->refcount);
+ 	queue_work_on(zhdr->cpu, pool->compact_wq, &zhdr->work);
++	clear_bit(PAGE_CLAIMED, &page->private);
+ 	z3fold_page_unlock(zhdr);
+ }
+ 
 
 
