@@ -2,40 +2,42 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB87ECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F752ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0082067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121A12067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390320AbfJPAlt (ORCPT
+        id S2390342AbfJPAlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:41:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53353 "EHLO
+        Tue, 15 Oct 2019 20:41:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53357 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388246AbfJPAls (ORCPT
+        with ESMTP id S2390302AbfJPAlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:41:48 -0400
+        Tue, 15 Oct 2019 20:41:49 -0400
 Received: from [213.220.153.21] (helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKXNq-00065g-If; Wed, 16 Oct 2019 00:41:46 +0000
+        id 1iKXNr-00065g-DZ; Wed, 16 Oct 2019 00:41:47 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     christian.brauner@ubuntu.com
 Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
         kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com
-Subject: [PATCH v2 0/3] bpf: switch to new usercopy helpers
-Date:   Wed, 16 Oct 2019 02:41:35 +0200
-Message-Id: <20191016004138.24845-1-christian.brauner@ubuntu.com>
+        songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
+Subject: [PATCH v2 2/3] bpf: use copy_struct_from_user() in bpf_prog_get_info_by_fd()
+Date:   Wed, 16 Oct 2019 02:41:37 +0200
+Message-Id: <20191016004138.24845-3-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191009160907.10981-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20191016004138.24845-1-christian.brauner@ubuntu.com>
 References: <20191009160907.10981-1-christian.brauner@ubuntu.com>
+ <20191016004138.24845-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,48 +45,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
+In v5.4-rc2 we added a new helper (cf. [1]) copy_struct_from_user().
+This helper is intended for all codepaths that copy structs from
+userspace that are versioned by size. bpf_prog_get_info_by_fd() does
+exactly what copy_struct_from_user() is doing.
+Note that copy_struct_from_user() is calling min() already. So
+technically, the min_t() call could go. But the info_len is used further
+below so leave it.
 
-In v5.4-rc2 we added two new helpers check_zeroed_user() and
-copy_struct_from_user() including selftests (cf. [1]). It is a generic
-interface designed to copy a struct from userspace. The helpers will be
-especially useful for structs versioned by size of which we have quite a
-few.
-
-The most obvious benefit is that this helper lets us get rid of
-duplicate code. We've already switched over sched_setattr(), perf_event_open(),
-and clone3(). More importantly it will also help to ensure that users
-implementing versioning-by-size end up with the same core semantics.
-
-This point is especially crucial since we have at least one case where
-versioning-by-size is used but with slighly different semantics:
-sched_setattr(), perf_event_open(), and clone3() all do do similar
-checks to copy_struct_from_user() while rt_sigprocmask(2) always rejects
-differently-sized struct arguments.
-
-This little series switches over bpf codepaths that have hand-rolled
-implementations of these helpers.
-
-Thanks!
-Christian
-
+[1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: bpf@vger.kernel.org
+Acked-by: Aleksa Sarai <cyphar@cyphar.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
 /* v1 */
-Link: https://lore.kernel.org/r/20191009160907.10981-1-christian.brauner@ubuntu.com
+Link: https://lore.kernel.org/r/20191009160907.10981-3-christian.brauner@ubuntu.com
 
 /* v2 */
-- rebase onto bpf-next
+- Alexei Starovoitov <ast@kernel.org>:
+  - remove unneeded initialization
+---
+ kernel/bpf/syscall.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-/* Reference */
-[1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-
-Christian Brauner (3):
-  bpf: use check_zeroed_user() in bpf_check_uarg_tail_zero()
-  bpf: use copy_struct_from_user() in bpf_prog_get_info_by_fd()
-  bpf: use copy_struct_from_user() in bpf() syscall
-
- kernel/bpf/syscall.c | 46 +++++++++++++++++---------------------------
- 1 file changed, 18 insertions(+), 28 deletions(-)
-
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index b289ae747cae..45524089e15d 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2309,20 +2309,17 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
+ 				   union bpf_attr __user *uattr)
+ {
+ 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
+-	struct bpf_prog_info info = {};
++	struct bpf_prog_info info;
+ 	u32 info_len = attr->info.info_len;
+ 	struct bpf_prog_stats stats;
+ 	char __user *uinsns;
+ 	u32 ulen;
+ 	int err;
+ 
+-	err = bpf_check_uarg_tail_zero(uinfo, sizeof(info), info_len);
++	info_len = min_t(u32, sizeof(info), info_len);
++	err = copy_struct_from_user(&info, sizeof(info), uinfo, info_len);
+ 	if (err)
+ 		return err;
+-	info_len = min_t(u32, sizeof(info), info_len);
+-
+-	if (copy_from_user(&info, uinfo, info_len))
+-		return -EFAULT;
+ 
+ 	info.type = prog->type;
+ 	info.id = prog->aux->id;
 -- 
 2.23.0
 
