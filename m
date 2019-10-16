@@ -2,106 +2,116 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28898FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A98FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BDC218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6bOoh9W"
+	by mail.kernel.org (Postfix) with ESMTP id 6A8852064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394003AbfJPOZz (ORCPT
+        id S2394014AbfJPO0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:25:55 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34721 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731887AbfJPOZz (ORCPT
+        Wed, 16 Oct 2019 10:26:06 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:41700 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392463AbfJPO0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:25:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k20so7052187pgi.1;
-        Wed, 16 Oct 2019 07:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ujGILVS8EOVsDFzbe0iajn+DjkCITaKLgBibceQs4Qk=;
-        b=a6bOoh9WX6DTprd6X00EX+6JfgBs7ui/aqTCQjRQtKjuicevk+q6uytkW0NbwJxVil
-         cSBlwFT21oiOer9Khli6iBMoxHsCgyGRBpGjpJk+lxnhnrKW/ZqNrJhL9TEF3OvzcsFR
-         4MQ15Eo/+o+PGv428dqqGP0V5khaisyqzTNF0ePtA5zZcOq4h2o+ArfnRMwqnyVgJgZ9
-         GQKSOxEck+QcA6uHMJtr4lU8JpWTf3MEMjBXLCsmoDLa2SxUtFNM1kvXrDsValCbcDC9
-         siH/D7L3PtTo1yqpzChH0dcb4/Ewf2aS6tyPau+NaSijx8sqvyai1t05WTVlsIi1VrC1
-         nRMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ujGILVS8EOVsDFzbe0iajn+DjkCITaKLgBibceQs4Qk=;
-        b=q/vQbfY5EijazxjCafMWsD3B4qV/ZYQ8NTZMmZj22ETE2i9lxHPPdOWl7LffGrMQ3k
-         4dE9xrENftN6KLowvU4kwb1G3M1vkgdHnCvyqwAgf16HYkbwYWsM9nQOBqgQ9ELOzjNW
-         zBE2jX2enHibj35eHBX6ijZ8487PiVyEE1Ig3kg2d/PKs5kmYvsB4T0ZafN1Jd/82k6M
-         m5sr5H4ipCIEq42afoUDlp4UhbZ9x0xAulrO/JByEhcu9YZr9lmusm3c/0ar93WFtBvB
-         vn1rlRAnqV5N/lftJVbcTOanyIvwE4mYa82WKw9w303j4KrO6bJdys4cKx7jUgdRbd6K
-         sktg==
-X-Gm-Message-State: APjAAAVc/FZ+8cc5kXiav+ylpUlF5wN2V9kYiMJelPi9XsCaDig4wRHp
-        vuqcmN6Wo9JZXesvC6ya+44=
-X-Google-Smtp-Source: APXvYqxIYy2Qv9i2kyVFd/IvVJK02XNDYI0j0LNVdMEsCydz62Z+SlEJeTndXygi/WhaU4LEtTD7PA==
-X-Received: by 2002:a63:3f86:: with SMTP id m128mr910929pga.404.1571235954263;
-        Wed, 16 Oct 2019 07:25:54 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id i1sm30371683pfg.2.2019.10.16.07.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 07:25:53 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] staging: iio: ad9834: add a check for devm_clk_get
-Date:   Wed, 16 Oct 2019 22:25:40 +0800
-Message-Id: <20191016142540.26450-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 16 Oct 2019 10:26:05 -0400
+Received: from ramsan ([84.194.98.4])
+        by baptiste.telenet-ops.be with bizsmtp
+        id EES22100P05gfCL01ES2kr; Wed, 16 Oct 2019 16:26:02 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iKkFW-0003ls-9s; Wed, 16 Oct 2019 16:26:02 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iKkFW-0007MT-88; Wed, 16 Oct 2019 16:26:02 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
+Date:   Wed, 16 Oct 2019 16:26:01 +0200
+Message-Id: <20191016142601.28255-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ad9834_probe misses a check for devm_clk_get and may cause problems.
-Add a check like what ad9832 does to fix it.
+As platform_get_irq() now prints an error when the interrupt does not
+exist, counting interrupts by looping until failure causes the printing
+of scary messages like:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+    sh-pfc e6060000.pin-controller: IRQ index 0 not found
+
+Fix this by using the platform_irq_count() helper instead.
+
+Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/staging/iio/frequency/ad9834.c | 4 ++++
- 1 file changed, 4 insertions(+)
+v2:
+  - Add Reviewed-by, Tested-by.
 
-diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
-index 038d6732c3fd..23026978a5a5 100644
---- a/drivers/staging/iio/frequency/ad9834.c
-+++ b/drivers/staging/iio/frequency/ad9834.c
-@@ -417,6 +417,10 @@ static int ad9834_probe(struct spi_device *spi)
- 	st = iio_priv(indio_dev);
- 	mutex_init(&st->lock);
- 	st->mclk = devm_clk_get(&spi->dev, NULL);
-+	if (IS_ERR(st->mclk)) {
-+		ret = PTR_ERR(st->mclk);
-+		goto error_disable_reg;
-+	}
+Linus: Can you please take this one, as it is a fix for v5.4? Thx!
+---
+ drivers/pinctrl/sh-pfc/core.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+index 1745c0639932c7a7..a5a794cbf997f7a3 100644
+--- a/drivers/pinctrl/sh-pfc/core.c
++++ b/drivers/pinctrl/sh-pfc/core.c
+@@ -29,12 +29,12 @@
+ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+ 				struct platform_device *pdev)
+ {
+-	unsigned int num_windows, num_irqs;
+ 	struct sh_pfc_window *windows;
+ 	unsigned int *irqs = NULL;
++	unsigned int num_windows;
+ 	struct resource *res;
+ 	unsigned int i;
+-	int irq;
++	int num_irqs;
  
- 	ret = clk_prepare_enable(st->mclk);
- 	if (ret) {
+ 	/* Count the MEM and IRQ resources. */
+ 	for (num_windows = 0;; num_windows++) {
+@@ -42,17 +42,13 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+ 		if (!res)
+ 			break;
+ 	}
+-	for (num_irqs = 0;; num_irqs++) {
+-		irq = platform_get_irq(pdev, num_irqs);
+-		if (irq == -EPROBE_DEFER)
+-			return irq;
+-		if (irq < 0)
+-			break;
+-	}
+-
+ 	if (num_windows == 0)
+ 		return -EINVAL;
+ 
++	num_irqs = platform_irq_count(pdev);
++	if (num_irqs < 0)
++		return num_irqs;
++
+ 	/* Allocate memory windows and IRQs arrays. */
+ 	windows = devm_kcalloc(pfc->dev, num_windows, sizeof(*windows),
+ 			       GFP_KERNEL);
 -- 
-2.20.1
+2.17.1
 
