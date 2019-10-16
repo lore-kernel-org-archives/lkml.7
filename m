@@ -2,117 +2,122 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AB0FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C1FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CCE20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66B1207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571240232;
+	bh=kewc2DHCxPax0/As8Dys1vVHnw4VcjP7TAGHyJnCm3U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rfAMyCekSvev1K1qs2HUPAIQdpxJ84tlB2mRc8xNX3I7zL6bx2Mi3dsiNvlFR2I/f
+	 fggmRrr9mCln4i37qO0bGCla/RZI1bB11Gcp9MdeuUrTuSh/tYkx2eNSGLCipKCBWV
+	 Fi6VmBAli6cnE6zfYjO77qLCQci/wrlKpJZt5LO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405084AbfJPPfe (ORCPT
+        id S2405117AbfJPPhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:35:34 -0400
-Received: from mx2a.mailbox.org ([80.241.60.219]:16483 "EHLO mx2a.mailbox.org"
+        Wed, 16 Oct 2019 11:37:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405055AbfJPPfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:35:34 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        id S1726707AbfJPPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:37:11 -0400
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx2a.mailbox.org (Postfix) with ESMTPS id 1ED8AA1149;
-        Wed, 16 Oct 2019 17:35:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id 9R7HIXzq1RpU; Wed, 16 Oct 2019 17:35:28 +0200 (CEST)
-Date:   Thu, 17 Oct 2019 02:35:20 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
- operations
-Message-ID: <20191016153520.zet5mn5xsygig4xc@yavin.dot.cyphar.com>
-References: <20191012010539.6131-1-cyphar@cyphar.com>
- <20191014154136.GF18794@devbig004.ftw2.facebook.com>
- <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
- <20191014163307.GG18794@devbig004.ftw2.facebook.com>
- <20191016083218.ttsaqnxpjh5i5bgv@yavin.dot.cyphar.com>
- <20191016142756.GN18794@devbig004.ftw2.facebook.com>
- <20191016152946.34j5x45ko5auhv3g@yavin.dot.cyphar.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D380320854;
+        Wed, 16 Oct 2019 15:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571240230;
+        bh=kewc2DHCxPax0/As8Dys1vVHnw4VcjP7TAGHyJnCm3U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e/1YPbJN2q6MW1B2PLR7tF/VsizhEwRlx2jWIO+PGFB7nQsA+W3L40aNX+4e4meou
+         wa/+akdLGCSd3lnmxG/a2oDCPp8YqydfEk55ZXTBrL+IvmsriSRm3L+997cCx7LmxW
+         Z2M2v6ABbRZpirXk12MlNjgDzpkMsCRBLE+G0AWI=
+Received: by mail-yb1-f178.google.com with SMTP id z125so7950690ybc.4;
+        Wed, 16 Oct 2019 08:37:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAXDlckBGDKsUMz91BzM7EjuDlnABHKZ2OVLfzoVYopfY1nnBVDV
+        xLnmX7IY+dlY6X6n3Qibly2NDvmfd0nzVoaf6Q==
+X-Google-Smtp-Source: APXvYqyQKovpJMvdc7d8KZIJ6YAr98uicEeI6atpwgB7s7JZpNePYfmdWhWwkMnddX4aoxlCOjiIRZ54XNh3gZE8uQE=
+X-Received: by 2002:a25:7543:: with SMTP id q64mr27841489ybc.414.1571240229011;
+ Wed, 16 Oct 2019 08:37:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gae43k7kt3kmufic"
-Content-Disposition: inline
-In-Reply-To: <20191016152946.34j5x45ko5auhv3g@yavin.dot.cyphar.com>
+References: <20191009175628.20570-1-bparrot@ti.com> <20191009175628.20570-2-bparrot@ti.com>
+ <20191015222947.GA13388@bogus> <20191016132239.ufptwl44ktmhvylo@ti.com>
+In-Reply-To: <20191016132239.ufptwl44ktmhvylo@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 16 Oct 2019 10:36:54 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKAGE=CytS89ET+r4+mSGfYPR5FMRUo2_jjVTZgW9o=Nw@mail.gmail.com>
+Message-ID: <CAL_JsqKAGE=CytS89ET+r4+mSGfYPR5FMRUo2_jjVTZgW9o=Nw@mail.gmail.com>
+Subject: Re: [Patch 1/3] dt-bindings: media: ti-vpe: Document VPE driver
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 8:20 AM Benoit Parrot <bparrot@ti.com> wrote:
+>
+> Rob Herring <robh@kernel.org> wrote on Tue [2019-Oct-15 17:29:47 -0500]:
+> > On Wed, Oct 09, 2019 at 12:56:26PM -0500, Benoit Parrot wrote:
+> > > Device Tree bindings for the Video Processing Engine (VPE) driver.
+> > >
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
+> > >  MAINTAINERS                                   |  1 +
+> > >  2 files changed, 49 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
+> >
+> > Please convert to DT schema format.
+>
+> I can do that.
+> Before posting/merging a .yaml, are we supposed to be able to pass these?
+> # make dt_binding_check
+> # make dtbs_check
 
---gae43k7kt3kmufic
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Only dt_binding_check needs to be warning free. It is good to test
+your schema with dtbs_check and make sure any warnings seem valid.
 
-On 2019-10-17, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-10-16, Tejun Heo <tj@kernel.org> wrote:
-> > Hello, Aleksa.
-> >=20
-> > On Wed, Oct 16, 2019 at 07:32:19PM +1100, Aleksa Sarai wrote:
-> > > Maybe I'm misunderstanding Documentation/atomic_t.txt, but it looks to
-> > > me like it's explicitly saying that I shouldn't use atomic64_t if I'm
-> > > just using it for fetching and assignment.
-> >=20
-> > Hah, where is it saying that?
->=20
-> Isn't that what this says:
->=20
-> > Therefore, if you find yourself only using the Non-RMW operations of
-> > atomic_t, you do not in fact need atomic_t at all and are doing it
-> > wrong.
->=20
-> Doesn't using just atomic64_read() and atomic64_set() fall under "only
-> using the non-RMW operations of atomic_t"? But yes, I agree that any
-> locking is overkill.
->=20
-> > > As for 64-bit on 32-bit machines -- that is a separate issue, but from
-> > > [1] it seems to me like there are more problems that *_ONCE() fixes t=
-han
-> > > just split reads and writes.
-> >=20
-> > Your explanations are too wishy washy.  If you wanna fix it, please do
-> > it correctly.  R/W ONCE isn't the right solution here.
->=20
-> Sure, I will switch it to use atomic64_read() and atomic64_set() instead
-> if that's what you'd prefer. Though I will mention that on quite a few
-> architectures atomic64_read() is defined as:
->=20
->   #define atomic64_read(v)        READ_ONCE((v)->counter)
+> Because currently with 5.4-rc3 these fails.
 
-Though I guess that's because on those architectures it turns out that
-READ_ONCE is properly atomic?
+Yeah, still waiting on regulator and media fixes. :( linux-next is fixed.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+> Is there a way to run these "test command" target a specific .yaml and not
+> the whole set?
 
---gae43k7kt3kmufic
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes, it's documented in writing-schema.rst. Use DT_SCHEMA_FILES  to
+test just your schema file.
 
------BEGIN PGP SIGNATURE-----
+[...]
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXac4XgAKCRCdlLljIbnQ
-EqfmAQCvvl9RoS0Za1ejIafzulKxMufJWahNQcrCVULRur+MvwEA+lhgaq8rJ/Qb
-48BFtp02gSX3aYFTdGOSILPOV6Op+Ak=
-=c8Qz
------END PGP SIGNATURE-----
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 8598f49fa2c8..63dcda51f8ae 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -16299,6 +16299,7 @@ W:  http://linuxtv.org/
+> > >  Q: http://patchwork.linuxtv.org/project/linux-media/list/
+> > >  S: Maintained
+> > >  F: drivers/media/platform/ti-vpe/
+> > > +F: Documentation/devicetree/bindings/media/ti-vpe.txt
+>
+> Now with the dt_schemas, I noticed that the maintainer's name is part of
+> the yaml file. Do we still need to add this to the MAINTAINERS file as
+> well?
 
---gae43k7kt3kmufic--
+Within the schema is really preparation for having schema outside of
+the kernel tree and because lots of bindings don't have a MAINTAINERS
+entry. So yes, you can still have both.
+
+Rob
