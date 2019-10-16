@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C51ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0600FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05556207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B947F207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264224;
-	bh=UkZPZ2JHlM6NKJARZYfHgZ9GaZEYDT2KLd81t2jjAu0=;
+	s=default; t=1571264228;
+	bh=oQqt3M4StlXw6mUeaHdr3WrAtVNIj8RQ6R1srCQRt48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvS4DdsOnz5suCR4VJBWIqbVdNseES42/K+9IpTx8hj6uuF1qN2oaQYxFtWVLlGwO
-	 vHXVPW6Ab2ejMZ6XHHcNPjBb8G39yZtc4vzW32YYuJpB875JfTmvvvKUtOGuXkI6nD
-	 HYgpyEV1jWHKqVlMHzy5Z83JtZMSpKxwjIQy3sms=
+	b=SmCnn0gfDFHBXQ8a4jw5N4121to4RQqgmikZdnHyiYcXmQSHleYg/wED+15khI5io
+	 33Lp7adlusNupG/9GCfF6zDkdU1CQyY7fgUGvYcwEe2ahNSL0jRB2MjO1D+NmIzoe4
+	 +NbJZC4Nxo6gP6QEmMXToB7lrUDFBYQ2iO9p6zAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfJPWRD (ORCPT
+        id S2388011AbfJPWRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395125AbfJPVy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:58 -0400
+        id S2390245AbfJPVy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:57 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0834321D7F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 363D521D7F;
         Wed, 16 Oct 2019 21:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262898;
-        bh=UkZPZ2JHlM6NKJARZYfHgZ9GaZEYDT2KLd81t2jjAu0=;
+        s=default; t=1571262897;
+        bh=oQqt3M4StlXw6mUeaHdr3WrAtVNIj8RQ6R1srCQRt48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MWxXN6nyG/I/jc/53LvwvieXT8pLVcWRd0oouUDONBQKqKe6VEpB4sVjdhEsJ1zTc
-         MFhHbQPVKhPwQBHaLS+8dUydx+CryunAqzdoLy5Qnx7GJCGfJdhKI/+n1Wo+JJGhxc
-         3HYbpAFgQUMKX9eiey2lZreMdHBQD6Wa3fGn3XFw=
+        b=kid4bUIrsiq2VFxzfI6laVNII0gJIg0hLSI2vNE8RdKvUBcVbjFE4Y7GuAiCaPJ5d
+         5cxmfvbsWGssjUH91mdd2SejeSw8h+/GT+az00x8p7ibZWf9+lnsK4WRk9R/uLa2zH
+         y+rK+O7q7v0jAbmQJERa8Kd4I+uz1aOrH/85/W4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 05/92] KVM: nVMX: handle page fault in vmread fix
-Date:   Wed, 16 Oct 2019 14:49:38 -0700
-Message-Id: <20191016214803.873050331@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 14/92] cfg80211: initialize on-stack chandefs
+Date:   Wed, 16 Oct 2019 14:49:47 -0700
+Message-Id: <20191016214811.372948112@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,57 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Wang <jinpu.wang@cloud.ionos.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-During backport f7eea636c3d5 ("KVM: nVMX: handle page fault in vmread"),
-there was a mistake the exception reference should be passed to function
-kvm_write_guest_virt_system, instead of NULL, other wise, we will get
-NULL pointer deref, eg
+commit f43e5210c739fe76a4b0ed851559d6902f20ceb1 upstream.
 
-kvm-unit-test triggered a NULL pointer deref below:
-[  948.518437] kvm [24114]: vcpu0, guest rIP: 0x407ef9 kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
-[  949.106464] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-[  949.106707] PGD 0 P4D 0
-[  949.106872] Oops: 0002 [#1] SMP
-[  949.107038] CPU: 2 PID: 24126 Comm: qemu-2.7 Not tainted 4.19.77-pserver #4.19.77-1+feature+daily+update+20191005.1625+a4168bb~deb9
-[  949.107283] Hardware name: Dell Inc. Precision Tower 3620/09WH54, BIOS 2.7.3 01/31/2018
-[  949.107549] RIP: 0010:kvm_write_guest_virt_system+0x12/0x40 [kvm]
-[  949.107719] Code: c0 5d 41 5c 41 5d 41 5e 83 f8 03 41 0f 94 c0 41 c1 e0 02 e9 b0 ed ff ff 0f 1f 44 00 00 48 89 f0 c6 87 59 56 00 00 01 48 89 d6 <49> c7 00 00 00 00 00 89 ca 49 c7 40 08 00 00 00 00 49 c7 40 10 00
-[  949.108044] RSP: 0018:ffffb31b0a953cb0 EFLAGS: 00010202
-[  949.108216] RAX: 000000000046b4d8 RBX: ffff9e9f415b0000 RCX: 0000000000000008
-[  949.108389] RDX: ffffb31b0a953cc0 RSI: ffffb31b0a953cc0 RDI: ffff9e9f415b0000
-[  949.108562] RBP: 00000000d2e14928 R08: 0000000000000000 R09: 0000000000000000
-[  949.108733] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffffffffc8
-[  949.108907] R13: 0000000000000002 R14: ffff9e9f4f26f2e8 R15: 0000000000000000
-[  949.109079] FS:  00007eff8694c700(0000) GS:ffff9e9f51a80000(0000) knlGS:0000000031415928
-[  949.109318] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  949.109495] CR2: 0000000000000000 CR3: 00000003be53b002 CR4: 00000000003626e0
-[  949.109671] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  949.109845] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  949.110017] Call Trace:
-[  949.110186]  handle_vmread+0x22b/0x2f0 [kvm_intel]
-[  949.110356]  ? vmexit_fill_RSB+0xc/0x30 [kvm_intel]
-[  949.110549]  kvm_arch_vcpu_ioctl_run+0xa98/0x1b30 [kvm]
-[  949.110725]  ? kvm_vcpu_ioctl+0x388/0x5d0 [kvm]
-[  949.110901]  kvm_vcpu_ioctl+0x388/0x5d0 [kvm]
-[  949.111072]  do_vfs_ioctl+0xa2/0x620
+In a few places we don't properly initialize on-stack chandefs,
+resulting in EDMG data to be non-zero, which broke things.
 
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Additionally, in a few places we rely on the driver to init the
+data completely, but perhaps we shouldn't as non-EDMG drivers
+may not initialize the EDMG data, also initialize it there.
+
+Cc: stable@vger.kernel.org
+Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/1569239475-I2dcce394ecf873376c386a78f31c2ec8b538fa25@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/nl80211.c     |    4 +++-
+ net/wireless/reg.c         |    2 +-
+ net/wireless/wext-compat.c |    2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7668,7 +7668,7 @@ static int handle_vmread(struct kvm_vcpu
- 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
- 		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
- 						(is_long_mode(vcpu) ? 8 : 4),
--						NULL))
-+						&e))
- 			kvm_inject_page_fault(vcpu, &e);
- 	}
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -2069,6 +2069,8 @@ static int nl80211_parse_chandef(struct
  
+ 	control_freq = nla_get_u32(info->attrs[NL80211_ATTR_WIPHY_FREQ]);
+ 
++	memset(chandef, 0, sizeof(*chandef));
++
+ 	chandef->chan = ieee80211_get_channel(&rdev->wiphy, control_freq);
+ 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
+ 	chandef->center_freq1 = control_freq;
+@@ -2538,7 +2540,7 @@ static int nl80211_send_iface(struct sk_
+ 
+ 	if (rdev->ops->get_channel) {
+ 		int ret;
+-		struct cfg80211_chan_def chandef;
++		struct cfg80211_chan_def chandef = {};
+ 
+ 		ret = rdev_get_channel(rdev, wdev, &chandef);
+ 		if (ret == 0) {
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1564,7 +1564,7 @@ static void reg_call_notifier(struct wip
+ 
+ static bool reg_wdev_chan_valid(struct wiphy *wiphy, struct wireless_dev *wdev)
+ {
+-	struct cfg80211_chan_def chandef;
++	struct cfg80211_chan_def chandef = {};
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
+ 	enum nl80211_iftype iftype;
+ 
+--- a/net/wireless/wext-compat.c
++++ b/net/wireless/wext-compat.c
+@@ -799,7 +799,7 @@ static int cfg80211_wext_giwfreq(struct
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
+-	struct cfg80211_chan_def chandef;
++	struct cfg80211_chan_def chandef = {};
+ 	int ret;
+ 
+ 	switch (wdev->iftype) {
 
 
