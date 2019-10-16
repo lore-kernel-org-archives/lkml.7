@@ -2,167 +2,153 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F913FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F97FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C8B20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FAF0218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXaaodg3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1iBpF2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393811AbfJPQTO (ORCPT
+        id S2394169AbfJPQT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:19:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34890 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfJPQTN (ORCPT
+        Wed, 16 Oct 2019 12:19:29 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37010 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfJPQT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:19:13 -0400
-Received: by mail-io1-f66.google.com with SMTP id q10so54685545iop.2;
-        Wed, 16 Oct 2019 09:19:13 -0700 (PDT)
+        Wed, 16 Oct 2019 12:19:28 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f22so3437285wmc.2;
+        Wed, 16 Oct 2019 09:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h32JWLot+gceae0jQn6+dpZ85M9IjTbgfAQ5j4grnTA=;
-        b=UXaaodg3AFzS4aSYdIEd36mhiJEN7vilHRmzWu5tZGMnYleV6eUDOKw4ScHHm1iIo9
-         YhV+fJpyY2lM/ApsjxfbQ41c7Bh9SxHYRzYZybNuFE9tB4D2sCUT+OXc65qbawa6rr/n
-         UV8HHfghrJBRDgHhKSJ3A61llDuxCoCn9IgMl7xXWVb8AolKDi2B4N8vtlQWM6vmdSWO
-         aO7204bSLfoLbtIynHam5CXwCUJyWj0od89S5T3cW5nCJXMS4PrhQWg0FWc4mXmcubY2
-         mjW03XFhU3DSsP1EykwtCvouoektuZJhxOghw3m91RHSQ5XqnKKSGrj9B456LWjHdq5c
-         Zdww==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DePY+vd4CjRqNFClvgu0HEDLinybeEc/aYWJ2h0z7BU=;
+        b=E1iBpF2AGWUiFRx3XaIfiOP0Gt8lL91/ccFuACx91vHthjRam+9ld0bu/ojzEkqtgB
+         YqteocE9aoljJs/8AsW90LoWzAUGPlJ2pLBBG9QGer1+qmWjjaubAfx2qHUx+xeBI4ni
+         vW4YS5M/XA21+hrlJAVp4caPOuJe1B9m/T4aC2UNLW1mTsDo8Pp+ICVomxoCeCIVlIHk
+         MZzLsQsQr1ON5NGgaJZPBiTY87sMBvCt3TV7adw//O4wM8wkob+yGvGhehFZ163adqcG
+         JAryEidJaWF33Ye6mqvBlZFaPaJkakMI77atgkDo/ATylRLBdDKKv81aTOye0IO2i3Wl
+         qk4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h32JWLot+gceae0jQn6+dpZ85M9IjTbgfAQ5j4grnTA=;
-        b=ZxZHHMW7OZpKHw4V/0SxIsPRIehy9RkD+jHaYPnYmJuD/PChkj5Fsnk0OnIPP9tRVQ
-         H1o9PtjVVye7Z59Wty+IASEptM0LXbaCIO93PhZrOL4kJ/CEzxKzdWKdsS9aAkm6vowS
-         lI56/WqXuCsO4lKrlG8RcKoOOZVfRO4MrUXI+ru1Dbvdhu7snqBhhsKixQGk51hHlZlI
-         2/sICrAFbqvkWz17wVhO+MnpKKP9zJECUjb3Ew+ukm4yiP5CHuKWsz7aY9APKh4w0BNW
-         fcCEENdVPEdgjihB5mzRPb5UgwIOMoIXIzJCwuXqYhsNG4qllUnqBmZujwAgWHG0GmNc
-         qRxQ==
-X-Gm-Message-State: APjAAAU1mMg0yynMQd9OSz56Q1RhCy1fEQVwjk1sw/nDUekLnXHDhm+E
-        owTWldsdcuL8dlNI1ovYn7svnPf824bj8pOYdwI=
-X-Google-Smtp-Source: APXvYqyhl5iUSYWpUQKJhr3nSoqeJuYCD1HiKNf1oQRQxqz8oX8fx+54lB4kBMH1RO7fz+6Vb8PFFolkd/cH6Qoz2Ps=
-X-Received: by 2002:a05:6638:632:: with SMTP id h18mr31488191jar.55.1571242752159;
- Wed, 16 Oct 2019 09:19:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DePY+vd4CjRqNFClvgu0HEDLinybeEc/aYWJ2h0z7BU=;
+        b=lBDU3kK84Sm/CuP7W9hvgvQbNE4TKRhPTU3xvRQ9ZFHbF1qFewriAcc1mp757KcQNd
+         +SwpbjmoGux0dsRrS9fc+OFc+VOpAAcBzOWkoW3dgk9jPxv4MhHBZvm1vloyEB7qo1xa
+         JdDNrUOAWvUOe9ZSL3gpvXvm+5jH808gtnxBDGieBRYJrtMm8pmkyT6TFptCKD4lMs9R
+         cSVsfS7U8J3xySuc8+bBQDti0bbx4LZDXUe2qR8blQbC/QrCCwIHqWAptyffQzxVh9tG
+         ycsd77AdvJu2LLVQUax358Na6+BH5koua+MqCdxfgEE5iaZv9ruUAjZM97lFtNeSbw2f
+         erCg==
+X-Gm-Message-State: APjAAAU9R+PeLTKASizFGVnGVzb4H3DFUQ77s9tMnKiyecibNlkdrd/7
+        lZ1FvDLfzzYEmgkNSl/jmmI=
+X-Google-Smtp-Source: APXvYqzZfR0uIAdhsAhB1DocvPRZKquR4DWTYHM+2m9sDni/Be1CRMbNuYHuyf9JeRQcV75hbzbVNw==
+X-Received: by 2002:a1c:9e07:: with SMTP id h7mr4246374wme.96.1571242764842;
+        Wed, 16 Oct 2019 09:19:24 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id r13sm38495943wrn.0.2019.10.16.09.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 09:19:22 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 18:19:20 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 1/2] PCI: tegra: Fix CLKREQ dependency programming
+Message-ID: <20191016161920.GA2526111@ulmo>
+References: <20191005164212.3646-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20191002114626.12407-1-aford173@gmail.com> <20191002203149.g22igmfndbve7m3n@earth.universe>
-In-Reply-To: <20191002203149.g22igmfndbve7m3n@earth.universe>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 16 Oct 2019 11:19:00 -0500
-Message-ID: <CAHCN7xK2MFJbZkjaboDnfHJa4SgGMc7CL3+ZUL4UBCFV00W9+g@mail.gmail.com>
-Subject: Re: [PATCH] Revert "Bluetooth: hci_ll: set operational frequency earlier"
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Content-Disposition: inline
+In-Reply-To: <20191005164212.3646-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 3:31 PM Sebastian Reichel <sre@kernel.org> wrote:
->
-> Hi,
->
-> On Wed, Oct 02, 2019 at 06:46:26AM -0500, Adam Ford wrote:
-> > As nice as it would be to update firmware faster, that patch broke
-> > at least two different boards, an OMAP4+WL1285 based Motorola Droid
-> > 4, as reported by Sebasian Reichel and the Logic PD i.MX6Q +
-> > WL1837MOD.
-> >
-> > This reverts commit a2e02f38eff84f199c8e32359eb213f81f270047.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
->
-> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->
-> This should be backported stable
 
-Is there any chance of this getting picked up for the 5.4 kernel?
-It's been a couple weeks, and I haven't seen any responses beyond
-Sebastian's Ack and request for backport.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-adam
+On Sat, Oct 05, 2019 at 10:12:11PM +0530, Vidya Sagar wrote:
+> Corrects the programming to provide REFCLK to the downstream device
+> when there is no CLKREQ sideband signal routing present from root port
+> to the endpont.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
+troller/dwc/pcie-tegra194.c
+> index f89f5acee72d..cbe95f0ea0ca 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -40,8 +40,6 @@
+>  #define APPL_PINMUX_CLKREQ_OVERRIDE		BIT(3)
+>  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN	BIT(4)
+>  #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE	BIT(5)
+> -#define APPL_PINMUX_CLKREQ_OUT_OVRD_EN		BIT(9)
+> -#define APPL_PINMUX_CLKREQ_OUT_OVRD		BIT(10)
+> =20
+>  #define APPL_CTRL				0x4
+>  #define APPL_CTRL_SYS_PRE_DET_STATE		BIT(6)
+> @@ -1193,8 +1191,8 @@ static int tegra_pcie_config_controller(struct tegr=
+a_pcie_dw *pcie,
+> =20
+>  	if (!pcie->supports_clkreq) {
+>  		val =3D appl_readl(pcie, APPL_PINMUX);
+> -		val |=3D APPL_PINMUX_CLKREQ_OUT_OVRD_EN;
+> -		val |=3D APPL_PINMUX_CLKREQ_OUT_OVRD;
+> +		val |=3D APPL_PINMUX_CLKREQ_OVERRIDE_EN;
+> +		val &=3D ~APPL_PINMUX_CLKREQ_OVERRIDE;
+>  		appl_writel(pcie, val, APPL_PINMUX);
+>  	}
 
->
-> -- Sebastian
->
-> > diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
-> > index 285706618f8a..d9a4c6c691e0 100644
-> > --- a/drivers/bluetooth/hci_ll.c
-> > +++ b/drivers/bluetooth/hci_ll.c
-> > @@ -621,13 +621,6 @@ static int ll_setup(struct hci_uart *hu)
-> >
-> >       serdev_device_set_flow_control(serdev, true);
-> >
-> > -     if (hu->oper_speed)
-> > -             speed = hu->oper_speed;
-> > -     else if (hu->proto->oper_speed)
-> > -             speed = hu->proto->oper_speed;
-> > -     else
-> > -             speed = 0;
-> > -
-> >       do {
-> >               /* Reset the Bluetooth device */
-> >               gpiod_set_value_cansleep(lldev->enable_gpio, 0);
-> > @@ -639,20 +632,6 @@ static int ll_setup(struct hci_uart *hu)
-> >                       return err;
-> >               }
-> >
-> > -             if (speed) {
-> > -                     __le32 speed_le = cpu_to_le32(speed);
-> > -                     struct sk_buff *skb;
-> > -
-> > -                     skb = __hci_cmd_sync(hu->hdev,
-> > -                                          HCI_VS_UPDATE_UART_HCI_BAUDRATE,
-> > -                                          sizeof(speed_le), &speed_le,
-> > -                                          HCI_INIT_TIMEOUT);
-> > -                     if (!IS_ERR(skb)) {
-> > -                             kfree_skb(skb);
-> > -                             serdev_device_set_baudrate(serdev, speed);
-> > -                     }
-> > -             }
-> > -
-> >               err = download_firmware(lldev);
-> >               if (!err)
-> >                       break;
-> > @@ -677,7 +656,25 @@ static int ll_setup(struct hci_uart *hu)
-> >       }
-> >
-> >       /* Operational speed if any */
-> > +     if (hu->oper_speed)
-> > +             speed = hu->oper_speed;
-> > +     else if (hu->proto->oper_speed)
-> > +             speed = hu->proto->oper_speed;
-> > +     else
-> > +             speed = 0;
-> > +
-> > +     if (speed) {
-> > +             __le32 speed_le = cpu_to_le32(speed);
-> > +             struct sk_buff *skb;
-> >
-> > +             skb = __hci_cmd_sync(hu->hdev, HCI_VS_UPDATE_UART_HCI_BAUDRATE,
-> > +                                  sizeof(speed_le), &speed_le,
-> > +                                  HCI_INIT_TIMEOUT);
-> > +             if (!IS_ERR(skb)) {
-> > +                     kfree_skb(skb);
-> > +                     serdev_device_set_baudrate(serdev, speed);
-> > +             }
-> > +     }
-> >
-> >       return 0;
-> >  }
-> > --
-> > 2.17.1
-> >
+If we do support CLKREQ, do we have to explicitly set the OVERRIDE bit?
+Or clear the OVERRIDE_EN bit? Is it always guaranteed that the defaults
+(OVERRIDE_EN =3D 0) is applied at this point?
+
+That's an issue that's orthogonal to this patch, though, so for this
+one:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2nQwMACgkQ3SOs138+
+s6E8BQ/9G0VANNqYdS++3CnPnN8WpRzZ5X80eDfGsloeyXEpgMYt6+9yOAtm0JTO
+3LKUqhWTtoxqnN9FqF6rTVhrfI+m7Wm2clBufTkX9OfDuRkFN4OD9bXBvWcNm43T
+esUpA3PPPPPcjN+b2vGG7iSc95ZkbJdf6+9RpehqEe308SFcftIwHgMww4AFVVv8
+3zATGvVSqU9oOK8J5TTVvKjlJ6JatSniwIUWj6GM8JdKduvD3qcua5BHOmRqgYJh
+J+OApeTRDjRdeSRyPQuiTN8ByBp01Z228OBGoRsdTqnypLq5lNV5WGT4P9bywFVV
+4+D99VAgL1qtSNlaJqxLUBiNjTDIGrkK6Z/pc1sgUVQdotLPjD47Vfh8URTskzz4
+u2k2IRuowNPRpKV/7zto23j7PS10tOKCfTi63/+RVj+rahp4ACGAJy1Mn9dU3Zai
+3zorkVVE02mUOsj5VKB9JQIetrqoxt+LLf+cjOZDfr8H+ehtDWIsb9b4QWFXlm5Q
+4xgpPD9Uuw6pSfEd+qCT7VkudCwqYFsvyGjHVSfaL0/nHadHy+8cLGDb0tWBXUTY
+8pMI8klIWZ0OUn2j/KPTj+x+dWalfEmS/5Ez/fM8IZpxOzQSHgd1VJAwmZTuChUR
+vJhRao5glT/alH6W+G/yhGIKVpWDL1ZTeF35/ibVHqKOxi1JxV0=
+=schF
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
