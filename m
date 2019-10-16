@@ -2,88 +2,122 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F12FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AAAFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4702168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDA4218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393171AbfJPOun (ORCPT
+        id S2393314AbfJPOut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:50:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:28125 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730251AbfJPOum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:50:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A66E89F302;
-        Wed, 16 Oct 2019 14:50:42 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A5760127;
-        Wed, 16 Oct 2019 14:50:39 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 15:50:38 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] vsock/virtio: remove unused 'work' field from 'struct
- virtio_vsock_pkt'
-Message-ID: <20191016145038.GH5487@stefanha-x1.localdomain>
-References: <20191015150051.104631-1-sgarzare@redhat.com>
+        Wed, 16 Oct 2019 10:50:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50475 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388751AbfJPOus (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:50:48 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iKkdJ-00073D-B5; Wed, 16 Oct 2019 16:50:37 +0200
+Date:   Wed, 16 Oct 2019 16:50:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+In-Reply-To: <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
+Message-ID: <alpine.DEB.2.21.1910161646160.2046@nanos.tec.linutronix.de>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de> <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de> <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com> <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EemXnrF2ob+xzFeB"
-Content-Disposition: inline
-In-Reply-To: <20191015150051.104631-1-sgarzare@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 14:50:42 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 16 Oct 2019, Xiaoyao Li wrote:
+> On 10/16/2019 7:58 PM, Paolo Bonzini wrote:
+> > > With your proposal you render #AC useless even on hosts which have SMT
+> > > disabled, which is just wrong. There are enough good reasons to disable
+> > > SMT.
+> > 
+> > My lazy "solution" only applies to SMT enabled.  When SMT is either not
+> > supported, or disabled as in "nosmt=force", we can virtualize it like
+> > the posted patches have done so far.
+> > 
+> 
+> Do we really need to divide it into two cases of SMT enabled and SMT disabled?
 
---EemXnrF2ob+xzFeB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes. See the matrix I just sent.
 
-On Tue, Oct 15, 2019 at 05:00:51PM +0200, Stefano Garzarella wrote:
-> The 'work' field was introduced with commit 06a8fc78367d0
-> ("VSOCK: Introduce virtio_vsock_common.ko")
-> but it is never used in the code, so we can remove it to save
-> memory allocated in the per-packet 'struct virtio_vsock_pkt'
->=20
-> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  include/linux/virtio_vsock.h | 1 -
->  1 file changed, 1 deletion(-)
+> > > I agree that with SMT enabled the situation is truly bad, but we surely
+> > > can
+> > > be smarter than just disabling it globally unconditionally and forever.
+> > > 
+> > > Plus we want a knob which treats guests triggering #AC in the same way as
+> > > we treat user space, i.e. kill them with SIGBUS.
+> > 
+> > Yes, that's a valid alternative.  But if SMT is possible, I think the
+> > only sane possibilities are global disable and SIGBUS.  SIGBUS (or
+> > better, a new KVM_RUN exit code) can be acceptable for debugging guests too.
+> 
+> If SIGBUS, why need to globally disable?
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+See the matrix I just sent.
 
---EemXnrF2ob+xzFeB
-Content-Type: application/pgp-signature; name="signature.asc"
+> When there is an #AC due to split-lock in guest, KVM only has below two
+> choices:
+> 1) inject back into guest.
+>    - If kvm advertise this feature to guest, and guest kernel is latest, and
+> guest kernel must enable it too. It's the happy case that guest can handler it
+> on its own purpose.
+>    - Any other cases, guest get an unexpected #AC and crash.
 
------BEGIN PGP SIGNATURE-----
+That's just wrong for obvious reasons.
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2nLj4ACgkQnKSrs4Gr
-c8hxgQf/fJM59TTkQU6f/aLvKMLRivTzsa1Yz/4hy25NeYI++lHojSBwzdtd1BxY
-PF945mWrEnCumX+FOqHdpwX6oRU4bnJ0pc3kzHPrxnLYoyHT1NYNPnEHnaZERFfP
-7OdE3RMXooLx+JM7MrIn8Fh/ElR2Bi4JhUw+zOUMEO96aY+HIJ7cAPsDG3QTHinj
-TL4WUjSRZEqwfZKvJ0TiydqJR/RKjpNEi1bYrTV9TzW84/5AmWternJ3sS76dH3w
-2Qb9yLIBpDSbOnohYQQunrl8VuYdeCw2w0NZc9jsbslAgs6yc5EIE/6PoX//fwOn
-Tf1ER5hbSetx0Lk+7Jaw3eVDH5r6Uw==
-=GpdO
------END PGP SIGNATURE-----
+> 2) report to userspace (I think the same like a SIGBUS)
 
---EemXnrF2ob+xzFeB--
+No. What guarantees that userspace qemu handles the SIGBUS sanely?
+
+> So for simplicity, we can do what Paolo suggested that don't advertise this
+> feature and report #AC to userspace when an #AC due to split-lock in guest
+> *but* we never disable the host's split-lock detection due to guest's
+> split-lock.
+
+No, you can't.
+
+Guess what happens when you just boot some existing guest on a #AC enabled
+host without having updated qemu to handle the exit code/SIGBUS.
+
+It simply will crash and burn in nonsensical ways. Same as reinjecting it
+into the guest and letting it crash.
+
+Thanks,
+
+	tglx
+
+
