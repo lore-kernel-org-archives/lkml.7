@@ -2,179 +2,99 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FBFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94818FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BE8205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7779220854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393173AbfJPMnR (ORCPT
+        id S2393195AbfJPMnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:43:17 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:32815 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726985AbfJPMnR (ORCPT
+        Wed, 16 Oct 2019 08:43:24 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57793 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfJPMnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:43:17 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id KidyiHbzfPduvKie2ir0H9; Wed, 16 Oct 2019 14:43:14 +0200
-Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191014141427.30708-1-ribalda@kernel.org>
- <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
- <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
- <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
- <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <77204a05-34a5-f6f1-460f-bddaa8f2bb5c@xs4all.nl>
-Date:   Wed, 16 Oct 2019 14:43:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 08:43:23 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 1520C3C057C;
+        Wed, 16 Oct 2019 14:43:21 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Mna5zdhg1cQk; Wed, 16 Oct 2019 14:43:15 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 76CDF3C003F;
+        Wed, 16 Oct 2019 14:43:15 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 16 Oct
+ 2019 14:43:15 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Junya Monden <jmonden@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH] ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
+Date:   Wed, 16 Oct 2019 14:42:55 +0200
+Message-ID: <20191016124255.7442-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfMTdI58S21VqBJGlzRA5QkvX90Dxrir53Rm9prnYFCX84at+LMg5VsJnHeRctj13ky0AJPqdjYHdLjY4iEzRqvE10l/3JpcHiLi7EeeWOqaM+QAt4sxj
- DxF410CIkFCBC8X3hdltE/ESw+4556LbpwybGeLSBmrWnNO/zu5j/sWEdwEkyagrL4A47vVItOfLXp204eDGnZVA+kEgTPPmK87Jt5GChmgqfJ9U/dioBjFv
- TJBlt2v6RkxUN19rJ4A7TXB5iNSIR6VjhqKbC7VeTbW1KBIqIkyQiGOZWZEzY4Gy
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 2:39 PM, Ricardo Ribalda Delgado wrote:
-> Hi Hans:
-> 
-> On Wed, Oct 16, 2019 at 2:32 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->>
->> On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
->>> Hi Hans
->>>
->>> Not that awkward, the user has to use the brand new
->>> v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
->>> change.
->>
->> Well, a struct v4l2_ctrl_config is typically a static const, so you can't use
->> v4l2_ctrl_ptr_create().
->>
->> Hmm, perhaps it is as easy as:
->>
->> static const struct v4l2_area def_area = {
->>         ...
->> };
->>
->> static const struct v4l2_ctrl_config ctrl = {
->>         ...
->>
->>         .p_def.p_area = &def_area,
->>         ...
->> };
->>
->> Can you do a quick compile check that I am not overlooking anything?
->>
->> If this works, then I'll take this patch.
-> 
-> Testing with gcc 9.2.1
-> 
-> This works fine, no warning/error:
-> 
-> static struct v4l2_area unit_size = {
-> .width = UNIT_SIZE,
-> .height = UNIT_SIZE,
-> };
-> static struct v4l2_ctrl_config area_ctrl = {
-> .type = V4L2_CTRL_TYPE_AREA,
-> .flags = V4L2_CTRL_FLAG_READ_ONLY,
-> .p_def.p_area = &unit_size,
-> };
-> 
-> but if unit_size is set as CONST:
-> static const struct v4l2_area
-> 
-> Then:
-> drivers/qtec/qtec_sony.c: In function ‘qtec_sony_probe’:
-> drivers/qtec/qtec_sony.c:3151:19: warning: initialization discards
-> ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
->  3151 |   .p_def.p_area = &unit_size,
->       |
+From: Junya Monden <jmonden@jp.adit-jv.com>
 
-Hmm. So we need a const void *p_def instead.
+Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
+is not properly re-initialized when setting format for new stream
+processing. The inversion, if requested, is then applied not to default,
+but to a previous value, which leads to SCKP bit in SSICR register being
+set incorrectly.
+Fix this by re-setting the flag to its initial value, determined by format.
 
-Regards,
+Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc: Jiada Wang <jiada_wang@mentor.com>
+Cc: Timo Wischer <twischer@de.adit-jv.com>
+Cc: stable@vger.kernel.org # v3.17+
+Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+ sound/soc/sh/rcar/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	Hans
-
-> 
->>
->> Regards,
->>
->>         Hans
->>
->>>
->>> Regards
->>>
->>> On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->>>>
->>>> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
->>>>> This allows setting the default value on compound controls created via
->>>>> v4l2_ctrl_new_custom.
->>>>>
->>>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
->>>>> ---
->>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
->>>>>  include/media/v4l2-ctrls.h           | 2 ++
->>>>>  2 files changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>> index bf50d37ef6c1..12cf38f73f7b 100644
->>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
->>>>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
->>>>>                       type, min, max,
->>>>>                       is_menu ? cfg->menu_skip_mask : step, def,
->>>>>                       cfg->dims, cfg->elem_size,
->>>>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
->>>>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
->>>>>       if (ctrl)
->>>>>               ctrl->is_private = cfg->is_private;
->>>>>       return ctrl;
->>>>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
->>>>> index 26205ba3a0a0..2fca5b823961 100644
->>>>> --- a/include/media/v4l2-ctrls.h
->>>>> +++ b/include/media/v4l2-ctrls.h
->>>>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
->>>>>   * @max:     The control's maximum value.
->>>>>   * @step:    The control's step value for non-menu controls.
->>>>>   * @def:     The control's default value.
->>>>> + * @p_def:   The control's default value for compound controls.
->>>>>   * @dims:    The size of each dimension.
->>>>>   * @elem_size:       The size in bytes of the control.
->>>>>   * @flags:   The control's flags.
->>>>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
->>>>>       s64 max;
->>>>>       u64 step;
->>>>>       s64 def;
->>>>> +     union v4l2_ctrl_ptr p_def;
->>>>>       u32 dims[V4L2_CTRL_MAX_DIMS];
->>>>>       u32 elem_size;
->>>>>       u32 flags;
->>>>>
->>>>
->>>> I'm not sure about this. It might be a bit awkward to initialize p_def given that it is a union.
->>>>
->>>> Perhaps a simple void pointer would be easier?
->>>>
->>>> Regards,
->>>>
->>>>         Hans
->>
+diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
+index bda5b958d0dc..e9596c2096cd 100644
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -761,6 +761,7 @@ static int rsnd_soc_dai_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	}
+ 
+ 	/* set format */
++	rdai->bit_clk_inv = 0;
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 		rdai->sys_delay = 0;
+-- 
+2.23.0
 
