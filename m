@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C870FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AC3ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55EBD21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DCC21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264100;
-	bh=j6J6/XrfGH0dGCQ64DCTclHY+iBTFT8Fgdv2TEDikSw=;
+	s=default; t=1571264103;
+	bh=ctx9m1P2qHO9OhbiDy0lfGlpY9jIrCPAipH0YS0yzCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqhT5CDYX/u3h8EIN89jWYtxTSwmiiSXKEzJFjVId7e/e6nH9KwEDDTPsGSCgE1I7
-	 TvMDl1PP7lGIzb8xTLjDybjK2JXthcXCM2rBWB2TzbGaMCoo7GBAeKiw6NeOoA6v4+
-	 Emg6HBz6cljLrPX4udDnS9bA6jGTVloXJaev6P3g=
+	b=Y9CweyBOTTy1kcJ3c5Ws+JvNQbpkcQnCNyN6ZzlWBME/lrE73VN7p/2gheameih3E
+	 5impAfjG1R4kXxibke4on+spEgkvZfs0x2Za/cAiFLTdaOYgFEFywy0eYqEp2dThrb
+	 P999diSJIbhtlh5JdMwImxlUL3s0wKGQGMEfnbfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407428AbfJPWO7 (ORCPT
+        id S2395261AbfJPVze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46482 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395267AbfJPVzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:36 -0400
+        id S2395230AbfJPVz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:29 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B599222BD;
-        Wed, 16 Oct 2019 21:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F281B21D7D;
+        Wed, 16 Oct 2019 21:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262935;
-        bh=j6J6/XrfGH0dGCQ64DCTclHY+iBTFT8Fgdv2TEDikSw=;
+        s=default; t=1571262929;
+        bh=ctx9m1P2qHO9OhbiDy0lfGlpY9jIrCPAipH0YS0yzCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GnIb/f9jhiTxU7b8PwWYcUSbcDgoZZ9bOBF16b9KIquSqmNgGaA7lB9uz9VgTFyo0
-         VDuIdB8wweARIFoPKjHwxioRzXLSK5O+yCcRI98bOvJN7pMJE4Ofcz55x23pl9mAyS
-         61U3ECOnbV4/XLIuoWZU5y5CzjajYQd0IYv+ZWS0=
+        b=PfZHFRCKW0mvsZfYjIOnpX/p50q7yAf0JZEj23WEAqnNTd1pgZoD+5aJzHJqiRjeO
+         7+06lw/a2jZkpd9AgXmEs/Ygu0ki9cDzjEpqgKlt0FIOmQSsHJMPGADBkTFzFFvco4
+         iwDaoMcVK80HCCq4Ahcf0aNTYgYpk0yVzzRjXYxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Peter Korsgaard <jacmet@sunsite.dk>
-Subject: [PATCH 4.9 57/92] serial: uartlite: fix exit path null pointer
-Date:   Wed, 16 Oct 2019 14:50:30 -0700
-Message-Id: <20191016214839.294596520@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.9 89/92] tracing/hwlat: Dont ignore outer-loop duration when calculating max_latency
+Date:   Wed, 16 Oct 2019 14:51:02 -0700
+Message-Id: <20191016214848.563153457@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,43 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
-commit a553add0846f355a28ed4e81134012e4a1e280c2 upstream.
+commit fc64e4ad80d4b72efce116f87b3174f0b7196f8e upstream.
 
-Call uart_unregister_driver() conditionally instead of
-unconditionally, only if it has been previously registered.
+max_latency is intended to record the maximum ever observed hardware
+latency, which may occur in either part of the loop (inner/outer). So
+we need to also consider the outer-loop sample when updating
+max_latency.
 
-This uses driver.state, just as the sh-sci.c driver does.
+Link: http://lkml.kernel.org/r/157073345463.17189.18124025522664682811.stgit@srivatsa-ubuntu
 
-Fixes this null pointer dereference in tty_unregister_driver(),
-since the 'driver' argument is null:
-
-  general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-  RIP: 0010:tty_unregister_driver+0x25/0x1d0
-
-Fixes: 238b8721a554 ("[PATCH] serial uartlite driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Peter Korsgaard <jacmet@sunsite.dk>
-Link: https://lore.kernel.org/r/9c8e6581-6fcc-a595-0897-4d90f5d710df@infradead.org
+Fixes: e7c15cd8a113 ("tracing: Added hardware latency tracer")
+Cc: stable@vger.kernel.org
+Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/uartlite.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace_hwlat.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -746,7 +746,8 @@ err_uart:
- static void __exit ulite_exit(void)
- {
- 	platform_driver_unregister(&ulite_platform_driver);
--	uart_unregister_driver(&ulite_uart_driver);
-+	if (ulite_uart_driver.state)
-+		uart_unregister_driver(&ulite_uart_driver);
- }
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -257,6 +257,8 @@ static int get_sample(void)
+ 		/* Keep a running maximum ever recorded hardware latency */
+ 		if (sample > tr->max_latency)
+ 			tr->max_latency = sample;
++		if (outer_sample > tr->max_latency)
++			tr->max_latency = outer_sample;
+ 	}
  
- module_init(ulite_init);
+ out:
 
 
