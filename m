@@ -2,149 +2,200 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF334ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326B9ECE58E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9256B2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFEA2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:06:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WBaJWJaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbfJPFCc (ORCPT
+        id S1730247AbfJPFGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 01:02:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31550 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726769AbfJPFCb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 01:02:31 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G51noV024524
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:02:30 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnva9rn5a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:02:29 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Wed, 16 Oct 2019 06:02:28 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 16 Oct 2019 06:02:24 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G52N2435061802
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 05:02:23 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA45CA4051;
-        Wed, 16 Oct 2019 05:02:22 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E53EA404D;
-        Wed, 16 Oct 2019 05:02:21 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.124.35.18])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 16 Oct 2019 05:02:21 +0000 (GMT)
-Subject: Re: [PATCH v2] ftrace: Introduce PERMANENT ftrace_ops flag
-To:     Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
-        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
-        pmladek@suse.com, joe.lawrence@redhat.com
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20191014105923.29607-1-mbenes@suse.cz>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Wed, 16 Oct 2019 10:32:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20191014105923.29607-1-mbenes@suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Wed, 16 Oct 2019 01:06:42 -0400
+Received: from mail-eopbgr10081.outbound.protection.outlook.com ([40.107.1.81]:60463
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726769AbfJPFGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 01:06:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Abu3erMAXd7b4z8WE/GaxpLEnRjVNhveU0bZ0l3KECtpgAy5tpnDVg4qtjMcygZL4pGQ08YDa5Dh+TxHzs1ywAbnOawLtJ6gowx9wf31VBX9tVDK5Bmxq0+vBRMJs9qm6ZnryzRUWphF+PwTWLo86ECLIe4FId3S7w5pqyeijRntLJuyIakXaYRKwP8PES/V5SMQYfrju7oDHaAoLyC4NdA5UFijOHsH0bQjPoJDZZA8PRlm3aTxtHJ8iQ8JDNjPG+uboAmBzW8chdqlZM+EnDMFfGtDZ/I/z70iDXUvcsAbo6VVWXM/5mdjpsH5Y4EJ9Ou9BKnGoWklaWKbB1WoZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hLf88dwV5MRfS3kbM/mBtnId8rOybPvLeTH0Qk2kKV0=;
+ b=K2+P4huq0X+Zctfkl+Ml+Na5NcfS7rf3gyuPXwhXp/6IY0ChJf6QSrzKV0Xii00F+fOKceULsng1SOOsMElP/kuhOcSQnrltrx81K6nqeJWUFQT6xlM9MzWYpd9xsrQQuRsulCKRd2ek7eFSYk//GfGym0WWyUQc5fN75KxcrZnP06LlXGN2EQvtj+YaKwCqgorcS3LCdQfdR4FHs7i8CZEbTJhetBNX+US2SXuY2F5ufe4m0E2ErHnMuqDPAlGnZyYjNcyKAIWfD+sXVNX85pofxIUMrxYlaj4mJqUBqhYaIPHXBj9bGveyGqIg4/P6vH244Gh5M5YKbphsSWnWrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hLf88dwV5MRfS3kbM/mBtnId8rOybPvLeTH0Qk2kKV0=;
+ b=WBaJWJawB0JCjkQf9JKoLD/jS/kMTpyqqCNrliJKYJ1req2eORc1fxV0DVR6LI9L+VUPhojCFYTSHDBT8w8T0IZZeL4dZKyL999CsjGSm1dq/tJcgbV0VSCivBgQXffUEEZkHQNn6NtfXnIYH7zdTO7cfH0v3H+fs6mYj67PMhk=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB5300.eurprd05.prod.outlook.com (20.178.18.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.16; Wed, 16 Oct 2019 05:06:35 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::64b2:6eb4:f000:3432]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::64b2:6eb4:f000:3432%7]) with mapi id 15.20.2347.021; Wed, 16 Oct 2019
+ 05:06:35 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
+CC:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "farman@linux.ibm.com" <farman@linux.ibm.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
+        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
+        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
+        "freude@linux.ibm.com" <freude@linux.ibm.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        Ido Shamay <idos@mellanox.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>
+Subject: RE: [PATCH V3 2/7] mdev: bus uevent support
+Thread-Topic: [PATCH V3 2/7] mdev: bus uevent support
+Thread-Index: AQHVgAxwOTFv76h8okS/5uHJAhcVf6dcvsLQ
+Date:   Wed, 16 Oct 2019 05:06:34 +0000
+Message-ID: <AM0PR05MB4866CEC5CB9CFB6B7B409029D1920@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-3-jasowang@redhat.com>
+In-Reply-To: <20191011081557.28302-3-jasowang@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101605-4275-0000-0000-000003727708
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101605-4276-0000-0000-000038858AF1
-Message-Id: <a39036e1-5235-9b5a-f847-12878538781e@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910160046
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [2605:6000:ec82:1c00:8ddb:1e36:fbf6:de3d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cb5026e1-4fb9-4c8d-151e-08d751f69df9
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM0PR05MB5300:|AM0PR05MB5300:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB530000C90970E79C5BB7BAE0D1920@AM0PR05MB5300.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:561;
+x-forefront-prvs: 0192E812EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(199004)(189003)(13464003)(476003)(446003)(52536014)(25786009)(81156014)(14454004)(81166006)(71190400001)(71200400001)(229853002)(316002)(110136005)(6436002)(486006)(54906003)(9686003)(7406005)(46003)(7416002)(55016002)(6246003)(76176011)(7736002)(186003)(6116002)(86362001)(33656002)(2906002)(2201001)(8676002)(11346002)(4326008)(74316002)(14444005)(53546011)(6506007)(305945005)(99286004)(5660300002)(478600001)(2501003)(66476007)(76116006)(102836004)(66446008)(66946007)(66556008)(64756008)(256004)(8936002)(7696005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5300;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: USIRKK135hjZiy2cR1Bcfs3XaJblthnntREI6dRe6tx649KkaMuwce4btTp3QScRb7met2r2oeyuT82vVYd7w7neNcXQraTgBv3UlnBJr1WePvL4fJ+ruDutKNtrMJwhKU1VEABR6ElbveeHx5cMlXolg1TLxPZLVPpobumVa0gvmCiXdPpQeI3KFDMUgoXu5D/ylZIiKp3BKp0BY5PxjOALWSxaah+oYy1CkY2Zugp8yUFbwRtj3EdNCQP8/9GgmCzRBAKucq4mL44+Z6AAHCzyEMP98n75b/2xBcEpJwIICR30BsZCqHUcdZPgzxNaWGku0czF40Xv69M8a4aKEetU5xDZV5q2TqTdLEbLY2sVmJeoK8qAvwxF2IyXPvii99ugp7CDSvE8v1cChl+NalKZlYSIAPj4bLIRApfQcWg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb5026e1-4fb9-4c8d-151e-08d751f69df9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 05:06:34.9806
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zAfA9QKeKHVoDH630fM+A9ja9s0fJAyNVfJkE5sOmnURj8/TzfFm4Fm7Um2rAYefjgWET88I0d2Lq4lS+6I9xw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5300
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/14/19 4:29 PM, Miroslav Benes wrote:
-> Livepatch uses ftrace for redirection to new patched functions. It means
-> that if ftrace is disabled, all live patched functions are disabled as
-> well. Toggling global 'ftrace_enabled' sysctl thus affect it directly.
-> It is not a problem per se, because only administrator can set sysctl
-> values, but it still may be surprising.
-> 
-> Introduce PERMANENT ftrace_ops flag to amend this. If the
-> FTRACE_OPS_FL_PERMANENT is set on any ftrace ops, the tracing cannot be
-> disabled by disabling ftrace_enabled. Equally, a callback with the flag
-> set cannot be registered if ftrace_enabled is disabled.
-> 
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 
-The patch looks good to me. A minor typo in flag description below.
 
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-
-[...]
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 8a8cb3c401b2..c2cad29dc557 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -142,6 +142,8 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
->   * PID     - Is affected by set_ftrace_pid (allows filtering on those pids)
->   * RCU     - Set when the ops can only be called when RCU is watching.
->   * TRACE_ARRAY - The ops->private points to a trace_array descriptor.
-> + * PERMAMENT - Set when the ops is permanent and should not be affected by
-> + *             ftrace_enabled.
->   */
-
-s/PERMAMENT/PERMANENT
-
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 62a50bf399d6..d2992ea29fe1 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6752,12 +6764,19 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
->  		ftrace_startup_sysctl();
-> 
->  	} else {
-> +		if (is_permanent_ops_registered()) {
-> +			ftrace_enabled = last_ftrace_enabled;
-> +			ret = -EBUSY;
-> +			goto out;
-> +		}
+> -----Original Message-----
+> From: Jason Wang <jasowang@redhat.com>
+> Sent: Friday, October 11, 2019 3:16 AM
+> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
+> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
+> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
+> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
+> tiwei.bie@intel.com
+> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
+> cohuck@redhat.com; maxime.coquelin@redhat.com;
+> cunming.liang@intel.com; zhihong.wang@intel.com;
+> rob.miller@broadcom.com; xiao.w.wang@intel.com;
+> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
+> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
+> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
+> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
+> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
+> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
+> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
+> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
+> <parav@mellanox.com>; christophe.de.dinechin@gmail.com;
+> kevin.tian@intel.com; Jason Wang <jasowang@redhat.com>
+> Subject: [PATCH V3 2/7] mdev: bus uevent support
+>=20
+> This patch adds bus uevent support for mdev bus in order to allow
+> cooperation with userspace.
+>=20
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/vfio/mdev/mdev_driver.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/vfio/mdev/mdev_driver.c
+> b/drivers/vfio/mdev/mdev_driver.c index b7c40ce86ee3..319d886ffaf7
+> 100644
+> --- a/drivers/vfio/mdev/mdev_driver.c
+> +++ b/drivers/vfio/mdev/mdev_driver.c
+> @@ -82,9 +82,17 @@ static int mdev_match(struct device *dev, struct
+> device_driver *drv)
+>  	return 0;
+>  }
+>=20
+> +static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
+> +{
+> +	struct mdev_device *mdev =3D to_mdev_device(dev);
 > +
->  		/* stopping ftrace calls (just send to ftrace_stub) */
->  		ftrace_trace_function = ftrace_stub;
-> 
->  		ftrace_shutdown_sysctl();
->  	}
-> 
-> +	last_ftrace_enabled = !!ftrace_enabled;
-
-No strong feelings on last_ftrace_enabled placement, leaving it to
-your preference. 
-
->   out:
->  	mutex_unlock(&ftrace_lock);
->  	return ret;
-> 
-
-
--- 
-Kamalesh
+> +	return add_uevent_var(env, "MODALIAS=3Dmdev:c%02X", mdev-
+> >class_id); }
+> +
+>  struct bus_type mdev_bus_type =3D {
+>  	.name		=3D "mdev",
+>  	.match		=3D mdev_match,
+> +	.uevent		=3D mdev_uevent,
+>  	.probe		=3D mdev_probe,
+>  	.remove		=3D mdev_remove,
+>  };
+> --
+> 2.19.1
+Reviewed-by: Parav Pandit <parav@mellanox.com>
 
