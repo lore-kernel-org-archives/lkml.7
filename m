@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441DEFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E07ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3B421835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60462168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264567;
-	bh=4E/fwMhWXnNPiCefYxw9M5HEvuky75pkNVwbx78a4sQ=;
+	s=default; t=1571264569;
+	bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0AOvLviVNo+keJSl+xJ3fBfiuIbojlY9294C091DxzuXeUOa4+rt9gxP0Zm8uw8x
-	 VOOgyTAwJaHhCQ/AceoRkbb9BpZY3LQqosBb03eRN51PL15UVgJo7GGqFDkwHI+Sem
-	 pFyHXYLiL7hiZN3lq0lJT+NMSV3wxKNH8VGSvFE0=
+	b=PxHDIBmew+iCrGzzvODUkT7cOX/APTHccpT2pH8ozD90s8vhWcbZsI8SEGNrr0YHS
+	 bWOFsCMQpBFQzFXVPFKgWXy72QylDjJSI8fQgPLAQGLXmGoJK+cF2m398dZIVm2yBN
+	 Ya1gJtvaBz1OcBQE2tiv2JPZONzxLTSdQ5I1WvD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437272AbfJPVxK (ORCPT
+        id S2405848AbfJPWWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41640 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394807AbfJPVxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:04 -0400
+        id S2437258AbfJPVxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:10 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B50A20872;
-        Wed, 16 Oct 2019 21:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70FA021D7A;
+        Wed, 16 Oct 2019 21:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262783;
-        bh=4E/fwMhWXnNPiCefYxw9M5HEvuky75pkNVwbx78a4sQ=;
+        s=default; t=1571262789;
+        bh=OrPEpdqwd733jdhoGK9h+vv1s9G3mOo9wyJbXWHjDiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HXsl/IUVPRy7WCs4+YtifPqLUr9K0b4jOTM5TNe7kfhS8ap83z/0GzqrwMyF+qhTf
-         r8Ium1iyyAhE6DCjDArAEBL/QU9F4QTe4KrFjRUrDr7o3oFARdRMb88uOPR1AWXN16
-         qqp6ZhHrH3CQeP2ZVIhoFHqptcbaOrZlUSOQHu7Q=
+        b=Kl6LcHyiIgz8eLctXwINHVmPZOMsqcoY2W4EV85ScZSctQ9fzF3tkI+JMsUh3XBqw
+         LzEuLEwkoIkr846VRCuls+mQSvtuEbMTBaPMMK7GGShYtHPHARNBUB/7ztLus+PdNq
+         pTJhZOpK533MjdWSTv6no2cq5ekVDxxd78swK0SM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 24/79] cfg80211: add and use strongly typed element iteration macros
-Date:   Wed, 16 Oct 2019 14:49:59 -0700
-Message-Id: <20191016214752.956130121@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.4 03/79] s390/cio: avoid calling strlen on null pointer
+Date:   Wed, 16 Oct 2019 14:49:38 -0700
+Message-Id: <20191016214732.783408279@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -58,103 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 0f3b07f027f87a38ebe5c436490095df762819be upstream.
+commit ea298e6ee8b34b3ed4366be7eb799d0650ebe555 upstream.
 
-Rather than always iterating elements from frames with pure
-u8 pointers, add a type "struct element" that encapsulates
-the id/datalen/data format of them.
+Fix the following kasan finding:
+BUG: KASAN: global-out-of-bounds in ccwgroup_create_dev+0x850/0x1140
+Read of size 1 at addr 0000000000000000 by task systemd-udevd.r/561
 
-Then, add the element iteration macros
- * for_each_element
- * for_each_element_id
- * for_each_element_extid
+CPU: 30 PID: 561 Comm: systemd-udevd.r Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000231b3db7e>] show_stack+0x14e/0x1a8)
+ [<0000000233826410>] dump_stack+0x1d0/0x218
+ [<000000023216fac4>] print_address_description+0x64/0x380
+ [<000000023216f5a8>] __kasan_report+0x138/0x168
+ [<00000002331b8378>] ccwgroup_create_dev+0x850/0x1140
+ [<00000002332b618a>] group_store+0x3a/0x50
+ [<00000002323ac706>] kernfs_fop_write+0x246/0x3b8
+ [<00000002321d409a>] vfs_write+0x132/0x450
+ [<00000002321d47da>] ksys_write+0x122/0x208
+ [<0000000233877102>] system_call+0x2a6/0x2c8
 
-which take, as their first 'argument', such a structure and
-iterate through a given u8 array interpreting it as elements.
+Triggered by:
+openat(AT_FDCWD, "/sys/bus/ccwgroup/drivers/qeth/group",
+		O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0666) = 16
+write(16, "0.0.bd00,0.0.bd01,0.0.bd02", 26) = 26
 
-While at it and since we'll need it, also add
- * for_each_subelement
- * for_each_subelement_id
- * for_each_subelement_extid
+The problem is that __get_next_id in ccwgroup_create_dev might set "buf"
+buffer pointer to NULL and explicit check for that is required.
 
-which instead of taking data/length just take an outer element
-and use its data/datalen.
-
-Also add for_each_element_completed() to determine if any of
-the loops above completed, i.e. it was able to parse all of
-the elements successfully and no data remained.
-
-Use for_each_element_id() in cfg80211_find_ie_match() as the
-first user of this.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ieee80211.h |   53 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/s390/cio/ccwgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -2550,4 +2550,57 @@ static inline bool ieee80211_action_cont
- 	return true;
- }
- 
-+struct element {
-+	u8 id;
-+	u8 datalen;
-+	u8 data[];
-+};
-+
-+/* element iteration helpers */
-+#define for_each_element(element, _data, _datalen)			\
-+	for (element = (void *)(_data);					\
-+	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
-+		sizeof(*element) &&					\
-+	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
-+		sizeof(*element) + element->datalen;			\
-+	     element = (void *)(element->data + element->datalen))
-+
-+#define for_each_element_id(element, _id, data, datalen)		\
-+	for_each_element(element, data, datalen)			\
-+		if (element->id == (_id))
-+
-+#define for_each_element_extid(element, extid, data, datalen)		\
-+	for_each_element(element, data, datalen)			\
-+		if (element->id == WLAN_EID_EXTENSION &&		\
-+		    element->datalen > 0 &&				\
-+		    element->data[0] == (extid))
-+
-+#define for_each_subelement(sub, element)				\
-+	for_each_element(sub, (element)->data, (element)->datalen)
-+
-+#define for_each_subelement_id(sub, id, element)			\
-+	for_each_element_id(sub, id, (element)->data, (element)->datalen)
-+
-+#define for_each_subelement_extid(sub, extid, element)			\
-+	for_each_element_extid(sub, extid, (element)->data, (element)->datalen)
-+
-+/**
-+ * for_each_element_completed - determine if element parsing consumed all data
-+ * @element: element pointer after for_each_element() or friends
-+ * @data: same data pointer as passed to for_each_element() or friends
-+ * @datalen: same data length as passed to for_each_element() or friends
-+ *
-+ * This function returns %true if all the data was parsed or considered
-+ * while walking the elements. Only use this if your for_each_element()
-+ * loop cannot be broken out of, otherwise it always returns %false.
-+ *
-+ * If some data was malformed, this returns %false since the last parsed
-+ * element will not fill the whole remaining data.
-+ */
-+static inline bool for_each_element_completed(const struct element *element,
-+					      const void *data, size_t datalen)
-+{
-+	return (u8 *)element == (u8 *)data + datalen;
-+}
-+
- #endif /* LINUX_IEEE80211_H */
+--- a/drivers/s390/cio/ccwgroup.c
++++ b/drivers/s390/cio/ccwgroup.c
+@@ -369,7 +369,7 @@ int ccwgroup_create_dev(struct device *p
+ 		goto error;
+ 	}
+ 	/* Check for trailing stuff. */
+-	if (i == num_devices && strlen(buf) > 0) {
++	if (i == num_devices && buf && strlen(buf) > 0) {
+ 		rc = -EINVAL;
+ 		goto error;
+ 	}
 
 
