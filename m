@@ -2,141 +2,91 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3F4FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68375FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F6B2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3634420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDSeyOj2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ha6hDOJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393274AbfJPQQF (ORCPT
+        id S2393496AbfJPQQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:16:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34132 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390076AbfJPQQF (ORCPT
+        Wed, 16 Oct 2019 12:16:27 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38504 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728316AbfJPQQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:16:05 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r22so18010971lfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:16:04 -0700 (PDT)
+        Wed, 16 Oct 2019 12:16:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w8so11487895plq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1ylL1eydi6OUMBpWNcbTT5Kqt/V1VFfcpzawFZbwf6M=;
-        b=kDSeyOj2cXVo7ubdqGLKFFuJ5cwxCUGu2SnwcczXReu8aRgDcead9Wx74qE6k3g3pE
-         /07VqXUD5t1xAzaAb2w/P2S+kDu9v7iCNXin8iwCbXhpcKi8EG1A2GmMevstjIgJsKAV
-         9T4qEBQcU5aRhoXOw+QwOeSdEIjAMq1EE0I4c9TmZKtTP7eCND+NEHSTRHfMMM9JN4lZ
-         p/ITNKm/aLkWLrIn27E60n4e65CNws8LVq/AMlALEwJ5P8dJbhOA8n0PXVL/+h5p+6L9
-         UqVqldxfOwPgSaioISiX3JNEN7mxF8WoKmEyn4UvRK3STHuPAdDOgxkeBJhX6pkJRBiX
-         a14A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=ResC/hhiygB40CQNO8g6ikuMbA0ju2V41a3xODY1vVE=;
+        b=Ha6hDOJlpfX3oR0Lo71lCcmpwUHRfznUaoRUnv6VA0oW8DYo3V3iOQyLrQhSnQHMDH
+         1ZqNiwjWcgmcyZNCR5vx+Haaa5wXkWQpq6vttdANH4PDcoef4Xkwm1JLMkYH177KuT9U
+         aE0h4rllUx2sP597BRDIh2bm46Peqp4URVGQAF0COhIR3qBtfppzGOgxAypDH0WUJ9Bd
+         u3jfndnQaIm/XpKsIRf/sfxd0Nq6lXDXR4k1bVCGe3GEm+2qA8S2Mo2JeuPHeSk8I8Q/
+         XUMLkJAyfF6Cgy7WQ4R3zO49FexD4uBIReK0ZZeILFTcqg6NC6smoewkpTm81cIregw/
+         3/fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1ylL1eydi6OUMBpWNcbTT5Kqt/V1VFfcpzawFZbwf6M=;
-        b=EeUDDbJKFOpQMVuG/t2F4kHGT4qEO0ngXNFdUmgiUfnFyoJCRxZxqLqWocZBl/kQeW
-         j7MCfE2CoIYHJgWd2Z2jROYPn/kLvdBOox3VbBGLBqhVarPgHdDTkEa8KvJTjye4GW3I
-         PiNMKO+snE3Z6hbWRNKL1Bt/Z/mt3uNwnmCE9vds5w3BKhpisQPLLFPUEhoiO1nNjm+c
-         PLJO3T151A2X0V88fKI37pTqfwKqGx7UYs3Fniibo586gSbGv0EoZyb+Uq6kqGbBuRkf
-         3H9hS3T6tG5204SOa8/2FDRZ+6RjszZ8E4mUGegFPovtS9FMX1LYf35yQKYDWOF/Cp1y
-         KXaQ==
-X-Gm-Message-State: APjAAAWLsnvMBNwb7flxs4a9bBo3lVhZhCBFQZUxBiexvnHm9pOrbYlP
-        3pu6NHvkyCMTg8WxRChsG2gHgXpcldSLMf92hCs=
-X-Google-Smtp-Source: APXvYqxro5i35Ft6ZD3j7iIxrRJ7VRGx4dCwTbmqD/NDL7ZHsmxJkNf1lH2oVljT+08Fxt5pyVK8s657Msykgea09JE=
-X-Received: by 2002:ac2:5610:: with SMTP id v16mr25010105lfd.93.1571242563292;
- Wed, 16 Oct 2019 09:16:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ResC/hhiygB40CQNO8g6ikuMbA0ju2V41a3xODY1vVE=;
+        b=jnGPR3ZcAOkiks9UdJonxcR8SoYwUtNgs7ygEyQz7eSA1i9bMo3QSZ5STLaO7DB00R
+         AQ523rvJolG8kqcQqxKuh9V1lmS+sAXTzyVhEtu0PcSSkXauMRozg7rIvcI7j+jEZeir
+         XGkgvb9K/HkxFTIKNiOAmYcbD2mS/xao0ukGZ+sV0GR6D+4FkD91C/9PbMwA92vdD/3W
+         dYfPshe876zf9NtCvokuLBYVx6lFrXPR7XmtUEcfcfY2v/q4c6Kt+Ix42jSUwizTayLC
+         kvdxwqFHHvV/3pugPwejtq3YNvZsvvxElZl8FLqj93yFNUndoVP0RTQWxWQ2dG4sb1/f
+         92PA==
+X-Gm-Message-State: APjAAAVoV2D13qDHgzrXJ8O4AiOnO7JlZZfQ/40JjmosElkCfPpyl5RA
+        TC+vbQ9TYVd7ycjRBTtoU/WfaQ==
+X-Google-Smtp-Source: APXvYqzcmnTEOiuKSt7BT2tO2CZWNSW1Cst0QeV7AzXL8vZ26nPCMzLc9eVwAlMHXVXLysywqp/i0A==
+X-Received: by 2002:a17:902:a5c3:: with SMTP id t3mr42557480plq.335.1571242585996;
+        Wed, 16 Oct 2019 09:16:25 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id e10sm34459145pfh.77.2019.10.16.09.16.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 16 Oct 2019 09:16:25 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: sm1: add audio support
+In-Reply-To: <20191009082708.6337-1-jbrunet@baylibre.com>
+References: <20191009082708.6337-1-jbrunet@baylibre.com>
+Date:   Wed, 16 Oct 2019 09:16:24 -0700
+Message-ID: <7h7e54hdif.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20191012200524.23512-1-alistair@alistair23.me>
- <20191016144946.p3tm67vh5lqigndn@gilmour> <CAGb2v67QrTJjSO99UNs-=3ZZnK948am11=izRTHT6gZ06E28eA@mail.gmail.com>
-In-Reply-To: <CAGb2v67QrTJjSO99UNs-=3ZZnK948am11=izRTHT6gZ06E28eA@mail.gmail.com>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Wed, 16 Oct 2019 09:10:54 -0700
-Message-ID: <CAKmqyKO1QugY=JHORoGnPjTqZQV-jMfey8T3144vaqTwNoCwqA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sun50i: sopine-baseboard: Expose serial1,
- serial2 and serial3
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Alistair Francis <alistair@alistair23.me>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 7:54 AM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Wed, Oct 16, 2019 at 10:49 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Sat, Oct 12, 2019 at 01:05:24PM -0700, Alistair Francis wrote:
-> > > Follow what the sun50i-a64-pine64.dts does and expose all 5 serial
-> > > connections.
-> > >
-> > > Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> > > ---
-> > >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 25 +++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > > index 124b0b030b28..49c37b21ab36 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > > @@ -56,6 +56,10 @@
-> > >       aliases {
-> > >               ethernet0 = &emac;
-> > >               serial0 = &uart0;
-> > > +             serial1 = &uart1;
-> > > +             serial2 = &uart2;
-> > > +             serial3 = &uart3;
-> > > +             serial4 = &uart4;
-> > >       };
-> > >
-> > >       chosen {
-> > > @@ -280,6 +284,27 @@
-> > >       };
-> > >  };
-> > >
-> > > +/* On Pi-2 connector */
-> > > +&uart2 {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&uart2_pins>;
-> > > +     status = "disabled";
-> > > +};
-> > > +
-> > > +/* On Euler connector */
-> > > +&uart3 {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&uart3_pins>;
-> > > +     status = "disabled";
-> > > +};
-> > > +
-> > > +/* On Euler connector, RTS/CTS optional */
-> > > +&uart4 {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&uart4_pins>;
-> > > +     status = "disabled";
-> > > +};
-> >
-> > Since these are all the default muxing, maybe we should just set that
-> > in the DTSI?
->
-> Maybe not, since people may want to only use RX/TX, and leave the other
-> two pins for GPIO?
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-I think this makes the most sense for the default.
+> This patchset adds audio support on the sm1 SoC family and the
+> sei610 platform
 
-Alistair
+Queued for v5.5.
 
->
-> ChenYu
+> Kevin, The patchset depends on:
+>  - The ARB binding merged by Philipp [0]
+>  - The audio clock controller bindings I just applied. A tag is
+>    available for you here [1]
+
+I've pulled both of those into v5.5/dt64 so that branch is buildable
+standlone.
+
+Thanks for details on the dependencies.
+
+Kevin
