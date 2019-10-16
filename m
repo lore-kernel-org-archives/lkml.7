@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A17ECE599
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B24FA3728
 	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0210E20872
+	by mail.kernel.org (Postfix) with ESMTP id 412D021925
 	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1571263548;
-	bh=r4AUOYR8v+E1OaFX4qVSirdArg5U+qp6rBVI9XN0p6g=;
+	bh=VzvKXf/eSkh8Hjew72eGtwuYBVG6o2WsuPOtlIZWYAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EqLPh5JqnY8rSFocsWrafVgdLV4M+y3tBmVCM8OAPKsr1KYv+fa96bS7d2jE+oS4h
-	 mKFHSvAk89ODD8tedmKm6z6DYfs8zj1XzFIHL+Dm/HXdwlQZ8QLfIvYpslL8oUssB0
-	 paBRTRUbdSD3THAkymhfP8gp6nJhMEb3cfJr6PK4=
+	b=Xbb7j3UXCO3UaVazgWl+KWbOe+4FlEkX6K846OV9zsDYaXePybVzNXQuM+l+fNQtY
+	 al4sG0QuGfO5aABysvkQVcVgmIAhjvS+sED5DFEKthLviZ8h9UsiR53kbHy0prZD7m
+	 PQ/ItwaLCJ8cMhnuwDH8UXmW7QCQXt9MPVqc+//c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438236AbfJPV6l (ORCPT
+        id S2406919AbfJPWFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50934 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395549AbfJPV54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:56 -0400
+        id S2438244AbfJPV6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:44 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A4D121D7F;
-        Wed, 16 Oct 2019 21:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F3C21A49;
+        Wed, 16 Oct 2019 21:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263075;
-        bh=r4AUOYR8v+E1OaFX4qVSirdArg5U+qp6rBVI9XN0p6g=;
+        s=default; t=1571263123;
+        bh=VzvKXf/eSkh8Hjew72eGtwuYBVG6o2WsuPOtlIZWYAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fSPUuTuwzvMTfz2h56DYns9dL05qR29BdB+cvx2oOQ4PUxG7mmFqe06bSzN7r0SlI
-         3zYvGIg1TqEv2/Ev4nxIlhWpK3LQDyRQaD8G6dEZudVuS01IGujm38WGiLVZqZdJ4z
-         lIfuGqoHb4Sw4lVCJg7VrA1DrgiGh555VDq5q5UQ=
+        b=C/f4TB8mMPqjbM7CxuaCC+3eWaSuvcDQZfpVxBoEOHjSr2F5/Xmm6B3r6d4nZXD4k
+         7wcEvhwVJL0/opSUtUuJU7LGvwOyA/DAv/w6nJeJzrLzILVS1EpV8z6bXCyUkuzws0
+         7Ddhn/BYyqY2Pk0j8vGaR2nYv5YjwFMA/qpJpG6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 75/81] tracing/hwlat: Dont ignore outer-loop duration when calculating max_latency
-Date:   Wed, 16 Oct 2019 14:51:26 -0700
-Message-Id: <20191016214847.641598348@linuxfoundation.org>
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
+Subject: [PATCH 5.3 047/112] staging/fbtft: Depend on OF
+Date:   Wed, 16 Oct 2019 14:50:39 -0700
+Message-Id: <20191016214855.113292089@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+From: Noralf Trønnes <noralf@tronnes.org>
 
-commit fc64e4ad80d4b72efce116f87b3174f0b7196f8e upstream.
+commit 63f2b1677fba11c5bd02089f25c13421948905f5 upstream.
 
-max_latency is intended to record the maximum ever observed hardware
-latency, which may occur in either part of the loop (inner/outer). So
-we need to also consider the outer-loop sample when updating
-max_latency.
+Commit c440eee1a7a1 ("Staging: fbtft: Switch to the gpio descriptor
+interface") removed setting gpios via platform data. This means that
+fbtft will now only work with Device Tree so set the dependency.
 
-Link: http://lkml.kernel.org/r/157073345463.17189.18124025522664682811.stgit@srivatsa-ubuntu
+This also prevents a NULL pointer deref on non-DT platform because
+fbtftops.request_gpios is not set in that case anymore.
 
-Fixes: e7c15cd8a113 ("tracing: Added hardware latency tracer")
-Cc: stable@vger.kernel.org
-Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: c440eee1a7a1 ("Staging: fbtft: Switch to the gpio descriptor interface")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Link: https://lore.kernel.org/r/20190917171843.10334-1-noralf@tronnes.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_hwlat.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/fbtft/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -256,6 +256,8 @@ static int get_sample(void)
- 		/* Keep a running maximum ever recorded hardware latency */
- 		if (sample > tr->max_latency)
- 			tr->max_latency = sample;
-+		if (outer_sample > tr->max_latency)
-+			tr->max_latency = outer_sample;
- 	}
- 
- out:
+--- a/drivers/staging/fbtft/Kconfig
++++ b/drivers/staging/fbtft/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ menuconfig FB_TFT
+ 	tristate "Support for small TFT LCD display modules"
+-	depends on FB && SPI
++	depends on FB && SPI && OF
+ 	depends on GPIOLIB || COMPILE_TEST
+ 	select FB_SYS_FILLRECT
+ 	select FB_SYS_COPYAREA
 
 
