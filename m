@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D52ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0EAECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E704521D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4378B21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262781;
-	bh=UaQM8EDlWYVsbySsIvNkxpYAX4mU7VUzUz6zMqmEr04=;
+	s=default; t=1571262786;
+	bh=qWfBUTlJZjz1IqhkpVnjzoy7Ub2LpDcTgsvcw0X1Oxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRQSa/dH2PwhBSeq11oxdhWyCQkeHFUJyXoqeIWdb7vaOymNUvPGKIH35c6lAnxD+
-	 ECwZeQOPTW8U1SrbHfZly4rCpxt5j7klDcTjNrtRzqPbo1i+VvHoOSXMPkhooO0QQ2
-	 VA2olLebzMF4fR/2q6GygLt3Xc6ldZpmysD1Y80U=
+	b=VqZoQ8ywX2oegtt8nCdbqUcPEHJPWkfeBoNAU6szvy//MrtGIOQ4eAwOM9L6nJEdX
+	 WKFzUJPvh/GL10P/jXYzA3UWv4coHKogTyZclcBuLb2ZDZkAZn92THdXLU4NzdEI/h
+	 je7ZWmqBVbuKOwyLiHM6SP1ucgwlm1mZ2xj3kIA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437172AbfJPVw7 (ORCPT
+        id S2387561AbfJPVxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41420 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437081AbfJPVw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:52:58 -0400
+        id S2437220AbfJPVxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:01 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EABA21A49;
-        Wed, 16 Oct 2019 21:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5B3218DE;
+        Wed, 16 Oct 2019 21:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262777;
-        bh=UaQM8EDlWYVsbySsIvNkxpYAX4mU7VUzUz6zMqmEr04=;
+        s=default; t=1571262780;
+        bh=qWfBUTlJZjz1IqhkpVnjzoy7Ub2LpDcTgsvcw0X1Oxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vY5xybHDwtwOHaVHcL3vT7XWMYD7y/t6Nf4BMUWJ1QxiTvvRN52uuWg972ik0FrO4
-         2TLRgH6b0mDc/XbmKIsKMYLcKJxnFYs20Q1lTbAJYlJ9ltFTyF1aJIQJwQxG7QQznG
-         JLGHNmvxVIR5ImT9eSOxKiETPeBTcfWKRQL8zwPc=
+        b=aNaxBVNek4OCkRJ8HXN61x9axQn1KKiGI4gX2QNgp2ldiuV2J7lYoaupQutNOgE4p
+         I+3ADeB4ZZ7fLZDRCNVskfRQAk/AQajmC9CCg45AsA09RuvmcSX78rt2ZUEaHPRWMd
+         m8CtQuEXg6SIEczwAlEOykxcvbYy7Lf1pMypRJcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Zhang Rui <rui.zhang@intel.com>,
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 18/79] thermal: Fix use-after-free when unregistering thermal zone device
-Date:   Wed, 16 Oct 2019 14:49:53 -0700
-Message-Id: <20191016214747.151924484@linuxfoundation.org>
+Subject: [PATCH 4.4 21/79] tools lib traceevent: Do not free tep->cmdlines in add_new_comm() on failure
+Date:   Wed, 16 Oct 2019 14:49:56 -0700
+Message-Id: <20191016214750.099225959@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -61,132 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
+[ Upstream commit e0d2615856b2046c2e8d5bfd6933f37f69703b0b ]
 
-thermal_zone_device_unregister() cancels the delayed work that polls the
-thermal zone, but it does not wait for it to finish. This is racy with
-respect to the freeing of the thermal zone device, which can result in a
-use-after-free [1].
+If the re-allocation of tep->cmdlines succeeds, then the previous
+allocation of tep->cmdlines will be freed. If we later fail in
+add_new_comm(), we must not free cmdlines, and also should assign
+tep->cmdlines to the new allocation. Otherwise when freeing tep, the
+tep->cmdlines will be pointing to garbage.
 
-Fix this by waiting for the delayed work to finish before freeing the
-thermal zone device. Note that thermal_zone_device_set_polling() is
-never invoked from an atomic context, so it is safe to call
-cancel_delayed_work_sync() that can block.
-
-[1]
-[  +0.002221] ==================================================================
-[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
-[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
-
-[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
-[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
-[  +0.000012] Call Trace:
-[  +0.000021]  dump_stack+0xa9/0x10e
-[  +0.000020]  print_address_description.cold.2+0x9/0x25e
-[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
-[  +0.000016]  kasan_report+0xe/0x20
-[  +0.000016]  __mutex_lock+0x1076/0x11c0
-[  +0.000014]  step_wise_throttle+0x72/0x150
-[  +0.000018]  handle_thermal_trip+0x167/0x760
-[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
-[  +0.000019]  process_one_work+0x969/0x16f0
-[  +0.000017]  worker_thread+0x91/0xc40
-[  +0.000014]  kthread+0x33d/0x400
-[  +0.000015]  ret_from_fork+0x3a/0x50
-
-[  +0.000020] Allocated by task 1:
-[  +0.000015]  save_stack+0x19/0x80
-[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
-[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
-[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
-[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
-[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
-[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
-[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
-[  +0.000014]  local_pci_probe+0xc3/0x150
-[  +0.000013]  pci_device_probe+0x280/0x410
-[  +0.000013]  really_probe+0x26a/0xbb0
-[  +0.000013]  driver_probe_device+0x208/0x2e0
-[  +0.000013]  device_driver_attach+0xfe/0x140
-[  +0.000013]  __driver_attach+0x110/0x310
-[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
-[  +0.000013]  driver_register+0x1c0/0x400
-[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
-[  +0.000014]  do_one_initcall+0x239/0x4dd
-[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
-[  +0.000012]  kernel_init+0x11/0x18b
-[  +0.000013]  ret_from_fork+0x3a/0x50
-
-[  +0.000015] Freed by task 581:
-[  +0.000013]  save_stack+0x19/0x80
-[  +0.000014]  __kasan_slab_free+0x125/0x170
-[  +0.000013]  kfree+0xf3/0x310
-[  +0.000013]  thermal_release+0xc7/0xf0
-[  +0.000014]  device_release+0x77/0x200
-[  +0.000014]  kobject_put+0x1a8/0x4c0
-[  +0.000014]  device_unregister+0x38/0xc0
-[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
-[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
-[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
-[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
-[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
-[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
-[  +0.000013]  genl_rcv_msg+0xca/0x170
-[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
-[  +0.000012]  genl_rcv+0x29/0x40
-[  +0.000013]  netlink_unicast+0x49b/0x660
-[  +0.000013]  netlink_sendmsg+0x755/0xc90
-[  +0.000013]  __sys_sendto+0x3de/0x430
-[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
-[  +0.000013]  do_syscall_64+0xa4/0x4d0
-[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
-               which belongs to the cache kmalloc-2k of size 2048
-[  +0.000012] The buggy address is located 1096 bytes inside of
-               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
-[  +0.000007] The buggy address belongs to the page:
-[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
-[  +0.000020] flags: 0x200000000010200(slab|head)
-[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
-[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
-[  +0.000007] page dumped because: kasan: bad access detected
-
-[  +0.000012] Memory state around the buggy address:
-[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000008]                                                  ^
-[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000007] ==================================================================
-
-Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
-Reported-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Fixes: a6d2a61ac653a ("tools lib traceevent: Remove some die() calls")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-trace-devel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190828191819.970121417@goodmis.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/traceevent/event-parse.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 3d5f8f432b5b1..929092fc25ef5 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -402,7 +402,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
- 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work(&tz->poll_queue);
-+		cancel_delayed_work_sync(&tz->poll_queue);
- }
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index df3c73e9dea49..9954b069b3ca2 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -265,10 +265,10 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
++	pevent->cmdlines = cmdlines;
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
+ 	cmdlines[pevent->cmdline_count].comm = strdup(comm);
+ 	if (!cmdlines[pevent->cmdline_count].comm) {
+-		free(cmdlines);
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
+@@ -279,7 +279,6 @@ static int add_new_comm(struct pevent *pevent, const char *comm, int pid)
+ 		pevent->cmdline_count++;
+ 
+ 	qsort(cmdlines, pevent->cmdline_count, sizeof(*cmdlines), cmdline_cmp);
+-	pevent->cmdlines = cmdlines;
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
