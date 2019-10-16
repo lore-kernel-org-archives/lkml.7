@@ -2,185 +2,167 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69448FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8F3FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F2121A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8D721A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:55:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VW4V+/aZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFNgX47+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436618AbfJPSxC (ORCPT
+        id S2436649AbfJPSzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:53:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46604 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731889AbfJPSxB (ORCPT
+        Wed, 16 Oct 2019 14:55:04 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44770 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436638AbfJPSzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:53:01 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GIqfgo083570;
-        Wed, 16 Oct 2019 13:52:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571251961;
-        bh=vUHHm6TQrzUaqF3WoeACMdoEVSPvSP0FUJ+Io/gdxSQ=;
-        h=From:To:CC:Subject:Date;
-        b=VW4V+/aZg20RkpZf9MraYhWlL5qZKFA7AkTCmXqpdrkBW9KjrD4toiuNnGTspLQ79
-         UYG7axKc2ttmfLszbY1LuCOPKm3uISbwZdy3ay49JBzkkFeKuIKZSHzdadMYFzJWWN
-         WqjjS2pAofIqHhrRTEKcK3+mQEzTRLZKEA9L4EqQ=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GIqffr082253
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 13:52:41 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 13:52:34 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 13:52:41 -0500
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIqfNF081989;
-        Wed, 16 Oct 2019 13:52:41 -0500
-Received: from localhost ([10.250.79.55])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x9GIqdZ11777;
-        Wed, 16 Oct 2019 13:52:39 -0500 (CDT)
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH] drm: Move radeon and amdgpu Kconfig options into their directories
-Date:   Wed, 16 Oct 2019 14:52:30 -0400
-Message-ID: <20191016185230.27824-1-afd@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 16 Oct 2019 14:55:04 -0400
+Received: by mail-qt1-f194.google.com with SMTP id u40so37643072qth.11
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=215ZBerRTMMvl/Ijng0HKjRnsXOqsXt0a9H0WhV1Gdk=;
+        b=dFNgX47+yn5y5aSzyG5fvds+4iZz2ZVcygnhlO/TFDDGxgLapBFuqKVnexxrntaUr6
+         fiArRNNdIKP4qK0Em+wCpsO75GsiMqBVV2DOdMCJz/1/pbRGFwINU0uKinfUqZdP1dGA
+         FTGEllIAVag49z4efR4OkmnHckUoM1s2tfLLmYpLFwTdT3UVM/CS/AXXtX4q/EmM+SfZ
+         VD8kR+1rc5bBqhBBsvzXqjeTkZm41brj1KB7Kdq8Zjip2e08o4AhrWjzBYN2ciQyLFqo
+         q2AiPBEozgmUXBPJJsk+ibrR99Pi9LjlcJZN44/zk8ZeQg48UJsSIEzg+OAsZXlwVHLA
+         aV7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=215ZBerRTMMvl/Ijng0HKjRnsXOqsXt0a9H0WhV1Gdk=;
+        b=LBX6GyjZbfMYAtNmGzsodtfazBpX3g5gK5mtYVln5kdPwv1+qSZT6UXu1y8lLSEAHi
+         R+Ky86wCSnXTAiRT+tKX85as7JDZm9rPDsmCJtjeX5yZ+xPThCWThePs1qVIA+s2kC/l
+         VvpJhWhZ1XB6B8HtK3DufxqfAluqLn2b7UhjZDkZTxF/7d2w6GjN9w4UAXm1ctEA1ZKO
+         PeN2dRQK3Yc0si7dAnxodHcppOGlO4DGJ/PDcAAtmKqJHFArNEQ/Q1OrJPTQadnjaDpr
+         f8KWrh2ZxQ2W9bzsH9pcQoCTP4loYHFmAIAGDh5TbLoId9hLUTdInPWofpZTL5FW8bQN
+         KH0g==
+X-Gm-Message-State: APjAAAWfIQxtluc5WoRdXNpCVhg8zuwpBbJQ7w3+SYHdy9X+Z4i80s67
+        Gg9Ob/YLowjRtTS0fkAA7Aw=
+X-Google-Smtp-Source: APXvYqxzTERqBQzFzqsZvJZcXfJfiW/6hYpbVzuLshfRe9ZdrNWNNzJxc2ZlnwryCz/df2jpkY8Hqg==
+X-Received: by 2002:a0c:f787:: with SMTP id s7mr43874485qvn.221.1571252102649;
+        Wed, 16 Oct 2019 11:55:02 -0700 (PDT)
+Received: from rani ([2001:470:1f07:5f3:9e5c:8eff:fe50:ac29])
+        by smtp.gmail.com with ESMTPSA id z6sm11165855qkf.125.2019.10.16.11.55.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 11:55:02 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani>
+Date:   Wed, 16 Oct 2019 14:55:00 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
+        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: AMDGPU and 16B stack alignment
+Message-ID: <20191016185500.GA2674383@rani>
+References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
+ <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com>
+ <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
+ <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com>
+ <20191015202636.GA1671072@rani>
+ <CAKwvOd=yGXMwdoxKCD2gcEgevozf41jVmqCkW7CU=Xvd7mqtjw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=yGXMwdoxKCD2gcEgevozf41jVmqCkW7CU=Xvd7mqtjw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most Kconfig options to enable a driver are in the Kconfig file
-inside the relevant directory, move these two to the same.
+On Tue, Oct 15, 2019 at 06:51:26PM -0700, Nick Desaulniers wrote:
+> On Tue, Oct 15, 2019 at 1:26 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, Oct 15, 2019 at 11:05:56AM -0700, Nick Desaulniers wrote:
+> > > Hmmm...I would have liked to remove it outright, as it is an ABI
+> > > mismatch that is likely to result in instability and non-fun-to-debug
+> > > runtime issues in the future.  I suspect my patch does work for GCC
+> > > 7.1+.  The question is: Do we want to either:
+> > > 1. mark AMDGPU broken for GCC < 7.1, or
+> > > 2. continue supporting it via stack alignment mismatch?
+> > >
+> > > 2 is brittle, and may break at any point in the future, but if it's
+> > > working for someone it does make me feel bad to outright disable it.
+> > > What I'd image 2 looks like is (psuedo code in a Makefile):
+> > >
+> > > if CC_IS_GCC && GCC_VERSION < 7.1:
+> > >   set stack alignment to 16B and hope for the best
+> > >
+> > > So my diff would be amended to keep the stack alignment flags, but
+> > > only to support GCC < 7.1.  And that assumes my change compiles with
+> > > GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
+> > > feel even more confident if someone with hardware to test on and GCC
+> > > 7.1+ could boot test).
+> > > --
+> > > Thanks,
+> > > ~Nick Desaulniers
+> >
+> > If we do keep it, would adding -mstackrealign make it more robust?
+> > That's simple and will only add the alignment to functions that require
+> > 16-byte alignment (at least on gcc).
+> 
+> I think there's also `-mincoming-stack-boundary=`.
+> https://github.com/ClangBuiltLinux/linux/issues/735#issuecomment-540038017
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- drivers/gpu/drm/Kconfig            | 34 ------------------------------
- drivers/gpu/drm/amd/amdgpu/Kconfig | 18 ++++++++++++++++
- drivers/gpu/drm/radeon/Kconfig     | 18 ++++++++++++++++
- 3 files changed, 36 insertions(+), 34 deletions(-)
+Yes, but -mstackrealign looks like it's supported by clang as well.
+> 
+> >
+> > Alternative is to use
+> > __attribute__((force_align_arg_pointer)) on functions that might be
+> > called from 8-byte-aligned code.
+> 
+> Which is hard to automate and easy to forget.  Likely a large diff to fix today.
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index e67c194c2aca..bc5329b697ad 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -203,42 +203,8 @@ source "drivers/gpu/drm/i2c/Kconfig"
- 
- source "drivers/gpu/drm/arm/Kconfig"
- 
--config DRM_RADEON
--	tristate "ATI Radeon"
--	depends on DRM && PCI && MMU
--	select FW_LOADER
--        select DRM_KMS_HELPER
--        select DRM_TTM
--	select POWER_SUPPLY
--	select HWMON
--	select BACKLIGHT_CLASS_DEVICE
--	select INTERVAL_TREE
--	help
--	  Choose this option if you have an ATI Radeon graphics card.  There
--	  are both PCI and AGP versions.  You don't need to choose this to
--	  run the Radeon in plain VGA mode.
--
--	  If M is selected, the module will be called radeon.
--
- source "drivers/gpu/drm/radeon/Kconfig"
- 
--config DRM_AMDGPU
--	tristate "AMD GPU"
--	depends on DRM && PCI && MMU
--	select FW_LOADER
--        select DRM_KMS_HELPER
--	select DRM_SCHED
--        select DRM_TTM
--	select POWER_SUPPLY
--	select HWMON
--	select BACKLIGHT_CLASS_DEVICE
--	select INTERVAL_TREE
--	select CHASH
--	help
--	  Choose this option if you have a recent AMD Radeon graphics card.
--
--	  If M is selected, the module will be called amdgpu.
--
- source "drivers/gpu/drm/amd/amdgpu/Kconfig"
- 
- source "drivers/gpu/drm/nouveau/Kconfig"
-diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
-index 2e98c016cb47..a53554557cc6 100644
---- a/drivers/gpu/drm/amd/amdgpu/Kconfig
-+++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
-@@ -1,4 +1,22 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+
-+config DRM_AMDGPU
-+	tristate "AMD GPU"
-+	depends on DRM && PCI && MMU
-+	select FW_LOADER
-+	select DRM_KMS_HELPER
-+	select DRM_SCHED
-+	select DRM_TTM
-+	select POWER_SUPPLY
-+	select HWMON
-+	select BACKLIGHT_CLASS_DEVICE
-+	select INTERVAL_TREE
-+	select CHASH
-+	help
-+	  Choose this option if you have a recent AMD Radeon graphics card.
-+
-+	  If M is selected, the module will be called amdgpu.
-+
- config DRM_AMDGPU_SI
- 	bool "Enable amdgpu support for SI parts"
- 	depends on DRM_AMDGPU
-diff --git a/drivers/gpu/drm/radeon/Kconfig b/drivers/gpu/drm/radeon/Kconfig
-index 6f60f4840cc5..ba67b879d31d 100644
---- a/drivers/gpu/drm/radeon/Kconfig
-+++ b/drivers/gpu/drm/radeon/Kconfig
-@@ -1,4 +1,22 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+
-+config DRM_RADEON
-+	tristate "ATI Radeon"
-+	depends on DRM && PCI && MMU
-+	select FW_LOADER
-+	select DRM_KMS_HELPER
-+	select DRM_TTM
-+	select POWER_SUPPLY
-+	select HWMON
-+	select BACKLIGHT_CLASS_DEVICE
-+	select INTERVAL_TREE
-+	help
-+	  Choose this option if you have an ATI Radeon graphics card.  There
-+	  are both PCI and AGP versions.  You don't need to choose this to
-+	  run the Radeon in plain VGA mode.
-+
-+	  If M is selected, the module will be called radeon.
-+
- config DRM_RADEON_USERPTR
- 	bool "Always enable userptr support"
- 	depends on DRM_RADEON
--- 
-2.17.1
+Right, this is a no-go, esp to just fix old compilers.
+> 
+> >
+> > It looks like -mstackrealign should work from gcc 5.3 onwards.
+> 
+> The kernel would generally like to support GCC 4.9+.
+> 
+> There's plenty of different ways to keep layering on duct tape and
+> bailing wire to support differing ABIs, but that's just adding
+> technical debt that will have to be repaid one day.  That's why the
+> cleanest solution IMO is mark the driver broken for old toolchains,
+> and use a code-base-consistent stack alignment.  Bending over
+> backwards to support old toolchains means accepting stack alignment
+> mismatches, which is in the "unspecified behavior" ring of the
+> "undefined behavior" Venn diagram.  I have the same opinion on relying
+> on explicitly undefined behavior.
+> 
+> I'll send patches for fixing up Clang, but please consider my strong
+> advice to generally avoid stack alignment mismatches, regardless of
+> compiler.
+> --
+> Thanks,
+> ~Nick Desaulniers
 
+What I suggested was in reference to your proposal for dropping the
+-mpreferred-stack-boundary=4 for modern compilers, but keeping it for
+<7.1. -mstackrealign would at least let 5.3 onwards be less likely to
+break (and it doesn't error before then, I think it just doesn't
+actually do anything, so no worse than now at least).
+
+Simply dropping support for <7.1 would be cleanest, yes, but it sounds
+like people don't want to go that far.
