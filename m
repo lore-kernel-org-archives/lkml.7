@@ -2,150 +2,189 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAB6C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3207BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C31C20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AA721D82
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZhDjZILu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391842AbfJPI7w (ORCPT
+        id S2391853AbfJPJAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:59:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:33026 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388817AbfJPI7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:59:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940C9142F;
-        Wed, 16 Oct 2019 01:59:50 -0700 (PDT)
-Received: from [10.163.1.216] (unknown [10.163.1.216])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2810F3F6C4;
-        Wed, 16 Oct 2019 01:59:32 -0700 (PDT)
-Subject: Re: [PATCH V6 0/2] mm/debug: Add tests validating architecture page
- table helpers
-To:     Qian Cai <cai@lca.pw>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
- <1571150502.5937.39.camel@lca.pw>
- <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
- <1571164920.5937.45.camel@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <fb1fe447-d30a-21ea-1b85-0d46e14f0872@arm.com>
-Date:   Wed, 16 Oct 2019 14:29:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 16 Oct 2019 05:00:08 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43847 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388817AbfJPJAI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:00:08 -0400
+Received: by mail-il1-f194.google.com with SMTP id t5so1808175ilh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TZutJZLGF0s525Qo74hWUBEFtHjd5fY3wVdzlXrrh2g=;
+        b=ZhDjZILuy3YhF2gSkbfiMnpR25Ut8GlVy3dzCgggDUq1Rl2yWFe7s6IUT85L+YoCtX
+         zNav7Nkq4uWki/D5pvlMY3/clN8kIEcVEPdQNYkEunUcUKGes46sxszFRcTUfeRp27lh
+         eTaeH407eXkavgtu8N5lihIVyrMoTHh22lV99W0RjYBC4zJgIbKELBPX5Z/eRtoiigye
+         +1PzXL3KQ700Ccbo/PfV2hFAB5rj0TlZUMQw6DOtJgprAqnFFFmzG6mcdSv7RXaHKGg+
+         lestp3pIU39bMzGAZM0yi9eU3GjA6uxwemlic7PkKXBD5WiV5dmadmIqCf12Z/Od4ov8
+         G1OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TZutJZLGF0s525Qo74hWUBEFtHjd5fY3wVdzlXrrh2g=;
+        b=sXutyXrrreDbtnBnaltAWTSuu4qgctl5sUJoqhVV0rWFralGQsuttgTtcCYMMcJMBE
+         7C55jkus2UtALNL0ADRfENtQJeG99BByleNENRhhxejQKYxheL7GsW7W3lkcJD0Q74bd
+         WK4YeJd+9Q8YLmGoAVK8jHtO5TRk6pqOCLB2AGQVuGjIohssfViNjfjmxFrGWeiC0B5o
+         OK8lP9R7VJGrX6J7nI/rle7HvJn/aCQiJ8f8FhP6tCFNTGcbXrHSvpvU+xmUL6dYcxp2
+         gqoZERPnKLkA4FwWYYSGN0f0nr9cdaa9f8uFnkbesp3K900lyJYeqzMuk7eB1gMHIhLf
+         Ztfg==
+X-Gm-Message-State: APjAAAW3SlAoQL8mSsNlqWCnHLOGyG8T1g/Kh5iHi+vhhHrehs5xjKXE
+        zYbljvxC3Y7fB4UH2pah2CfItdG4ITExbj6uUfWEMQ==
+X-Google-Smtp-Source: APXvYqwJg57R7T7Y4R5Atp4LSTftEMxw9GTS82UTA6BSFSYXKdQ99EAqMtb6dSOBmHCC17Yr2KZ85giWiH60Bot35T4=
+X-Received: by 2002:a92:c10c:: with SMTP id p12mr10520194ile.32.1571216406838;
+ Wed, 16 Oct 2019 02:00:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1571164920.5937.45.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191016034314.231363-1-pumahsu@google.com> <577ac2f6-f073-1bd0-0adb-33fa8243773c@infradead.org>
+In-Reply-To: <577ac2f6-f073-1bd0-0adb-33fa8243773c@infradead.org>
+From:   Puma Hsu <pumahsu@google.com>
+Date:   Wed, 16 Oct 2019 16:59:30 +0800
+Message-ID: <CAGCq0La71bzMKcRw-+QmnMtOH_eeA-5t0qYAq3fSrLgBToyUrw@mail.gmail.com>
+Subject: Re: [PATCH] usb: typec: Add sysfs node to show cc orientation
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Kyle Tso <kyletso@google.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Albert Wang <albertccwang@google.com>,
+        Puma Hsu <pumahsu@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Randy,
+
+According to include/linux/usb/typec.h, The value of
+/sys/class/typec/<port>/cc_orientation is usually =E2=80=9C1=E2=80=9D, =E2=
+=80=9C2=E2=80=9D, or =E2=80=9C0=E2=80=9D
+corresponding to =E2=80=9Cconfigured in NORMAL side=E2=80=9D, =E2=80=9Cconf=
+igured in REVERSE
+side=E2=80=9D, or =E2=80=9Cnothing configured=E2=80=9D.
+Refer to the usage in tcpm.c, it claims CC1 is NORMAL and CC2 is REVERSE.
+I will update this into Documentation description.
+
+enum typec_orientation {
+        TYPEC_ORIENTATION_NONE,
+        TYPEC_ORIENTATION_NORMAL,
+        TYPEC_ORIENTATION_REVERSE,
+};
+
+Thanks in advance.
 
 
-On 10/16/2019 12:12 AM, Qian Cai wrote:
-> On Tue, 2019-10-15 at 20:51 +0530, Anshuman Khandual wrote:
->>
->> On 10/15/2019 08:11 PM, Qian Cai wrote:
->>> The x86 will crash with linux-next during boot due to this series (v5) with the
->>> config below plus CONFIG_DEBUG_VM_PGTABLE=y. I am not sure if v6 would address
->>> it.
->>>
->>> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
->>>
->>> [   33.862600][    T1] page:ffffea0009000000 is uninitialized and poisoned
->>> [   33.862608][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff
->>> ffffff871140][    T1]  ? _raw_spin_unlock_irq+0x27/0x40
->>> [   33.871140][    T1]  ? rest_init+0x307/0x307
->>> [   33.871140][    T1]  kernel_init+0x11/0x139
->>> [   33.871140][    T1]  ? rest_init+0x307/0x307
->>> [   33.871140][    T1]  ret_from_fork+0x27/0x50
->>> [   33.871140][    T1] Modules linked in:
->>> [   33.871140][    T1] ---[ end trace e99d392b0f7befbd ]---
->>> [   33.871140][    T1] RIP: 0010:alloc_gigantic_page_order+0x3fe/0x490
->>
->> Hmm, with defconfig (DEBUG_VM=y and DEBUG_VM_PGTABLE=y) it does not crash but
->> with the config above, it does. Just wondering if it is possible that these
->> pages might not been initialized yet because DEFERRED_STRUCT_PAGE_INIT=y ?
-> 
-> Yes, this patch works fine.
-> 
-> diff --git a/init/main.c b/init/main.c
-> index 676d8020dd29..591be8f9e8e0 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1177,7 +1177,6 @@ static noinline void __init kernel_init_freeable(void)
->         workqueue_init();
->  
->         init_mm_internals();
-> -       debug_vm_pgtable();
->  
->         do_pre_smp_initcalls();
->         lockup_detector_init();
-> @@ -1186,6 +1185,8 @@ static noinline void __init kernel_init_freeable(void)
->         sched_init_smp();
->  
->         page_alloc_init_late();
-> +       debug_vm_pgtable();
-> +
->         /* Initialize page ext after all struct pages are initialized. */
->         page_ext_init();
-> 
 
-Sure, will keep this in mind if we at all end up with memory allocation approach
-for this test.
+  =E2=80=A2  Puma Hsu =E8=A8=B1=E8=AA=8C=E5=AE=8F
+  =E2=80=A2  Software Engineer, Pixel Phone
+  =E2=80=A2  Tel: +886 2 8729 0870
+  =E2=80=A2  pumahsu@google.com
 
->>
->> [   13.898549][    T1] page:ffffea0005000000 is uninitialized and poisoned
->> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
->> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
->> [   13.898549][    T1] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
->> [   13.898549][    T1] ------------[ cut here ]------------
->> [   13.898549][    T1] kernel BUG at ./include/linux/mm.h:1107!
->> [   13.898549][    T1] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
->> [   13.898549][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-next-20191015+ #
-> 
+
+Thanks in advance.
+
+
+
+
+  =E2=80=A2  Puma Hsu =E8=A8=B1=E8=AA=8C=E5=AE=8F
+  =E2=80=A2  Software Engineer, Pixel Phone
+  =E2=80=A2  Tel: +886 2 8729 0870
+  =E2=80=A2  pumahsu@google.com
+
+
+
+
+
+On Wed, Oct 16, 2019 at 11:47 AM Randy Dunlap <rdunlap@infradead.org> wrote=
+:
+>
+> On 10/15/19 8:43 PM, pumahsu wrote:
+> > Export the Type-C cc orientation so that user space can
+> > get this information.
+> >
+> > Signed-off-by: pumahsu <pumahsu@google.com>
+>
+> Hi,
+> what the * is cc orientation?
+>
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-typec |  7 +++++++
+> >  drivers/usb/typec/class.c                   | 11 +++++++++++
+> >  2 files changed, 18 insertions(+)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentatio=
+n/ABI/testing/sysfs-class-typec
+> > index d7647b258c3c..419f952c991d 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > @@ -108,6 +108,13 @@ Contact: Heikki Krogerus <heikki.krogerus@linux.in=
+tel.com>
+> >  Description:
+> >               Revision number of the supported USB Type-C specification=
+.
+> >
+> > +What:                /sys/class/typec/<port>/cc_orientation
+> > +Date:                September 2019
+> > +Contact:     Puma Hsu <pumahsu@google.com>
+> > +Description:
+> > +             Indicates which cc orientation is active now, or 0 when
+> > +             nothing is connected.
+> > +
+> >
+> >  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+> >
+> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> > index 7d8805d9bf37..00edae63da8e 100644
+> > --- a/drivers/usb/typec/class.c
+> > +++ b/drivers/usb/typec/class.c
+> > @@ -1238,6 +1238,16 @@ static ssize_t usb_power_delivery_revision_show(=
+struct device *dev,
+> >  }
+> >  static DEVICE_ATTR_RO(usb_power_delivery_revision);
+> >
+> > +static ssize_t cc_orientation_show(struct device *dev,
+> > +                                             struct device_attribute *=
+attr,
+> > +                                             char *buf)
+> > +{
+> > +     struct typec_port *p =3D to_typec_port(dev);
+> > +
+> > +     return sprintf(buf, "%d\n", typec_get_orientation(p));
+> > +}
+> > +static DEVICE_ATTR_RO(cc_orientation);
+> > +
+> >  static struct attribute *typec_attrs[] =3D {
+> >       &dev_attr_data_role.attr,
+> >       &dev_attr_power_operation_mode.attr,
+> > @@ -1248,6 +1258,7 @@ static struct attribute *typec_attrs[] =3D {
+> >       &dev_attr_usb_typec_revision.attr,
+> >       &dev_attr_vconn_source.attr,
+> >       &dev_attr_port_type.attr,
+> > +     &dev_attr_cc_orientation.attr,
+> >       NULL,
+> >  };
+> >  ATTRIBUTE_GROUPS(typec);
+> >
+>
+>
+> --
+> ~Randy
