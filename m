@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDAAECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BCEFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D6321D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A254A21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262845;
-	bh=0pRgjxjxcQutTSf8K2BeQpWt/9VHQ1dqxNGgKWkcSAg=;
+	s=default; t=1571262849;
+	bh=crHSjvYMY9d/dYMyzSZHnf5e6SCkxwWPOlxaPZTBiYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mgwC2qxJrnjvCbzihith4W9RYdMxJjanVETne7n3YgsFeY+geY7cg2OKcYDo/RiAh
-	 7uSQnIqmIzp7J9yFh99BfxErKLw7PSrSQ9sYsh71zZof2QqZzDDzUjttjXBV3GFbZ2
-	 MWo7kUXFhSCdB40vSHuWZHQ7dO/JahTo7w/Sw3Dg=
+	b=UAmBhSHTWCUAJkHctyGONwSXgJ5QsDOzRO0skkcZJT47QBahS+bWsaZ5ATQV5Ndm+
+	 j159X4YPzDpWVxFdDDjEw+QixlbbWMhb+49tBAnJ4XuoSpCEe2KHhDEn02NDkU4sS2
+	 hUQz4bpzTqrhebE7wlUoJfC1M7Alg20KCFLk5QU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437662AbfJPVyE (ORCPT
+        id S2437686AbfJPVyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394931AbfJPVx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:57 -0400
+        id S2437628AbfJPVyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:00 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11CF821925;
-        Wed, 16 Oct 2019 21:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0273721925;
+        Wed, 16 Oct 2019 21:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262837;
-        bh=0pRgjxjxcQutTSf8K2BeQpWt/9VHQ1dqxNGgKWkcSAg=;
+        s=default; t=1571262840;
+        bh=crHSjvYMY9d/dYMyzSZHnf5e6SCkxwWPOlxaPZTBiYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NSWR96jlQyJm2h6JnIy0YEj0+PuelceXGt5K3Y1YUVwWBfiWpHNL0JcEGIqCVM9RP
-         CNocMGsNBTh8YaUydBNvDB8ANfblYHoWIvQ4SkqtdbFbCBo9oqwt3dB/ExM4AksIjV
-         92S5EnY+lwhkwm3HggTEmBdqtrmfMqLlFM9aJFP4=
+        b=MMZ2FeIqjN4VWz9UfJCHqhsD73vH2J9Opawrtqzve26HOXU93jRrhghOW1T7stJwx
+         ufQui9dmkYsMuZZ6wPxr5cOjVGWb3kp9CqFuQNSnJTwTY2rymb1fM0yJVsyKTU2QMQ
+         C6OSDnjJh8JHmNcQrK3Hi4WhVe4j8kUf5ShX8ZfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 4.4 79/79] xfs: clear sb->s_fs_info on mount failure
-Date:   Wed, 16 Oct 2019 14:50:54 -0700
-Message-Id: <20191016214834.705602853@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 45/79] USB: usblp: fix runtime PM after driver unbind
+Date:   Wed, 16 Oct 2019 14:50:20 -0700
+Message-Id: <20191016214807.819152517@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -60,78 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit c9fbd7bbc23dbdd73364be4d045e5d3612cf6e82 upstream.
+commit 9a31535859bfd8d1c3ed391f5e9247cd87bb7909 upstream.
 
-We recently had an oops reported on a 4.14 kernel in
-xfs_reclaim_inodes_count() where sb->s_fs_info pointed to garbage
-and so the m_perag_tree lookup walked into lala land.
+Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
+interface PM usage counter") USB drivers must always balance their
+runtime PM gets and puts, including when the driver has already been
+unbound from the interface.
 
-Essentially, the machine was under memory pressure when the mount
-was being run, xfs_fs_fill_super() failed after allocating the
-xfs_mount and attaching it to sb->s_fs_info. It then cleaned up and
-freed the xfs_mount, but the sb->s_fs_info field still pointed to
-the freed memory. Hence when the superblock shrinker then ran
-it fell off the bad pointer.
+Leaving the interface with a positive PM usage counter would prevent a
+later bound driver from suspending the device.
 
-With the superblock shrinker problem fixed at teh VFS level, this
-stale s_fs_info pointer is still a problem - we use it
-unconditionally in ->put_super when the superblock is being torn
-down, and hence we can still trip over it after a ->fill_super
-call failure. Hence we need to clear s_fs_info if
-xfs-fs_fill_super() fails, and we need to check if it's valid in
-the places it can potentially be dereferenced after a ->fill_super
-failure.
-
-Signed-Off-By: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191001084908.2003-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/xfs/xfs_super.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
 
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1572,6 +1572,7 @@ xfs_fs_fill_super(
-  out_close_devices:
- 	xfs_close_devices(mp);
-  out_free_fsname:
-+	sb->s_fs_info = NULL;
- 	xfs_free_fsname(mp);
- 	kfree(mp);
-  out:
-@@ -1589,6 +1590,10 @@ xfs_fs_put_super(
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
+---
+ drivers/usb/class/usblp.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -474,10 +474,12 @@ static int usblp_release(struct inode *i
  
-+	/* if ->fill_super failed, we have no mount to tear down */
-+	if (!sb->s_fs_info)
-+		return;
+ 	mutex_lock(&usblp_mutex);
+ 	usblp->used = 0;
+-	if (usblp->present) {
++	if (usblp->present)
+ 		usblp_unlink_urbs(usblp);
+-		usb_autopm_put_interface(usblp->intf);
+-	} else		/* finish cleanup from disconnect */
 +
- 	xfs_notice(mp, "Unmounting Filesystem");
- 	xfs_filestream_unmount(mp);
- 	xfs_unmountfs(mp);
-@@ -1598,6 +1603,8 @@ xfs_fs_put_super(
- 	xfs_destroy_percpu_counters(mp);
- 	xfs_destroy_mount_workqueues(mp);
- 	xfs_close_devices(mp);
++	usb_autopm_put_interface(usblp->intf);
 +
-+	sb->s_fs_info = NULL;
- 	xfs_free_fsname(mp);
- 	kfree(mp);
- }
-@@ -1617,6 +1624,9 @@ xfs_fs_nr_cached_objects(
- 	struct super_block	*sb,
- 	struct shrink_control	*sc)
- {
-+	/* Paranoia: catch incorrect calls during mount setup or teardown */
-+	if (WARN_ON_ONCE(!sb->s_fs_info))
-+		return 0;
- 	return xfs_reclaim_inodes_count(XFS_M(sb));
- }
- 
++	if (!usblp->present)		/* finish cleanup from disconnect */
+ 		usblp_cleanup(usblp);
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
 
 
