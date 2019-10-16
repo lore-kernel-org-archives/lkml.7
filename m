@@ -6,104 +6,117 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1B1FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77265FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10752067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A3B2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392867AbfJPMIS (ORCPT
+        id S2392876AbfJPMJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:08:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45436 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389612AbfJPMIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:08:17 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2024987642;
-        Wed, 16 Oct 2019 12:08:17 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00D6B19C68;
-        Wed, 16 Oct 2019 12:08:14 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 08:08:13 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] iomap: lift the xfs writeback code to iomap
-Message-ID: <20191016120813.GA40434@bfoster>
-References: <20191015154345.13052-1-hch@lst.de>
- <20191015154345.13052-10-hch@lst.de>
- <20191015220721.GC16973@dread.disaster.area>
- <20191016074836.GB23696@lst.de>
+        Wed, 16 Oct 2019 08:09:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46182 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389612AbfJPMJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:09:08 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DC2D7FF522453C16920F;
+        Wed, 16 Oct 2019 20:09:06 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 20:08:55 +0800
+Subject: Re: [PATCH] perf jevents: Fix resource leak in process_mapfile()
+To:     Yunfeng Ye <yeyunfeng@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <ak@linux.intel.com>,
+        <lukemujica@google.com>, <kan.liang@linux.intel.com>,
+        <yuzenghui@huawei.com>
+References: <bf113089-e3cd-50f9-f7ed-17d07512a702@huawei.com>
+ <87e66585-1564-3523-59f6-cab15b7e1717@huawei.com>
+ <0cd0d259-e806-effd-5e44-fccd13842697@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
+        <linfeilong@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <5dcbcd6f-3789-69e1-b0c1-33416aa0790d@huawei.com>
+Date:   Wed, 16 Oct 2019 13:08:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016074836.GB23696@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 16 Oct 2019 12:08:17 +0000 (UTC)
+In-Reply-To: <0cd0d259-e806-effd-5e44-fccd13842697@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:48:36AM +0200, Christoph Hellwig wrote:
-> On Wed, Oct 16, 2019 at 09:07:21AM +1100, Dave Chinner wrote:
-...
-> > > +/*
-> > > + * Submit the bio for an ioend. We are passed an ioend with a bio attached to
-> > > + * it, and we submit that bio. The ioend may be used for multiple bio
-> > > + * submissions, so we only want to allocate an append transaction for the ioend
-> > > + * once.  In the case of multiple bio submission, each bio will take an IO
-> > 
-> > This needs to be changed to describe what wpc->ops->submit_ioend()
-> > is used for rather than what XFS might use this hook for.
-> 
-> True.  The real documentation now is in the header near the ops defintion,
-> but I'll update this one to make more sense as well.
-> 
-> > > +static int
-> > > +iomap_submit_ioend(struct iomap_writepage_ctx *wpc, struct iomap_ioend *ioend,
-> > > +		int error)
-> > > +{
-> > > +	ioend->io_bio->bi_private = ioend;
-> > > +	ioend->io_bio->bi_end_io = iomap_writepage_end_bio;
-> > > +
-> > > +	if (wpc->ops->submit_ioend)
-> > > +		error = wpc->ops->submit_ioend(ioend, error);
-> > 
-> > I'm not sure that "submit_ioend" is the best name for this method,
-> > as it is a pre-bio-submission hook, not an actual IO submission
-> > method. "prepare_ioend_for_submit" is more descriptive, but probably
-> > too long. wpc->ops->prepare_submit(ioend, error) reads pretty well,
-> > though...
-> 
-> Not a huge fan of that name either, but Brian complained.  Let's hold
-> a popular vote for a name and see if we have a winner.
-> 
+>>> +            ret = -1;
+>>> +            goto out;
+>>
+>> There's a subtle change of behaviour here, i.e. now calling print_mapping_table_suffix(), but I don't think that it makes any difference.
+>>
+> yes, I know that "goto out" will run print_mapping_table_suffix(outfp), because the error path before is done like this.
+> so I think it should be use "goto out" to run run print_mapping_table_suffix(outfp).
+>
+>> However, does outfp remain open also in this case:
+>>
+> Because it has a comment that "Make build fail", so I am not handle the outfp, only modify the process_mapfile() function.
+>
+>> main(int argc, char *argv[])
+>> {
+>> ...
+>>
+>> if (process_mapfile(eventsfp, mapfile)) {
+>>     pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+>>     /* Make build fail */
+>>     return 1;
+>> }
+>>
+>> return 0;
+>>
+>> empty_map:
+>>     fclose(eventsfp);
+>>     ...
+>> }
+>>
+>> I think that this code works on the basis that the program exits on any sort of error and releases resources automatically. Having said that, it is a good practice to tidy up.
+>>
+> I agree with you, when program exits, it will releases resources automatically. It's just to make the program clearer and more correct.
 
-Just to recall, I suggested something like ->pre_submit_ioend() back in
-v5. Short of that, I asked for extra comments to clearly document
-semantics which I believe Christoph added to the header, and I acked (it
-looks like the handful of R-B tags I sent were all dropped btw...? Have
-all of those patches changed?).
+So can you make that change also (to close outfp)?
 
-To give my .02 on the naming thing, I care about functional clarity more
-than aesthetics. In that regard, ->submit_ioend() reads like a
-submission hook and thus sounds rather confusing to me when I don't see
-it actually submit anything. ->pre_submit_ioend(), ->prepare_ioend() or
-->prepare_submission() all clearly indicate semantics to me, so I'm good
-with any of those over ->submit_ioend(). :)
+Thanks,
+John
 
-Brian
+>
+>> John
+>>
+>>>          }
+>>>          line[strlen(line)-1] = '\0';
+>>>
+>>> @@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
+>>>
+>>>  out:
+>>>      print_mapping_table_suffix(outfp);
+>>> -    return 0;
+>>> +    fclose(mapfp);
+>>> +    free(line);
+>>> +    return ret;
+>>>  }
+>>>
+>>>  /*
+>>>
+>>
+>>
+>>
+>> .
+>>
+>
+>
+> .
+>
 
-> As for the grammar comments - all this is copied over as-is.  I'll add
-> another patch to fix that up.
-> 
+
