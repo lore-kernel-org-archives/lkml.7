@@ -2,44 +2,44 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFECFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536F5FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDA421928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6F821928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GNRSeiD+"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TRjBnf8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406229AbfJPQYQ (ORCPT
+        id S2406192AbfJPQYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:24:16 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:58622 "EHLO
+        Wed, 16 Oct 2019 12:24:07 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:58520 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406198AbfJPQYK (ORCPT
+        by vger.kernel.org with ESMTP id S1732453AbfJPQYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:24:10 -0400
+        Wed, 16 Oct 2019 12:24:07 -0400
 Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 10620C300B;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 049A0C3008;
         Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571243048; bh=Q1OWeW46pCK8necNfIb4Cw9P88sWMr95qAMSB5WZ0fs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GNRSeiD+nBpYkpwkOSZNxrMIFHMdMmXpHqEClsL06AtAgJBXyUf1Ptp+hlS3r6d2C
-         EjhH8bk+lU8LFmOdlWjPimuje4r52uMAvtVkbh7hGCOjjncVug2omGKze/+GDrLjls
-         L6/p8sClaz4jRT/iAgpgnHn3U4/w6fqrItaNxY5s94IiEiVDlw0GXUqnWQUeVD4q5T
-         M6WKB341jFkyttCEuM5FiSDo4PnvioBPHREC8d6iYf1UKnNiHZDfZbQZMVedoCaCE3
-         e6JeBvLZKh54BoFoJ1uEeJ+aD4ssxqTpdUsnmmmzKxb8cB/7m2LqvnGcuwnl6r/0RH
-         mABQaLiIsWxNg==
+        t=1571243046; bh=llraKphMWAkZVO2NRbIWH0Hsr8qlC/sbM1GULVRrJUA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TRjBnf8GTm/MtZQRqem6EfZw/EWLXV54vKOyLdWH41Yi/Zh+abb2M34MgrXYsvbvu
+         cSLcKHn7TtUpDBnZKhqyI4Q4DerBCw6gTIlNunmG0mnnV8C2RyuOx3nKVmqHPnM2vf
+         6aRdxhq+Yd9BHPUsAxzOXgzgthryy5/ypywUX59dSJil4aKCkYLGHYcYkH443GOOUy
+         DYAprqzRmZ56DMtOvFExxBN5z8KUbUeNFwAZW/+uMqoWVd81KNjFRUwVkf8RaEHbdr
+         WkktoGeB22hOUhjX5yDpb1HPddZuWyd5rtd81CgJa2cAiD+MhLCgu414vwGlkNl1rz
+         xAh/yMqu/fWDw==
 Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 14661A006D;
-        Wed, 16 Oct 2019 16:24:02 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 85889A0081;
+        Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
 From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
 To:     linux-mm@kvack.org
 Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -52,10 +52,12 @@ Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH v3 0/5] elide extraneous generated code for folded p4d/pud/pmd
-Date:   Wed, 16 Oct 2019 09:23:55 -0700
-Message-Id: <20191016162400.14796-1-vgupta@synopsys.com>
+Subject: [PATCH v3 4/5] asm-generic/tlb: stub out pmd_free_tlb() if nopmd
+Date:   Wed, 16 Oct 2019 09:23:59 -0700
+Message-Id: <20191016162400.14796-5-vgupta@synopsys.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191016162400.14796-1-vgupta@synopsys.com>
+References: <20191016162400.14796-1-vgupta@synopsys.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,73 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This came up when removing __ARCH_HAS_5LEVEL_HACK for ARC as code bloat.
+With this patch we see the following code reduction.
 
-This series came out of seemingly benign excursion into understanding/removing
-__ARCH_USE_5LEVEL_HACK from ARC port showing some extraneous code being
-generated despite folded p4d/pud/pmd
-
-| bloat-o-meter2 vmlinux-[AB]*
-| add/remove: 0/0 grow/shrink: 3/0 up/down: 130/0 (130)
+| bloat-o-meter2 vmlinux-E-elide-p?d_clear_bad vmlinux-F-elide-pmd_free_tlb
+| add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-112 (-112)
 | function                                     old     new   delta
-| free_pgd_range                               548     660    +112
-| p4d_clear_bad                                  2      20     +18
+| free_pgd_range                               422     310    -112
+| Total: Before=4137042, After=4136930, chg -1.000000%
 
-The patches here address that
+Note that pmd folding can be tricky: In 2-level setup (where pmd is
+conceptually folded) most pmd routines are valid and refer to upper levels.
+In this patch we can, but see next patch for example where we can't
 
-| bloat-o-meter2 vmlinux-[BF]*
-| add/remove: 0/2 grow/shrink: 0/1 up/down: 0/-386 (-386)
-| function                                     old     new   delta
-| pud_clear_bad                                 20       -     -20
-| p4d_clear_bad                                 20       -     -20
-| free_pgd_range                               660     314    -346
-
-The code savings are not a whole lot, but still worthwhile IMHO.
-
-Please review, test and apply. It seems to survive my usual battery of
-multibench, hakcbench etc.
-
-Thx,
--Vineet
-
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 ---
-Changes since v2 [3]
- - No code changes: Fixed the silly typos and collected ACKs
+ include/asm-generic/pgtable-nopmd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes since v1 [1]
- - Per Linus Sugestion remvoed the extra ifdey'ery (hence not
-   accumulating Kirill's ACks)
- - Added the RFC patch for pmd_free_tlb() after discussions [2]
- - Also throwing in the ARC patch which started this all (so we get the
-   full context of patchset) - I'm ok if this goes via mm tree, should
-   be non contentious and can drop this too if Andrew thinks otherwise
-
-[1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006263.html
-[2] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006277.html
-[3] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006307.html
----
-
-Vineet Gupta (5):
-  ARC: mm: remove __ARCH_USE_5LEVEL_HACK
-  asm-generic/tlb: stub out pud_free_tlb() if nopud ...
-  asm-generic/tlb: stub out p4d_free_tlb() if nop4d ...
-  asm-generic/tlb: stub out pmd_free_tlb() if nopmd
-  asm-generic/mm: stub out p{4,u}d_clear_bad() if
-    __PAGETABLE_P{4,u}D_FOLDED
-
- arch/arc/include/asm/pgtable.h      |  1 -
- arch/arc/mm/fault.c                 | 10 ++++++++--
- arch/arc/mm/highmem.c               |  4 +++-
- include/asm-generic/4level-fixup.h  |  1 -
- include/asm-generic/5level-fixup.h  |  1 -
- include/asm-generic/pgtable-nop4d.h |  2 +-
- include/asm-generic/pgtable-nopmd.h |  2 +-
- include/asm-generic/pgtable-nopud.h |  2 +-
- include/asm-generic/pgtable.h       | 11 +++++++++++
- include/asm-generic/tlb.h           |  4 ----
- mm/pgtable-generic.c                |  9 +++++++++
- 11 files changed, 34 insertions(+), 13 deletions(-)
-
+diff --git a/include/asm-generic/pgtable-nopmd.h b/include/asm-generic/pgtable-nopmd.h
+index b85b8271a73d..0d9b28cba16d 100644
+--- a/include/asm-generic/pgtable-nopmd.h
++++ b/include/asm-generic/pgtable-nopmd.h
+@@ -60,7 +60,7 @@ static inline pmd_t * pmd_offset(pud_t * pud, unsigned long address)
+ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ {
+ }
+-#define __pmd_free_tlb(tlb, x, a)		do { } while (0)
++#define pmd_free_tlb(tlb, x, a)		do { } while (0)
+ 
+ #undef  pmd_addr_end
+ #define pmd_addr_end(addr, end)			(end)
 -- 
 2.20.1
 
