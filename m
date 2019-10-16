@@ -2,101 +2,167 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B7CFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F913FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1A820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571242734;
-	bh=4COz89P1zpzTlupxFFQQGh+6woY2hW0X2gsI1bc8HjQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mnNnNUXkEKiILNr1npJXPkQD+4g7PyJzMcFYBqJyLAcaz2S9OsMzM+NDuwbBdasRq
-	 daII229rleZc5ftiSXhthu5s1B866B6TyoZDBhbPWKoJiMMIR75+O3juu390UiF+Mg
-	 H8oVGIK2qUh6nxReOnHpDXkFEgAdBi2Rv7Dk0PVU=
+	by mail.kernel.org (Postfix) with ESMTP id 63C8B20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXaaodg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393741AbfJPQSx (ORCPT
+        id S2393811AbfJPQTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727154AbfJPQSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:18:51 -0400
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF22521928;
-        Wed, 16 Oct 2019 16:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571242731;
-        bh=4COz89P1zpzTlupxFFQQGh+6woY2hW0X2gsI1bc8HjQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xwM3DTxgTRrC9GLPoyMIVyLVBPvVCnMIYci5oDwuIfmHMX1amrkAZRVTHxCv2wXtc
-         iN9BRwPh3p5AIcva79D+7Ov7/Jet8aumvERgrxkZ9IfryBELEq9tQ6GTaGWHZTJSpO
-         FvlLYzakgxBw3HbEL7engUbcO4kAnu7OK4vX8AWM=
-Received: by mail-lj1-f179.google.com with SMTP id f5so24654496ljg.8;
-        Wed, 16 Oct 2019 09:18:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAUXkIUHaNPy8woBVm4cfuX74uUpiYXDPfyGsVwW0S1FBSG+4VzZ
-        +u4XqI6hBlrp9w9MbLWrOxzq4BnLLM1pfRUJkkg=
-X-Google-Smtp-Source: APXvYqzu0RRV4q5pmM2b1sIMqFIXCTIwcolo7Dbv37lXTeqNkqpQA3nPxoPmIeAXJmVDW5spOsl8eEkJOiSX9IsOuoQ=
-X-Received: by 2002:a2e:9ec2:: with SMTP id h2mr23068539ljk.85.1571242729071;
- Wed, 16 Oct 2019 09:18:49 -0700 (PDT)
+        Wed, 16 Oct 2019 12:19:14 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34890 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfJPQTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:19:13 -0400
+Received: by mail-io1-f66.google.com with SMTP id q10so54685545iop.2;
+        Wed, 16 Oct 2019 09:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h32JWLot+gceae0jQn6+dpZ85M9IjTbgfAQ5j4grnTA=;
+        b=UXaaodg3AFzS4aSYdIEd36mhiJEN7vilHRmzWu5tZGMnYleV6eUDOKw4ScHHm1iIo9
+         YhV+fJpyY2lM/ApsjxfbQ41c7Bh9SxHYRzYZybNuFE9tB4D2sCUT+OXc65qbawa6rr/n
+         UV8HHfghrJBRDgHhKSJ3A61llDuxCoCn9IgMl7xXWVb8AolKDi2B4N8vtlQWM6vmdSWO
+         aO7204bSLfoLbtIynHam5CXwCUJyWj0od89S5T3cW5nCJXMS4PrhQWg0FWc4mXmcubY2
+         mjW03XFhU3DSsP1EykwtCvouoektuZJhxOghw3m91RHSQ5XqnKKSGrj9B456LWjHdq5c
+         Zdww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h32JWLot+gceae0jQn6+dpZ85M9IjTbgfAQ5j4grnTA=;
+        b=ZxZHHMW7OZpKHw4V/0SxIsPRIehy9RkD+jHaYPnYmJuD/PChkj5Fsnk0OnIPP9tRVQ
+         H1o9PtjVVye7Z59Wty+IASEptM0LXbaCIO93PhZrOL4kJ/CEzxKzdWKdsS9aAkm6vowS
+         lI56/WqXuCsO4lKrlG8RcKoOOZVfRO4MrUXI+ru1Dbvdhu7snqBhhsKixQGk51hHlZlI
+         2/sICrAFbqvkWz17wVhO+MnpKKP9zJECUjb3Ew+ukm4yiP5CHuKWsz7aY9APKh4w0BNW
+         fcCEENdVPEdgjihB5mzRPb5UgwIOMoIXIzJCwuXqYhsNG4qllUnqBmZujwAgWHG0GmNc
+         qRxQ==
+X-Gm-Message-State: APjAAAU1mMg0yynMQd9OSz56Q1RhCy1fEQVwjk1sw/nDUekLnXHDhm+E
+        owTWldsdcuL8dlNI1ovYn7svnPf824bj8pOYdwI=
+X-Google-Smtp-Source: APXvYqyhl5iUSYWpUQKJhr3nSoqeJuYCD1HiKNf1oQRQxqz8oX8fx+54lB4kBMH1RO7fz+6Vb8PFFolkd/cH6Qoz2Ps=
+X-Received: by 2002:a05:6638:632:: with SMTP id h18mr31488191jar.55.1571242752159;
+ Wed, 16 Oct 2019 09:19:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191002164316.14905-1-krzk@kernel.org> <20191002164316.14905-6-krzk@kernel.org>
- <20191014113240.GN12262@dragon>
-In-Reply-To: <20191014113240.GN12262@dragon>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 16 Oct 2019 19:18:34 +0300
-X-Gmail-Original-Message-ID: <CAJKOXPccVj3KJTzzxvQpzFeBYHX1onoh+DfApr8AA-QxvPzWLg@mail.gmail.com>
-Message-ID: <CAJKOXPccVj3KJTzzxvQpzFeBYHX1onoh+DfApr8AA-QxvPzWLg@mail.gmail.com>
-Subject: Re: [PATCH v3 06/10] ARM: dts: imx: Rename "iram" node to "sram"
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org
+References: <20191002114626.12407-1-aford173@gmail.com> <20191002203149.g22igmfndbve7m3n@earth.universe>
+In-Reply-To: <20191002203149.g22igmfndbve7m3n@earth.universe>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 16 Oct 2019 11:19:00 -0500
+Message-ID: <CAHCN7xK2MFJbZkjaboDnfHJa4SgGMc7CL3+ZUL4UBCFV00W9+g@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_ll: set operational frequency earlier"
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 at 14:33, Shawn Guo <shawnguo@kernel.org> wrote:
+On Wed, Oct 2, 2019 at 3:31 PM Sebastian Reichel <sre@kernel.org> wrote:
 >
-> On Wed, Oct 02, 2019 at 06:43:12PM +0200, Krzysztof Kozlowski wrote:
-> > The device node name should reflect generic class of a device so rename
-> > the "iram" node to "sram".  This will be also in sync with upcoming DT
-> > schema.  No functional change.
+> Hi,
+>
+> On Wed, Oct 02, 2019 at 06:46:26AM -0500, Adam Ford wrote:
+> > As nice as it would be to update firmware faster, that patch broke
+> > at least two different boards, an OMAP4+WL1285 based Motorola Droid
+> > 4, as reported by Sebasian Reichel and the Logic PD i.MX6Q +
+> > WL1837MOD.
 > >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > This reverts commit a2e02f38eff84f199c8e32359eb213f81f270047.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
 >
-> Acked-by: Shawn Guo <shawnguo@kernel.org>
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 >
-> Let me know if you want it go through IMX tree.
+> This should be backported stable
 
-Yes please, I think each of these should go through soc maintainers.
+Is there any chance of this getting picked up for the 5.4 kernel?
+It's been a couple weeks, and I haven't seen any responses beyond
+Sebastian's Ack and request for backport.
 
-Best regards,
-Krzysztof
+adam
+
+>
+> -- Sebastian
+>
+> > diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
+> > index 285706618f8a..d9a4c6c691e0 100644
+> > --- a/drivers/bluetooth/hci_ll.c
+> > +++ b/drivers/bluetooth/hci_ll.c
+> > @@ -621,13 +621,6 @@ static int ll_setup(struct hci_uart *hu)
+> >
+> >       serdev_device_set_flow_control(serdev, true);
+> >
+> > -     if (hu->oper_speed)
+> > -             speed = hu->oper_speed;
+> > -     else if (hu->proto->oper_speed)
+> > -             speed = hu->proto->oper_speed;
+> > -     else
+> > -             speed = 0;
+> > -
+> >       do {
+> >               /* Reset the Bluetooth device */
+> >               gpiod_set_value_cansleep(lldev->enable_gpio, 0);
+> > @@ -639,20 +632,6 @@ static int ll_setup(struct hci_uart *hu)
+> >                       return err;
+> >               }
+> >
+> > -             if (speed) {
+> > -                     __le32 speed_le = cpu_to_le32(speed);
+> > -                     struct sk_buff *skb;
+> > -
+> > -                     skb = __hci_cmd_sync(hu->hdev,
+> > -                                          HCI_VS_UPDATE_UART_HCI_BAUDRATE,
+> > -                                          sizeof(speed_le), &speed_le,
+> > -                                          HCI_INIT_TIMEOUT);
+> > -                     if (!IS_ERR(skb)) {
+> > -                             kfree_skb(skb);
+> > -                             serdev_device_set_baudrate(serdev, speed);
+> > -                     }
+> > -             }
+> > -
+> >               err = download_firmware(lldev);
+> >               if (!err)
+> >                       break;
+> > @@ -677,7 +656,25 @@ static int ll_setup(struct hci_uart *hu)
+> >       }
+> >
+> >       /* Operational speed if any */
+> > +     if (hu->oper_speed)
+> > +             speed = hu->oper_speed;
+> > +     else if (hu->proto->oper_speed)
+> > +             speed = hu->proto->oper_speed;
+> > +     else
+> > +             speed = 0;
+> > +
+> > +     if (speed) {
+> > +             __le32 speed_le = cpu_to_le32(speed);
+> > +             struct sk_buff *skb;
+> >
+> > +             skb = __hci_cmd_sync(hu->hdev, HCI_VS_UPDATE_UART_HCI_BAUDRATE,
+> > +                                  sizeof(speed_le), &speed_le,
+> > +                                  HCI_INIT_TIMEOUT);
+> > +             if (!IS_ERR(skb)) {
+> > +                     kfree_skb(skb);
+> > +                     serdev_device_set_baudrate(serdev, speed);
+> > +             }
+> > +     }
+> >
+> >       return 0;
+> >  }
+> > --
+> > 2.17.1
+> >
