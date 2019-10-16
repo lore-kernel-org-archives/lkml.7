@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE917ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B22FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DC0218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7063E21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263018;
-	bh=qFP1NjO6W8Srt9bBH9rasyAL70V1cecuNsWg7IKsMEo=;
+	s=default; t=1571263023;
+	bh=L95EMHtNAx1++/FTWvOD8AFJ7l+KXtUK06uQ1uo1HIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iGOevNQizw/0pus/njEpthNPBlAT2rG1wYgS0qfLnISBI8Nc3bRaLHyyZhLkFBXgm
-	 n2SuRsqYGemBbmTkwzljhL1O0HidI8AetSqImpYBHQJEMy+pq3lGUDAtCul+tEWf0K
-	 ROpMnjgmj0HZShgjPUv/7HsLBPBegyD7OFTBxD6I=
+	b=0iqF4FxCWgWVEF73XEuJEIH06rXzsf4r4+gzKWZgLeZHeA+AbRXO2lrrXI0xpf/sd
+	 F5mEvzWW7SBapvW2vT2ccREhnV+Ci0CoKRkIbhXblbwKaDyme4tqkuDw4WH1LVjTMP
+	 NIEKa7fKy9OdE8np8h7E/3cTLUp80V7Z1CNj5MJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437942AbfJPV44 (ORCPT
+        id S2391484AbfJPV5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48094 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406644AbfJPV41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:27 -0400
+        id S2406657AbfJPV4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:30 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A0FB21D7E;
-        Wed, 16 Oct 2019 21:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE24021A49;
+        Wed, 16 Oct 2019 21:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262986;
-        bh=qFP1NjO6W8Srt9bBH9rasyAL70V1cecuNsWg7IKsMEo=;
+        s=default; t=1571262990;
+        bh=L95EMHtNAx1++/FTWvOD8AFJ7l+KXtUK06uQ1uo1HIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S75StnAgxkuU2RBkJ+9IBDM9SUEvP9m/2NnojWmv6M1rSJeddZFhac3odUsC3PvEG
-         FLIxlG+tyxtNXedtFHdVXARkay6tdPqGMlI0rPo5TOX/TQlS394ozvS1OENQzez8Mr
-         XFRVOZoJd5p5pvyj8GedfLdLLicUkdlHGqnfBj2I=
+        b=ynwlWHHJyJqer7kYxICV018N7sUxdSVFSAuZdHoF3QUgVrRzXWkTc7Lock0v/I+AF
+         qM40yFlBh//j8lXBE7ax0HMHhZKOhnRAP2eUaB56kV2ovb6RpT5t0DBsSFG0Pqw7EA
+         3hNBZa5dbZ8zad7PE7ZwMpe7uAV38MFW8WA+6Bjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 55/65] btrfs: fix incorrect updating of log root tree
-Date:   Wed, 16 Oct 2019 14:51:09 -0700
-Message-Id: <20191016214837.671712650@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 4.14 57/65] MIPS: Disable Loongson MMI instructions for kernel build
+Date:   Wed, 16 Oct 2019 14:51:11 -0700
+Message-Id: <20191016214838.518286192@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -61,132 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Paul Burton <paul.burton@mips.com>
 
-commit 4203e968947071586a98b5314fd7ffdea3b4f971 upstream.
+commit 2f2b4fd674cadd8c6b40eb629e140a14db4068fd upstream.
 
-We've historically had reports of being unable to mount file systems
-because the tree log root couldn't be read.  Usually this is the "parent
-transid failure", but could be any of the related errors, including
-"fsid mismatch" or "bad tree block", depending on which block got
-allocated.
+GCC 9.x automatically enables support for Loongson MMI instructions when
+using some -march= flags, and then errors out when -msoft-float is
+specified with:
 
-The modification of the individual log root items are serialized on the
-per-log root root_mutex.  This means that any modification to the
-per-subvol log root_item is completely protected.
+  cc1: error: ‘-mloongson-mmi’ must be used with ‘-mhard-float’
 
-However we update the root item in the log root tree outside of the log
-root tree log_mutex.  We do this in order to allow multiple subvolumes
-to be updated in each log transaction.
+The kernel shouldn't be using these MMI instructions anyway, just as it
+doesn't use floating point instructions. Explicitly disable them in
+order to fix the build with GCC 9.x.
 
-This is problematic however because when we are writing the log root
-tree out we update the super block with the _current_ log root node
-information.  Since these two operations happen independently of each
-other, you can end up updating the log root tree in between writing out
-the dirty blocks and setting the super block to point at the current
-root.
-
-This means we'll point at the new root node that hasn't been written
-out, instead of the one we should be pointing at.  Thus whatever garbage
-or old block we end up pointing at complains when we mount the file
-system later and try to replay the log.
-
-Fix this by copying the log's root item into a local root item copy.
-Then once we're safely under the log_root_tree->log_mutex we update the
-root item in the log_root_tree.  This way we do not modify the
-log_root_tree while we're committing it, fixing the problem.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Chris Mason <clm@fb.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: 3702bba5eb4f ("MIPS: Loongson: Add GCC 4.4 support for Loongson2E")
+Fixes: 6f7a251a259e ("MIPS: Loongson: Add basic Loongson 2F support")
+Fixes: 5188129b8c9f ("MIPS: Loongson-3: Improve -march option and move it to Platform")
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: stable@vger.kernel.org # v2.6.32+
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+ arch/mips/loongson64/Platform |    4 ++++
+ arch/mips/vdso/Makefile       |    1 +
+ 2 files changed, 5 insertions(+)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -2729,7 +2729,8 @@ out:
-  * in the tree of log roots
-  */
- static int update_log_root(struct btrfs_trans_handle *trans,
--			   struct btrfs_root *log)
-+			   struct btrfs_root *log,
-+			   struct btrfs_root_item *root_item)
- {
- 	struct btrfs_fs_info *fs_info = log->fs_info;
- 	int ret;
-@@ -2737,10 +2738,10 @@ static int update_log_root(struct btrfs_
- 	if (log->log_transid == 1) {
- 		/* insert root item on the first sync */
- 		ret = btrfs_insert_root(trans, fs_info->log_root_tree,
--				&log->root_key, &log->root_item);
-+				&log->root_key, root_item);
- 	} else {
- 		ret = btrfs_update_root(trans, fs_info->log_root_tree,
--				&log->root_key, &log->root_item);
-+				&log->root_key, root_item);
- 	}
- 	return ret;
- }
-@@ -2836,6 +2837,7 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 	struct btrfs_fs_info *fs_info = root->fs_info;
- 	struct btrfs_root *log = root->log_root;
- 	struct btrfs_root *log_root_tree = fs_info->log_root_tree;
-+	struct btrfs_root_item new_root_item;
- 	int log_transid = 0;
- 	struct btrfs_log_ctx root_log_ctx;
- 	struct blk_plug plug;
-@@ -2901,18 +2903,26 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 		goto out;
- 	}
+--- a/arch/mips/loongson64/Platform
++++ b/arch/mips/loongson64/Platform
+@@ -43,6 +43,10 @@ else
+       $(call cc-option,-march=mips64r2,-mips64r2 -U_MIPS_ISA -D_MIPS_ISA=_MIPS_ISA_MIPS64)
+ endif
  
-+	/*
-+	 * We _must_ update under the root->log_mutex in order to make sure we
-+	 * have a consistent view of the log root we are trying to commit at
-+	 * this moment.
-+	 *
-+	 * We _must_ copy this into a local copy, because we are not holding the
-+	 * log_root_tree->log_mutex yet.  This is important because when we
-+	 * commit the log_root_tree we must have a consistent view of the
-+	 * log_root_tree when we update the super block to point at the
-+	 * log_root_tree bytenr.  If we update the log_root_tree here we'll race
-+	 * with the commit and possibly point at the new block which we may not
-+	 * have written out.
-+	 */
- 	btrfs_set_root_node(&log->root_item, log->node);
-+	memcpy(&new_root_item, &log->root_item, sizeof(new_root_item));
- 
- 	root->log_transid++;
- 	log->log_transid = root->log_transid;
- 	root->log_start_pid = 0;
- 	/*
--	 * Update or create log root item under the root's log_mutex to prevent
--	 * races with concurrent log syncs that can lead to failure to update
--	 * log root item because it was not created yet.
--	 */
--	ret = update_log_root(trans, log);
--	/*
- 	 * IO has been started, blocks of the log tree have WRITTEN flag set
- 	 * in their headers. new modifications of the log will be written to
- 	 * new positions. so it's safe to allow log writers to go in.
-@@ -2932,6 +2942,14 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 	mutex_unlock(&log_root_tree->log_mutex);
- 
- 	mutex_lock(&log_root_tree->log_mutex);
++# Some -march= flags enable MMI instructions, and GCC complains about that
++# support being enabled alongside -msoft-float. Thus explicitly disable MMI.
++cflags-y += $(call cc-option,-mno-loongson-mmi)
 +
-+	/*
-+	 * Now we are safe to update the log_root_tree because we're under the
-+	 * log_mutex, and we're a current writer so we're holding the commit
-+	 * open until we drop the log_mutex.
-+	 */
-+	ret = update_log_root(trans, log, &new_root_item);
-+
- 	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
- 		/*
- 		 * Implicit memory barrier after atomic_dec_and_test
+ #
+ # Loongson Machines' Support
+ #
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -9,6 +9,7 @@ ccflags-vdso := \
+ 	$(filter -mmicromips,$(KBUILD_CFLAGS)) \
+ 	$(filter -march=%,$(KBUILD_CFLAGS)) \
+ 	$(filter -m%-float,$(KBUILD_CFLAGS)) \
++	$(filter -mno-loongson-%,$(KBUILD_CFLAGS)) \
+ 	-D__VDSO__
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
 
 
