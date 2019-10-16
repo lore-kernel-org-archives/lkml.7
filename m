@@ -2,128 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3271FECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DD0ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003C620854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236FE20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="WUPyGUzQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrQSV0DS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390828AbfJPDJf (ORCPT
+        id S2390832AbfJPDMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:09:35 -0400
-Received: from mail-eopbgr740097.outbound.protection.outlook.com ([40.107.74.97]:28698
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726906AbfJPDJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:09:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MW++LaAb2SY69VnNsNoQnmb6MKJ1X3jqhaolVr/rdjYcV4csWEleHMNWyLI2Vq+pvSa88+G+vygNBudoKQnZx1C7FO6SLf5FNBmankCfL0JEUVMNpeJvxr327ZwryefSVVnV7kefhMPrIoaz1ubXcW++DLd9L/n2V7rlaDVbjYufEboH/1n1Z6hUP//1GqQCS5Xz8uaOIq0hrgP8BfkZ3BEnh19ctjWay/sMrkDoFFfZOuRmKvQsacfUXPnNiwdGQZHA5jmJ5q+Ez1sqGS5tJFO2WaEnNKnAeGB0Qr6fVizIeKCcVXxeK/dhCjl5LJj68dbXu6HhjE4uQfx+xwlE7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYqiARXwLXYngOzh8qR594QbWumrl9KKHlCx+EVvWrc=;
- b=YpKMV4/IxRtW9Og1z128QaCa1sABsA5OQHn96dstOHsUyCZa/5A2h7Wk7BfpZawzMUwYkObPutll1aKZdsC6iYdXFUKsqVaxgOQk0iwKPKx+b3nkkIo3gCAx5RyQ/IidgrPB6nr+BsP3XQHfLFjBI78igkdc7Y0W1Q5DNvHWWLZrXJS1GPm+Rj5880xYvNncq/VKVe+KS8qbTPqzszb+CdQwJDrj4XOCc7LqhP6p60oRh937L0CQUdC+YNOxXHDoSklVRM8O51Z1odZIo2trzemcCK8Cjk4DuC1y/C/0Jw0/jtw0PdmSuy4UFVqbjRAeHiLmz86VUZFaLeDHu6dFTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYqiARXwLXYngOzh8qR594QbWumrl9KKHlCx+EVvWrc=;
- b=WUPyGUzQwhrsCvTd+QlusupO1TkVAp+IdPJJDfdRMj7v5soZVqMFo31tFtPq/vg5G8daaiR2a41JhpqV7Geovtt9DXaCXl3KVAtiUi6doYyQ3tw96PMY1jCW8Rkn0j/d9RyEVEG7gITN16q7RKlAptSxU3YTZ7TIkVtA4qAbqvY=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB0969.namprd13.prod.outlook.com (10.168.239.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.13; Wed, 16 Oct 2019 03:09:31 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::d1be:764d:9347:764e]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::d1be:764d:9347:764e%10]) with mapi id 15.20.2347.023; Wed, 16 Oct
- 2019 03:09:31 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "suyj.fnst@cn.fujitsu.com" <suyj.fnst@cn.fujitsu.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: About patch NFS: Fix O_DIRECT accounting of number of bytes
- read/written
-Thread-Topic: About patch NFS: Fix O_DIRECT accounting of number of bytes
- read/written
-Thread-Index: AdWDupUDFq5cvVv1QGGoMCLng+/bzAAFIhGA
-Date:   Wed, 16 Oct 2019 03:09:29 +0000
-Message-ID: <ee3fc922be7850532a6625a09569b74e24d75b15.camel@hammerspace.com>
-References: <9608C5E5429A7846A89FDA46D5296B97334E3824@G08CNEXMBPEKD03.g08.fujitsu.local>
-In-Reply-To: <9608C5E5429A7846A89FDA46D5296B97334E3824@G08CNEXMBPEKD03.g08.fujitsu.local>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [107.1.192.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 407c5ed3-d705-4b28-07dc-08d751e643b5
-x-ms-traffictypediagnostic: DM5PR13MB0969:
-x-microsoft-antispam-prvs: <DM5PR13MB09692BEF049FF291FE8D6BBFB8920@DM5PR13MB0969.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(136003)(39840400004)(346002)(199004)(189003)(256004)(14444005)(99286004)(6916009)(25786009)(478600001)(118296001)(2906002)(6486002)(8676002)(86362001)(6246003)(6512007)(6436002)(54906003)(81156014)(2501003)(5640700003)(8936002)(81166006)(71200400001)(3846002)(4326008)(6116002)(229853002)(4001150100001)(36756003)(2351001)(316002)(14454004)(66446008)(66556008)(2616005)(186003)(6506007)(66066001)(71190400001)(476003)(66476007)(64756008)(11346002)(66946007)(76116006)(91956017)(26005)(446003)(102836004)(5660300002)(305945005)(76176011)(486006)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB0969;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ky3/gnLdDJHTNHDvFrhtVGO3Zsp6jTsMPlx8GZgXnJE8mAq8rO8YUYrWPL709vdIWRXY6e6KkC7E3T7DAaQCtVaCLLbLywxXImAHxzCcIlmJXqlYMK8OEW7VjKN9/GpzMj9F0UYnCxYwTnS2JJ4RpOgrlnlw3u4MDJn7xwc9SYpGxbobrFVxQPryqzq59efT6eL2JHogauDMQ6nzGqod0rITUNx3Gi2qRkczbHrehIzpLWSh+cq3FfKVOr+GaUHJQm4kHyGATGMOpdKw4aL3Y+R/MzY29E+cg6EBeWR+R8NiUNmQ8iQsbOU2TYYpRbCj5oxSGLgqvmd85+cpN9FqtE/8DpB4o791xYss77hIkfv2rJetlEjA7tV2zcLRZFLQItzcoyiwlaJoKeChWv7Y644oAD7yxha0S6CQu2w0ea8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C96EDE7DF36D4D469BD597B5F8DB93D1@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 15 Oct 2019 23:12:53 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45021 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfJPDMx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:12:53 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w6so18699833oie.11
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 20:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Ps4EVuybUtMjAwr2oDyFkpx78Fm0dPag8RJXIQ6sLRI=;
+        b=ZrQSV0DSQt7/CAKfrEigLHdIDxlswOYjHDG8Db1U4KxJFnjeaWuWtikRq/3XpXID1M
+         gEDgZDoEhzsJGePOYjhPxfdCfpEHlJ7Dq//a01bSFAAAlShkI0FOhqh5fY5IR+SKMwmv
+         VHlJUHMZbeE1WhKSkougzM4IAzZwPQC9NqTFKvmijHSJiLgsCiBJW2/kboNMG7DBnfcA
+         NIL/mxk50sekpXtHWP3hT0HFd2VKHnfTm5YfqaOCLuiGjlUZ6rxf3EIGNJ4QYyuaAi5+
+         JeBECp//LbCgcWj8DCInG85WHymzN6y1arfB5rJoJgSKaMx2CKyOOe6w5HJ7iSp/U/T7
+         qJIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Ps4EVuybUtMjAwr2oDyFkpx78Fm0dPag8RJXIQ6sLRI=;
+        b=K8BTFeQ9Q21o81Xvwz3mSqP8WH7lpuhVXt5GNdlg4JW0WZ1cmL6coPPhcgY9V46pxO
+         pUdUb8q7VPn7zTkaK3iGxwFy3gXPOtzjaHvzHlZMzEVI9efvPIyVgQ5gXj3oArXvlkE7
+         FbMkzlDzo+BFU1teIsTMsESc4YLJElW0lnEQH4tWbSe7ZSOcOWY96EfL6FiRfSilvXRf
+         K22dpd017H//7Qirp+8JIwsJKfFVf4BFLVU52oQWVDYE0r/L2neoVwWrchLcV8DPBq46
+         QTdpteWJHcUeGiN+nBQaekIdNl7KpH4kHnh5924HQyBmxTbt/2WFflCSjRCpUqBbT4wn
+         6iqw==
+X-Gm-Message-State: APjAAAUMdLLkn13G33RqG4AwAkV5PNuH5L1ZSHnWJxSDmSq7ypUp4p7l
+        THsUpnp2A4HtLQ6nhqAC7Lk=
+X-Google-Smtp-Source: APXvYqzemvPwAicUlAsZF5hC3V69o0sHDC/Cuz34m2aXl5tSu0Nnv1l9LFQAJXp8eeTxDpJgZqStsQ==
+X-Received: by 2002:aca:48d8:: with SMTP id v207mr1499400oia.113.1571195572447;
+        Tue, 15 Oct 2019 20:12:52 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id z10sm7854337ote.54.2019.10.15.20.12.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 20:12:51 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH -next v2] arm64: mm: Fix unused variable warning in zone_sizes_init
+Date:   Tue, 15 Oct 2019 20:11:08 -0700
+Message-Id: <20191016031107.30045-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191015224304.20963-1-natechancellor@gmail.com>
+References: <20191015224304.20963-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 407c5ed3-d705-4b28-07dc-08d751e643b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 03:09:29.8818
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yX6EYKSb0A3KjSzCWyZQJJtTEn1aoW7jBd6KivajOsSpCe8qT3F2uV898MXNQpPnG6+9/7qJHB6qg1fwLPqyhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB0969
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEwLTE2IGF0IDAxOjAwICswMDAwLCBTdSwgWWFuanVuIHdyb3RlOg0KPiBI
-aSB0cm9uZCwNCj4gQmVjYXVzZSBNeSBtYWlsIHN5c3RlbSBjYW50IHJlY2VpdmUgbmZzIG1haWwg
-bGlzdOKAmXMgbWFpbHMsIEkgcmVwbHkNCj4geW91ciBwYXRjaCBoZXJlLg0KPiBJIGhhdmUgc29t
-ZSBxdWVzdGlvbiBmb3IgdGhlIHBhdGNoLg0KPiANCj4gPiBOby4gQmFzaWMgT19ESVJFQ1QgZG9l
-cyBub3QgZ3VhcmFudGVlIGF0b21pY2l0eSBvZiByZXF1ZXN0cywgd2hpY2gNCj4gPiBpcw0KPiA+
-IHdoeSB3ZSBkbyBub3QgaGF2ZSBnZW5lcmljIGxvY2tpbmcgYXQgdGhlIFZGUyBsZXZlbCB3aGVu
-IHJlYWRpbmcNCj4gPiBhbmQNCj4gPiB3cml0aW5nLiBUaGUgb25seSBndWFyYW50ZWUgYmVpbmcg
-b2ZmZXJlZCBpcyB0aGF0IE9fRElSRUNUIGFuZA0KPiA+IGJ1ZmZlcmVkDQo+ID4gd3JpdGVzIGRv
-IG5vdCBjb2xsaWRlLg0KPiBEbyB5b3UgbWVhbiBvdGhlciBmcyBhbHNvIGNhbnQgZ3VhcmFudGVl
-IGF0b21pY2l0eSBvZiBPX0RJUkVDVA0KPiByZXF1ZXN0IG9yIGp1c3QgbmZzPw0KPiANCj4gPiBJ
-T1c6IEkgdGhpbmsgdGhlIGJhc2ljIHByZW1pc2UgZm9yIHRoaXMgdGVzdCBpcyBqdXN0IGJyb2tl
-biAoYXMgSQ0KPiA+IGNvbW1lbnRlZCBpbiB0aGUgcGF0Y2ggc2VyaWVzIEkgc2VudCkgYmVjYXVz
-ZSBpdCBpcyBhc3N1bWluZyBhDQo+ID4gYmVoYXZpb3VyIHRoYXQgaXMgc2ltcGx5IG5vdCBndWFy
-YW50ZWVkLg0KPiBTbyB0aGUgZ2VuZXJpYy80NjUgb2YgeGZzdGVzdHMgY2Fu4oCZdCBhcHBseSB0
-byBuZnMgZm9yIG5vdywgYW0gSQ0KPiByaWdodD8NCg0KQXMgZmFyIGFzIEkgY2FuIHNlZSwgaXQg
-aXMgZG9lcyBub3QgYmVsb25nIGluIHRoZSAnZ2VuZXJpYycgY2F0ZWdvcnkgYXQNCmFsbC4NCg0K
-PiANCj4gPiBCVFc6IG5vdGUgdGhhdCBidWZmZXJlZCB3cml0ZXMgaGF2ZSB0aGUgc2FtZSBwcm9w
-ZXJ0eS4gVGhleSBhcmUNCj4gPiBvcmRlcmVkDQo+ID4gd2hlbiBiZWluZyB3cml0dGVuIGludG8g
-dGhlIHBhZ2UgY2FjaGUsIG1lYW5pbmcgdGhhdCByZWFkcyBvbiB0aGUNCj4gPiBzYW1lDQo+ID4g
-Y2xpZW50IHdpbGwgc2VlIG5vIGhvbGVzLCBob3dldmVyIGlmIHlvdSB0cnkgdG8gcmVhZCBmcm9t
-IGFub3RoZXINCj4gPiBjbGllbnQsIHRoZW4geW91IHdpbGwgc2VlIHRoZSBzYW1lIGJlaGF2aW91
-ciwgd2l0aCB0ZW1wb3JhcnkgaG9sZXMNCj4gPiBtYWdpY2FsbHkgYXBwZWFyaW5nIGluIHRoZSBm
-aWxlLg0KPiBBcyB5b3Ugc2F5LCBuZnMgYnVmZmVyZWQgd3JpdGUgYWxzbyBoYXMgdGhlIGhvbGUg
-cHJvYmxlbSB3aXRoDQo+IG11bHRpcGxlIHIvdyBvbiBkaWZmZXJlbnQgY2xpZW50cy4NCj4gSSB3
-YW50IHRvIGtub3cgaWYgdGhlIHByb2JsZW0gZXhpc3RzIGluIG90aGVyIGxvY2FsIGZzIHN1Y2gg
-YXMNCj4geGZzLGV4dDQ/DQo+IA0KDQpUaGVyZSBpcyBubyBWRlMgbG9ja2luZyB0aGF0IGVuZm9y
-Y2VzIGFueSBzZXJpYWxpc2F0aW9uIGZvciBPX0RJUkVDVC4NClNvIHVubGVzcyB0aGUgZmlsZXN5
-c3RlbSBpbXBsZW1lbnRzIGl0cyBvd24gc2VyaWFsaXNhdGlvbiAod2hpY2ggeGZzDQpkb2VzKSB0
-aGVuIHRoZXJlIGlzIG5vIGd1YXJhbnRlZS4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4
-IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1t
-ZXJzcGFjZS5jb20NCg0KDQo=
+When building arm64 allnoconfig, CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32
+get disabled so there is a warning about max_dma being unused.
+
+../arch/arm64/mm/init.c:215:16: warning: unused variable 'max_dma'
+[-Wunused-variable]
+        unsigned long max_dma = min;
+                      ^
+1 warning generated.
+
+Add an ifdef around the variable to fix this.
+
+Fixes: 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Fix check for CONFIG_ZONE_DMA32 as pointed out by Will.
+
+ arch/arm64/mm/init.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 44f07fdf7a59..359c3b08b968 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -212,7 +212,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 	struct memblock_region *reg;
+ 	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+ 	unsigned long max_dma32 = min;
++#if defined(CONFIG_ZONE_DMA) || defined(CONFIG_ZONE_DMA32)
+ 	unsigned long max_dma = min;
++#endif
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+ 
+-- 
+2.23.0
+
