@@ -2,145 +2,197 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125BBECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD921ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E982053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9841621928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406591AbfJPT12 convert rfc822-to-8bit (ORCPT
+        id S2406601AbfJPT2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:27:28 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:50892 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfJPT12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:27:28 -0400
-Received: from surfer-172-29-2-69-hotspot.internet-for-guests.com (p578ac27a.dip0.t-ipconnect.de [87.138.194.122])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 655A2CECDE;
-        Wed, 16 Oct 2019 21:36:24 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH] Bluetooth: hci_core: fix init with
- HCI_QUIRK_NON_PERSISTENT_SETUP
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191004000933.24575-1-mkorpershoek@baylibre.com>
-Date:   Wed, 16 Oct 2019 21:27:25 +0200
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <474814D3-A97F-48D1-8268-3D200BE60795@holtmann.org>
-References: <20191004000933.24575-1-mkorpershoek@baylibre.com>
-To:     Mattijs Korpershoek <mkorpershoek@baylibre.com>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Wed, 16 Oct 2019 15:28:22 -0400
+Received: from mailoutvs7.siol.net ([185.57.226.198]:46283 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730794AbfJPT2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 15:28:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id A1E315240D7;
+        Wed, 16 Oct 2019 21:28:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ICK6a2hQkFqB; Wed, 16 Oct 2019 21:28:17 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 2C624522B23;
+        Wed, 16 Oct 2019 21:28:17 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 8A38B5240D7;
+        Wed, 16 Oct 2019 21:28:13 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
+        hverkuil@xs4all.nl, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: [PATCH v3 0/6] media: Introduce Allwinner H3 deinterlace driver
+Date:   Wed, 16 Oct 2019 21:28:01 +0200
+Message-Id: <20191016192807.1278987-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mattijs,
+Starting with H3, Allwinner began to include standalone deinterlace
+core in multimedia oriented SoCs. This patch series introduces support
+for it. Note that new SoCs, like H6, have radically different (updated)
+deinterlace core, which will need a new driver.
 
-> Some HCI devices which have the HCI_QUIRK_NON_PERSISTENT_SETUP [1]
-> require a call to setup() to be ran after every open().
-> 
-> During the setup() stage, these devices expect the chip to acknowledge
-> its setup() completion via vendor specific frames.
-> 
-> If userspace opens() such HCI device in HCI_USER_CHANNEL [2] mode,
-> the vendor specific frames are never tranmitted to the driver, as
-> they are filtered in hci_rx_work().
-> 
-> Allow HCI devices which have HCI_QUIRK_NON_PERSISTENT_SETUP to process
-> frames if the HCI device is is HCI_INIT state.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/965071/
-> [2] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
-> 
-> Fixes: 740011cfe948 ("Bluetooth: Add new quirk for non-persistent setup settings")
-> Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-> ---
-> Some more background on the change follows:
-> 
-> The Android bluetooth stack (Bluedroid) also has a HAL implementation
-> which follows Linux's standard rfkill interface [1].
-> 
-> This implementation relies on the HCI_CHANNEL_USER feature to get
-> exclusive access to the underlying bluetooth device.
-> 
-> When testing this along with the btkmtksdio driver, the
-> chip appeared unresponsive when calling the following from userspace:
-> 
->    struct sockaddr_hci addr;
->    int fd;
-> 
->    fd = socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI);
-> 
->    memset(&addr, 0, sizeof(addr));
->    addr.hci_family = AF_BLUETOOTH;
->    addr.hci_dev = 0;
->    addr.hci_channel = HCI_CHANNEL_USER;
-> 
->    bind(fd, (struct sockaddr *) &addr, sizeof(addr)); # device hangs
-> 
-> In the case of bluetooth drivers exposing QUIRK_NON_PERSISTENT_SETUP
-> such as btmtksdio, setup() is called each multiple times.
-> In particular, when userspace calls bind(), the setup() is called again
-> and vendor specific commands might be send to re-initialize the chip.
-> 
-> Those commands are filtered out by hci_core in HCI_CHANNEL_USER mode,
-> preventing setup() from completing successfully.
-> 
-> This has been tested on a 4.19 kernel based on Android Common Kernel.
-> It has also been compile tested on bluetooth-next.
-> 
-> [1] https://android.googlesource.com/platform/system/bt/+/refs/heads/master/vendor_libs/linux/interface/
-> 
-> net/bluetooth/hci_core.c | 15 +++++++++++++--
-> 1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 04bc79359a17..5f12e8574d54 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -4440,9 +4440,20 @@ static void hci_rx_work(struct work_struct *work)
-> 			hci_send_to_sock(hdev, skb);
-> 		}
-> 
-> +		/* If the device has been opened in HCI_USER_CHANNEL,
-> +		 * the userspace has exclusive access to device.
-> +		 * When HCI_QUIRK_NON_PERSISTENT_SETUP is set and
-> +		 * device is HCI_INIT,  we still need to process
-> +		 * the data packets to the driver in order
-> +		 * to complete its setup().
-> +		 */
-> 		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-> -			kfree_skb(skb);
-> -			continue;
-> +			if (!test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP,
-> +				      &hdev->quirks) ||
-> +			    !test_bit(HCI_INIT, &hdev->flags)) {
-> +				kfree_skb(skb);
-> +				continue;
-> +			}
-> 		}
+v4l2-compliance report:
+v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
 
-	if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
-	    !test_bit(HCI_INIT, &hdev->flags)) {
-		kfree_skb(skb);
-		continue;
-	}
+Compliance test for sun8i-di device /dev/video0:
 
-Wouldn’t it be enough to just add a check for HCI_INIT to this. I mean it makes no difference if ->setup is repeated on each device open or not. We want to process event during HCI_INIT when in user channel mode.
+Driver Info:
+        Driver name      : sun8i-di
+        Card type        : sun8i-di
+        Bus info         : platform:sun8i-di
+        Driver version   : 5.3.0
+        Capabilities     : 0x84208000
+                Video Memory-to-Memory
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps      : 0x04208000
+                Video Memory-to-Memory
+                Streaming
+                Extended Pix Format
 
-Regards
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
 
-Marcel
+Allow for multiple opens:
+        test second /dev/video0 open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+        test VIDIOC_QUERYCTRL: OK (Not Supported)
+        test VIDIOC_G/S_CTRL: OK (Not Supported)
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK
+        test VIDIOC_TRY_FMT: OK
+        test VIDIOC_S_FMT: OK
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK
+
+Codec ioctls:
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+        test VIDIOC_EXPBUF: OK
+        test Requests: OK (Not Supported)
+
+Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warn=
+ings: 0
+
+Please take a look.
+
+Best regards,
+Jernej
+
+Changes from v2:
+- added acked-by and review-by tags
+- fixed schema path in H3 deinterlace binding
+- moved busy check after format args check
+
+Changes from v1:
+- updated Maxime's e-mail in DT binding
+- removed "items" for single item in DT binding
+- implemented power management
+- replaced regmap with direct io access
+- set exclusive clock rate
+- renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACC=
+ESS
+
+Jernej Skrabec (6):
+  dt-bindings: bus: sunxi: Add H3 MBUS compatible
+  clk: sunxi-ng: h3: Export MBUS clock
+  ARM: dts: sunxi: h3/h5: Add MBUS controller node
+  dt-bindings: media: Add Allwinner H3 Deinterlace binding
+  media: sun4i: Add H3 deinterlace driver
+  dts: arm: sun8i: h3: Enable deinterlace unit
+
+ .../bindings/arm/sunxi/sunxi-mbus.txt         |    1 +
+ .../media/allwinner,sun8i-h3-deinterlace.yaml |   75 ++
+ MAINTAINERS                                   |    7 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |   13 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |    9 +
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.h           |    4 -
+ drivers/media/platform/sunxi/Kconfig          |    1 +
+ drivers/media/platform/sunxi/Makefile         |    1 +
+ drivers/media/platform/sunxi/sun8i-di/Kconfig |   11 +
+ .../media/platform/sunxi/sun8i-di/Makefile    |    2 +
+ .../media/platform/sunxi/sun8i-di/sun8i-di.c  | 1020 +++++++++++++++++
+ .../media/platform/sunxi/sun8i-di/sun8i-di.h  |  237 ++++
+ include/dt-bindings/clock/sun8i-h3-ccu.h      |    2 +-
+ 13 files changed, 1378 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun=
+8i-h3-deinterlace.yaml
+ create mode 100644 drivers/media/platform/sunxi/sun8i-di/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun8i-di/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.c
+ create mode 100644 drivers/media/platform/sunxi/sun8i-di/sun8i-di.h
+
+--=20
+2.23.0
 
