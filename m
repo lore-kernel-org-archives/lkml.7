@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC042FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B27FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F17222C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A62C21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262938;
-	bh=wrJC8ofyYVGM3ZMkVOPjmMsV1QlKH9zkBK4eiceb2GA=;
+	s=default; t=1571262947;
+	bh=uNohVdhBifiuMEKTQUmSHwCBhepRBWL4dR1TiZyFf0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a3dNlRozqe/2kEU/9RFaH+bY9O52sHOv7jHf6RkAr2SwXFXTo6TzGuiVXXIxC7TcR
-	 FWUeV1CmunKXNfW+8XCA4VetVabq0YH1y50zhAWboq2wogNuHuEtxU4YB8S2zXSkZ0
-	 p5tg9C/C/kOiyJBUfGEtvVkHsEbm7bQZx9cSRCiQ=
+	b=OR8NYQUm0S3Jcg+r9BYh6X4xs68KvQFx0ylNz4l9g109QR/v4KX0P1cZ+kY44LHkb
+	 kQFNrtWl0OvS3hKyrpaiLqn9WxMfff4SVGnajHi08ncXPf8MGtb2S2ZUeXXFyuvnwU
+	 HXWR4cjBIKL+wwL9TrZIj7IClzrMOWNZHoASyMEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395271AbfJPVzg (ORCPT
+        id S2395362AbfJPVzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46280 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395238AbfJPVzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:31 -0400
+        id S2395349AbfJPVzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:45 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F91D21A4C;
-        Wed, 16 Oct 2019 21:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AF7E218DE;
+        Wed, 16 Oct 2019 21:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262930;
-        bh=wrJC8ofyYVGM3ZMkVOPjmMsV1QlKH9zkBK4eiceb2GA=;
+        s=default; t=1571262944;
+        bh=uNohVdhBifiuMEKTQUmSHwCBhepRBWL4dR1TiZyFf0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1CkTOlmJ+oRtpx5p+UTgj+yw0nSGtXdnWkYe4syM+MB26QXJD78Bg/20ZsXabqKt
-         Ec7mwnJ2iJs27W2f/UiBAcjuPIJkdzmuf/dSzofBXng3uVKiB4zA4XVbNRBQm7qdxq
-         W4Vp49K9N2PmSenJ7Jdy+oiZhHrAfwv42Ofep1fE=
+        b=tQNEo31pu9VTAm07PwT0VPKDbii2pPcgR9HhI1zw1vDGkDd3HziB/iJdyeQJmCtxz
+         vg1JNX5NdFESAcZr0cn44tBzPn/C0r0qsuXT9258SP/YIH2pmsBC7IuQKtgItlSqpS
+         I/XKCsoeWeBnGn3bnZhHpvzMg3GxW9trCjwTGRWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 90/92] tracing: Get trace_array reference for available_tracers files
-Date:   Wed, 16 Oct 2019 14:51:03 -0700
-Message-Id: <20191016214848.693341261@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 15/65] USB: adutux: fix NULL-derefs on disconnect
+Date:   Wed, 16 Oct 2019 14:50:29 -0700
+Message-Id: <20191016214807.808311626@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
-References: <20191016214759.600329427@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,67 +58,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
+commit b2fa7baee744fde746c17bc1860b9c6f5c2eebb7 upstream.
 
-As instances may have different tracers available, we need to look at the
-trace_array descriptor that shows the list of the available tracers for the
-instance. But there's a race between opening the file and an admin
-deleting the instance. The trace_array_get() needs to be called before
-accessing the trace_array.
+The driver was using its struct usb_device pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg statements in the completion handlers
+which relies on said pointer.
 
-Cc: stable@vger.kernel.org
-Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+The pointer was also dereferenced unconditionally in a dev_dbg statement
+release() something which would lead to a NULL-deref whenever a device
+was disconnected before the final character-device close if debugging
+was enabled.
+
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
+
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
+
+Fixes: 1ef37c6047fe ("USB: adutux: remove custom debug macro and module parameter")
+Fixes: 66d4bc30d128 ("USB: adutux: remove custom debug macro")
+Cc: stable <stable@vger.kernel.org>     # 3.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190925092913.8608-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/usb/misc/adutux.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3700,9 +3700,14 @@ static int show_traces_open(struct inode
- 	if (tracing_disabled)
- 		return -ENODEV;
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -79,6 +79,7 @@ struct adu_device {
+ 	char			serial_number[8];
  
-+	if (trace_array_get(tr) < 0)
-+		return -ENODEV;
+ 	int			open_count; /* number of times this port has been opened */
++	unsigned long		disconnected:1;
+ 
+ 	char		*read_buffer_primary;
+ 	int			read_buffer_length;
+@@ -120,7 +121,7 @@ static void adu_abort_transfers(struct a
+ {
+ 	unsigned long flags;
+ 
+-	if (dev->udev == NULL)
++	if (dev->disconnected)
+ 		return;
+ 
+ 	/* shutdown transfer */
+@@ -243,7 +244,7 @@ static int adu_open(struct inode *inode,
+ 	}
+ 
+ 	dev = usb_get_intfdata(interface);
+-	if (!dev || !dev->udev) {
++	if (!dev) {
+ 		retval = -ENODEV;
+ 		goto exit_no_device;
+ 	}
+@@ -326,7 +327,7 @@ static int adu_release(struct inode *ino
+ 	}
+ 
+ 	adu_release_internal(dev);
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 		if (!dev->open_count)	/* ... and we're the last user */
+ 			adu_delete(dev);
+@@ -355,7 +356,7 @@ static ssize_t adu_read(struct file *fil
+ 		return -ERESTARTSYS;
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto exit;
+@@ -520,7 +521,7 @@ static ssize_t adu_write(struct file *fi
+ 		goto exit_nolock;
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto exit;
+@@ -766,11 +767,14 @@ static void adu_disconnect(struct usb_in
+ 
+ 	usb_deregister_dev(interface, &adu_class);
+ 
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
 +
- 	ret = seq_open(file, &show_traces_seq_ops);
--	if (ret)
-+	if (ret) {
-+		trace_array_put(tr);
- 		return ret;
-+	}
+ 	mutex_lock(&adutux_mutex);
+ 	usb_set_intfdata(interface, NULL);
  
- 	m = file->private_data;
- 	m->private = tr;
-@@ -3710,6 +3715,14 @@ static int show_traces_open(struct inode
- 	return 0;
- }
+ 	mutex_lock(&dev->mtx);	/* not interruptible */
+-	dev->udev = NULL;	/* poison */
++	dev->disconnected = 1;
+ 	mutex_unlock(&dev->mtx);
  
-+static int show_traces_release(struct inode *inode, struct file *file)
-+{
-+	struct trace_array *tr = inode->i_private;
-+
-+	trace_array_put(tr);
-+	return seq_release(inode, file);
-+}
-+
- static ssize_t
- tracing_write_stub(struct file *filp, const char __user *ubuf,
- 		   size_t count, loff_t *ppos)
-@@ -3740,8 +3753,8 @@ static const struct file_operations trac
- static const struct file_operations show_traces_fops = {
- 	.open		= show_traces_open,
- 	.read		= seq_read,
--	.release	= seq_release,
- 	.llseek		= seq_lseek,
-+	.release	= show_traces_release,
- };
- 
- static ssize_t
+ 	/* if the device is not opened, then we clean up right now */
 
 
