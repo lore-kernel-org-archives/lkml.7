@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A72ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6009ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7CE2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFD820854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X4D5Ac/v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmzymGkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390755AbfJPHfN (ORCPT
+        id S2390855AbfJPHfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:35:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42437 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390610AbfJPHfL (ORCPT
+        Wed, 16 Oct 2019 03:35:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37775 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390778AbfJPHfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:35:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so14153859pff.9
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:35:10 -0700 (PDT)
+        Wed, 16 Oct 2019 03:35:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y5so14171654pfo.4
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=03jpeb+1aJx4bxpcdPiavfJJhVJ5WBvL1EOxBoz3J+I=;
-        b=X4D5Ac/vX8qbhhnG/SRIM90B0+FmV6AycTSj/JtrullgPcisRI70iJjTkjiIMfyi/H
-         QhssR6y42idqaSNfRGO5AVREd9915qBuIXFx5EV+4gIzMHAQr/p1a8REtGA9cfSZKsmI
-         PWp5a2RaRyTOA8Ki2AoHQ3/WAxaO3Rg2RGtb1Z1GvMXas458/hA1SSPuRzfojyFyWFL7
-         td8pqUQrvLIhjkogvgzcfK4BGdZzYFhJsEFJxSn26/snm4bs1h1urgmrwhLPPNyIxmWz
-         ONpJaLJ3eApPbWqGwuOBFv5BOLamb9huJXIkx7cabTmnkVM7sFciLLaBHM7zV6jpwMvN
-         g+ww==
+        bh=/kNhWSzT1XF3+/kAR7Dxjp13J1ZI+CyyKCX+EYBQmx8=;
+        b=QmzymGkdzTKuxhlQQbG1q+cOpiRxZSL4bdv7TTVHrcS7uAjgk0NhCFOkhZSDoi0agg
+         dfs2fDlBES/nfc5WbMchIaqgOFuKZZZ5lnP2maSL3pITe59vcfuNo+veBb7BWXWh9MIN
+         elCftBIxAO646pb6sAd0Ej0vLFEYSQITYp6Y1C3BT1toeeScAk8P/zDRxnmDSmdaP4JT
+         SDHTUIwg1v6fpMQH3w4yZ5qhnIESZOLl4EL2Q4xdx0dlu1CDgtHge5LJx29Lta020jge
+         pnkaZ+gNJ1FCG7Dde3tKXqfEqG87y6g1uMl1gNWmZKMty67hlR5rzQjDrGWHmmnaQV/4
+         QLfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=03jpeb+1aJx4bxpcdPiavfJJhVJ5WBvL1EOxBoz3J+I=;
-        b=eme3pwQjqelPDVPTixPo4G4iHHiGbj1af9TPYSXuPRKX8Ly6yj24BbZ6zjYvk3U/Bs
-         WdDoPzhj9zioH9HgmVI88XeT7HIo/wI4u+VzLwZnb3/iQgc3TI2reAok9Ibd4X3aWmmX
-         22SPLa8x0W8WDMZVDRvExz5qseHPGzadDdwyXjiDd1SlWmQJrtGgMzf/lnibrr8IBQs3
-         4GrH0Y+MUb0ILVQIxnQP0+LFpyQhoZMWVncRhMQeOfz0Ujo+FtGLfwppps2LX1WnT0gH
-         9t6fxskgDd4M5EiNoi/TtpPEUEvlkJpgz2djHthLJr56HkFVlqYS9aNYyCw1OkFWrOpE
-         mEag==
-X-Gm-Message-State: APjAAAWWqFzNQdPSo4BmgvHpsho/t+ASsWXHA2K2xmVQWf/KOtaOPl0Y
-        OAbdCUK81QALsE1Q2R6n8fmjUYOhfa3cYQ==
-X-Google-Smtp-Source: APXvYqxLAdFUelj0nGlA72+kn0HnBJlREcJf6ke7gmZg2QchUPKPdi3nc8YGKl4qzUSdSd5kYYWf0Q==
-X-Received: by 2002:a63:c748:: with SMTP id v8mr43605412pgg.348.1571211310066;
-        Wed, 16 Oct 2019 00:35:10 -0700 (PDT)
+        bh=/kNhWSzT1XF3+/kAR7Dxjp13J1ZI+CyyKCX+EYBQmx8=;
+        b=X2yGJFXzvCWi65LcjxtD0CKwMuHlaTnt4me2lP18OnZEW/AV0u18ew5WNEUfRC8vqe
+         mQq6igfzx27i9EwgJYOfpH1U+we5yH1VaFydC+ivlBokdiRAZhMYia+RbwexYWLiRPz0
+         9YfIRDcSPBtsSIPmDFq4F2Mtm8y+ZLBp2mb0j8lvVIi5UYOeqRSdbdC32stgGlulfsap
+         zdYeF7NQ/RxFfzGAdH9P2iY+8gkwWblsv8ZBl81kVK8mPJ8bXkSMvOTaPrIroC3QquXf
+         JN81fE1oqMJzC4wjdt7Py5M0E45FikzxFgp7Kly3DpIgW5mdKMHWOmNGYz5XSlBmWnZw
+         W6rQ==
+X-Gm-Message-State: APjAAAUNH5S++o8PLHnzIycFJ7aeZNdy+iGqJO9lyvuF/4YhsLth9XOa
+        JaVH8YEPjUAkQsUD/caSa9vqlqf/doWlkA==
+X-Google-Smtp-Source: APXvYqzW3Yokr508aGfspxAB1bRkDKPRBSHVECG1pH9ihR8mBDtUA5nnuAE4IIQT+9sNJ6KNK6RUCA==
+X-Received: by 2002:aa7:93de:: with SMTP id y30mr42412010pff.98.1571211313730;
+        Wed, 16 Oct 2019 00:35:13 -0700 (PDT)
 Received: from localhost ([49.248.175.127])
-        by smtp.gmail.com with ESMTPSA id z4sm27413149pfn.45.2019.10.16.00.35.09
+        by smtp.gmail.com with ESMTPSA id v68sm28026272pfv.47.2019.10.16.00.35.12
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 16 Oct 2019 00:35:09 -0700 (PDT)
+        Wed, 16 Oct 2019 00:35:13 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
@@ -65,10 +65,10 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH 13/15] arm64: dts: msm8916: thermal: Add interrupt support
-Date:   Wed, 16 Oct 2019 13:04:12 +0530
-Message-Id: <88eff964b708c8aff57b24370d2e14389ace09e9.1571210269.git.amit.kucheria@linaro.org>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH 14/15] drivers: thermal: tsens: Create function to return sign-extended temperature
+Date:   Wed, 16 Oct 2019 13:04:13 +0530
+Message-Id: <0689917475cf83b7e01f6978504fd37352a5e3ca.1571210269.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1571210269.git.amit.kucheria@linaro.org>
 References: <cover.1571210269.git.amit.kucheria@linaro.org>
@@ -79,26 +79,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register upper-lower interrupt for the tsens controller.
+Hide the details of how to convert values read from TSENS HW to mCelsius
+behind a function. All versions of the IP can be supported as a result.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/thermal/qcom/tsens-common.c | 49 ++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 8686e101905c..807f86a4535e 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -816,6 +816,8 @@
- 			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
- 			nvmem-cell-names = "calib", "calib_sel";
- 			#qcom,sensors = <5>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
- 			#thermal-sensor-cells = <1>;
- 		};
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index ea2c46cc6a66..c34a1a26ce29 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -84,13 +84,46 @@ static inline int code_to_degc(u32 adc_code, const struct tsens_sensor *s)
+ 	return degc;
+ }
  
++/**
++ * tsens_hw_to_mC - Return sign-extended temperature in mCelsius.
++ * @s:     Pointer to sensor struct
++ * @field: Index into regmap_field array pointing to temperature data
++ *
++ * This function handles temperature returned in ADC code or deciCelsius
++ * depending on IP version.
++ *
++ * Return: Temperature in milliCelsius on success, a negative errno will
++ * be returned in error cases
++ */
++static int tsens_hw_to_mC(struct tsens_sensor *s, int field)
++{
++	struct tsens_priv *priv = s->priv;
++	u32 resolution;
++	u32 temp = 0;
++	int ret;
++
++	resolution = priv->fields[LAST_TEMP_0].msb -
++		priv->fields[LAST_TEMP_0].lsb;
++
++	ret = regmap_field_read(priv->rf[field], &temp);
++	if (ret)
++		return ret;
++
++	/* Convert temperature from ADC code to milliCelsius */
++	if (priv->feat->adc)
++		return code_to_degc(temp, s) * 1000;
++
++	/* deciCelsius -> milliCelsius along with sign extension */
++	return sign_extend32(temp, resolution) * 100;
++}
++
+ int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
+ {
+ 	struct tsens_priv *priv = s->priv;
+ 	int hw_id = s->hw_id;
+ 	u32 temp_idx = LAST_TEMP_0 + hw_id;
+ 	u32 valid_idx = VALID_0 + hw_id;
+-	u32 last_temp = 0, valid, mask;
++	u32 valid;
+ 	int ret;
+ 
+ 	ret = regmap_field_read(priv->rf[valid_idx], &valid);
+@@ -108,19 +141,7 @@ int get_temp_tsens_valid(struct tsens_sensor *s, int *temp)
+ 	}
+ 
+ 	/* Valid bit is set, OK to read the temperature */
+-	ret = regmap_field_read(priv->rf[temp_idx], &last_temp);
+-	if (ret)
+-		return ret;
+-
+-	if (priv->feat->adc) {
+-		/* Convert temperature from ADC code to milliCelsius */
+-		*temp = code_to_degc(last_temp, s) * 1000;
+-	} else {
+-		mask = GENMASK(priv->fields[LAST_TEMP_0].msb,
+-			       priv->fields[LAST_TEMP_0].lsb);
+-		/* Convert temperature from deciCelsius to milliCelsius */
+-		*temp = sign_extend32(last_temp, fls(mask) - 1) * 100;
+-	}
++	*temp = tsens_hw_to_mC(s, temp_idx);
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
