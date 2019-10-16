@@ -2,55 +2,54 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B267EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF39ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEB32168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A889C2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263830;
-	bh=vsZnRybb1oRRLje+6QOYMh4wo/50seiDG8wLW8igT9c=;
+	s=default; t=1571263833;
+	bh=1V/MXXtzlL2Kw94mARl0j4IePYU5lmLrRUjQj9pGouE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bf1rBvgprHhlBglWjhLwVfgFinrlHoTI1tKv7EiEBTaDHAHCd9oqNdwuj9f97QnLU
-	 KxgnSIbs7uxXzdpXBIra0g9DN8qNRc8fu/25Ct/jVc2/lr/cMihuoD5kG//ea57Vlf
-	 3Fp0iGtxs8yKaEMfWSg1Nmq4bb5aRa89WZd4MwII=
+	b=VvBVzedqOOQhNakdtUEZfbDskmsArShHlLiCP8LT0YE66+RCQFsE6VIGrOW77f9Ju
+	 qFP+Z9Z/mr3TghxN80B0pfo4mrjfTa8H9rbGrr/FwKm83HG1cS8p4sUL79jM79Ols5
+	 phhuiTYfuFT5SAcng14+edNrytcn7Xmj9dU0UrQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395455AbfJPV5L (ORCPT
+        id S2407207AbfJPWKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391375AbfJPV4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:34 -0400
+        id S2437963AbfJPV5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:13 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB6521925;
-        Wed, 16 Oct 2019 21:56:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C248D21D7D;
+        Wed, 16 Oct 2019 21:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262993;
-        bh=vsZnRybb1oRRLje+6QOYMh4wo/50seiDG8wLW8igT9c=;
+        s=default; t=1571263032;
+        bh=1V/MXXtzlL2Kw94mARl0j4IePYU5lmLrRUjQj9pGouE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D6DNAJow1l5iHn5rrC8dPUXnuWZHBqt65UOCMPyym2NRIe3pC73P7XlywQQRrvONp
-         DrqkDLtonUMo/CbqtNlU/s/3DU3HWMdwSNxR1urJ0RCcmSUBJsXJmzRH3DJWQkz1vc
-         IKS0+RVHYNqx81zCJPx94ZaXZiyOQAESdVz76c3Y=
+        b=DWnP5xPCmrj4JT0fMINWb+DFGRrAjxIoDBGMfgS6TGJ3CBAVDtZGbE/Vi+Ql6obGq
+         ORW6AC+pCSu7vy7IS3CTsVmJlyPdGs1LIQBb0Ped4htPnC1xVFcd0UGEkbmHLEZhBB
+         L4lk8FKgSq/V3rR2DbVupVREsjkS7AniYnAjvtXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 61/65] tracing/hwlat: Dont ignore outer-loop duration when calculating max_latency
-Date:   Wed, 16 Oct 2019 14:51:15 -0700
-Message-Id: <20191016214839.826570224@linuxfoundation.org>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4.19 34/81] usb: renesas_usbhs: gadget: Fix usb_ep_set_{halt,wedge}() behavior
+Date:   Wed, 16 Oct 2019 14:50:45 -0700
+Message-Id: <20191016214834.753707258@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
-References: <20191016214756.457746573@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +59,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit fc64e4ad80d4b72efce116f87b3174f0b7196f8e upstream.
+commit 4d599cd3a097a85a5c68a2c82b9a48cddf9953ec upstream.
 
-max_latency is intended to record the maximum ever observed hardware
-latency, which may occur in either part of the loop (inner/outer). So
-we need to also consider the outer-loop sample when updating
-max_latency.
+According to usb_ep_set_halt()'s description,
+__usbhsg_ep_set_halt_wedge() should return -EAGAIN if the IN endpoint
+has any queue or data. Otherwise, this driver is possible to cause
+just STALL without sending a short packet data on g_mass_storage driver,
+and then a few resetting a device happens on a host side during
+a usb enumaration.
 
-Link: http://lkml.kernel.org/r/157073345463.17189.18124025522664682811.stgit@srivatsa-ubuntu
-
-Fixes: e7c15cd8a113 ("tracing: Added hardware latency tracer")
-Cc: stable@vger.kernel.org
-Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 2f98382dcdfe ("usb: renesas_usbhs: Add Renesas USBHS Gadget")
+Cc: <stable@vger.kernel.org> # v3.0+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1569924633-322-3-git-send-email-yoshihiro.shimoda.uh@renesas.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_hwlat.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/renesas_usbhs/common.h     |    1 +
+ drivers/usb/renesas_usbhs/fifo.c       |    2 +-
+ drivers/usb/renesas_usbhs/fifo.h       |    1 +
+ drivers/usb/renesas_usbhs/mod_gadget.c |   16 +++++++++++++++-
+ drivers/usb/renesas_usbhs/pipe.c       |   15 +++++++++++++++
+ drivers/usb/renesas_usbhs/pipe.h       |    1 +
+ 6 files changed, 34 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -258,6 +258,8 @@ static int get_sample(void)
- 		/* Keep a running maximum ever recorded hardware latency */
- 		if (sample > tr->max_latency)
- 			tr->max_latency = sample;
-+		if (outer_sample > tr->max_latency)
-+			tr->max_latency = outer_sample;
- 	}
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -207,6 +207,7 @@ struct usbhs_priv;
+ /* DCPCTR */
+ #define BSTS		(1 << 15)	/* Buffer Status */
+ #define SUREQ		(1 << 14)	/* Sending SETUP Token */
++#define INBUFM		(1 << 14)	/* (PIPEnCTR) Transfer Buffer Monitor */
+ #define CSSTS		(1 << 12)	/* CSSTS Status */
+ #define	ACLRM		(1 << 9)	/* Buffer Auto-Clear Mode */
+ #define SQCLR		(1 << 8)	/* Toggle Bit Clear */
+--- a/drivers/usb/renesas_usbhs/fifo.c
++++ b/drivers/usb/renesas_usbhs/fifo.c
+@@ -89,7 +89,7 @@ static void __usbhsf_pkt_del(struct usbh
+ 	list_del_init(&pkt->node);
+ }
  
- out:
+-static struct usbhs_pkt *__usbhsf_pkt_get(struct usbhs_pipe *pipe)
++struct usbhs_pkt *__usbhsf_pkt_get(struct usbhs_pipe *pipe)
+ {
+ 	return list_first_entry_or_null(&pipe->list, struct usbhs_pkt, node);
+ }
+--- a/drivers/usb/renesas_usbhs/fifo.h
++++ b/drivers/usb/renesas_usbhs/fifo.h
+@@ -97,5 +97,6 @@ void usbhs_pkt_push(struct usbhs_pipe *p
+ 		    void *buf, int len, int zero, int sequence);
+ struct usbhs_pkt *usbhs_pkt_pop(struct usbhs_pipe *pipe, struct usbhs_pkt *pkt);
+ void usbhs_pkt_start(struct usbhs_pipe *pipe);
++struct usbhs_pkt *__usbhsf_pkt_get(struct usbhs_pipe *pipe);
+ 
+ #endif /* RENESAS_USB_FIFO_H */
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -721,6 +721,7 @@ static int __usbhsg_ep_set_halt_wedge(st
+ 	struct usbhs_priv *priv = usbhsg_gpriv_to_priv(gpriv);
+ 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
+ 	unsigned long flags;
++	int ret = 0;
+ 
+ 	dev_dbg(dev, "set halt %d (pipe %d)\n",
+ 		halt, usbhs_pipe_number(pipe));
+@@ -728,6 +729,18 @@ static int __usbhsg_ep_set_halt_wedge(st
+ 	/********************  spin lock ********************/
+ 	usbhs_lock(priv, flags);
+ 
++	/*
++	 * According to usb_ep_set_halt()'s description, this function should
++	 * return -EAGAIN if the IN endpoint has any queue or data. Note
++	 * that the usbhs_pipe_is_dir_in() returns false if the pipe is an
++	 * IN endpoint in the gadget mode.
++	 */
++	if (!usbhs_pipe_is_dir_in(pipe) && (__usbhsf_pkt_get(pipe) ||
++	    usbhs_pipe_contains_transmittable_data(pipe))) {
++		ret = -EAGAIN;
++		goto out;
++	}
++
+ 	if (halt)
+ 		usbhs_pipe_stall(pipe);
+ 	else
+@@ -738,10 +751,11 @@ static int __usbhsg_ep_set_halt_wedge(st
+ 	else
+ 		usbhsg_status_clr(gpriv, USBHSG_STATUS_WEDGE);
+ 
++out:
+ 	usbhs_unlock(priv, flags);
+ 	/********************  spin unlock ******************/
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int usbhsg_ep_set_halt(struct usb_ep *ep, int value)
+--- a/drivers/usb/renesas_usbhs/pipe.c
++++ b/drivers/usb/renesas_usbhs/pipe.c
+@@ -277,6 +277,21 @@ int usbhs_pipe_is_accessible(struct usbh
+ 	return -EBUSY;
+ }
+ 
++bool usbhs_pipe_contains_transmittable_data(struct usbhs_pipe *pipe)
++{
++	u16 val;
++
++	/* Do not support for DCP pipe */
++	if (usbhs_pipe_is_dcp(pipe))
++		return false;
++
++	val = usbhsp_pipectrl_get(pipe);
++	if (val & INBUFM)
++		return true;
++
++	return false;
++}
++
+ /*
+  *		PID ctrl
+  */
+--- a/drivers/usb/renesas_usbhs/pipe.h
++++ b/drivers/usb/renesas_usbhs/pipe.h
+@@ -83,6 +83,7 @@ void usbhs_pipe_clear(struct usbhs_pipe
+ void usbhs_pipe_clear_without_sequence(struct usbhs_pipe *pipe,
+ 				       int needs_bfre, int bfre_enable);
+ int usbhs_pipe_is_accessible(struct usbhs_pipe *pipe);
++bool usbhs_pipe_contains_transmittable_data(struct usbhs_pipe *pipe);
+ void usbhs_pipe_enable(struct usbhs_pipe *pipe);
+ void usbhs_pipe_disable(struct usbhs_pipe *pipe);
+ void usbhs_pipe_stall(struct usbhs_pipe *pipe);
 
 
