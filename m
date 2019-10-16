@@ -2,110 +2,116 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB66FFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836AAFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B8121848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C31620854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6em5sPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405280AbfJPNDx (ORCPT
+        id S2405294AbfJPNEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:03:53 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:33665 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391721AbfJPNDx (ORCPT
+        Wed, 16 Oct 2019 09:04:09 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34246 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405282AbfJPNEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:03:53 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id E6C754001D;
-        Wed, 16 Oct 2019 13:03:47 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 15:05:36 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
-Message-ID: <20191016130536.222vsi5whkoy6vzo@uno.localdomain>
-References: <20191007033200.13443-1-brgl@bgdev.pl>
- <20191014081220.GK4545@dell>
- <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
+        Wed, 16 Oct 2019 09:04:08 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 3so36009220qta.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PaygqXHQuaC5ycCiWRMEVFWLxwJSQTfQRD8hMbozOH4=;
+        b=a6em5sPq1kYjTh4Gos9mjEHYuHVIoQ98XWy3VObQZGiwnnP/leACZU1CNNpZJ6o60O
+         /mwUxKTvXUlAxlxFSb9BqRu92qGDsiR1JH8G0jOApChowQFE36vSlqfuvz75TUDINh8I
+         Efs05XCBc8g/knvY0gGexx83lnfLwkxJSK91xRB1JUnjpJ2lHjwY+1cYctWgKs0kE8Dv
+         Fs/hA6VbnEZkaHNcqpXZYjpADL+G/oznyiePyh29gY5d8j9jZmwXt4srKXwSTXzAyrAC
+         K3liiotHtoBvrraYMcdDkhVajOafop/kMnFKyS9FQrh4xAum/UiLT+mL1WfF2BO9e1G5
+         v8bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PaygqXHQuaC5ycCiWRMEVFWLxwJSQTfQRD8hMbozOH4=;
+        b=L04C4PAHhQonVSKQJCD+i7ipFmShgchZODTenZw3hfpIkB1KTCpbR/IPdGEtNh1Kxa
+         bwD5v+QOqcR96VtqM1uOMA5ZYM2j5wKSsBeR3vCnzXlJgg8rqcDpHc+UBLfWzARi9RIX
+         FqQxcy05JHwWbK/KAceExeTjZlQiitQJWci/KdLpbDg6X4RHyustZUb+NiUOVVbI+wSw
+         q9HVu/fww+rioe9n5d6HaC8SVTrmSYMHzDCAo4IrqClwjfgj7WF4WUxzQK5PygqVR+i0
+         +UhKM7cdYlO7QULg5+RN9a/a1CszSCbf9TmlBomaqEfLeEbxOXgtTIFu6NYSF/p+3rmm
+         wWTQ==
+X-Gm-Message-State: APjAAAWB9SSJXjn90dYSkNqrmsG5t/sVeF2S5tWUK5hvDsD0A/mFHKip
+        tUIEMRdHpY1Df/XEFs4HYR4=
+X-Google-Smtp-Source: APXvYqwfcq2We+5TqhLAfkE7OnROz8ZlXCvXe3ha0WVLYlpbcyKu5rl+oq5H6JP40X5Z5zo5fasWMw==
+X-Received: by 2002:ac8:368b:: with SMTP id a11mr24854169qtc.362.1571231046562;
+        Wed, 16 Oct 2019 06:04:06 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id b22sm11636807qkc.58.2019.10.16.06.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 06:04:05 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BE85B4DD66; Wed, 16 Oct 2019 10:04:03 -0300 (-03)
+Date:   Wed, 16 Oct 2019 10:04:03 -0300
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        hushiyuan@huawei.com, linfeilong@huawei.com
+Subject: Re: [PATCH] perf kmem: Fix memory leak in compact_gfp_flags()
+Message-ID: <20191016130403.GA22835@kernel.org>
+References: <f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="obmlgf7bnd7gsis3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, Oct 16, 2019 at 04:38:45PM +0800, Yunfeng Ye escreveu:
+> The memory @orig_flags is allocated by strdup(), it is freed on the
+> normal path, but leak to free on the error path.
 
---obmlgf7bnd7gsis3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Are you using some tool to find out these problems? Or is it just visual
+inspection?
 
-Hi, sorry for not having replied earlier
+- Arnaldo
+ 
+> Fix this by adding free(orig_flags) on the error path.
+> 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+>  tools/perf/builtin-kmem.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 1e61e353f579..9661671cc26e 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
+>  			new = realloc(new_flags, len + strlen(cpt) + 2);
+>  			if (new == NULL) {
+>  				free(new_flags);
+> +				free(orig_flags);
+>  				return NULL;
+>  			}
+> 
+> -- 
+> 2.7.4.3
 
-On Wed, Oct 16, 2019 at 02:56:57PM +0200, Linus Walleij wrote:
-> On Mon, Oct 14, 2019 at 10:12 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
-> >
-> > I guess we're just waiting for the SH Acks now?
->
-> The one maintainer with this board is probably overloaded.
->
-> I would say just apply it, it can't hold back the entire series.
+-- 
 
-I've been able to resurect the Ecovec, and I've also been given a copy
-of its schematics file a few weeks ago.
-
-It's in my TODO list to test this series but I didn't manage to find
-time. If I pinky promise I get back to you before end of the week,
-could you wait for me ? :)
-
-Thanks and sorry again!
-
->
-> Yours,
-> Linus Walleij
-
---obmlgf7bnd7gsis3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2nFaAACgkQcjQGjxah
-VjzoFBAAhwhZPZe4vv+vLpIH9nXV/zZkAZjerr/FDZoeAm13GfCbvATlAG3xuN2O
-/yt4lmoNa0HPZn59BxgVUsCZC5/uTUg8NosCm33YOUGtYU1bhqo9dvBIQc2U7OXJ
-u+CxQrlsXVXJtF+51bzDbU0dQRXgccwVhl8F0KMtq/OwyzboyFOl400CN5CqIKHP
-Htq5yUN7BPhMNWtSM9ar/CfZpLQUvhl2P/h4id6uuPhM8CQtlDEHxHSULFxtJBwl
-w7y0N5f+7wUKtrPVsJ5M6ya3iPrhda49XWtcEPuYGGkOxgM3DiLJENLnStTf78Bh
-4hde/25m0jCdbqqRENmccyBcznO1ljcdQOYTAZty+ufXtTWFcJwNk7+Obaz2P447
-09kuzxY+Syp7QWAmjh9R1gxaxBpfHCkALgttNqws8jLhou70YeglHSgA/4z/aHgK
-wgTcAz2HrzgbtJA15KTO9x+99Gyr/NzJE7ffXSNPXket5u9U2O0r+efDKeCMAGVl
-O1YQD4zAnk460taT03o8QndflimZp1kq8Wg8PlXgV3y4XAsIgq64Dc2QGqzLaxI6
-30Ak7ph277+RSc6SU6lMazid9TF/b8sf1Rk8tc/usVoWrN7BoHhyFSJj9tdFG71f
-kFfg9ieXD+Lno9Ri03PmblRxX1Qted/2kJzw6YX65On55W72l0A=
-=RcMR
------END PGP SIGNATURE-----
-
---obmlgf7bnd7gsis3--
+- Arnaldo
