@@ -2,112 +2,133 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC86EFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34634FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958D42168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571242835;
-	bh=vx4fgYELxq41ZRHv+mEk07Z7avOAFxP0vU2ELzDIZVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y6ADD/T7PDH9MCTICFGHJdtIEC8pA0CndDsuWVqFrXBHvTGcp3RqOvwhNS9M6SUrL
-	 eUh9/i4L95VYLQF2MXqiRLRgT0HXBXzjHwGDZP8Vb0chA8RevACJqdLDOfW3Nx99fv
-	 C82UokDE2zO62KHqJ3KIf69k2CZeLYWRfAUvvcvc=
+	by mail.kernel.org (Postfix) with ESMTP id 0CB6C20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bckKbSoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406111AbfJPQUe (ORCPT
+        id S2393451AbfJPQWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:20:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733190AbfJPQUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:20:34 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164AB20663;
-        Wed, 16 Oct 2019 16:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571242833;
-        bh=vx4fgYELxq41ZRHv+mEk07Z7avOAFxP0vU2ELzDIZVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MbyZatxiqhOeO1jLIwdNcHHFaMvWJTKvHTpqkgEsErzVbBPJaG9L71cnrnd3w4YH0
-         n8BOCQpXPr7Ew7/c5TWlTYogITb+qXI4xuLHdHrpzvONUT+cBIYVYuql96vVB543uG
-         B1Y1YQtUX3+rojF+mdWtPeRglujbzVQVMlzy5zsk=
-Date:   Wed, 16 Oct 2019 12:20:32 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20191016162032.GT31224@sasha-vm>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
- <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
- <20191016140353.4hrncxa5wkx47oau@pali>
- <20191016143113.GS31224@sasha-vm>
- <20191016160349.pwghlg566hh2o7id@pali>
+        Wed, 16 Oct 2019 12:22:10 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50864 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfJPQWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:22:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 5so3620289wmg.0;
+        Wed, 16 Oct 2019 09:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l/TRSD+YkWPaNUUn33x7sao3wMEgezx4EPVX8O4dORw=;
+        b=bckKbSoF+xwh3uLEe632e7xuUyKCRII4rfj1izMdfWtvt46KNOmXLb7S7QUiQQTXJy
+         uW8wrd9/NBR3Qq1F0RJcG8JHjuw7c/+Z6ndq+BDzbc4KF2ve4G9+sjuIGT52zjA0tUJq
+         BbkwlOPoBhg5svDSEdAIrXWLvIm3fFAUPy0tKQfWBpChhUSg55zlPkphHfXktZ+0QJWa
+         iNcGbZxcxPA65yup7kbiFp0JxUhRyeN5e/svFSXjJMLOWern68JL5QPEyssbyxWG0LwS
+         GyOvDyRbQn6+vrRbbgi17g70YiA12z+eywYrJjRrpfJzW1lnkCQrwLmmND9GL4257l8r
+         KPWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l/TRSD+YkWPaNUUn33x7sao3wMEgezx4EPVX8O4dORw=;
+        b=lIa9mNFxx6omJPlUThiODdMkRlJg7odIfQ6Yf7WLiCtVdhepAejc+M2zJqyaJ3Vgcs
+         IhGkaZ8NH+XOTt3mATp6gQSfUXMoWwTuLvVjCNWYQwuyXZ8taBZFjvfGDbq8du6QOKwC
+         3WhTu6Shqp11zHjJy8Ex5fDEE3qpqUOlcvSVOh9RH4xtbIQICtI8TuLq+bk16U/Nxc36
+         zoAeZscQCvB5PHD6mh3apO2xRq7Dut1xQq7/JnIP9ga5vcz3J7ExyuFc+eX4DVI+QnMY
+         OyAEUI+a6FDDu2iwWL8qv8RQF53qDBo0AoT4yBTdX9MTMLU7mmCoTJ37/sA2Tlpe35tL
+         vfCQ==
+X-Gm-Message-State: APjAAAX11nwjDXy1nDMd7pM/QWd5vcAHZGJtPIGAGVX7x77TDEY3Eaxs
+        nxE1cw/QwJ+jawk72rrMlMSMB4fkQXlwp6EoolA=
+X-Google-Smtp-Source: APXvYqxfjSJnIf2HAoJqhYgjYiqvi3mdiZMozruMItnEd9McAZs3QLLYtUdqBaWHzBEfWer05MBD9psE9paKR+HKLDw=
+X-Received: by 2002:a1c:c90f:: with SMTP id f15mr4412507wmb.127.1571242928310;
+ Wed, 16 Oct 2019 09:22:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016160349.pwghlg566hh2o7id@pali>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191016112207.1ade14af@canb.auug.org.au>
+In-Reply-To: <20191016112207.1ade14af@canb.auug.org.au>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 16 Oct 2019 12:21:55 -0400
+Message-ID: <CADnq5_OG5B6TJzkCwdLjR17G-7JEgf90pyC6NRCsjS7TZf8YBg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huang Rui <ray.huang@amd.com>, Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 06:03:49PM +0200, Pali Rohár wrote:
->On Wednesday 16 October 2019 10:31:13 Sasha Levin wrote:
->> On Wed, Oct 16, 2019 at 04:03:53PM +0200, Pali Rohár wrote:
->> > On Friday 30 August 2019 09:56:47 Pali Rohár wrote:
->> > > On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
->> > > > With regards to missing specs/docs/whatever - our main concern with this
->> > > > release was that we want full interoperability, which is why the spec
->> > > > was made public as-is without modifications from what was used
->> > > > internally. There's no "secret sauce" that Microsoft is hiding here.
->> > >
->> > > Ok, if it was just drop of "current version" of documentation then it
->> > > makes sense.
->> > >
->> > > > How about we give this spec/code time to get soaked and reviewed for a
->> > > > bit, and if folks still feel (in a month or so?) that there are missing
->> > > > bits of information related to exfat, I'll be happy to go back and try
->> > > > to get them out as well.
->> >
->> > Hello Sasha!
->> >
->> > Now one month passed, so do you have some information when missing parts
->> > of documentation like TexFAT would be released to public?
->>
->> Sure, I'll see if I can get an approval to open it up.
->
->Ok!
->
->> Can I assume you will be implementing TexFAT support once the spec is
->> available?
->
->I cannot promise that I would implement something which I do not know
->how is working... It depends on how complicated TexFAT is and also how
->future exfat support in kernel would look like.
->
->But I'm interesting in implementing it.
+Applied.  Thanks!
 
-Sure, thank you. This is more to let me tell my management that "there
-is someone who wants to work on it" rather than committing you to do
-that work :)
+Alex
 
--- 
-Thanks,
-Sasha
+On Tue, Oct 15, 2019 at 8:22 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the drm-misc tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c:23:10: fatal error: drm/drmP.h: No such file or directory
+>    23 | #include <drm/drmP.h>
+>       |          ^~~~~~~~~~~~
+>
+> Caused by commit
+>
+>   4e98f871bcff ("drm: delete drmP.h + drm_os_linux.h")
+>
+> interacting with commit
+>
+>   8b8c294c5d37 ("drm/amdgpu: add function to check tmz capability (v4)")
+>
+> from the amdgpu tree.
+>
+> I applied the following merge fix patch for today (which should also
+> apply to the amdgpu tree).
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 16 Oct 2019 11:17:32 +1100
+> Subject: [PATCH] drm/amdgpu: fix up for amdgpu_tmz.c and removal of drm/drmP.h
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c
+> index 14a55003dd81..823527a0fa47 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_tmz.c
+> @@ -20,7 +20,10 @@
+>   * OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>
+> -#include <drm/drmP.h>
+> +#include <linux/device.h>
+> +
+> +#include <drm/amd_asic_type.h>
+> +
+>  #include "amdgpu.h"
+>  #include "amdgpu_tmz.h"
+>
+> --
+> 2.23.0
+>
+> --
+> Cheers,
+> Stephen Rothwell
