@@ -2,190 +2,156 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116A5ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F12BFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D599521848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A40bHLsh"
+	by mail.kernel.org (Postfix) with ESMTP id 5A554207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405446AbfJPXCs (ORCPT
+        id S2405610AbfJPXDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 19:02:48 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:46106 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391366AbfJPXCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 19:02:44 -0400
-Received: by mail-pg1-f202.google.com with SMTP id 195so314878pgc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=5VeOMLWwE6g0WvRsIC8itj+v+Y0yf4dhqyzJ89LKDQw=;
-        b=A40bHLshrNkP45PQDK5L664W/1W68XMbbph48wGTPjAkUy/eye889BQYxk9m7kUSjt
-         9qxA81XbIZzgEbVf4Vlegiae0E/Jkr6VEEjwyY6Y9GnlGhFWgL6x3LgNodzcKaEaKeWT
-         tiK2M0C6MBwGIlzb6c1NgMs6R5DPf4LEBCpBsk1MjimcIKe6nswxwOmjCx9qOmnEb0V9
-         NfVbsyRoCAFtoh6OyDGgEdV0KMiuUHV3INyF8rSa1O2nflcSyqLe1DrCZVUl3yNQTraB
-         PQfvRpttT6HAVG1XvjGIuIWQQg/CmAup10Xuo4wruCy6VYcKNQv9DKOl3E0XxuY2mgGN
-         N2WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=5VeOMLWwE6g0WvRsIC8itj+v+Y0yf4dhqyzJ89LKDQw=;
-        b=uToqdhenDivi0UlogiAHFTYOBTp1g2UitXoSZSS+wTT2vL0VKWt22lLUZNevIqhzIt
-         LAZFRRbTrWR7V8bbYXzoTZXLt6I91rWTTdekCw9JIRN6Dx0d1XIYhHlIktE8mLHfRoWB
-         lPWUUfW8fB4UkxvmO6V/F8Y9vVEPm8ssp7qpDTvVKbwqFaTTT3d1w10uDMYbKqVsuo6/
-         M8mKf9/WX8u9XSDrh9Z2LkZ/YskbE6Fvdlhvnzy40JBx02z0gk6QptMhnYAl+ohxTLhL
-         ckhkHIoXGQHYrasPk6tcGojkumn/m6a4V+16Vm+iJv7iqSJ1i3DB/awnuL8E2dnMONSC
-         re9g==
-X-Gm-Message-State: APjAAAXYiEeP4NHnaQSUxuTsvnhASZpuSWj6MX9EfzFivCtfLnbvO68n
-        MN+HipXwU0fuwrUCmxcc6VBuoAJ29U3l8/BTaME=
-X-Google-Smtp-Source: APXvYqw9zBMWtZ4DRP13HSZzKIGsxaZGBSg0XfK5PbjAaMKRPT/6Lf7FkHKRcXH2ZXuzmgky7x+B9R0tEbAIcUTdq8c=
-X-Received: by 2002:a65:5cc8:: with SMTP id b8mr652311pgt.38.1571266963884;
- Wed, 16 Oct 2019 16:02:43 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:02:09 -0700
-In-Reply-To: <20191016230209.39663-1-ndesaulniers@google.com>
-Message-Id: <20191016230209.39663-4-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20191016230209.39663-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH 3/3] drm/amdgpu: enable -msse2 for GCC 7.1+ users
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     harry.wentland@amd.com, alexander.deucher@amd.com
-Cc:     yshuiv7@gmail.com, andrew.cooper3@citrix.com, arnd@arndb.de,
-        clang-built-linux@googlegroups.com, mka@google.com,
-        shirish.s@amd.com, David1.Zhou@amd.com, christian.koenig@amd.com,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 16 Oct 2019 19:03:25 -0400
+Received: from muru.com ([72.249.23.125]:37728 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732249AbfJPXDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 19:03:24 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 1FDFF8107;
+        Wed, 16 Oct 2019 23:03:56 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 16:03:18 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Adam Ford <aford173@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        maemo-leste@lists.dyne.org,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@pyra-handheld.com, Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [Letux-kernel] Lay common foundation to make PVR/SGX work
+ without hacks on OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+Message-ID: <20191016230318.GK5610@atomide.com>
+References: <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+ <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+ <C3A56737-6187-4B31-8697-3A02DD164429@goldelico.com>
+ <72851E17-9B56-4CA5-B164-667836A7C894@goldelico.com>
+ <1A69DA38-DD6D-4C2B-9F42-D293796AC98A@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1A69DA38-DD6D-4C2B-9F42-D293796AC98A@goldelico.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A final attempt at enabling sse2 for GCC users.
+* H. Nikolaus Schaller <hns@goldelico.com> [191014 09:12]:
+> 
+> > Am 12.10.2019 um 15:09 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> > 
+> > Hi,
+> > 
+> >> Am 05.10.2019 um 18:58 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> > 
+> > I have found the following description, followed all steps, and it works:
+> > 
+> > http://blog.0xpebbles.org/PowerVR-SGX-on-the-beaglebone-black-in-2019
+> > 
+> > So with this, I have got a working user-space setup for BeagleBone and some working
+> > pvrsrvkm.ko module (kernel 4.4.155-ti-r155) for evaluation.
+> 
+> > What I don't have yet is the full source code or build recipe for the specific
+> > 4.4.155-ti-r155 pvrsrvkm.ko from TI.
+> > 
+> > But even without having this yet, I can start experiments by replacing
+> > kernel and pvrsrvkm.ko with mine. This should allow to gain new insights.
+> 
+> Good news:
+> 
+> after making a Hybrid SD image of the setup described above and replacing the
+> 4.4.155-ti-r155 kernel with its pvrsrvkm.ko by my own 5.4-rc2 kernel and pvrsrvkm,
+> I was able to start the pvrsrv uKernel. And run the gles1test1 on beaglebone
+> (without LCD but also without errors).
+> 
+> With this knowledge I could adapt my user-space. There are indeed different
+> non-free binaries for sgx530, sgx540, sgx544. And SGX needs enough coherent memory.
+> So I could make a completely self-built kernel and rootfs (using the git clone from
+> ti for the firmware + make install) run on BeagleBone.
+> 
+> Here is a quickly taken video:
+> 
+> https://youtu.be/jFCPR_EvtjY
 
-Orininally attempted in:
-commit 10117450735c ("drm/amd/display: add -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
+Nice :)
 
-Reverted due to "reported instability" in:
-commit 193392ed9f69 ("Revert "drm/amd/display: add -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines"")
+> With the same setup, I can now also load the kernel driver and run pvrsrvctl on
+> DM3730 without errors, but the gles1test1 reports some error and fails to run.
+> Maybe something in the video subsystem or memory mapping is still wrong.
+> 
+> Unfortunately, the same setup does not run on omap5. It looks like there are different
+> releases for the non-free binaries and I have to pick the right one.
+> 
+> On BBB the version I could make running is branch ti-img-sgx/1.14.3699939_k4.4 from
+> git://git.ti.com/graphics/omap5-sgx-ddk-um-linux.git. Target ti335x works while
+> target jacinto6evm fails for OMAP5. A diff on the binaries for e.g. pvrsrvctl shows
+> that they are different.
+> 
+> If you want to repeat this setup and my instructions are too imprecise, please
+> ask.
+> 
+> So in summary this means:
+> * the common foundation (clock, reset, power etc.) setup is working - thanks to Tero, Tony and others
+> * I have added device tree nodes for each SoC type to define sgx registers, interrupts, compatible etc.
+> * compiling SoC specific kernel module variants from single source tree works
+> * the work can already be demoed on BBB and OMAP5 Pyra (using different user-space binaries)
+> 
+> Basically I am now ready to post an RFC for the sgx child device nodes together
+> with a bindings document [1]. But I am not sure if I should better wait until
+> really all underlaying prm+rtsctl+syscon+idlest-polling patches by Tero and Tony [2]
+> have matured in linux-next and have arrived in v5.5-rc1. Would be short before Xmas.
 
-Re-added just for Clang in:
-commit 0f0727d971f6 ("drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
+I think you've already proven that we can have a generic binding for the
+sgx using standard properties :) So AFAIK, there's nothing stopping you
+from posting the binding and dts changes for review for v5.5.
 
-The original report didn't have enough information to know if the GPF
-was due to misalignment, but I suspect that it was. (The missing
-information was the disassembly of the function at the bottom of the
-trace, to see if the instruction pointer pointed to an instruction with
-16B alignment memory operand requirements.  The stack trace does show
-the stack was only 8B but not 16B aligned though, which makes this a
-strong possibility).
+> Independent of low level patches, we all have to discuss how we want to get the GPLed
+> kernel driver [3] into mainline drivers/staging. This likely needs more cleanup before
+> it can be proposed.
 
-Now that the stack misalignment issue has been fixed for users of GCC
-7.1+, reattempt adding -msse2. This matches Clang.
+You probably need a shell script using sed or something to get rid of the
+crazy directory path for the kernel driver :) Just make it something like:
 
-It will likely never be safe to enable this for pre-GCC 7.1 AND use a
-16B aligned stack in these translation units.
+drivers/staging/pvr
 
-This is only a functional change for GCC 7.1+ users, and should be boot
-tested.
+Then if you have a script doing the directory path conversion, you can
+still convert and diff against any other prv branches you may find.
 
-Link: https://bugs.freedesktop.org/show_bug.cgi?id=109487
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- drivers/gpu/drm/amd/display/dc/calcs/Makefile | 4 +---
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile | 4 +---
- drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 4 +---
- drivers/gpu/drm/amd/display/dc/dml/Makefile   | 4 +---
- drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 4 +---
- 5 files changed, 5 insertions(+), 15 deletions(-)
+And you can get rid of all the LINUX_VERSION_CODE stuff too for the
+mainline kernel.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/Makefile b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-index a1af55a86508..26c6d735cdc7 100644
---- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-@@ -37,9 +37,7 @@ ifdef IS_OLD_GCC
- # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
- # (8B stack alignment).
- calcs_ccflags += -mpreferred-stack-boundary=4
--endif
--
--ifdef CONFIG_CC_IS_CLANG
-+else
- calcs_ccflags += -msse2
- endif
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-index cb0ac131f74a..63f3bddba7da 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-@@ -23,9 +23,7 @@ ifdef IS_OLD_GCC
- # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
- # (8B stack alignment).
- CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -mpreferred-stack-boundary=4
--endif
--
--ifdef CONFIG_CC_IS_CLANG
-+else
- CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -msse2
- endif
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-index f92320ddd27f..ff50ae71fe27 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
-@@ -16,9 +16,7 @@ ifdef IS_OLD_GCC
- # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
- # (8B stack alignment).
- CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -mpreferred-stack-boundary=4
--endif
--
--ifdef CONFIG_CC_IS_CLANG
-+else
- CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o += -msse2
- endif
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index ef1bdd20b425..8df251626e22 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -37,9 +37,7 @@ ifdef IS_OLD_GCC
- # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
- # (8B stack alignment).
- dml_ccflags += -mpreferred-stack-boundary=4
--endif
--
--ifdef CONFIG_CC_IS_CLANG
-+else
- dml_ccflags += -msse2
- endif
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dsc/Makefile b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-index 3f7840828a9f..970737217e53 100644
---- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-@@ -14,9 +14,7 @@ ifdef IS_OLD_GCC
- # GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
- # (8B stack alignment).
- dsc_ccflags += -mpreferred-stack-boundary=4
--endif
--
--ifdef CONFIG_CC_IS_CLANG
-+else
- dsc_ccflags += -msse2
- endif
- 
--- 
-2.23.0.700.g56cf767bdb-goog
+Regards,
 
+Tony
+
+
+> [1]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap-pvr-soc-glue-v5
+> [2]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap-sysc-prm-gfx
+> [3]: https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/latest-pvr
+> 
