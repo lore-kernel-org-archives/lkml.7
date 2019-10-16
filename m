@@ -2,77 +2,134 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E089FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFECFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE8921A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FDA421928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GNRSeiD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406239AbfJPQYR (ORCPT
+        id S2406229AbfJPQYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:24:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44334 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406222AbfJPQYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 12:24:16 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:58622 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406198AbfJPQYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:24:10 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DEB2130860C1;
-        Wed, 16 Oct 2019 16:24:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 803E35D9CD;
-        Wed, 16 Oct 2019 16:24:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 16 Oct 2019 18:24:13 +0200 (CEST)
-Date:   Wed, 16 Oct 2019 18:24:09 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, aarcange@redhat.com,
-        akpm@linux-foundation.org, christian@kellner.me, cyphar@cyphar.com,
-        elena.reshetova@intel.com, guro@fb.com, jannh@google.com,
-        ldv@altlinux.org, linux-api@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
-        peterz@infradead.org, shuah@kernel.org, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2 1/5] pidfd: verify task is alive when printing fdinfo
-Message-ID: <20191016162408.GB31585@redhat.com>
-References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
- <20191016153606.2326-1-christian.brauner@ubuntu.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 10620C300B;
+        Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1571243048; bh=Q1OWeW46pCK8necNfIb4Cw9P88sWMr95qAMSB5WZ0fs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GNRSeiD+nBpYkpwkOSZNxrMIFHMdMmXpHqEClsL06AtAgJBXyUf1Ptp+hlS3r6d2C
+         EjhH8bk+lU8LFmOdlWjPimuje4r52uMAvtVkbh7hGCOjjncVug2omGKze/+GDrLjls
+         L6/p8sClaz4jRT/iAgpgnHn3U4/w6fqrItaNxY5s94IiEiVDlw0GXUqnWQUeVD4q5T
+         M6WKB341jFkyttCEuM5FiSDo4PnvioBPHREC8d6iYf1UKnNiHZDfZbQZMVedoCaCE3
+         e6JeBvLZKh54BoFoJ1uEeJ+aD4ssxqTpdUsnmmmzKxb8cB/7m2LqvnGcuwnl6r/0RH
+         mABQaLiIsWxNg==
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 14661A006D;
+        Wed, 16 Oct 2019 16:24:02 +0000 (UTC)
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     linux-mm@kvack.org
+Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH v3 0/5] elide extraneous generated code for folded p4d/pud/pmd
+Date:   Wed, 16 Oct 2019 09:23:55 -0700
+Message-Id: <20191016162400.14796-1-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016153606.2326-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 16 Oct 2019 16:24:16 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16, Christian Brauner wrote:
->
-> +static inline bool task_alive(struct pid *pid, enum pid_type type)
-> +{
-> +	return !hlist_empty(&pid->tasks[type]);
-> +}
+Hi,
 
-So you decided to add a helper ;) OK, but note that its name is very
-confusing and misleading. Even more than pid_alive() we already have.
+This series came out of seemingly benign excursion into understanding/removing
+__ARCH_USE_5LEVEL_HACK from ARC port showing some extraneous code being
+generated despite folded p4d/pud/pmd
 
-What does "alive" actually mean? Say, task_alive(pid, PIDTYPE_SID) == F
-after fork(). Then it becomes T if this task does setsid().
+| bloat-o-meter2 vmlinux-[AB]*
+| add/remove: 0/0 grow/shrink: 3/0 up/down: 130/0 (130)
+| function                                     old     new   delta
+| free_pgd_range                               548     660    +112
+| p4d_clear_bad                                  2      20     +18
 
-And why task_ if it accepts pid+pid_type? May be pid_has_task() or
-something like this...
+The patches here address that
 
-OK, since I can't suggest a better name I won't really argue. Feel free
-to add my reviewed-by to this series.
+| bloat-o-meter2 vmlinux-[BF]*
+| add/remove: 0/2 grow/shrink: 0/1 up/down: 0/-386 (-386)
+| function                                     old     new   delta
+| pud_clear_bad                                 20       -     -20
+| p4d_clear_bad                                 20       -     -20
+| free_pgd_range                               660     314    -346
 
-Oleg.
+The code savings are not a whole lot, but still worthwhile IMHO.
+
+Please review, test and apply. It seems to survive my usual battery of
+multibench, hakcbench etc.
+
+Thx,
+-Vineet
+
+---
+Changes since v2 [3]
+ - No code changes: Fixed the silly typos and collected ACKs
+
+Changes since v1 [1]
+ - Per Linus Sugestion remvoed the extra ifdey'ery (hence not
+   accumulating Kirill's ACks)
+ - Added the RFC patch for pmd_free_tlb() after discussions [2]
+ - Also throwing in the ARC patch which started this all (so we get the
+   full context of patchset) - I'm ok if this goes via mm tree, should
+   be non contentious and can drop this too if Andrew thinks otherwise
+
+[1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006263.html
+[2] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006277.html
+[3] http://lists.infradead.org/pipermail/linux-snps-arc/2019-October/006307.html
+---
+
+Vineet Gupta (5):
+  ARC: mm: remove __ARCH_USE_5LEVEL_HACK
+  asm-generic/tlb: stub out pud_free_tlb() if nopud ...
+  asm-generic/tlb: stub out p4d_free_tlb() if nop4d ...
+  asm-generic/tlb: stub out pmd_free_tlb() if nopmd
+  asm-generic/mm: stub out p{4,u}d_clear_bad() if
+    __PAGETABLE_P{4,u}D_FOLDED
+
+ arch/arc/include/asm/pgtable.h      |  1 -
+ arch/arc/mm/fault.c                 | 10 ++++++++--
+ arch/arc/mm/highmem.c               |  4 +++-
+ include/asm-generic/4level-fixup.h  |  1 -
+ include/asm-generic/5level-fixup.h  |  1 -
+ include/asm-generic/pgtable-nop4d.h |  2 +-
+ include/asm-generic/pgtable-nopmd.h |  2 +-
+ include/asm-generic/pgtable-nopud.h |  2 +-
+ include/asm-generic/pgtable.h       | 11 +++++++++++
+ include/asm-generic/tlb.h           |  4 ----
+ mm/pgtable-generic.c                |  9 +++++++++
+ 11 files changed, 34 insertions(+), 13 deletions(-)
+
+-- 
+2.20.1
 
