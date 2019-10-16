@@ -2,146 +2,131 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0AAFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA163FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C472067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8536D2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393566AbfJPNWl (ORCPT
+        id S2393609AbfJPNYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:22:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:39824 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfJPNWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:22:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69FD8142F;
-        Wed, 16 Oct 2019 06:22:40 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8962B3F68E;
-        Wed, 16 Oct 2019 06:22:38 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 14:22:33 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Daniel Axtens <dja@axtens.net>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, x86@kernel.org, glider@google.com,
-        luto@kernel.org, linux-kernel@vger.kernel.org, dvyukov@google.com,
-        christophe.leroy@c-s.fr, linuxppc-dev@lists.ozlabs.org,
-        gor@linux.ibm.com
-Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real
- shadow memory
-Message-ID: <20191016132233.GA46264@lakrids.cambridge.arm.com>
-References: <20191001065834.8880-1-dja@axtens.net>
- <20191001065834.8880-2-dja@axtens.net>
- <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
- <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
- <8f573b40-3a5a-ed36-dffb-4a54faf3c4e1@virtuozzo.com>
+        Wed, 16 Oct 2019 09:24:46 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:53629 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729306AbfJPNYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:24:46 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.173])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKjI8-0000go-EN; Wed, 16 Oct 2019 14:24:40 +0100
+Subject: Re: [Linux-kernel] [PATCH] net: bpf: add static in net/core/filter.c
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Song Liu <songliubraving@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        netdev@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+References: <20191016110446.24622-1-ben.dooks@codethink.co.uk>
+ <20191016122605.GC21367@pc-63.home>
+ <e947b15d-1d70-39d9-3b28-0367a3f0f4c0@codethink.co.uk>
+ <20191016131020.GE21367@pc-63.home>
+ <e3e81678-6c58-191b-3514-629f5f94def2@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <16a0fe4a-f63a-7e33-62a2-d3dfbccd8f63@codethink.co.uk>
+Date:   Wed, 16 Oct 2019 14:24:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f573b40-3a5a-ed36-dffb-4a54faf3c4e1@virtuozzo.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <e3e81678-6c58-191b-3514-629f5f94def2@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
-
-On Wed, Oct 16, 2019 at 03:19:50PM +0300, Andrey Ryabinin wrote:
-> On 10/14/19 4:57 PM, Daniel Axtens wrote:
-> >>> +	/*
-> >>> +	 * Ensure poisoning is visible before the shadow is made visible
-> >>> +	 * to other CPUs.
-> >>> +	 */
-> >>> +	smp_wmb();
-> >>
-> >> I'm not quite understand what this barrier do and why it needed.
-> >> And if it's really needed there should be a pairing barrier
-> >> on the other side which I don't see.
-> > 
-> > Mark might be better able to answer this, but my understanding is that
-> > we want to make sure that we never have a situation where the writes are
-> > reordered so that PTE is installed before all the poisioning is written
-> > out. I think it follows the logic in __pte_alloc() in mm/memory.c:
-> > 
-> > 	/*
-> > 	 * Ensure all pte setup (eg. pte page lock and page clearing) are
-> > 	 * visible before the pte is made visible to other CPUs by being
-> > 	 * put into page tables.
-> > 	 *
-> > 	 * The other side of the story is the pointer chasing in the page
-> > 	 * table walking code (when walking the page table without locking;
-> > 	 * ie. most of the time). Fortunately, these data accesses consist
-> > 	 * of a chain of data-dependent loads, meaning most CPUs (alpha
-> > 	 * being the notable exception) will already guarantee loads are
-> > 	 * seen in-order. See the alpha page table accessors for the
-> > 	 * smp_read_barrier_depends() barriers in page table walking code.
-> > 	 */
-> > 	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
-> > 
-> > I can clarify the comment.
+On 16/10/2019 14:11, Ben Dooks wrote:
+> On 16/10/2019 14:10, Daniel Borkmann wrote:
+>> On Wed, Oct 16, 2019 at 02:02:31PM +0100, Ben Dooks wrote:
+>>> On 16/10/2019 13:26, Daniel Borkmann wrote:
+>>>> On Wed, Oct 16, 2019 at 12:04:46PM +0100, Ben Dooks (Codethink) wrote:
+>>>>> There are a number of structs in net/core/filter.c
+>>>>> that are not exported or declared outside of the
+>>>>> file. Fix the following warnings by making these
+>>>>> all static:
+>>>>>
+>>>>> net/core/filter.c:8465:31: warning: symbol 'sk_filter_verifier_ops' 
+>>>>> was not declared. Should it be static?
+>>>>> net/core/filter.c:8472:27: warning: symbol 'sk_filter_prog_ops' was 
+>>>>> not declared. Should it be static?
+>>>> [...]
+>>>>> net/core/filter.c:8935:27: warning: symbol 'sk_reuseport_prog_ops' 
+>>>>> was not declared. Should it be static?
+>>>>>
+>>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>> ---
+>>>>> Cc: Alexei Starovoitov <ast@kernel.org>
+>>>>> Cc: Daniel Borkmann <daniel@iogearbox.net>
+>>>>> Cc: Martin KaFai Lau <kafai@fb.com>
+>>>>> Cc: Song Liu <songliubraving@fb.com>
+>>>>> Cc: Yonghong Song <yhs@fb.com>
+>>>>> Cc: "David S. Miller" <davem@davemloft.net>
+>>>>> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+>>>>> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+>>>>> Cc: John Fastabend <john.fastabend@gmail.com>
+>>>>> Cc: netdev@vger.kernel.org
+>>>>> Cc: bpf@vger.kernel.org
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> ---
+>>>>>    net/core/filter.c | 60 
+>>>>> +++++++++++++++++++++++------------------------
+>>>>>    1 file changed, 30 insertions(+), 30 deletions(-)
+>>>>>
+>>>>> diff --git a/net/core/filter.c b/net/core/filter.c
+>>>>> index ed6563622ce3..f7338fee41f8 100644
+>>>>> --- a/net/core/filter.c
+>>>>> +++ b/net/core/filter.c
+>>>>> @@ -8462,18 +8462,18 @@ static u32 sk_msg_convert_ctx_access(enum 
+>>>>> bpf_access_type type,
+>>>>>        return insn - insn_buf;
+>>>>>    }
+>>>>> -const struct bpf_verifier_ops sk_filter_verifier_ops = {
+>>>>> +static const struct bpf_verifier_ops sk_filter_verifier_ops = {
+>>>>>        .get_func_proto        = sk_filter_func_proto,
+>>>>>        .is_valid_access    = sk_filter_is_valid_access,
+>>>>>        .convert_ctx_access    = bpf_convert_ctx_access,
+>>>>>        .gen_ld_abs        = bpf_gen_ld_abs,
+>>>>>    };
+>>>>
+>>>> Big obvious NAK. I'm puzzled that you try to fix a compile warning, 
+>>>> but without
+>>>> even bothering to compile the result after your patch ...
+>>>
+>>> builds fine. maybe some effort to stop this happening again should be 
+>>> made.
+>>
+>> It doesn't build, because they are used/needed outside:
 > 
-> I don't see how is this relevant here.
-
-The problem isn't quite the same, but it's a similar shape. See below
-for more details.
-
-> barrier in __pte_alloc() for very the following case:
+> Hmm, your config it does, I get /none/ of these warnings.
 > 
-> CPU 0							CPU 1
-> __pte_alloc():                                          pte_offset_kernel(pmd_t * dir, unsigned long address):
->      pgtable_t new = pte_alloc_one(mm);                        pte_t *new = (pte_t *) pmd_page_vaddr(*dir) + ((address >> PAGE_SHIFT) & (PTRS_PER_PAGE - 1));  
->      smp_wmb();                                                smp_read_barrier_depends();
->      pmd_populate(mm, pmd, new);
-> 							/* do something with pte, e.g. check if (pte_none(*new)) */
-> 
-> 
-> It's needed to ensure that if CPU1 sees pmd_populate() it also sees initialized contents of the 'new'.
-> 
-> In our case the barrier would have been needed if we had the other side like this:
-> 
-> if (!pte_none(*vmalloc_shadow_pte)) {
-> 	shadow_addr = (unsigned long)__va(pte_pfn(*vmalloc_shadow_pte) << PAGE_SHIFT);
-> 	smp_read_barrier_depends();
-> 	*shadow_addr; /* read the shadow, barrier ensures that if we see installed pte, we will see initialized shadow memory. */
-> }
-> 
-> 
-> Without such other side the barrier is pointless.
+> I guess a lot of this is being built whether or not is then used.
 
-The barrier isn't pointless, but we are relying on a subtlety that is
-not captured in LKMM, as one of the observers involved is the TLB (and
-associated page table walkers) of the CPU.
+Without CONFIG_BPF_SYSCALL, a part of net/core/filter.c is being
+built but then not declared or used. Should this be split up or
+the areas not being built be removed?
 
-Until the PTE written by CPU 0 has been observed by the TLB of CPU 1, it
-is not possible for CPU 1 to satisfy loads from the memory that PTE
-maps, as it doesn't yet know which memory that is.
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
 
-Once the PTE written by CPU has been observed by the TLB of CPU 1, it is
-possible for CPU 1 to satisfy those loads. At this instant, CPU 1 must
-respect the smp_wmb() before the PTE was written, and hence sees zeroes
-written before this. Note that if this were not true, we could not
-safely swap userspace memory.
-
-There is the risk (as laid out in [1]) that CPU 1 attempts to hoist the
-loads of the shadow memory above the load of the PTE, samples a stale
-(faulting) status from the TLB, then performs the load of the PTE and
-sees a valid value. In this case (on arm64) a spurious fault could be
-taken when the access is architecturally performed.
-
-It is possible on arm64 to use a barrier here to prevent the spurious
-fault, but this is not smp_read_barrier_depends(), as that does nothing
-for everyone but alpha. On arm64 We have a spurious fault handler to fix
-this up.
-
-Thanks,
-Mark.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20190827131818.14724-1-will@kernel.org/
-[2] https://lore.kernel.org/linux-mm/20191014152717.GA20438@lakrids.cambridge.arm.com/
+https://www.codethink.co.uk/privacy.html
