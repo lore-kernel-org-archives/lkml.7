@@ -2,158 +2,159 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D67FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4DDFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD3020640
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="G9sSCpQW"
+	by mail.kernel.org (Postfix) with ESMTP id 7D0FA20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391290AbfJPPE6 (ORCPT
+        id S2391053AbfJPPFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:04:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50206 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727597AbfJPPE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:04:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 5so3326731wmg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gy9Mqvz7ViVsHcvjshcUIFjm83FQXB1FgFTRQgeKnZg=;
-        b=G9sSCpQWzfSQ2lgVJZuH2GvIMH7I+v+Zsriz4Mk7x7se0mK/ibhKOqMtCpv5XjWRYN
-         kf0LTGEoWRMYsmzpfbDDPxPB+1Ad+s+dopUEQWWsPHir9iUGVUOzQYDUSr7c8F+0nKBu
-         fzHiqkv6+OUkT0snZt+o1rhuuIsfYcsLuLtag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Gy9Mqvz7ViVsHcvjshcUIFjm83FQXB1FgFTRQgeKnZg=;
-        b=AymuIr4/e+TQAjhTwC/GEhseAFrXq9Ei3gLO3ApPNLi55lcUGcGognBZp0Wwc3OS2V
-         Zcha0l4lUJBdeoPzgH/GQOsbR6VRd/EvE6rN0tlkhHHRQZ202FueEqU+kFZQQUCtDFKb
-         ofqzwWwJHwmtXNqer8skFfPMF2X89lBkYXpruljPOxGpWKTmnprmnKh2OO22PeGlI2G7
-         flRytDE7iB15AHiao8Lk/SseYfSfInQRbcJAv8qfXPxTGrqhQ1c8A+8zfWhyTpByar6h
-         2BGLhs4IBx/DgPTtBe4efkvoZtcMDiINF3PvGMe1wmAg43VRdVBWYM/P5ve8bIHdd2xs
-         10FQ==
-X-Gm-Message-State: APjAAAXUgEnX9newSIGt9jxoK6PrBVD8DLSykV5XbfPRjiqQuaTFoSxB
-        FWwpt9JJkgBvaULKllsYZMHTxw==
-X-Google-Smtp-Source: APXvYqwENQa0ZhP9R+YaODjOskIqVrhbRbWPHKcsVMTitFlrbg4jiwWjBaF/eiyfcZK+zwBUTq+a6g==
-X-Received: by 2002:a7b:c387:: with SMTP id s7mr3630959wmj.22.1571238296595;
-        Wed, 16 Oct 2019 08:04:56 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id m62sm2553828wmm.35.2019.10.16.08.04.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 08:04:55 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 17:04:53 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 08/11] drm/ttm: add drm_gem_ttm_mmap()
-Message-ID: <20191016150453.GS11828@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191016115203.20095-1-kraxel@redhat.com>
- <20191016115203.20095-9-kraxel@redhat.com>
+        Wed, 16 Oct 2019 11:05:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:42624 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbfJPPFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:05:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 454971570;
+        Wed, 16 Oct 2019 08:05:53 -0700 (PDT)
+Received: from bogus (unknown [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48FB13F68E;
+        Wed, 16 Oct 2019 08:05:51 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 16:05:45 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Will Deacon <will@kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>, hushiyuan@huawei.com,
+        linfeilong@huawei.com, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
+ cpu_psci_cpu_kill()
+Message-ID: <20191016150545.GA6750@bogus>
+References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
+ <20191015162358.bt5rffidkv2j4xqb@willie-the-truck>
+ <ab42357e-f4f9-9019-e8d9-7e9bfe106e9e@huawei.com>
+ <20191016102545.GA11386@bogus>
+ <13d82e24-90bd-0c17-ef7f-aa7fec272f59@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016115203.20095-9-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <13d82e24-90bd-0c17-ef7f-aa7fec272f59@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 01:52:00PM +0200, Gerd Hoffmann wrote:
-> Add helper function to mmap ttm bo's using &drm_gem_object_funcs.mmap().
-> 
-> Note that with this code path access verification is done by
-> drm_gem_mmap() (which calls drm_vma_node_is_allowed(()).
-> The &ttm_bo_driver.verify_access() callback is is not used.
-> 
-> v3: use ttm_bo_mmap_obj instead of ttm_bo_mmap_vma_setup
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+On Wed, Oct 16, 2019 at 07:29:59PM +0800, Yunfeng Ye wrote:
+>
+>
+> On 2019/10/16 18:25, Sudeep Holla wrote:
+> > On Wed, Oct 16, 2019 at 11:22:23AM +0800, Yunfeng Ye wrote:
+> >>
+> >>
+> >> On 2019/10/16 0:23, Will Deacon wrote:
+> >>> Hi,
+> >>>
+> >>> On Sat, Sep 21, 2019 at 07:21:17PM +0800, Yunfeng Ye wrote:
+> >>>> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
+> >>>> take so long in the right case. Use usleep_range() instead of msleep(),
+> >>>> reduce the waiting time, and give a chance to busy wait before sleep.
+> >>>
+> >>> Can you elaborate on "the right case" please? It's not clear to me
+> >>> exactly what problem you're solving here.
+> >>>
+> >> The situation is that when the power is off, we have a battery to save some
+> >> information, but the battery power is limited, so we reduce the power consumption
+> >> by turning off the cores, and need fastly to complete the core shutdown. However, the
+> >> time of cpu_psci_cpu_kill() will take 10ms. We have tested the time that it does not
+> >> need 10ms, and most case is about 50us-500us. if we reduce the time of cpu_psci_cpu_kill(),
+> >> we can reduce 10% - 30% of the total time.
+> >>
+> >
+> > Have you checked why PSCI AFFINITY_INFO not returning LEVEL_OFF quickly
+> > then ? We wait for upto 5s in cpu_wait_death(worst case) before cpu_kill
+> > is called from __cpu_die.
+> >
+> When cpu_wait_death() is done, it means that the cpu core's hardware prepare to
+> die. I think not returning LEVEL_OFF quickly is that hardware need time to handle.
+> I don't know how much time it need is reasonable, but I test that it need about
+> 50us - 500us.
+>
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Fair enough.
 
-Also on the entire series:
+> In addition I have not meat the worst case that cpu_wait_death() need upto
+> 5s, and we only take normal case into account.
+>
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Good
 
+>
+> > Moreover I don't understand the argument here. The cpu being killed
+> > will be OFF, as soon as it can and firmware controls that and this
+> > change is not related to CPU_OFF. And this CPU calling cpu_kill can
+> > sleep and 10ms is good to enter idle states if it's idle saving power,
+> > so I fail to map the power saving you mention above.
+> >
+> We have hundreds of CPU cores that need to be shut down. For example,
+> a CPU has 200 cores, and the thread to shut down the core is in CPU 0.
+> and the thread need to shut down from core 1 to core 200. However, the
+> implementation of the kernel can only shut down cpu cores one by one, so we
+> need to wait for cpu_kill() to finish before shutting down the next
+> CPU core. If it wait for 10ms each time in cpu_kill, it will takes up
+> about 2 seconds in cpu_kill() total.
+>
 
-> ---
->  include/drm/drm_gem_ttm_helper.h     |  2 ++
->  drivers/gpu/drm/drm_gem_ttm_helper.c | 17 +++++++++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm_helper.h
-> index 6268f89c5a48..118cef76f84f 100644
-> --- a/include/drm/drm_gem_ttm_helper.h
-> +++ b/include/drm/drm_gem_ttm_helper.h
-> @@ -15,5 +15,7 @@
->  
->  void drm_gem_ttm_print_info(struct drm_printer *p, unsigned int indent,
->  			    const struct drm_gem_object *gem);
-> +int drm_gem_ttm_mmap(struct drm_gem_object *gem,
-> +		     struct vm_area_struct *vma);
->  
->  #endif
-> diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
-> index a534104d8bee..7412bfc5c05a 100644
-> --- a/drivers/gpu/drm/drm_gem_ttm_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
-> @@ -52,5 +52,22 @@ void drm_gem_ttm_print_info(struct drm_printer *p, unsigned int indent,
->  }
->  EXPORT_SYMBOL(drm_gem_ttm_print_info);
->  
-> +/**
-> + * drm_gem_ttm_mmap() - mmap &ttm_buffer_object
-> + * @gem: GEM object.
-> + * @vma: vm area.
-> + *
-> + * This function can be used as &drm_gem_object_funcs.mmap
-> + * callback.
-> + */
-> +int drm_gem_ttm_mmap(struct drm_gem_object *gem,
-> +		     struct vm_area_struct *vma)
-> +{
-> +	struct ttm_buffer_object *bo = drm_gem_ttm_of_gem(gem);
-> +
-> +	return ttm_bo_mmap_obj(vma, bo);
-> +}
-> +EXPORT_SYMBOL(drm_gem_ttm_mmap);
-> +
->  MODULE_DESCRIPTION("DRM gem ttm helpers");
->  MODULE_LICENSE("GPL");
-> -- 
-> 2.18.1
-> 
+OK, thanks for the illustrative example. This make sense to me now. But
+you comparing with battery powered devices confused me and I assumed
+it as some hack to optimise mobile workload.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> >> So change msleep (10) to usleep_range() to reduce the waiting time. In addition,
+> >> we don't want to be scheduled during the sleeping time, some threads may take a
+> >> long time and don't give up the CPU, which affects the time of core shutdown,
+> >> Therefore, we add a chance to busy-wait max 1ms.
+> >>
+> >
+> > On the other hand, usleep_range reduces the timer interval and hence
+> > increases the chance of the callee CPU not to enter deeper idle states.
+> >
+> > What am I missing here ? What's the use case or power off situation
+> > you are talking about above ?
+> >
+> As mentioned above, we are not to save power through msleep to idle state,
+> but to quickly turn off other CPU core's hardware to reduce power consumption.
+
+You still don't provide your use-case in which this is required. I know
+this will be useful for suspend-to-ram. Do you have any other use-case
+that you need to power-off large number of CPUs like this ? Also you
+mentioned battery powered, and I don't think any battery powered device
+has 200 thread like in your example :)
+
+You need to mention few things clearly in the commit log:
+1. How the CPU hotplug operation is serialised in some use-case like
+   suspend-to-ram
+2. How that may impact systems with large number of CPUs
+3. How your change helps to improve that
+
+It may it easy for anyone to understand the motivation for this change.
+The commit message you have doesn't give any clue on all the above and
+hence we have lot of questions.
+
+I will respond to the original patch separately.
+
+--
+Regards,
+Sudeep
