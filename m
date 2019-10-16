@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53664FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34036FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274B12168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E87207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264025;
-	bh=USWBleXjwXnXwcBWIYOfCKkr4PGVJwm1DSVGRna6F04=;
+	s=default; t=1571264030;
+	bh=ano3lCLTDZjUOQxqg5UXqoNphOhVKH8iFTaJKiHaR9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PbQyOL28e78bKjmqRRfZxrQIZyMzhoiLYcHbQd/gkIyCbzWJnJJkZx8FIHOwjJzjb
-	 Jbgs8IaxFfidKbotOCWdQpO46mL5vj+XcMrMtg7hVBJj0uCay2qz6ga+zXch1FptKk
-	 AgFlPHV1TUrtlvMM+zxNln3ZwoKpRpmpsrT/M3bo=
+	b=O0EaQ9A5U3SHsHnYpnBd6+OzmchJjolwIJR1Dd8fxBiLDQP7doEmv3LrmnXv8pZRn
+	 tHPJDbnCDwatFNUSt1jDberkaBduZbDUISi7NJuUu8VBvhsz9JFNcV04xyI+zZdSGA
+	 Ns8JURxAnbjaQ+H7KFZuiBoxKAaROrAMO3Lm/X2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393249AbfJPWNn (ORCPT
+        id S2395351AbfJPVzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46776 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395361AbfJPVzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:46 -0400
+        id S2395324AbfJPVzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:43 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F84218DE;
-        Wed, 16 Oct 2019 21:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BCA2218DE;
+        Wed, 16 Oct 2019 21:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262946;
-        bh=USWBleXjwXnXwcBWIYOfCKkr4PGVJwm1DSVGRna6F04=;
+        s=default; t=1571262942;
+        bh=ano3lCLTDZjUOQxqg5UXqoNphOhVKH8iFTaJKiHaR9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1kjl2M4hmWQHl+Q2qkPdTHx53HUpzVqn+rskLUNZMGTRAcCxj1xKpLs8l4Uog3Qr
-         yscJKOgrUb7PJtJoc7N3D02qlqD/Zo1PTjyu9AZZZRsCWPy9bzmLSVXNZVklklnFe2
-         2UKmK+Zpaf6LvulQyj47554blJSrsx2SlgQ4P31c=
+        b=p1eIP8LDzn7EG0C3E8305ERdZYYOLwD6vgLVpphAKu66bgVMI6ipc8/XmOQC54cg5
+         LahA7PFugC1NmnnQqrYAJ7WInLTGWqOlTX5zKzuVWWpbj193Jd2twl4feUzrOEbTTs
+         a5yRF1qykXxB7vjT0aebVcCdP8hHap/tOik7ZQyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0761012cebf7bdb38137@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 17/65] USB: iowarrior: fix use-after-free on disconnect
-Date:   Wed, 16 Oct 2019 14:50:31 -0700
-Message-Id: <20191016214810.223397885@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 4.14 13/65] USB: adutux: remove redundant variable minor
+Date:   Wed, 16 Oct 2019 14:50:27 -0700
+Message-Id: <20191016214806.274121772@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -60,63 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit edc4746f253d907d048de680a621e121517f484b upstream.
+commit 8444efc4a052332d643ed5c8aebcca148c7de032 upstream.
 
-A recent fix addressing a deadlock on disconnect introduced a new bug
-by moving the present flag out of the critical section protected by the
-driver-data mutex. This could lead to a racing release() freeing the
-driver data before disconnect() is done with it.
+Variable minor is being assigned but never read, hence it is redundant
+and can be removed. Cleans up clang warning:
 
-Due to insufficient locking a related use-after-free could be triggered
-also before the above mentioned commit. Specifically, the driver needs
-to hold the driver-data mutex also while checking the opened flag at
-disconnect().
+drivers/usb/misc/adutux.c:770:2: warning: Value stored to 'minor' is
+never read
 
-Fixes: c468a8aa790e ("usb: iowarrior: fix deadlock on disconnect")
-Fixes: 946b960d13c1 ("USB: add driver for iowarrior devices.")
-Cc: stable <stable@vger.kernel.org>	# 2.6.21
-Reported-by: syzbot+0761012cebf7bdb38137@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009104846.5925-2-johan@kernel.org
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/usb/misc/adutux.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -870,8 +870,6 @@ static void iowarrior_disconnect(struct
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -761,13 +761,11 @@ error:
+ static void adu_disconnect(struct usb_interface *interface)
+ {
+ 	struct adu_device *dev;
+-	int minor;
+ 
  	dev = usb_get_intfdata(interface);
- 	mutex_lock(&iowarrior_open_disc_lock);
- 	usb_set_intfdata(interface, NULL);
--	/* prevent device read, write and ioctl */
--	dev->present = 0;
  
- 	minor = dev->minor;
- 	mutex_unlock(&iowarrior_open_disc_lock);
-@@ -882,8 +880,7 @@ static void iowarrior_disconnect(struct
- 	mutex_lock(&dev->mutex);
- 
- 	/* prevent device read, write and ioctl */
--
--	mutex_unlock(&dev->mutex);
-+	dev->present = 0;
- 
- 	if (dev->opened) {
- 		/* There is a process that holds a filedescriptor to the device ,
-@@ -893,8 +890,10 @@ static void iowarrior_disconnect(struct
- 		usb_kill_urb(dev->int_in_urb);
- 		wake_up_interruptible(&dev->read_wait);
- 		wake_up_interruptible(&dev->write_wait);
-+		mutex_unlock(&dev->mutex);
- 	} else {
- 		/* no process is using the device, cleanup now */
-+		mutex_unlock(&dev->mutex);
- 		iowarrior_delete(dev);
- 	}
+ 	mutex_lock(&dev->mtx);	/* not interruptible */
+ 	dev->udev = NULL;	/* poison */
+-	minor = dev->minor;
+ 	usb_deregister_dev(interface, &adu_class);
+ 	mutex_unlock(&dev->mtx);
  
 
 
