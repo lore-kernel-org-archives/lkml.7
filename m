@@ -2,129 +2,113 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA7ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF583C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769852168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:27:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jaTe+Z9S"
+	by mail.kernel.org (Postfix) with ESMTP id D09612168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391669AbfJPI1v (ORCPT
+        id S2391680AbfJPI2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:27:51 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42868 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729709AbfJPI1u (ORCPT
+        Wed, 16 Oct 2019 04:28:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391656AbfJPI2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:27:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f14so8727386pgi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZBU8KtWqaPlvm9aGAuLUyV54XDJ4T42xfnXwt2IbHm8=;
-        b=jaTe+Z9SL0l41r3xbeeskPOYmc7zKJ2qW2CcVNLyMJ+gQLe4dCAo4PkjkWGbaL+c0m
-         i+syX0nJ5qzIDEwxSgnMC4xZ5aGfqFF8XIEn3FFlFy4gbRwv0eFQ+3dSlAIVSMq7G4ZP
-         rYHk54WTHVtVLS1SIdW65A58XjG7vn9VQ9JgP2ot90BjseIpHPsmduKA6Lnt4OLFuq3v
-         TmYp9mUdp8GmOSLbVZ17GsE44I+w8D9qQM0PgsoGOBcNzurEN+0JdUM9fIfOXgRBc1Vi
-         tRQicfje5MGgwtZ9e/Nflt0Bx8rP+pq/KtBkHECpDJEjmrBkGJgNQK8AKrW/jMw8xTa3
-         nrTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZBU8KtWqaPlvm9aGAuLUyV54XDJ4T42xfnXwt2IbHm8=;
-        b=aramuP6+kU0qMjToLy3Xx+XVX+xdJOS951clXWvyQ1NMCjmtbYoMjDYgl/vtPZVSRQ
-         oMvBhLiklNXgmIDY5O7UTrCtijZnqusMJOVIe1E2HIwHGHZD0FJOHs62CXJAx8yDc64B
-         HFxz+ZZWgsWqXP2gqrx+gZ+qh+Zp507y1uJayqTo+x3Y37FypsZTugJQZDebPpTMhasF
-         YYaojxlKWVczLhxJg2zWkQ6e2V1HnJ7pulLL9eTPsgJUwEtSV1gGKkdjrI5hzxGtWggA
-         230+VtPKGpXjWrx8JQ3ps9GuKS/X7LXVNSZqFkk1zIHTqX49fXODmebl9BBRImgSkc4X
-         c+XA==
-X-Gm-Message-State: APjAAAV0viMlAJjwyPQUev86ntg2b68ZptHApxv8TNK3vlJ3UyVXpfyX
-        AAfHloPT2cGSF6gPS9zEdrUl5g==
-X-Google-Smtp-Source: APXvYqw2HuEJr6hFR0qslv2UzEWwBhoszStKl4ceu9NlZWQejXp2FiWt/eWTKHoyvc3xDCv3gvPwKA==
-X-Received: by 2002:a17:90a:2425:: with SMTP id h34mr3519628pje.113.1571214469897;
-        Wed, 16 Oct 2019 01:27:49 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id x11sm9580112pja.3.2019.10.16.01.27.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 01:27:49 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 13:57:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS
- framework
-Message-ID: <20191016082742.nttzuofes6uds4pu@vireshk-i7>
-References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
- <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
- <a1c503a7-6136-a405-369c-596a680183f2@gmail.com>
- <20191015114637.pcdbs2ctxl4xoxdo@vireshk-i7>
- <CAJZ5v0g3kRfa2WXy=xz3Mj15Pwb5tm1xg=uPODoifnv70O1ORA@mail.gmail.com>
- <CAJZ5v0hxsy3ZKFvtWULHAVog4=3rYQfd3-61A9dNaKeUbiDtrg@mail.gmail.com>
+        Wed, 16 Oct 2019 04:28:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G8RQ93066879
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 04:28:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vnx1u3svc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 04:28:43 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 16 Oct 2019 09:28:40 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 16 Oct 2019 09:28:33 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G8SWqN19661040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 08:28:33 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7E88A4057;
+        Wed, 16 Oct 2019 08:28:32 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C7A3A4040;
+        Wed, 16 Oct 2019 08:28:32 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.85])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 16 Oct 2019 08:28:32 +0000 (GMT)
+Date:   Wed, 16 Oct 2019 10:28:30 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/29] vmlinux.lds.h: Refactor EXCEPTION_TABLE and
+ NOTES
+References: <20191011000609.29728-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hxsy3ZKFvtWULHAVog4=3rYQfd3-61A9dNaKeUbiDtrg@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
+X-TM-AS-GCONF: 00
+x-cbid: 19101608-0016-0000-0000-000002B87DFE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101608-0017-0000-0000-000033199F8D
+Message-Id: <20191016082830.GC4267@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=960 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-10-19, 23:50, Rafael J. Wysocki wrote:
-> On Tue, Oct 15, 2019 at 5:53 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-
-> > > - Update QoS framework with the knowledge of related CPUs, this has been pending
-> > >   until now from my side. And this is the thing we really need to do. Eventually
-> > >   we shall have only a single notifier list for all CPUs of a policy, at least
-> > >   for MIN/MAX frequencies.
-> >
-> > - Move the PM QoS requests and notifiers to the new policy CPU on all
-> > changes of that.  That is, when cpufreq_offline() nominates the new
-> > "leader", all of the QoS stuff for the policy needs to go to this one.
+On Thu, Oct 10, 2019 at 05:05:40PM -0700, Kees Cook wrote:
+> Arch maintainers: please send Acks (if you haven't already) for your
+> respective linker script changes; the intention is for this series to
+> land via -tip.
 > 
-> Alas, that still will not work, because things like
-> acpi_processor_ppc_init() only work accidentally for one-CPU policies.
-
-I am not sure what problem you see here ? Can you please explain a bit more.
-
-> Generally, adding such a PM QoS request to a non-policy CPU simply has
-> no effect until it becomes a policy CPU which may be never.
-
-I was thinking maybe we can read the constraints for all CPUs in the
-policy->cpus mask in cpufreq_set_policy() and so this part of the problem will
-just go away. The only part that would be left is to remove the QoS constraints
-properly.
-
-> It looks like using device PM QoS for cpufreq is a mistake in general
-> and what is needed is a struct pm_qos_constraints member in struct
-> cpufreq_policy and something like
+> v1: https://lore.kernel.org/lkml/20190926175602.33098-1-keescook@chromium.org
+> v2: clean up commit messages, rename RO_EXCEPTION_TABLE (bp)
 > 
-> struct freq_pm_qos_request {
->         enum freq_pm_qos_req_type type; /* min or max */
->         struct plist_node pnode;
->         struct cpufreq_policy *policy;
-> };
 > 
-> Then, pm_qos_update_target() can be used for adding, updating and
-> removing requests.
+> This series works to move the linker sections for NOTES and
+> EXCEPTION_TABLE into the RO_DATA area, where they belong on most
+> (all?) architectures. The problem being addressed was the discovery
+> by Rick Edgecombe that the exception table was accidentally marked
+> executable while he was developing his execute-only-memory series. When
+> permissions were flipped from readable-and-executable to only-executable,
+> the exception table became unreadable, causing things to explode rather
+> badly. :)
 
--- 
-viresh
+Feel free to add
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+to every patch in this series which touches s390.
+
