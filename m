@@ -2,153 +2,165 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC787FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C802FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A089A207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B1021925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qh7WLKvM"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hYNlRyNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393820AbfJPOJB (ORCPT
+        id S2393829AbfJPOJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:09:01 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46347 "EHLO
+        Wed, 16 Oct 2019 10:09:38 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36989 "EHLO
         mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393799AbfJPOJA (ORCPT
+        with ESMTP id S1731923AbfJPOJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:09:00 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e66so2288038qkf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:08:59 -0700 (PDT)
+        Wed, 16 Oct 2019 10:09:38 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u184so22872918qkd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:09:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jN7Dveffqa87qcgYwBlcVqa13+mGccK4fLl9wVw4FPc=;
-        b=qh7WLKvMAOxf6aSAkLv9y3u3GnZy1KBJyQu9ajT5VYiT9VKe8KjPVW4ZUU6CrPrOCA
-         x+QOoWuBn3ELp3AbKuVCyoSXfbWgovYjyPXv2TjvvM4fQy4lloJ4nI5yIIkRnnJ60vO2
-         NL6e24sFZJc4oycdYMq5gT22urPN3kd7QfkGNJVfmNTBTy58NbUfhR4YQN7GgebpjZNx
-         P0bNv0j8gAt3Xeuciy3RyMIwqbKWe3Fv9axfjpsmKh0eP7/JpfmH+DLlXrwAHcRX/s3r
-         DCuLeBF5hm13J1CkDc+hlqiIryGZtxoetqGX7mS0QP7b5sISdj/W+DN5Balhme4u+fNs
-         IBdw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wbLFFtj39kkBf5dkql9MHXopp0F39M0Fqhm7mWy045Q=;
+        b=hYNlRyNg8vFkPzQVjv108oF4X8imWdsQPeb/8uXTjEjUOy2It0rTxwvHdKZRnbWsPU
+         J59C6GVORFOefgDVmVnjQ2ZaIWKqY57UT+V8TKW/gyo3/fd5onIlYYDS1Eo9oQfLZxcL
+         D7J2kgXHUaF68hu6JZXtoQa0NwkrIJaQcNH11dPZWTJjpYudzSFkPAwbn3d20DWx/7Bf
+         0rQgUlwzXXdWD4GAc+DepazemS/sWxYAoCKeNO/UZ593WshwWTPyYgSRmndPfLtOo8OI
+         LHWu72OE5xIRuhFV3RVQ8Go+/THXlgYZWQ8I5knmow52XH6LpW009GTtXPrguFNOCuur
+         dO0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jN7Dveffqa87qcgYwBlcVqa13+mGccK4fLl9wVw4FPc=;
-        b=g8y5UnOmRgn4LhHpaBe/7Apxc2IE4cChLpfAmdC5L2Rp49orn0fuxrKGCIe3IgBSH9
-         YRLU+91l3896pglysFzi7aW1CGIva8OSTKGcdSESVtitSvNRPE50lMkrtbeKvm9pQJ08
-         05AVkMNtD5+m1C3k/E69t3k87pWBjldi/RlH3hmQA3XFTkE5/IOMQpa4Y3D8OmfZkiVb
-         Tr/NDvl8dlG6uO4kmXLBLUGgIQRjqtMcEunIX07OS8+n8rlmVz+NqDD4BiF4efi79EOp
-         qvp2WUmgLRtMGed7LN1ro/TTZKGLOQavYvnfPVZm9Q30CTAyRcJFpRw5T5eAwZ6ze5GF
-         ToxA==
-X-Gm-Message-State: APjAAAUNrNZzSAlWxrtfEAV7Ht2ZLuJYMnyGl0RTBtqXkSrf9R7NNu9i
-        Y3DUVXKa8ibku7aQYwU1QbY=
-X-Google-Smtp-Source: APXvYqwELWVXa9DU6HmIsqQ8vpefu9yJkQfzhO5IZOttbfwd6MNebJCBisRfQ+lfyv7FOGIguCvO+A==
-X-Received: by 2002:a05:620a:215b:: with SMTP id m27mr3755302qkm.328.1571234939220;
-        Wed, 16 Oct 2019 07:08:59 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id c12sm10494913qkc.81.2019.10.16.07.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 07:08:58 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DBC924DD66; Wed, 16 Oct 2019 11:08:56 -0300 (-03)
-Date:   Wed, 16 Oct 2019 11:08:56 -0300
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        hushiyuan@huawei.com, linfeilong@huawei.com
-Subject: Re: [PATCH] perf kmem: Fix memory leak in compact_gfp_flags()
-Message-ID: <20191016140856.GG22835@kernel.org>
-References: <f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com>
- <20191016130403.GA22835@kernel.org>
- <20191016130921.GC22835@kernel.org>
- <f1dc9f3f-ce4a-9a62-1940-8ea8b7fea750@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1dc9f3f-ce4a-9a62-1940-8ea8b7fea750@huawei.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wbLFFtj39kkBf5dkql9MHXopp0F39M0Fqhm7mWy045Q=;
+        b=pD6Lvr85NrYpgaDM6Zf1GDbj43C91/VO9+3bGFjqFyX+1tRUdG/dV4MgQxmWjCHWFa
+         TtRD1ygwur2yQwmpbYGCt72ENTTuMAOvN3Iqk15e6l1Q9q3Slr9DSK6QL9GYB3R1BGtk
+         7od5WTKxhRxy2Acw9KkJEiWVzDOwvwIFiUC/AB8iwjp7JfW1RZCs4xlWLWDR1FjxgLke
+         M591Z1lUYpPdSSLYYnO410FLF0EtsN6lGdt63C9UUkBRpVTGzZkhA7FHgGoQLH64nhYE
+         4TN4sZ7sSUfOEGxPEghdLK42n3oInZJDtS+9YXCyhTwnvIOfORoNSJd+Q9z9MJMFkBKH
+         dU2w==
+X-Gm-Message-State: APjAAAWrZskeUGZ5tgul9ngr5OO90QPFBFnUkeM2ND6uBTsuBlCpqLNC
+        6+k/jWUfgH7MLjajTF82NsncQg==
+X-Google-Smtp-Source: APXvYqyklEz5e4+IwFGQBrBmCZvd+42WiJ1q+u4q7+b33ayLkLa/ZT1Zr72zVQg0+mStrEfooLIkiQ==
+X-Received: by 2002:a37:4bd2:: with SMTP id y201mr41517861qka.391.1571234976882;
+        Wed, 16 Oct 2019 07:09:36 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id x12sm15910012qtb.32.2019.10.16.07.09.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 07:09:36 -0700 (PDT)
+Message-ID: <1571234974.5937.53.camel@lca.pw>
+Subject: Re: memory leaks in dasd_eckd_check_characteristics() error paths
+From:   Qian Cai <cai@lca.pw>
+To:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 16 Oct 2019 10:09:34 -0400
+In-Reply-To: <6f5584d5-755c-e416-52da-3cb99c69adaf@linux.ibm.com>
+References: <1570044801.5576.262.camel@lca.pw>
+         <6f5584d5-755c-e416-52da-3cb99c69adaf@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Oct 16, 2019 at 09:19:54PM +0800, Yunfeng Ye escreveu:
+On Wed, 2019-10-16 at 15:29 +0200, Stefan Haberland wrote:
+> Hi,
+> 
+> thanks for reporting this.
+> 
+> On 02.10.19 21:33, Qian Cai wrote:
+> > For some reasons, dasd_eckd_check_characteristics() received -ENOMEM and then
+> > dasd_generic_set_online() emits this message,
+> > 
+> > dasd: 0.0.0122 Setting the DASD online with discipline ECKD failed with rc=-12
+> > 
+> > After that, there are several memory leaks below. There are "config_data" and
+> > then stored as,
+> > 
+> > /* store per path conf_data */
+> > device->path[pos].conf_data = conf_data;
+> > 
+> > When it processes the error path in  dasd_generic_set_online(), it calls
+> > dasd_delete_device() which nuke the whole "struct dasd_device" without freeing
+> > the device->path[].conf_data first. 
+> 
+> Usually dasd_delete_device() calls dasd_generic_free_discipline() which
+> takes care of
+> the device->path[].conf_data in dasd_eckd_uncheck_device().
+> From a first look this looks sane.
+> 
+> So I need to spend a closer look if this does not happen correctly here.
+
+When dasd_eckd_check_characteristics() failed here,
+
+	if (!private) {
+		private = kzalloc(sizeof(*private), GFP_KERNEL | GFP_DMA);
+		if (!private) {
+			dev_warn(&device->cdev->dev,
+				 "Allocating memory for private DASD data "
+				 "failed\n");
+			return -ENOMEM;
+		}
+		device->private = private;
+
+The device->private is NULL.
+
+Then, in dasd_eckd_uncheck_device(), it will return immediately.
+
+	if (!private)
+		return;
+
+> 
+> > Is it safe to free those in
+> > dasd_free_device() without worrying about the double-free? Or, is it better to
+> > free those in dasd_eckd_check_characteristics()'s goto error handling, i.e.,
+> > out_err*?
+> > 
+> > --- a/drivers/s390/block/dasd.c
+> > +++ b/drivers/s390/block/dasd.c
+> > @@ -153,6 +153,9 @@ struct dasd_device *dasd_alloc_device(void)
+> >   */
+> >  void dasd_free_device(struct dasd_device *device)
+> >  {
+> > +       for (int i = 0; i < 8; i++)
+> > +               kfree(device->path[i].conf_data);
+> > +
+> >         kfree(device->private);
+> >         free_pages((unsigned long) device->ese_mem, 1);
+> >         free_page((unsigned long) device->erp_mem);
+> > 
+> > 
+> > unreferenced object 0x0fcee900 (size 256):
+> >   comm "dasdconf.sh", pid 446, jiffies 4294940081 (age 170.340s)
+> >   hex dump (first 32 bytes):
+> >     dc 01 01 00 f0 f0 f2 f1 f0 f7 f9 f0 f0 c9 c2 d4  ................
+> >     f7 f5 f0 f0 f0 f0 f0 f0 f0 c6 d9 c2 f7 f1 62 33  ..............b3
+> >   backtrace:
+> >     [<00000000a83b1992>] kmem_cache_alloc_trace+0x200/0x388
+> >     [<00000000048ef3e2>] dasd_eckd_read_conf+0x408/0x1400 [dasd_eckd_mod]
+> >     [<00000000ce31f195>] dasd_eckd_check_characteristics+0x3cc/0x938
+> > [dasd_eckd_mod]
+> >     [<00000000f6f1759b>] dasd_generic_set_online+0x150/0x4c0
+> >     [<00000000efca1efa>] ccw_device_set_online+0x324/0x808
+> >     [<00000000f9779774>] online_store_recog_and_online+0xe8/0x220
+> >     [<00000000349a5446>] online_store+0x2ce/0x420
+> >     [<000000005bd145f8>] kernfs_fop_write+0x1bc/0x270
+> >     [<0000000005664197>] vfs_write+0xce/0x220
+> >     [<0000000044a8bccb>] ksys_write+0xea/0x190
+> >     [<0000000037335938>] system_call+0x296/0x2b4
 > 
 > 
-> On 2019/10/16 21:09, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Oct 16, 2019 at 10:04:03AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Wed, Oct 16, 2019 at 04:38:45PM +0800, Yunfeng Ye escreveu:
-> >>> The memory @orig_flags is allocated by strdup(), it is freed on the
-> >>> normal path, but leak to free on the error path.
-> >>
-> >> Are you using some tool to find out these problems? Or is it just visual
-> >> inspection?
-> > 
-> By a static code anaylsis tool which not an open source tool. thanks.
-
-Ok, so please state that next time, just for the fullest possible
-disclosure and for people to realize to what extent problems in the
-kernel and in tooling hosted in the kernel is being fixed by such tools.
-
-I.e. you don't need to release the tool, not even give out its name,
-just something like:
-
-"Found by internal static analysis tool."
-
-Thanks,
-
-- Arnaldo
- 
-> > Anyway, applied after adding this to the commit log message:
-> > 
-> > Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
-> > 
-> ok, thanks.
-> 
-> > - Arnaldo
-> >  
-> >> - Arnaldo
-> >>  
-> >>> Fix this by adding free(orig_flags) on the error path.
-> >>>
-> >>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> >>> ---
-> >>>  tools/perf/builtin-kmem.c | 1 +
-> >>>  1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-> >>> index 1e61e353f579..9661671cc26e 100644
-> >>> --- a/tools/perf/builtin-kmem.c
-> >>> +++ b/tools/perf/builtin-kmem.c
-> >>> @@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
-> >>>  			new = realloc(new_flags, len + strlen(cpt) + 2);
-> >>>  			if (new == NULL) {
-> >>>  				free(new_flags);
-> >>> +				free(orig_flags);
-> >>>  				return NULL;
-> >>>  			}
-> >>>
-> >>> -- 
-> >>> 2.7.4.3
-> >>
-> >> -- 
-> >>
-> >> - Arnaldo
-> > 
-
--- 
-
-- Arnaldo
