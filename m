@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3C9FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D23DECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3C221925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D534321925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263915;
-	bh=LA6KR0c28eo+/gwg1dpmIVId20Zt7vqtc46BEbBLHF0=;
+	s=default; t=1571263920;
+	bh=ZMCX9A9XKGm5q/+zflXd5y5AjLNg4mDznV7taU+wOc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGmN3W6bn8lK61SQiPCNHuyR02CA7v+MUHI7dJhy3tbv+QSMsEVKA3BFlfXAnAWOs
-	 EiDAn9dZyEz264LxiDHUNldhsVZBEUm5aqx7Xp5pF4rgmGe7MsLd47hpMjV7X8GWUE
-	 u7MomWB5yZ17+LXb0BNFi3FmVjPZ3Nvl5PcNRiEs=
+	b=wvwqtjwTJOpFG/utBGH4JHC2RyqNkP8is85qjaOh5MjK0Ut+tOntHlkP7QpDNqBRo
+	 uZ0yJbXf6GVHtC48g+Vunq4qbF7oGf4JS1ow29/r8vbKsZb9K5JnB9rkMGa6inxydl
+	 TPULZ6vJQ7wi6hlg9frFs1oUIW7jvvwYeoADlg0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407332AbfJPWLy (ORCPT
+        id S2439236AbfJPWMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395387AbfJPV4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:37 -0400
+        id S2395380AbfJPV4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:35 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3CFD21D7E;
-        Wed, 16 Oct 2019 21:56:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BD5D21A49;
+        Wed, 16 Oct 2019 21:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262997;
-        bh=LA6KR0c28eo+/gwg1dpmIVId20Zt7vqtc46BEbBLHF0=;
+        s=default; t=1571262994;
+        bh=ZMCX9A9XKGm5q/+zflXd5y5AjLNg4mDznV7taU+wOc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ei9WmJEQXc2Ekz7ggbd5h8YMQCP3EWqTFq1FnKXfWzF3HTUTyvT4eMPWwMcemuGq4
-         gfkA/y6raidPMYVxYqRRTKm72Ph9FgPK1jl0qvpB5ZjY7iZyi1DUszouObb1Uy/+al
-         vNv3nktPqDSrWOWoLyPfD1L99IXUB8MG0xFeMMPs=
+        b=yNwZUPxiLSBgiWVmfxG2eb91nR3dw4jfFDQ1ZXDD35h1Q+ld3T7++wr9oKTy38jWd
+         98NfJuzp81OGyCUE2A6mqnp0YK9dYUPxOtxVvKX96YakaEbvYPr3ANtOSqAfCOuWO/
+         Q3pKuvtpaCtf9i+/aR5pRm4Tgjmei+3cSbQRskSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 4.14 65/65] xfs: clear sb->s_fs_info on mount failure
-Date:   Wed, 16 Oct 2019 14:51:19 -0700
-Message-Id: <20191016214840.649307743@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 62/65] ftrace: Get a reference counter for the trace_array on filter files
+Date:   Wed, 16 Oct 2019 14:51:16 -0700
+Message-Id: <20191016214839.912090427@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -60,78 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit c9fbd7bbc23dbdd73364be4d045e5d3612cf6e82 upstream.
+commit 9ef16693aff8137faa21d16ffe65bb9832d24d71 upstream.
 
-We recently had an oops reported on a 4.14 kernel in
-xfs_reclaim_inodes_count() where sb->s_fs_info pointed to garbage
-and so the m_perag_tree lookup walked into lala land.
+The ftrace set_ftrace_filter and set_ftrace_notrace files are specific for
+an instance now. They need to take a reference to the instance otherwise
+there could be a race between accessing the files and deleting the instance.
 
-Essentially, the machine was under memory pressure when the mount
-was being run, xfs_fs_fill_super() failed after allocating the
-xfs_mount and attaching it to sb->s_fs_info. It then cleaned up and
-freed the xfs_mount, but the sb->s_fs_info field still pointed to
-the freed memory. Hence when the superblock shrinker then ran
-it fell off the bad pointer.
+It wasn't until the :mod: caching where these file operations started
+referencing the trace_array directly.
 
-With the superblock shrinker problem fixed at teh VFS level, this
-stale s_fs_info pointer is still a problem - we use it
-unconditionally in ->put_super when the superblock is being torn
-down, and hence we can still trip over it after a ->fill_super
-call failure. Hence we need to clear s_fs_info if
-xfs-fs_fill_super() fails, and we need to check if it's valid in
-the places it can potentially be dereferenced after a ->fill_super
-failure.
-
-Signed-Off-By: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Cc: stable@vger.kernel.org
+Fixes: 673feb9d76ab3 ("ftrace: Add :mod: caching infrastructure to trace_array")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/xfs/xfs_super.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
 
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1715,6 +1715,7 @@ xfs_fs_fill_super(
-  out_close_devices:
- 	xfs_close_devices(mp);
-  out_free_fsname:
-+	sb->s_fs_info = NULL;
- 	xfs_free_fsname(mp);
- 	kfree(mp);
-  out:
-@@ -1732,6 +1733,10 @@ xfs_fs_put_super(
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
+---
+ kernel/trace/ftrace.c |   27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3629,21 +3629,22 @@ ftrace_regex_open(struct ftrace_ops *ops
+ 	struct ftrace_hash *hash;
+ 	struct list_head *mod_head;
+ 	struct trace_array *tr = ops->private;
+-	int ret = 0;
++	int ret = -ENOMEM;
  
-+	/* if ->fill_super failed, we have no mount to tear down */
-+	if (!sb->s_fs_info)
-+		return;
+ 	ftrace_ops_init(ops);
+ 
+ 	if (unlikely(ftrace_disabled))
+ 		return -ENODEV;
+ 
++	if (tr && trace_array_get(tr) < 0)
++		return -ENODEV;
 +
- 	xfs_notice(mp, "Unmounting Filesystem");
- 	xfs_filestream_unmount(mp);
- 	xfs_unmountfs(mp);
-@@ -1741,6 +1746,8 @@ xfs_fs_put_super(
- 	xfs_destroy_percpu_counters(mp);
- 	xfs_destroy_mount_workqueues(mp);
- 	xfs_close_devices(mp);
+ 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
+ 	if (!iter)
+-		return -ENOMEM;
++		goto out;
+ 
+-	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX)) {
+-		kfree(iter);
+-		return -ENOMEM;
+-	}
++	if (trace_parser_get_init(&iter->parser, FTRACE_BUFF_MAX))
++		goto out;
+ 
+ 	iter->ops = ops;
+ 	iter->flags = flag;
+@@ -3673,13 +3674,13 @@ ftrace_regex_open(struct ftrace_ops *ops
+ 
+ 		if (!iter->hash) {
+ 			trace_parser_put(&iter->parser);
+-			kfree(iter);
+-			ret = -ENOMEM;
+ 			goto out_unlock;
+ 		}
+ 	} else
+ 		iter->hash = hash;
+ 
++	ret = 0;
 +
-+	sb->s_fs_info = NULL;
- 	xfs_free_fsname(mp);
- 	kfree(mp);
- }
-@@ -1760,6 +1767,9 @@ xfs_fs_nr_cached_objects(
- 	struct super_block	*sb,
- 	struct shrink_control	*sc)
- {
-+	/* Paranoia: catch incorrect calls during mount setup or teardown */
-+	if (WARN_ON_ONCE(!sb->s_fs_info))
-+		return 0;
- 	return xfs_reclaim_inodes_count(XFS_M(sb));
+ 	if (file->f_mode & FMODE_READ) {
+ 		iter->pg = ftrace_pages_start;
+ 
+@@ -3691,7 +3692,6 @@ ftrace_regex_open(struct ftrace_ops *ops
+ 			/* Failed */
+ 			free_ftrace_hash(iter->hash);
+ 			trace_parser_put(&iter->parser);
+-			kfree(iter);
+ 		}
+ 	} else
+ 		file->private_data = iter;
+@@ -3699,6 +3699,13 @@ ftrace_regex_open(struct ftrace_ops *ops
+  out_unlock:
+ 	mutex_unlock(&ops->func_hash->regex_lock);
+ 
++ out:
++	if (ret) {
++		kfree(iter);
++		if (tr)
++			trace_array_put(tr);
++	}
++
+ 	return ret;
  }
  
+@@ -5098,6 +5105,8 @@ int ftrace_regex_release(struct inode *i
+ 
+ 	mutex_unlock(&iter->ops->func_hash->regex_lock);
+ 	free_ftrace_hash(iter->hash);
++	if (iter->tr)
++		trace_array_put(iter->tr);
+ 	kfree(iter);
+ 
+ 	return 0;
 
 
