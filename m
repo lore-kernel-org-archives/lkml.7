@@ -2,193 +2,185 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC57FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36CBFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B66205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571229576;
-	bh=mj5WsNm9zjatXEtFvEvg0QZ/Wf0AqG4dY1SSmXX3o6E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xecpuMOYpeY4KiZLs3uV5CSO3pV/RnluBFJZpkf15F3xc7pz6papw89+2Oo6DhgMQ
-	 MqTdE7fGw7P4vbiXrc4blW9XTEhgY0qZR5qXHHWKchMQLHfN8qHASL8+Ch85/AHIXF
-	 RUJZCzgMP3coMrMd4HU3UF9yxmMMvSzlPW+yUvIE=
+	by mail.kernel.org (Postfix) with ESMTP id 7E109205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393139AbfJPMjf (ORCPT
+        id S2393155AbfJPMk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfJPMjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:39:35 -0400
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB97F205F4;
-        Wed, 16 Oct 2019 12:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571229574;
-        bh=mj5WsNm9zjatXEtFvEvg0QZ/Wf0AqG4dY1SSmXX3o6E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y31L2fAjcOjOt2+MGpHexpF1WV8RDkdapU7Pk2zmBLBx5xzM7oSPSPEkUVhOULWFj
-         MKOO5NlTfpoZ4Hip87mpA8fU/CpSNwM/6AFrL1rWULXy2n1/Q/dB2PnIBSVyzyFnEV
-         kur0MKAule2YxXdnrrGR4G7hGZGsW7Id1rUW6Mn4=
-Received: by mail-lf1-f43.google.com with SMTP id u16so4771384lfq.3;
-        Wed, 16 Oct 2019 05:39:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAUpmDED6NyPgYUnJHkt7iljZLWiJ6F/gXVyseDhkDzMp+xp4zYS
-        39C/dm8GLh1eswdvYeb7QfRNzlabPAtaePaNy1w=
-X-Google-Smtp-Source: APXvYqyYy2rtlW10V22SOn04X4VTrR/pYnl5tunFa5HNmu+gYjPAYmneFKctgrNqN61CrHvgkH92kNZxeIy3bdUFZWU=
-X-Received: by 2002:ac2:4845:: with SMTP id 5mr24190084lfy.191.1571229572131;
- Wed, 16 Oct 2019 05:39:32 -0700 (PDT)
+        Wed, 16 Oct 2019 08:40:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50953 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfJPMkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:40:25 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iKibB-00066E-DR; Wed, 16 Oct 2019 14:40:17 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iKib9-0006aS-8m; Wed, 16 Oct 2019 14:40:15 +0200
+Date:   Wed, 16 Oct 2019 14:40:15 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] dt-bindings: net: dsa: qca,ar9331 switch
+ documentation
+Message-ID: <20191016124015.joawodelm23xkzga@pengutronix.de>
+References: <20191014061549.3669-1-o.rempel@pengutronix.de>
+ <20191014061549.3669-3-o.rempel@pengutronix.de>
+ <20191016122152.GE4780@lunn.ch>
 MIME-Version: 1.0
-References: <20191014141427.30708-1-ribalda@kernel.org> <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
- <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com> <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
-In-Reply-To: <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Wed, 16 Oct 2019 14:39:15 +0200
-X-Gmail-Original-Message-ID: <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
-Message-ID: <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
-Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191016122152.GE4780@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:34:15 up 151 days, 18:52, 100 users,  load average: 0.13, 0.06,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans:
+On Wed, Oct 16, 2019 at 02:21:52PM +0200, Andrew Lunn wrote:
+> On Mon, Oct 14, 2019 at 08:15:47AM +0200, Oleksij Rempel wrote:
+> > Atheros AR9331 has built-in 5 port switch. The switch can be configured
+> > to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
+> > ethernet controller or to be used directly by the switch over second ethernet
+> > controller.
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/net/dsa/ar9331.txt    | 155 ++++++++++++++++++
+> >  1 file changed, 155 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/dsa/ar9331.txt b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
+> > new file mode 100644
+> > index 000000000000..b0f95fd19584
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
+> > @@ -0,0 +1,155 @@
+> > +Atheros AR9331 built-in switch
+> > +=============================
+> > +
+> > +It is a switch built-in to Atheros AR9331 WiSoC and addressable over internal
+> > +MDIO bus. All PHYs are build-in as well. 
+> > +
+> > +Required properties:
+> > +
+> > + - compatible: should be: "qca,ar9331-switch" 
+> > + - reg: Address on the MII bus for the switch.
+> > + - resets : Must contain an entry for each entry in reset-names.
+> > + - reset-names : Must include the following entries: "switch"
+> > + - interrupt-parent: Phandle to the parent interrupt controller
+> > + - interrupts: IRQ line for the switch
+> > + - interrupt-controller: Indicates the switch is itself an interrupt
+> > +   controller. This is used for the PHY interrupts.
+> > + - #interrupt-cells: must be 1
+> > + - mdio: Container of PHY and devices on the switches MDIO bus.
+> > +
+> > +See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
+> > +required and optional properties.
+> > +Examples:
+> > +
+> > +eth0: ethernet@19000000 {
+> > +	compatible = "qca,ar9330-eth";
+> > +	reg = <0x19000000 0x200>;
+> > +	interrupts = <4>;
+> > +
+> > +	resets = <&rst 9>, <&rst 22>;
+> > +	reset-names = "mac", "mdio";
+> > +	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
+> > +	clock-names = "eth", "mdio";
+> > +
+> > +	phy-mode = "mii";
+> > +	phy-handle = <&phy_port4>;
+> 
+> This does not seem like a valid example. If phy_port4 is listed here,
+> i would expect switch_port 5 to be totally missing?
 
-On Wed, Oct 16, 2019 at 2:32 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wro=
-te:
->
-> On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
-> > Hi Hans
-> >
-> > Not that awkward, the user has to use the brand new
-> > v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
-> > change.
->
-> Well, a struct v4l2_ctrl_config is typically a static const, so you can't=
- use
-> v4l2_ctrl_ptr_create().
->
-> Hmm, perhaps it is as easy as:
->
-> static const struct v4l2_area def_area =3D {
->         ...
-> };
->
-> static const struct v4l2_ctrl_config ctrl =3D {
->         ...
->
->         .p_def.p_area =3D &def_area,
->         ...
-> };
->
-> Can you do a quick compile check that I am not overlooking anything?
->
-> If this works, then I'll take this patch.
+hm... right.
+phy4 can be used with switch_port 5 or eth0. Should i remove completely
+switch_port 5 node or it is enough to "disable" it.
 
-Testing with gcc 9.2.1
+> > +};
+> > +
+> > +eth1: ethernet@1a000000 {
+> > +	compatible = "qca,ar9330-eth";
+> > +	reg = <0x1a000000 0x200>;
+> > +	interrupts = <5>;
+> > +	resets = <&rst 13>, <&rst 23>;
+> > +	reset-names = "mac", "mdio";
+> > +	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
+> > +	clock-names = "eth", "mdio";
+> > +
+> > +	phy-mode = "gmii";
+> > +	phy-handle = <&switch_port0>;
+> > +
+> > +	fixed-link {
+> > +		speed = <1000>;
+> > +		full-duplex;
+> > +	};
+> 
+> You also cannot have both a fixed-link and a phy-handle.
 
-This works fine, no warning/error:
+ok.
 
-static struct v4l2_area unit_size =3D {
-.width =3D UNIT_SIZE,
-.height =3D UNIT_SIZE,
-};
-static struct v4l2_ctrl_config area_ctrl =3D {
-.type =3D V4L2_CTRL_TYPE_AREA,
-.flags =3D V4L2_CTRL_FLAG_READ_ONLY,
-.p_def.p_area =3D &unit_size,
-};
+> 
+> > +
+> > +	mdio {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		switch10: switch@10 {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			compatible = "qca,ar9331-switch";
+> > +			reg = <16>;
+> 
+> Maybe don't mix up hex and decimal? switch16: switch@16.
 
-but if unit_size is set as CONST:
-static const struct v4l2_area
+ok. will fix it. What is actually proper way to set the reg of switch?
+This switch is responding on range of phy addresses: any of two high bits of 5
+bit phy address.
 
-Then:
-drivers/qtec/qtec_sony.c: In function =E2=80=98qtec_sony_probe=E2=80=99:
-drivers/qtec/qtec_sony.c:3151:19: warning: initialization discards
-=E2=80=98const=E2=80=99 qualifier from pointer target type [-Wdiscarded-qua=
-lifiers]
- 3151 |   .p_def.p_area =3D &unit_size,
-      |
+Regards,
+Oleksij
 
->
-> Regards,
->
->         Hans
->
-> >
-> > Regards
-> >
-> > On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl>=
- wrote:
-> >>
-> >> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
-> >>> This allows setting the default value on compound controls created vi=
-a
-> >>> v4l2_ctrl_new_custom.
-> >>>
-> >>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> >>> ---
-> >>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
-> >>>  include/media/v4l2-ctrls.h           | 2 ++
-> >>>  2 files changed, 3 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l=
-2-core/v4l2-ctrls.c
-> >>> index bf50d37ef6c1..12cf38f73f7b 100644
-> >>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> >>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> >>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v=
-4l2_ctrl_handler *hdl,
-> >>>                       type, min, max,
-> >>>                       is_menu ? cfg->menu_skip_mask : step, def,
-> >>>                       cfg->dims, cfg->elem_size,
-> >>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
-> >>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
-> >>>       if (ctrl)
-> >>>               ctrl->is_private =3D cfg->is_private;
-> >>>       return ctrl;
-> >>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> >>> index 26205ba3a0a0..2fca5b823961 100644
-> >>> --- a/include/media/v4l2-ctrls.h
-> >>> +++ b/include/media/v4l2-ctrls.h
-> >>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
-> >>>   * @max:     The control's maximum value.
-> >>>   * @step:    The control's step value for non-menu controls.
-> >>>   * @def:     The control's default value.
-> >>> + * @p_def:   The control's default value for compound controls.
-> >>>   * @dims:    The size of each dimension.
-> >>>   * @elem_size:       The size in bytes of the control.
-> >>>   * @flags:   The control's flags.
-> >>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
-> >>>       s64 max;
-> >>>       u64 step;
-> >>>       s64 def;
-> >>> +     union v4l2_ctrl_ptr p_def;
-> >>>       u32 dims[V4L2_CTRL_MAX_DIMS];
-> >>>       u32 elem_size;
-> >>>       u32 flags;
-> >>>
-> >>
-> >> I'm not sure about this. It might be a bit awkward to initialize p_def=
- given that it is a union.
-> >>
-> >> Perhaps a simple void pointer would be easier?
-> >>
-> >> Regards,
-> >>
-> >>         Hans
->
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
