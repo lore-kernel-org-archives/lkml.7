@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F95EECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6A8FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB24207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71272168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264522;
-	bh=Bf+ER69cBxaSgSskm14ZAD6nSzKcf7naYP/B+3ZIYU8=;
+	s=default; t=1571264528;
+	bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGf+sjtrnxU9LJG6GruSZqIH5qekDn9Q6rZAksXJvWfMkcDQBFuxRTDzgipAYt7yK
-	 SBMb26+a6geuoIujCYQt/oG7ATx1Jn+9mPD8Smkh9BvhF2BxioJXDpPpRY/SvHGcSV
-	 6TG1w5lSXYrL0PKZNAvMm6hTWnxvtUv5m6XPpBak=
+	b=b91EUmJwXKO7usc2wr80ytyQ8uIvX5ytc6mdU6buMmwkJH5gpOUKDFo3tK6ZvVToF
+	 AQG+k5SUBhetlBEKwYHUiUx7uvWOGhQ2GCIs3NB04qcV5X6xio/EjKIkka9A0JHc4S
+	 EkiTeQB9zDwp/WGUZujuhrjGIgSpNqELVttzFotU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439402AbfJPWWA (ORCPT
+        id S2407614AbfJPWWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42306 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:22:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394858AbfJPVx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:26 -0400
+        id S1729185AbfJPVxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:24 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30F7721925;
-        Wed, 16 Oct 2019 21:53:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 651D321A49;
+        Wed, 16 Oct 2019 21:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262806;
-        bh=Bf+ER69cBxaSgSskm14ZAD6nSzKcf7naYP/B+3ZIYU8=;
+        s=default; t=1571262803;
+        bh=ym8G2ZdQbDsO+1BvbPg5YIeTwSU9bt9Wg46NbwfNwBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ag92/JOGMWolXSIdPiD8z0PbLPAcMoVj3Ep7ofrlQLA7BbrQ+EGsNFwxjTGSj7KKw
-         4WbLElfyhXTVxGs6AVi6AAeRR+SvaMhL7xLVpgz690iHOgBXmLtDJFifrQe33y1SEc
-         OM6bZUp4LV9jf73xnzS9DHaYZfGnYNyva+7KNaaY=
+        b=Ct0MhTd0KW5fKw8gejZaojr0TI80SXIROvUVW/QKT2aysnRtD0KE7WxEVy1bzm4Aq
+         u7VPLzZ+w+NW+pwioqC1eeU37FK2PoNjpM6OnQ4w7jeUKoSSahpjc1HGTVtIGDph8W
+         C9ukt6wQT70M3Jh3Ro0DmI8t4/xBCaY2To+pA+hY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Peter Korsgaard <jacmet@sunsite.dk>
-Subject: [PATCH 4.4 48/79] serial: uartlite: fix exit path null pointer
-Date:   Wed, 16 Oct 2019 14:50:23 -0700
-Message-Id: <20191016214811.705472460@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 09/79] crypto: qat - Silence smp_processor_id() warning
+Date:   Wed, 16 Oct 2019 14:49:44 -0700
+Message-Id: <20191016214738.404173114@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,43 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-commit a553add0846f355a28ed4e81134012e4a1e280c2 upstream.
+commit 1b82feb6c5e1996513d0fb0bbb475417088b4954 upstream.
 
-Call uart_unregister_driver() conditionally instead of
-unconditionally, only if it has been previously registered.
+It seems that smp_processor_id() is only used for a best-effort
+load-balancing, refer to qat_crypto_get_instance_node(). It's not feasible
+to disable preemption for the duration of the crypto requests. Therefore,
+just silence the warning. This commit is similar to e7a9b05ca4
+("crypto: cavium - Fix smp_processor_id() warnings").
 
-This uses driver.state, just as the sh-sci.c driver does.
+Silences the following splat:
+BUG: using smp_processor_id() in preemptible [00000000] code: cryptomgr_test/2904
+caller is qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
+CPU: 1 PID: 2904 Comm: cryptomgr_test Tainted: P           O    4.14.69 #1
+...
+Call Trace:
+ dump_stack+0x5f/0x86
+ check_preemption_disabled+0xd3/0xe0
+ qat_alg_ablkcipher_setkey+0x300/0x4a0 [intel_qat]
+ skcipher_setkey_ablkcipher+0x2b/0x40
+ __test_skcipher+0x1f3/0xb20
+ ? cpumask_next_and+0x26/0x40
+ ? find_busiest_group+0x10e/0x9d0
+ ? preempt_count_add+0x49/0xa0
+ ? try_module_get+0x61/0xf0
+ ? crypto_mod_get+0x15/0x30
+ ? __kmalloc+0x1df/0x1f0
+ ? __crypto_alloc_tfm+0x116/0x180
+ ? crypto_skcipher_init_tfm+0xa6/0x180
+ ? crypto_create_tfm+0x4b/0xf0
+ test_skcipher+0x21/0xa0
+ alg_test_skcipher+0x3f/0xa0
+ alg_test.part.6+0x126/0x2a0
+ ? finish_task_switch+0x21b/0x260
+ ? __schedule+0x1e9/0x800
+ ? __wake_up_common+0x8d/0x140
+ cryptomgr_test+0x40/0x50
+ kthread+0xff/0x130
+ ? cryptomgr_notify+0x540/0x540
+ ? kthread_create_on_node+0x70/0x70
+ ret_from_fork+0x24/0x50
 
-Fixes this null pointer dereference in tty_unregister_driver(),
-since the 'driver' argument is null:
-
-  general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-  RIP: 0010:tty_unregister_driver+0x25/0x1d0
-
-Fixes: 238b8721a554 ("[PATCH] serial uartlite driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Peter Korsgaard <jacmet@sunsite.dk>
-Link: https://lore.kernel.org/r/9c8e6581-6fcc-a595-0897-4d90f5d710df@infradead.org
+Fixes: ed8ccaef52 ("crypto: qat - Add support for SRIOV")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/uartlite.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/crypto/qat/qat_common/adf_common_drv.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -701,7 +701,8 @@ err_uart:
- static void __exit ulite_exit(void)
+--- a/drivers/crypto/qat/qat_common/adf_common_drv.h
++++ b/drivers/crypto/qat/qat_common/adf_common_drv.h
+@@ -95,7 +95,7 @@ struct service_hndl {
+ 
+ static inline int get_current_node(void)
  {
- 	platform_driver_unregister(&ulite_platform_driver);
--	uart_unregister_driver(&ulite_uart_driver);
-+	if (ulite_uart_driver.state)
-+		uart_unregister_driver(&ulite_uart_driver);
+-	return topology_physical_package_id(smp_processor_id());
++	return topology_physical_package_id(raw_smp_processor_id());
  }
  
- module_init(ulite_init);
+ int adf_service_register(struct service_hndl *service);
 
 
