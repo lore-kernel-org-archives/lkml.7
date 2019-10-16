@@ -3,68 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DCAFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82B1FA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5FB21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA31921835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393981AbfJPQ1E (ORCPT
+        id S2405561AbfJPQ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:27:04 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:59399 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390184AbfJPQ1E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:27:04 -0400
-Received: from [167.98.27.226] (helo=[10.35.5.173])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKm8b-0005Vr-DR; Wed, 16 Oct 2019 17:27:01 +0100
-Subject: Re: [PATCH] NFSv4: add declaration of current_stateid
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191015121953.14905-1-ben.dooks@codethink.co.uk>
- <20191015163136.GA11160@infradead.org>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <63bbd39b-6f9d-f58c-4ad7-428ac4ca9d5b@codethink.co.uk>
-Date:   Wed, 16 Oct 2019 17:27:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 12:28:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:36565 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404133AbfJPQ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:28:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 09:28:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
+   d="scan'208";a="202116750"
+Received: from hagarwal-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.5.165])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2019 09:27:58 -0700
+Date:   Wed, 16 Oct 2019 19:27:57 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Kairui Song <kasong@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v3] x86, efi: never relocate kernel below lowest
+ acceptable address
+Message-ID: <20191016162757.GC6279@linux.intel.com>
+References: <20191012034421.25027-1-kasong@redhat.com>
+ <20191014101419.GA4715@zn.tnic>
+ <20191014202111.GP15552@linux.intel.com>
+ <20191014211825.GJ4715@zn.tnic>
+ <20191016152014.GC4261@linux.intel.com>
+ <fb0e7c13da405970d5cbd59c10005daaf970b8da.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20191015163136.GA11160@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb0e7c13da405970d5cbd59c10005daaf970b8da.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/10/2019 17:31, Christoph Hellwig wrote:
-> On Tue, Oct 15, 2019 at 01:19:53PM +0100, Ben Dooks wrote:
->> The current_stateid is exported from nfs4state.c but not
->> declared in any of the headers. Add to nfs4_fs.h to
->> remove the following warning:
+On Wed, Oct 16, 2019 at 08:23:56AM -0700, Joe Perches wrote:
+> On Wed, 2019-10-16 at 18:20 +0300, Jarkko Sakkinen wrote: > > On Mon, Oct 14, 2019 at 11:18:25PM +0200, Borislav Petkov wrote:
+> > > On Mon, Oct 14, 2019 at 11:21:11PM +0300, Jarkko Sakkinen wrote:
+> > > > Was there a section in the patch submission documentation to point out
+> > > > when people send patches with all the possible twists for an acronym?
+> > > 
+> > > I don't think so.
+> > > 
+> > > > This is giving me constantly gray hairs with TPM patches.
+> > > 
+> > > Well, I'm slowly getting tired of repeating the same crap over and over
+> > > again about how important it is to document one's changes and to write
+> > > good commit messages. The most repeated answers I'm simply putting into
+> > > canned reply templates because, well, saying it once or twice is not
+> > > enough anymore. :-\
+> > > 
+> > > And yeah, I see your pain. Same here, actually.
+> > > 
+> > > In the acronym case, I'd probably add a regex to my patch massaging
+> > > script and convert those typos automatically and be done with it.
+> > 
+> > Wonder if checkpatch.pl could be extended to know acronyms e.g. have a
+> > db of known acronyms.
 > 
-> I think you also need to remove the extern in pnfs.c as well.
-
-ok, thanks, will sort.
-
-> Also nfs4_stateid_is_current has a local variable with the same name,
-> so you might want to rename that so that we don't get symbol shadowing
-> warnings.
+> ?  examples please.
 > 
-ok, will do.
+> checkpatch has a db for misspellings, I supposed another for
+> acronyms could be added, but how would false positives be avoided?
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+TPM should be always TPM, e.g. not tpm. EFI should be always, e.g.
+not efi.
 
-https://www.codethink.co.uk/privacy.html
+/Jarkko
