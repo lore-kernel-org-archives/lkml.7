@@ -2,52 +2,52 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212C8ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3C5FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31AD21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD4E218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263101;
-	bh=DunNQsyNa1VNuHxx2OOC8Q0qfEOKg0cfD+bPhM640gk=;
+	s=default; t=1571263111;
+	bh=HSW9Eg9Cocl1FHpauNvnQ+JPck1GECfflNlQLO7SD2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXsyUNvGlgnOzdRNAF/pJBT+G0zFL+JPvrh1k+jpBDtIK3MCfoNw6k69oep7DaAHI
-	 8ZNqenZadDyMZf+AhbHaS7fUYYquEQgYN67YooBA5Vsl5WGdUhJ5NPt80OrQRSS1gr
-	 ThsIkM/zMlfZ9iYqcqfEu3f0anZhqrEQQGPtprzc=
+	b=eRWtaE2udZFiL6IpjnuN4idX4h+xPkkHwqqvDKXBhnDPzsN7zjh9mhyMKgMZs80g6
+	 edCcPkrxhMtSpNAWTIP2btr41Z7DxH/yl2pbym+Ss7zxucT1OoEzRyV6sKGfAVBlYo
+	 8wRAH6Xe/zdJUF8GDvJDqgAV/AsoClXNzLIqrg4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438133AbfJPV6T (ORCPT
+        id S2438163AbfJPV6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50020 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfJPV5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:24 -0400
+        id S2395495AbfJPV5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:37 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BF721928;
-        Wed, 16 Oct 2019 21:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF44121D7A;
+        Wed, 16 Oct 2019 21:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263044;
-        bh=DunNQsyNa1VNuHxx2OOC8Q0qfEOKg0cfD+bPhM640gk=;
+        s=default; t=1571263057;
+        bh=HSW9Eg9Cocl1FHpauNvnQ+JPck1GECfflNlQLO7SD2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dJe6q+vIebxnHKYjGjQdUaYBcUEa/ZxyG+VewlRbDp35C/Ia5YRaD3PXkSAxzYX82
-         Is0uiFXzFNoTFgkQRIOC+Utko6NCKZVZsXd9I3feeRk1HmlMIGWqg/Jqk6nMSpHt8S
-         wZgH/kSDI2MSL4tGJ6e8VzoroL6dg0cuFGt8bEKk=
+        b=FB6G+2Zgbpwe2nRII9z0lbH4PNiHHOk2LVYIjGZemWp03Yk5YzS7+na6RTR4pXyqQ
+         HavUhLWmLaNbavbBJ/7pYdUJNQYSWFuC0XUmkdLL7NuDTIdZA2ScB5O6s/lUH9FHXj
+         pfldp2HUB8ztt8qc4AemEOeVoswWlrWKkRR8NESs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Frey <dpfrey@gmail.com>,
-        Andreas Dannenberg <dannenberg@ti.com>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 48/81] iio: light: opt3001: fix mutex unlock race
-Date:   Wed, 16 Oct 2019 14:50:59 -0700
-Message-Id: <20191016214839.933714089@linuxfoundation.org>
+        stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 59/81] gpiolib: dont clear FLAG_IS_OUT when emulating open-drain/open-source
+Date:   Wed, 16 Oct 2019 14:51:10 -0700
+Message-Id: <20191016214843.408438977@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,56 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Frey <dpfrey@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-commit 82f3015635249a8c8c45bac303fd84905066f04f upstream.
+[ Upstream commit e735244e2cf068f98b6384681a38993e0517a838 ]
 
-When an end-of-conversion interrupt is received after performing a
-single-shot reading of the light sensor, the driver was waking up the
-result ready queue before checking opt->ok_to_ignore_lock to determine
-if it should unlock the mutex. The problem occurred in the case where
-the other thread woke up and changed the value of opt->ok_to_ignore_lock
-to false prior to the interrupt thread performing its read of the
-variable. In this case, the mutex would be unlocked twice.
+When emulating open-drain/open-source by not actively driving the output
+lines - we're simply changing their mode to input. This is wrong as it
+will then make it impossible to change the value of such line - it's now
+considered to actually be in input mode. If we want to still use the
+direction_input() callback for simplicity then we need to set FLAG_IS_OUT
+manually in gpiod_direction_output() and not clear it in
+gpio_set_open_drain_value_commit() and
+gpio_set_open_source_value_commit().
 
-Signed-off-by: David Frey <dpfrey@gmail.com>
-Reviewed-by: Andreas Dannenberg <dannenberg@ti.com>
-Fixes: 94a9b7b1809f ("iio: light: add support for TI's opt3001 light sensor")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c663e5f56737 ("gpio: support native single-ended hardware drivers")
+Cc: stable@vger.kernel.org
+Reported-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+[Bartosz: backported to v5.3, v4.19]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/opt3001.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
---- a/drivers/iio/light/opt3001.c
-+++ b/drivers/iio/light/opt3001.c
-@@ -694,6 +694,7 @@ static irqreturn_t opt3001_irq(int irq,
- 	struct iio_dev *iio = _iio;
- 	struct opt3001 *opt = iio_priv(iio);
- 	int ret;
-+	bool wake_result_ready_queue = false;
- 
- 	if (!opt->ok_to_ignore_lock)
- 		mutex_lock(&opt->lock);
-@@ -728,13 +729,16 @@ static irqreturn_t opt3001_irq(int irq,
- 		}
- 		opt->result = ret;
- 		opt->result_ready = true;
--		wake_up(&opt->result_ready_queue);
-+		wake_result_ready_queue = true;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 3289b53a7ba14..565ab945698ca 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2649,8 +2649,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 		if (!ret)
+ 			goto set_output_value;
+ 		/* Emulate open drain by not actively driving the line high */
+-		if (value)
+-			return gpiod_direction_input(desc);
++		if (value) {
++			ret = gpiod_direction_input(desc);
++			goto set_output_flag;
++		}
  	}
+ 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
+ 		ret = gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+@@ -2658,8 +2660,10 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ 		if (!ret)
+ 			goto set_output_value;
+ 		/* Emulate open source by not actively driving the line low */
+-		if (!value)
+-			return gpiod_direction_input(desc);
++		if (!value) {
++			ret = gpiod_direction_input(desc);
++			goto set_output_flag;
++		}
+ 	} else {
+ 		gpio_set_drive_single_ended(gc, gpio_chip_hwgpio(desc),
+ 					    PIN_CONFIG_DRIVE_PUSH_PULL);
+@@ -2667,6 +2671,17 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
  
- out:
- 	if (!opt->ok_to_ignore_lock)
- 		mutex_unlock(&opt->lock);
- 
-+	if (wake_result_ready_queue)
-+		wake_up(&opt->result_ready_queue);
+ set_output_value:
+ 	return gpiod_direction_output_raw_commit(desc, value);
 +
- 	return IRQ_HANDLED;
++set_output_flag:
++	/*
++	 * When emulating open-source or open-drain functionalities by not
++	 * actively driving the line (setting mode to input) we still need to
++	 * set the IS_OUT flag or otherwise we won't be able to set the line
++	 * value anymore.
++	 */
++	if (ret == 0)
++		set_bit(FLAG_IS_OUT, &desc->flags);
++	return ret;
  }
+ EXPORT_SYMBOL_GPL(gpiod_direction_output);
  
+@@ -2980,8 +2995,6 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
+ 
+ 	if (value) {
+ 		err = chip->direction_input(chip, offset);
+-		if (!err)
+-			clear_bit(FLAG_IS_OUT, &desc->flags);
+ 	} else {
+ 		err = chip->direction_output(chip, offset, 0);
+ 		if (!err)
+@@ -3011,8 +3024,6 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+ 			set_bit(FLAG_IS_OUT, &desc->flags);
+ 	} else {
+ 		err = chip->direction_input(chip, offset);
+-		if (!err)
+-			clear_bit(FLAG_IS_OUT, &desc->flags);
+ 	}
+ 	trace_gpio_direction(desc_to_gpio(desc), !value, err);
+ 	if (err < 0)
+-- 
+2.20.1
+
 
 
