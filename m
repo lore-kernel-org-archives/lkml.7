@@ -2,81 +2,147 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43F8FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF90FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CA92067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F09121928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFfug13x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404056AbfJPQDS (ORCPT
+        id S2391360AbfJPQDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:03:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56948 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727881AbfJPQDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:03:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 852C0B412;
-        Wed, 16 Oct 2019 16:03:16 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 18:03:14 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Tom Murphy <murphyt7@tcd.ie>, Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: "Convert the AMD iommu driver to the dma-iommu api" is buggy
-Message-ID: <20191016160314.GH4695@suse.de>
-References: <1571237707.5937.58.camel@lca.pw>
- <1571237982.5937.60.camel@lca.pw>
- <20191016153112.GF4695@suse.de>
- <1571241213.5937.64.camel@lca.pw>
+        Wed, 16 Oct 2019 12:03:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41353 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbfJPQDy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:03:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p4so12837887wrm.8;
+        Wed, 16 Oct 2019 09:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8tAzClyAvZpUSFyKG/Pk8kSHQbTC3odRRyjL8/E0mfM=;
+        b=jFfug13xCcYliAOTf69yFMA+Mvkx2HeD406hyp5ifiYivCZzu8FiEQT3ZOpIA84Chh
+         0FY/HX9TwYPGyTEeUFsmmggPMZkAeFiG7Mt4J+SLrc/qAi1T4SS424uou1WjRSTZ7EQQ
+         Gbyp1NXVXQuh79XtuibNDc5/Ou8lTJw6yK2JcU1D8HG63Vqji3b5xuuZuL/Rq88D6CFR
+         Wd3wCrt2IC68NbIpkNs9YfOTh5J1lfRbz/gPmizn3QI2zP5n4DcmmA+xp0UIxaw//Y0A
+         +GGLOSekVHF5TjrTBJUknP9lKJsE2DHQyId85UBAjdqcEB0Z5M28/30pAlLX8aw3/OWp
+         ZBRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8tAzClyAvZpUSFyKG/Pk8kSHQbTC3odRRyjL8/E0mfM=;
+        b=gPksQ13wo9CFmRQuNgEXyQxLyc7E//fi+XmXZn5QXz0mp1tU82aAPugbHjoIMpBpGi
+         9hc1BNyEdttIW6wOnF5PeBAz1JuMW/sehGuIUvWKF15FH1hKz7qrl/0eQabNF6ExYcpq
+         Uk3iB0XmMQ2JE7am1y2uJGoJp6JICGUd1gXT6ch/heX+7NyE7N6sDIRuTpOBazKXT0Gz
+         tiy62tPNbATny/OR54cmaAP/4gR+oioOEvDC2JR6GuJO5FyDryhnnpPgdolo1lFMwcZP
+         qOBb+m2j8pFdG0PhnKQcwqCtf1xR52v+uJXF5EP9PdUiwHGcUepiT+bVT4nrP542w52C
+         rx8w==
+X-Gm-Message-State: APjAAAX4YcHlTtgOzG2P0mLKJu+Kx+LlyWv3FHbVM2Fl1NfwiS6qnByX
+        lu1XB8o9TZbU7p+Z0k/dxik=
+X-Google-Smtp-Source: APXvYqx2fq3WUjV1DN0JFZChxKVkSK4kwdX+hTuiRYccS4yHQC2WgV0minWbd47ga5S1YMqawMGn6g==
+X-Received: by 2002:adf:c641:: with SMTP id u1mr3427669wrg.361.1571241832723;
+        Wed, 16 Oct 2019 09:03:52 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id p7sm2684570wma.34.2019.10.16.09.03.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 16 Oct 2019 09:03:51 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 18:03:49 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20191016160349.pwghlg566hh2o7id@pali>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190829205631.uhz6jdboneej3j3c@pali>
+ <184209.1567120696@turing-police>
+ <20190829233506.GT5281@sasha-vm>
+ <20190830075647.wvhrx4asnkrfkkwk@pali>
+ <20191016140353.4hrncxa5wkx47oau@pali>
+ <20191016143113.GS31224@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xtpjukghalsmqwao"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571241213.5937.64.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191016143113.GS31224@sasha-vm>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:53:33AM -0400, Qian Cai wrote:
-> On Wed, 2019-10-16 at 17:31 +0200, Joerg Roedel wrote:
 
-> The x86 one might just be a mistake.
-> 
-> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> index ad05484d0c80..63c4b894751d 100644
-> --- a/drivers/iommu/amd_iommu.c
-> +++ b/drivers/iommu/amd_iommu.c
-> @@ -2542,7 +2542,7 @@ static int amd_iommu_map(struct iommu_domain *dom,
-> unsigned long iova,
->         if (iommu_prot & IOMMU_WRITE)
->                 prot |= IOMMU_PROT_IW;
->  
-> -       ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
-> +       ret = iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
+--xtpjukghalsmqwao
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, that is a bug, I spotted that too.
+On Wednesday 16 October 2019 10:31:13 Sasha Levin wrote:
+> On Wed, Oct 16, 2019 at 04:03:53PM +0200, Pali Roh=C3=A1r wrote:
+> > On Friday 30 August 2019 09:56:47 Pali Roh=C3=A1r wrote:
+> > > On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
+> > > > With regards to missing specs/docs/whatever - our main concern with=
+ this
+> > > > release was that we want full interoperability, which is why the sp=
+ec
+> > > > was made public as-is without modifications from what was used
+> > > > internally. There's no "secret sauce" that Microsoft is hiding here.
+> > >=20
+> > > Ok, if it was just drop of "current version" of documentation then it
+> > > makes sense.
+> > >=20
+> > > > How about we give this spec/code time to get soaked and reviewed fo=
+r a
+> > > > bit, and if folks still feel (in a month or so?) that there are mis=
+sing
+> > > > bits of information related to exfat, I'll be happy to go back and =
+try
+> > > > to get them out as well.
+> >=20
+> > Hello Sasha!
+> >=20
+> > Now one month passed, so do you have some information when missing parts
+> > of documentation like TexFAT would be released to public?
+>=20
+> Sure, I'll see if I can get an approval to open it up.
 
-> @@ -1185,7 +1185,7 @@ static struct iommu_dma_msi_page
-> *iommu_dma_get_msi_page(struct device *dev,
->         if (!iova)
->                 goto out_free_page;
->  
-> -       if (iommu_map(domain, iova, msi_addr, size, prot))
-> +       if (iommu_map_atomic(domain, iova, msi_addr, size, prot))
->                 goto out_free_iova;
+Ok!
 
-Not so sure this is a bug, this code is only about setting up MSIs on
-ARM. It probably doesn't need to be atomic.
+> Can I assume you will be implementing TexFAT support once the spec is
+> available?
 
-Regards,
+I cannot promise that I would implement something which I do not know
+how is working... It depends on how complicated TexFAT is and also how
+future exfat support in kernel would look like.
 
-	Joerg
+But I'm interesting in implementing it.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--xtpjukghalsmqwao
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXac/ZAAKCRCL8Mk9A+RD
+Up63AJ9RWDz74lfxmFMyPt68AQrr18x87wCfW3K+Im689OPplqjLk3mnz6YAHp0=
+=8o6F
+-----END PGP SIGNATURE-----
+
+--xtpjukghalsmqwao--
