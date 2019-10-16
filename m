@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE08FECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D557FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8791821A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCF221A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263026;
-	bh=igHqsfJ/KTYG9kzGSxI1nBlYQVC8EhHXmU66VJt5M2Q=;
+	s=default; t=1571263030;
+	bh=dlgjEkhjGzZAqHQIJgcRh8buxbVAOWa6jQVNzLlvn5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YBvszdAxgCaikrZ46jUolhH9tTO2i2KOPTXhl62j9FxHUC8M+VqRAuBE6Bf1Dibb5
-	 Z2XFyH/eZr42cfgDb4Z1Ao8Se4ebSaRb5aqyaK9lVm8CjWsA5SUVMtVrWor82ESu/T
-	 JgWG/+CvILuzfDOhyFaa2Or0TSeinfvIl2+7udSA=
+	b=W6MzY2V74Ez7q8oJ/0Q46JdpD/kF4Aw5VIp8N+/1kWAbpADhL8y2ly1hGMX2Pxzah
+	 Vg++hkFYfVBj7TXxYAP5HYCeNMqznx/5TW3RWtor43XSJaCPXStgFGsDO/3IMg0gS+
+	 gdwnBQ7ZA5A9AbILVub/4TzcYqzNgPXmzQlVRN8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395451AbfJPV5F (ORCPT
+        id S2406671AbfJPV5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48150 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406653AbfJPV4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:30 -0400
+        id S2391343AbfJPV4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:33 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF2BF21925;
-        Wed, 16 Oct 2019 21:56:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A14F21D7F;
+        Wed, 16 Oct 2019 21:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262988;
-        bh=igHqsfJ/KTYG9kzGSxI1nBlYQVC8EhHXmU66VJt5M2Q=;
+        s=default; t=1571262992;
+        bh=dlgjEkhjGzZAqHQIJgcRh8buxbVAOWa6jQVNzLlvn5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UwZAkgfxrKIp58P/ET3sZOrFrX6VoZ26TP1jaw01AonA8hI1PBPDWGe0P3xZDhyuv
-         pM5Jbyquyg4m7LxnHTOISDYHccciSPNSIO29Dovf7wPW9NjpVqXJNmk74VVd4LPfQy
-         VrCG6yqLCDRz96/kjjbb5ApfarvR8wL0sHgR3074=
+        b=Oj0OTlcTbCKAbOdnuZ568gHrhzDVrUc9yl8oeheMZjraHUNhr9OGQ0UjZjQbYIjOA
+         rHBa7Dsa7nX0sOF31cnPOGuYfCfRAvj9yc7XrjJ/TMQB9qTKm4XIhIpeTSJEkeZybf
+         wwZ/QBY/+Uz9ygVd5yhG31Q9axG+MNJJXEkmCNjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.14 56/65] NFS: Fix O_DIRECT accounting of number of bytes read/written
-Date:   Wed, 16 Oct 2019 14:51:10 -0700
-Message-Id: <20191016214838.027140327@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 60/65] tracing/hwlat: Report total time spent in all NMIs during the sample
+Date:   Wed, 16 Oct 2019 14:51:14 -0700
+Message-Id: <20191016214839.553835136@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -60,155 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
-commit 031d73ed768a40684f3ca21992265ffdb6a270bf upstream.
+commit 98dc19c11470ee6048aba723d77079ad2cda8a52 upstream.
 
-When a series of O_DIRECT reads or writes are truncated, either due to
-eof or due to an error, then we should return the number of contiguous
-bytes that were received/sent starting at the offset specified by the
-application.
+nmi_total_ts is supposed to record the total time spent in *all* NMIs
+that occur on the given CPU during the (active portion of the)
+sampling window. However, the code seems to be overwriting this
+variable for each NMI, thereby only recording the time spent in the
+most recent NMI. Fix it by accumulating the duration instead.
 
-Currently, we are failing to correctly check contiguity, and so we're
-failing the generic/465 in xfstests when the race between the read
-and write RPCs causes the file to get extended while the 2 reads are
-outstanding. If the first read RPC call wins the race and returns with
-eof set, we should treat the second read RPC as being truncated.
+Link: http://lkml.kernel.org/r/157073343544.17189.13911783866738671133.stgit@srivatsa-ubuntu
 
-Reported-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Fixes: 1ccbad9f9f9bd ("nfs: fix DIO good bytes calculation")
-Cc: stable@vger.kernel.org # 4.1+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 7b2c86250122 ("tracing: Add NMI tracing in hwlat detector")
+Cc: stable@vger.kernel.org
+Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/direct.c |   78 ++++++++++++++++++++++++++++++--------------------------
- 1 file changed, 43 insertions(+), 35 deletions(-)
+ kernel/trace/trace_hwlat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -122,32 +122,49 @@ static inline int put_dreq(struct nfs_di
- }
- 
- static void
--nfs_direct_good_bytes(struct nfs_direct_req *dreq, struct nfs_pgio_header *hdr)
-+nfs_direct_handle_truncated(struct nfs_direct_req *dreq,
-+			    const struct nfs_pgio_header *hdr,
-+			    ssize_t dreq_len)
-+{
-+	struct nfs_direct_mirror *mirror = &dreq->mirrors[hdr->pgio_mirror_idx];
-+
-+	if (!(test_bit(NFS_IOHDR_ERROR, &hdr->flags) ||
-+	      test_bit(NFS_IOHDR_EOF, &hdr->flags)))
-+		return;
-+	if (dreq->max_count >= dreq_len) {
-+		dreq->max_count = dreq_len;
-+		if (dreq->count > dreq_len)
-+			dreq->count = dreq_len;
-+
-+		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
-+			dreq->error = hdr->error;
-+		else /* Clear outstanding error if this is EOF */
-+			dreq->error = 0;
-+	}
-+	if (mirror->count > dreq_len)
-+		mirror->count = dreq_len;
-+}
-+
-+static void
-+nfs_direct_count_bytes(struct nfs_direct_req *dreq,
-+		       const struct nfs_pgio_header *hdr)
- {
--	int i;
--	ssize_t count;
-+	struct nfs_direct_mirror *mirror = &dreq->mirrors[hdr->pgio_mirror_idx];
-+	loff_t hdr_end = hdr->io_start + hdr->good_bytes;
-+	ssize_t dreq_len = 0;
- 
--	WARN_ON_ONCE(dreq->count >= dreq->max_count);
-+	if (hdr_end > dreq->io_start)
-+		dreq_len = hdr_end - dreq->io_start;
- 
--	if (dreq->mirror_count == 1) {
--		dreq->mirrors[hdr->pgio_mirror_idx].count += hdr->good_bytes;
--		dreq->count += hdr->good_bytes;
--	} else {
--		/* mirrored writes */
--		count = dreq->mirrors[hdr->pgio_mirror_idx].count;
--		if (count + dreq->io_start < hdr->io_start + hdr->good_bytes) {
--			count = hdr->io_start + hdr->good_bytes - dreq->io_start;
--			dreq->mirrors[hdr->pgio_mirror_idx].count = count;
--		}
--		/* update the dreq->count by finding the minimum agreed count from all
--		 * mirrors */
--		count = dreq->mirrors[0].count;
-+	nfs_direct_handle_truncated(dreq, hdr, dreq_len);
- 
--		for (i = 1; i < dreq->mirror_count; i++)
--			count = min(count, dreq->mirrors[i].count);
-+	if (dreq_len > dreq->max_count)
-+		dreq_len = dreq->max_count;
- 
--		dreq->count = count;
--	}
-+	if (mirror->count < dreq_len)
-+		mirror->count = dreq_len;
-+	if (dreq->count < dreq_len)
-+		dreq->count = dreq_len;
- }
- 
- /*
-@@ -401,20 +418,12 @@ static void nfs_direct_read_completion(s
- 	struct nfs_direct_req *dreq = hdr->dreq;
- 
- 	spin_lock(&dreq->lock);
--	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
--		dreq->error = hdr->error;
--
- 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
- 		spin_unlock(&dreq->lock);
- 		goto out_put;
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -152,7 +152,7 @@ void trace_hwlat_callback(bool enter)
+ 		if (enter)
+ 			nmi_ts_start = time_get();
+ 		else
+-			nmi_total_ts = time_get() - nmi_ts_start;
++			nmi_total_ts += time_get() - nmi_ts_start;
  	}
  
--	if (hdr->good_bytes != 0)
--		nfs_direct_good_bytes(dreq, hdr);
--
--	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
--		dreq->error = 0;
--
-+	nfs_direct_count_bytes(dreq, hdr);
- 	spin_unlock(&dreq->lock);
- 
- 	while (!list_empty(&hdr->pages)) {
-@@ -651,6 +660,9 @@ static void nfs_direct_write_reschedule(
- 	nfs_direct_write_scan_commit_list(dreq->inode, &reqs, &cinfo);
- 
- 	dreq->count = 0;
-+	dreq->max_count = 0;
-+	list_for_each_entry(req, &reqs, wb_list)
-+		dreq->max_count += req->wb_bytes;
- 	dreq->verf.committed = NFS_INVALID_STABLE_HOW;
- 	nfs_clear_pnfs_ds_commit_verifiers(&dreq->ds_cinfo);
- 	for (i = 0; i < dreq->mirror_count; i++)
-@@ -783,17 +795,13 @@ static void nfs_direct_write_completion(
- 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
- 
- 	spin_lock(&dreq->lock);
--
--	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
--		dreq->error = hdr->error;
--
- 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
- 		spin_unlock(&dreq->lock);
- 		goto out_put;
- 	}
- 
-+	nfs_direct_count_bytes(dreq, hdr);
- 	if (hdr->good_bytes != 0) {
--		nfs_direct_good_bytes(dreq, hdr);
- 		if (nfs_write_need_commit(hdr)) {
- 			if (dreq->flags == NFS_ODIRECT_RESCHED_WRITES)
- 				request_commit = true;
+ 	if (enter)
 
 
