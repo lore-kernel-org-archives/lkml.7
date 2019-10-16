@@ -2,89 +2,102 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3571C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B540FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1E22168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB382168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404266AbfJPJlG (ORCPT
+        id S2404277AbfJPJlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:41:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51838 "EHLO mx1.redhat.com"
+        Wed, 16 Oct 2019 05:41:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60896 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbfJPJlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:41:06 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2696FC05686D
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:41:06 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id w2so11521627wrn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:41:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+/XXGrpNozCSyajreXrVJeY8SJDmqfMaPcvU+nilJic=;
-        b=l/7D8NHTcfwx2n5hsy2xVtcQXUROkb93abeISHaqExQPq9kfYUW4uoqV9ad++g5vI1
-         d3ku7XkAsoVaIuoeJ4hzSw/X+XX+5l/NZVZJtq35BGjaXLY7Q2lNBx5V1hU66tKa411k
-         uVEgThBNpSsn8GPgu/6BVaBZ5V+aukpUJyOBOAoY7TAazW8LyAvPLAVWUfMEovtLkwzb
-         /ZCA9Snqo1hqkweyrXnH/B7obE2o34aaxp0digi13q9YQRR0US1AjbMrN0yEpFRVGnM9
-         3bFXoU0p3elMmoa7k4kFhumlx0KfDIgqreUHjfM0uQSviQatAOIBrW83ft3d6AaQOI1h
-         2XLQ==
-X-Gm-Message-State: APjAAAXbjGI2Cld8m9QA+gXYx9SCxscs5rH9gaNFvkBHhVjKgFsY9Ic1
-        LcLxlE6R9srgohY3MdZ2bhBAgRQoproaj3qktICypRQbb4SsDUrlBg5KXwOdM/2zg0ZqXcy96LB
-        7rH0VSYVWdtgea5KPcOG4YJvR
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr1830015wrr.186.1571218864813;
-        Wed, 16 Oct 2019 02:41:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwgwsHpBb20L1PvDo1LFEyusoLMGQ0MOWWfnLaWu+kFJ88D3mS8OS7IaVf4s07z4/xuk+xOKg==
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr1829999wrr.186.1571218864577;
-        Wed, 16 Oct 2019 02:41:04 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ddc7:c53c:581a:7f3e? ([2001:b07:6468:f312:ddc7:c53c:581a:7f3e])
-        by smtp.gmail.com with ESMTPSA id 33sm42277584wra.41.2019.10.16.02.41.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2019 02:41:04 -0700 (PDT)
-Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20191014162247.61461-1-xiaoyao.li@intel.com>
- <87y2xn462e.fsf@vitty.brq.redhat.com>
- <d14d22e2-d74c-ed73-b5bb-3ed5eb087deb@redhat.com>
- <6cc430c1-5729-c2d3-df11-3bf1ec1272f8@intel.com>
- <245dcfe2-d167-fdec-a371-506352d3c684@redhat.com>
- <11318bab-a377-bb8c-b881-76331c92f11e@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <10300339-e4cb-57b0-ac2f-474604551df0@redhat.com>
-Date:   Wed, 16 Oct 2019 11:41:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <11318bab-a377-bb8c-b881-76331c92f11e@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726689AbfJPJlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:41:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 02:41:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="225733107"
+Received: from unknown (HELO ubuntu.localdomain) ([10.226.249.160])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Oct 2019 02:41:08 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Ong Hean Loong <hean.loong.ong@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>
+Subject: [PATCHv2] arm64: dts: agilex: add QSPI support for Intel Agilex
+Date:   Wed, 16 Oct 2019 02:40:46 -0700
+Message-Id: <1571218846-12306-1-git-send-email-joyce.ooi@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/10/19 09:48, Xiaoyao Li wrote:
-> BTW, could you have a look at the series I sent yesterday to refactor
-> the vcpu creation flow, which is inspired partly by this issue. Any
-> comment and suggestion is welcomed since I don't want to waste time on
-> wrong direction.
+This patch adds QSPI flash interface in device tree for Intel Agilex
 
-Yes, that's the series from which I'll take your patch.
+Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+---
+v2: update the qspi_rootfs partition size
+---
+ arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-Paolo
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+index 7814a9e..8de8118 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+@@ -73,3 +73,38 @@
+ &watchdog0 {
+ 	status = "okay";
+ };
++
++&qspi {
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "mt25qu02g";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++
++		m25p,fast-read;
++		cdns,page-size = <256>;
++		cdns,block-size = <16>;
++		cdns,read-delay = <1>;
++		cdns,tshsl-ns = <50>;
++		cdns,tsd2d-ns = <50>;
++		cdns,tchsh-ns = <4>;
++		cdns,tslch-ns = <4>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			qspi_boot: partition@0 {
++				label = "Boot and fpga data";
++				reg = <0x0 0x034B0000>;
++			};
++
++			qspi_rootfs: partition@34B0000 {
++				label = "Root Filesystem - JFFS2";
++				reg = <0x034B0000 0x0CB50000>;
++			};
++		};
++	};
++};
+-- 
+1.9.1
+
