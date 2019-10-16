@@ -2,89 +2,204 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38BDC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A442C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DCF20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC5620854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732678AbfJPG5X (ORCPT
+        id S2389152AbfJPG6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:57:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40462 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731974AbfJPG5X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:57:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y39so19204976ota.7
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 23:57:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jn51E7CHg9BRoH5fZ6ikubNN+LcIafO+PMv/rB0cfpU=;
-        b=HKQUF3zkCddkQqSr5Dw7p7n7obOxPQbm1qTVEkdRpn8892ye5SC7RyQWjTdreZZLXn
-         HOb5aCIoPGmqbh72DA7dQy9PgP3KlmtDIK5lSDgYfCpE36Rlhzc026s4WUNb19zL8Qal
-         vjUZqEvj1R+9vA/YxuAaXHDDTQ2GoOwbkvtD3tqQEUPXA56Fin/oXo/bY4rmqeK2kfBi
-         w8HVBUB8ygIFSjObeKqK3pWp2a3XhiIU2J6YNHsOWlYPXQqNBR57bQPZPy2+aCLFnUzD
-         5a8Z6IhwW2trnXM8le/6K9bIhTUl4gj2IMWgu7ZRxGdvZqsj1lFgVY5pWsimKHrP9Kw+
-         VkMQ==
-X-Gm-Message-State: APjAAAX4hWfVfgloSQydiIdWrCJJZDnW+fZKBA9kLjHxcrFf5wf+VckD
-        WhnjW8Mf448hgm8gAHoywTLScxasW4mjYWakbtp6fA==
-X-Google-Smtp-Source: APXvYqx51gV+Y1QjSyr2AoMzkZI/h34WOr04EycVqfWyQkbql2gypOJx+T1tGe3O65hZeX260JrIBONm5ZGvkT6F9cY=
-X-Received: by 2002:a9d:7345:: with SMTP id l5mr22858189otk.39.1571209042125;
- Tue, 15 Oct 2019 23:57:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191008094006.8251-1-geert+renesas@glider.be>
- <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
- <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com>
- <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
- <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
- <CAMuHMdWZYOsJv1uQkOFRK2tZO+E8sSHEneUM-p+q5FyAmYZ9Fw@mail.gmail.com>
- <fa4ce46605a81d660be73361a4fdd30240a6348e.camel@perches.com>
- <CAMuHMdWSGzs7BHqeHC0W5qUEpYqJ8B3Os4wdY11JNzt5+xEaiQ@mail.gmail.com>
- <e09057e0eefb221549ef9686826e2d190ef36a9c.camel@perches.com>
- <CAMuHMdUvoQz7a7NmLHdpNjRnAUMdbqxFRvB2vdLhHj8pw4Z9Rw@mail.gmail.com> <70c9eaac3510bf8857338d82e14c7e3eded9faa9.camel@perches.com>
-In-Reply-To: <70c9eaac3510bf8857338d82e14c7e3eded9faa9.camel@perches.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 16 Oct 2019 08:57:10 +0200
-Message-ID: <CAMuHMdUBdhSVqpT4grtdKyHxoVEfJcoiTrVzau_kVeFoUw8zvg@mail.gmail.com>
-Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
-To:     Joe Perches <joe@perches.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Whitcroft <apw@canonical.com>,
+        Wed, 16 Oct 2019 02:58:11 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64506 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387860AbfJPG6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 02:58:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 23:58:11 -0700
+X-IronPort-AV: E=Sophos;i="5.67,302,1566889200"; 
+   d="scan'208";a="186064631"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 15 Oct 2019 23:58:07 -0700
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <bc8f5850-ba7d-45b7-a30b-5560764edcc8@intel.com>
+Date:   Wed, 16 Oct 2019 14:58:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20190925180931.GG31852@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+On 9/26/2019 2:09 AM, Sean Christopherson wrote:
+> On Wed, Jun 26, 2019 at 11:47:40PM +0200, Thomas Gleixner wrote:
+>> So only one of the CPUs will win the cmpxchg race, set te variable to 1 and
+>> warn, the other and any subsequent AC on any other CPU will not warn
+>> either. So you don't need WARN_ONCE() at all. It's redundant and confusing
+>> along with the atomic_set().
+>>
+>> Whithout reading that link [1], what Ingo proposed was surely not the
+>> trainwreck which you decided to put into that debugfs thing.
+> 
+> We're trying to sort out the trainwreck, but there's an additional wrinkle
+> that I'd like your input on.
+> 
+> We overlooked the fact that MSR_TEST_CTRL is per-core, i.e. shared by
+> sibling hyperthreads.  This is especially problematic for KVM, as loading
+> MSR_TEST_CTRL during VM-Enter could cause spurious #AC faults in the kernel
+> and bounce MSR_TEST_CTRL.split_lock.
+> 
+> E.g. if CPU0 and CPU1 are siblings and CPU1 is running a KVM guest with
+> MSR_TEST_CTRL.split_lock=1, hitting an #AC on CPU0 in the host kernel will
+> lead to suprious #AC faults and constant toggling of of the MSR.
+> 
+>    CPU0               CPU1
+> 
+>           split_lock=enabled
+> 
+>    #AC -> disabled
+> 
+>                       VM-Enter -> enabled
+> 
+>    #AC -> disabled
+> 
+>                       VM-Enter -> enabled
+> 
+>    #AC -> disabled
+> 
+> 
+> 
+> My thought to handle this:
+> 
+>    - Remove the per-cpu cache.
+> 
+>    - Rework the atomic variable to differentiate between "disabled globally"
+>      and "disabled by kernel (on some CPUs)".
+> 
+>    - Modify the #AC handler to test/set the same atomic variable as the
+>      sysfs knob.  This is the "disabled by kernel" flow.
+> 
+>    - Modify the debugfs/sysfs knob to only allow disabling split-lock
+>      detection.  This is the "disabled globally" path, i.e. sends IPIs to
+>      clear MSR_TEST_CTRL.split_lock on all online CPUs.
+> 
+>    - Modify the resume/init flow to clear MSR_TEST_CTRL.split_lock if it's
+>      been disabled on *any* CPU via #AC or via the knob.
+> 
+>    - Modify the debugs/sysfs read function to either print the raw atomic
+>      variable, or differentiate between "enabled", "disabled globally" and
+>     "disabled by kernel".
+> 
+>    - Remove KVM loading of MSR_TEST_CTRL, i.e. KVM *never* writes the CPU's
+>      actual MSR_TEST_CTRL.  KVM still emulates MSR_TEST_CTRL so that the
+>      guest can do WRMSR and handle its own #AC faults, but KVM doesn't
+>      change the value in hardware.
+> 
+>        * Allowing guest to enable split-lock detection can induce #AC on
+>          the host after it has been explicitly turned off, e.g. the sibling
+>          hyperthread hits an #AC in the host kernel, or worse, causes a
+>          different process in the host to SIGBUS.
+> 
+>        * Allowing guest to disable split-lock detection opens up the host
+>          to DoS attacks.
+> 
+>    - KVM advertises split-lock detection to guest/userspace if and only if
+>      split_lock_detect_disabled is zero.
+> 
+>    - Add a pr_warn_once() in KVM that triggers if split locks are disabled
+>      after support has been advertised to a guest.
+> 
+> Does this sound sane?
+> 
+> The question at the forefront of my mind is: why not have the #AC handler
+> send a fire-and-forget IPI to online CPUs to disable split-lock detection
+> on all CPUs?  Would the IPI be problematic?  Globally disabling split-lock
+> on any #AC would (marginally) simplify the code and would eliminate the
+> oddity of userspace process (and KVM guest) #AC behavior varying based on
+> the physical CPU it's running on.
+> 
+> 
+> Something like:
+> 
+> #define SPLIT_LOCK_DISABLED_IN_KERNEL	BIT(0)
+> #define SPLIT_LOCK_DISABLED_GLOBALLY	BIT(1)
+> 
+> static atomic_t split_lock_detect_disabled = ATOMIT_INIT(0);
+> 
+> void split_lock_detect_ac(void)
+> {
+> 	lockdep_assert_irqs_disabled();
+> 
+> 	/* Disable split lock detection on this CPU to avoid reentrant #AC. */
+> 	wrmsrl(MSR_TEST_CTRL,
+> 	       rdmsrl(MSR_TEST_CTRL) & ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
+> 
+> 	/*
+> 	 * If split-lock detection has not been disabled, either by the kernel
+> 	 * or globally, record that it has been disabled by the kernel and
+> 	 * WARN.  Guarding WARN with the atomic ensures only the first #AC due
+> 	 * to split-lock is logged, e.g. if multiple CPUs encounter #AC or if
+> 	 * #AC is retriggered by a perf context NMI that interrupts the
+> 	 * original WARN.
+> 	 */
+> 	if (atomic_cmpxchg(&split_lock_detect_disabled, 0,
+> 			   SPLIT_LOCK_DISABLED_IN_KERNEL) == 0)
+> 	        WARN(1, "split lock operation detected\n");
+> }
+> 
+> static ssize_t split_lock_detect_wr(struct file *f, const char __user *user_buf,
+> 				    size_t count, loff_t *ppos)
+> {
+> 	int old;
+> 
+> 	<parse or ignore input value?>
+> 	
+> 	old = atomic_fetch_or(SPLIT_LOCK_DISABLED_GLOBALLY,
+> 			      &split_lock_detect_disabled);
+> 
+> 	/* Update MSR_TEST_CTRL unless split-lock was already disabled. */
+> 	if (!(old & SPLIT_LOCK_DISABLED_GLOBALLY))
+> 		on_each_cpu(split_lock_update, NULL, 1);
+> 
+> 	return count;
+> }
+> 
 
-On Tue, Oct 15, 2019 at 7:24 PM Joe Perches <joe@perches.com> wrote:
-> On Tue, 2019-10-15 at 18:40 +0200, Geert Uytterhoeven wrote:
-> > The advantage of formail over git-mailsplit is that the former doesn't
-> > create a bunch of files that need to be stored in a temporary place,
-> > and cleant up afterwards.
-> > But hey, that can be handled in yet-another-script...
->
-> Or yet-another-git-hook.
+Hi Thomas,
 
-Too late: thou maintainer shall run checkpatch before  applying patches.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Could you please have a look at Sean's proposal and give your opinion.
