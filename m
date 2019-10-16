@@ -2,231 +2,404 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623DEFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F963FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302AC218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571233528;
-	bh=eQfVsPWtiaa76UEMfm4cgWSEE3cBsE3PaVSOzO1kv+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZNWkypY5nYxw2qKjHjPPEanVm9kJhN/AfOpAVU9asT/9r1fmfCdCi02o0Nhdmmo+w
-	 qxBMYkygs4kDXgAD9otNDA6aW3b/OQb1dwnNUHUVfpo3hM/3nPdXfNgVvzQLHDN8Os
-	 VDKNJm2Pj+ph6oHvgZ+NU/Fdy3dD4GlklaE4RtsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 64DDD21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TozhwmiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405471AbfJPNp1 (ORCPT
+        id S2405482AbfJPNpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:45:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43986 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729093AbfJPNp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:45:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4CD1CB68D;
-        Wed, 16 Oct 2019 13:45:22 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 15:45:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Juergen Gross <jgross@suse.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
- a reference count of 0
-Message-ID: <20191016134519.GC317@dhcp22.suse.cz>
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-7-david@redhat.com>
- <20191016114321.GX317@dhcp22.suse.cz>
- <bd38d88d-19a7-275a-386d-f37cb76a3390@redhat.com>
+        Wed, 16 Oct 2019 09:45:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38558 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbfJPNpd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:45:33 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 150D79F4;
+        Wed, 16 Oct 2019 15:45:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571233530;
+        bh=vOEzWNYztWnSnMZNv4WpRzClI9hoeVdo3Dii5k/kozs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TozhwmiHugn++nNlxAq6c3mHORBK3yd5CRx5PD0sXqDvVu4KedJQ+WnEcuL+enbjv
+         iENuxQ/5UINpgsRMWJAbKKP+edfmft1J+NKgflftmZogXb202HOpTk5KMlqRuuy4wV
+         6o3jXbihSy7Pxho2AB05LX0aN7cvO0zh1vtKVHpY=
+Date:   Wed, 16 Oct 2019 16:45:26 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/8] drm: rcar-du: Add support for CMM
+Message-ID: <20191016134526.GD5175@pendragon.ideasonboard.com>
+References: <20191016085548.105703-1-jacopo+renesas@jmondi.org>
+ <20191016085548.105703-4-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bd38d88d-19a7-275a-386d-f37cb76a3390@redhat.com>
+In-Reply-To: <20191016085548.105703-4-jacopo+renesas@jmondi.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 16-10-19 14:50:30, David Hildenbrand wrote:
-> On 16.10.19 13:43, Michal Hocko wrote:
-> > On Thu 19-09-19 16:22:25, David Hildenbrand wrote:
-> > > virtio-mem wants to allow to offline memory blocks of which some parts
-> > > were unplugged, especially, to later offline and remove completely
-> > > unplugged memory blocks. The important part is that PageOffline() has
-> > > to remain set until the section is offline, so these pages will never
-> > > get accessed (e.g., when dumping). The pages should not be handed
-> > > back to the buddy (which would require clearing PageOffline() and
-> > > result in issues if offlining fails and the pages are suddenly in the
-> > > buddy).
-> > > 
-> > > Let's use "PageOffline() + reference count = 0" as a sign to
-> > > memory offlining code that these pages can simply be skipped when
-> > > offlining, similar to free or HWPoison pages.
-> > > 
-> > > Pass flags to test_pages_isolated(), similar as already done for
-> > > has_unmovable_pages(). Use a new flag to indicate the
-> > > requirement of memory offlining to skip over these special pages.
-> > > 
-> > > In has_unmovable_pages(), make sure the pages won't be detected as
-> > > movable. This is not strictly necessary, however makes e.g.,
-> > > alloc_contig_range() stop early, trying to isolate such page blocks -
-> > > compared to failing later when testing if all pages were isolated.
-> > > 
-> > > Also, make sure that when a reference to a PageOffline() page is
-> > > dropped, that the page will not be returned to the buddy.
-> > > 
-> > > memory devices (like virtio-mem) that want to make use of this
-> > > functionality have to make sure to synchronize against memory offlining,
-> > > using the memory hotplug notifier.
-> > > 
-> > > Alternative: Allow to offline with a reference count of 1
-> > > and use some other sign in the struct page that offlining is permitted.
-> > 
-> > Few questions. I do not see onlining code to take care of this special
-> > case. What should happen when offline && online?
-> 
-> Once offline, the memmap is garbage. When onlining again:
-> 
-> a) memmap will be re-initialized
-> b) online_page_callback_t will be called for every page in the section. The
-> driver can mark them offline again and not give them to the buddy.
-> c) section will be marked online.
+Hi Jacopo,
 
-But we can skip those pages when onlining and keep them in the offline
-state right? We do not poison offlined pages.
+Thank you for the patch.
 
-There is state stored in the struct page. In other words this shouldn't
-be really different from HWPoison pages. I cannot find the code that is
-doing that and maybe we don't handle that. But we cannot simply online
-hwpoisoned page. Offlining the range will not make a broken memory OK
-all of the sudden. And your usecase sounds similar to me.
+On Wed, Oct 16, 2019 at 10:55:43AM +0200, Jacopo Mondi wrote:
+> Add a driver for the R-Car Display Unit Color Correction Module.
+> 
+> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> to perform image enhancement and color correction.
+> 
+> Add support for CMM through a driver that supports configuration of
+> the 1-dimensional LUT table. More advanced CMM features will be
+> implemented on top of this initial one.
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
+>  drivers/gpu/drm/rcar-du/Makefile   |   1 +
+>  drivers/gpu/drm/rcar-du/rcar_cmm.c | 212 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_cmm.h |  58 ++++++++
+>  4 files changed, 278 insertions(+)
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> index 1529849e217e..539d232790d1 100644
+> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
+>  	  Choose this option if you have an R-Car chipset.
+>  	  If M is selected the module will be called rcar-du-drm.
+>  
+> +config DRM_RCAR_CMM
+> +	bool "R-Car DU Color Management Module (CMM) Support"
+> +	depends on DRM && OF
+> +	depends on DRM_RCAR_DU
+> +	help
+> +	  Enable support for R-Car Color Management Module (CMM).
+> +
+>  config DRM_RCAR_DW_HDMI
+>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+>  	depends on DRM && OF
+> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
+> index 6c2ed9c46467..4d1187ccc3e5 100644
+> --- a/drivers/gpu/drm/rcar-du/Makefile
+> +++ b/drivers/gpu/drm/rcar-du/Makefile
+> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
+>  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
+>  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
+>  
+> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
+>  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
+>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
+>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> new file mode 100644
+> index 000000000000..4170626208cf
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> @@ -0,0 +1,212 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
+> + *
+> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include <drm/drm_color_mgmt.h>
+> +
+> +#include "rcar_cmm.h"
+> +
+> +#define CM2_LUT_CTRL		0x0000
+> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
+> +#define CM2_LUT_TBL_BASE	0x0600
+> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
+> +
+> +struct rcar_cmm {
+> +	void __iomem *base;
+> +
+> +	/*
+> +	 * @lut:		1D-LUT state
+> +	 * @lut.enabled:	1D-LUT enabled flag
+> +	 */
+> +	struct {
+> +		bool enabled;
+> +	} lut;
+> +};
+> +
+> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
+> +{
+> +	return ioread32(rcmm->base + reg);
+> +}
+> +
+> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
+> +{
+> +	iowrite32(data, rcmm->base + reg);
+> +}
+> +
+> +/*
+> + * rcar_cmm_lut_write() - Scale the DRM LUT table entries to hardware precision
+> + *			  and write to the CMM registers
+> + * @rcmm: Pointer to the CMM device
+> + * @drm_lut: Pointer to the DRM LUT table
+> + */
+> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm,
+> +			       const struct drm_color_lut *drm_lut)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
+> +		u32 entry = drm_color_lut_extract(drm_lut[i].red, 8) << 16
+> +			  | drm_color_lut_extract(drm_lut[i].green, 8) << 8
+> +			  | drm_color_lut_extract(drm_lut[i].blue, 8);
+> +
+> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), entry);
+> +	}
+> +}
+> +
+> +/*
+> + * rcar_cmm_setup() - Configure the CMM unit
+> + * @pdev: The platform device associated with the CMM instance
+> + * @config: The CMM unit configuration
+> + *
+> + * Configure the CMM unit with the given configuration. Currently enabling,
+> + * disabling and programming of the 1-D LUT unit is supported.
 
-> The driver that marked these pages to be skipped when offlining is
-> responsible for registering the online_page_callback_t callback where these
-> pages will get excluded.
-> 
-> This is exactly the same as when onling a memory block that is partially
-> populated (e.g., HpyerV balloon right now).
-> 
-> So it's effectively "re-initializing the memmap using the driver knowledge"
-> when onlining.
+Did you miss the comment in the previous version about explaining when
+rcar_cmm_setup() can be called (basically requiring the CMM to be
+enabled) ? I can fix this when applying if you tell me what I should
+write.
 
-I am not sure I follow. So you exclude those pages when onlining?
-
-> > Should we allow to try_remove_memory to succeed with these pages?
-> 
-> I think we should first properly offline them (mark sections offline and
-> memory blocks, fixup numbers, shrink zones ...). The we can cleanly remove
-> the memory. (see [PATCH RFC v3 8/9] mm/memory_hotplug: Introduce
-> offline_and_remove_memory())
-
-I will have a look, but just to quick question. try_remove_memory would
-fail if the range is offline (via user interface) but there are still some
-pages in the driver Offline state?
-
-> Once offline, the memmap is irrelevant and try_remove_memory() can do its
-> job.
-> 
-> > Do we really have hook into __put_page? Why do we even care about the
-> > reference count of those pages? Wouldn't it be just more consistent to
-> > elevate the reference count (I guess this is what you suggest in the
-> > last paragraph) and the virtio driver would return that page to the
-> > buddy by regular put_page. This is also related to the above question
-> > about the physical memory remove.
-> 
-> Returning them to the buddy is problematic for various reasons. Let's have a
-> look at __offline_pages():
-> 
-> 1) start_isolate_page_range()
-> -> offline pages with a reference count of one will be detected as unmovable
-> -> BAD, we abort right away. We could hack around that.
-> 
-> 2) memory_notify(MEM_GOING_OFFLINE, &arg);
-> -> Here, we could release all pages to the buddy, clearing PG_offline
-> -> BAD, PF_offline must not be cleared so dumping tools will not touch
->    these pages. I don't see a way to hack around that.
-> 
-> 3) scan_movable_pages() ...
-> 
-> 4a) memory_notify(MEM_OFFLINE, &arg);
-> 
-> Perfect, it worked. Sections are offline.
-> 
-> 4b) undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
->     memory_notify(MEM_CANCEL_OFFLINE, &arg);
-> 
-> -> Offlining failed for whatever reason.
-> -> Pages are in the buddy, but we already un-isolated them. BAD.
-> 
-> By not going via the buddy we avoid these issues and can leave PG_offline
-> set until the section is fully offline. Something that is very desirable for
-> virtio-mem (and as far as I can tell also HyperV in the future).
-
-I am not sure I follow. Maybe my original question was confusing. Let me
-ask again. Why do we need to hook into __put_page?
-
-
-> > [...]
-> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > > index d5d7944954b3..fef74720d8b4 100644
-> > > --- a/mm/page_alloc.c
-> > > +++ b/mm/page_alloc.c
-> > > @@ -8221,6 +8221,15 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
-> > >   		if (!page_ref_count(page)) {
-> > >   			if (PageBuddy(page))
-> > >   				iter += (1 << page_order(page)) - 1;
-> > > +			/*
-> > > +			* Memory devices allow to offline a page if it is
-> > > +			* marked PG_offline and has a reference count of 0.
-> > > +			* However, the pages are not movable as it would be
-> > > +			* required e.g., for alloc_contig_range().
-> > > +			*/
-> > > +			if (PageOffline(page) && !(flags & SKIP_OFFLINE))
-> > > +				if (++found > count)
-> > > +					goto unmovable;
-> > >   			continue;
-> > >   		}
-> > 
-> > Do we really need to distinguish offline and hwpoison pages? They are
-> > both unmovable for allocator purposes and offlineable for the hotplug,
-> > right? Should we just hide them behind a helper and use it rather than
-> > an explicit SKIP_$FOO?
-> 
-> Makes sense. It really boils down to "offline" vs. "allocate" use cases.
-> 
-> So maybe instead of "SKIP_FOO" something like "MEMORY_OFFLINE". ?
-
-Yes, that would be a better fit.
+> + *
+> + * TODO: Add support for LUT double buffer operations to avoid updating the
+> + * LUT table entries while a frame is being displayed.
+> + */
+> +int rcar_cmm_setup(struct platform_device *pdev,
+> +		   const struct rcar_cmm_config *config)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	/* Disable LUT if no table is provided. */
+> +	if (!config->lut.table) {
+> +		if (rcmm->lut.enabled) {
+> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +			rcmm->lut.enabled = false;
+> +		}
+> +
+> +		return 0;
+> +	}
+> +
+> +	/* Enable LUT and program the new gamma table values. */
+> +	if (!rcmm->lut.enabled) {
+> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+> +		rcmm->lut.enabled = true;
+> +	}
+> +
+> +	rcar_cmm_lut_write(rcmm, config->lut.table);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
+> +
+> +/*
+> + * rcar_cmm_enable() - Enable the CMM unit
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * When the output of the corresponding DU channel is routed to the CMM unit,
+> + * the unit shall be enabled before the DU channel is started, and remain
+> + * enabled until the channel is stopped. The CMM unit shall be disabled with
+> + * rcar_cmm_disable().
+> + *
+> + * Calls to rcar_cmm_enable() and rcar_cmm_disable() are not reference-counted.
+> + * It is an error to attempt to enable an already enabled CMM unit, or to
+> + * attempt to disable a disabled unit.
+> + */
+> +int rcar_cmm_enable(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(&pdev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
+> +
+> +/*
+> + * rcar_cmm_disable() - Disable the CMM unit
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * See rcar_cmm_enable() for usage information.
+> + *
+> + * Disabling the CMM unit disable all the internal processing blocks. The CMM
+> + * state shall thus be restored with rcar_cmm_setup() when re-enabling the CMM
+> + * unit after the next rcar_cmm_enable() call.
+> + */
+> +void rcar_cmm_disable(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +	rcmm->lut.enabled = false;
+> +
+> +	pm_runtime_put(&pdev->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
+> +
+> +/*
+> + * rcar_cmm_init() - Initialize the CMM unit
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * Return: 0 on success, -EPROBE_DEFER if the CMM is not available yet,
+> + *         -ENODEV if the DRM_RCAR_CMM config option is disabled
+> + */
+> +int rcar_cmm_init(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	if (!rcmm)
+> +		return -EPROBE_DEFER;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
+> +
+> +static int rcar_cmm_probe(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm;
+> +
+> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
+> +	if (!rcmm)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, rcmm);
+> +
+> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(rcmm->base))
+> +		return PTR_ERR(rcmm->base);
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_cmm_remove(struct platform_device *pdev)
+> +{
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id rcar_cmm_of_table[] = {
+> +	{ .compatible = "renesas,rcar-gen3-cmm", },
+> +	{ .compatible = "renesas,rcar-gen2-cmm", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
+> +
+> +static struct platform_driver rcar_cmm_platform_driver = {
+> +	.probe		= rcar_cmm_probe,
+> +	.remove		= rcar_cmm_remove,
+> +	.driver		= {
+> +		.name	= "rcar-cmm",
+> +		.of_match_table = rcar_cmm_of_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(rcar_cmm_platform_driver);
+> +
+> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> new file mode 100644
+> index 000000000000..b5f7ec6db04a
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> @@ -0,0 +1,58 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
+> + *
+> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#ifndef __RCAR_CMM_H__
+> +#define __RCAR_CMM_H__
+> +
+> +#define CM2_LUT_SIZE		256
+> +
+> +struct drm_color_lut;
+> +struct platform_device;
+> +
+> +/**
+> + * struct rcar_cmm_config - CMM configuration
+> + *
+> + * @lut:	1D-LUT configuration
+> + * @lut.table:	1D-LUT table entries. Disable LUT operations when NULL
+> + */
+> +struct rcar_cmm_config {
+> +	struct {
+> +		struct drm_color_lut *table;
+> +	} lut;
+> +};
+> +
+> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
+> +int rcar_cmm_init(struct platform_device *pdev);
+> +
+> +int rcar_cmm_enable(struct platform_device *pdev);
+> +void rcar_cmm_disable(struct platform_device *pdev);
+> +
+> +int rcar_cmm_setup(struct platform_device *pdev,
+> +		   const struct rcar_cmm_config *config);
+> +#else
+> +static inline int rcar_cmm_init(struct platform_device *pdev)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int rcar_cmm_enable(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void rcar_cmm_disable(struct platform_device *pdev)
+> +{
+> +}
+> +
+> +static inline int rcar_cmm_setup(struct platform_device *pdev,
+> +				 const struct rcar_cmm_config *config)
+> +{
+> +	return 0;
+> +}
+> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
+> +
+> +#endif /* __RCAR_CMM_H__ */
 
 -- 
-Michal Hocko
-SUSE Labs
+Regards,
+
+Laurent Pinchart
