@@ -2,146 +2,75 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCD0ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5AEECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49892067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868612067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qKznEtbU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GpyqjUPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbfJPGwI (ORCPT
+        id S1732402AbfJPGwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:52:08 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35813 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfJPGwI (ORCPT
+        Wed, 16 Oct 2019 02:52:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48166 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfJPGwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:52:08 -0400
-Received: by mail-ua1-f67.google.com with SMTP id n41so2434269uae.2;
-        Tue, 15 Oct 2019 23:52:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=+yZ4tUEflU1wot9Y3TZUGwsQJDcRC6cRj494J8rN2Ig=;
-        b=qKznEtbUYog0qWpVHk5hQ5CTH+HjZ+1M8PCv9jYmJM6e5Ga3cJuHQMHkBxpWibX/y/
-         yZYngAzpG7DbJobb3gOI18s84UnRSDk3JhgHlaUpAXge+GXf7lqnSfhT+S9HeryZcUWL
-         dnDFQ5Fe42A4M1ra6hX+atjJop1QXwqd8mmVkdWy7TaCSyBuksnALn/pfJJqxs95VrU5
-         MmN/8kyKRSy+G2znswjxpNWVQRUTapfSj3LXLEKg2mP6VWXPar0of9rpBSDYv1DIu96z
-         1a+lM9D9GdThIthIcztKMefMzT7PgLrYLZpa0z8gpJjU7FPZzBsGiRbJggbpNQQt41qw
-         yvJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=+yZ4tUEflU1wot9Y3TZUGwsQJDcRC6cRj494J8rN2Ig=;
-        b=kFhzdxyr6HOSSkRFJ8R3NFvnIMLAromk/FFDPUI2OXeakDXWqcGKT76GHexMk5a4ch
-         Dz8Iom7oPVAEzD3agqw7H7C+UriHdrGn++7/o/lRocgmiGP5jdBonz31I5CmpWlUvkG1
-         NRq0I7bPuvdp9CfXo4B9+BbI0AdDzySxHr3fgkuKCOXjDH4XvpYLm40pTOmUoczVy9Ed
-         5Ch4fjMpCDcZ+JTSU8T3uHAs+7y5hBHLmBJEuP9zGYzle3oHHr9PW03jSoqHzvG20ajH
-         p2A4Bj+4AFHQ3jfpSNAc4aVpvamZgx5KWz9Gky5aBXw0KquUbYxW7UFv4rDr6XSfmbop
-         N2Cg==
-X-Gm-Message-State: APjAAAWiPbXH+b7yndKWR+wpyJspcMX4I3IBT/D1arXtzS8vYBAOQ6Xh
-        FCN8IfEXJsricp++72IlQ38/d58H5HJ3WCNAQJgtLBQ2
-X-Google-Smtp-Source: APXvYqwYe2I/kz08nX4fY0/iraBX0nqPJ5J5F4ZWecritIBG2AouvIB4Clj8Mw7kT19YLKlDwJdAsmcM/nGU8rRJXww=
-X-Received: by 2002:ab0:7008:: with SMTP id k8mr15269916ual.70.1571208727054;
- Tue, 15 Oct 2019 23:52:07 -0700 (PDT)
+        Wed, 16 Oct 2019 02:52:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uMAZZRys5GkzQMBlqs8w/J6ZliGfuWbMK7Pk12sLaUw=; b=GpyqjUPum5gD6lqhhmAKF9cBC
+        GX/YKd8exF9pGkmAoBwrCiaWKufls/xApL1uDV/uul9f3KpM+0kqCbT6hIyPQCjgNnGIJTZl07Lw/
+        jYZR6yJdsUgxb+mveZlQt+00clzw1/lgUN4/SehVlz+HL2C5Nx2Qn6Bm2YrzQVjcCZlfWnIHvzcR3
+        FoOKhpJ9kNM97ARiXodDohQA/wDPfnlnoWJp84+b4ppCmSvqHJ4+igh64kfHSCF8tR/cxlDzH0+9u
+        Qh6XQdHpJCRJ9AKLMUuKR41/BdwXyO1syMRkQmE2XTOV2njok98kn1Hz5+zzH8mkJsSLe1NsBqAMo
+        GhJECqXPQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKdAg-000227-1j; Wed, 16 Oct 2019 06:52:34 +0000
+Date:   Tue, 15 Oct 2019 23:52:34 -0700
+From:   'Christoph Hellwig' <hch@infradead.org>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     'Christoph Hellwig' <hch@infradead.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        andrew.murray@arm.com, lorenzo.pieralisi@arm.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        vidyas@nvidia.com, 'Anvesh Salveru' <anvesh.s@samsung.com>
+Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related
+ equalization quirks
+Message-ID: <20191016065234.GA6825@infradead.org>
+References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
+ <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
+ <20191015081620.GA28204@infradead.org>
+ <068001d58336$a76ed970$f64c8c50$@samsung.com>
+ <20191015090547.GA7199@infradead.org>
+ <000e01d5836b$ac871190$059534b0$@samsung.com>
 MIME-Version: 1.0
-References: <CAOuPNLgH=JQeT3=tZ_AdBsV0e-S_JNEe4CtpFW8Wj5NfYW5PsA@mail.gmail.com>
- <CAOuPNLjqm+Dv5RARP6dzZRKSttCvqoLe7MNYOeChAGUWX1krRA@mail.gmail.com>
- <CAOuPNLgZ3kjBaCmXkXHZrncYqUxsNYKiXQqptoDBT_EWfjpNqg@mail.gmail.com> <CAOuPNLjMFPn5WLcotG26wy_ROhJZn39iywwOYG0imzjqeQ3jeg@mail.gmail.com>
-In-Reply-To: <CAOuPNLjMFPn5WLcotG26wy_ROhJZn39iywwOYG0imzjqeQ3jeg@mail.gmail.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Wed, 16 Oct 2019 12:21:55 +0530
-Message-ID: <CAOuPNLje_kRyEy1JEv1RSSERKGa+WKzmybmR6svqiUcSduNDcg@mail.gmail.com>
-Subject: Re: imx6: i2c-transfer timeout issue after resume
-To:     p.zabel@pengutronix.de, bob.beckett@collabora.com,
-        dri-devel@lists.freedesktop.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000e01d5836b$ac871190$059534b0$@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 3:47 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
->
-> Hi,
->
-> On Sun, Sep 29, 2019 at 10:24 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
-> >
-> > >
-> > > On Mon, Sep 23, 2019 at 1:28 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
-> > > >
-> > > > Dear Philipp,
-> > > >
-> > > > I have a iMX6dl custom board with custom Linux Kernel 4.8.
-> > > > I have both LCD and HDMI connected to the board.
-> > > > And we are using weston/wayland as the display interface.
-> > > > In normal boot, both LCD and HDMI display is working fine.
-> > > >
-> > > > But, currently, for one of the requirement, I am trying to explore and
-> > > > support hibernation image booting on it.
-> > > > Currently, we are able to resume the system without display.
-> > > > Also, if we make the entire imx-drm as modules, and then install the
-> > > > modules after resume, even LCD is also coming up.
-> > > > But HDMI display is black out.
-> > > >
->
-> I just found the main root cause of the HDMI screen blackout issue
-> after system resume.
-> * HDMI is trying to get EDID data from the monitor using I2C interface.
-> * But its seems i2c_transfer is getting timeout after 5 retries.
-> * Thus EDID data is failing, and HDMI could not able to detect the monitor.
->
-> This is the logs:
->
-> [  441.104989] [drm:drm_helper_probe_single_connector_modes]
-> [CONNECTOR:29:HDMI-A-1] status updated from unknown to connected
-> [  441.116080]: drm_helper_probe_single_connector_modes - inside -
-> else override_edid
-> [  441.124416]: drm_helper_probe_single_connector_modes - inside -
-> else - drm_load_edid_firmware: count: 0
-> [  441.134546]: drm_helper_probe_single_connector_modes - calling - get_modes
-> [  441.142157]: dw_hdmi_connector_get_modes : called
-> [  441.147652]: dw_hdmi_connector_get_modes : called - calling -> drm_get_edid
-> [  441.155346]: drm_do_probe_ddc_edid : called!
-> [  441.660759]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 5
-> [  442.170758]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 4
-> [  442.680755]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 3
-> [  443.190755]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 2
-> [  443.700754]: drm_do_probe_ddc_edid : i2c_transfer: ret: -110, retry: 1
-> [  443.707989]: drm_get_edid : called - drm_probe_ddc - failed
-> [  443.714303] dwhdmi-imx 120000.hdmi: failed to get edid
->
-> Is there any clue, how to resolve this i2c failure issue, after resume?
-> This does not happen in normal booting case.
->
-> These are the steps I follow:
-> * Boot the system normally (without display) and install all imx-drm as modules.
-> * Then uninstall the modules in reverse order.
-> * Take the snapshot of the system (suspend to disk).
-> * Reboot the system and boot with the image.
-> * Install all the modules again.
-> * Then launch the Weston.
-> * During the weston launch in the beginning we observe this error.
->
+On Tue, Oct 15, 2019 at 08:47:32PM +0530, Pankaj Dubey wrote:
+> OK, but do we think the current driver has only code which is being used by
+> some user?
 
-* Changing the subject to be more relevant.
+That is at least the intent of how we do kernel development. 
 
-I need some pointers in debugging this i2c_transfer timeout issue,
-after system resume.
-I am not so much familiar with i2c, so I am looking for some clue here.
+> At least I can see current driver has some features which is not being used
+> by any current driver.  
 
-i2c-experts (or pm experts), please help me to find the root cause and
-debug further.
-
-Thanks,
-Pintu
+Please send patches to remove them.
