@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AFCECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8914FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 004B821A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD68121D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262789;
-	bh=0TygEq0obD9yYFXBpeYVPtjciUgfWD7m0vV61+y6fIg=;
+	s=default; t=1571262792;
+	bh=hNYIw7BePq0zXre+xmi6ULiuwQlpVyI6psPdkO41fes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mG4BGxDLDeYXVCdvy5YwgXhxMPP3MzU/1hreAHxNGCa48i4+MHPJp9nS13AWyiCud
-	 WOcfU1FNDa1fFvDPygm5tUnLDsJzCkwayVpKHyOZ9LyFdGvsLlDAgn6LeQxSVLaw9I
-	 GTIy0fXx40fGJlvyaeCL4fF1hyj77O64GPhyKp0E=
+	b=DEiHrNe2Lzv9H8AhLx5C9cZDYRWVSuWyqMXy3JViTH0lGADRS6yVDBDou4jcy2VTx
+	 B0LapAAVen77OQZXljFZyo9x6vszTR3//BZPalylN4Vmx665aRJg5DM6PL1jHSIrxy
+	 XVwWbUw9ZF2LU+SQJO3i/J3FoIsO7HvxWe4T7buk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394830AbfJPVxH (ORCPT
+        id S2437337AbfJPVxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41620 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394799AbfJPVxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:03 -0400
+        id S2394828AbfJPVxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:08 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6591521A49;
-        Wed, 16 Oct 2019 21:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18E1520872;
+        Wed, 16 Oct 2019 21:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262782;
-        bh=0TygEq0obD9yYFXBpeYVPtjciUgfWD7m0vV61+y6fIg=;
+        s=default; t=1571262787;
+        bh=hNYIw7BePq0zXre+xmi6ULiuwQlpVyI6psPdkO41fes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1D17U8myz+1/o2Am/Ol4aaMCx5AvJiSBqMFtjPLZ7IdR1+WJt1oN34ja4sgjQLVw
-         u4vQsJQro1LcuoLnPO170/4nHgeYXO77kRwk8Tk/adX7VzRWt77zu88xhH4xse8hPQ
-         pU0EC6GO79nl81FsXhuvUMFJ3ZW+R6vrHVg9Hbr8=
+        b=vbkm/avg6TosfxcmQZQhA2hfwwrNcc4TySCUxIg6140GNmxwh8CnNeLMzN2w5R8Z+
+         /bNZnivjVjXBoZxxvABdgjo5nDPIpFf2+ZG11EaqXyHQ9c9RCK6Kyyj1Dcj4shXoSH
+         Ct/xDv6bUqgeX08SjZxEGbrpf0W+q7V6KvvNGV58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH 4.4 23/79] crypto: caam - fix concurrency issue in givencrypt descriptor
-Date:   Wed, 16 Oct 2019 14:49:58 -0700
-Message-Id: <20191016214752.249557377@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 28/79] panic: ensure preemption is disabled during panic()
+Date:   Wed, 16 Oct 2019 14:50:03 -0700
+Message-Id: <20191016214755.396779680@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,90 +64,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Will Deacon <will@kernel.org>
 
-commit 48f89d2a2920166c35b1c0b69917dbb0390ebec7 upstream.
+commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
 
-IV transfer from ofifo to class2 (set up at [29][30]) is not guaranteed
-to be scheduled before the data transfer from ofifo to external memory
-(set up at [38]:
+Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
+calling CPU in an infinite loop, but with interrupts and preemption
+enabled.  From this state, userspace can continue to be scheduled,
+despite the system being "dead" as far as the kernel is concerned.
 
-[29] 10FA0004           ld: ind-nfifo (len=4) imm
-[30] 81F00010               <nfifo_entry: ofifo->class2 type=msg len=16>
-[31] 14820004           ld: ccb2-datasz len=4 offs=0 imm
-[32] 00000010               data:0x00000010
-[33] 8210010D    operation: cls1-op aes cbc init-final enc
-[34] A8080B04         math: (seqin + math0)->vseqout len=4
-[35] 28000010    seqfifold: skip len=16
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[38] 69300000   seqfifostr: msg len=vseqoutsz
-[39] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+This is easily reproducible on arm64 when booting with "nosmp" on the
+command line; a couple of shell scripts print out a periodic "Ping"
+message whilst another triggers a crash by writing to
+/proc/sysrq-trigger:
 
-If ofifo -> external memory transfer happens first, DECO will hang
-(issuing a Watchdog Timeout error, if WDOG is enabled) waiting for
-data availability in ofifo for the ofifo -> c2 ififo transfer.
+  | sysrq: Trigger a crash
+  | Kernel panic - not syncing: sysrq triggered crash
+  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
+  | Hardware name: linux,dummy-virt (DT)
+  | Call trace:
+  |  dump_backtrace+0x0/0x148
+  |  show_stack+0x14/0x20
+  |  dump_stack+0xa0/0xc4
+  |  panic+0x140/0x32c
+  |  sysrq_handle_reboot+0x0/0x20
+  |  __handle_sysrq+0x124/0x190
+  |  write_sysrq_trigger+0x64/0x88
+  |  proc_reg_write+0x60/0xa8
+  |  __vfs_write+0x18/0x40
+  |  vfs_write+0xa4/0x1b8
+  |  ksys_write+0x64/0xf0
+  |  __arm64_sys_write+0x14/0x20
+  |  el0_svc_common.constprop.0+0xb0/0x168
+  |  el0_svc_handler+0x28/0x78
+  |  el0_svc+0x8/0xc
+  | Kernel Offset: disabled
+  | CPU features: 0x0002,24002004
+  | Memory Limit: none
+  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
+  |  Ping 2!
+  |  Ping 1!
+  |  Ping 1!
+  |  Ping 2!
 
-Make sure IV transfer happens first by waiting for all CAAM internal
-transfers to end before starting payload transfer.
+The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
+otherwise local interrupts are disabled in 'smp_send_stop()'.
 
-New descriptor with jump command inserted at [37]:
+Disable preemption in 'panic()' before re-enabling interrupts.
 
-[..]
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] A1000401         jump: jsl1 all-match[!nfifopend] offset=[01] local->[38]
-[38] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[39] 69300000   seqfifostr: msg len=vseqoutsz
-[40] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
-
-[Note: the issue is present in the descriptor from the very beginning
-(cf. Fixes tag). However I've marked it v4.19+ since it's the oldest
-maintained kernel that the patch applies clean against.]
-
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: 1acebad3d8db8 ("crypto: caam - faster aead implementation")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-[Horia: backport to v4.4, v4.9]
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
+Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
+Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Xogium <contact@xogium.me>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ kernel/panic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -75,7 +75,7 @@
- #define DESC_AEAD_BASE			(4 * CAAM_CMD_SZ)
- #define DESC_AEAD_ENC_LEN		(DESC_AEAD_BASE + 11 * CAAM_CMD_SZ)
- #define DESC_AEAD_DEC_LEN		(DESC_AEAD_BASE + 15 * CAAM_CMD_SZ)
--#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 9 * CAAM_CMD_SZ)
-+#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 10 * CAAM_CMD_SZ)
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -84,6 +84,7 @@ void panic(const char *fmt, ...)
+ 	 * after the panic_lock is acquired) from invoking panic again.
+ 	 */
+ 	local_irq_disable();
++	preempt_disable_notrace();
  
- /* Note: Nonce is counted in enckeylen */
- #define DESC_AEAD_CTR_RFC3686_LEN	(4 * CAAM_CMD_SZ)
-@@ -437,6 +437,7 @@ static int aead_set_sh_desc(struct crypt
- 	u32 geniv, moveiv;
- 	u32 ctx1_iv_off = 0;
- 	u32 *desc;
-+	u32 *wait_cmd;
- 	const bool ctr_mode = ((ctx->class1_alg_type & OP_ALG_AAI_MASK) ==
- 			       OP_ALG_AAI_CTR_MOD128);
- 	const bool is_rfc3686 = alg->caam.rfc3686;
-@@ -702,6 +703,14 @@ copy_iv:
- 
- 	/* Will read cryptlen */
- 	append_math_add(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
-+
-+	/*
-+	 * Wait for IV transfer (ofifo -> class2) to finish before starting
-+	 * ciphertext transfer (ofifo -> external memory).
-+	 */
-+	wait_cmd = append_jump(desc, JUMP_JSL | JUMP_TEST_ALL | JUMP_COND_NIFP);
-+	set_jump_tgt_here(desc, wait_cmd);
-+
- 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_BOTH | KEY_VLF |
- 			     FIFOLD_TYPE_MSG1OUT2 | FIFOLD_TYPE_LASTBOTH);
- 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | KEY_VLF);
+ 	/*
+ 	 * It's possible to come here directly from a panic-assertion and
 
 
