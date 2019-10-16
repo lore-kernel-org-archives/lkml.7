@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FC2FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0768FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B04207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6B2207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264421;
-	bh=wtk5x1/IBjLHnQsTUzkF8JGFi44DTecZI8E2VRCEmU4=;
+	s=default; t=1571264425;
+	bh=Cf5c/80aJdyXt3Zpm5BFNdbfwCnNyBhS/mtUmHs+fWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lzHqEO2G5XsZsx76Z1KJAftDsybRMSZ4xz8MhPMtMR9zfjJbeEi0JmA2cf/VImlW
-	 KggPOXSv7C4sJTWIH2XHx5N2YQV5ezoWZMjZD0v+kqWQoCGYXsZaAhDEBg/sTSC9Bn
-	 KHxk6cy8xXuZdTYeMajhrAWXkQDV14/nBtVEys9Q=
+	b=x/0vyvMroT7BUv90OY1U2w4xukoLGFleC0GzvMb7DD4yj/l8KAJrFS5hLlT+fk2S2
+	 SjIv8r47GYRl5hObCDNBF9+2fYdcp+88V4Qxmg+evJxL0GFUGzK0oykeALfyk1rF6W
+	 HpMZpKP42rFF6q7FU4qtokBSy83FPRY4s7abhIb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392245AbfJPWUT (ORCPT
+        id S2404726AbfJPWUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:20:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43106 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:20:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394903AbfJPVxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:50 -0400
+        id S2389339AbfJPVxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:49 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1F221925;
-        Wed, 16 Oct 2019 21:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95626218DE;
+        Wed, 16 Oct 2019 21:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262829;
-        bh=wtk5x1/IBjLHnQsTUzkF8JGFi44DTecZI8E2VRCEmU4=;
+        s=default; t=1571262828;
+        bh=Cf5c/80aJdyXt3Zpm5BFNdbfwCnNyBhS/mtUmHs+fWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ej6Nis/cMgtHBwAe8865Z5++NIIz0tmc68biHebUUsgatGGOQyRaV49KW7NJBpu2G
-         DCBBy33K06+I+7KNehn524NhvkC1E6sDN0lXe1RoJBGv4JRJSi95ewbT0bd0t1tDfn
-         IQ7lN1XTTZ7tZwKx+K1sQ1JhArwhHpqp41moVX6g=
+        b=UMF6WKhml88Xe6tmTnNT7rPJyffrHorrGibJSYhjKty/NTzNpwDvosQBdH/nuzAqB
+         JGcyn7BYFPo3eVzdwZvVsUmJl+3DL24ksLu79QYVwy2iHZ2y9Ek/L0gmHLbZ7KZrlB
+         4Qxt377p/frJQ9AI1HgGGG424J08vFXR6/d2qeiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 72/79] arm64: Rename cpuid_feature field extract routines
-Date:   Wed, 16 Oct 2019 14:50:47 -0700
-Message-Id: <20191016214829.594553571@linuxfoundation.org>
+Subject: [PATCH 4.4 71/79] arm64: capabilities: Handle sign of the feature bit
+Date:   Wed, 16 Oct 2019 14:50:46 -0700
+Message-Id: <20191016214829.359534414@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -65,134 +63,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 28c5dcb22f90113dea101b0421bc6971bccb7a74 upstream
+commit ff96f7bc7bf6393eef8ff2bde1279715ce13343a usptream
 
-Now that we have a clear understanding of the sign of a feature,
-rename the routines to reflect the sign, so that it is not misused.
-The cpuid_feature_extract_field() now accepts a 'sign' parameter.
+Use the appropriate accessor for the feature bit by keeping
+track of the sign of the feature.
 
-This makes sure that the arm64_ftr_value() extracts the feature
-field properly for signed fields.
+This is a pre-requisite for the commit 28c5dcb22f90 upstream,
+which fixes the arm64_ftr_value() for signed feature fields.
 
 Cc: stable@vger.kernel.org # v4.4
-Signed-off-by: Suzuki K. Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Acked-by: Will Deacon <will.deacon@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/cpufeature.h | 22 ++++++++++++++--------
- arch/arm64/kernel/cpufeature.c      |  2 +-
- arch/arm64/kernel/debug-monitors.c  |  2 +-
- arch/arm64/kvm/sys_regs.c           |  2 +-
- arch/arm64/mm/context.c             |  3 ++-
- 5 files changed, 19 insertions(+), 12 deletions(-)
+ arch/arm64/include/asm/cpufeature.h |  7 +++---
+ arch/arm64/kernel/cpufeature.c      | 33 +++++++++++++++++------------
+ 2 files changed, 23 insertions(+), 17 deletions(-)
 
 diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index 690961a749da1..518eaa63e633e 100644
+index 0a66f8241f185..690961a749da1 100644
 --- a/arch/arm64/include/asm/cpufeature.h
 +++ b/arch/arm64/include/asm/cpufeature.h
-@@ -121,15 +121,15 @@ static inline void cpus_set_cap(unsigned int num)
- }
+@@ -88,9 +88,10 @@ struct arm64_cpu_capabilities {
  
- static inline int __attribute_const__
--cpuid_feature_extract_field_width(u64 features, int field, int width)
-+cpuid_feature_extract_signed_field_width(u64 features, int field, int width)
- {
- 	return (s64)(features << (64 - width - field)) >> (64 - width);
- }
- 
- static inline int __attribute_const__
--cpuid_feature_extract_field(u64 features, int field)
-+cpuid_feature_extract_signed_field(u64 features, int field)
- {
--	return cpuid_feature_extract_field_width(features, field, 4);
-+	return cpuid_feature_extract_signed_field_width(features, field, 4);
- }
- 
- static inline unsigned int __attribute_const__
-@@ -149,17 +149,23 @@ static inline u64 arm64_ftr_mask(struct arm64_ftr_bits *ftrp)
- 	return (u64)GENMASK(ftrp->shift + ftrp->width - 1, ftrp->shift);
- }
- 
-+static inline int __attribute_const__
-+cpuid_feature_extract_field(u64 features, int field, bool sign)
-+{
-+	return (sign) ?
-+		cpuid_feature_extract_signed_field(features, field) :
-+		cpuid_feature_extract_unsigned_field(features, field);
-+}
-+
- static inline s64 arm64_ftr_value(struct arm64_ftr_bits *ftrp, u64 val)
- {
--	return ftrp->sign ?
--		cpuid_feature_extract_field_width(val, ftrp->shift, ftrp->width) :
--		cpuid_feature_extract_unsigned_field_width(val, ftrp->shift, ftrp->width);
-+	return (s64)cpuid_feature_extract_field(val, ftrp->shift, ftrp->sign);
- }
- 
- static inline bool id_aa64mmfr0_mixed_endian_el0(u64 mmfr0)
- {
--	return cpuid_feature_extract_field(mmfr0, ID_AA64MMFR0_BIGENDEL_SHIFT) == 0x1 ||
--		cpuid_feature_extract_field(mmfr0, ID_AA64MMFR0_BIGENDEL0_SHIFT) == 0x1;
-+	return cpuid_feature_extract_unsigned_field(mmfr0, ID_AA64MMFR0_BIGENDEL_SHIFT) == 0x1 ||
-+		cpuid_feature_extract_unsigned_field(mmfr0, ID_AA64MMFR0_BIGENDEL0_SHIFT) == 0x1;
- }
- 
- void __init setup_cpu_features(void);
+ 		struct {	/* Feature register checking */
+ 			u32 sys_reg;
+-			int field_pos;
+-			int min_field_value;
+-			int hwcap_type;
++			u8 field_pos;
++			u8 min_field_value;
++			u8 hwcap_type;
++			bool sign;
+ 			unsigned long hwcap;
+ 		};
+ 	};
 diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 3949991e544bf..a0118a07a4a5f 100644
+index 062484d344509..3949991e544bf 100644
 --- a/arch/arm64/kernel/cpufeature.c
 +++ b/arch/arm64/kernel/cpufeature.c
-@@ -600,7 +600,7 @@ u64 read_system_reg(u32 id)
- static bool
- feature_matches(u64 reg, const struct arm64_cpu_capabilities *entry)
- {
--	int val = cpuid_feature_extract_field(reg, entry->field_pos);
-+	int val = cpuid_feature_extract_field(reg, entry->field_pos, entry->sign);
+@@ -636,6 +636,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_useable_gicv3_cpuif,
+ 		.sys_reg = SYS_ID_AA64PFR0_EL1,
+ 		.field_pos = ID_AA64PFR0_GIC_SHIFT,
++		.sign = FTR_UNSIGNED,
+ 		.min_field_value = 1,
+ 	},
+ #ifdef CONFIG_ARM64_PAN
+@@ -645,6 +646,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		.sys_reg = SYS_ID_AA64MMFR1_EL1,
+ 		.field_pos = ID_AA64MMFR1_PAN_SHIFT,
++		.sign = FTR_UNSIGNED,
+ 		.min_field_value = 1,
+ 		.enable = cpu_enable_pan,
+ 	},
+@@ -656,6 +658,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		.sys_reg = SYS_ID_AA64ISAR0_EL1,
+ 		.field_pos = ID_AA64ISAR0_ATOMICS_SHIFT,
++		.sign = FTR_UNSIGNED,
+ 		.min_field_value = 2,
+ 	},
+ #endif /* CONFIG_AS_LSE && CONFIG_ARM64_LSE_ATOMICS */
+@@ -665,37 +668,39 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		.sys_reg = SYS_ID_AA64PFR0_EL1,
+ 		.field_pos = ID_AA64PFR0_EL0_SHIFT,
++		.sign = FTR_UNSIGNED,
+ 		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
+ 	},
+ 	{},
+ };
  
- 	return val >= entry->min_field_value;
- }
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index c8875b64be909..8e7675e5ce4a5 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -34,7 +34,7 @@
- /* Determine debug architecture. */
- u8 debug_monitors_arch(void)
- {
--	return cpuid_feature_extract_field(read_system_reg(SYS_ID_AA64DFR0_EL1),
-+	return cpuid_feature_extract_unsigned_field(read_system_reg(SYS_ID_AA64DFR0_EL1),
- 						ID_AA64DFR0_DEBUGVER_SHIFT);
- }
+-#define HWCAP_CAP(reg, field, min_value, type, cap)		\
++#define HWCAP_CAP(reg, field, s, min_value, type, cap)	\
+ 	{							\
+ 		.desc = #cap,					\
+ 		.matches = has_cpuid_feature,			\
+ 		.sys_reg = reg,					\
+ 		.field_pos = field,				\
++		.sign = s,					\
+ 		.min_field_value = min_value,			\
+ 		.hwcap_type = type,				\
+ 		.hwcap = cap,					\
+ 	}
  
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index c2489f62c4fb1..0a587e7b9b6eb 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -687,7 +687,7 @@ static bool trap_dbgidr(struct kvm_vcpu *vcpu,
- 	} else {
- 		u64 dfr = read_system_reg(SYS_ID_AA64DFR0_EL1);
- 		u64 pfr = read_system_reg(SYS_ID_AA64PFR0_EL1);
--		u32 el3 = !!cpuid_feature_extract_field(pfr, ID_AA64PFR0_EL3_SHIFT);
-+		u32 el3 = !!cpuid_feature_extract_unsigned_field(pfr, ID_AA64PFR0_EL3_SHIFT);
- 
- 		p->regval = ((((dfr >> ID_AA64DFR0_WRPS_SHIFT) & 0xf) << 28) |
- 			     (((dfr >> ID_AA64DFR0_BRPS_SHIFT) & 0xf) << 24) |
-diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
-index e87f53ff5f583..5c8759cd66f15 100644
---- a/arch/arm64/mm/context.c
-+++ b/arch/arm64/mm/context.c
-@@ -187,7 +187,8 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 
- static int asids_init(void)
- {
--	int fld = cpuid_feature_extract_field(read_cpuid(ID_AA64MMFR0_EL1), 4);
-+	int fld = cpuid_feature_extract_unsigned_field(read_cpuid(ID_AA64MMFR0_EL1),
-+						       ID_AA64MMFR0_ASID_SHIFT);
- 
- 	switch (fld) {
- 	default:
+ static const struct arm64_cpu_capabilities arm64_hwcaps[] = {
+-	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, 2, CAP_HWCAP, HWCAP_PMULL),
+-	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, 1, CAP_HWCAP, HWCAP_AES),
+-	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA1_SHIFT, 1, CAP_HWCAP, HWCAP_SHA1),
+-	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA2_SHIFT, 1, CAP_HWCAP, HWCAP_SHA2),
+-	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_CRC32_SHIFT, 1, CAP_HWCAP, HWCAP_CRC32),
+-	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_ATOMICS_SHIFT, 2, CAP_HWCAP, HWCAP_ATOMICS),
+-	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, 0, CAP_HWCAP, HWCAP_FP),
+-	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, 0, CAP_HWCAP, HWCAP_ASIMD),
++	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, HWCAP_PMULL),
++	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_AES),
++	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SHA1),
++	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA2_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SHA2),
++	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_CRC32_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_CRC32),
++	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_ATOMICS_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, HWCAP_ATOMICS),
++	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_FP),
++	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_ASIMD),
+ #ifdef CONFIG_COMPAT
+-	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
+-	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
+-	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
+-	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA2_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA2),
+-	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_CRC32_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_CRC32),
++	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
++	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
++	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
++	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA2_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA2),
++	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_CRC32_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_CRC32),
+ #endif
+ 	{},
+ };
 -- 
 2.20.1
 
