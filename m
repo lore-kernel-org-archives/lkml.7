@@ -2,75 +2,87 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F2FFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488C2FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78E92067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171832067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q52LV5dh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403924AbfJPLZB (ORCPT
+        id S2404876AbfJPLZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:25:01 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:48867 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403826AbfJPLZB (ORCPT
+        Wed, 16 Oct 2019 07:25:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36792 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403863AbfJPLZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:25:01 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKhQJ-0005Pd-IO; Wed, 16 Oct 2019 12:24:59 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKhQI-0005T4-S5; Wed, 16 Oct 2019 12:24:58 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: [PATCH] kthread: make __kthread_queue_delayed_work static
-Date:   Wed, 16 Oct 2019 12:24:58 +0100
-Message-Id: <20191016112458.20974-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 07:25:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so23602829ljj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 04:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MlGfNW+ZwLIIrjx2RXVhFO36vcxe4kSh91BJi93HZos=;
+        b=Q52LV5dhAqKzb9M3AlTjL0SI4SrXZTZ7kHbwa/KvZkyNXw1KEUisSwTAXlpIvFyRdI
+         KZiKfo3O1ks0VJDd0N/wkc7Ll6JDLeWwNr/0QBlFH5gqq1+RctHDwfwinZW4e9pdndBr
+         BbRGJjbRM9bgDlYtQfeDJzqVnb/xQoZ9P5ZfIiS3zawD51hz1HWegt5fsZGcN4zndXxN
+         TRROJuvs14Ed8UkRTfUI1SYUbVaCBK3jvcp18AsgekZjEdBtMs1SiWdsyKL0h6z8/1Iv
+         05ehbl7PL7whK0ZfPc2Hj6+RqoIxmtSpm3wX0mwz1+MbwOhFBunRogMaJ+BMaoEGmC4r
+         ijzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MlGfNW+ZwLIIrjx2RXVhFO36vcxe4kSh91BJi93HZos=;
+        b=tl5ytmyT8S0LEjhPkzy0tuVEaEVq7652EWjhvGldY5NUEFu9UrrSf2twED4uZXw5IL
+         KGWiaGra8yWYWlgRaGsnanuimZMFOIlptZcAIYGlQ9IV3hiRijdfYFxDp+G3mc7dJ5zG
+         s+MZQhPj/6hV9gJdpsM491rnyFUmdZ4wktUBCukFU1n4V3Cmlnk7lZFkkUGC/sAojf0r
+         DS8T/6/cAyrOeNjIHS0fJWhmna69VBIUQGY0vka+fcFzwNE/23hAvdelmTjN4yZ/6Go7
+         p3HFMjZYoKCmPR6osmqCBbsJr0GeNeEaidQwM8qwQCzam4MbHnaIpTGmEmSYxLClRkPp
+         o4yg==
+X-Gm-Message-State: APjAAAUv/sn6doji/foiMJYv3QQEuck/Zpgviz2wn6XXg5tQwSJUrtBd
+        djGA7sVYJOKAiKVL96It51+34RRULSEV8VA1+gvOnA==
+X-Google-Smtp-Source: APXvYqxHJCsCiOB07sfl//pV88Ji6ehsYnvrh50L4VAxJJIWuK8+6oBcB8+7Hgh2P49tJS+pXeAJM7bhEsUVTSP1i4o=
+X-Received: by 2002:a2e:81cf:: with SMTP id s15mr5591377ljg.99.1571225100228;
+ Wed, 16 Oct 2019 04:25:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191008204800.19870-1-dmurphy@ti.com> <20191008204800.19870-12-dmurphy@ti.com>
+In-Reply-To: <20191008204800.19870-12-dmurphy@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 13:24:48 +0200
+Message-ID: <CACRpkdZnJttsw-mpV3cZY51nE6reHqhuwiCH48_k49b=A9NGQg@mail.gmail.com>
+Subject: Re: [PATCH v11 11/16] ARM: dts: ste-href: Add reg property to the
+ LP5521 channel nodes
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __kthread_queue_delayed_work is not exported so
-make it static, to avoid the following sparse warning:
+On Tue, Oct 8, 2019 at 10:48 PM Dan Murphy <dmurphy@ti.com> wrote:
 
-kernel/kthread.c:869:6: warning: symbol '__kthread_queue_delayed_work' was not declared. Should it be static?
+> Add the reg property to each channel node.  This update is
+> to accomodate the multicolor framework.  In addition to the
+> accomodation this allows the LEDs to be placed on any channel
+> and allow designs to skip channels as opposed to requiring
+> sequential order.
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> CC: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: linux-kernel@vger.kernel.org
-Cc: torvalds@linux-foundation.org
----
- kernel/kthread.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Patch applied to the Ux500 tree.
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 621467c33fef..b262f47046ca 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -866,9 +866,9 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
- }
- EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
- 
--void __kthread_queue_delayed_work(struct kthread_worker *worker,
--				  struct kthread_delayed_work *dwork,
--				  unsigned long delay)
-+static void __kthread_queue_delayed_work(struct kthread_worker *worker,
-+					 struct kthread_delayed_work *dwork,
-+					 unsigned long delay)
- {
- 	struct timer_list *timer = &dwork->timer;
- 	struct kthread_work *work = &dwork->work;
--- 
-2.23.0
-
+Yours,
+Linus Walleij
