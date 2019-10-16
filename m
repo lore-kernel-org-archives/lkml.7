@@ -2,126 +2,118 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBE3ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB259ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF1D2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3D12082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391300AbfJPHsm (ORCPT
+        id S2391312AbfJPHsr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:48:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:59511 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbfJPHsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:48:41 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3189868B20; Wed, 16 Oct 2019 09:48:37 +0200 (CEST)
-Date:   Wed, 16 Oct 2019 09:48:36 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] iomap: lift the xfs writeback code to iomap
-Message-ID: <20191016074836.GB23696@lst.de>
-References: <20191015154345.13052-1-hch@lst.de> <20191015154345.13052-10-hch@lst.de> <20191015220721.GC16973@dread.disaster.area>
+        Wed, 16 Oct 2019 03:48:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48532 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfJPHsr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:48:47 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iKe31-0007jH-2v; Wed, 16 Oct 2019 09:48:43 +0200
+Date:   Wed, 16 Oct 2019 09:48:43 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        tglx@linutronix.de, linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 03/34] powerpc: Use CONFIG_PREEMPTION
+Message-ID: <20191016074842.6acrlzbmgb5bx4pm@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-4-bigeasy@linutronix.de>
+ <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191015220721.GC16973@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:07:21AM +1100, Dave Chinner wrote:
-> > +	trace_iomap_releasepage(page->mapping->host, page, 0, 0);
-> > +
-> >  	/*
-> >  	 * mm accommodates an old ext3 case where clean pages might not have had
-> >  	 * the dirty bit cleared. Thus, it can send actual dirty pages to
-> > @@ -483,6 +488,8 @@ EXPORT_SYMBOL_GPL(iomap_releasepage);
-> >  void
-> >  iomap_invalidatepage(struct page *page, unsigned int offset, unsigned int len)
-> >  {
-> > +	trace_iomap_invalidatepage(page->mapping->host, page, offset, len);
+On 2019-10-16 06:57:48 [+0200], Christophe Leroy wrote:
+> 
+> 
+> Le 15/10/2019 à 21:17, Sebastian Andrzej Siewior a écrit :
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> > 
+> > CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+> > Both PREEMPT and PREEMPT_RT require the same functionality which today
+> > depends on CONFIG_PREEMPT.
+> > 
+> > Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
+> > output in __die().
+> 
+> powerpc doesn't select ARCH_SUPPORTS_RT, so this change is useless as
+> CONFIG_PREEMPT_RT cannot be selected.
+
+No it is not. It makes it possible for PowerPC to select it one day and
+I have patches for it today. Also, if other ARCH copies code from
+PowerPC it will copy the correct thing (as in distinguish between the
+flavour PREEMPT and the functionality PREEMPTION).
+
+> > diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> > index 82f43535e6867..23d2f20be4f2e 100644
+> > --- a/arch/powerpc/kernel/traps.c
+> > +++ b/arch/powerpc/kernel/traps.c
+> > @@ -252,14 +252,19 @@ NOKPROBE_SYMBOL(oops_end);
+> >   static int __die(const char *str, struct pt_regs *regs, long err)
+> >   {
+> > +	const char *pr = "";
 > > +
 > 
-> These tracepoints should be split out into a separate patch like
-> the readpage(s) tracepoints. Maybe just lift all the non-writeback
-> ones in a single patch...
+> Please follow the same approach as already existing. Don't add a local var
+> for that.
 
-I guess that makes sense.  Initially I didn't want to duplicate the
-trace definition as it is shared with the writeback tracepoints,
-but in the overall scheme of things that doesn't really matter.
+I would leave it to the maintainer to comment on that and decide which
+one they want. My eyes find it more readable and the compiles does not
+create more code.
 
-> > +iomap_finish_page_writeback(struct inode *inode, struct bio_vec *bvec,
-> > +		int error)
-> > +{
-> > +	struct iomap_page *iop = to_iomap_page(bvec->bv_page);
+> >   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+> > +	if (IS_ENABLED(CONFIG_PREEMPTION))
+> > +		pr = IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
 > > +
-> > +	if (error) {
-> > +		SetPageError(bvec->bv_page);
-> > +		mapping_set_error(inode->i_mapping, -EIO);
-> > +	}
-> > +
-> > +	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
-> > +	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
-> > +
-> > +	if (!iop || atomic_dec_and_test(&iop->write_count))
-> > +		end_page_writeback(bvec->bv_page);
-> > +}
 > 
-> Can we just pass the struct page into this function?
-
-I'd rather not change calling conventions in code just moved over for
-no good reason.  That being said I agree with passing a page, so I'll
-just throw in a follow on patch like I did for iomap_ioend_compare
-cleanup.
-
+> drop
 > 
-> .....
+> >   	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s%s %s\n",
 > 
-> > +/*
-> > + * Submit the bio for an ioend. We are passed an ioend with a bio attached to
-> > + * it, and we submit that bio. The ioend may be used for multiple bio
-> > + * submissions, so we only want to allocate an append transaction for the ioend
-> > + * once.  In the case of multiple bio submission, each bio will take an IO
+> Add one %s
 > 
-> This needs to be changed to describe what wpc->ops->submit_ioend()
-> is used for rather than what XFS might use this hook for.
-
-True.  The real documentation now is in the header near the ops defintion,
-but I'll update this one to make more sense as well.
-
-> > +static int
-> > +iomap_submit_ioend(struct iomap_writepage_ctx *wpc, struct iomap_ioend *ioend,
-> > +		int error)
-> > +{
-> > +	ioend->io_bio->bi_private = ioend;
-> > +	ioend->io_bio->bi_end_io = iomap_writepage_end_bio;
-> > +
-> > +	if (wpc->ops->submit_ioend)
-> > +		error = wpc->ops->submit_ioend(ioend, error);
+> >   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+> >   	       PAGE_SIZE / 1024,
+> >   	       early_radix_enabled() ? " MMU=Radix" : "",
+> >   	       early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ? " MMU=Hash" : "",
+> > -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
 > 
-> I'm not sure that "submit_ioend" is the best name for this method,
-> as it is a pre-bio-submission hook, not an actual IO submission
-> method. "prepare_ioend_for_submit" is more descriptive, but probably
-> too long. wpc->ops->prepare_submit(ioend, error) reads pretty well,
-> though...
+> Replace by: 	IS_ENABLED(CONFIG_PREEMPTION) ? " PREEMPT" : ""
+> 
+> > +	       pr,
+> 
+> add something like: IS_ENABLED(CONFIG_PREEMPT_RT) ? "_RT" : ""
 
-Not a huge fan of that name either, but Brian complained.  Let's hold
-a popular vote for a name and see if we have a winner.
+this on the other hand will create more code which is not strictly
+required.
 
-As for the grammar comments - all this is copied over as-is.  I'll add
-another patch to fix that up.
+> >   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+> >   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
+> >   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+> > 
+> 
+> Christophe
 
+Sebastian
