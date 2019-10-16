@@ -2,57 +2,60 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E87ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34D2FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3836821925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F1D2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264343;
-	bh=JlMX2lzPSZonYYQe8neGfCYmIhxJDq7CPBzUWvY4DJk=;
+	s=default; t=1571264348;
+	bh=t5SabUBL58cN4oJLeCIcShWn59cDVugH9Hne/Pi4n7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6A3tWhcUGsWJhijAen+f3enyR8jiEt0yOQ5BkRhOyB+w+qtL7bST5w9DR8/j7gUD
-	 IM1sYGKRuyc6bZr6WO7RHGUmcDelpmvZ9Jq9GXHRTENI33CaRND99ZWzBT/brgdqTW
-	 dqtlUMxC0en6846rkXYwwvFD1n33eHCiYV9jKKbs=
+	b=GAzsn2qXZIRO6K/LAJ5D/M5+Q5FxT8L4CjBHuPJyekB6HNa//GQ84uTmdQ2kk+Lvv
+	 p1v6wANO+PoZ7G+Q89cDTxuEnfVLieVjLk5woq/iAyZjRq1pnlmy1rK+9aPX6dpAFD
+	 0KAzl2+9aRc5q9tXGj6hPQuwJyu+jJJNeeMWWXQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394012AbfJPWTC (ORCPT
+        id S2394949AbfJPVyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44010 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394953AbfJPVyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:17 -0400
+        id S2437656AbfJPVyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:04 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C5B20872;
-        Wed, 16 Oct 2019 21:54:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A11F21D7A;
+        Wed, 16 Oct 2019 21:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262856;
-        bh=JlMX2lzPSZonYYQe8neGfCYmIhxJDq7CPBzUWvY4DJk=;
+        s=default; t=1571262843;
+        bh=t5SabUBL58cN4oJLeCIcShWn59cDVugH9Hne/Pi4n7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GThWAOSaO4yFRpjmjF6tnLcsj/79J+CQzvKxFFbdB7PTtN9xIP+9l2NCWrc/Kax4R
-         BcfgzwCs8QVrgwsJuO5F9FstnnBK7hbQbpNBiBqUJkifJzdwg7mAVUt0cnZaFuMHNM
-         jNAAM40KN1tDeyIVZ/Z0sYS/rnI+U2IZVJ7/bx5I=
+        b=Zc1m7GtX/nqhoB4KdqfE9jlNHRZ8E292RLQbpBqTjDkPjRlfNOFuwvjC2rYdVVpLH
+         JWTpvFNa2e29GoRw6Va8a4o5wvoXHQURTsuStqS4PUrgqYcvKK3wILff/dEuJbHWXS
+         woWPMRsZshyTFc+MP0MPHIej1RjyLEe9x2P9xwtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 22/92] thermal: Fix use-after-free when unregistering thermal zone device
-Date:   Wed, 16 Oct 2019 14:49:55 -0700
-Message-Id: <20191016214818.632056648@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 4.9 01/92] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
+Date:   Wed, 16 Oct 2019 14:49:34 -0700
+Message-Id: <20191016214800.188301016@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,134 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Thomas Huth <thuth@redhat.com>
 
-[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
+commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
 
-thermal_zone_device_unregister() cancels the delayed work that polls the
-thermal zone, but it does not wait for it to finish. This is racy with
-respect to the freeing of the thermal zone device, which can result in a
-use-after-free [1].
+If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
+then there is certainly a bug in the calling userspace application.
+We check for wrong access registers, but only if the vCPU was already
+in the access register mode before (i.e. the SIE block has recorded
+it). The check is also buried somewhere deep in the calling chain (in
+the function ar_translation()), so this is somewhat hard to find.
 
-Fix this by waiting for the delayed work to finish before freeing the
-thermal zone device. Note that thermal_zone_device_set_polling() is
-never invoked from an atomic context, so it is safe to call
-cancel_delayed_work_sync() that can block.
+It's better to always report an error to the userspace in case this
+field is set wrong, and it's safer in the KVM code if we block wrong
+values here early instead of relying on a check somewhere deep down
+the calling chain, so let's add another check to kvm_s390_guest_mem_op()
+directly.
 
-[1]
-[  +0.002221] ==================================================================
-[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
-[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
+We also should check that the "size" is non-zero here (thanks to Janosch
+Frank for the hint!). If we do not check the size, we could call vmalloc()
+with this 0 value, and this will cause a kernel warning.
 
-[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
-[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
-[  +0.000012] Call Trace:
-[  +0.000021]  dump_stack+0xa9/0x10e
-[  +0.000020]  print_address_description.cold.2+0x9/0x25e
-[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
-[  +0.000016]  kasan_report+0xe/0x20
-[  +0.000016]  __mutex_lock+0x1076/0x11c0
-[  +0.000014]  step_wise_throttle+0x72/0x150
-[  +0.000018]  handle_thermal_trip+0x167/0x760
-[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
-[  +0.000019]  process_one_work+0x969/0x16f0
-[  +0.000017]  worker_thread+0x91/0xc40
-[  +0.000014]  kthread+0x33d/0x400
-[  +0.000015]  ret_from_fork+0x3a/0x50
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[  +0.000020] Allocated by task 1:
-[  +0.000015]  save_stack+0x19/0x80
-[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
-[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
-[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
-[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
-[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
-[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
-[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
-[  +0.000014]  local_pci_probe+0xc3/0x150
-[  +0.000013]  pci_device_probe+0x280/0x410
-[  +0.000013]  really_probe+0x26a/0xbb0
-[  +0.000013]  driver_probe_device+0x208/0x2e0
-[  +0.000013]  device_driver_attach+0xfe/0x140
-[  +0.000013]  __driver_attach+0x110/0x310
-[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
-[  +0.000013]  driver_register+0x1c0/0x400
-[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
-[  +0.000014]  do_one_initcall+0x239/0x4dd
-[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
-[  +0.000012]  kernel_init+0x11/0x18b
-[  +0.000013]  ret_from_fork+0x3a/0x50
-
-[  +0.000015] Freed by task 581:
-[  +0.000013]  save_stack+0x19/0x80
-[  +0.000014]  __kasan_slab_free+0x125/0x170
-[  +0.000013]  kfree+0xf3/0x310
-[  +0.000013]  thermal_release+0xc7/0xf0
-[  +0.000014]  device_release+0x77/0x200
-[  +0.000014]  kobject_put+0x1a8/0x4c0
-[  +0.000014]  device_unregister+0x38/0xc0
-[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
-[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
-[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
-[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
-[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
-[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
-[  +0.000013]  genl_rcv_msg+0xca/0x170
-[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
-[  +0.000012]  genl_rcv+0x29/0x40
-[  +0.000013]  netlink_unicast+0x49b/0x660
-[  +0.000013]  netlink_sendmsg+0x755/0xc90
-[  +0.000013]  __sys_sendto+0x3de/0x430
-[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
-[  +0.000013]  do_syscall_64+0xa4/0x4d0
-[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
-               which belongs to the cache kmalloc-2k of size 2048
-[  +0.000012] The buggy address is located 1096 bytes inside of
-               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
-[  +0.000007] The buggy address belongs to the page:
-[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
-[  +0.000020] flags: 0x200000000010200(slab|head)
-[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
-[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
-[  +0.000007] page dumped because: kasan: bad access detected
-
-[  +0.000012] Memory state around the buggy address:
-[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000008]                                                  ^
-[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000007] ==================================================================
-
-Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
-Reported-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_core.c | 2 +-
+ arch/s390/kvm/kvm-s390.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index cd82ae34ddfa3..57603be42c507 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -402,7 +402,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
- 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work(&tz->poll_queue);
-+		cancel_delayed_work_sync(&tz->poll_queue);
- }
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3033,7 +3033,7 @@ static long kvm_s390_guest_mem_op(struct
+ 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
+ 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
--- 
-2.20.1
-
+-	if (mop->flags & ~supported_flags)
++	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
+ 		return -EINVAL;
+ 
+ 	if (mop->size > MEM_OP_MAX_SIZE)
 
 
