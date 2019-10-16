@@ -2,125 +2,184 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6ACFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2701AFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D42520663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CEA20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393523AbfJPNNL (ORCPT
+        id S2393535AbfJPNNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:13:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54456 "EHLO mga11.intel.com"
+        Wed, 16 Oct 2019 09:13:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45958 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390087AbfJPNNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:13:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 06:13:10 -0700
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="186145335"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 06:13:06 -0700
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
- <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
- <20190925180931.GG31852@linux.intel.com>
- <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
- <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
- <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
-Date:   Wed, 16 Oct 2019 21:13:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2390087AbfJPNNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:13:12 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D51EEA3CD92;
+        Wed, 16 Oct 2019 13:13:11 +0000 (UTC)
+Received: from [10.3.116.74] (ovpn-116-74.phx2.redhat.com [10.3.116.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3647560127;
+        Wed, 16 Oct 2019 13:13:11 +0000 (UTC)
+Subject: Re: [PATCH] ipmi: Don't allow device module unload when in use
+From:   tony camuso <tcamuso@redhat.com>
+To:     minyard@acm.org
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
+References: <20191014134141.GA25427@t560>
+ <20191014154632.11103-1-minyard@acm.org>
+ <40e26052-3ccb-684a-540f-61ff47077690@redhat.com>
+Message-ID: <321ed6cb-929c-462f-2459-9caf67be224e@redhat.com>
+Date:   Wed, 16 Oct 2019 09:13:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+In-Reply-To: <40e26052-3ccb-684a-540f-61ff47077690@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 13:13:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/2019 7:26 PM, Paolo Bonzini wrote:
-> On 16/10/19 13:23, Xiaoyao Li wrote:
->> KVM always traps #AC, and only advertises split-lock detection to guest
->> when the global variable split_lock_detection_enabled in host is true.
+On 10/16/19 8:18 AM, tony camuso wrote:
+> On 10/14/19 11:46 AM, minyard@acm.org wrote:
+>> From: Corey Minyard <cminyard@mvista.com>
 >>
->> - If guest enables #AC (CPL3 alignment check or split-lock detection
->> enabled), injecting #AC back into guest since it's supposed capable of
->> handling it.
->> - If guest doesn't enable #AC, KVM reports #AC to userspace (like other
->> unexpected exceptions), and we can print a hint in kernel, or let
->> userspace (e.g., QEMU) tell the user guest is killed because there is a
->> split-lock in guest.
+>> If something has the IPMI driver open, don't allow the device
+>> module to be unloaded.  Before it would unload and the user would
+>> get errors on use.
 >>
->> In this way, malicious guests always get killed by userspace and old
->> sane guests cannot survive as well if it causes split-lock. If we do
->> want old sane guests work we have to disable the split-lock detection
->> (through booting parameter or debugfs) in the host just the same as we
->> want to run an old and split-lock generating userspace binary.
+>> This change is made on user request, and it makes it consistent
+>> with the I2C driver, which has the same behavior.
+>>
+>> It does change things a little bit with respect to kernel users.
+>> If the ACPI or IPMI watchdog (or any other kernel user) has
+>> created a user, then the device module cannot be unloaded.  Before
+>> it could be unloaded,
+>>
+>> This does not affect hot-plug.  If the device goes away (it's on
+>> something removable that is removed or is hot-removed via sysfs)
+>> then it still behaves as it did before.
+>>
+>> Reported-by: tony camuso <tcamuso@redhat.com>
+>> Signed-off-by: Corey Minyard <cminyard@mvista.com>
+>> ---
+>> Tony, here is a suggested change for this.  Can you look it over and
+>> see if it looks ok?
+>>
+>> Thanks,
+>>
+>> -corey
+>>
+>>   drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
+>>   include/linux/ipmi_smi.h            | 12 ++++++++----
+>>   2 files changed, 24 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+>> index 2aab80e19ae0..15680de18625 100644
+>> --- a/drivers/char/ipmi/ipmi_msghandler.c
+>> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+>> @@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
+>>   #define IPMI_IPMB_NUM_SEQ    64
+>>   struct ipmi_smi {
+>> +    struct module *owner;
+>> +
+>>       /* What interface number are we? */
+>>       int intf_num;
+>> @@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
+>>       if (rv)
+>>           goto out_kfree;
+>> +    if (!try_module_get(intf->owner)) {
+>> +        rv = -ENODEV;
+>> +        goto out_kfree;
+>> +    }
+>> +
+>>       /* Note that each existing user holds a refcount to the interface. */
+>>       kref_get(&intf->refcount);
+>> @@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
+>>       }
+>>       kref_put(&intf->refcount, intf_free);
+>> +    module_put(intf->owner);
+>>   }
+>>   int ipmi_destroy_user(struct ipmi_user *user)
+>> @@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
+>>    * been recently fetched, this will just use the cached data.  Otherwise
+>>    * it will run a new fetch.
+>>    *
+>> - * Except for the first time this is called (in ipmi_register_smi()),
+>> + * Except for the first time this is called (in ipmi_add_smi()),
+>>    * this will always return good data;
+>>    */
+>>   static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
+>> @@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work)
+>>       kref_put(&intf->refcount, intf_free);
+>>   }
+>> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>> -              void               *send_info,
+>> -              struct device            *si_dev,
+>> -              unsigned char            slave_addr)
+>> +int ipmi_add_smi(struct module         *owner,
+>> +         const struct ipmi_smi_handlers *handlers,
+>> +         void               *send_info,
+>> +         struct device         *si_dev,
+>> +         unsigned char         slave_addr)
+>>   {
+>>       int              i, j;
+>>       int              rv;
+>> @@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>>           return rv;
+>>       }
+>> -
+>> +    intf->owner = owner;
+>>       intf->bmc = &intf->tmp_bmc;
+>>       INIT_LIST_HEAD(&intf->bmc->intfs);
+>>       mutex_init(&intf->bmc->dyn_mutex);
+>> @@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>>       return rv;
+>>   }
+>> -EXPORT_SYMBOL(ipmi_register_smi);
+>> +EXPORT_SYMBOL(ipmi_add_smi);
+>>   static void deliver_smi_err_response(struct ipmi_smi *intf,
+>>                        struct ipmi_smi_msg *msg,
+>> diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
+>> index 4dc66157d872..deec18b8944a 100644
+>> --- a/include/linux/ipmi_smi.h
+>> +++ b/include/linux/ipmi_smi.h
+>> @@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
+>>    * is called, and the lower layer must get the interface from that
+>>    * call.
+>>    */
+>> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+>> -              void                     *send_info,
+>> -              struct device            *dev,
+>> -              unsigned char            slave_addr);
+>> +int ipmi_add_smi(struct module            *owner,
+>> +         const struct ipmi_smi_handlers *handlers,
+>> +         void                     *send_info,
+>> +         struct device            *dev,
+>> +         unsigned char            slave_addr);
+>> +
+>> +#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
+>> +    ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
+>>   /*
+>>    * Remove a low-level interface from the IPMI driver.  This will
+>>
 > 
-> Old guests are prevalent enough that enabling split-lock detection by
-> default would be a big usability issue.  And even ignoring that, you
-> would get the issue you describe below:
-
-Right, whether enabling split-lock detection is made by the 
-administrator. The administrator is supposed to know the consequence of 
-enabling it. Enabling it means don't want any split-lock happens in 
-userspace, of course VMM softwares are under control.
-
->> But there is an issue that we advertise split-lock detection to guest
->> based on the value of split_lock_detection_enabled to be true in host,
->> which can be turned into false dynamically when split-lock happens in
->> host kernel.
+> Thanks, Corey.
 > 
-> ... which means that supposedly safe guests become unsafe, and that is bad.
+> Regards,
+> Tony
 > 
->> This causes guest's capability changes at run time and I
->> don't if there is a better way to inform guest? Maybe we need a pv
->> interface?
-> 
-> Even a PV interface would not change the basic fact that a supposedly
-> safe configuration becomes unsafe.
 
-I don't catch you about the unsafe?
+And I meant to add that I will be testing this over the next couple days.
 
-If host disables split-lock detection dynamically, then the 
-MST_TEST_CTL.split_lock is clear in the hardware and we can use the PV 
-interface to notify the guest so that guest knows it loses the 
-capability of split-lock detection. In this case, I think safety is 
-meaningless for both host and guest.
-
-> Paolo
-> 
