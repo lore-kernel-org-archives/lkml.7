@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D52ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E40ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94C321848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039B221848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264616;
-	bh=gOxfJOCLf60/pIqvNXNUkBT5bw2/Po247341M7g2E6k=;
+	s=default; t=1571264619;
+	bh=AAKQlzbvTxzLTVQbz11o7zrn12sb1NA0ge1J0S9RcAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6lGT5ob8yJkkElH0FGp9lDTJ6BFH5rLnhfJ33WYavtiNsdLEUOzdTKRT73cRKo44
-	 vVdL5uh0wrm9oa8pzeCLZYGTVUNFgaEihP2kChYngHX+MU4uL7Jtx2YKKWCQPl4cAn
-	 qk4R3f3U/hb/0NNk2oew8Wmut+QMkF3jkgD0C3LE=
+	b=mGfoXi08k1dZMTz/NNYwxxCcHrLYQFOM73S5qE6VkOEdUctBWDzKbsV3tJY+srUMP
+	 2GVF256w/xtV+VrTqIazDAbk/rsCTCW0PvhD0LyTJ92G91y8GZa9EH/P0Uz8pAZMcG
+	 Oxk8cDYepxu3bdUjcBs8vbtC0G/FXDbUWNnrPmkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439417AbfJPWX2 (ORCPT
+        id S2437022AbfJPVwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:52:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437043AbfJPVw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:52:56 -0400
+        id S2436940AbfJPVwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:52:54 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F96A218DE;
-        Wed, 16 Oct 2019 21:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F82921925;
+        Wed, 16 Oct 2019 21:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262776;
-        bh=gOxfJOCLf60/pIqvNXNUkBT5bw2/Po247341M7g2E6k=;
+        s=default; t=1571262773;
+        bh=AAKQlzbvTxzLTVQbz11o7zrn12sb1NA0ge1J0S9RcAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VCjSp+gVjviT6E8ItEovLIgzzGJnzlI8x3nBZcrdYolTnQ9RoMsWUv2sa6OUKvBZL
-         8muu/jIIUYmn2lem5MMqkIz88YPDN0Ikn36TlNrsMswmlTr8Xqryjr3RrKSzI6Tfr/
-         w64WFuk9AmYF7/JOqlheIyq2O8DOpynYBWori4G0=
+        b=TJbVpTpucQW8CcoeeZLH07f8AbjVlheCvQNdxDpZOMDczdDbATDtyCfR25UBw1I/x
+         72NQKUo4cg+vn0AXOc91X6Hh7bNhKarZBExwTZUBwVbjCrW/w/WAJ0WNevpnVZhvZm
+         JHs+OQ61P1Uye24Z9bpyAMqn5tf2/X6712bM7Zjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trek <trek00@inbox.ru>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 17/79] drm/amdgpu: Check for valid number of registers to read
-Date:   Wed, 16 Oct 2019 14:49:52 -0700
-Message-Id: <20191016214746.435033052@linuxfoundation.org>
+Subject: [PATCH 4.4 14/79] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
+Date:   Wed, 16 Oct 2019 14:49:49 -0700
+Message-Id: <20191016214743.174898914@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -60,37 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trek <trek00@inbox.ru>
+From: Chengguang Xu <cgxu519@zoho.com.cn>
 
-[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
+[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
 
-Do not try to allocate any amount of memory requested by the user.
-Instead limit it to 128 registers. Actually the longest series of
-consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
-mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
+Currently on mmap cache policy, we always attach writeback_fid
+whether mmap type is SHARED or PRIVATE. However, in the use case
+of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
+this behavior will trigger overlayfs' copy-up when excute command
+inside container.
 
-Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
-Signed-off-by: Trek <trek00@inbox.ru>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
+Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
+ fs/9p/vfs_file.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index a5c8240784726..e35e603710b4d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -406,6 +406,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
- 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
- 			sh_num = 0xffffffff;
+diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
+index 373cc50544e91..9dbf371471261 100644
+--- a/fs/9p/vfs_file.c
++++ b/fs/9p/vfs_file.c
+@@ -528,6 +528,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	v9inode = V9FS_I(inode);
+ 	mutex_lock(&v9inode->v_mutex);
+ 	if (!v9inode->writeback_fid &&
++	    (vma->vm_flags & VM_SHARED) &&
+ 	    (vma->vm_flags & VM_WRITE)) {
+ 		/*
+ 		 * clone a fid and add it to writeback_fid
+@@ -629,6 +630,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
+ 			(vma->vm_end - vma->vm_start - 1),
+ 	};
  
-+		if (info->read_mmr_reg.count > 128)
-+			return -EINVAL;
-+
- 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
- 		if (!regs)
- 			return -ENOMEM;
++	if (!(vma->vm_flags & VM_SHARED))
++		return;
+ 
+ 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
+ 
 -- 
 2.20.1
 
