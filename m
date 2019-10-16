@@ -2,110 +2,116 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3836EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE743ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEB6207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="cXyWJwAm"
+	by mail.kernel.org (Postfix) with ESMTP id C569921848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437313AbfJPUwo (ORCPT
+        id S2388038AbfJPU50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:52:44 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58814 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437248AbfJPUwi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:52:38 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id C7ECA20B9C00; Wed, 16 Oct 2019 13:52:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C7ECA20B9C00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1571259157;
-        bh=2YV6IZfNKusYy95VZq7usZ04z/v2U6/1CdgSHm4EGRA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:From;
-        b=cXyWJwAm4Uz6OgM2sXS10Ye6hGGR5w1eyiWIeT7rPwwJTHzVwJG+qd4mNC+7Ud814
-         KzJ6gC07S6vp4Bm/+W4jkfkbX8m95r9vceBKzhTWb/I/onq8y3up8TsogJjoPX+EJ8
-         wU57KV1RgWTeVHlGlAA1k1ohjhopp93xy3wAqTf0=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>, stable@vger.kernel.org
-Subject: [PATCH 6/7] cifs: smbd: Only queue work for error recovery on memory registration
-Date:   Wed, 16 Oct 2019 13:51:55 -0700
-Message-Id: <1571259116-102015-7-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1571259116-102015-1-git-send-email-longli@linuxonhyperv.com>
-References: <1571259116-102015-1-git-send-email-longli@linuxonhyperv.com>
-Reply-To: longli@microsoft.com
+        Wed, 16 Oct 2019 16:57:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59492 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727806AbfJPU50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 16:57:26 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7F2AD90C99
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 20:57:25 +0000 (UTC)
+Received: by mail-qk1-f199.google.com with SMTP id g62so24986525qkb.20
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:57:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DBQ7gpZ68XC9yJUIRmvhGT9ykcxZ7LBo1PQ5kgI2O8M=;
+        b=S4De6Oa5OgFUzmnq30HT3mmfdV05lkM6/XqkRL+zZlk1uODmw1UoRDzNKWamUgJ7KP
+         IqQSvIbZ6SQGNcq9QVpZmAifN2LuOZsCHx6migsECtGsjUDvu9mWbgf/G9GT0IyF43gh
+         1wZx5KYwSaYqmnoJnYWbnGDduiMKLQfE2ukNCXPNANFD7l/NPndp7OtdaY7vmhCa0On7
+         YwPzeRWkpeN4E7yiFDrpiVLef/eyG/OAWjHysBufBAL7Z47eztMyj8GhR1zXOUBDfLb/
+         w+9MWIEVCQ/8OUnEP6nv+EIwmnrmPrAjecsayb4c9qzaOrh7JY8EG9ZfBiK+QYYeFZtR
+         jOUA==
+X-Gm-Message-State: APjAAAW8a/4uaHXlpuZgmRURJkLT1ZOX1gd2WK6uV0/VeBPyYq/upcRr
+        7xbnOaE2B04FQNeGo68bScMJhhlYMRIWrPuonbEfeIiscczjBKPEoYJq7O6K15bgxRQ4pRrgU69
+        89KDc5+z/RL17olMewPOdPd52
+X-Received: by 2002:a0c:eda9:: with SMTP id h9mr30849qvr.125.1571259444743;
+        Wed, 16 Oct 2019 13:57:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxtZQ1p9uv2sCQ5sckBZmJmAmvdBRNeFuMdkuR0mLRWv2XsHKm8h8LAyLgrLZlCxrCo9UBhpQ==
+X-Received: by 2002:a0c:eda9:: with SMTP id h9mr30831qvr.125.1571259444351;
+        Wed, 16 Oct 2019 13:57:24 -0700 (PDT)
+Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id 16sm26966qkj.59.2019.10.16.13.57.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 13:57:23 -0700 (PDT)
+From:   Laura Abbott <labbott@redhat.com>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas Waisman <nico@semmle.com>
+Subject: [PATCH] rtlwifi: Fix potential overflow on P2P code
+Date:   Wed, 16 Oct 2019 16:57:16 -0400
+Message-Id: <20191016205716.2843-1-labbott@redhat.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Nicolas Waisman noticed that even though noa_len is checked for
+a compatible length it's still possible to overrun the buffers
+of p2pinfo since there's no check on the upper bound of noa_num.
+Bounds check noa_num against P2P_MAX_NOA_NUM.
 
-It's not necessary to queue invalidated memory registration to work queue, as
-all we need to do is to unmap the SG and make it usable again. This can save
-CPU cycles in normal data paths as memory registration errors are rare and
-normally only happens during reconnection.
-
-Signed-off-by: Long Li <longli@microsoft.com>
-Cc: stable@vger.kernel.org
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Laura Abbott <labbott@redhat.com>
 ---
- fs/cifs/smbdirect.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+Compile tested only as this was reported to the security list.
+---
+ drivers/net/wireless/realtek/rtlwifi/ps.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index cf001f10d555..c00629a41d81 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -2269,12 +2269,7 @@ static void smbd_mr_recovery_work(struct work_struct *work)
- 	int rc;
- 
- 	list_for_each_entry(smbdirect_mr, &info->mr_list, list) {
--		if (smbdirect_mr->state == MR_INVALIDATED)
--			ib_dma_unmap_sg(
--				info->id->device, smbdirect_mr->sgl,
--				smbdirect_mr->sgl_count,
--				smbdirect_mr->dir);
--		else if (smbdirect_mr->state == MR_ERROR) {
-+		if (smbdirect_mr->state == MR_ERROR) {
- 
- 			/* recover this MR entry */
- 			rc = ib_dereg_mr(smbdirect_mr->mr);
-@@ -2602,11 +2597,20 @@ int smbd_deregister_mr(struct smbd_mr *smbdirect_mr)
- 		 */
- 		smbdirect_mr->state = MR_INVALIDATED;
- 
--	/*
--	 * Schedule the work to do MR recovery for future I/Os
--	 * MR recovery is slow and we don't want it to block the current I/O
--	 */
--	queue_work(info->workqueue, &info->mr_recovery_work);
-+	if (smbdirect_mr->state == MR_INVALIDATED) {
-+		ib_dma_unmap_sg(
-+			info->id->device, smbdirect_mr->sgl,
-+			smbdirect_mr->sgl_count,
-+			smbdirect_mr->dir);
-+		smbdirect_mr->state = MR_READY;
-+		if (atomic_inc_return(&info->mr_ready_count) == 1)
-+			wake_up_interruptible(&info->wait_mr);
-+	} else
-+		/*
-+		 * Schedule the work to do MR recovery for future I/Os
-+		 * MR recovery is slow and we don't want it to block the
-+		 * current I/O */
-+		queue_work(info->workqueue, &info->mr_recovery_work);
- 
- done:
- 	if (atomic_dec_and_test(&info->mr_used_count))
+diff --git a/drivers/net/wireless/realtek/rtlwifi/ps.c b/drivers/net/wireless/realtek/rtlwifi/ps.c
+index 70f04c2f5b17..c5cff598383d 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/ps.c
++++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+@@ -754,6 +754,13 @@ static void rtl_p2p_noa_ie(struct ieee80211_hw *hw, void *data,
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM) {
++					RT_TRACE(rtlpriv, COMP_INIT, DBG_LOUD,
++						 "P2P notice of absence: invalid noa_num.%d\n",
++						 noa_num);
++					return;
++				}
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+@@ -848,6 +855,13 @@ static void rtl_p2p_action_ie(struct ieee80211_hw *hw, void *data,
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM) {
++					RT_TRACE(rtlpriv, COMP_FW, DBG_LOUD,
++						 "P2P notice of absence: invalid noa_len.%d\n",
++						 noa_len);
++					return;
++
++				}
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
 -- 
-2.17.1
+2.21.0
 
