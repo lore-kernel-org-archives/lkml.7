@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA26BECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798C8FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BED021925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D128207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263861;
-	bh=7D63rJM58zHxbKFLjCXovi7Up2/y6GYSCmMHN/T9qk0=;
+	s=default; t=1571263866;
+	bh=LY9IoeQ4KDR5F+hVavxrD1Vb2SUzTkDoVSL59UYUWi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cKX9HEX0cQULq4Iq9ZakfDOG8RlUC3W/hgke8fqdvu2CUkqL9JdUCN9LfWva/AFxB
-	 frMR5ZRlZuABXF6KHN55ugj64w4p4DTEYTb+F7b5JIcQijlPNq1rdsduNSpgyMm2Af
-	 pWAqnHwlcmOtCFoOpogt3bjwT9YlPwt0lRzBOy2w=
+	b=CxelAb9HPWyYRPYqkKhElUGosZFhZm9c1Wd6m8KASycEow5Uydb6nWIqlgQp4CV52
+	 8s+hkXafWkcaBb4h/MCNCNHCTfU6AiXwKVZEOX9mSMvCvVVXflXn21/zYH0hn7yeGO
+	 zO8xrfoUifPmsG1d3aa5vKs8x6wO/fJ442guLq6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439192AbfJPWLA (ORCPT
+        id S2439202AbfJPWLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49408 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395450AbfJPV5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2395445AbfJPV5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:57:05 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116B920872;
-        Wed, 16 Oct 2019 21:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B4921928;
+        Wed, 16 Oct 2019 21:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263025;
-        bh=7D63rJM58zHxbKFLjCXovi7Up2/y6GYSCmMHN/T9qk0=;
+        s=default; t=1571263024;
+        bh=LY9IoeQ4KDR5F+hVavxrD1Vb2SUzTkDoVSL59UYUWi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/WdD6v4q+f/zHKWaKezhKzuGHfXG7T9bvg7n6JGv5ujU59Ut9HU1RL/MtLFrsIz7
-         /9q9soCPGNErobv89VotCMvN2L5M699i5uvQrxzWFBurudo3fLrV80+1hXUabG23j4
-         qrJkAS4xEnFvvu/PAkR+0MNqt+IUjkyL6uZZxYI0=
+        b=MBMC0dNUTCYoUMfbbWCAmITBcx05HU3DibtoJ1pQ3Se1ymXbtwJ3Jyt+JPWNBukjX
+         DNYntigERwqRzMwCmfzawopBuessG3FrSK7k1J6lbvid+vc1wrM/H5upGR0tYWvclD
+         zr4YeM0V/gbuV+mby/8viepfNQbVIDEHG0bV9f/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Beni Mahler <beni.mahler@gmx.net>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 26/81] USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
-Date:   Wed, 16 Oct 2019 14:50:37 -0700
-Message-Id: <20191016214828.924352747@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 25/81] USB: serial: keyspan: fix NULL-derefs on open() and write()
+Date:   Wed, 16 Oct 2019 14:50:36 -0700
+Message-Id: <20191016214827.671778494@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -59,65 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Beni Mahler <beni.mahler@gmx.net>
+From: Johan Hovold <johan@kernel.org>
 
-commit 357f16d9e0194cdbc36531ff88b453481560b76a upstream.
+commit 7d7e21fafdbc7fcf0854b877bd0975b487ed2717 upstream.
 
-Both devices added here have a FTDI chip inside. The device from Echelon
-is called 'Network Interface' it is actually a LON network gateway.
+Fix NULL-pointer dereferences on open() and write() which can be
+triggered by a malicious USB device.
 
- ID 0403:8348 Future Technology Devices International, Ltd
- https://www.eltako.com/fileadmin/downloads/de/datenblatt/Datenblatt_PL-SW-PROF.pdf
+The current URB allocation helper would fail to initialise the newly
+allocated URB if the device has unexpected endpoint descriptors,
+something which could lead NULL-pointer dereferences in a number of
+open() and write() paths when accessing the URB. For example:
 
- ID 0920:7500 Network Interface
- https://www.echelon.com/products/u20-usb-network-interface
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	...
+	RIP: 0010:usb_clear_halt+0x11/0xc0
+	...
+	Call Trace:
+	 ? tty_port_open+0x4d/0xd0
+	 keyspan_open+0x70/0x160 [keyspan]
+	 serial_port_activate+0x5b/0x80 [usbserial]
+	 tty_port_open+0x7b/0xd0
+	 ? check_tty_count+0x43/0xa0
+	 tty_open+0xf1/0x490
 
-Signed-off-by: Beni Mahler <beni.mahler@gmx.net>
-Cc: stable <stable@vger.kernel.org>
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	...
+	RIP: 0010:keyspan_write+0x14e/0x1f3 [keyspan]
+	...
+	Call Trace:
+	 serial_write+0x43/0xa0 [usbserial]
+	 n_tty_write+0x1af/0x4f0
+	 ? do_wait_intr_irq+0x80/0x80
+	 ? process_echoes+0x60/0x60
+	 tty_write+0x13f/0x2f0
+
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	...
+	RIP: 0010:keyspan_usa26_send_setup+0x298/0x305 [keyspan]
+	...
+	Call Trace:
+	 keyspan_open+0x10f/0x160 [keyspan]
+	 serial_port_activate+0x5b/0x80 [usbserial]
+	 tty_port_open+0x7b/0xd0
+	 ? check_tty_count+0x43/0xa0
+	 tty_open+0xf1/0x490
+
+Fixes: fdcba53e2d58 ("fix for bugzilla #7544 (keyspan USB-to-serial converter)")
+Cc: stable <stable@vger.kernel.org>	# 2.6.21
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ftdi_sio.c     |    3 +++
- drivers/usb/serial/ftdi_sio_ids.h |    9 +++++++++
- 2 files changed, 12 insertions(+)
+ drivers/usb/serial/keyspan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1020,6 +1020,9 @@ static const struct usb_device_id id_tab
- 	/* EZPrototypes devices */
- 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
- 	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
-+	/* Sienna devices */
-+	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
-+	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
- 	{ }					/* Terminating entry */
- };
+--- a/drivers/usb/serial/keyspan.c
++++ b/drivers/usb/serial/keyspan.c
+@@ -1741,8 +1741,8 @@ static struct urb *keyspan_setup_urb(str
  
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -39,6 +39,9 @@
- 
- #define FTDI_LUMEL_PD12_PID	0x6002
- 
-+/* Sienna Serial Interface by Secyourit GmbH */
-+#define FTDI_SIENNA_PID		0x8348
-+
- /* Cyber Cortex AV by Fabulous Silicon (http://fabuloussilicon.com) */
- #define CYBER_CORTEX_AV_PID	0x8698
- 
-@@ -689,6 +692,12 @@
- #define BANDB_ZZ_PROG1_USB_PID	0xBA02
- 
- /*
-+ * Echelon USB Serial Interface
-+ */
-+#define ECHELON_VID		0x0920
-+#define ECHELON_U20_PID		0x7500
-+
-+/*
-  * Intrepid Control Systems (http://www.intrepidcs.com/) ValueCAN and NeoVI
-  */
- #define INTREPID_VID		0x093C
+ 	ep_desc = find_ep(serial, endpoint);
+ 	if (!ep_desc) {
+-		/* leak the urb, something's wrong and the callers don't care */
+-		return urb;
++		usb_free_urb(urb);
++		return NULL;
+ 	}
+ 	if (usb_endpoint_xfer_int(ep_desc)) {
+ 		ep_type_name = "INT";
 
 
