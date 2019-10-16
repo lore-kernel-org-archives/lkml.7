@@ -2,209 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC45C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87762C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696662168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566A92168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hahLTPEG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3TGfy7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404399AbfJPJzQ (ORCPT
+        id S2404401AbfJPJ5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:55:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33020 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfJPJzP (ORCPT
+        Wed, 16 Oct 2019 05:57:52 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42561 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbfJPJ5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:55:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G9sfBB080644;
-        Wed, 16 Oct 2019 04:54:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571219681;
-        bh=ilvmorCMdYLV72y3iRRl828Fp9lD2xDungHZT0n9FRU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hahLTPEGxEbDd5g7fTyGMLIpHg87uMKwqP4+TlO2o7Og00hHuXZSfrhRQ8fLCJFnE
-         uQ/gjBdIqAvGGdUsHS9OZZQWqhWv+P6c9FQ4cliyE8hOUyqQx8aPt+0pL+fUFV/Fjl
-         0E19L8NAJbj1G5dnD4nzw6qUkHWcs5tBFnp9Rt5M=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G9sfxC105364
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 04:54:41 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 04:54:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 04:54:40 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G9scFD113224;
-        Wed, 16 Oct 2019 04:54:39 -0500
-Subject: Re: [PATCH 1/2] usb: cdns3: fix cdns3_core_init_role()
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191007121601.25996-1-rogerq@ti.com>
- <20191007121601.25996-2-rogerq@ti.com>
- <BYAPR07MB470974496C7C59FDE615E5F3DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
- <715c8f74-2790-6546-66ae-c0aea53946ed@ti.com>
- <BYAPR07MB470923F80C4B49D26291B268DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <3d2e7110-448f-d847-7668-bb20d7e03d22@ti.com>
-Date:   Wed, 16 Oct 2019 12:54:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 05:57:51 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c195so16925758lfg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=XmkE9WlFKI8pyb3SJarkshMXBgc4RxOdMIxQgz3kh30=;
+        b=E3TGfy7xP24jXUdwFV+Nil23p+/H3OaGslr52g0fdf5RJs0BFr3EBxzosDTpxlaHcJ
+         gfHyVmxK8W0dmqbA+VTMhGVspJtZU+yGCqauOsxbZ9wEnp7wwNMhi1JLeSL2q/IBv0O5
+         9pBm9Z7E6JX3/1ZeiST1uEPzS5BuwnNMMrpu8wsrfqLh/6iK5WScbIOOHJMtPYxtUaKU
+         f5gstHFXf14SFIK2k8HCHwnZAH8QXLkwl4e8kYpGnMXtc4ue4zSawj9pAKFWtoUMp4sn
+         0OpOsxH9L1PqIQY1h7f4HAOk4HkaAV9HMx2EozQaLhk9zULIhib+lMNk0aWLd8ilpJ06
+         KCww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XmkE9WlFKI8pyb3SJarkshMXBgc4RxOdMIxQgz3kh30=;
+        b=b8GNsVmEKX+7D8qrJNTv7blddS6DMeJS8kUkdpe54LqW5DQOvZUKiXyP9pZSIXtsfp
+         Go1Ows0AiI8kvNW5IVTpq0a+ctcIdnZXHAdMHus9FLH51wcF8iKWeQv4eW2qWdGIOJb7
+         VkDS3Y68StW12YNBgo/6oKyEBbxAqJzp9ujYcehbgLGHBdNSxjD+WyjsOK7G6zSRSaJI
+         Ze21P8dQrsF9is5D3Hh3JoxAofS2GdwmBhBnfaghhnYsX8YuGGFTY8N0KBhM5gkhQy4x
+         8TIOws3k6aPOyikWLW4lE2Ardmu8XcBlFWt4jvjZ/kpwYMwxRUJJ8DciT6xA7ofDTcdw
+         efqQ==
+X-Gm-Message-State: APjAAAXHrqCFxL/f+3zK0SHBX4gJOo+7eayQVDOl4beUU5ybz0kG+WzB
+        mPP/px0nrpGMrCRRpffLn7Yt/EF11nZBBw==
+X-Google-Smtp-Source: APXvYqyByOg+IfsgQBVPxlMuMlhGelXgSpoJEbecz8DeWG44lbDSy7leAjZbMdYWT8OxVRJkL8+zWQ==
+X-Received: by 2002:ac2:4830:: with SMTP id 16mr25588588lft.35.1571219869589;
+        Wed, 16 Oct 2019 02:57:49 -0700 (PDT)
+Received: from localhost ([78.133.233.210])
+        by smtp.gmail.com with ESMTPSA id h10sm6016603ljb.14.2019.10.16.02.57.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 02:57:49 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 11:57:39 +0200
+From:   Marek Bykowski <marek.bykowski@gmail.com>
+To:     mark.rutland@arm.com, will.deacon@arm.com, pawel.moll@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 1/2] perf: arm-ccn: Enable stats for CCN-512
+ interconnect
+Message-ID: <20191016115739.0d5d2272@gmail.com>
+In-Reply-To: <20191016110612.17381ad6@gmail.com>
+References: <1570454475-2848-1-git-send-email-marek.bykowski@gmail.com>
+        <20191016110612.17381ad6@gmail.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <BYAPR07MB470923F80C4B49D26291B268DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add compatible string for the ARM CCN-512 interconnect
 
+Signed-off-by: Marek Bykowski <marek.bykowski@gmail.com>
+Signed-off-by: Boleslaw Malecki <boleslaw.malecki@tieto.com>
+---
+Changelog v2->v3
+- Correcting copy-paste typo: this commit adds compatible string for CCN-512
+  and not for CCN-502 which has already a support for.
+- Now *for real* change the subject to reflect where the driver got moved
+  to (drivers/perf) from (drivers/bus).
+Changelog v1->v2:
+- Change the subject to reflect where the driver got moved to (drivers/perf)
+  from (drivers/bus).
+- Add credit to my work mate that helped me validate the counts from
+  the interconnect.
+---
+ drivers/perf/arm-ccn.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 16/10/2019 12:38, Pawel Laszczak wrote:
->>
->>
->> Hi Pawel,
->>
->> On 16/10/2019 07:32, Pawel Laszczak wrote:
->>> Hi Roger
->>>
->>>>
->>>> At startup we should trigger the HW state machine
->>>> only if it is OTG mode. Otherwise we should just
->>>> start the respective role.
->>>>
->>>> Initialize idle role by default. If we don't do this then
->>>> cdns3_idle_role_stop() is not called when switching to
->>>> host/device role and so lane switch mechanism
->>>> doesn't work. This results to super-speed device not working
->>>> in one orientation if it was plugged before driver probe.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->>>> ---
->>>> drivers/usb/cdns3/core.c | 20 +++++++++++++++++++-
->>>> 1 file changed, 19 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
->>>> index 06f1e105be4e..1109dc5a4c39 100644
->>>> --- a/drivers/usb/cdns3/core.c
->>>> +++ b/drivers/usb/cdns3/core.c
->>>> @@ -160,10 +160,28 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
->>>> 	if (ret)
->>>> 		goto err;
->>>>
->>>> -	if (cdns->dr_mode != USB_DR_MODE_OTG) {
->>>> +	/* Initialize idle role to start with */
->>>> +	ret = cdns3_role_start(cdns, USB_ROLE_NONE);
->>>> +	if (ret)
->>>> +		goto err;
->>>> +
->>>> +	switch (cdns->dr_mode) {
->>>> +	case USB_DR_MODE_UNKNOWN:
->>>
->>> One note in this place. USB_DR_MODE_UNKNOWN is not possible in this place.
->>> If cdns->dr_mode will be USB_DR_MODE_UNKNOWN then driver returns -EINVAL
->>
->> At which place? I could not find.
-> 
-> In this patch we can't see this line:
-> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/usb/cdns3/core.c#L159
-> There is called  cdns3_drd_update_mode(cdns);
-> 
-> int cdns3_drd_update_mode(struct cdns3 *cdns)
-> {
-> 	int ret = 0;
-> 
-> 	switch (cdns->dr_mode) {
-> 	case USB_DR_MODE_PERIPHERAL:
-> 		ret = cdns3_set_mode(cdns, USB_DR_MODE_PERIPHERAL);
-> 		break;
-> 	case USB_DR_MODE_HOST:
-> 		ret = cdns3_set_mode(cdns, USB_DR_MODE_HOST);
-> 		break;
-> 	case USB_DR_MODE_OTG:
-> 		ret = cdns3_init_otg_mode(cdns);
-> 		break;
-> 	default:
-> 		dev_err(cdns->dev, "Unsupported mode of operation %d\n",
-> 			cdns->dr_mode);
-> 		return -EINVAL;
-> 	}
-> 
-> 	return ret;
-> }
-> 
-> After calling cdns3_drd_update_mode  we have 2 first lines from this patch
-> 	if (ret)
-> 		goto err;
-
-I see now. I will update this patch to error out if dr_mode is USB_DR_MODE_UNKNOWN.
-Thanks.
-
-cheers,
--roger
-
-> 
-> Pawel
->>
->>> some line before after returning form cdns3_drd_update_mode and in consequence
->>> it jump to err label.
->>>
->>> Maybe for better readability it this condition should be treated here also as error.
->>>
->>>> +	case USB_DR_MODE_OTG:
->>>> 		ret = cdns3_hw_role_switch(cdns);
->>>> 		if (ret)
->>>> 			goto err;
->>>> +		break;
->>>> +	case USB_DR_MODE_PERIPHERAL:
->>>> +		ret = cdns3_role_start(cdns, USB_ROLE_DEVICE);
->>>> +		if (ret)
->>>> +			goto err;
->>>> +		break;
->>>> +	case USB_DR_MODE_HOST:
->>>> +		ret = cdns3_role_start(cdns, USB_ROLE_HOST);
->>>> +		if (ret)
->>>> +			goto err;
->>>> +		break;
->>>> 	}
->>>>
->>>> 	return ret;
->>>
->>> Reviewed-by: Pawel Laszczak <pawell@cadence.com>
->>> Tested-by: Pawel Laszczak <pawell@cadence.com>
->>>
->>> --
->>> Regards,
->>> Pawel
->>>
->>
->> --
->> cheers,
->> -roger
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
+index 7dd850e02f19..b6e00f35a448 100644
+--- a/drivers/perf/arm-ccn.c
++++ b/drivers/perf/arm-ccn.c
+@@ -1545,6 +1545,7 @@ static int arm_ccn_remove(struct platform_device *pdev)
+ static const struct of_device_id arm_ccn_match[] = {
+        { .compatible = "arm,ccn-502", },
+        { .compatible = "arm,ccn-504", },
++       { .compatible = "arm,ccn-512", },
+        {},
+ };
+ MODULE_DEVICE_TABLE(of, arm_ccn_match);
