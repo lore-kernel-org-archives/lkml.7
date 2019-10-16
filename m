@@ -2,120 +2,90 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4292BECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3554ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9A620872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979F020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 02:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="XPgn6dcX"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="1w0IOtYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389296AbfJPCAa (ORCPT
+        id S1731933AbfJPCFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 22:00:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34283 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbfJPCAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 22:00:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tFqs03bsz9sP7;
-        Wed, 16 Oct 2019 13:00:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1571191226;
-        bh=0KA4g3xowsqOnI9ovIRoXat3q18fqIJdjDOOFzRTZIg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=XPgn6dcXOiENhvvPhScdow4uV6XbPWC/BZjzknSx1mU6zuIAhaMjhUAq9EcndoA8U
-         FiJoTuLImuL4G+j2ot562gMKoLKb8zxE2O0ShNPLunyJVc/6LAkX+9F4tB1OLvcPYi
-         Ty1JdudVrAYDJzRpQ6q3PYyO2XQKnU+yxJSwixPESIK6WCxUX90Fe5IvVEOVGitbuk
-         /6AlB1ZsGHmwqARGfbkYZOYrqLL4DvIA7YCzqeaUJLd+7YVW/UMmXXKKF1hVrrzUgE
-         sRMFALFgH9UfdEg1BNE9HeutVBQa9qAL1Xw9LgmhAIFgsQQL82AJqNrcASGRqPMrHv
-         f+TT+KahHEtqQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Shuah Khan <skhan@linuxfoundation.org>,
-        yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        shuah@kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: Add kselftest-all and kselftest-install targets
-In-Reply-To: <20190926224014.28910-1-skhan@linuxfoundation.org>
-References: <20190926224014.28910-1-skhan@linuxfoundation.org>
-Date:   Wed, 16 Oct 2019 13:00:21 +1100
-Message-ID: <87sgnttpoq.fsf@mpe.ellerman.id.au>
+        Tue, 15 Oct 2019 22:05:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37145 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfJPCFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 22:05:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y5so13675195pfo.4
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 19:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QC3gEZR1hPeoV9cErrVTRBwhQgxMJw1kOt/RcyP6C6w=;
+        b=1w0IOtYfvSoz2t35HiCfmWEBG/6NZWQDRGyT9mxsztX6Py9Chwl0498ydNjJh0c//p
+         /pUv8LxQNVibIrycGvKocjulsnsWN/vrTMaIcY1fIUvc31ZU4qCJbyuLdDBntXMOE97d
+         CyZP6VcCp7aR21Vyf109i5U2fhry6UYaMZg/lPZnzoxThrZk2aILiB6YLGoeDlXfwUCp
+         WZ55aOfZvtWNYwrk3OErtEE+rJS+BVioCM6nZOf2QnanyzFj9ftGRv/hZAkzpU6ZzsaG
+         hnJoKhQL2U4Vq2icAfQqb45uaJqw1uM7uoNVkHL4LUEWI48WHdO77tRksqhZaU97DX4U
+         8dTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QC3gEZR1hPeoV9cErrVTRBwhQgxMJw1kOt/RcyP6C6w=;
+        b=sCh7mD5y+yXNBpsydq3sm83qyoVxaa+U8lmehKwyTyNA9xfoggRrKDdnvyV4/XqPlq
+         kyIt49966pihPJyqpqd6xI1YfkQ46RZy1G8TDpA8yzcQb0rkLo8XAEmY9tSAGwA4sX3m
+         XqHx2s+KVFfQB/TS4PzJkUO5OzFeBMiF2hBEf4n47dXzRuJ8qHZv0teFm+B5ZRAqp/D4
+         uB4bWiMvhwZPL3WSbe/+2JxSSeUIAOwvjy9KuT8Pd9U3pBCb5nY5YnDMDVoSQpXkge5L
+         q1RVczfvmIvNMEolrkeIlfKLQCbtQ2KJgb0lYwxLItZ+xxWqT1mM7IVvN10C1WaIpVEw
+         qeiw==
+X-Gm-Message-State: APjAAAXfGZ+56Z4/i25Irv0Ziq78s6jN1/I9jAxIN7CtRJ7GBh5cjYqq
+        AL9/yPyM5E5QeT92N/Vz/Av9mw==
+X-Google-Smtp-Source: APXvYqw/EikbC+SU1Dgo4BMgqr5G5Xrl3P4spbJU2PEsTCnZX+e9JRuffgAYMJbGXbmsMOTX3yMNyA==
+X-Received: by 2002:a63:3c3:: with SMTP id 186mr22567709pgd.285.1571191502725;
+        Tue, 15 Oct 2019 19:05:02 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id 16sm21264196pfn.35.2019.10.15.19.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 19:05:02 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 19:04:55 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Zhu Lingshan <lingshan.zhu@intel.com>
+Cc:     mst@redhat.com, jasowang@redhat.com, alex.williamson@redhat.com,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com, tiwei.bie@intel.com,
+        jason.zeng@intel.com, zhiyuan.lv@intel.com
+Subject: Re: [RFC 1/2] vhost: IFC VF hardware operation layer
+Message-ID: <20191015190455.0d79b836@hermes.lan>
+In-Reply-To: <20191016010318.3199-2-lingshan.zhu@intel.com>
+References: <20191016010318.3199-1-lingshan.zhu@intel.com>
+        <20191016010318.3199-2-lingshan.zhu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+On Wed, 16 Oct 2019 09:03:17 +0800
+Zhu Lingshan <lingshan.zhu@intel.com> wrote:
 
-I know this has been merged already, so this is just FYI and in case it
-helps anyone else who's tracking down build failures.
+> +int ifcvf_init_hw(struct ifcvf_hw *hw, struct pci_dev *dev)
+> +{
+> +	int ret;
+> +	u8 pos;
+> +	struct virtio_pci_cap cap;
+> +	u32 i;
+> +	u16 notify_off;
 
-Sorry I didn't reply before you merged it, I was on leave.
-
-Shuah Khan <skhan@linuxfoundation.org> writes:
-> Add kselftest-all target to build tests from the top level
-> Makefile. This is to simplify kselftest use-cases for CI and
-> distributions where build and test systems are different.
->
-> Current kselftest target builds and runs tests on a development
-> system which is a developer use-case.
->
-> Add kselftest-install target to install tests from the top level
-> Makefile. This is to simplify kselftest use-cases for CI and
-> distributions where build and test systems are different.
->
-> This change addresses requests from developers and testers to add
-> support for installing kselftest from the main Makefile.
->
-> In addition, make the install directory the same when install is
-> run using "make kselftest-install" or by running kselftest_install.sh.
-> Also fix the INSTALL_PATH variable conflict between main Makefile and
-> selftests Makefile.
-...
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index c3feccb99ff5..bad18145ed1a 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -171,9 +171,12 @@ run_pstore_crash:
->  # 1. output_dir=kernel_src
->  # 2. a separate output directory is specified using O= KBUILD_OUTPUT
->  # 3. a separate output directory is specified using KBUILD_OUTPUT
-> +# Avoid conflict with INSTALL_PATH set by the main Makefile
->  #
-> -INSTALL_PATH ?= $(BUILD)/install
-> -INSTALL_PATH := $(abspath $(INSTALL_PATH))
-> +KSFT_INSTALL_PATH ?= $(BUILD)/kselftest_install
-
-This change broke all my CI, because the tests no longer install in the
-place it's expecting them :/
-
-I can fix it by explicitly specifying the install path in my CI scripts.
-
-> +KSFT_INSTALL_PATH := $(abspath $(KSFT_INSTALL_PATH))
-> +# Avoid changing the rest of the logic here and lib.mk.
-> +INSTALL_PATH := $(KSFT_INSTALL_PATH)
-
-But because the over-rideable variable changed from INSTALL_PATH to
-KSFT_INSTALL_PATH I will need to export both of them in order for my CI
-to work with old and new kernels.
-
-So to emulate the old behaviour for old & new kernels you need to do:
-
-# export KSFT_INSTALL_PATH=install
-# export INSTALL_PATH=install
-# make -C tools/testing/selftests install
-
-
-cheers
+For network code, the preferred declaration style is
+reverse christmas tree.
