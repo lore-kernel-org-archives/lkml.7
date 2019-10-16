@@ -2,178 +2,78 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E97FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6D8FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6362F21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCEC21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ahh+DqSy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="l+GxzaXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437093AbfJPUXH (ORCPT
+        id S2394721AbfJPUYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:23:07 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45463 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732738AbfJPUXG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:23:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y72so76759pfb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:23:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=Qrm1NvsXrsFrJaiaktnNZJoOxKRyRjdaoTo5U5Izuk8=;
-        b=Ahh+DqSyKQU4I8H524JcL1PIUJqZCf9a35VJVicjcCCqn06nJAx24r1keCachP6WYS
-         fk1t2w6sSlc2muk8MBj7Olqfe3BNATOJBd6R7srgvDSqvC26FQO6rIpRWqZRIGN/9neN
-         7JZadWQ29Ssk8xRdKOzc/YlYYSJ/1raV59+DU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=Qrm1NvsXrsFrJaiaktnNZJoOxKRyRjdaoTo5U5Izuk8=;
-        b=oERJm6xtPbXD+Nz2eSEHrx2yWafeTrY6/vknx21B1HnhCJWlqJj+vLXV7eFxAoHFy+
-         PA1FM3ORz12bAhZXnpFo8Ks6Dr4WEKcHehndcH7m3iXprhXZc5aYRXiz/BpEJ0ut9eKJ
-         KLIQn98TSdRj7tY1QTCmTUcPCUbaxMKDj/L4v4QSahjH8It+FHTlLE9/CbMyHjz7umH1
-         ze/BmfiUyz+hQR9hF6fIj4ckjgCyc5VmUdxVq+398Gli9V7mqq2CuFXyIPNiJsvoEPCH
-         /PHREFl1nO6K0ddsgAHAJQ0qZB5pr6cOl/3/jo5hGN7RcO9Clt/Jk6RIc06bbIqVVXKF
-         o7Ow==
-X-Gm-Message-State: APjAAAVv0xJtU8UI0hy3Y5SkS9ImadLnZ5+07mSDhajCiyvd1tZ96NZ1
-        yrddGh4UbULmxI/2eSqPJY0Akg==
-X-Google-Smtp-Source: APXvYqyYjQEWTnhtfIJtx+HVP/qsBdKLByhTQ5WcY+ad6SCiP1cjGC6S1RKDWb2/HMy0APgi43ph6w==
-X-Received: by 2002:a62:a104:: with SMTP id b4mr35615699pff.239.1571257384523;
-        Wed, 16 Oct 2019 13:23:04 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id p68sm33732397pfp.9.2019.10.16.13.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:23:03 -0700 (PDT)
-Message-ID: <5da77c27.1c69fb81.b45e2.8b99@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 16 Oct 2019 16:24:12 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49306 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388251AbfJPUYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 16:24:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=lp9sGSeBUfNCINz8D0KXuszYBQzAqsZQkv+K4LudJSs=; b=l+GxzaXFjS8l3ToLipq/WrGhgo
+        8vvhof4mQ7FXr+CAR85chuh6HDr9DMnMBjTDb1eTmX4fZ9vysDuZgTkA5SGMU7GoKLD5AhbLjPWYb
+        yV1LrfjlU0Zo0E10BjUkZs0FtGhiCZOT9eUBDaPhWb0PNQHYKhZ9PvGMLMhosMCtMYqs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iKpps-00017G-Bz; Wed, 16 Oct 2019 22:23:56 +0200
+Date:   Wed, 16 Oct 2019 22:23:56 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] dt-bindings: net: dsa: qca,ar9331 switch
+ documentation
+Message-ID: <20191016202356.GM17013@lunn.ch>
+References: <20191014061549.3669-1-o.rempel@pengutronix.de>
+ <20191014061549.3669-3-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191009001159.27761-1-saravanak@google.com>
-References: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com> <20191009001159.27761-1-saravanak@google.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     bjorn.andersson@linaro.org, daidavid1@codeaurora.org,
-        devicetree@vger.kernel.org, evgreen@chromium.org,
-        georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mripard@kernel.org, robh+dt@kernel.org,
-        saravanak@google.com, kernel-team@android.com
-Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and reduce DT binding
-User-Agent: alot/0.8.1
-Date:   Wed, 16 Oct 2019 13:23:02 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014061549.3669-3-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Saravana Kannan (2019-10-08 17:11:59)
-> Quoting Stephen Boyd:
-> > The property would describe what's going to this device and how it's
-> > integrated into the SoC. This is similar to how we describe what port is
-> > connected to a device with the of graph binding or how we only list the
-> > clk or regulator that goes to a device and not the whole path to the
-> > root of the respective tree.
-> >=20
-> > There can be a driver API that gets these port numbers out and
-> > constructs a path to another struct device or struct device_node. I
-> > imagine that 90% of the time a driver is going to request some bandwidth
-> > from their master port (or ports) to the DDR controller. We could either
-> > make the DDR controller a device that can be globally acquired or
-> > integrate it deeply into the API to the point that it looks for a DDR
-> > controller somewhere or relies on interconnect providers to tell the
-> > framework about the controller.
-> >=20
-> > TL;DR is that I don't want to have to specify paths in each and every
-> > node to say that some port on this device here is connected to some port
-> > on the DDR controller and that we want to adjust the bandwidth or QoS
-> > across this path. I'd like to describe a device "hermetically" by
-> > listing out the ports the device has. Then we can rely on the OS to
-> > figure out what paths to construct and change. If we need to constrain
-> > or tweak those paths then we can do that with the existing interconnects
-> > binding, but let's worry about that when we get there.
->=20
-> I think I understand what you are trying to do here. Correct me if my
-> understanding is wrong. Each device just lists what interconnects (and th=
-eir
-> ports) it's connected to -- let's call this device endpoints.
+On Mon, Oct 14, 2019 at 08:15:47AM +0200, Oleksij Rempel wrote:
+> Atheros AR9331 has built-in 5 port switch. The switch can be configured
+> to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
+> ethernet controller or to be used directly by the switch over second ethernet
+> controller.
 
-Yes this is the ideal case.
+Hi Oleksij
 
->=20
-> If a device is making bandwidth votes from itself to some other device, i=
-t just
-> specifies the other end point (as a device? path name?) in icc_get(). The
-> interconnect framework can then figure out what two interconnect ports the
-> icc_get() is about (by looking at the device endpoints info) and then con=
-struct
-> the path.
->=20
-> But it's not clear how you'll handle the case where a Device-A wants to m=
-ake a
-> bandwidth vote from a Device-B to Device-C. This is necessary for multiple
-> scenarios. Eg: booting a remote proc where the CPU needs to make sure the
-> remote proc has its path to DDR active. icc_get() can't always assume the
-> source is the device making the request. So, I don't think you can omit t=
-he
-> source of the path in the DT binding.
+How exactly is this phy sharing controlled? I did not see anything in
+the driver. Is there a mux we need to set?
 
-This is one scenario, not various scenarios. For a remote proc why
-wouldn't we list the endpoint for the remote processor in the remote
-proc node in DT? That makes sense to me so I'm not following this
-scenario.
-
->=20
-> If we take the above into account, would the only change in your proposal=
- be to
-> list the source and destination device in DT instead of their interconnec=
-t and
-> ports?  I don't have a strong opinion on whether this is necessary, but w=
-ant to
-> make sure that we are all talking about the same thing.
-
-What does this mean? I would assume that if device A is using another
-device B, either that would be expressed in DT via a phandle property or
-userspace would be connecting the two devices up with each other with
-something like dma_buf so the driver would know the other side of the
-path they want to scale bandwidth on.
-
->=20
-> Another way to look at this: There's one crucial difference between clock=
-s and
-> interconnects. Given a clock controller and it's "output port", the clock=
- that
-> you referring to doesn't change irrespective of what device is asking for=
- it.
-> But in the case of an interconnect, if you specify just a destination
-> interconnect and it's port, the path that you are referring to changes ba=
-sed on
-> which device is requesting it. And if you want a device independent of
-> referring to a path, you need to specify the source and destination expli=
-citly.
-
-Yes but those are use-cases that don't need to be expressed in DT. We
-should be able to get by with just listing the endpoints and then build
-the layer in the kernel to get the other side of the endpoint if it's
-something like DDR or another device that we want to connect the
-endpoint to.
-
->=20
-> Also, if a firmware isn't used, how do you see your icc_get() proposal wo=
-rking
-> with just the "name"? In what way is it better than the current icc_get()=
- API?
-
-If there isn't firmware and we're using platform data then I imagine we
-would have to have data tables listing out the endpoints of various
-devices, endpoint names, and the device names associated with those
-endpoints so we could match them up in the framework.
-
+    Andrew
