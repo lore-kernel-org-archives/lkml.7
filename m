@@ -2,216 +2,159 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9641ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0934ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965712082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:06:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXI1+nMF"
+	by mail.kernel.org (Postfix) with ESMTP id C7FBB2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389343AbfJPHGl (ORCPT
+        id S2389453AbfJPHHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:06:41 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41636 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387777AbfJPHGl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:06:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p4so10773408wrm.8;
-        Wed, 16 Oct 2019 00:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fy0Igawx+eGgGntcbgCob/Oi3WyPHOBuVYeVnj6J198=;
-        b=lXI1+nMFTpbZQCJE2YZmWssTNO/Cd6w7JlpW5EEU5S+fG64Xs+A4c/IIfvcBUYfkR8
-         HBbHuB8GjnQffMSBUl/lDHqdvIzYd1rTCG7mz1SoEJlnWURct9NLPukqgib9FBt1qtHw
-         uaFnTc8mWZvLN/Z93b/L6QW7g7UV6/e9cRdDk10om+BoqCNOjYazgs4jTexpdI7oW4w0
-         w+ZUh+qUVpI9Z+bmlXOi+5iDGjdGBQfWgYXHeRKWH/r7uPnci16jcYE0+yzCBJe4mzd0
-         TNPfsWOY2wVuKUprhPysbFhcXZfY4MZYQz9I4nQZqaG/BcyOpkC7AZGfmxCu8NzG5yTc
-         D5Aw==
+        Wed, 16 Oct 2019 03:07:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59028 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389242AbfJPHHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:07:41 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 227348666C
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:07:41 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id o10so11265408wrm.22
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:07:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fy0Igawx+eGgGntcbgCob/Oi3WyPHOBuVYeVnj6J198=;
-        b=C/L3mi8+ZlCiaGrHhSMke+7RozeiAkppJYObEv0akrvHGCxW+aVznUsW8dByivOBlq
-         +/27VHeJPNOPeJqhSjpEf+wr3Z5qeh7xvPc0G4ECdWebHCLx8icoPSQXemI/dBLQmtRW
-         JKqEnZck9nUrkEpLgdJtRWKobUxd0ZIbWFdwskcw1RdnuQn8JLrz2lJa4e5facx6cgRr
-         YwF4Ujszwg+LOou5SHdrMlihbPq5xj+9p7LvaTa4OsWMyIlJXjY9TZh4A7KW5AjJmYkt
-         51JAIj4AEaFKFi6wvr94X39MORhAXLs7ZBQbHTRNm9lEw9Wz/x/vMIa7/2SjpHHFmFEl
-         ncVg==
-X-Gm-Message-State: APjAAAWbyyLhhVZsDIg1iafLvRl7bdGXlt00a+u7iarA0eXAiCeOfm+e
-        oPoqOhK9Ojiao2dJCmgZw/Gi5jCp
-X-Google-Smtp-Source: APXvYqw6N0t13E+81VszyfgVqlQlypn9E08dVdeUj2+xS1aYERza5WnnIUhPE6yvc0WBX33f37mjCg==
-X-Received: by 2002:adf:cd8d:: with SMTP id q13mr1298032wrj.103.1571209597634;
-        Wed, 16 Oct 2019 00:06:37 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id n22sm1531230wmk.19.2019.10.16.00.06.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 00:06:36 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 09:06:35 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
-        alexandre.torgue@st.com, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 3/3] pwm: stm32: add power management support
-Message-ID: <20191016070635.GC1296874@ulmo>
-References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
- <1570193633-6600-4-git-send-email-fabrice.gasnier@st.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N+9zhD6sQkjtyZn9LozIr63oV0xoTG40KqwCVlYDKHM=;
+        b=D9zr6l7JKbNusCi5zgJ6K9cD5+HgDlLIiUwtty+qEaLktej6uX/rdRwS7SYpYuoe8c
+         VC4dX12QmSSdlKjqaWuI0G6XNzyOzInedRseiEofEYjGz3me7CTCmQm4+x6aLNoEqqkd
+         9p+9bbEC6NknomSBB5EOtUsevqA6cltDa+I2F4SdiYCpGaS+/TveAwSDNoeBed3G+5+V
+         ZIfvFppKp3Xm9lR9sFwOqQhtFVe9ZhSjejSJQAKt8GshqGO/uJT2Z0zQxUhuY70saP1A
+         +fJ6vW+goGJ2xVynbsn9R2BCIbYRSTXewaxxlHhCm9f5p6sVWtuLMfz3zf833IDaYOGu
+         GHfw==
+X-Gm-Message-State: APjAAAWZeH6QhqsDkFhYTskJZhgkiFz1el/0U6E49nO6GaD1ZYiKBJxh
+        MXnP9ub2wQ/7tl7K1U9qWvUg0fxG/NYuzM139CyZ9sVHB2XXcIDESfIq9bkHx8dEYFql025boIE
+        +03JpFd8qVgOrSxBFbiiRPOJz
+X-Received: by 2002:adf:8295:: with SMTP id 21mr1239232wrc.14.1571209659471;
+        Wed, 16 Oct 2019 00:07:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxoZ2u9pyRAua6Ul/ChncLAqQBC2pUX3xcLpP8/GnoCUcKnPgyeub7C/seFKjjOj2y3m+oRsg==
+X-Received: by 2002:adf:8295:: with SMTP id 21mr1239207wrc.14.1571209659089;
+        Wed, 16 Oct 2019 00:07:39 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ddc7:c53c:581a:7f3e? ([2001:b07:6468:f312:ddc7:c53c:581a:7f3e])
+        by smtp.gmail.com with ESMTPSA id a9sm2047772wmf.14.2019.10.16.00.07.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 00:07:38 -0700 (PDT)
+Subject: Re: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from
+ vmx.c exit handlers
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
+ <20190928172323.14663-13-aarcange@redhat.com>
+ <933ca564-973d-645e-fe9c-9afb64edba5b@redhat.com>
+ <20191015164952.GE331@redhat.com>
+ <870aaaf3-7a52-f91a-c5f3-fd3c7276a5d9@redhat.com>
+ <20191015203516.GF331@redhat.com>
+ <f375049a-6a45-c0df-a377-66418c8eb7e8@redhat.com>
+ <20191015234229.GC6487@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <27cc0d6b-6bd7-fcaf-10b4-37bb566871f8@redhat.com>
+Date:   Wed, 16 Oct 2019 09:07:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
-Content-Disposition: inline
-In-Reply-To: <1570193633-6600-4-git-send-email-fabrice.gasnier@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191015234229.GC6487@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 16/10/19 01:42, Andrea Arcangeli wrote:
+> On Wed, Oct 16, 2019 at 12:22:31AM +0200, Paolo Bonzini wrote:
+>> Oh come on.  0.9 is not 12-years old.  virtio 1.0 is 3.5 years old
+>> (March 2016).  Anything older than 2017 is going to use 0.9.
+> 
+> Sorry if I got the date wrong, but still I don't see the point in
+> optimizing for legacy virtio. I can't justify forcing everyone to
+> execute that additional branch for inb/outb, in the attempt to make
+> legacy virtio faster that nobody should use in combination with
+> bleeding edge KVM in the host.
 
---QRj9sO5tAVLaXnSD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yet you would add CPUID to the list even though it is not even there in
+your benchmarks, and is *never* invoked in a hot path by *any* sane
+program? Some OSes have never gotten virtio 1.0 drivers.  OpenBSD only
+got it earlier this year.
 
-On Fri, Oct 04, 2019 at 02:53:53PM +0200, Fabrice Gasnier wrote:
-> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
-> channel isn't active. Let the PWM consumers disable it during their own
-> suspend sequence, see [1]. So, perform a check here, and handle the
-> pinctrl states. Also restore the break inputs upon resume, as registers
-> content may be lost when going to low power mode.
->=20
-> [1] https://lkml.org/lkml/2019/2/5/770
->=20
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
-> Changes in v2:
-> Follow Uwe suggestions/remarks:
-> - Add a precursor patch to ease reviewing
-> - Use registers read instead of pwm_get_state
-> - Add a comment to mention registers content may be lost in low power mode
-> ---
->  drivers/pwm/pwm-stm32.c | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+>> Your tables give:
+>>
+>> 	Samples	  Samples%  Time%     Min Time  Max time       Avg time
+>> HLT     101128    75.33%    99.66%    0.43us    901000.66us    310.88us
+>> HLT     118474    19.11%    95.88%    0.33us    707693.05us    43.56us
+>>
+>> If "avg time" means the average time to serve an HLT vmexit, I don't
+>> understand how you can have an average time of 0.3ms (1/3000th of a
+>> second) and 100000 samples per second.  Can you explain that to me?
+> 
+> I described it wrong, the bpftrace record was a sleep 5, not a sleep
+> 1. The pipe loop was sure a sleep 1.
 
-Applied, thanks. I made two minor changes, though, see below.
+It still doesn't add up.  0.3ms / 5 is 1/15000th of a second; 43us is
+1/25000th of a second.  Do you have multiple vCPU perhaps?
 
->=20
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index cf8658c..546b661 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -12,6 +12,7 @@
->  #include <linux/mfd/stm32-timers.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
-> =20
-> @@ -655,6 +656,42 @@ static int stm32_pwm_remove(struct platform_device *=
-pdev)
->  	return 0;
->  }
-> =20
-> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
-> +{
-> +	struct stm32_pwm *priv =3D dev_get_drvdata(dev);
-> +	unsigned int ch;
+> The issue is that in production you get a flood more of those with
+> hundred of CPUs, so the exact number doesn't move the needle.
+> This just needs to be frequent enough that the branch cost pay itself off,
+> but the sure thing is that HLT vmexit will not go away unless you execute
+> mwait in guest mode by isolating the CPU in the host.
 
-I renamed this to just "i", which is more idiomatic for loop variables.
-The function is small enough not to need to differentiate between loop
-variables.
+The number of vmexits doesn't count (for HLT).  What counts is how long
+they take to be serviced, and as long as it's 1us or more the
+optimization is pointless.
 
-> +	u32 ccer, mask;
-> +
-> +	/* Look for active channels */
-> +	ccer =3D active_channels(priv);
-> +
-> +	for (ch =3D 0; ch < priv->chip.npwm; ch++) {
-> +		mask =3D TIM_CCER_CC1E << (ch * 4);
-> +		if (ccer & mask) {
-> +			dev_err(dev, "The consumer didn't stop us (%s)\n",
-> +				priv->chip.pwms[ch].label);
+Consider these pictures
 
-Changed this to:
+         w/o optimization                   with optimization
+         ----------------------             -------------------------
+0us      vmexit                             vmexit
+500ns    retpoline                          call vmexit handler directly
+600ns    retpoline                          kvm_vcpu_check_block()
+700ns    retpoline                          kvm_vcpu_check_block()
+800ns    kvm_vcpu_check_block()             kvm_vcpu_check_block()
+900ns    kvm_vcpu_check_block()             kvm_vcpu_check_block()
+...
+39900ns  kvm_vcpu_check_block()             kvm_vcpu_check_block()
 
-	"PWM %u still in use by consumer %s\n", i, priv->chip.pwms[i].label
+                            <interrupt arrives>
 
-I think that might help clarify which PWM is still enabled in case the
-consumers don't set a label.
+40000ns  kvm_vcpu_check_block()             kvm_vcpu_check_block()
 
-Thierry
 
-> +			return -EBUSY;
-> +		}
-> +	}
-> +
-> +	return pinctrl_pm_select_sleep_state(dev);
-> +}
-> +
-> +static int __maybe_unused stm32_pwm_resume(struct device *dev)
-> +{
-> +	struct stm32_pwm *priv =3D dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret =3D pinctrl_pm_select_default_state(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* restore breakinput registers that may have been lost in low power */
-> +	return stm32_pwm_apply_breakinputs(priv);
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_=
-resume);
-> +
->  static const struct of_device_id stm32_pwm_of_match[] =3D {
->  	{ .compatible =3D "st,stm32-pwm",	},
->  	{ /* end node */ },
-> @@ -667,6 +704,7 @@ static struct platform_driver stm32_pwm_driver =3D {
->  	.driver	=3D {
->  		.name =3D "stm32-pwm",
->  		.of_match_table =3D stm32_pwm_of_match,
-> +		.pm =3D &stm32_pwm_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_pwm_driver);
-> --=20
-> 2.7.4
->=20
+Unless the interrupt arrives exactly in the few nanoseconds that it
+takes to execute the retpoline, a direct handling of HLT vmexits makes
+*absolutely no difference*.
 
---QRj9sO5tAVLaXnSD
-Content-Type: application/pgp-signature; name="signature.asc"
+>> Again: what is the real workload that does thousands of CPUIDs per second?
+> 
+> None, but there are always background CPUID vmexits while there are
+> never inb/outb vmexits.
+> 
+> So the cpuid retpoline removal has a slight chance to pay for the cost
+> of the branch, the inb/outb retpoline removal cannot pay off the cost
+> of the branch.
 
------BEGIN PGP SIGNATURE-----
+Please stop considering only the exact configuration of your benchmarks.
+ There are known, valid configurations where outb is a very hot vmexit.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2mwXsACgkQ3SOs138+
-s6GqmQ//aMbyiuKupfEKiM3NlzeTFHoXGDg+k4W+S9nTP9R1XcCo+LUn9otYurGO
-f44vih/M5jOuxA1RJ3w3Ji1fFOLD4/QXpTCN1nf+E1U0E/wo8HuPjpPJsZGj3vEJ
-YeLxDNmpVe/VID1GKuyACOChqCI0dSvMmZYqbKMSSRhUVNmfja/FnubM6iCQ8xzY
-qqUDkr4R1OCc4EjB9h5L+uBb+vy6iwGxEIZZNuMn3khiVvNTZpiI0D5qGLC0eVLM
-3pDe6BTs/B7sI6OgQ2EJjqne9CbYXT3j/ANty3k4NcPXnMZ2nJT+8anoczxo2ZwB
-zyA5SzMctvcCHNpqrbAZLuOPERTA//X8BisEzJ9YRC1WjKuvJ9ykyXWWtcEnYdyr
-JeS6NNslrxDC1Fl4mrJV4rEJqm01giH2Pz1J0+8FAYYiga9QYQoYqjjxos6NSxde
-PcruGHt6xLWd647jwNGDrrG1G8gz+7xUEVpyHD8xSVXsNZ41Rst3WSkmwmu0vr4Y
-S7y5ylK/O9SW9p3yhyVuQPCc0rk/Mgln4BnOj8jq0FQDNVFosnC0eKX3tI8/CWlB
-Mpe9Rc7W4v3Hr7GBXoNqbNx4Uudfg7exBCc0pk2LFrobvyyjy+1vmKPtW6HnH4k3
-S6h+dAMVH0QFmOimR8+QXtzTSUQ3ik96+Na4q+C44ozzuX/EBNs=
-=+BC6
------END PGP SIGNATURE-----
+Thanks,
 
---QRj9sO5tAVLaXnSD--
+Paolo
