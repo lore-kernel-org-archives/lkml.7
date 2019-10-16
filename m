@@ -2,108 +2,134 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5D4FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F5FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E2C218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BFF21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNl4Wp0o"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="t2WIQRuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405713AbfJPOkO (ORCPT
+        id S2405737AbfJPOkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:40:14 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44617 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405214AbfJPOkN (ORCPT
+        Wed, 16 Oct 2019 10:40:24 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38954 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405214AbfJPOkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:40:13 -0400
-Received: by mail-il1-f194.google.com with SMTP id f13so2847133ils.11;
-        Wed, 16 Oct 2019 07:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=F4KpRCphtdIQOih7zA7wyNTEii8fpVd38VbpBCCqits=;
-        b=KNl4Wp0os/zfSE3mGGHwH9H7k7l1az689glcED+KLLYDXtO/JI84rorQIkEFCNvBM1
-         BZn2wtF3XK/9iypI7FJfCUBSop+/2Fe6+lclKR6EQsOKUscTMEjxo61WmTLOuOgAI2s1
-         vNs+hfaV+fe2b0ZmHMSkUu3dfEnv/cctrdyAqBuAZvh6k7YLCaX36KvmgL1oM7IMgOWv
-         8Wi9QrnN3/FX8+rEcbBvg9rWyQZfZ6/yZNGWU8VTE88r2V3Wg8qPtqvT6/Z1jp5R8OOe
-         Uj1NIR3YG1fNvMmMw8ZjMWJjKN73M4mNuqW51ejK83aBHFPfH64Jpz11y/+/ho6rSvxH
-         3qzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=F4KpRCphtdIQOih7zA7wyNTEii8fpVd38VbpBCCqits=;
-        b=WJBzX2kJhopeqDj7uJuIUNZnLxlecLbnISdK3EmaqRZtDncHfGE7Aej901ZqROipLX
-         g7lQom0u5XiFE8qdrd+1CCPOmAQhJR7Xoe5uKuUVTvgqL6JmVIldDL+AtK0d1U6lXBu7
-         aOw15PCuIZFm7UhtU/ZCARycEW+mAIcI8bXilldW0tLuFub2Z3uK7cd0NcND1U4B41tk
-         my9lx5z6ymikjvLxwmltmS+EjK+t61q0AcBXo/H1cWgweml3OjpFXVqE6fFmR50LxyIF
-         jvA8VeC5nJ/Y10keWToUYtqW9r8Q7QsnZaOqXjlEU8f3Vap6G0qPAqgl93tVY4HpPqM/
-         Vz8A==
-X-Gm-Message-State: APjAAAUOn2L8sUJOCqnRBpfWYHGFNHhECT2Q9Q/5ANgy33FrmzBQG3+C
-        yTGs4LUGT4y+nl2vqRIGduI=
-X-Google-Smtp-Source: APXvYqzVFOp47e5GYuEKGNzZtGyGxBnqHwcB6U9SdRarISkIvacLzPBtNUL4zKSI4DDp1UtHN9TuEg==
-X-Received: by 2002:a92:b314:: with SMTP id p20mr12316552ilh.80.1571236812822;
-        Wed, 16 Oct 2019 07:40:12 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id d197sm19160630iog.15.2019.10.16.07.40.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 07:40:12 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
-        stable <stable@vger.kernel.org>,
+        Wed, 16 Oct 2019 10:40:23 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 34F3C9F4;
+        Wed, 16 Oct 2019 16:40:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571236821;
+        bh=Ix3XoJ8c2YHEbbRw/h23s9VQOlN2/0+X/ZG7Iozx4OM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t2WIQRuEIMiyqAfhI9K8seGMZLbuogVv7sRdQ7WqmidxqES1u0zjmgqsIAcvtNU0X
+         7hOxXRHo7DR3i+oByIuV5RL8j6//k0NHBiGcO2C9kzqa9jMY4EOZznm/CB7A/E20Et
+         OKbsxfLMRm3Payf72G5DnLmaBjHgn8ddDYDVKxHs=
+Date:   Wed, 16 Oct 2019 17:40:18 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: imx6-logicpd: Re-enable SNVS power key
-Date:   Wed, 16 Oct 2019 09:40:05 -0500
-Message-Id: <20191016144005.9863-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 2/3] dt-bindings: Add Logic PD Type 28 display panel
+Message-ID: <20191016144018.GG5175@pendragon.ideasonboard.com>
+References: <20191016135147.7743-1-aford173@gmail.com>
+ <20191016135147.7743-2-aford173@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191016135147.7743-2-aford173@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The baseboard of the Logic PD i.MX6 development kit has a power
-button routed which can both power down and power up the board.
-It can also wake the board from sleep.  This functionality was
-marked as disabled by default in imx6qdl.dtsi, so it needs to
-be explicitly enabled for each board.
+Hi Adam,
 
-This patch enables the snvs power key again.
-Fixes: 770856f0da5d ("ARM: dts: imx6qdl: Enable SNVS power key according to board design")
+Thank you for the patch.
 
-Cc: stable <stable@vger.kernel.org> #5.3+
-Signed-off-by: Adam Ford <aford173@gmail.com>
+On Wed, Oct 16, 2019 at 08:51:46AM -0500, Adam Ford wrote:
+> This patch adds documentation of device tree bindings for the WVGA panel
+> Logic PD Type 28 display.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> V5:  Replace GPIO_ACTIVE_HIGH with 0 to fix make dt_binding_check -k
+> V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
+> V3:  Correct build errors from 'make dt_binding_check'
+> V2:  Use YAML instead of TXT for binding
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> new file mode 100644
+> index 000000000000..2834287b8d88
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> +
+> +maintainers:
+> +  - Adam Ford <aford173@gmail.com>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: logicpd,type28
+> +
+> +  power-supply: true
+> +  enable-gpios: true
+> +  backlight: true
+> +  port: true
+> +
+> +required:
+> +  - compatible
 
-diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-index 2a6ce87071f9..9e027b9a5f91 100644
---- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-@@ -328,6 +328,10 @@
- 	pinctrl-0 = <&pinctrl_pwm3>;
- };
- 
-+&snvs_pwrkey {
-+	status = "okay";
-+};
-+
- &ssi2 {
- 	status = "okay";
- };
+Should the port be required too ? Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    lcd0: display {
+> +      compatible = "logicpd,type28";
+> +      enable-gpios = <&gpio5 27 0>;
+> +      backlight = <&backlight>;
+> +      port {
+> +        lcd_in: endpoint {
+> +          remote-endpoint = <&dpi_out>;
+> +        };
+> +      };
+> +    };
+> +
+> +...
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
