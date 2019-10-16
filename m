@@ -2,59 +2,67 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B20C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E9FECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DADD20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796A520854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388791AbfJPHbj (ORCPT
+        id S2388913AbfJPHbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:31:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48468 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388737AbfJPHbj (ORCPT
+        Wed, 16 Oct 2019 03:31:46 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:38633 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388737AbfJPHbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:31:39 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iKdmO-0007Nm-2r; Wed, 16 Oct 2019 09:31:32 +0200
-Date:   Wed, 16 Oct 2019 09:31:32 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 26/34] Documentation/RCU: Use CONFIG_PREEMPTION where
- appropriate
-Message-ID: <20191016073131.b35nfcc3vzbm2pfk@linutronix.de>
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-27-bigeasy@linutronix.de>
- <20191016041330.GF2689@paulmck-ThinkPad-P72>
+        Wed, 16 Oct 2019 03:31:46 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.173])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKdmZ-0006Sq-Th; Wed, 16 Oct 2019 08:31:44 +0100
+Subject: Re: [PATCH] PCI: sysfs: remove pci_bridge_groups and pcie_dev_groups
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015140059.18660-1-ben.dooks@codethink.co.uk>
+ <20191016062831.GB6537@infradead.org>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <5e7cae3e-399a-523b-2c54-fbecaefb81bf@codethink.co.uk>
+Date:   Wed, 16 Oct 2019 08:31:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191016041330.GF2689@paulmck-ThinkPad-P72>
+In-Reply-To: <20191016062831.GB6537@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-15 21:13:30 [-0700], Paul E. McKenney wrote:
-> Sadly, this one ran afoul of the .txt-to-.rst migration.  Even applying
-> it against linus/master and cherry-picking it does not help.  I will
-> defer it for the moment -- perhaps Mauro or Joel have some advice.
+On 16/10/2019 07:28, Christoph Hellwig wrote:
+> On Tue, Oct 15, 2019 at 03:00:59PM +0100, Ben Dooks wrote:
+>> The pci_bridge_groups and pcie_dev_groups objects are
+>> not exported and not used at-all, so remove them to
+>> fix the following warnings from sparse:
+>>
+>> drivers/pci/pci-sysfs.c:1546:30: warning: symbol 'pci_bridge_groups' was not declared. Should it be static?
+>> drivers/pci/pci-sysfs.c:1555:30: warning: symbol 'pcie_dev_groups' was not declared. Should it be static?
+> 
+> But now pci_bridge_group is unused, and if you remove that the
+> attributes, etc..
 
-Don't worry about it then. Just point me to the tree once it is done.
+Hmm, didn't get a warning for that. I'll go check.
 
-> 							Thanx, Paul
 
-Sebastian
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
