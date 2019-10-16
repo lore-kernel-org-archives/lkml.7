@@ -2,60 +2,67 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB9CFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C394DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71502067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA472067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h++Z7vtj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OSTCyjFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406011AbfJPQAq (ORCPT
+        id S2406021AbfJPQAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:00:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41828 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405941AbfJPQAg (ORCPT
+        Wed, 16 Oct 2019 12:00:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48488 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405996AbfJPQAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:00:36 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0UxZ026495;
-        Wed, 16 Oct 2019 11:00:30 -0500
+        Wed, 16 Oct 2019 12:00:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0WGs045904;
+        Wed, 16 Oct 2019 11:00:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571241630;
-        bh=0CPOm8eM1uD8XbD6J4VdzkHXSOBHZ4mtmjsY/tl59e8=;
+        s=ti-com-17Q1; t=1571241632;
+        bh=EJK//JMShkFomcxIL7CoEODYJVjSFbKnvbLo+tDSL6s=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=h++Z7vtjGfutCIRX6YXqnfh5f4ZtJkTnX9cFN4sitrFze93gjMvQ2kjXYWYR6Ugoy
-         pSvinmmC1pFmJocfWFesnKMCJCW93LppHjHZARL+h97ucgNsth2TFmFDTW34zpNKDR
-         U6eIEt90XQdYgGU/W8zcjMvcs4fzGbasGMOQLKnw=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GG0U43053355
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 11:00:30 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        b=OSTCyjFAVfALAh0iC6Ya7BpiiXn9qsZe0z2kxu8EEeamZxX/aYjyahVYPcRLa1JKb
+         rscB76Ixwh+gN5X+CSM3DnUcNEI5O/Leh7S3nVHP7Y8uojVazbusrCOye/qEHoc00F
+         6P1iZDbY0JUh6sfqnPV9qrT4jlwKcBMIHyKdvEws=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0Wcp083043;
+        Wed, 16 Oct 2019 11:00:32 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 11:00:30 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 11:00:25 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 11:00:30 -0500
+ Frontend Transport; Wed, 16 Oct 2019 11:00:32 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0Uom043126;
-        Wed, 16 Oct 2019 11:00:30 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0W4N061798;
+        Wed, 16 Oct 2019 11:00:32 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Subject: [PATCH v13 09/18] ARM: dts: n900: Add reg property to the LP5523 channel node
-Date:   Wed, 16 Oct 2019 10:59:45 -0500
-Message-ID: <20191016155954.29044-10-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v13 18/18] dt: bindings: Update lp55xx binding to recommended LED naming
+Date:   Wed, 16 Oct 2019 10:59:54 -0500
+Message-ID: <20191016155954.29044-19-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191016155954.29044-1-dmurphy@ti.com>
 References: <20191016155954.29044-1-dmurphy@ti.com>
@@ -68,109 +75,264 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accomodate the multicolor framework.  In addition to the
-accomodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+Update the LP55xx DT binding examples to the recommended node
+naming convention.  There are no changes to the DT properties.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Rob Herring <robh+dt@kernel.org>
 CC: Tony Lindgren <tony@atomide.com>
 CC: "Benoît Cousson" <bcousson@baylibre.com>
-
-k# interactive rebase in progress; onto ae89cc6d4a8c
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- arch/arm/boot/dts/omap3-n900.dts | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 58 +++++++++----------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 84a5ade1e865..643f35619246 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -607,63 +607,74 @@
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+index 0ccc1efc2499..5475f45ef51f 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+@@ -48,7 +48,7 @@ example 1) LP5521
+ 'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
+ on channel 0.
+ 
+-lp5521@32 {
++led-controller@32 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "national,lp5521";
+@@ -56,20 +56,20 @@ lp5521@32 {
+ 	label = "lp5521_pri";
+ 	clock-mode = /bits/ 8 <2>;
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		led-cur = /bits/ 8 <0x2f>;
+ 		max-cur = /bits/ 8 <0x5f>;
+ 		linux,default-trigger = "heartbeat";
  	};
  
- 	lp5523: lp5523@32 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		compatible = "national,lp5523";
- 		reg = <0x32>;
- 		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
- 		enable-gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>; /* 41 */
- 
--		chan0 {
-+		chan@0 {
- 			chan-name = "lp5523:kb1";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <0>;
- 		};
- 
--		chan1 {
-+		chan@1 {
- 			chan-name = "lp5523:kb2";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <1>;
- 		};
- 
--		chan2 {
-+		chan@2 {
- 			chan-name = "lp5523:kb3";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <2>;
- 		};
- 
--		chan3 {
-+		chan@3 {
- 			chan-name = "lp5523:kb4";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <3>;
- 		};
- 
--		chan4 {
-+		chan@4 {
- 			chan-name = "lp5523:b";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <4>;
- 		};
- 
--		chan5 {
-+		chan@5 {
- 			chan-name = "lp5523:g";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <5>;
- 		};
- 
--		chan6 {
-+		chan@6 {
- 			chan-name = "lp5523:r";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <6>;
- 		};
- 
--		chan7 {
-+		chan@7 {
- 			chan-name = "lp5523:kb5";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <7>;
- 		};
- 
--		chan8 {
-+		chan@8 {
- 			chan-name = "lp5523:kb6";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <8>;
- 		};
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		led-cur = /bits/ 8 <0x2f>;
+ 		max-cur = /bits/ 8 <0x5f>;
  	};
  
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		led-cur = /bits/ 8 <0x2f>;
+ 		max-cur = /bits/ 8 <0x5f>;
+@@ -88,70 +88,70 @@ ASEL1    ASEL0    Address
+  VEN      GND       34h
+  VEN      VEN       35h
+ 
+-lp5523@32 {
++led-controller@32 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "national,lp5523";
+ 	reg = <0x32>;
+ 	clock-mode = /bits/ 8 <1>;
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		chan-name = "d1";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		chan-name = "d2";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		chan-name = "d3";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@3 {
++	led@3 {
+ 		reg = <3>;
+ 		chan-name = "d4";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@4 {
++	led@4 {
+ 		reg = <4>;
+ 		chan-name = "d5";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@5 {
++	led@5 {
+ 		reg = <5>;
+ 		chan-name = "d6";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@6 {
++	led@6 {
+ 		reg = <6>;
+ 		chan-name = "d7";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@7 {
++	led@7 {
+ 		reg = <7>;
+ 		chan-name = "d8";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@8 {
++	led@8 {
+ 		reg = <8>;
+ 		chan-name = "d9";
+ 		led-cur = /bits/ 8 <0x14>;
+@@ -162,35 +162,35 @@ lp5523@32 {
+ example 3) LP5562
+ 4 channels are defined.
+ 
+-lp5562@30 {
++led-controller@30 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "ti,lp5562";
+ 	reg = <0x30>;
+ 	clock-mode = /bits/8 <2>;
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		chan-name = "R";
+ 		led-cur = /bits/ 8 <0x20>;
+ 		max-cur = /bits/ 8 <0x60>;
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		chan-name = "G";
+ 		led-cur = /bits/ 8 <0x20>;
+ 		max-cur = /bits/ 8 <0x60>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		chan-name = "B";
+ 		led-cur = /bits/ 8 <0x20>;
+ 		max-cur = /bits/ 8 <0x60>;
+ 	};
+ 
+-	chan@3 {
++	led@3 {
+ 		reg = <3>;
+ 		chan-name = "W";
+ 		led-cur = /bits/ 8 <0x20>;
+@@ -202,7 +202,7 @@ example 4) LP8501
+ 9 channels are defined. The 'pwr-sel' is LP8501 specific property.
+ Others are same as LP5523.
+ 
+-lp8501@32 {
++led-controller@32 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "ti,lp8501";
+@@ -210,63 +210,63 @@ lp8501@32 {
+ 	clock-mode = /bits/ 8 <2>;
+ 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		chan-name = "d1";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		chan-name = "d2";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		chan-name = "d3";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@3 {
++	led@3 {
+ 		reg = <3>;
+ 		chan-name = "d4";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@4 {
++	led@4 {
+ 		reg = <4>;
+ 		chan-name = "d5";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@5 {
++	led@5 {
+ 		reg = <5>;
+ 		chan-name = "d6";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@6 {
++	led@6 {
+ 		reg = <6>;
+ 		chan-name = "d7";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@7 {
++	led@7 {
+ 		reg = <7>;
+ 		chan-name = "d8";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@8 {
++	led@8 {
+ 		reg = <8>;
+ 		chan-name = "d9";
+ 		led-cur = /bits/ 8 <0x14>;
 -- 
 2.22.0.214.g8dca754b1e
 
