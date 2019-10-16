@@ -6,143 +6,85 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B20C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38BDC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B0720650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DCF20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbfJPG4A (ORCPT
+        id S1732678AbfJPG5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:56:00 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:50462 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbfJPG4A (ORCPT
+        Wed, 16 Oct 2019 02:57:23 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40462 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731974AbfJPG5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:56:00 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x9G6trgN044342;
-        Wed, 16 Oct 2019 14:55:53 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 0FAB2E5F2E903446FFBA;
-        Wed, 16 Oct 2019 14:55:53 +0800 (CST)
-In-Reply-To: <20191015095637.142e6db7@xps13>
-References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw> <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
-        <20191007104501.1b4ed8ed@xps13> <OF147D635A.8968CD6B-ON4825848D.00088AD5-4825848D.000B9D06@mxic.com.tw>
-        <20191008092832.54492696@dhcp-172-31-174-146.wireless.concordia.ca>     <OF6D5429CF.876DE422-ON48258494.000D641F-48258494.000E0D4C@mxic.com.tw> <20191015095637.142e6db7@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org,
-        "Boris Brezillon" <boris.brezillon@collabora.com>,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        frieder.schrempf@kontron.de, gregkh@linuxfoundation.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marcel.ziswiler@toradex.com,
-        marek.vasut@gmail.com, richard@nod.at, tglx@linutronix.de,
-        vigneshr@ti.com
-Subject: Re: [PATCH RFC 3/3] mtd: rawnand: Add support Macronix power down mode
+        Wed, 16 Oct 2019 02:57:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id y39so19204976ota.7
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 23:57:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jn51E7CHg9BRoH5fZ6ikubNN+LcIafO+PMv/rB0cfpU=;
+        b=HKQUF3zkCddkQqSr5Dw7p7n7obOxPQbm1qTVEkdRpn8892ye5SC7RyQWjTdreZZLXn
+         HOb5aCIoPGmqbh72DA7dQy9PgP3KlmtDIK5lSDgYfCpE36Rlhzc026s4WUNb19zL8Qal
+         vjUZqEvj1R+9vA/YxuAaXHDDTQ2GoOwbkvtD3tqQEUPXA56Fin/oXo/bY4rmqeK2kfBi
+         w8HVBUB8ygIFSjObeKqK3pWp2a3XhiIU2J6YNHsOWlYPXQqNBR57bQPZPy2+aCLFnUzD
+         5a8Z6IhwW2trnXM8le/6K9bIhTUl4gj2IMWgu7ZRxGdvZqsj1lFgVY5pWsimKHrP9Kw+
+         VkMQ==
+X-Gm-Message-State: APjAAAX4hWfVfgloSQydiIdWrCJJZDnW+fZKBA9kLjHxcrFf5wf+VckD
+        WhnjW8Mf448hgm8gAHoywTLScxasW4mjYWakbtp6fA==
+X-Google-Smtp-Source: APXvYqx51gV+Y1QjSyr2AoMzkZI/h34WOr04EycVqfWyQkbql2gypOJx+T1tGe3O65hZeX260JrIBONm5ZGvkT6F9cY=
+X-Received: by 2002:a9d:7345:: with SMTP id l5mr22858189otk.39.1571209042125;
+ Tue, 15 Oct 2019 23:57:22 -0700 (PDT)
 MIME-Version: 1.0
-X-KeepSent: 7A229151:50591C54-48258495:00249AAF;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF7A229151.50591C54-ON48258495.00249AAF-48258495.002612F1@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 16 Oct 2019 14:55:52 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/10/16 PM 02:55:53,
-        Serialize complete at 2019/10/16 PM 02:55:53
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x9G6trgN044342
+References: <20191008094006.8251-1-geert+renesas@glider.be>
+ <19c54ca5b3750bebc057e20542ad6c0c2acef960.camel@perches.com>
+ <CAMuHMdUYf=0RVeJhSqs9WUY4H+o9Jk8U+J6tUsnMjz7bgKpAxw@mail.gmail.com>
+ <f59c1ef48b64bcf97047df5952f8994f75c0cecf.camel@perches.com>
+ <CAMuHMdWvLbcGDG=VZDSAd=E-Bb_FEt9zvffpJu5nubMCKMZUZA@mail.gmail.com>
+ <CAMuHMdWZYOsJv1uQkOFRK2tZO+E8sSHEneUM-p+q5FyAmYZ9Fw@mail.gmail.com>
+ <fa4ce46605a81d660be73361a4fdd30240a6348e.camel@perches.com>
+ <CAMuHMdWSGzs7BHqeHC0W5qUEpYqJ8B3Os4wdY11JNzt5+xEaiQ@mail.gmail.com>
+ <e09057e0eefb221549ef9686826e2d190ef36a9c.camel@perches.com>
+ <CAMuHMdUvoQz7a7NmLHdpNjRnAUMdbqxFRvB2vdLhHj8pw4Z9Rw@mail.gmail.com> <70c9eaac3510bf8857338d82e14c7e3eded9faa9.camel@perches.com>
+In-Reply-To: <70c9eaac3510bf8857338d82e14c7e3eded9faa9.camel@perches.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 16 Oct 2019 08:57:10 +0200
+Message-ID: <CAMuHMdUBdhSVqpT4grtdKyHxoVEfJcoiTrVzau_kVeFoUw8zvg@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: use patch subject when reading from stdin
+To:     Joe Perches <joe@perches.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Joe,
 
-Hi Miquel,
+On Tue, Oct 15, 2019 at 7:24 PM Joe Perches <joe@perches.com> wrote:
+> On Tue, 2019-10-15 at 18:40 +0200, Geert Uytterhoeven wrote:
+> > The advantage of formail over git-mailsplit is that the former doesn't
+> > create a bunch of files that need to be stored in a temporary place,
+> > and cleant up afterwards.
+> > But hey, that can be handled in yet-another-script...
+>
+> Or yet-another-git-hook.
 
-> > 
-> > > > > > +   nand_select_target(chip, 0); 
-> > > > > 
-> > > > > On several NAND controllers there is no way to act on the CS 
-line
-> > > > > without actually writing bytes to the NAND chip. So basically 
-this
-> > > > > is very likely to not work. 
-> > > > 
-> > > > any other way to make it work ? GPIO ?
-> > > > or just have some comments description here.
-> > > > i.e,.
-> > > > 
-> > > > /* The NAND chip will exit the deep power down mode with #CS 
-toggling, 
-> > 
-> > > >  * please refer to datasheet for the timing requirement of tCRDP 
-and 
-> > tRDP.
-> > > >  */
-> > > > 
-> > > 
-> > > Good luck with that. As Miquel said, on most NAND controllers
-> > > select_target() is a dummy operation that just assigns 
-nand_chip->target
-> > > to the specified value but doesn't assert the CS line. You could 
-send a
-> > > dummy command here, like a READ_ID, but I guess you need CS to be
-> > > asserted for at least 20ns before asserting any other signals 
-(CLE/ALE)
-> > > which might be an issue. 
-> > 
-> > okay, got it.
-> > But if possible, I think adding CS line control in 
-nand_select_target()
-> > is a simple and generic way for MTD and all raw NAND controllers.
-> 
-> The problem is not that we do not want to; the problem is that
-> controllers are not capable of doing it reliably if no byte is sent
-> over the NAND bus.
+Too late: thou maintainer shall run checkpatch before  applying patches.
 
-okay,  it's kind of pity even though our raw NAND controller is capable of 
+Gr{oetje,eeting}s,
 
-doing it with no byte is sent over the NAND bus.
+                        Geert
 
-As you mentioned that other controllers are not capable of doing it 
-reliably 
-if no byte is sent over the NAND bus.
-if so, does it work by adding a NAND_OP_DUMMY_INSTR ? (as Boris's 
-comments)
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-thanks for your time & comments.
-
-Mason
-
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
