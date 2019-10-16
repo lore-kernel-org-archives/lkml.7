@@ -2,74 +2,155 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED5BC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC106C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A41E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3992067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:14:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Osi9UjzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfJPGMD (ORCPT
+        id S2387598AbfJPGOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:12:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49326 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfJPGMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:12:03 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 19CE03082B40;
-        Wed, 16 Oct 2019 06:12:03 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-43.ams2.redhat.com [10.36.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF2ED1001B03;
-        Wed, 16 Oct 2019 06:12:02 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id E371F11AB5; Wed, 16 Oct 2019 08:12:01 +0200 (CEST)
-Date:   Wed, 16 Oct 2019 08:12:01 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stevensd@chromium.org,
-        =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>,
-        Zach Reizner <zachr@chromium.org>,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Pawel Osciak <posciak@chromium.org>
-Subject: Re: [RFC PATCH] drm/virtio: Export resource handles via DMA-buf API
-Message-ID: <20191016061201.iinqjcw6trx5qztq@sirius.home.kraxel.org>
-References: <20190912094121.228435-1-tfiga@chromium.org>
- <20190917132305.GV3958@phenom.ffwll.local>
- <CAAFQd5ADmObo1yVnFGaWDU=DHF+tex3tWJxTZLkxv=EdGNNM7A@mail.gmail.com>
- <20191008100328.GN16989@phenom.ffwll.local>
- <CAAFQd5CR2YhyNoSv7=nUhPQ7Nap6n36DrtsCfqS+-iWydAqbNA@mail.gmail.com>
- <20191008150435.GO16989@phenom.ffwll.local>
- <CAAFQd5DhKn_2uSA=1JDSj0H98aT8X9UjxWaTBwZCDfOC7YR5Sg@mail.gmail.com>
+        Wed, 16 Oct 2019 02:14:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36806 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbfJPGOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 02:14:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id j11so10754764plk.3;
+        Tue, 15 Oct 2019 23:14:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ws1WO5M7d4Tu7v3DIlAQw4A7zpDh0cpMdpB6luxKIBI=;
+        b=Osi9UjzIp6AnYiGqmasdbgc5oOxivyhSWNSIf3W7tfZj0ClRj1FhZ7L+lMq+NUC0Y0
+         dxDuajpDijjUrD9vo3MR1Ebpd/4ePPEB478kGblDyugBx8Y6nJrRAxOcjIT3fiU5+Uvf
+         oxSo8GRRFjRWZLvqAh10cxG4D/5XoOcL47OP5stHgbVYqilMAI66Pep2n6OueTuia51J
+         GTXSpWF3B0puJ0/qZNiwmGVqIWSr5DurwtU/PAUeJKr58mOgj0bDbeyOodTgoAPjUBuX
+         9P2l+WmL7WJNOZ1OysC/SwB8MUmngtl7krsSItiYBoF1jGtALNm1Rsr3X7vFmZvUokTd
+         DQtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ws1WO5M7d4Tu7v3DIlAQw4A7zpDh0cpMdpB6luxKIBI=;
+        b=JsoAWmSRAvsL48XI52y/Oc1XfgW6zly8HW+U1JUqQD6cbwpRylwBoaEf68TU7DSqG9
+         BX4v9RVk0XzNBY54F2G+ZK0lHRXHlQJms27pApsOt3r1zBsS/GSEWpgd+fsvwBCvScKI
+         sMiVaKu5i6FHf6CmHRU+WvylZO5zuSmePGMQuS/yuEkb9w8K+/XxZRD1OX7zOH2QWAu/
+         RVcNB1JPQZSYlfykwkzGVL69Baxb4Y/UqVP6q6vYu4k9zaE8ghqxeauDAgCHsChUZUvR
+         i0vYZz/y7+6Agy5nDIqwtBvktTK+lXi7+x4HsD2I9klpX3WqQ4Tplm+PkHUFZi3Uev7T
+         pB6Q==
+X-Gm-Message-State: APjAAAXoAQp8ebv3T66UPyvJ29Dvym82tCpFh5p50g7m40BkuqXD8NLr
+        XOY3Sq6q8T5a168YXzLjpfs=
+X-Google-Smtp-Source: APXvYqxp9q+kARjAqeN6XdrJY5XNQxHWBW2f5CSxYU1m6B406cBbiZnDzxWE8kPZiK3q9O/Lx4N37A==
+X-Received: by 2002:a17:902:82cb:: with SMTP id u11mr38599845plz.315.1571206441188;
+        Tue, 15 Oct 2019 23:14:01 -0700 (PDT)
+Received: from Gentoo.localdomain ([103.231.90.170])
+        by smtp.gmail.com with ESMTPSA id q3sm32998595pgj.54.2019.10.15.23.13.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 23:14:00 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rdunlap@infradead.org, bfields@fieldses.org,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] scripts : prune-kernel : prune kernels generalized way
+Date:   Wed, 16 Oct 2019 11:43:12 +0530
+Message-Id: <20191016061312.10626-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5DhKn_2uSA=1JDSj0H98aT8X9UjxWaTBwZCDfOC7YR5Sg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 16 Oct 2019 06:12:03 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+This patch will remove old kernel from the system in a selective way.
 
-> up later when given a buffer index. But we would still need to make
-> the DMA-buf itself importable. For virtio-gpu I guess that would mean
-> returning an sg_table backed by the shadow buffer pages.
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+Thanks, a bunch to Randy for the hand holding . :)
 
-The virtio-gpu driver in drm-misc-next supports dma-buf exports.
+ scripts/prune-kernel | 71 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 59 insertions(+), 12 deletions(-)
 
-cheers,
-  Gerd
+diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+index e8aa940bc0a9..78dd4c854b2b 100755
+--- a/scripts/prune-kernel
++++ b/scripts/prune-kernel
+@@ -5,17 +5,64 @@
+ # again, /boot and /lib/modules/ eventually fill up.
+ # Dumb script to purge that stuff:
+
++#for f in "$@"
++#do
++#        if rpm -qf "/lib/modules/$f" >/dev/null; then
++#                echo "keeping $f (installed from rpm)"
++#        elif [ $(uname -r) = "$f" ]; then
++#                echo "keeping $f (running kernel) "
++#        else
++#                echo "removing $f"
++#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
++#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
++#                rm -rf "/lib/modules/$f"
++#                new-kernel-pkg --remove $f
++#        fi
++#done
++boot_dir=/boot
++modules_dir=/lib/modules
++
++function remove_old_kernel(){
++	cd $boot_dir
++	rm -If vmlinuz-$kenrel_version System.map-$kernel_version config-$kernel_verison
++}
++function remove_old_kernel_modules_dir(){
++	cd $modules_dir
++	rm -rf $modules_version
++}
++printf "\n\n Enlist the installed kernels \n\n"
++
++find $boot_dir -name "vmlinuz-*" -type f  -exec ls -1 {} \;
++
++printf "\n\n\n Please give the kernel version to remove: %s"
++read kernel_version
++
++remove_old_kernel
++
++printf "\n\n Enlist the installed modules directory \n\n"
++
++find $modules_dir  -maxdepth 0 -type d -exec ls -1 {} \;
++
++printf "\n\n Please give the full modules directory name to remove: %s"
++read modules_version
++
++remove_old_kernel_modules_dir
++
++printf "\n\n Removed kernel version: $kernel_version and associcated modules: $modules_version ...Done \n"
++while :
+ do
++printf "\n\n Do you want to remove another?[YN] : %s"
++read response
++
++if [[ $response == "Y" ]];then
++	printf "Please give another version to remove : %s"
++	read kernel_version
++	remove_old_kernel
++	printf "\n\n Please give the full modules directory name to remove: %s"
++	read modules_version
++	remove_old_kernel_modules_dir
++elif [[ $response == "N" ]];then
++	printf "\n\n Alright,no more. \n\n"
++	exit 1
++fi
+ done
+--
+2.21.0
 
