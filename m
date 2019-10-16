@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9069FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E60FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7367C218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88396218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263333;
-	bh=QR/FWJvorMny5FKt9GS+YknXw16/Cv9Bjq0InM4LQn4=;
+	s=default; t=1571263337;
+	bh=fGjBvwbJAILEISJRXoOExesOnF4xhwaj6G/DEAlXi2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tb+tlftAVeZRP71CZvZQ2Y9wRwdpo596QJWA7Y2BOT970HWLvqxzc/5NOILAzHU/E
-	 cdT+GXV6QGA8bXKyHag3JcMC3Rzr2w6ui98Jmw3VLqLdJgrX2KbYcXm0ltniNg625J
-	 GwVDeSiFmCsMybKIRWj+4ytK/6v9h2PDY6TNsOjQ=
+	b=lAxVK5mdANsJ3JLTHSeatANCEhW3n4eqf8X6qrpq/6NmrwIluHQq+6PIS3s8dJ+M5
+	 hpIDn7J7J6GcOcW/sRRKj7YssSz0sEMwq3KU/ycTmDSb1QvtiS2iDpSWtLTScdXulP
+	 mphBwk+Pvv9kfu/eeRNImmC0sQhLUWvGsjO6EJVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438644AbfJPV7t (ORCPT
+        id S2438990AbfJPWCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438269AbfJPV6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:47 -0400
+        id S2438635AbfJPV7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:48 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57AAC21925;
-        Wed, 16 Oct 2019 21:58:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCFC421D7A;
+        Wed, 16 Oct 2019 21:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263127;
-        bh=QR/FWJvorMny5FKt9GS+YknXw16/Cv9Bjq0InM4LQn4=;
+        s=default; t=1571263188;
+        bh=fGjBvwbJAILEISJRXoOExesOnF4xhwaj6G/DEAlXi2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gja1ur++cJw/ttAsq+N/qJGeI9WOSy57bi1ROFaR+vVTjuwV3G30jk+R71HglxWmo
-         Cz7Mg+5IBxqUBiZvyYvrkeULXevfxhn7dfcWsxuSlt0rXunvVjEYqpcJIEe7RsT9zJ
-         WzS0dY5ksDDXlny/hWeLgmxY66uLF1i0hfoc6bu0=
+        b=XR6j9bdRecxpj02RFpoNesOl89ePlX76DCnUKo8ylfdzk76U7fa6GAeqqFTcgLuf7
+         s4YBPtuWVwdLLLj2s+hpO2z6/e1MRtAcE+Tmp3IQGqd2YZw+oGy2J/68AddwJEnWJI
+         OR1czS1w3cnWGSBAccGuTrUJBXwliVfLVUTwlm1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Peter Korsgaard <jacmet@sunsite.dk>
-Subject: [PATCH 5.3 024/112] serial: uartlite: fix exit path null pointer
-Date:   Wed, 16 Oct 2019 14:50:16 -0700
-Message-Id: <20191016214852.010367751@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.3 075/112] kernel/sysctl.c: do not override max_threads provided by userspace
+Date:   Wed, 16 Oct 2019 14:51:07 -0700
+Message-Id: <20191016214904.052268850@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -59,43 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Michal Hocko <mhocko@suse.com>
 
-commit a553add0846f355a28ed4e81134012e4a1e280c2 upstream.
+commit b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40 upstream.
 
-Call uart_unregister_driver() conditionally instead of
-unconditionally, only if it has been previously registered.
+Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe
+limits") because the patch is causing a regression to any workload which
+needs to override the auto-tuning of the limit provided by kernel.
 
-This uses driver.state, just as the sh-sci.c driver does.
+set_max_threads is implementing a boot time guesstimate to provide a
+sensible limit of the concurrently running threads so that runaways will
+not deplete all the memory.  This is a good thing in general but there
+are workloads which might need to increase this limit for an application
+to run (reportedly WebSpher MQ is affected) and that is simply not
+possible after the mentioned change.  It is also very dubious to
+override an admin decision by an estimation that doesn't have any direct
+relation to correctness of the kernel operation.
 
-Fixes this null pointer dereference in tty_unregister_driver(),
-since the 'driver' argument is null:
+Fix this by dropping set_max_threads from sysctl_max_threads so any
+value is accepted as long as it fits into MAX_THREADS which is important
+to check because allowing more threads could break internal robust futex
+restriction.  While at it, do not use MIN_THREADS as the lower boundary
+because it is also only a heuristic for automatic estimation and admin
+might have a good reason to stop new threads to be created even when
+below this limit.
 
-  general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-  RIP: 0010:tty_unregister_driver+0x25/0x1d0
+This became more severe when we switched x86 from 4k to 8k kernel
+stacks.  Starting since 6538b8ea886e ("x86_64: expand kernel stack to
+16K") (3.16) we use THREAD_SIZE_ORDER = 2 and that halved the auto-tuned
+value.
 
-Fixes: 238b8721a554 ("[PATCH] serial uartlite driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Peter Korsgaard <jacmet@sunsite.dk>
-Link: https://lore.kernel.org/r/9c8e6581-6fcc-a595-0897-4d90f5d710df@infradead.org
+In the particular case
+
+  3.12
+  kernel.threads-max = 515561
+
+  4.4
+  kernel.threads-max = 200000
+
+Neither of the two values is really insane on 32GB machine.
+
+I am not sure we want/need to tune the max_thread value further.  If
+anything the tuning should be removed altogether if proven not useful in
+general.  But we definitely need a way to override this auto-tuning.
+
+Link: http://lkml.kernel.org/r/20190922065801.GB18814@dhcp22.suse.cz
+Fixes: 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/uartlite.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/fork.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -897,7 +897,8 @@ static int __init ulite_init(void)
- static void __exit ulite_exit(void)
- {
- 	platform_driver_unregister(&ulite_platform_driver);
--	uart_unregister_driver(&ulite_uart_driver);
-+	if (ulite_uart_driver.state)
-+		uart_unregister_driver(&ulite_uart_driver);
- }
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2939,7 +2939,7 @@ int sysctl_max_threads(struct ctl_table
+ 	struct ctl_table t;
+ 	int ret;
+ 	int threads = max_threads;
+-	int min = MIN_THREADS;
++	int min = 1;
+ 	int max = MAX_THREADS;
  
- module_init(ulite_init);
+ 	t = *table;
+@@ -2951,7 +2951,7 @@ int sysctl_max_threads(struct ctl_table
+ 	if (ret || !write)
+ 		return ret;
+ 
+-	set_max_threads(threads);
++	max_threads = threads;
+ 
+ 	return 0;
+ }
 
 
