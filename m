@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA1BFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C26FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413FF2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498F92067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392547AbfJPKqs (ORCPT
+        id S2404398AbfJPKqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:46:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3781 "EHLO huawei.com"
+        Wed, 16 Oct 2019 06:46:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43686 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392449AbfJPKqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:46:47 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8B09BB85DC26B4258360;
-        Wed, 16 Oct 2019 18:46:44 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 18:46:36 +0800
+        id S2392449AbfJPKqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:46:50 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C0CAFACCE9509A1880D9;
+        Wed, 16 Oct 2019 18:46:48 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 18:46:41 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <mpm@selenic.com>, <arnd@arndb.de>,
         <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
@@ -41,9 +42,9 @@ CC:     <linux-crypto@vger.kernel.org>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-amlogic@lists.infradead.org>,
         <linuxppc-dev@lists.ozlabs.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 01/13] hwrng: atmel - use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 16 Oct 2019 18:46:09 +0800
-Message-ID: <20191016104621.26056-2-yuehaibing@huawei.com>
+Subject: [PATCH -next 03/13] hwrng: exynos - use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 16 Oct 2019 18:46:11 +0800
+Message-ID: <20191016104621.26056-4-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20191016104621.26056-1-yuehaibing@huawei.com>
 References: <20191016104621.26056-1-yuehaibing@huawei.com>
@@ -61,29 +62,30 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/char/hw_random/atmel-rng.c | 4 +---
+ drivers/char/hw_random/exynos-trng.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
-index e557057..b3138ec2 100644
---- a/drivers/char/hw_random/atmel-rng.c
-+++ b/drivers/char/hw_random/atmel-rng.c
-@@ -62,15 +62,13 @@ static void atmel_trng_disable(struct atmel_trng *trng)
- static int atmel_trng_probe(struct platform_device *pdev)
+diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
+index b4b52ab..8e1fe3f 100644
+--- a/drivers/char/hw_random/exynos-trng.c
++++ b/drivers/char/hw_random/exynos-trng.c
+@@ -109,7 +109,6 @@ static int exynos_trng_init(struct hwrng *rng)
+ static int exynos_trng_probe(struct platform_device *pdev)
  {
- 	struct atmel_trng *trng;
+ 	struct exynos_trng_dev *trng;
 -	struct resource *res;
- 	int ret;
+ 	int ret = -ENOMEM;
  
  	trng = devm_kzalloc(&pdev->dev, sizeof(*trng), GFP_KERNEL);
- 	if (!trng)
- 		return -ENOMEM;
+@@ -128,8 +127,7 @@ static int exynos_trng_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, trng);
+ 	trng->dev = &pdev->dev;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	trng->base = devm_ioremap_resource(&pdev->dev, res);
-+	trng->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(trng->base))
- 		return PTR_ERR(trng->base);
+-	trng->mem = devm_ioremap_resource(&pdev->dev, res);
++	trng->mem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(trng->mem))
+ 		return PTR_ERR(trng->mem);
  
 -- 
 2.7.4
