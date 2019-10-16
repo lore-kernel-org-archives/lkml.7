@@ -2,120 +2,112 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B60CFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADDFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539CE21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:04:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SnV6duwi"
+	by mail.kernel.org (Postfix) with ESMTP id 2F5482067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393532AbfJPRES (ORCPT
+        id S2392363AbfJPRGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:04:18 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41823 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391091AbfJPRER (ORCPT
+        Wed, 16 Oct 2019 13:06:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34750 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388161AbfJPRGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:04:17 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g81so2486976oib.8
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BSGWH28HRKXwBsAljxNnBMneVoGGH/xuNYpExPGbSaY=;
-        b=SnV6duwiaal+yGD3AuPhlJcCXxUGyQLB+r75PKs+qHRyI/QWizQJVUfcvWk9X9i2OQ
-         zJImBN8zyWaB/wS3UnRh5d9ZrP0JQce4Es6JbeJB5vbTkPcSiZ52CcoL8YCe4TglWK8o
-         186yTn3eE3xJXnC+4uUIwEmwTtnTl4kooRUrgqgOXhI+gzk/Spuvr6zuBj97NDv8o1UC
-         nSBDhRyZEEVSGLN0cVa3qVKmVWV2EOOWtc4T7Zgw7d3GypYKUZ54HRZw1lO1/hl1fzN1
-         hGggQEji+g3hrpoN+TsUs+Ye9Z0ut6eQ0vJlg9n8BuPfAGiF3nIIKgIDjEopKsAyv5Vb
-         XJtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BSGWH28HRKXwBsAljxNnBMneVoGGH/xuNYpExPGbSaY=;
-        b=DehaTrrG6FtG27qcXTWxWe8hM6WkS6UPmBzn3XnmZ/v4KMdOAO5r5lt6mmB5nrBCph
-         t2Ex/kGsFml9Nv1K9PgkcMuCYMVEJJfBFeOI+FrUyMXbri/WlTodMIF45KF7Kv7Ecb7o
-         18wifbHgdIVvCy1u9dyrk45bRGB1E5mKTGZZVf7Eyz8zAi40Yp7tTlz191EokPs/oMDp
-         tmtZWfQAr5j03l9Cf848iz5HnvPxb9o6ZGJ3PP/nYTfYvzxEPY+GU33hE6dkjZd2qJQt
-         4n0Op91LdiUyMGBIm91T4mkVEGWrWPoCbHAylsV6lki41bt6FSbCn5vz4b6R/aurRbT6
-         jxOA==
-X-Gm-Message-State: APjAAAW6k3DcDdwz9+afd0Pc41NC3UJ3zc8k5Ya/03A/k4Nkh4g6jOpj
-        fr14f6ViX8y0RARSrtb7Z3+pLIUjsWjloKTW61oV7g==
-X-Google-Smtp-Source: APXvYqyJf907NHVLtjRanj3dokhHHBREfhg/3ZadjyyyP26vVviAVhDiWn+UNwp7oYMNCmFsgbDqBfpdl+UYkHN8IG4=
-X-Received: by 2002:aca:5015:: with SMTP id e21mr4471718oib.121.1571245456250;
- Wed, 16 Oct 2019 10:04:16 -0700 (PDT)
+        Wed, 16 Oct 2019 13:06:49 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9GGlC1B073529
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:06:48 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vnppumweu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:06:47 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Wed, 16 Oct 2019 18:06:40 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 16 Oct 2019 18:06:35 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9GH6Yan44236942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 17:06:34 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70B2BAE051;
+        Wed, 16 Oct 2019 17:06:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7CCBAE057;
+        Wed, 16 Oct 2019 17:06:31 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.32.238])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 16 Oct 2019 17:06:31 +0000 (GMT)
+Subject: Re: [PATCH v3 3/3] selftests/livepatch: Test interaction with
+ ftrace_enabled
+To:     Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
+        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
+        pmladek@suse.com, joe.lawrence@redhat.com
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+References: <20191016113316.13415-1-mbenes@suse.cz>
+ <20191016113316.13415-4-mbenes@suse.cz>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Wed, 16 Oct 2019 22:36:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191016083959.186860-1-elver@google.com> <20191016083959.186860-9-elver@google.com>
- <ce0d1658-c000-be20-c997-34ca488e4406@intel.com>
-In-Reply-To: <ce0d1658-c000-be20-c997-34ca488e4406@intel.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 16 Oct 2019 19:04:05 +0200
-Message-ID: <CANpmjNOjJsqEtS5jrZ66f3RQSEASjG-N9oMQ377KhmoWJycxXA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] x86, kcsan: Enable KCSAN for x86
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191016113316.13415-4-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101617-0012-0000-0000-00000358A60E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101617-0013-0000-0000-00002193C080
+Message-Id: <61b8e995-f5a2-8094-8e91-1a60019d2916@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 at 18:14, Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 10/16/19 1:39 AM, Marco Elver wrote:
-> > This patch enables KCSAN for x86, with updates to build rules to not use
-> > KCSAN for several incompatible compilation units.
->
-> First of all KCSAN looks really interesting!
->
-> For the x86 code, though, I'd really appreciate some specific notes on
-> why individual compilation units are incompatible.  There might be some
-> that were missed, and we have to figure out what we do for any future
-> work.  Knowing the logic used on these would be really helpful in the
-> future.
+On 10/16/19 5:03 PM, Miroslav Benes wrote:
+> From: Joe Lawrence <joe.lawrence@redhat.com>
+> 
+> Since livepatching depends upon ftrace handlers to implement "patched"
+> code functionality, verify that the ftrace_enabled sysctl value
+> interacts with livepatch registration as expected.  At the same time,
+> ensure that ftrace_enabled is set and part of the test environment
+> configuration that is saved and restored when running the selftests.
+> 
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 
-Thanks!  I will add comments where I can for v2. For most of them, I
-followed the examples of KASAN and co, and will try to reevaluate each
-one.
+[...]
+> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
+> new file mode 100755
+> index 000000000000..e2a76887f40a
+> --- /dev/null
+> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
 
--- Marco
+This test fails due to wrong file permissions, with the warning:
+
+# Warning: file test-ftrace.sh is not executable, correct this.
+not ok 4 selftests: livepatch: test-ftrace.sh
+
+-- 
+Kamalesh
+
