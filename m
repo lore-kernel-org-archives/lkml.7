@@ -2,149 +2,99 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA6ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB75AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082AA21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571212993;
-	bh=wM/nUTK3S5psgEypnAz0OtgZ+jpM99/JuUjxmXaJLbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oTudtvyQ89pxWIR/BGaeNP1Q+lZROTB3JOGw0mQGtatVgAXNaJmKMP1lBtabSxHgn
-	 TfcMa7S7tYFeaqHo52LwDpfLApgDdOM2bcgorS/JRGy34VEtp41DHg5IUHQYaMWcIE
-	 WsBJtViyXyH12WztfF6k95xuW0p4wwk1kZxcMm5o=
+	by mail.kernel.org (Postfix) with ESMTP id C490C2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391422AbfJPIDL (ORCPT
+        id S2391431AbfJPID2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390608AbfJPIDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:03:11 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95F022168B;
-        Wed, 16 Oct 2019 08:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571212990;
-        bh=wM/nUTK3S5psgEypnAz0OtgZ+jpM99/JuUjxmXaJLbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QCPGi1WVH+6Crkf1iDbM7YIS4z1GKzHDuhctLzfeInuMMn5u5nDXy5q+iDHNmXvrb
-         M2GYnuqAUqL+5tCNIq8sknLo9+qH3E7ER6Gi7uJGEPEhb4YoZL80odrE/w5vwRzqYJ
-         KnYL7dFRNfLvSpXT4Csnnc3JMz0IYoC5vjRwliAg=
-Date:   Wed, 16 Oct 2019 10:03:06 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-Message-ID: <20191016080306.44pmo3rfmtnkgosq@gilmour>
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
- <20191005141913.22020-6-jagan@amarulasolutions.com>
- <20191007105708.raxavxk4n7bvxh7x@gilmour>
- <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+        Wed, 16 Oct 2019 04:03:28 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:39857 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390590AbfJPID2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:03:28 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKeHF-0007Oi-H0; Wed, 16 Oct 2019 09:03:25 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKeHF-0003MF-1X; Wed, 16 Oct 2019 09:03:25 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [V2] PCI: sysfs: remove pci_bridge_groups and pcie_dev_groups
+Date:   Wed, 16 Oct 2019 09:03:24 +0100
+Message-Id: <20191016080324.12864-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="daxw7i7armk2zq3y"
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
---daxw7i7armk2zq3y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The pci_bridge_groups and pcie_dev_groups objects are
+not exported and not used at-all, so remove them to
+fix the following warnings from sparse:
 
-On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
-> On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
-> > > Add MIPI DSI pipeline for Allwinner A64.
-> > >
-> > > - dsi node, with A64 compatible since it doesn't support
-> > >   DSI_SCLK gating unlike A33
-> > > - dphy node, with A64 compatible with A33 fallback since
-> > >   DPHY on A64 and A33 is similar
-> > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
-> > >  1 file changed, 38 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > index 69128a6dfc46..ad4170b8aee0 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > @@ -382,6 +382,12 @@
-> > >                                       #address-cells = <1>;
-> > >                                       #size-cells = <0>;
-> > >                                       reg = <1>;
-> > > +
-> > > +                                     tcon0_out_dsi: endpoint@1 {
-> > > +                                             reg = <1>;
-> > > +                                             remote-endpoint = <&dsi_in_tcon0>;
-> > > +                                             allwinner,tcon-channel = <1>;
-> > > +                                     };
-> > >                               };
-> > >                       };
-> > >               };
-> > > @@ -1003,6 +1009,38 @@
-> > >                       status = "disabled";
-> > >               };
-> > >
-> > > +             dsi: dsi@1ca0000 {
-> > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
-> > > +                     reg = <0x01ca0000 0x1000>;
-> > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
-> > > +                     clock-names = "bus";
-> >
-> > This won't validate with the bindings you have either here, since it
-> > still expects bus and mod.
-> >
-> > I guess in that cas, we can just drop clock-names, which will require
-> > a bit of work on the driver side as well.
->
-> Okay.
-> mod clock is not required for a64, ie reason we have has_mod_clk quirk
-> patch. Adjust the clock-names: on dt-bindings would make sense here,
-> what do you think?
+drivers/pci/pci-sysfs.c:1546:30: warning: symbol 'pci_bridge_groups' was not declared. Should it be static?
+drivers/pci/pci-sysfs.c:1555:30: warning: symbol 'pcie_dev_groups' was not declared. Should it be static?
 
-I'm confused, what are you suggesting?
+Also remove the unused pci_bridge_group and pcie_dev_group
+as they are not used any more.
 
-Maxime
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
---daxw7i7armk2zq3y
-Content-Type: application/pgp-signature; name="signature.asc"
+fixup - more unused pci bits
+---
+ drivers/pci/pci-sysfs.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 793412954529..eaffb477c5bf 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1539,24 +1539,6 @@ const struct attribute_group *pci_dev_groups[] = {
+ 	NULL,
+ };
+ 
+-static const struct attribute_group pci_bridge_group = {
+-	.attrs = pci_bridge_attrs,
+-};
+-
+-const struct attribute_group *pci_bridge_groups[] = {
+-	&pci_bridge_group,
+-	NULL,
+-};
+-
+-static const struct attribute_group pcie_dev_group = {
+-	.attrs = pcie_dev_attrs,
+-};
+-
+-const struct attribute_group *pcie_dev_groups[] = {
+-	&pcie_dev_group,
+-	NULL,
+-};
+-
+ static const struct attribute_group pci_dev_hp_attr_group = {
+ 	.attrs = pci_dev_hp_attrs,
+ 	.is_visible = pci_dev_hp_attrs_are_visible,
+-- 
+2.23.0
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXabOugAKCRDj7w1vZxhR
-xaRxAQCMC8f5R5O0x3PDOXjho8DhgMeHnD0ME5PLyqwkpk557QD+JbRITmjTlYf0
-FHZLWNsA4avNld7ActyJrkctTuut3AM=
-=aBRs
------END PGP SIGNATURE-----
-
---daxw7i7armk2zq3y--
