@@ -2,73 +2,151 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0055CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1017DECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D698821835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CB821835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390174AbfJPHzX (ORCPT
+        id S2391287AbfJPHzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:55:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48674 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfJPHzX (ORCPT
+        Wed, 16 Oct 2019 03:55:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41208 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726277AbfJPHzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:55:23 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iKe9R-0007yC-2j; Wed, 16 Oct 2019 09:55:21 +0200
-Date:   Wed, 16 Oct 2019 09:55:21 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 10/34] m68k/coldfire: Use CONFIG_PREEMPTION
-Message-ID: <20191016075520.eauiemlvbo5a37d4@linutronix.de>
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-11-bigeasy@linutronix.de>
- <39d20c16-50a4-34f5-f98c-979138bf1a29@linux-m68k.org>
+        Wed, 16 Oct 2019 03:55:38 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G7gOhR018211
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 03:55:37 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vnugpf4me-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 03:55:37 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Wed, 16 Oct 2019 08:55:35 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 16 Oct 2019 08:55:29 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G7tSFt45154546
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 07:55:29 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1818AE063;
+        Wed, 16 Oct 2019 07:55:28 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0871AE051;
+        Wed, 16 Oct 2019 07:55:24 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.85.142.84])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 16 Oct 2019 07:55:24 +0000 (GMT)
+Date:   Wed, 16 Oct 2019 00:55:21 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org,
+        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
+        mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
+        aik@linux.ibm.com, paul.burton@mips.com, robin.murphy@arm.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        jasowang@redhat.com, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1570843519-8696-1-git-send-email-linuxram@us.ibm.com>
+ <1570843519-8696-2-git-send-email-linuxram@us.ibm.com>
+ <1570843519-8696-3-git-send-email-linuxram@us.ibm.com>
+ <20191015073501.GA32345@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39d20c16-50a4-34f5-f98c-979138bf1a29@linux-m68k.org>
+In-Reply-To: <20191015073501.GA32345@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19101607-0012-0000-0000-000003587DE7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101607-0013-0000-0000-000021939633
+Message-Id: <20191016075521.GA5201@oc0525413822.ibm.com>
+Subject: RE: [PATCH 2/2] virtio_ring: Use DMA API if memory is encrypted
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-16 10:50:41 [+1000], Greg Ungerer wrote:
-> Hi Sebastian,
-Hi Greg,
-
-> On 16/10/19 5:17 am, Sebastian Andrzej Siewior wrote:
-> > From: Thomas Gleixner <tglx@linutronix.de>
+On Tue, Oct 15, 2019 at 09:35:01AM +0200, Christoph Hellwig wrote:
+> On Fri, Oct 11, 2019 at 06:25:19PM -0700, Ram Pai wrote:
+> > From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 > > 
-> > CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-> > Both PREEMPT and PREEMPT_RT require the same functionality which today
-> > depends on CONFIG_PREEMPT.
-> > 
-> > Switch the entry code over to use CONFIG_PREEMPTION.
-> > 
-> > Cc: Greg Ungerer <gerg@linux-m68k.org>
+> > Normally, virtio enables DMA API with VIRTIO_F_IOMMU_PLATFORM, which must
+> > be set by both device and guest driver. However, as a hack, when DMA API
+> > returns physical addresses, guest driver can use the DMA API; even though
+> > device does not set VIRTIO_F_IOMMU_PLATFORM and just uses physical
+> > addresses.
 > 
-> Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+> Sorry, but this is a complete bullshit hack.  Driver must always use
+> the DMA API if they do DMA, and if virtio devices use physical addresses
+> that needs to be returned through the platform firmware interfaces for
+> the dma setup.  If you don't do that yet (which based on previous
+> informations you don't), you need to fix it, and we can then quirk
+> old implementations that already are out in the field.
+> 
+> In other words: we finally need to fix that virtio mess and not pile
+> hacks on top of hacks.
 
-Thank you.
+So force all virtio devices to use DMA API, except when
+VIRTIO_F_IOMMU_PLATFORM is not enabled?
 
-> Do you want me to take this via the m68knommu git tree?
-> Or are you taking the whole series via some other tree?
+Any help detailing the idea, will enable us fix this issue once for all.
 
-It is up to you. You have all the dependencies so you can either add it
-to your -next branch or leave it and we will pick it up for you.
+Will something like below work? It removes the prior hacks, and
+always uses DMA API; except when VIRTIO_F_IOMMU_PLATFORM is not enabled.
 
-> Regards
-> Greg
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index c8be1c4..b593d3d 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -240,22 +240,10 @@ static inline bool virtqueue_use_indirect(struct virtqueue *_vq,
+ 
+ static bool vring_use_dma_api(struct virtio_device *vdev)
+ {
+-	if (!virtio_has_iommu_quirk(vdev))
+-		return true;
+-
+-	/* Otherwise, we are left to guess. */
+-	/*
+-	 * In theory, it's possible to have a buggy QEMU-supposed
+-	 * emulated Q35 IOMMU and Xen enabled at the same time.  On
+-	 * such a configuration, virtio has never worked and will
+-	 * not work without an even larger kludge.  Instead, enable
+-	 * the DMA API if we're a Xen guest, which at least allows
+-	 * all of the sensible Xen configurations to work correctly.
+-	 */
+-	if (xen_domain())
+-		return true;
++	if (virtio_has_iommu_quirk(vdev))
++		return false;
+ 
+-	return false;
++	return true;
+ }
+ 
+ size_t virtio_max_dma_size(struct virtio_device *vdev)
 
-Sebastian
+
+-- 
+Ram Pai
+
