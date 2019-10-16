@@ -2,69 +2,76 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B09C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E89DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024582168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C39220872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404214AbfJPJf0 convert rfc822-to-8bit (ORCPT
+        id S2404234AbfJPJfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:35:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49420 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391829AbfJPJf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:35:26 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iKfiF-0001cC-KN; Wed, 16 Oct 2019 11:35:23 +0200
-Date:   Wed, 16 Oct 2019 11:35:23 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        tglx@linutronix.de, Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH 03/34] powerpc: Use CONFIG_PREEMPTION
-Message-ID: <20191016093523.tukmwtouugecbll4@linutronix.de>
-References: <20191015191821.11479-1-bigeasy@linutronix.de>
- <20191015191821.11479-4-bigeasy@linutronix.de>
- <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
- <87d0ext4q3.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <87d0ext4q3.fsf@mpe.ellerman.id.au>
+        Wed, 16 Oct 2019 05:35:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8786 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391995AbfJPJfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:35:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 02:35:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="195550429"
+Received: from unknown (HELO ubuntu.localdomain) ([10.226.249.160])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Oct 2019 02:35:32 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Ong Hean Loong <hean.loong.ong@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>
+Subject: [PATCH] arm64: defconfig: add JFFS FS support in defconfig
+Date:   Wed, 16 Oct 2019 02:35:28 -0700
+Message-Id: <1571218528-12126-1-git-send-email-joyce.ooi@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-16 20:33:08 [+1100], Michael Ellerman wrote:
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> > Le 15/10/2019 à 21:17, Sebastian Andrzej Siewior a écrit :
-> >> From: Thomas Gleixner <tglx@linutronix.de>
-> >> 
-> >> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-> >> Both PREEMPT and PREEMPT_RT require the same functionality which today
-> >> depends on CONFIG_PREEMPT.
-> >> 
-> >> Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
-> >> output in __die().
-> >
-> > powerpc doesn't select ARCH_SUPPORTS_RT, so this change is useless as 
-> > CONFIG_PREEMPT_RT cannot be selected.
-> 
-> Yeah I don't think there's any point adding the "_RT" to the __die()
-> output until/if we ever start supporting PREEMPT_RT.
+This patch adds JFFS2 FS support and remove QSPI Sector 4K size force in
+the default defconfig
 
-so jut the PREEMPT -> PREEMPTION  bits then?
+Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> cheers
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c9adae4..6080c6e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -860,3 +860,5 @@ CONFIG_DEBUG_KERNEL=y
+ # CONFIG_DEBUG_PREEMPT is not set
+ # CONFIG_FTRACE is not set
+ CONFIG_MEMTEST=y
++CONFIG_JFFS2_FS=y
++CONFIG_MTD_SPI_NOR_USE_4K_SECTORS=n
+-- 
+1.9.1
 
-Sebastian
