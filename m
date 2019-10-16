@@ -2,133 +2,88 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91CEFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F12FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B468E218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571237391;
-	bh=TVHkTQZcT9q9ZjJzYOSkolVYYuNP2y6v7NQ51/mM5q8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hbdYdGsXOCJJk/SfgZ9Y0TGO9WauSkhFIIWmowKkWK+zHRjjtKXfeGpNrCHnadQo2
-	 tdwrJY5j2s3IFfw+uahOjB01y2XNVYUKWecKt8Cogc71NI2C2ZbPKmSs3fvcBoEW0m
-	 XmwwdkaUtszvvarlZFKFn8hKEgil3TlWXm6fKk/A=
+	by mail.kernel.org (Postfix) with ESMTP id 7B4702168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390237AbfJPOtu (ORCPT
+        id S2393171AbfJPOun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 10:50:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:28125 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730251AbfJPOtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:49:50 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730251AbfJPOum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:50:42 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022C32168B;
-        Wed, 16 Oct 2019 14:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571237389;
-        bh=TVHkTQZcT9q9ZjJzYOSkolVYYuNP2y6v7NQ51/mM5q8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bcf31tblggd+MJJkjJ9MWL3/6Xm57VNAYnvAEXEXu/qG9MTqKIwOaCCRWRD6tCt+u
-         pUnsMBBBwSJMxdN+D/t5cMU9aJACRsrTR5piIFe6N4GEmJ1uGCotm3uyYDWh+9v5lN
-         GO/aBm+6T/Z1kI0UaQXd3CDgadNWxjpsme7Jfbg8=
-Date:   Wed, 16 Oct 2019 16:49:46 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Alistair Francis <alistair@alistair23.me>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wens@csie.org, alistair23@gmail.com
-Subject: Re: [PATCH] arm64: dts: sun50i: sopine-baseboard: Expose serial1,
- serial2 and serial3
-Message-ID: <20191016144946.p3tm67vh5lqigndn@gilmour>
-References: <20191012200524.23512-1-alistair@alistair23.me>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9A66E89F302;
+        Wed, 16 Oct 2019 14:50:42 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A5760127;
+        Wed, 16 Oct 2019 14:50:39 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 15:50:38 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] vsock/virtio: remove unused 'work' field from 'struct
+ virtio_vsock_pkt'
+Message-ID: <20191016145038.GH5487@stefanha-x1.localdomain>
+References: <20191015150051.104631-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n5scbjei5snz6qva"
+        protocol="application/pgp-signature"; boundary="EemXnrF2ob+xzFeB"
 Content-Disposition: inline
-In-Reply-To: <20191012200524.23512-1-alistair@alistair23.me>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191015150051.104631-1-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 14:50:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---n5scbjei5snz6qva
+--EemXnrF2ob+xzFeB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Sat, Oct 12, 2019 at 01:05:24PM -0700, Alistair Francis wrote:
-> Follow what the sun50i-a64-pine64.dts does and expose all 5 serial
-> connections.
->
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+On Tue, Oct 15, 2019 at 05:00:51PM +0200, Stefano Garzarella wrote:
+> The 'work' field was introduced with commit 06a8fc78367d0
+> ("VSOCK: Introduce virtio_vsock_common.ko")
+> but it is never used in the code, so we can remove it to save
+> memory allocated in the per-packet 'struct virtio_vsock_pkt'
+>=20
+> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 > ---
->  .../allwinner/sun50i-a64-sopine-baseboard.dts | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> index 124b0b030b28..49c37b21ab36 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> @@ -56,6 +56,10 @@
->  	aliases {
->  		ethernet0 = &emac;
->  		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
-> +		serial4 = &uart4;
->  	};
->
->  	chosen {
-> @@ -280,6 +284,27 @@
->  	};
->  };
->
-> +/* On Pi-2 connector */
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart2_pins>;
-> +	status = "disabled";
-> +};
-> +
-> +/* On Euler connector */
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart3_pins>;
-> +	status = "disabled";
-> +};
-> +
-> +/* On Euler connector, RTS/CTS optional */
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart4_pins>;
-> +	status = "disabled";
-> +};
+>  include/linux/virtio_vsock.h | 1 -
+>  1 file changed, 1 deletion(-)
 
-Since these are all the default muxing, maybe we should just set that
-in the DTSI?
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Maxime
-
---n5scbjei5snz6qva
+--EemXnrF2ob+xzFeB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXacuCgAKCRDj7w1vZxhR
-xakUAQDKMLPFYrXgJoIqujk/rfbeUS2P3a0rGnGDrfrvSZkCMAD+JRTAJwfGyT0T
-0GAa8ejfAZiZ2/8OCoW/Y++QrQ3JhA4=
-=Q2Sd
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2nLj4ACgkQnKSrs4Gr
+c8hxgQf/fJM59TTkQU6f/aLvKMLRivTzsa1Yz/4hy25NeYI++lHojSBwzdtd1BxY
+PF945mWrEnCumX+FOqHdpwX6oRU4bnJ0pc3kzHPrxnLYoyHT1NYNPnEHnaZERFfP
+7OdE3RMXooLx+JM7MrIn8Fh/ElR2Bi4JhUw+zOUMEO96aY+HIJ7cAPsDG3QTHinj
+TL4WUjSRZEqwfZKvJ0TiydqJR/RKjpNEi1bYrTV9TzW84/5AmWternJ3sS76dH3w
+2Qb9yLIBpDSbOnohYQQunrl8VuYdeCw2w0NZc9jsbslAgs6yc5EIE/6PoX//fwOn
+Tf1ER5hbSetx0Lk+7Jaw3eVDH5r6Uw==
+=GpdO
 -----END PGP SIGNATURE-----
 
---n5scbjei5snz6qva--
+--EemXnrF2ob+xzFeB--
