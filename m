@@ -2,72 +2,93 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76145C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D798C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA0B20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDAEC20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hHypW5ck"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rx7dicTG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391118AbfJPHkh (ORCPT
+        id S2391167AbfJPHk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:40:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52484 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732599AbfJPHke (ORCPT
+        Wed, 16 Oct 2019 03:40:58 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:46081 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbfJPHk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:40:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nAVrUYNo7z77xNN8BPUYDjArRLCzHJySHwl8SGXWxtA=; b=hHypW5ckFDh6HXlPU8J/DBxPn
-        3ysSaC4VkVmMb6n21hYpS5DUSbe9/K5xvXF4Ap3889f9kKtk/nSi7OvWLMDBgl1wEu4Jm2ZfK2ADD
-        R4JWlr1saxV7trRst+fFBqaygEgFaSgDr3sebg2JytNGZGt+nhgIPthLFGGt7kAIrz6zcxn1z+CKW
-        HP9HAFKCmx7NQVzWOPwVeejyiyDcMGlh8GAvWdRLMPp48jrM439trEfzWnZOmtIg9UMq19pHcT1CM
-        xTpwYQER629OMMcYz5XFzwb+hzl0ZdkH7WOiH5bK1ooaGcdCf881Npq0aJUCB8+clohzyWdBLFq6q
-        YAOnj2P/Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKdv2-0007jR-Lh; Wed, 16 Oct 2019 07:40:28 +0000
-Date:   Wed, 16 Oct 2019 00:40:28 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@lists.codethink.co.uk,
-        Marek Behun <marek.behun@nic.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: moxtet: declare moxtet_bus_type
-Message-ID: <20191016074028.GA25140@infradead.org>
-References: <20191015122535.5439-1-ben.dooks@codethink.co.uk>
- <20191015163205.GB11160@infradead.org>
- <ec914ca4-53c6-ef4d-b0db-82852cdd9bbe@codethink.co.uk>
+        Wed, 16 Oct 2019 03:40:57 -0400
+Received: by mail-yb1-f193.google.com with SMTP id h202so7469694ybg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DrfvktYJgAyHta/Fz913K8rareDdtUbK//eXrFywXHc=;
+        b=Rx7dicTGbigHVFli33Z0CCDjnpeCZSVCs8WSkbB0h9qQ9s3NUhpJmYM1+CskI4USTO
+         U8lEW6L/BvXQ3hliCs1oMJxRlt8oYNtn8Zlb3tXcBhwlm7E9dQgdutJHonBKZ6tp8rUR
+         zyZB2MKVFN3H3fiGcXpxl54HXEJpjTcml8wzFj6g4AtR21H/k1HKGbLKG8+THhhONegW
+         XWvbyaZ+3Y/yvnNCXQFfUiltiaFsb59NapoZlTmDZ3y0ejKXkAPYtze17pT7nZjEX4OJ
+         5MY8JsigNfkZLBCuebrCtVwxYD0KLKQWD24PQjDPIICGFiP7xfiY4rBGct6d7906CSK/
+         tbMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DrfvktYJgAyHta/Fz913K8rareDdtUbK//eXrFywXHc=;
+        b=Z81TfrOmaBKCpwlzpLS10+LoQn5HVdwWHuCQvVuixLNIPVd9eiKaE9n/ERm5CxthEJ
+         VoGdTKjAu5n/Fa0RjACFF9gANo8GXnHwM/ZW9USWl5V1NnX4yPvelSD1GSpgqf2FhuxE
+         ajy1P6vPBxnX8wrnKdSXqIkjwBpFgLPzkTbyHQYMW4CMztT3K5YEcQx2NEYBQ3FViIWn
+         bgy1Ps0eUiUvF4zaSKQw3+psA4pOkiVVlXQThPrdyjjhtlqsw1TSoEgTXJRM2BGbUKcy
+         UwUc20vmVDA/9fmKpCO8vuQXRxVL+ZJ9C/wgrPX34aEX3MTensNlkRSlUN0JQGYtqWYx
+         1DeA==
+X-Gm-Message-State: APjAAAUadRcCjWKHboc+ELs79JTMffYG/3gXx6ikm9THUM+TPsLmQmfW
+        N/zz3WEjE9kAQy7vNBepF3KE7INm19x+tePQWW0=
+X-Google-Smtp-Source: APXvYqycJt2YiaXwNjBOltfUHwxfdgZ2fpnSS5NnUnC+6uOaN53bFDpsPUaRNgTPEVTBEloZi/YepjgE6HpyhrRkP4g=
+X-Received: by 2002:a5b:4c5:: with SMTP id u5mr14131584ybp.25.1571211656797;
+ Wed, 16 Oct 2019 00:40:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec914ca4-53c6-ef4d-b0db-82852cdd9bbe@codethink.co.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20191015212526.1775-1-jcmvbkbc@gmail.com> <20191016070827.GA23051@lst.de>
+In-Reply-To: <20191016070827.GA23051@lst.de>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 16 Oct 2019 00:40:45 -0700
+Message-ID: <CAMo8BfLz5R=nXb3Ycw-xs9qfxHjBiKS2--mS3pr7=7rgwBeO_Q@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: implement arch_dma_coherent_to_pfn
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 08:34:06AM +0100, Ben Dooks wrote:
-> On 15/10/2019 17:32, Christoph Hellwig wrote:
-> > On Tue, Oct 15, 2019 at 01:25:35PM +0100, Ben Dooks wrote:
-> > > The moxtet_bus_type object is exported from the bus
-> > > driver, but not declared. Add a declaration for use
-> > > and to silence the following warning:
-> > 
-> > The symbol can be marked static instead.
-> 
-> Then it would have to be un-exported as it's listed as
-> EXPORT_SYMBOL_GPL(moxtet_bus_type);
+Hi Christoph,
 
-Yes, once you mark it static you should also remove the export.
+On Wed, Oct 16, 2019 at 12:08 AM Christoph Hellwig <hch@lst.de> wrote:
+> On Tue, Oct 15, 2019 at 02:25:26PM -0700, Max Filippov wrote:
+> > Add trivial implementation for arch_dma_coherent_to_pfn.
+> > This change enables communication with PCI ALSA devices through mmapped
+> > buffers.
+>
+> This looks fine, although I'd much rather convert xtensa to the
+> generic DMA remap / uncached segment support.
+
+Thanks for the review.
+
+> Do you want this fix for 5.4?  If so please queue it up ASAP so that
+> I can do the proper thing for 5.5.  If you don't need it that urgent
+> I'd rather go straight to the generic code.
+
+There's no rush, I'll keep my version privately and will switch to the
+generic version once it's available.
+
+-- 
+Thanks.
+-- Max
