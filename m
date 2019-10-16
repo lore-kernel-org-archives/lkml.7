@@ -2,54 +2,57 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22C6ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A6FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C171218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C02218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263597;
-	bh=sGsJKFhrpuqfRmJ6WDyPzNWLyv7nP8hm0PYNR2JdHW0=;
+	s=default; t=1571263603;
+	bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bl269UoVdsBHeX5BmWwjAfwXcVPRqbt9X5t9XIywVxRRHDIel6FS7a8Xjg6WBD6E4
-	 TLTqiI718Gw64XyOuXuF5IpDuYp1KE97lJn7RRP7hwM+LzTuaQvNZCvQ3ZyTOMOB4O
-	 X7n6acghVadpzuwUrQMRtg13+ZV+boL33gvZW4rY=
+	b=ICXvsuKtKU21PnEnN34vMhRfMeddmSwm6hCn+tMz9rI7BLl2XGShHbwNq2hpd6E1e
+	 S0mZIfW2+di5Y9miFBTGWgyph9nBp73OmXBBz8I/Xixsj6FZxj1l525dRFwk5tQ66A
+	 dLWlLWkEBl08lf40u0CMrV6yry4K7IL0c0/UgUSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406994AbfJPWGf (ORCPT
+        id S2406728AbfJPV60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438171AbfJPV6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:31 -0400
+        id S2395490AbfJPV5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:36 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C360521928;
-        Wed, 16 Oct 2019 21:58:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09BE421D7F;
+        Wed, 16 Oct 2019 21:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263110;
-        bh=sGsJKFhrpuqfRmJ6WDyPzNWLyv7nP8hm0PYNR2JdHW0=;
+        s=default; t=1571263056;
+        bh=7GqnbcH+r90nThr865WG1XKok01vq2QVJ4b1QhEQN5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=reQYFxEZCIMDMoXsWKSX3D+YJjxCrwYBwdb6u9OP/bccqDSKtVBcDxjNypJ2aQW2m
-         a58IiGEksQ0tM3jipEZjFzTNy1N762Oo5nSU5LAbMmaQkK0RFZHSEAlTUbAhTyMVCi
-         UkWrKU7niwltC+gBRIUy9lRD4KUHnITDDhkZyyow=
+        b=awH4RzxIok22DVVp1t0MXqdhkXkftAlVjSkM5CQGMLjv8OmxITV0sCnaa7ku3Sd5a
+         A0DKa8rcvz3+EeDrYNQIYecTQ+gyjx39zWFpz46lUFy+N3Yge8ASx7SNTwnwbolXuY
+         6k/ceNGO4cOxzEG1TAffWwq4JFv0riDVP3gCcgkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 5.3 034/112] usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt,wedge}()
-Date:   Wed, 16 Oct 2019 14:50:26 -0700
-Message-Id: <20191016214853.497255053@linuxfoundation.org>
+        stable@vger.kernel.org, Hung-Te Lin <hungte@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 58/81] firmware: google: increment VPD key_len properly
+Date:   Wed, 16 Oct 2019 14:51:09 -0700
+Message-Id: <20191016214843.336805131@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
-References: <20191016214844.038848564@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit 1aae1394294cb71c6aa0bc904a94a7f2f1e75936 upstream.
+[ Upstream commit 442f1e746e8187b9deb1590176f6b0ff19686b11 ]
 
-The commit 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-had added a usbhsg_pipe_disable() calling into
-__usbhsg_ep_set_halt_wedge() accidentally. But, this driver should
-not call the usbhsg_pipe_disable() because the function discards
-all queues. So, this patch removes it.
+Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
+decoding VPD data") adds length checks, but the new vpd_decode_entry()
+function botched the logic -- it adds the key length twice, instead of
+adding the key and value lengths separately.
 
-Fixes: 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-Cc: <stable@vger.kernel.org> # v3.1+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1569924633-322-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
+On my local system, this means vpd.c's vpd_section_create_attribs() hits
+an error case after the first attribute it parses, since it's no longer
+looking at the correct offset. With this patch, I'm back to seeing all
+the correct attributes in /sys/firmware/vpd/...
+
+Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decoding VPD data")
+Cc: <stable@vger.kernel.org>
+Cc: Hung-Te Lin <hungte@chromium.org>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Link: https://lore.kernel.org/r/20190930214522.240680-1-briannorris@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/renesas_usbhs/mod_gadget.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/firmware/google/vpd_decode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -723,8 +723,6 @@ static int __usbhsg_ep_set_halt_wedge(st
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
- 	unsigned long flags;
+diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/google/vpd_decode.c
+index e75abe9fa122c..6c7ab2ba85d2f 100644
+--- a/drivers/firmware/google/vpd_decode.c
++++ b/drivers/firmware/google/vpd_decode.c
+@@ -62,7 +62,7 @@ static int vpd_decode_entry(const u32 max_len, const u8 *input_buf,
+ 	if (max_len - consumed < *entry_len)
+ 		return VPD_FAIL;
  
--	usbhsg_pipe_disable(uep);
--
- 	dev_dbg(dev, "set halt %d (pipe %d)\n",
- 		halt, usbhs_pipe_number(pipe));
- 
+-	consumed += decoded_len;
++	consumed += *entry_len;
+ 	*_consumed = consumed;
+ 	return VPD_OK;
+ }
+-- 
+2.20.1
+
 
 
