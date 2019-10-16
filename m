@@ -4,62 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6918FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7647ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE7D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F189207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264149;
-	bh=61zl7DkTaWrXCdCD6qktASwL8w1xwvcJ3Y+nDn38yoY=;
+	s=default; t=1571264152;
+	bh=cOwtfjxBvvQosjr82wqCP+8UkphEQZiAwZA6WXjNgSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vbra3V18Fur23xv5DHt6cBOnUcWe4wf6qOjItHqW6JSm9jnFZafoXVJvgpxljckBH
-	 JS9uYt7q9A63LBga8j++g1uK4/OjVH14jWpziVP+QsGNVWJSqlFLMLVvsdxY83KZ45
-	 CSPFb2eYloxv3k8ftJ06Tt84uYee1NHf9Armv+Yc=
+	b=qd/q/EqX31RYyP45IKQeUDkzbrI2d8fSbamUOMOo9C74ZNuwMYgRULs+njhkAg4mS
+	 q8mcxFRUfN5Kh2KG0taumgFqMOvNgS3kLtEWp3xvd5UUbnlQu6fBn+9h/2rXZSN2mW
+	 DMN9VsR12e/A8JQEVVhPiPgKUDCi2U4onXTVeU+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437784AbfJPVzV (ORCPT
+        id S2390104AbfJPVzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45762 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437748AbfJPVzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:17 -0400
+        id S2437728AbfJPVzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:14 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7D1218DE;
-        Wed, 16 Oct 2019 21:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A0C921925;
+        Wed, 16 Oct 2019 21:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262916;
-        bh=61zl7DkTaWrXCdCD6qktASwL8w1xwvcJ3Y+nDn38yoY=;
+        s=default; t=1571262914;
+        bh=cOwtfjxBvvQosjr82wqCP+8UkphEQZiAwZA6WXjNgSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVhWrnaswqTQjQsdIPP8LDcoErM56dPS7JJVgIaJe6Lruq7znAHVpleEF+Ym3Q1Tm
-         ANX13YnlPo9gQJsCylwxGolX1gQDUSYme47GcXNEHuukGCr2lKpBukq2gZQafzH+wk
-         EXWWEiCbqjPjoOKYOFAOb/mhJqntphH50K4bxtXI=
+        b=0M805NDwb0Zf96aqgG0xOdyTVXc/ddVN4ziw7qnv9BY6aIKqbanq3wgR6xC2V+rRH
+         FM9c6JLnChmuchL71mn3avmQdyN2HZ90RSJKg5H0lbIIwc8bIhYp6HBNEzAcHH3fiD
+         nyJB+kUwcEovDEbu7WKEYkus24s8ykWUc+m/EgPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Talbert <swt@techie.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 76/92] efivar/ssdt: Dont iterate over EFI vars if no SSDT override was specified
-Date:   Wed, 16 Oct 2019 14:50:49 -0700
-Message-Id: <20191016214845.951472119@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 74/92] iio: adc: ad799x: fix probe error handling
+Date:   Wed, 16 Oct 2019 14:50:47 -0700
+Message-Id: <20191016214845.288036467@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -72,59 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit c05f8f92b701576b615f30aac31fabdc0648649b upstream.
+commit c62dd44901cfff12acc5792bf3d2dec20bcaf392 upstream.
 
-The kernel command line option efivar_ssdt= allows the name to be
-specified of an EFI variable containing an ACPI SSDT table that should
-be loaded into memory by the OS, and treated as if it was provided by
-the firmware.
+Since commit 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe
+and reset alert status on probe") the error path is wrong since it
+leaves the vref regulator on. Fix this by disabling both regulators.
 
-Currently, that code will always iterate over the EFI variables and
-compare each name with the provided name, even if the command line
-option wasn't set to begin with.
-
-So bail early when no variable name was provided. This works around a
-boot regression on the 2012 Mac Pro, as reported by Scott.
-
-Tested-by: Scott Talbert <swt@techie.net>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: <stable@vger.kernel.org> # v4.9+
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Fixes: 475fb4e8b2f4 ("efi / ACPI: load SSTDs from EFI variables")
-Link: https://lkml.kernel.org/r/20191002165904.8819-3-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 0f7ddcc1bff1 ("iio:adc:ad799x: Write default config on probe and reset alert status on probe")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/efi.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iio/adc/ad799x.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -243,6 +243,9 @@ static __init int efivar_ssdt_load(void)
- 	void *data;
- 	int ret;
+--- a/drivers/iio/adc/ad799x.c
++++ b/drivers/iio/adc/ad799x.c
+@@ -817,10 +817,10 @@ static int ad799x_probe(struct i2c_clien
  
-+	if (!efivar_ssdt[0])
-+		return 0;
-+
- 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
+ 	ret = ad799x_write_config(st, st->chip_config->default_config);
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		goto error_disable_vref;
+ 	ret = ad799x_read_config(st);
+ 	if (ret < 0)
+-		goto error_disable_reg;
++		goto error_disable_vref;
+ 	st->config = ret;
  
- 	list_for_each_entry_safe(entry, aux, &entries, list) {
+ 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
 
 
