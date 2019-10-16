@@ -2,127 +2,127 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA78FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965B2FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC81205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D51921848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571228468;
+	bh=CeJ4OFaEFPLw3ihfH/hKtlqnZhGpg3+vkKM+rY149p0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PLdgAmlDPLVVmkGJobWqIpJhuZCqKI8TnsRq6rZVkX5ct3RbOVhOuK8AYmyxwXIJc
+	 Pks91WQo6EQPouuaXQORiix1wxm9m684UQtmNZ5TVuEhz0GHD7SaEXePvt6vZUbFWb
+	 YVDHomy7Um9DYZ/1ZEqKi4FEqYrMTBAtCSn4+qvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405215AbfJPMUe (ORCPT
+        id S2392941AbfJPMVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:20:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49868 "EHLO mga18.intel.com"
+        Wed, 16 Oct 2019 08:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405187AbfJPMUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:20:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 05:20:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="370783308"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 16 Oct 2019 05:20:33 -0700
-Received: from [10.251.8.200] (kliang2-mobl.ccr.corp.intel.com [10.251.8.200])
+        id S2389042AbfJPMVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:21:07 -0400
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id EEB375803C5;
-        Wed, 16 Oct 2019 05:20:31 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] perf/x86/intel: implement LBR callstacks context
- synchronization
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <5964c7e9-ab6f-c0d0-3dca-31196606e337@linux.intel.com>
- <79b0e201-479e-0e35-4ef4-3f6410ee28e4@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <56c5408c-a217-18f3-8a0d-c0bb0886f2d3@linux.intel.com>
-Date:   Wed, 16 Oct 2019 08:20:30 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A283218DE;
+        Wed, 16 Oct 2019 12:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571228466;
+        bh=CeJ4OFaEFPLw3ihfH/hKtlqnZhGpg3+vkKM+rY149p0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lK1We6Lmi97XkGiE/MEp3HZsTdoBnl5FJowPRopClnI5Eme8siVxkyOU2+OKGGie7
+         NMVYJ0To1IU6xM5KK58z4H9YNWjARbAOWxY+iPIQQeome6NuOdFpRHYPMWvv8NPeH0
+         xLNNw+ZuL3fb6a4ODvh+YARSA/hsNxV+p6sYpFLo=
+Received: by mail-lf1-f42.google.com with SMTP id r22so17330317lfm.1;
+        Wed, 16 Oct 2019 05:21:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAUjIdcTFWO4/3tiRnxevEmP77yM5x+KDMOOjrTM5n+mL8vXGplP
+        hSPXXc+v3ZRtLi4uML4+Giw7FXvKt6nPffxUfS0=
+X-Google-Smtp-Source: APXvYqyCdHTpq1tJW1xZhlVB32lqSSRbrks1Qn6qW2WOIZZ4YErk+tAL87CwQULw8+QcHDEGBDkRvD+94zlk2mZ0bx4=
+X-Received: by 2002:a19:4f4c:: with SMTP id a12mr1366518lfk.18.1571228463791;
+ Wed, 16 Oct 2019 05:21:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <79b0e201-479e-0e35-4ef4-3f6410ee28e4@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191014141427.30708-1-ribalda@kernel.org> <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
+In-Reply-To: <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Wed, 16 Oct 2019 14:20:47 +0200
+X-Gmail-Original-Message-ID: <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
+Message-ID: <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
+Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Hans
 
+Not that awkward, the user has to use the brand new
+v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
+change.
 
-On 10/16/2019 5:50 AM, Alexey Budankov wrote:
-> 
-> Implement intel_pmu_lbr_sync_task_ctx() method that updates counter
-> of the events that requested LBR callstack data on a sample.
-> 
-> The counter can be zero for the case when task context belongs to
-> a thread that has just come from a block on a futex and the context
-> contains saved (lbr_stack_state == LBR_VALID) LBR register values.
-> 
-> For the values to be restored at LBR registers on the next thread's
-> switch-in event it copies the counter value that is expected to be
-> non zero from the previous equivalent task perf event context.
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->   arch/x86/events/intel/lbr.c  | 9 +++++++++
->   arch/x86/events/perf_event.h | 3 +++
->   2 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index ea54634eabf3..152a3f8b516a 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-> @@ -417,6 +417,15 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
->   	cpuc->last_log_id = ++task_ctx->log_id;
->   }
->   
-> +void intel_pmu_lbr_sync_task_ctx(struct x86_perf_task_context *one,
-> +				 struct x86_perf_task_context *another)
-> +{
-> +	if (!one || !another)
-> +		return;
-> +
-> +	one->lbr_callstack_users = another->lbr_callstack_users;
+Regards
 
-We may want to swap here?
-
-Thanks,
-Kan
-
-> +}
-> +
->   void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in)
->   {
->   	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index a25e6d7eb87b..3e0087c06fc9 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -1024,6 +1024,9 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
->   
->   void intel_ds_init(void);
->   
-> +void intel_pmu_lbr_sync_task_ctx(struct x86_perf_task_context *one,
-> +				 struct x86_perf_task_context *another);
-> +
->   void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in);
->   
->   u64 lbr_from_signext_quirk_wr(u64 val);
-> 
+On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>
+> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
+> > This allows setting the default value on compound controls created via
+> > v4l2_ctrl_new_custom.
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+> >  include/media/v4l2-ctrls.h           | 2 ++
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index bf50d37ef6c1..12cf38f73f7b 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
+> >                       type, min, max,
+> >                       is_menu ? cfg->menu_skip_mask : step, def,
+> >                       cfg->dims, cfg->elem_size,
+> > -                     flags, qmenu, qmenu_int, ptr_null, priv);
+> > +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
+> >       if (ctrl)
+> >               ctrl->is_private = cfg->is_private;
+> >       return ctrl;
+> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> > index 26205ba3a0a0..2fca5b823961 100644
+> > --- a/include/media/v4l2-ctrls.h
+> > +++ b/include/media/v4l2-ctrls.h
+> > @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
+> >   * @max:     The control's maximum value.
+> >   * @step:    The control's step value for non-menu controls.
+> >   * @def:     The control's default value.
+> > + * @p_def:   The control's default value for compound controls.
+> >   * @dims:    The size of each dimension.
+> >   * @elem_size:       The size in bytes of the control.
+> >   * @flags:   The control's flags.
+> > @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
+> >       s64 max;
+> >       u64 step;
+> >       s64 def;
+> > +     union v4l2_ctrl_ptr p_def;
+> >       u32 dims[V4L2_CTRL_MAX_DIMS];
+> >       u32 elem_size;
+> >       u32 flags;
+> >
+>
+> I'm not sure about this. It might be a bit awkward to initialize p_def given that it is a union.
+>
+> Perhaps a simple void pointer would be easier?
+>
+> Regards,
+>
+>         Hans
