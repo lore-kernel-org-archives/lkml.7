@@ -7,62 +7,60 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E987ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CB7FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C4E20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C1020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263474;
-	bh=K/ms87F2xzjse/R2MJ6RrvqzNR/clpL9pFvRPU5peDg=;
+	s=default; t=1571263481;
+	bh=4xJdH9kiHe2LVsMTel/OrXlDj2ZKHxjrUQ6T4JRXoFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjjsOJLd1p8TjQf3YO2g9INtyzbZSWyvvWekDN44Bd04PxL9ul//OzeZDAxp8XBJl
-	 Ur8/37K2rrOihoBCduJVY4o9CUP4jqiUyPOZG1HytEYnDPHX8OkqyNFVHsuA8kNpE5
-	 aApFlh8iTVQ6SI2+0T16+ldqe6egIQVIoC/lt0OI=
+	b=Gxy6aulR70ztXhGskuvRHOCShNeAeF4HoW2/Q9c4mfmz7i/Or1NOa9qWQIGcquSZn
+	 TenqEvBm3yc8gMEtISSmbdOSuAwRsfCGTnUWaH3XXbZM0aN8vuH5og1hvqkU/qmERn
+	 UDID3uVZt1qPH4FeEkDrvgSQWKGxIgShESguCFuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406865AbfJPWEc (ORCPT
+        id S2406877AbfJPWEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438375AbfJPV7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:04 -0400
+        id S2438357AbfJPV7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:01 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D80222C1;
-        Wed, 16 Oct 2019 21:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D96221A49;
+        Wed, 16 Oct 2019 21:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263143;
-        bh=K/ms87F2xzjse/R2MJ6RrvqzNR/clpL9pFvRPU5peDg=;
+        s=default; t=1571263140;
+        bh=4xJdH9kiHe2LVsMTel/OrXlDj2ZKHxjrUQ6T4JRXoFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAGejVG6ioEaTHMiveJNZcAsC2xw0jz5lCoeXuO0jLjCJlx1c+Rosxr+8UOkJyTea
-         yxxhDeIZ41kH8nCseNIrHjTCQm7b2cTf57zbLRrrh5Cf+0e1K4vBxBsm7PTCg072Ot
-         a3AKeSBFbrDjavQB0+/wnfxsMjCU4RLnpO7GybIE=
+        b=De6ExkF7wVeRRDdy58ATeybhFXTE+n8SMTprMei9r9u8MpT6tet/tiK9J5V4fDe7c
+         qNi7JEuiL4QNNKmYfefq4sXUB0BW9vXDli0SZPQ8zG3+E8uMdM1tw4vheH2XmBCDhB
+         bClbO3RykCYJPYzpPPFRp1nCb3YCkOP/hvFynsJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steve MacLean <Steve.MacLean@Microsoft.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Brian Robbins <brianrob@microsoft.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        John Keeping <john@metanate.com>,
-        John Salem <josalem@microsoft.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Peter Jones <pjones@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Octavian Purdila <octavian.purdila@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Tom McDonald <thomas.mcdonald@microsoft.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.3 067/112] perf inject jit: Fix JIT_CODE_MOVE filename
-Date:   Wed, 16 Oct 2019 14:50:59 -0700
-Message-Id: <20191016214902.440901739@linuxfoundation.org>
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.3 064/112] efi/tpm: Dont traverse an event log with no events
+Date:   Wed, 16 Oct 2019 14:50:56 -0700
+Message-Id: <20191016214901.749711997@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -75,73 +73,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve MacLean <Steve.MacLean@microsoft.com>
+From: Peter Jones <pjones@redhat.com>
 
-commit b59711e9b0d22fd47abfa00602fd8c365cdd3ab7 upstream.
+commit 05c8c1ff81ed2eb9bad7c27cf92e55c864c16df8 upstream.
 
-During perf inject --jit, JIT_CODE_MOVE records were injecting MMAP records
-with an incorrect filename. Specifically it was missing the ".so" suffix.
+When there are no entries to put into the final event log, some machines
+will return the template they would have populated anyway.  In this case
+the nr_events field is 0, but the rest of the log is just garbage.
 
-Further the JIT_CODE_LOAD record were silently truncating the
-jr->load.code_index field to 32 bits before generating the filename.
+This patch stops us from trying to iterate the table with
+__calc_tpm2_event_size() when the number of events in the table is 0.
 
-Make both records emit the same filename based on the full 64 bit
-code_index field.
-
-Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
-Cc: stable@vger.kernel.org # v4.6+
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Brian Robbins <brianrob@microsoft.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: John Keeping <john@metanate.com>
-Cc: John Salem <josalem@microsoft.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Tested-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Peter Jones <pjones@redhat.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Acked-by: Matthew Garrett <mjg59@google.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
-Link: http://lore.kernel.org/lkml/BN8PR21MB1362FF8F127B31DBF4121528F7800@BN8PR21MB1362.namprd21.prod.outlook.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Scott Talbert <swt@techie.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Cc: stable@vger.kernel.org
+Fixes: c46f3405692d ("tpm: Reserve the TPM final events table")
+Link: https://lkml.kernel.org/r/20191002165904.8819-5-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/jitdump.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/tpm.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -396,7 +396,7 @@ static int jit_repipe_code_load(struct j
- 	size_t size;
- 	u16 idr_size;
- 	const char *sym;
--	uint32_t count;
-+	uint64_t count;
- 	int ret, csize, usize;
- 	pid_t pid, tid;
- 	struct {
-@@ -419,7 +419,7 @@ static int jit_repipe_code_load(struct j
- 		return -1;
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -75,11 +75,16 @@ int __init efi_tpm_eventlog_init(void)
+ 		goto out;
+ 	}
  
- 	filename = event->mmap2.filename;
--	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%u.so",
-+	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
- 			jd->dir,
- 			pid,
- 			count);
-@@ -530,7 +530,7 @@ static int jit_repipe_code_move(struct j
- 		return -1;
- 
- 	filename = event->mmap2.filename;
--	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%"PRIu64,
-+	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
- 	         jd->dir,
- 	         pid,
- 		 jr->move.code_index);
+-	tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
+-					    + sizeof(final_tbl->version)
+-					    + sizeof(final_tbl->nr_events),
+-					    final_tbl->nr_events,
+-					    log_tbl->log);
++	tbl_size = 0;
++	if (final_tbl->nr_events != 0) {
++		void *events = (void *)efi.tpm_final_log
++				+ sizeof(final_tbl->version)
++				+ sizeof(final_tbl->nr_events);
++
++		tbl_size = tpm2_calc_event_log_size(events,
++						    final_tbl->nr_events,
++						    log_tbl->log);
++	}
+ 	memblock_reserve((unsigned long)final_tbl,
+ 			 tbl_size + sizeof(*final_tbl));
+ 	early_memunmap(final_tbl, sizeof(*final_tbl));
 
 
