@@ -2,254 +2,130 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_MISSP_FREEMAIL,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AB6C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB946ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E406420854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9355020854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7BUnwKw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LobMO/1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389012AbfJPHlk (ORCPT
+        id S2390973AbfJPHmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:41:40 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46304 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728201AbfJPHlk (ORCPT
+        Wed, 16 Oct 2019 03:42:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40904 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728201AbfJPHmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:41:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so26714785wrv.13;
-        Wed, 16 Oct 2019 00:41:38 -0700 (PDT)
+        Wed, 16 Oct 2019 03:42:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e13so5563892pga.7
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=G2RiC5j4ZC+QNkltEYjAf3/AmJoRh3yjXVN3pTFgAVM=;
-        b=l7BUnwKwcMvzSnIW1ly4qOp6Dhg5EoealJKK/k5zXJMeeDJ5iRFB3DGyxyRMrcQQri
-         zA2pMn3C5Eo6/KM8B9EDA+TFfDDYmRL5Ezh/Wm+Gk+nA8goGbGLt2e8MFB0V1sZp7ipQ
-         i82hnaERCLSKfBOQgIx2qWR/7sOkCfLDnjMBw2A99Sc5AUa3nPRA2tOscUbf/0O6rpev
-         6yjR3Tg2+Vz2l0WtBH1mzy23K09++asH4E1aRftQuN99imuzFDLwOmtl5aJJfhgoc4yF
-         c32P/Xiy0z52vsUajta72bADi1xiMjMO66R/pAW76Ijf6ZYoInYQ1fFDJyHsJY/lwgjy
-         JY/g==
+        bh=THg5AIRpzEMlPPt8spygiynKMTygfSswC7awShDdMxU=;
+        b=LobMO/1OtmSkqdhcKBbbKNeFpMIP4hoHsRV4p1VCHldVwZ2SRicw5VVUb6sNSwKbnq
+         VByBnG30mUKPa/sgQ5CddllExySAv+bvMVNglTtD02F6r/aDtsrzrTAgwHu3zs7ZLp8f
+         Ox3OUs2ZqdmEiLFIbVVhkh42diPZLCX/I+lrtQrwBYWJhpU3cQBLQYIv9Cz3rptDcT5m
+         fYV0Fsei2nCyxuIJ9V8Vlq6W5+zaQ0Y33nz2ONgz3gKrXj61WzD2nGF8Po5T2ka0L5Nm
+         Qq13EyOESKDZy6N8pv7QrCTbJTovR+g3W19r+3CyBaK8dvnlZiGju/7rWMIqhQDXchV1
+         ulew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G2RiC5j4ZC+QNkltEYjAf3/AmJoRh3yjXVN3pTFgAVM=;
-        b=prqzweSHoXzWAbLxwq7Tc8mf9HIx+5ivW824oelnxcSSd3c6qwy0Uyc2Z7miM1IZvc
-         16EotzIwEdtC1VFYB8k0c94VLKHeuKeCfmsTzoFxZxQbgEP4BLe7YHQNTMjsUv/zuH8w
-         a1sPodt6ET7jl2Rxa2gYZ9e7m2a7S8bB4F9tjyYfqG0HhOVSgHst8AVHngaiF2aShkam
-         Ru5Buz3REkHbMj5FaFwtb7RfEvfgqN6TdzS8ezTlTpM7WkmiwfJme7YEA7kRoFMGkI2b
-         5o7ztajAheTvdQlC92rfHH37UOyLpAWDxtSi6gwnuXiecr7TJJrfePMXMXzxTHpNwXgF
-         pCOQ==
-X-Gm-Message-State: APjAAAWSkjJHtBNAxoL43a/mH6cROZwOnVNhiHbPSNqRZQuYriKGxTk/
-        RSnfN47rb6YklucRlN+O9ZA=
-X-Google-Smtp-Source: APXvYqwEsUuM0WyqMH+c7Nxa7MjVdmr00UhNnF3QHbFLupUGFRUp/AYeMfMtzGbBkjBDEv6Tuq7YKg==
-X-Received: by 2002:a5d:540e:: with SMTP id g14mr1428833wrv.177.1571211697122;
-        Wed, 16 Oct 2019 00:41:37 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id k24sm6145176wmi.1.2019.10.16.00.41.35
+        bh=THg5AIRpzEMlPPt8spygiynKMTygfSswC7awShDdMxU=;
+        b=lzypU2bH8FQ4Y5gH+SW49Z8KdQ2DSuDYOi1EJt1r4BjC904NVBHP3ElDRaeFAKA+KG
+         MQA3671tK5fPfRrUwtmTNUfd9Dtpdn/Hakw+oVR4iarbTJnr++LX9aPuVL4hwR/7v4TL
+         3tFZb2ObnbBTdVqTb2VzFPRMeCxTlFcOBOVLKNMvbFUSUjHs0kUU34pCMA6XUtXLYb/U
+         5pWU6Uj5pw3p15Mo3I2zB0Dblc/Fm+0cweDKUOwFm4GMXnNaVfWCk/f2t4nwz/w/4ftJ
+         XxELJakuwGkUummoUcNitBIEmf1lTwoT6I4C+qtIBxz3szMWVGfJ/1oLkyjYuAndLhMq
+         b/bg==
+X-Gm-Message-State: APjAAAXIGjiF580tXDfvfoKtKMrDpvq1bQz/8zuKAcBbsdhiag+Ufgyy
+        T5IGWGsNzJXizdWAGBdoBy0=
+X-Google-Smtp-Source: APXvYqzIecCR/3jU0SEKcTA9DhO74LXXfPo/HAnU2KYPgcgmmYd6QrNsRetxpjZrJLuPuTrJuFZDMQ==
+X-Received: by 2002:a63:f453:: with SMTP id p19mr41882831pgk.433.1571211736414;
+        Wed, 16 Oct 2019 00:42:16 -0700 (PDT)
+Received: from whale ([45.52.215.209])
+        by smtp.gmail.com with ESMTPSA id ce16sm2148561pjb.29.2019.10.16.00.42.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 00:41:35 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 09:41:34 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org, kernel-team@android.com,
-        Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pwm: Convert period and duty cycle to u64
-Message-ID: <20191016074134.GE1296874@ulmo>
-References: <1571191899-6150-1-git-send-email-gurus@codeaurora.org>
- <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
+        Wed, 16 Oct 2019 00:42:15 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 00:42:13 -0700
+From:   "<Chandra Annamaneni>" <chandra627@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, gneukum1@gmail.com,
+        michael.scheiderer@fau.de, fabian.krueger@fau.de,
+        linux-kernel@vger.kernel.org, simon@nikanor.nu,
+        dan.carpenter@oracle.com
+Subject: Re: [PATCH 1/5] KPC2000: kpc2000_spi.c: Fix style issues (line
+ length)
+Message-ID: <20191016074213.GB19148@whale>
+References: <20191011055155.4985-1-chandra627@gmail.com>
+ <20191011063219.GA986093@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ffoCPvUAPMgSXi6H"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571191899-6150-2-git-send-email-gurus@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191011063219.GA986093@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 11, 2019 at 08:32:19AM +0200, Greg KH wrote:
+> On Thu, Oct 10, 2019 at 10:51:51PM -0700, Chandra Annamaneni wrote:
+> > Resoved: "WARNING: line over 80 characters" from checkpatch.pl
+> 
+> Please put "staging:" in your subject line, makes it easier to sort and
+> handle.  It should look something like:
+> 	staging: kpc2000_spi: fix line length issues
+> 
+> Looks a lot cleaner, right?
+> 
+> > 
+> > Signed-off-by: Chandra Annamaneni <chandra627@gmail.com>
+> > ---
+> >  drivers/staging/kpc2000/kpc2000_spi.c | 20 ++++++++++----------
+> >  1 file changed, 10 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
+> > index 3be33c450cab..81d79b116ce0 100644
+> > --- a/drivers/staging/kpc2000/kpc2000_spi.c
+> > +++ b/drivers/staging/kpc2000/kpc2000_spi.c
+> > @@ -30,19 +30,19 @@
+> >  #include "kpc.h"
+> >  
+> >  static struct mtd_partition p2kr0_spi0_parts[] = {
+> > -	{ .name = "SLOT_0",	.size = 7798784,		.offset = 0,                },
+> > -	{ .name = "SLOT_1",	.size = 7798784,		.offset = MTDPART_OFS_NXTBLK},
+> > -	{ .name = "SLOT_2",	.size = 7798784,		.offset = MTDPART_OFS_NXTBLK},
+> > -	{ .name = "SLOT_3",	.size = 7798784,		.offset = MTDPART_OFS_NXTBLK},
+> > -	{ .name = "CS0_EXTRA",	.size = MTDPART_SIZ_FULL,	.offset = MTDPART_OFS_NXTBLK},
+> > +	{ .name = "SLOT_0",  .size = 7798784,  .offset = 0,                },
+> > +	{ .name = "SLOT_1",  .size = 7798784,  .offset = MTDPART_OFS_NXTBLK},
+> > +	{ .name = "SLOT_2",  .size = 7798784,  .offset = MTDPART_OFS_NXTBLK},
+> > +	{ .name = "SLOT_3",  .size = 7798784,  .offset = MTDPART_OFS_NXTBLK},
+> > +	{ .name = "CS0_EXTRA",  .size = MTDPART_SIZ_FULL,  .offset = MTDPART_OFS_NXTBLK},
+> 
+> Why did you pick 2 spaces here as a random choice of padding?  That's
+> very odd, please don't.
+> 
+> Either leave this alone (as it lines everything up nicely), or only use
+> one space.  I would suggest just leaving it alone.
+> 
+> thanks,
+> 
+> greg k-h
 
---ffoCPvUAPMgSXi6H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am going to leave it as is at your and Dan C's suggestion. 
 
-On Tue, Oct 15, 2019 at 07:11:39PM -0700, Guru Das Srinagesh wrote:
-> Because period and duty cycle are defined as ints with units of
-> nanoseconds, the maximum time duration that can be set is limited to
-> ~2.147 seconds. Change their definitions to u64 so that higher durations
-> may be set.
->=20
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/pwm/core.c  |  4 ++--
->  drivers/pwm/sysfs.c | 10 +++++-----
->  include/linux/pwm.h | 16 ++++++++--------
->  3 files changed, 15 insertions(+), 15 deletions(-)
+Thanks!
+Chandra
 
-Applied, thanks.
-
-Thierry
-
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 6ad51aa..dc79c03 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -1163,8 +1163,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, str=
-uct seq_file *s)
->  		if (state.enabled)
->  			seq_puts(s, " enabled");
-> =20
-> -		seq_printf(s, " period: %u ns", state.period);
-> -		seq_printf(s, " duty: %u ns", state.duty_cycle);
-> +		seq_printf(s, " period: %llu ns", state.period);
-> +		seq_printf(s, " duty: %llu ns", state.duty_cycle);
->  		seq_printf(s, " polarity: %s",
->  			   state.polarity ? "inverse" : "normal");
-> =20
-> diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-> index 2389b86..3fb1610 100644
-> --- a/drivers/pwm/sysfs.c
-> +++ b/drivers/pwm/sysfs.c
-> @@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
-> =20
->  	pwm_get_state(pwm, &state);
-> =20
-> -	return sprintf(buf, "%u\n", state.period);
-> +	return sprintf(buf, "%llu\n", state.period);
->  }
-> =20
->  static ssize_t period_store(struct device *child,
-> @@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
->  	struct pwm_export *export =3D child_to_pwm_export(child);
->  	struct pwm_device *pwm =3D export->pwm;
->  	struct pwm_state state;
-> -	unsigned int val;
-> +	u64 val;
->  	int ret;
-> =20
-> -	ret =3D kstrtouint(buf, 0, &val);
-> +	ret =3D kstrtou64(buf, 0, &val);
->  	if (ret)
->  		return ret;
-> =20
-> @@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
-> =20
->  	pwm_get_state(pwm, &state);
-> =20
-> -	return sprintf(buf, "%u\n", state.duty_cycle);
-> +	return sprintf(buf, "%llu\n", state.duty_cycle);
->  }
-> =20
->  static ssize_t duty_cycle_store(struct device *child,
-> @@ -212,7 +212,7 @@ static ssize_t capture_show(struct device *child,
->  	if (ret)
->  		return ret;
-> =20
-> -	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
-> +	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
->  }
-> =20
->  static DEVICE_ATTR_RW(period);
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index b2c9c46..1efdd63 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -39,7 +39,7 @@ enum pwm_polarity {
->   * current PWM hardware state.
->   */
->  struct pwm_args {
-> -	unsigned int period;
-> +	u64 period;
->  	enum pwm_polarity polarity;
->  };
-> =20
-> @@ -56,8 +56,8 @@ enum {
->   * @enabled: PWM enabled status
->   */
->  struct pwm_state {
-> -	unsigned int period;
-> -	unsigned int duty_cycle;
-> +	u64 period;
-> +	u64 duty_cycle;
->  	enum pwm_polarity polarity;
->  	bool enabled;
->  };
-> @@ -105,13 +105,13 @@ static inline bool pwm_is_enabled(const struct pwm_=
-device *pwm)
->  	return state.enabled;
->  }
-> =20
-> -static inline void pwm_set_period(struct pwm_device *pwm, unsigned int p=
-eriod)
-> +static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
->  {
->  	if (pwm)
->  		pwm->state.period =3D period;
->  }
-> =20
-> -static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
-> +static inline u64 pwm_get_period(const struct pwm_device *pwm)
->  {
->  	struct pwm_state state;
-> =20
-> @@ -126,7 +126,7 @@ static inline void pwm_set_duty_cycle(struct pwm_devi=
-ce *pwm, unsigned int duty)
->  		pwm->state.duty_cycle =3D duty;
->  }
-> =20
-> -static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *p=
-wm)
-> +static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
->  {
->  	struct pwm_state state;
-> =20
-> @@ -308,8 +308,8 @@ struct pwm_chip {
->   * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
->   */
->  struct pwm_capture {
-> -	unsigned int period;
-> -	unsigned int duty_cycle;
-> +	u64 period;
-> +	u64 duty_cycle;
->  };
-> =20
->  #if IS_ENABLED(CONFIG_PWM)
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->=20
-
---ffoCPvUAPMgSXi6H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2mya4ACgkQ3SOs138+
-s6FBTg/9HxvrPqbqcQrp36je+9mg0wOu6IRZgSJnWjsrWQmUHA5jZcmToEWYwlUA
-4oLcy5TYRte50DkE7gDP0A2A94gMeFEUDQaoXLXYUNTF4d6hSK6BF0Yrao2wX3+c
-IZv4/LoGfSmGdMwxmT0Jg+UFYub481YbNOANHJXCq1qWQpXVT6zm3RMv1GVMnj1Y
-E/m5kwrJuql7wKMQIIwEu0Yoyop4Tc9rdK1jQvw06CkShc6pTOG6Y+QjUYstNtDR
-IwHv7Adp2kaUKgoO9nFzVCcOgKgKMfHwGKkjUa0Gqu7+OpOEe1UgeMeYs1Ih9hJL
-PH7RhrXErru8ZNjDi8DTDQ5jViuLEAdiTYJ8UMP+dTgqoPb2S4XSFCSdWwVnJKGR
-64HA9NQUOTTr6wHdO5VowOwA+rtnlgKSSOtKpcV9ToXJOLv6PIK3lRl6C8gGwR2k
-hHhHiiUmW/kQZEAWzwMfTjYt3LibnRgrxbVwC3amXBdBkjXFXs8/+9drTMZVQWFB
-aaKX40MoLDbkgfEKdM/S2cWzT2Me1xRIGv0q8oCSyjWOZdUQ8SggPCJaVo+9FbzO
-/F1c4xe972AXziz51nZmpMFNLIvRrULI/6AwSxiwK2zrojO3NintC6syAninpetq
-zkNEseFdiq+asEwsdEDsedTMEQEz/VMgGBCADFBbDXoGIEs09Q4=
-=REYO
------END PGP SIGNATURE-----
-
---ffoCPvUAPMgSXi6H--
