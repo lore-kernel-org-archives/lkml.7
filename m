@@ -2,345 +2,182 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4449C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5717BFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB51E20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A44D20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="aRciCog4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbfJPJdA convert rfc822-to-8bit (ORCPT
+        id S2389173AbfJPJdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:33:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:33820 "EHLO foss.arm.com"
+        Wed, 16 Oct 2019 05:33:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:48093 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbfJPJdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:33:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C777142F;
-        Wed, 16 Oct 2019 02:32:59 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 178203F6C4;
-        Wed, 16 Oct 2019 02:32:57 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 10:32:48 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>, tglx@linutronix.de
-Subject: Re: [PATCH REPOST] lib/ubsan: Don't seralize UBSAN report
-Message-ID: <20191016103248.3d5f1d4f@donnerap.cambridge.arm.com>
-In-Reply-To: <20191010163616.qon4ppmhf74l4fix@linutronix.de>
-References: <20191010163616.qon4ppmhf74l4fix@linutronix.de>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        id S1727328AbfJPJdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:33:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46tRtH57fQz9sP3;
+        Wed, 16 Oct 2019 20:33:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1571218391;
+        bh=pjVc29H4bZtGuE5SgY2LVplntFwXPBG67IBZzDY04AA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=aRciCog4aQbTDlib+FMZmE8hQpUAoz51x1PhPzPWoQmHJP31msdpBp2gSBgW188KM
+         8w1rI1B2NQlyY5gBytuLYnRlUsbpjgo+1MxYfdpupMk9VZ0Zk7fejnV70YKyhZY0WQ
+         sUzi14Lj+TObxgLUSm625eECZR79+Fh0ZWfVpgebz9LbFlzb5j5HoCBJq7mqsICw7R
+         GbsIeMuaigeAyur/K/cx3L3NeoQuIpKL4+oKyNToAR8mPFbOPldNoklhL0OVHkJLK1
+         JJmgF0K4mIBKo4E7zdP05BDqFv1bC9/838XrblQj28Thbr7rxQ3iNZD1Y/wKKA3eFj
+         QEQAFQt5lISLw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, tglx@linutronix.de,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH 03/34] powerpc: Use CONFIG_PREEMPTION
+In-Reply-To: <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
+References: <20191015191821.11479-1-bigeasy@linutronix.de> <20191015191821.11479-4-bigeasy@linutronix.de> <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
+Date:   Wed, 16 Oct 2019 20:33:08 +1100
+Message-ID: <87d0ext4q3.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Oct 2019 18:36:16 +0200
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Le 15/10/2019 =C3=A0 21:17, Sebastian Andrzej Siewior a =C3=A9crit=C2=A0:
+>> From: Thomas Gleixner <tglx@linutronix.de>
+>>=20
+>> CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+>> Both PREEMPT and PREEMPT_RT require the same functionality which today
+>> depends on CONFIG_PREEMPT.
+>>=20
+>> Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
+>> output in __die().
+>
+> powerpc doesn't select ARCH_SUPPORTS_RT, so this change is useless as=20
+> CONFIG_PREEMPT_RT cannot be selected.
 
-Hi,
+Yeah I don't think there's any point adding the "_RT" to the __die()
+output until/if we ever start supporting PREEMPT_RT.
 
-you seem to be me missing the "From:" line here, to keep Julien as the author. If you have this patch in a git repo, you could use:
-$ git commit --amend --author "Julien Grall <julien.grall@arm.com>"
-so that git keeps the authorship, which should be translated into the proper email form (From: ...) by git send-email.
+cheers
 
-And what is the reason for the repost anyway?
 
-Cheers,
-Andre.
-
-> At the moment, UBSAN report will be serialized using a spin_lock(). On
-> RT-systems, spinlocks are turned to rt_spin_lock and may sleep. This will
-> result to the following splat if the undefined behavior is in a context
-> that can not sleep:
-> 
-> | BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:968
-> | in_atomic(): 1, irqs_disabled(): 128, pid: 3447, name: make
-> | 1 lock held by make/3447:
-> |  #0: 000000009a966332 (&mm->mmap_sem){++++}, at: do_page_fault+0x140/0x4f8
-> | Preemption disabled at:
-> | [<ffff000011324a4c>] rt_mutex_futex_unlock+0x4c/0xb0
-> | CPU: 3 PID: 3447 Comm: make Tainted: G        W         5.2.14-rt7-01890-ge6e057589653 #911
-> | Call trace:
-> …
-> |  ___might_sleep+0x154/0x210
-> |  rt_spin_lock+0x68/0xa0
-> |  ubsan_prologue+0x30/0x68
-> |  handle_overflow+0x64/0xe0
-> |  __ubsan_handle_add_overflow+0x10/0x18
-> 
-> The spin_lock() will protect against multiple CPUs to output a report
-> together, I guess to prevent them to be interleaved. However, they can
-> still interleave with other messages (and even splat from __migth_sleep).
-> 
-> So the lock usefulness seems pretty limited. Rather than trying to
-> accomodate RT-system by switching to a raw_spin_lock(), the lock is now
-> completely dropped.
-> 
-> Link: https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
-> Reported-by: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: 
-> Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> Repost of
->   https://lkml.kernel.org/r/20190920100835.14999-1-julien.grall@arm.com
-> 
->  lib/ubsan.c | 64 +++++++++++++++++++----------------------------------
->  1 file changed, 23 insertions(+), 41 deletions(-)
-> 
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index e7d31735950de..39d5952c42733 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -140,25 +140,21 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
->  	}
->  }
->  
-> -static DEFINE_SPINLOCK(report_lock);
-> -
-> -static void ubsan_prologue(struct source_location *location,
-> -			unsigned long *flags)
-> +static void ubsan_prologue(struct source_location *location)
->  {
->  	current->in_ubsan++;
-> -	spin_lock_irqsave(&report_lock, *flags);
->  
->  	pr_err("========================================"
->  		"========================================\n");
->  	print_source_location("UBSAN: Undefined behaviour in", location);
->  }
->  
-> -static void ubsan_epilogue(unsigned long *flags)
-> +static void ubsan_epilogue(void)
->  {
->  	dump_stack();
->  	pr_err("========================================"
->  		"========================================\n");
-> -	spin_unlock_irqrestore(&report_lock, *flags);
-> +
->  	current->in_ubsan--;
->  }
->  
-> @@ -167,14 +163,13 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
->  {
->  
->  	struct type_descriptor *type = data->type;
-> -	unsigned long flags;
->  	char lhs_val_str[VALUE_LENGTH];
->  	char rhs_val_str[VALUE_LENGTH];
->  
->  	if (suppress_report(&data->location))
->  		return;
->  
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  
->  	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
->  	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
-> @@ -186,7 +181,7 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
->  		rhs_val_str,
->  		type->type_name);
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  
->  void __ubsan_handle_add_overflow(struct overflow_data *data,
-> @@ -214,20 +209,19 @@ EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
->  void __ubsan_handle_negate_overflow(struct overflow_data *data,
->  				void *old_val)
->  {
-> -	unsigned long flags;
->  	char old_val_str[VALUE_LENGTH];
->  
->  	if (suppress_report(&data->location))
->  		return;
->  
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  
->  	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
->  
->  	pr_err("negation of %s cannot be represented in type %s:\n",
->  		old_val_str, data->type->type_name);
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
->  
-> @@ -235,13 +229,12 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
->  void __ubsan_handle_divrem_overflow(struct overflow_data *data,
->  				void *lhs, void *rhs)
->  {
-> -	unsigned long flags;
->  	char rhs_val_str[VALUE_LENGTH];
->  
->  	if (suppress_report(&data->location))
->  		return;
->  
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  
->  	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
->  
-> @@ -251,58 +244,52 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
->  	else
->  		pr_err("division by zero\n");
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  EXPORT_SYMBOL(__ubsan_handle_divrem_overflow);
->  
->  static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
->  {
-> -	unsigned long flags;
-> -
->  	if (suppress_report(data->location))
->  		return;
->  
-> -	ubsan_prologue(data->location, &flags);
-> +	ubsan_prologue(data->location);
->  
->  	pr_err("%s null pointer of type %s\n",
->  		type_check_kinds[data->type_check_kind],
->  		data->type->type_name);
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  
->  static void handle_misaligned_access(struct type_mismatch_data_common *data,
->  				unsigned long ptr)
->  {
-> -	unsigned long flags;
-> -
->  	if (suppress_report(data->location))
->  		return;
->  
-> -	ubsan_prologue(data->location, &flags);
-> +	ubsan_prologue(data->location);
->  
->  	pr_err("%s misaligned address %p for type %s\n",
->  		type_check_kinds[data->type_check_kind],
->  		(void *)ptr, data->type->type_name);
->  	pr_err("which requires %ld byte alignment\n", data->alignment);
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  
->  static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
->  					unsigned long ptr)
->  {
-> -	unsigned long flags;
-> -
->  	if (suppress_report(data->location))
->  		return;
->  
-> -	ubsan_prologue(data->location, &flags);
-> +	ubsan_prologue(data->location);
->  	pr_err("%s address %p with insufficient space\n",
->  		type_check_kinds[data->type_check_kind],
->  		(void *) ptr);
->  	pr_err("for an object of type %s\n", data->type->type_name);
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  
->  static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
-> @@ -351,25 +338,23 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
->  
->  void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
->  {
-> -	unsigned long flags;
->  	char index_str[VALUE_LENGTH];
->  
->  	if (suppress_report(&data->location))
->  		return;
->  
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  
->  	val_to_string(index_str, sizeof(index_str), data->index_type, index);
->  	pr_err("index %s is out of range for type %s\n", index_str,
->  		data->array_type->type_name);
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
->  
->  void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
->  					void *lhs, void *rhs)
->  {
-> -	unsigned long flags;
->  	struct type_descriptor *rhs_type = data->rhs_type;
->  	struct type_descriptor *lhs_type = data->lhs_type;
->  	char rhs_str[VALUE_LENGTH];
-> @@ -378,7 +363,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
->  	if (suppress_report(&data->location))
->  		return;
->  
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  
->  	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
->  	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
-> @@ -401,18 +386,16 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
->  			lhs_str, rhs_str,
->  			lhs_type->type_name);
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
->  
->  
->  void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
->  {
-> -	unsigned long flags;
-> -
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  	pr_err("calling __builtin_unreachable()\n");
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  	panic("can't return from __builtin_unreachable()");
->  }
->  EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
-> @@ -420,19 +403,18 @@ EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
->  void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
->  				void *val)
->  {
-> -	unsigned long flags;
->  	char val_str[VALUE_LENGTH];
->  
->  	if (suppress_report(&data->location))
->  		return;
->  
-> -	ubsan_prologue(&data->location, &flags);
-> +	ubsan_prologue(&data->location);
->  
->  	val_to_string(val_str, sizeof(val_str), data->type, val);
->  
->  	pr_err("load of value %s is not a valid value for type %s\n",
->  		val_str, data->type->type_name);
->  
-> -	ubsan_epilogue(&flags);
-> +	ubsan_epilogue();
->  }
->  EXPORT_SYMBOL(__ubsan_handle_load_invalid_value);
-
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 3e56c9c2f16ee..8ead8d6e1cbc8 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -106,7 +106,7 @@ config LOCKDEP_SUPPORT
+>>   config GENERIC_LOCKBREAK
+>>   	bool
+>>   	default y
+>> -	depends on SMP && PREEMPT
+>> +	depends on SMP && PREEMPTION
+>>=20=20=20
+>>   config GENERIC_HWEIGHT
+>>   	bool
+>> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_=
+32.S
+>> index d60908ea37fb9..e1a4c39b83b86 100644
+>> --- a/arch/powerpc/kernel/entry_32.S
+>> +++ b/arch/powerpc/kernel/entry_32.S
+>> @@ -897,7 +897,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
+>>   	bne-	0b
+>>   1:
+>>=20=20=20
+>> -#ifdef CONFIG_PREEMPT
+>> +#ifdef CONFIG_PREEMPTION
+>>   	/* check current_thread_info->preempt_count */
+>>   	lwz	r0,TI_PREEMPT(r2)
+>>   	cmpwi	0,r0,0		/* if non-zero, just restore regs and return */
+>> @@ -921,7 +921,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
+>>   	 */
+>>   	bl	trace_hardirqs_on
+>>   #endif
+>> -#endif /* CONFIG_PREEMPT */
+>> +#endif /* CONFIG_PREEMPTION */
+>>   restore_kuap:
+>>   	kuap_restore r1, r2, r9, r10, r0
+>>=20=20=20
+>> diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_=
+64.S
+>> index 6467bdab8d405..83733376533e8 100644
+>> --- a/arch/powerpc/kernel/entry_64.S
+>> +++ b/arch/powerpc/kernel/entry_64.S
+>> @@ -840,7 +840,7 @@ _GLOBAL(ret_from_except_lite)
+>>   	bne-	0b
+>>   1:
+>>=20=20=20
+>> -#ifdef CONFIG_PREEMPT
+>> +#ifdef CONFIG_PREEMPTION
+>>   	/* Check if we need to preempt */
+>>   	andi.	r0,r4,_TIF_NEED_RESCHED
+>>   	beq+	restore
+>> @@ -871,7 +871,7 @@ _GLOBAL(ret_from_except_lite)
+>>   	li	r10,MSR_RI
+>>   	mtmsrd	r10,1		  /* Update machine state */
+>>   #endif /* CONFIG_PPC_BOOK3E */
+>> -#endif /* CONFIG_PREEMPT */
+>> +#endif /* CONFIG_PREEMPTION */
+>>=20=20=20
+>>   	.globl	fast_exc_return_irq
+>>   fast_exc_return_irq:
+>> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+>> index 82f43535e6867..23d2f20be4f2e 100644
+>> --- a/arch/powerpc/kernel/traps.c
+>> +++ b/arch/powerpc/kernel/traps.c
+>> @@ -252,14 +252,19 @@ NOKPROBE_SYMBOL(oops_end);
+>>=20=20=20
+>>   static int __die(const char *str, struct pt_regs *regs, long err)
+>>   {
+>> +	const char *pr =3D "";
+>> +
+>
+> Please follow the same approach as already existing. Don't add a local=20
+> var for that.
+>
+>>   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+>>=20=20=20
+>> +	if (IS_ENABLED(CONFIG_PREEMPTION))
+>> +		pr =3D IS_ENABLED(CONFIG_PREEMPT_RT) ? " PREEMPT_RT" : " PREEMPT";
+>> +
+>
+> drop
+>
+>>   	printk("%s PAGE_SIZE=3D%luK%s%s%s%s%s%s%s %s\n",
+>
+> Add one %s
+>
+>>   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>>   	       PAGE_SIZE / 1024,
+>>   	       early_radix_enabled() ? " MMU=3DRadix" : "",
+>>   	       early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ? " MMU=3DHash" : "",
+>> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+>
+> Replace by: 	IS_ENABLED(CONFIG_PREEMPTION) ? " PREEMPT" : ""
+>
+>> +	       pr,
+>
+> add something like: IS_ENABLED(CONFIG_PREEMPT_RT) ? "_RT" : ""
+>
+>>   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>>   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=3D" __stringify(NR_CPUS)) =
+: "",
+>>   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+>>=20
+>
+> Christophe
