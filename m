@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CD2FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70282ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E7E2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471392168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263736;
-	bh=45TN+AVUUlUvz2/NcfGvcrPhot7V+NoTaE61N7NufjY=;
+	s=default; t=1571263740;
+	bh=hAsqppvURYM9GWpczI9rGWlTdjnFjUFXQk2AxTJM8U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiELzylkODVw4Y6K2nutq35PnFNli+4/GqiBqvGqGeaGwAA7MpZdPifbJpJ0LEV6b
-	 X1V4YVPziv49x1zc5xgOfjPph0Rsvb2rjWUn47KelUHRsuVxbDbgCAFYvgmtXTwJBU
-	 I454d0PtAI6gGrc4LeqflGpw1e1PQN23nlAwqxnk=
+	b=O/fTHiTIBP0kba2lA0ORbxspKA2LLD2TRMZH45U5PIVhsswAiys1OqISvj1wYchVy
+	 BBd6ucODymXIbjIMZq2qEdXPuGSrKyHKjsrRPd495rBif7DF579Ol+ZhJkT9Zh33ny
+	 lvOH1wsfl0u0/fwZ1UcXKzDUZ4GJpO2PvdUdpDA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439121AbfJPWIz (ORCPT
+        id S2395519AbfJPV5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395523AbfJPV5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:42 -0400
+        id S2437943AbfJPV44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:56 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13701222BD;
-        Wed, 16 Oct 2019 21:57:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314F320872;
+        Wed, 16 Oct 2019 21:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263060;
-        bh=45TN+AVUUlUvz2/NcfGvcrPhot7V+NoTaE61N7NufjY=;
+        s=default; t=1571263016;
+        bh=hAsqppvURYM9GWpczI9rGWlTdjnFjUFXQk2AxTJM8U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNXoalnRFmGhiPMEmOTyCtWG1NuuTawG7zjN4HjKtSMq63J9qaxPISfVyETsxS02p
-         v8nuL/U0Dr6bg5HkfuCOsR/sXQxul7uMxN/Bn/Z60iV7rBQid9zDi0F7EUX+iWIKo9
-         QpkGwZT3VRi7A8gRjb+MP6B7v40eUCIWx6z5y4sk=
+        b=JhT/Qq8WqFMaOMgz0Hvmcme3rWhh371ywdqSdXe9rLhxw14KjpbUvC/0IYg5Gq/Id
+         Iy21zJsL+HaaRf8fEP5R0crslPpyvF46x9S2RZnEiSwljW/nc2Sgl3BHaoH+uhmA1x
+         Gy00CzzI6Q8JW3HsQsR7TyN84vUx3d/F52HLUybg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 62/81] cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a panic
-Date:   Wed, 16 Oct 2019 14:51:13 -0700
-Message-Id: <20191016214843.979454273@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0761012cebf7bdb38137@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 18/81] USB: iowarrior: fix use-after-free on disconnect
+Date:   Wed, 16 Oct 2019 14:50:29 -0700
+Message-Id: <20191016214823.748674574@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,163 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-Commit 487317c99477 ("cifs: add spinlock for the openFileList to
-cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
-the openFileList, but missed a few places where cifs_inode->openFileList
-was enumerated.  Change these remaining tcon->open_file_lock to
-cifsInodeInfo->open_file_lock to avoid panic in is_size_safe_to_change.
+commit edc4746f253d907d048de680a621e121517f484b upstream.
 
-[17313.245641] RIP: 0010:is_size_safe_to_change+0x57/0xb0 [cifs]
-[17313.245645] Code: 68 40 48 89 ef e8 19 67 b7 f1 48 8b 43 40 48 8d 4b 40 48 8d 50 f0 48 39 c1 75 0f eb 47 48 8b 42 10 48 8d 50 f0 48 39 c1 74 3a <8b> 80 88 00 00 00 83 c0 01 a8 02 74 e6 48 89 ef c6 07 00 0f 1f 40
-[17313.245649] RSP: 0018:ffff94ae1baefa30 EFLAGS: 00010202
-[17313.245654] RAX: dead000000000100 RBX: ffff88dc72243300 RCX: ffff88dc72243340
-[17313.245657] RDX: dead0000000000f0 RSI: 00000000098f7940 RDI: ffff88dd3102f040
-[17313.245659] RBP: ffff88dd3102f040 R08: 0000000000000000 R09: ffff94ae1baefc40
-[17313.245661] R10: ffffcdc8bb1c4e80 R11: ffffcdc8b50adb08 R12: 00000000098f7940
-[17313.245663] R13: ffff88dc72243300 R14: ffff88dbc8f19600 R15: ffff88dc72243428
-[17313.245667] FS:  00007fb145485700(0000) GS:ffff88dd3e000000(0000) knlGS:0000000000000000
-[17313.245670] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[17313.245672] CR2: 0000026bb46c6000 CR3: 0000004edb110003 CR4: 00000000007606e0
-[17313.245753] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[17313.245756] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[17313.245759] PKRU: 55555554
-[17313.245761] Call Trace:
-[17313.245803]  cifs_fattr_to_inode+0x16b/0x580 [cifs]
-[17313.245838]  cifs_get_inode_info+0x35c/0xa60 [cifs]
-[17313.245852]  ? kmem_cache_alloc_trace+0x151/0x1d0
-[17313.245885]  cifs_open+0x38f/0x990 [cifs]
-[17313.245921]  ? cifs_revalidate_dentry_attr+0x3e/0x350 [cifs]
-[17313.245953]  ? cifsFileInfo_get+0x30/0x30 [cifs]
-[17313.245960]  ? do_dentry_open+0x132/0x330
-[17313.245963]  do_dentry_open+0x132/0x330
-[17313.245969]  path_openat+0x573/0x14d0
-[17313.245974]  do_filp_open+0x93/0x100
-[17313.245979]  ? __check_object_size+0xa3/0x181
-[17313.245986]  ? audit_alloc_name+0x7e/0xd0
-[17313.245992]  do_sys_open+0x184/0x220
-[17313.245999]  do_syscall_64+0x5b/0x1b0
+A recent fix addressing a deadlock on disconnect introduced a new bug
+by moving the present flag out of the critical section protected by the
+driver-data mutex. This could lead to a racing release() freeing the
+driver data before disconnect() is done with it.
 
-Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInodeInfo")
+Due to insufficient locking a related use-after-free could be triggered
+also before the above mentioned commit. Specifically, the driver needs
+to hold the driver-data mutex also while checking the opened flag at
+disconnect().
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: c468a8aa790e ("usb: iowarrior: fix deadlock on disconnect")
+Fixes: 946b960d13c1 ("USB: add driver for iowarrior devices.")
+Cc: stable <stable@vger.kernel.org>	# 2.6.21
+Reported-by: syzbot+0761012cebf7bdb38137@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009104846.5925-2-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/cifs/file.c |   27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ drivers/usb/misc/iowarrior.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1841,13 +1841,12 @@ struct cifsFileInfo *find_readable_file(
- {
- 	struct cifsFileInfo *open_file = NULL;
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(cifs_inode->vfs_inode.i_sb);
--	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -866,8 +866,6 @@ static void iowarrior_disconnect(struct
+ 	dev = usb_get_intfdata(interface);
+ 	mutex_lock(&iowarrior_open_disc_lock);
+ 	usb_set_intfdata(interface, NULL);
+-	/* prevent device read, write and ioctl */
+-	dev->present = 0;
  
- 	/* only filter by fsuid on multiuser mounts */
- 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER))
- 		fsuid_only = false;
+ 	minor = dev->minor;
+ 	mutex_unlock(&iowarrior_open_disc_lock);
+@@ -878,8 +876,7 @@ static void iowarrior_disconnect(struct
+ 	mutex_lock(&dev->mutex);
  
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- 	/* we could simply get the first_list_entry since write-only entries
- 	   are always at the end of the list but since the first entry might
- 	   have a close pending, we go through the whole list */
-@@ -1859,7 +1858,7 @@ struct cifsFileInfo *find_readable_file(
- 				/* found a good file */
- 				/* lock it so it will not be closed on us */
- 				cifsFileInfo_get(open_file);
--				spin_unlock(&tcon->open_file_lock);
-+				spin_unlock(&cifs_inode->open_file_lock);
- 				return open_file;
- 			} /* else might as well continue, and look for
- 			     another, or simply have the caller reopen it
-@@ -1867,7 +1866,7 @@ struct cifsFileInfo *find_readable_file(
- 		} else /* write only file */
- 			break; /* write only files are last so must be done */
+ 	/* prevent device read, write and ioctl */
+-
+-	mutex_unlock(&dev->mutex);
++	dev->present = 0;
+ 
+ 	if (dev->opened) {
+ 		/* There is a process that holds a filedescriptor to the device ,
+@@ -889,8 +886,10 @@ static void iowarrior_disconnect(struct
+ 		usb_kill_urb(dev->int_in_urb);
+ 		wake_up_interruptible(&dev->read_wait);
+ 		wake_up_interruptible(&dev->write_wait);
++		mutex_unlock(&dev->mutex);
+ 	} else {
+ 		/* no process is using the device, cleanup now */
++		mutex_unlock(&dev->mutex);
+ 		iowarrior_delete(dev);
  	}
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 	return NULL;
- }
- 
-@@ -1876,7 +1875,6 @@ struct cifsFileInfo *find_writable_file(
- {
- 	struct cifsFileInfo *open_file, *inv_file = NULL;
- 	struct cifs_sb_info *cifs_sb;
--	struct cifs_tcon *tcon;
- 	bool any_available = false;
- 	int rc;
- 	unsigned int refind = 0;
-@@ -1892,16 +1890,15 @@ struct cifsFileInfo *find_writable_file(
- 	}
- 
- 	cifs_sb = CIFS_SB(cifs_inode->vfs_inode.i_sb);
--	tcon = cifs_sb_master_tcon(cifs_sb);
- 
- 	/* only filter by fsuid on multiuser mounts */
- 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER))
- 		fsuid_only = false;
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- refind_writable:
- 	if (refind > MAX_REOPEN_ATT) {
--		spin_unlock(&tcon->open_file_lock);
-+		spin_unlock(&cifs_inode->open_file_lock);
- 		return NULL;
- 	}
- 	list_for_each_entry(open_file, &cifs_inode->openFileList, flist) {
-@@ -1913,7 +1910,7 @@ refind_writable:
- 			if (!open_file->invalidHandle) {
- 				/* found a good writable file */
- 				cifsFileInfo_get(open_file);
--				spin_unlock(&tcon->open_file_lock);
-+				spin_unlock(&cifs_inode->open_file_lock);
- 				return open_file;
- 			} else {
- 				if (!inv_file)
-@@ -1932,7 +1929,7 @@ refind_writable:
- 		cifsFileInfo_get(inv_file);
- 	}
- 
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 
- 	if (inv_file) {
- 		rc = cifs_reopen_file(inv_file, false);
-@@ -1946,7 +1943,7 @@ refind_writable:
- 			cifsFileInfo_put(inv_file);
- 			++refind;
- 			inv_file = NULL;
--			spin_lock(&tcon->open_file_lock);
-+			spin_lock(&cifs_inode->open_file_lock);
- 			goto refind_writable;
- 		}
- 	}
-@@ -4007,17 +4004,15 @@ static int cifs_readpage(struct file *fi
- static int is_inode_writable(struct cifsInodeInfo *cifs_inode)
- {
- 	struct cifsFileInfo *open_file;
--	struct cifs_tcon *tcon =
--		cifs_sb_master_tcon(CIFS_SB(cifs_inode->vfs_inode.i_sb));
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- 	list_for_each_entry(open_file, &cifs_inode->openFileList, flist) {
- 		if (OPEN_FMODE(open_file->f_flags) & FMODE_WRITE) {
--			spin_unlock(&tcon->open_file_lock);
-+			spin_unlock(&cifs_inode->open_file_lock);
- 			return 1;
- 		}
- 	}
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 	return 0;
- }
  
 
 
