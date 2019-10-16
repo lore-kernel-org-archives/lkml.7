@@ -2,114 +2,121 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9543FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514F7FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A13CA21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIg43a4P"
+	by mail.kernel.org (Postfix) with ESMTP id 2EADA2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405456AbfJPNeK (ORCPT
+        id S1731569AbfJPNgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:34:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34824 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405403AbfJPNd4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:33:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y21so2810515wmi.0;
-        Wed, 16 Oct 2019 06:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EVcGe0jhVemfS4F9ZaDSPVCJM3kLwDEzlwrCz/1Vhro=;
-        b=BIg43a4PhnBN6aknYztJwMUcTY0MIAypkizEN//oN9dYCn9Fx6o5uPghISks+nlsiu
-         iE9DOdnWOfzw95aUaB5vapQZO80vx49X6l6WLFhQzzo32sUYrutfl4b3xGaL+tbsAgt4
-         c97yMteO5mTKnQbKtSqGkCnt1luJ4QtJrEbCx8uyxAUISzAT/P2CK9mP75qZtZZUqeuk
-         94Mrm1MF8ac8ZC3XOMOZaeXaF9UjYAIuTkoRpKsa3O1c1b0+VJCch0E3Q5HkDXoOJslO
-         RID3HC3Q/LqApR514VY+AQv564qkiUmq+JLCqib4mQXe+YbVvRPh9ppdOw+7TrZ7tZ3I
-         neVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EVcGe0jhVemfS4F9ZaDSPVCJM3kLwDEzlwrCz/1Vhro=;
-        b=UhpTTosO4tlEzewpHFGxM4HMWIpxSA9p41bY1438pN+0kVRWj2pfQwAgzt0OgDzr0w
-         URWS2P8HTEhQuRAeGYHgF7mY9z/suVPxph4ODDPBDKgp6R5Uw3+eGfLNVj2i9G5DY4Ou
-         A3nztedv6kh/rs/TneFlxonoZoFjpqDi/Nqur2z6sck1CcGJQvF5PSvmr7rPY6AXi292
-         v94XP5GQSa7BSGtQt7mzffjHdY81Jl2UvSS7y9/YRuqOjnGbQrA1U5aPpMw3/mBi+7am
-         dVQ0X42X4Uk/U2LfG/Kyt9dK8bnpLROq63L1qgKR7eEJlQqd0Yw5eJ5jVlK9oIoPDmaC
-         05qw==
-X-Gm-Message-State: APjAAAVN0BYzgysrqI2XjfoUVVi1c75v6tLP0u+l1SUx7Wjh4CJEX6oz
-        SqG4kQMO+mxD7gBuKb5ugcg=
-X-Google-Smtp-Source: APXvYqwGL6jmkbSgelGmHpLhCjNcVPYnOVsZM87fvj53cE9tOmTuLcQx6uR26uBy9cXoYbg1C35K1A==
-X-Received: by 2002:a05:600c:1088:: with SMTP id e8mr3526355wmd.27.1571232834229;
-        Wed, 16 Oct 2019 06:33:54 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id h17sm3139998wme.6.2019.10.16.06.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 06:33:53 -0700 (PDT)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 3/4] ARM: dts: sun8i: a83t: Add Security System node
-Date:   Wed, 16 Oct 2019 15:33:44 +0200
-Message-Id: <20191016133345.9076-4-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191016133345.9076-1-clabbe.montjoie@gmail.com>
-References: <20191016133345.9076-1-clabbe.montjoie@gmail.com>
+        Wed, 16 Oct 2019 09:36:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38124 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727619AbfJPNge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:36:34 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6DF9E476CBDCC42BCA3A;
+        Wed, 16 Oct 2019 21:36:33 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 21:36:24 +0800
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mingo@redhat.com>,
+        <peterz@infradead.org>, <alex.williamson@redhat.com>
+CC:     Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>
+Subject: Kernel panic while doing vfio-pci hot-plug/unplug test
+Message-ID: <79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com>
+Date:   Wed, 16 Oct 2019 21:36:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Security System is a hardware cryptographic accelerator that support
-AES/MD5/SHA1/DES/3DES/PRNG/RSA algorithms.
-It could be found on Allwinner SoC A80 and A83T
+Hi all,
 
-This patch add it on the Allwinner A83T SoC Device-tree.
+Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
+See the call stack below:
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+[66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
+[66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
+[66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
+[66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
+[66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
+[66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
+[66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
+[66630.246266] Mem abort info:
+[66630.249047]   ESR = 0x8600000d
+[66630.252088]   Exception class = IABT (current EL), IL = 32 bits
+[66630.257981]   SET = 0, FnV = 0
+[66630.261022]   EA = 0, S1PTW = 0
+[66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
+[66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
+[66630.277751] Internal error: Oops: 8600000d [#1] SMP
+[66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
+[66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
+[66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
+[66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
+[66630.314042] pc : 0xffff802dac469000
+[66630.317519] lr : __wake_up_common+0x90/0x1a8
+[66630.321768] sp : ffff00027746bb00
+[66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
+[66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
+[66630.335643] x25: 0000000000000000 x24: 0000000000000000
+[66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
+[66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
+[66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
+[66630.356793] x17: 0000000000000000 x16: 0000000000000000
+[66630.362081] x15: 0000000000000000 x14: 0000000000000000
+[66630.367368] x13: 0000000000000000 x12: 0000000000000000
+[66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
+[66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
+[66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
+[66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
+[66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
+[66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
+[66630.404381] Call trace:
+[66630.406818]  0xffff802dac469000
+[66630.409945]  __wake_up_common_lock+0xa8/0x1a0
+[66630.414283]  __wake_up+0x40/0x50
+[66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
+[66630.421752]  pci_try_reset_function+0x58/0x78
+[66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
+[66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+[66630.436158]  do_vfs_ioctl+0xc4/0x8c0
+[66630.439718]  ksys_ioctl+0x8c/0xa0
+[66630.443018]  __arm64_sys_ioctl+0x28/0x38
+[66630.446925]  el0_svc_common+0x78/0x130
+[66630.450657]  el0_svc_handler+0x38/0x78
+[66630.454389]  el0_svc+0x8/0xc
+[66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
+[66630.463325] kernel fault(0x1) notification starting on CPU 41
+[66630.469044] kernel fault(0x1) notification finished on CPU 41
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 74bb053cf23c..0a6e9d92277c 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -583,6 +583,16 @@
- 			reg = <0x1c14000 0x400>;
- 		};
- 
-+		crypto: crypto@1c15000 {
-+			compatible = "allwinner,sun8i-a83t-crypto";
-+			reg = <0x01c15000 0x1000>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&ccu RST_BUS_SS>;
-+			reset-names = "bus";
-+			clocks = <&ccu CLK_BUS_SS>, <&ccu CLK_SS>;
-+			clock-names = "bus", "mod";
-+		};
-+
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a83t-musb",
- 				     "allwinner,sun8i-a33-musb";
+The chance to reproduce this problem is very small. We had an initial analysis of this problem,
+and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
+
+I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
+concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+
+
 -- 
-2.21.0
+
+Thanks,
+Xiang
 
