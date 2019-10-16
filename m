@@ -2,52 +2,57 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA9ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004A6FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C47D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C078F207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264316;
-	bh=f9IPlNHLKFCsJuY8349dycvrJB7cmi/z+5puEsg0Q7o=;
+	s=default; t=1571264322;
+	bh=1eNzkQKB/omEwyVgtMMgoDNH1lBHiCVbElxjt1odP9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+dAtZ7i73iIp4osh+yrPpTYjEkNxD03l5MMuXUt99dPrkvoLBX8ZRv1xYC5ScfzQ
-	 RscfICHwtUB/gcIj+BN7FEMMlLwAzLi6ra3KTHhOH0q9vDfW0vNa8MdF4H760k+t27
-	 Uq/6zvTeGgKGXNFVCW5GiahO8qa0TD80gFK+HC5A=
+	b=LSO9ZWpNucXAOKsclyI3P6W/OsGs532Qwt1vKZESH/KXP+3UADnUdGNOCmejiJr8X
+	 +LSd1OZJmL9a+ESPv1SjBKLmLDp3YmJJZhHtpXSAulNHfqMllOPlyJM3bB7o5X6xq/
+	 9ysNPGT+Y5RoDGERofcmRk17FlSmnBno/l7PglAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391797AbfJPWSb (ORCPT
+        id S2388982AbfJPWSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44372 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394996AbfJPVy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:26 -0400
+        id S2394976AbfJPVyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:23 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A423421A4C;
-        Wed, 16 Oct 2019 21:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2FD21D7A;
+        Wed, 16 Oct 2019 21:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262865;
-        bh=f9IPlNHLKFCsJuY8349dycvrJB7cmi/z+5puEsg0Q7o=;
+        s=default; t=1571262862;
+        bh=1eNzkQKB/omEwyVgtMMgoDNH1lBHiCVbElxjt1odP9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLdcnChFTCsJGgBOj/5gb2EykNnIGj8SUSahL09pWBqmXmmhkYfbEo8MDLuwwtHQ5
-         7V8johGqli6CCbgHELgYKrlpfqu76hmK135cwWug4bQnX6Wy6DO38apk1SPu4gykCB
-         OPh1V7sJTdUfwpw4z+fBIMJv2UoPBqPk1GVtXkao=
+        b=bYbrk1fMQyVyuL6JJOVHzoB73d1WfTml+hYCm7fR6rquz9+SMFBU/LSP8TpIimeNB
+         MhJv7flGlsqM9g6+WDfNtfoEPmnMVx1TLtJyoVrSfIipe/4xhS7ptXBhuG6/IVU/Pd
+         V3GWP8i+3nxWg2f8wst7aySEO9SLQ6zAgyPh6h04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 4.9 31/92] coresight: etm4x: Use explicit barriers on enable/disable
-Date:   Wed, 16 Oct 2019 14:50:04 -0700
-Message-Id: <20191016214826.438744632@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 28/92] perf stat: Fix a segmentation fault when using repeat forever
+Date:   Wed, 16 Oct 2019 14:50:01 -0700
+Message-Id: <20191016214822.754625413@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,72 +65,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-commit 1004ce4c255fc3eb3ad9145ddd53547d1b7ce327 upstream.
+[ Upstream commit 443f2d5ba13d65ccfd879460f77941875159d154 ]
 
-Synchronization is recommended before disabling the trace registers
-to prevent any start or stop points being speculative at the point
-of disabling the unit (section 7.3.77 of ARM IHI 0064D).
+Observe a segmentation fault when 'perf stat' is asked to repeat forever
+with the interval option.
 
-Synchronization is also recommended after programming the trace
-registers to ensure all updates are committed prior to normal code
-resuming (section 4.3.7 of ARM IHI 0064D).
+Without fix:
 
-Let's ensure these syncronization points are present in the code
-and clearly commented.
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+  #           time             counts unit events
+       5.000211692  3,13,89,82,34,157      cycles
+      10.000380119  1,53,98,52,22,294      cycles
+      10.040467280       17,16,79,265      cycles
+  Segmentation fault
 
-Note that we could rely on the barriers in CS_LOCK and
-coresight_disclaim_device_unlocked or the context switch to user
-space - however coresight may be of use in the kernel.
+This problem was only observed when we use forever option aka -r 0 and
+works with limited repeats. Calling print_counter with ts being set to
+NULL, is not a correct option when interval is set. Hence avoid
+print_counter(NULL,..)  if interval is set.
 
-On armv8 the mb macro is defined as dsb(sy) - Given that the etm4x is
-only used on armv8 let's directly use dsb(sy) instead of mb(). This
-removes some ambiguity and makes it easier to correlate the code with
-the TRM.
+With fix:
 
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-[Fixed capital letter for "use" in title]
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190829202842.580-11-mathieu.poirier@linaro.org
-Cc: stable@vger.kernel.org # 4.9+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  # perf stat -r 0 -I 5000 -e cycles -a sleep 10
+   #           time             counts unit events
+       5.019866622  3,15,14,43,08,697      cycles
+      10.039865756  3,15,16,31,95,261      cycles
+      10.059950628     1,26,05,47,158      cycles
+       5.009902655  3,14,52,62,33,932      cycles
+      10.019880228  3,14,52,22,89,154      cycles
+      10.030543876       66,90,18,333      cycles
+       5.009848281  3,14,51,98,25,437      cycles
+      10.029854402  3,15,14,93,04,918      cycles
+       5.009834177  3,14,51,95,92,316      cycles
 
+Committer notes:
+
+Did the 'git bisect' to find the cset introducing the problem to add the
+Fixes tag below, and at that time the problem reproduced as:
+
+  (gdb) run stat -r0 -I500 sleep 1
+  <SNIP>
+  Program received signal SIGSEGV, Segmentation fault.
+  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  866		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, csv_sep);
+  (gdb) bt
+  #0  print_interval (prefix=prefix@entry=0x7fffffffc8d0 "", ts=ts@entry=0x0) at builtin-stat.c:866
+  #1  0x000000000041860a in print_counters (ts=ts@entry=0x0, argc=argc@entry=2, argv=argv@entry=0x7fffffffd640) at builtin-stat.c:938
+  #2  0x0000000000419a7f in cmd_stat (argc=2, argv=0x7fffffffd640, prefix=<optimized out>) at builtin-stat.c:1411
+  #3  0x000000000045c65a in run_builtin (p=p@entry=0x6291b8 <commands+216>, argc=argc@entry=5, argv=argv@entry=0x7fffffffd640) at perf.c:370
+  #4  0x000000000045c893 in handle_internal_command (argc=5, argv=0x7fffffffd640) at perf.c:429
+  #5  0x000000000045c8f1 in run_argv (argcp=argcp@entry=0x7fffffffd4ac, argv=argv@entry=0x7fffffffd4a0) at perf.c:473
+  #6  0x000000000045cac9 in main (argc=<optimized out>, argv=<optimized out>) at perf.c:588
+  (gdb)
+
+Mostly the same as just before this patch:
+
+  Program received signal SIGSEGV, Segmentation fault.
+  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  964		sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
+  (gdb) bt
+  #0  0x00000000005874a7 in print_interval (config=0xa1f2a0 <stat_config>, evlist=0xbc9b90, prefix=0x7fffffffd1c0 "`", ts=0x0) at util/stat-display.c:964
+  #1  0x0000000000588047 in perf_evlist__print_counters (evlist=0xbc9b90, config=0xa1f2a0 <stat_config>, _target=0xa1f0c0 <target>, ts=0x0, argc=2, argv=0x7fffffffd670)
+      at util/stat-display.c:1172
+  #2  0x000000000045390f in print_counters (ts=0x0, argc=2, argv=0x7fffffffd670) at builtin-stat.c:656
+  #3  0x0000000000456bb5 in cmd_stat (argc=2, argv=0x7fffffffd670) at builtin-stat.c:1960
+  #4  0x00000000004dd2e0 in run_builtin (p=0xa30e00 <commands+288>, argc=5, argv=0x7fffffffd670) at perf.c:310
+  #5  0x00000000004dd54d in handle_internal_command (argc=5, argv=0x7fffffffd670) at perf.c:362
+  #6  0x00000000004dd694 in run_argv (argcp=0x7fffffffd4cc, argv=0x7fffffffd4c0) at perf.c:406
+  #7  0x00000000004dda11 in main (argc=5, argv=0x7fffffffd670) at perf.c:531
+  (gdb)
+
+Fixes: d4f63a4741a8 ("perf stat: Introduce print_counters function")
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org # v4.2+
+Link: http://lore.kernel.org/lkml/20190904094738.9558-3-srikar@linux.vnet.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -181,6 +181,12 @@ static void etm4_enable_hw(void *info)
- 	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
- 		dev_err(drvdata->dev,
- 			"timeout while waiting for Idle Trace Status\n");
-+	/*
-+	 * As recommended by section 4.3.7 ("Synchronization when using the
-+	 * memory-mapped interface") of ARM IHI 0064D
-+	 */
-+	dsb(sy);
-+	isb();
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 43d5f35e90747..e55dbceadad6c 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2565,7 +2565,7 @@ int cmd_stat(int argc, const char **argv, const char *prefix __maybe_unused)
+ 				run_idx + 1);
  
- 	CS_LOCK(drvdata->base);
- 
-@@ -323,8 +329,12 @@ static void etm4_disable_hw(void *info)
- 	/* EN, bit[0] Trace unit enable bit */
- 	control &= ~0x1;
- 
--	/* make sure everything completes before disabling */
--	mb();
-+	/*
-+	 * Make sure everything completes before disabling, as recommended
-+	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
-+	 * SSTATUS") of ARM IHI 0064D
-+	 */
-+	dsb(sy);
- 	isb();
- 	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
- 
+ 		status = run_perf_stat(argc, argv);
+-		if (forever && status != -1) {
++		if (forever && status != -1 && !interval) {
+ 			print_counters(NULL, argc, argv);
+ 			perf_stat__reset_stats();
+ 		}
+-- 
+2.20.1
+
 
 
