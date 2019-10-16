@@ -2,111 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ACCFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44CFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F20B20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571239934;
-	bh=n2NOvEYEqv4lSGUyIJF666vrlhz9L9BzoevNrWqRz9M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s6tYGbzWfz6p5QYWw5yV/Na+yUVX9gsPdnk+AM+jjMsNOcGzBnEZWhhSKF2J+0wmJ
-	 pJBhSD/Dz2MNQ2t6svMdgTz/AoMAlle4BW/Ff3/zWt+3oCXwVLmRxGP4vZPSiQ9ETn
-	 QylDLUq9B8BRQWNw35XU6klgVAKNaoEPkIZuShaA=
+	by mail.kernel.org (Postfix) with ESMTP id BFD2720854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404969AbfJPPcN (ORCPT
+        id S2404984AbfJPPcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:32:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38299 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbfJPPcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:32:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id b20so24510225ljj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x4sUXBF9N+gOqGoXUSe/0E2VksmAjHdkiv7KSR2ftGI=;
-        b=KN++Zn81C01LK7bngv2WQhecCB2pvDWa6MiPOCNK9giCb55GzPd38NprLWCi9y4Rmp
-         G5JVpEFhN07gxtvQKkcodZ0c/iin5yb7op+6svXAeHTJxJPM5HZz2LuFX2hGczINIWnp
-         zjAlhPJ3IIlR8ZNhwPZ4TPeH42AI6XYGcDMmI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x4sUXBF9N+gOqGoXUSe/0E2VksmAjHdkiv7KSR2ftGI=;
-        b=uHQyc84jtG9yhtaDKwVl/mW0JofwcKsrFKX02nI20lPNpI5IDwJGAVDfgq0AYv2uHI
-         5By8Va647NgxI4Jgb/c9fQO++kuUnfG2QDyx0gAR2No13alpkNjUKNR8iTkIam9Zr9iL
-         qk7AMTqt36NGYIRf8Bz87QMFH+aWsxIxKASZ/Amek6fcwKiY0lT6tCynNUlBbgrz1TUZ
-         iWKCIhJnQbqiqNB88RbCWEZeUWlB7Xp5gSZsQU8kBJFvGK9PN6KkG7wpuhwEcEKlZIPO
-         gklHkXRp/J9T0SmcgRcn2DcL2Z4UkZyh3NE4rojyJ/t1I6Oanris5FetdY/qjwCuTpCZ
-         fwYQ==
-X-Gm-Message-State: APjAAAW5l0Cbm5ijBroJf2UXf8cV6ll+MfTjJ85kzB6hb7l6OsLTCPTr
-        bpKaPZ/FVNLBvucqIenNgfcMmaCqEZ0=
-X-Google-Smtp-Source: APXvYqxrAubzqBNDQsl5oaMlalW824MhSMd+mIdkg1K3kgr2Bea+40ec8qNw1iQTKiwvWL/FGdl3pA==
-X-Received: by 2002:a05:651c:102e:: with SMTP id w14mr19570568ljm.159.1571239929340;
-        Wed, 16 Oct 2019 08:32:09 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id m10sm6270932lfo.69.2019.10.16.08.32.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2019 08:32:06 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id l21so24514031lje.4
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:32:05 -0700 (PDT)
-X-Received: by 2002:a2e:545:: with SMTP id 66mr4189350ljf.133.1571239925218;
- Wed, 16 Oct 2019 08:32:05 -0700 (PDT)
+        Wed, 16 Oct 2019 11:32:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:43458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726332AbfJPPcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:32:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47089142F;
+        Wed, 16 Oct 2019 08:32:30 -0700 (PDT)
+Received: from bogus (unknown [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86B693F68E;
+        Wed, 16 Oct 2019 08:32:28 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 16:32:21 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
+ cpu_psci_cpu_kill()
+Message-ID: <20191016153221.GA8978@bogus>
+References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
+ <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
 MIME-Version: 1.0
-References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
- <157117608708.15019.1998141309054662114.stgit@warthog.procyon.org.uk>
- <CAHk-=whiz1sHXu8SVZKEC2dup=r5JMrftPtEt6ff9Ea8dyH8yQ@mail.gmail.com> <6900.1571235985@warthog.procyon.org.uk>
-In-Reply-To: <6900.1571235985@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 16 Oct 2019 08:31:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgMZR8TWpmRBPytGmWJX=C=-bCb5D2PsCx0LUNemAPexA@mail.gmail.com>
-Message-ID: <CAHk-=wgMZR8TWpmRBPytGmWJX=C=-bCb5D2PsCx0LUNemAPexA@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/21] Add a prelocked wake-up
-To:     David Howells <dhowells@redhat.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9df267db-e647-a81d-16bb-b8bfb06c2624@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 7:26 AM David Howells <dhowells@redhat.com> wrote:
+On Wed, Oct 09, 2019 at 12:45:16PM +0800, Yunfeng Ye wrote:
+> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
+> take so long in the right case. Use usleep_range() instead of msleep(),
+> reduce the waiting time, and give a chance to busy wait before sleep.
 >
-> Btw, is there any point in __wake_up_sync_key() taking a nr_exclusive
-> argument since it clears WF_SYNC if nr_exclusive != 1 and doesn't make sense
-> to be >1 anyway.
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+> V1->V2:
+> - use usleep_range() instead of udelay() after waiting for a while
+>
+>  arch/arm64/kernel/psci.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index c9f72b2..99b3122 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -82,6 +82,7 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+>  static int cpu_psci_cpu_kill(unsigned int cpu)
+>  {
+>  	int err, i;
+> +	unsigned long timeout;
+>
+>  	if (!psci_ops.affinity_info)
+>  		return 0;
+> @@ -91,16 +92,24 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+>  	 * while it is dying. So, try again a few times.
+>  	 */
+>
+> -	for (i = 0; i < 10; i++) {
+> +	i = 0;
+> +	timeout = jiffies + msecs_to_jiffies(100);
+> +	do {
+>  		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+>  		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+>  			pr_info("CPU%d killed.\n", cpu);
+>  			return 0;
+>  		}
+>
+> -		msleep(10);
+> -		pr_info("Retrying again to check for CPU kill\n");
 
-Ack, looks sane to me.
+You dropped this message, any particular reason ?
 
-We have _very_ few users of nr_exclusive. I wonder if it's even worth
-having at all, but it's definitely not worth it here.
+> -	}
+> +		/* busy-wait max 1ms */
+> +		if (i++ < 100) {
+> +			cond_resched();
+> +			udelay(10);
+> +			continue;
 
-I'd love for nr_exclusive to go away and be replaced by WF_ALL
-instead. Right now it looks like there is one SGI driver that uses it,
-and the sbitmap code. That was all I could find.
+Why can't it be simple like loop of 100 * msleep(1) instead of loop of
+10 * msleep(10). The above initial busy wait for 1 ms looks too much
+optimised for your setup where it takes 50-500us, what if it take just
+over 1 ms ?
 
-Oh well. You removing one case is at last a small amount of progress.
+We need more generic solution.
 
-         Linus
+--
+Regards,
+Sudeep
