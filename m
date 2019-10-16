@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58753FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEC5FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBC721925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34E221928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262907;
-	bh=bSyDCcyQXcWvqCLPXJ2U4fltUvcxfSCK4GIwQwkFDXE=;
+	s=default; t=1571262909;
+	bh=6kvh2ljFqUDYi5wwuIe97TZ/HrGcR9V7uAH6Lgc/6cA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJQyBUqXoM/H6DDGquToayBGTYyPU/WPInU/FzGYCn9nvRgg7N7Ddv3UXzXtq+f3e
-	 bKXj4b7y80SrrB2lTPri5r4++BANQnzPbpVBssSXzHgyyjR2xtTuyi+ztta/roT4wB
-	 /sFTPnTwkJ8uYOcodu/SxThCLi5lXHUMM5gYmIR8=
+	b=c+QXBheN0+HsauWuzicljVAlIufErSKLuTKpMStUiEa0G5+7zGWISws6EnV5cOZiz
+	 YxOSt/W8eY69bzc2zLrLVenSb+eaxrM/9Sf86bM0gXDK+fTgqnr7RriI4IYAj21FPt
+	 znGPe13lnURyF99NIt02Q49D00OLD7fs6jwHwbRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395181AbfJPVzG (ORCPT
+        id S1733263AbfJPVzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395165AbfJPVzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2395146AbfJPVzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:55:04 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1809A21928;
-        Wed, 16 Oct 2019 21:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E37CD21D7A;
+        Wed, 16 Oct 2019 21:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262903;
-        bh=bSyDCcyQXcWvqCLPXJ2U4fltUvcxfSCK4GIwQwkFDXE=;
+        s=default; t=1571262904;
+        bh=6kvh2ljFqUDYi5wwuIe97TZ/HrGcR9V7uAH6Lgc/6cA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVClsWiE85JnBh6XhZgR0wDj5Erk5RVX+z5t3i/N667dda9wTyhYs7e+eTn+FASos
-         kpJJQxrV0xQQAw9VQ6akCHZA6nq9TJ1f+fHTmEnU9SPGDKIS8rbVMcI4U3KoFra4Cm
-         4ErJY3ZedP0t9DVGEvy/d3zMH1so4266mMZ15Jls=
+        b=Mafp7UBviZpeyLRW93IGrpSr8je++0AEtPs8z0f0cOIcxp1NSH9DGeKDjRk7RePMe
+         LFChMKaaKQwTzLFOSV5Kdg52yBAOX2bVdmNAtFRBlYShdbGgCwLBmxY6snZ/Iu86vX
+         OcceGXeme1Dd/HKu9Qax8OE4kz+Yv8CsxYgVb/vQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 63/92] USB: usblcd: fix I/O after disconnect
-Date:   Wed, 16 Oct 2019 14:50:36 -0700
-Message-Id: <20191016214840.790253736@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.9 64/92] USB: microtek: fix info-leak at probe
+Date:   Wed, 16 Oct 2019 14:50:37 -0700
+Message-Id: <20191016214841.239423777@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,126 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit eb7f5a490c5edfe8126f64bc58b9ba2edef0a425 upstream.
+commit 177238c3d47d54b2ed8f0da7a4290db492f4a057 upstream.
 
-Make sure to stop all I/O on disconnect by adding a disconnected flag
-which is used to prevent new I/O from being started and by stopping all
-ongoing I/O before returning.
-
-This also fixes a potential use-after-free on driver unbind in case the
-driver data is freed before the completion handler has run.
+Add missing bulk-in endpoint sanity check to prevent uninitialised stack
+data from being reported to the system log and used as endpoint
+addresses.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>	# 7bbe990c989e
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190926091228.24634-7-johan@kernel.org
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20191003070931.17009-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/usblcd.c |   33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ drivers/usb/image/microtek.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/misc/usblcd.c
-+++ b/drivers/usb/misc/usblcd.c
-@@ -17,6 +17,7 @@
- #include <linux/slab.h>
- #include <linux/errno.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/uaccess.h>
- #include <linux/usb.h>
+--- a/drivers/usb/image/microtek.c
++++ b/drivers/usb/image/microtek.c
+@@ -724,6 +724,10 @@ static int mts_usb_probe(struct usb_inte
  
-@@ -56,6 +57,8 @@ struct usb_lcd {
- 							   using up all RAM */
- 	struct usb_anchor	submitted;		/* URBs to wait for
- 							   before suspend */
-+	struct rw_semaphore	io_rwsem;
-+	unsigned long		disconnected:1;
- };
- #define to_lcd_dev(d) container_of(d, struct usb_lcd, kref)
- 
-@@ -141,6 +144,13 @@ static ssize_t lcd_read(struct file *fil
- 
- 	dev = file->private_data;
- 
-+	down_read(&dev->io_rwsem);
-+
-+	if (dev->disconnected) {
-+		retval = -ENODEV;
-+		goto out_up_io;
-+	}
-+
- 	/* do a blocking bulk read to get data from the device */
- 	retval = usb_bulk_msg(dev->udev,
- 			      usb_rcvbulkpipe(dev->udev,
-@@ -157,6 +167,9 @@ static ssize_t lcd_read(struct file *fil
- 			retval = bytes_read;
  	}
  
-+out_up_io:
-+	up_read(&dev->io_rwsem);
-+
- 	return retval;
- }
- 
-@@ -236,11 +249,18 @@ static ssize_t lcd_write(struct file *fi
- 	if (r < 0)
- 		return -EINTR;
- 
-+	down_read(&dev->io_rwsem);
-+
-+	if (dev->disconnected) {
-+		retval = -ENODEV;
-+		goto err_up_io;
++	if (ep_in_current != &ep_in_set[2]) {
++		MTS_WARNING("couldn't find two input bulk endpoints. Bailing out.\n");
++		return -ENODEV;
 +	}
-+
- 	/* create a urb, and a buffer for it, and copy the data to the urb */
- 	urb = usb_alloc_urb(0, GFP_KERNEL);
- 	if (!urb) {
- 		retval = -ENOMEM;
--		goto err_no_buf;
-+		goto err_up_io;
- 	}
  
- 	buf = usb_alloc_coherent(dev->udev, count, GFP_KERNEL,
-@@ -277,6 +297,7 @@ static ssize_t lcd_write(struct file *fi
- 	   the USB core will eventually free it entirely */
- 	usb_free_urb(urb);
- 
-+	up_read(&dev->io_rwsem);
- exit:
- 	return count;
- error_unanchor:
-@@ -284,7 +305,8 @@ error_unanchor:
- error:
- 	usb_free_coherent(dev->udev, count, buf, urb->transfer_dma);
- 	usb_free_urb(urb);
--err_no_buf:
-+err_up_io:
-+	up_read(&dev->io_rwsem);
- 	up(&dev->limit_sem);
- 	return retval;
- }
-@@ -325,6 +347,7 @@ static int lcd_probe(struct usb_interfac
- 		goto error;
- 	kref_init(&dev->kref);
- 	sema_init(&dev->limit_sem, USB_LCD_CONCURRENT_WRITES);
-+	init_rwsem(&dev->io_rwsem);
- 	init_usb_anchor(&dev->submitted);
- 
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
-@@ -432,6 +455,12 @@ static void lcd_disconnect(struct usb_in
- 	/* give back our minor */
- 	usb_deregister_dev(interface, &lcd_class);
- 
-+	down_write(&dev->io_rwsem);
-+	dev->disconnected = 1;
-+	up_write(&dev->io_rwsem);
-+
-+	usb_kill_anchored_urbs(&dev->submitted);
-+
- 	/* decrement our usage count */
- 	kref_put(&dev->kref, lcd_delete);
- 
+ 	if ( ep_out == -1 ) {
+ 		MTS_WARNING( "couldn't find an output bulk endpoint. Bailing out.\n" );
 
 
