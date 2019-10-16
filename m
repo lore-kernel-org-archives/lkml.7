@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E84EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B267EFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB52F207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DEB32168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263828;
-	bh=5iTKraSr6YCzgOAbZj3fnmt3DlD0mJRxEZgpQheQyyc=;
+	s=default; t=1571263830;
+	bh=vsZnRybb1oRRLje+6QOYMh4wo/50seiDG8wLW8igT9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxEJn93Iq7AGA238FfrBfRzSxk0A6wRerWUXgeX0AzD54bN3YI7HMz2SiMNyMR86E
-	 udnjL9/tofrX354bVH+Z7rKMTifZ1yVGF55lz+wje8ufCqX67vJWSSvYUA0PdkQo3M
-	 lDdaxhv3Qpxlk5MJ0uhh8eEHqOqABfugEMh6gZXE=
+	b=bf1rBvgprHhlBglWjhLwVfgFinrlHoTI1tKv7EiEBTaDHAHCd9oqNdwuj9f97QnLU
+	 KxgnSIbs7uxXzdpXBIra0g9DN8qNRc8fu/25Ct/jVc2/lr/cMihuoD5kG//ea57Vlf
+	 3Fp0iGtxs8yKaEMfWSg1Nmq4bb5aRa89WZd4MwII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407196AbfJPWK0 (ORCPT
+        id S2395455AbfJPV5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49756 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729429AbfJPV5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:16 -0400
+        id S2391375AbfJPV4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:34 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8877720872;
-        Wed, 16 Oct 2019 21:57:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB6521925;
+        Wed, 16 Oct 2019 21:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263035;
-        bh=5iTKraSr6YCzgOAbZj3fnmt3DlD0mJRxEZgpQheQyyc=;
+        s=default; t=1571262993;
+        bh=vsZnRybb1oRRLje+6QOYMh4wo/50seiDG8wLW8igT9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cI/39r+VB8KwFkd1PyrRh2LzxYYXlbS5aIdkAhI5Rxzm1iVTLzmDGi/7BWMpz6aRr
-         UYkJbz+OzdgqZS/IZc5cxQ6eg4oq3VXlHH1jT0/RK+5hvI9V7qC0uZ9WVP75XtGVDI
-         857UiUg046cLGFLZig0QBV8WocNk5HoMDmz970cQ=
+        b=D6DNAJow1l5iHn5rrC8dPUXnuWZHBqt65UOCMPyym2NRIe3pC73P7XlywQQRrvONp
+         DrqkDLtonUMo/CbqtNlU/s/3DU3HWMdwSNxR1urJ0RCcmSUBJsXJmzRH3DJWQkz1vc
+         IKS0+RVHYNqx81zCJPx94ZaXZiyOQAESdVz76c3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 05/81] USB: yurex: fix NULL-derefs on disconnect
-Date:   Wed, 16 Oct 2019 14:50:16 -0700
-Message-Id: <20191016214809.831170094@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 61/65] tracing/hwlat: Dont ignore outer-loop duration when calculating max_latency
+Date:   Wed, 16 Oct 2019 14:51:15 -0700
+Message-Id: <20191016214839.826570224@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,92 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
-commit aafb00a977cf7d81821f7c9d12e04c558c22dc3c upstream.
+commit fc64e4ad80d4b72efce116f87b3174f0b7196f8e upstream.
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag, but was setting it to NULL without making sure all
-code paths that used it were done with it.
+max_latency is intended to record the maximum ever observed hardware
+latency, which may occur in either part of the loop (inner/outer). So
+we need to also consider the outer-loop sample when updating
+max_latency.
 
-Before commit ef61eb43ada6 ("USB: yurex: Fix protection fault after
-device removal") this included the interrupt-in completion handler, but
-there are further accesses in dev_err and dev_dbg statements in
-yurex_write() and the driver-data destructor (sic!).
+Link: http://lkml.kernel.org/r/157073345463.17189.18124025522664682811.stgit@srivatsa-ubuntu
 
-Fix this by unconditionally stopping also the control URB at disconnect
-and by using a dedicated disconnected flag.
-
-Note that we need to take a reference to the struct usb_interface to
-avoid a use-after-free in the destructor whenever the device was
-disconnected while the character device was still open.
-
-Fixes: aadd6472d904 ("USB: yurex.c: remove dbg() usage")
-Fixes: 45714104b9e8 ("USB: yurex.c: remove err() usage")
-Cc: stable <stable@vger.kernel.org>     # 3.5: ef61eb43ada6
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-6-johan@kernel.org
+Fixes: e7c15cd8a113 ("tracing: Added hardware latency tracer")
+Cc: stable@vger.kernel.org
+Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/yurex.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/trace/trace_hwlat.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -60,6 +60,7 @@ struct usb_yurex {
- 
- 	struct kref		kref;
- 	struct mutex		io_mutex;
-+	unsigned long		disconnected:1;
- 	struct fasync_struct	*async_queue;
- 	wait_queue_head_t	waitq;
- 
-@@ -107,6 +108,7 @@ static void yurex_delete(struct kref *kr
- 				dev->int_buffer, dev->urb->transfer_dma);
- 		usb_free_urb(dev->urb);
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -258,6 +258,8 @@ static int get_sample(void)
+ 		/* Keep a running maximum ever recorded hardware latency */
+ 		if (sample > tr->max_latency)
+ 			tr->max_latency = sample;
++		if (outer_sample > tr->max_latency)
++			tr->max_latency = outer_sample;
  	}
-+	usb_put_intf(dev->interface);
- 	usb_put_dev(dev->udev);
- 	kfree(dev);
- }
-@@ -205,7 +207,7 @@ static int yurex_probe(struct usb_interf
- 	init_waitqueue_head(&dev->waitq);
  
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
--	dev->interface = interface;
-+	dev->interface = usb_get_intf(interface);
- 
- 	/* set up the endpoint information */
- 	iface_desc = interface->cur_altsetting;
-@@ -316,8 +318,9 @@ static void yurex_disconnect(struct usb_
- 
- 	/* prevent more I/O from starting */
- 	usb_poison_urb(dev->urb);
-+	usb_poison_urb(dev->cntl_urb);
- 	mutex_lock(&dev->io_mutex);
--	dev->interface = NULL;
-+	dev->disconnected = 1;
- 	mutex_unlock(&dev->io_mutex);
- 
- 	/* wakeup waiters */
-@@ -405,7 +408,7 @@ static ssize_t yurex_read(struct file *f
- 	dev = file->private_data;
- 
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* already disconnected */
-+	if (dev->disconnected) {		/* already disconnected */
- 		mutex_unlock(&dev->io_mutex);
- 		return -ENODEV;
- 	}
-@@ -440,7 +443,7 @@ static ssize_t yurex_write(struct file *
- 		goto error;
- 
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* already disconnected */
-+	if (dev->disconnected) {		/* already disconnected */
- 		mutex_unlock(&dev->io_mutex);
- 		retval = -ENODEV;
- 		goto error;
+ out:
 
 
