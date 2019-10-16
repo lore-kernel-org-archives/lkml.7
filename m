@@ -2,108 +2,101 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647F7FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FB0FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A58D2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3D121A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MG8kkB/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390992AbfJPRyw (ORCPT
+        id S2389882AbfJPR6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:54:52 -0400
-Received: from smtprelay0019.hostedemail.com ([216.40.44.19]:45224 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388804AbfJPRyv (ORCPT
+        Wed, 16 Oct 2019 13:58:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34968 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfJPR6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:54:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D6B2883E3;
-        Wed, 16 Oct 2019 17:54:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cap93_46fcf941bb85d
-X-Filterd-Recvd-Size: 3199
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 16 Oct 2019 17:54:47 +0000 (UTC)
-Message-ID: <e6d33109f7abad1f883764828311e9965d65dd9e.camel@perches.com>
-Subject: Re: [PATCH v3] x86, efi: never relocate kernel below lowest
- acceptable address
-From:   Joe Perches <joe@perches.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Kairui Song <kasong@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Date:   Wed, 16 Oct 2019 10:54:46 -0700
-In-Reply-To: <20191016162757.GC6279@linux.intel.com>
-References: <20191012034421.25027-1-kasong@redhat.com>
-         <20191014101419.GA4715@zn.tnic> <20191014202111.GP15552@linux.intel.com>
-         <20191014211825.GJ4715@zn.tnic> <20191016152014.GC4261@linux.intel.com>
-         <fb0e7c13da405970d5cbd59c10005daaf970b8da.camel@perches.com>
-         <20191016162757.GC6279@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Wed, 16 Oct 2019 13:58:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y21so3759018wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 10:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=nFz4T0vFX9I/roldji38Wknwl/JNJ6KhqR7kFUGrr+8=;
+        b=MG8kkB/maSXdkwrwZNVgc+Xt3j8g2HWexcftmSC0vzdBO837oFQKzV2Hlniy6PE0yH
+         WI40Q0LAOwT9M9yDnx6e0NCvpSy4g4fh8iUCaLzH/ciRPfS9YHMPj6bgX234D+yhGdse
+         ZYMPpMe5M3HTAg6sMw0/Jw/gVWMTJCypdNTDrqjnLixFJIQT3uvbrEfcWCHPxuFfMcwi
+         kRwt4w2lZLppVnDv6jcrUjfbaaRIZFEqlJj/qA0AazdcIEf8bOsvGhUCdpB2RRrexIMC
+         PlRL465867YiyQtZ8NfvBTsriVq6F11OzW1hvwIB/JKliHP5V8RHHXIpJjyolospeWtQ
+         r9Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=nFz4T0vFX9I/roldji38Wknwl/JNJ6KhqR7kFUGrr+8=;
+        b=aeK4g1hRebGXezNzwDvxZvhkGo+rOJG3gQrlHhzECBDD0EzhsBMpvV/T7EKDnwgkFF
+         yBRAZKWz3JR7gMsdhxguRet4W2X9mnGfTbiV3cNB7X0gpQKPQDcIDKNEtB59meCquI9d
+         1pLdM2rMrbTTv7Nn2hode140a9rhGj0UZ8PRXYTVtzYiIMJPDsei7/l255mqd0rIZpNv
+         KNADfAILtRYtoEQgs0MZ33UFumuR7lx4/OJbPbJ0Z/Z8UW7ia5Z8Z4PS+VG6ezcZIe/r
+         snCf1GJkayprAiP8TkqtPD1h8HXk8Q7MjAVj5scKM6QSnnhRUwKyPZbolOhBVj9S+QPy
+         NHkA==
+X-Gm-Message-State: APjAAAWdGEFKPqsfpwrPKZxU3Vmbk+yPQEotKr+gYhw2Or51WrBDHvOW
+        dQUxuhFk3CuYSu3k4TZk7w==
+X-Google-Smtp-Source: APXvYqzhSei8ojosNKz5bE95s1ODgdjfle9rj/9SqQgQEUrQ7Cy8VxXIGgT84Tsi1e8CY5tQ6SuylQ==
+X-Received: by 2002:a1c:e455:: with SMTP id b82mr4444588wmh.41.1571248687904;
+        Wed, 16 Oct 2019 10:58:07 -0700 (PDT)
+Received: from ninjabhubz.org (host-2-102-13-201.as13285.net. [2.102.13.201])
+        by smtp.gmail.com with ESMTPSA id 143sm4430952wmb.33.2019.10.16.10.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 10:58:06 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
+Date:   Wed, 16 Oct 2019 18:57:42 +0100 (BST)
+To:     Julia Lawall <julia.lawall@lip6.fr>
+cc:     Jules Irenge <jbi.octave@gmail.com>,
+        outreachy-kernel@googlegroups.com, eric@anholt.net,
+        wahrenst@gmx.net, gregkh@linuxfoundation.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: vc04_services: fix line over
+ 80 characters checks warning
+In-Reply-To: <alpine.DEB.2.21.1910160713140.2732@hadrien>
+Message-ID: <alpine.LFD.2.21.1910161855320.8071@ninjahub.org>
+References: <20191015225716.10563-1-jbi.octave@gmail.com> <alpine.DEB.2.21.1910160713140.2732@hadrien>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-16 at 19:27 +0300, Jarkko Sakkinen wrote:
-> On Wed, Oct 16, 2019 at 08:23:56AM -0700, Joe Perches wrote:
-> > On Wed, 2019-10-16 at 18:20 +0300, Jarkko Sakkinen wrote: > > On Mon, Oct 14, 2019 at 11:18:25PM +0200, Borislav Petkov wrote:
-> > > > On Mon, Oct 14, 2019 at 11:21:11PM +0300, Jarkko Sakkinen wrote:
-> > > > > Was there a section in the patch submission documentation to point out
-> > > > > when people send patches with all the possible twists for an acronym?
-> > > > 
-> > > > I don't think so.
-> > > > 
-> > > > > This is giving me constantly gray hairs with TPM patches.
-> > > > 
-> > > > Well, I'm slowly getting tired of repeating the same crap over and over
-> > > > again about how important it is to document one's changes and to write
-> > > > good commit messages. The most repeated answers I'm simply putting into
-> > > > canned reply templates because, well, saying it once or twice is not
-> > > > enough anymore. :-\
-> > > > 
-> > > > And yeah, I see your pain. Same here, actually.
-> > > > 
-> > > > In the acronym case, I'd probably add a regex to my patch massaging
-> > > > script and convert those typos automatically and be done with it.
-> > > 
-> > > Wonder if checkpatch.pl could be extended to know acronyms e.g. have a
-> > > db of known acronyms.
-> > 
-> > ?  examples please.
-> > 
-> > checkpatch has a db for misspellings, I supposed another for
-> > acronyms could be added, but how would false positives be avoided?
+
+
+On Wed, 16 Oct 2019, Julia Lawall wrote:
+
+> >  #ifndef VCHI_BULK_GRANULARITY
+> >  #   if __VCCOREVER__ >= 0x04000000
+> > -#       define VCHI_BULK_GRANULARITY 32 // Allows for the need to do cache cleans
+> > +#	define VCHI_BULK_GRANULARITY 32 // Allows for the need of cache cleans
+> >  #   else
+> >  #       define VCHI_BULK_GRANULARITY 16
+> >  #   endif
 > 
-> TPM should be always TPM, e.g. not tpm. EFI should be always, e.g.
-> not efi.
+> The branches should be indented to the same degree.
+> 
+> julia
+> 
+> -- 
 
-I think it's not possible to distinguish between
-proper and improper uses.  For instance:
-
-$ git grep -w tpm | wc -l
-328
-$ git grep -w TPM | wc -l
-566
-
-$ git grep -w efi | wc -l
-851
-$ git grep -w EFI | wc -l
-915
-
-
+Thanks, I have just  updated. 
