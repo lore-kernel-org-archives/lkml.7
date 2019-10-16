@@ -6,106 +6,77 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1076DC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E80FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AEC20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8030B205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392407AbfJPKZx (ORCPT
+        id S2392423AbfJPK0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:25:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:35270 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730972AbfJPKZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:25:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA6CB28;
-        Wed, 16 Oct 2019 03:25:52 -0700 (PDT)
-Received: from bogus (unknown [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D936C3F6C4;
-        Wed, 16 Oct 2019 03:25:50 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 11:25:45 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Will Deacon <will@kernel.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Wed, 16 Oct 2019 06:26:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49627 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730972AbfJPK0Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:26:24 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iKgVU-0002kt-VI; Wed, 16 Oct 2019 12:26:17 +0200
+Date:   Wed, 16 Oct 2019 12:26:16 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wuyun.wu@huawei.com" <wuyun.wu@huawei.com>, hushiyuan@huawei.com,
-        linfeilong@huawei.com
-Subject: Re: [PATCH V2] arm64: psci: Reduce waiting time of
- cpu_psci_cpu_kill()
-Message-ID: <20191016102545.GA11386@bogus>
-References: <18068756-0f39-6388-3290-cf03746e767d@huawei.com>
- <20191015162358.bt5rffidkv2j4xqb@willie-the-truck>
- <ab42357e-f4f9-9019-e8d9-7e9bfe106e9e@huawei.com>
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: RE: [PATCH v5 3/6] timekeeping: Add clocksource to
+ system_time_snapshot
+In-Reply-To: <HE1PR0801MB1676B967505C44D385F21E6DF4920@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+Message-ID: <alpine.DEB.2.21.1910161224050.2046@nanos.tec.linutronix.de>
+References: <20191015104822.13890-1-jianyong.wu@arm.com> <20191015104822.13890-4-jianyong.wu@arm.com> <alpine.DEB.2.21.1910152047490.2518@nanos.tec.linutronix.de> <HE1PR0801MB1676B967505C44D385F21E6DF4920@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab42357e-f4f9-9019-e8d9-7e9bfe106e9e@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:22:23AM +0800, Yunfeng Ye wrote:
->
->
-> On 2019/10/16 0:23, Will Deacon wrote:
-> > Hi,
-> >
-> > On Sat, Sep 21, 2019 at 07:21:17PM +0800, Yunfeng Ye wrote:
-> >> If psci_ops.affinity_info() fails, it will sleep 10ms, which will not
-> >> take so long in the right case. Use usleep_range() instead of msleep(),
-> >> reduce the waiting time, and give a chance to busy wait before sleep.
-> >
-> > Can you elaborate on "the right case" please? It's not clear to me
-> > exactly what problem you're solving here.
-> >
-> The situation is that when the power is off, we have a battery to save some
-> information, but the battery power is limited, so we reduce the power consumption
-> by turning off the cores, and need fastly to complete the core shutdown. However, the
-> time of cpu_psci_cpu_kill() will take 10ms. We have tested the time that it does not
-> need 10ms, and most case is about 50us-500us. if we reduce the time of cpu_psci_cpu_kill(),
-> we can reduce 10% - 30% of the total time.
->
+On Wed, 16 Oct 2019, Jianyong Wu (Arm Technology China) wrote:
+> On Wed, 16 Oct 2019, Thomas Gleixner wrote:
+> > On Tue, 15 Oct 2019, Jianyong Wu wrote:
+> > +/* Enum to give clocksources a unique identifier */ enum
+> > +clocksource_ids {
+> > +	CSID_GENERIC		= 0,
+> > +	CSID_ARM_ARCH_COUNTER,
+> > +	CSID_MAX,
+> > +};
+> > +
+> 
+> Does this mean I must add clocksource id for all kinds of ARCHs and
+> update all the code which have checked clocksource in the old way?
 
-Have you checked why PSCI AFFINITY_INFO not returning LEVEL_OFF quickly
-then ? We wait for upto 5s in cpu_wait_death(worst case) before cpu_kill
-is called from __cpu_die.
+What is the old way? No code exists which can access the current
+clocksource pointer because the core code does not expose it at all.
 
-Moreover I don't understand the argument here. The cpu being killed
-will be OFF, as soon as it can and firmware controls that and this
-change is not related to CPU_OFF. And this CPU calling cpu_kill can
-sleep and 10ms is good to enter idle states if it's idle saving power,
-so I fail to map the power saving you mention above.
+Thanks,
 
-> So change msleep (10) to usleep_range() to reduce the waiting time. In addition,
-> we don't want to be scheduled during the sleeping time, some threads may take a
-> long time and don't give up the CPU, which affects the time of core shutdown,
-> Therefore, we add a chance to busy-wait max 1ms.
->
-
-On the other hand, usleep_range reduces the timer interval and hence
-increases the chance of the callee CPU not to enter deeper idle states.
-
-What am I missing here ? What's the use case or power off situation
-you are talking about above ?
-
->
-> > I've also added Sudeep to the thread, since I'd like his ack on the change.
-> >
-
-Thanks Will.
-
---
-Regards,
-Sudeep
+	tglx
