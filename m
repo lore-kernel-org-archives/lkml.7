@@ -2,91 +2,265 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6C7FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197D4ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C92D21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACDD21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394633AbfJPVrQ (ORCPT
+        id S2388409AbfJPVsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:47:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57520 "EHLO mx1.redhat.com"
+        Wed, 16 Oct 2019 17:48:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56670 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388409AbfJPVrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:47:15 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2394662AbfJPVsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:48:36 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DFE33082B40;
-        Wed, 16 Oct 2019 21:47:15 +0000 (UTC)
-Received: from [10.10.121.199] (ovpn-121-199.rdu2.redhat.com [10.10.121.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 061ED60BE1;
-        Wed, 16 Oct 2019 21:47:12 +0000 (UTC)
-Subject: Re: [PATCH v3 3/3] selftests/livepatch: Test interaction with
- ftrace_enabled
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>, rostedt@goodmis.org,
-        mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
-        pmladek@suse.com
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org
-References: <20191016113316.13415-1-mbenes@suse.cz>
- <20191016113316.13415-4-mbenes@suse.cz>
- <61b8e995-f5a2-8094-8e91-1a60019d2916@linux.vnet.ibm.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <d4e9e2a0-51e7-e86e-9f6d-237a6c3b0204@redhat.com>
-Date:   Wed, 16 Oct 2019 17:47:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 9FD167FDF5
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 21:48:35 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id y10so252406qti.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 14:48:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QborS368Ajr5BbVEVEpxWdvLBweeVUiSSgjGJk+rcJ8=;
+        b=FliMAX0Thto/1Zw73RO36avgfeoU5hb3oKYhqTjmS+OKJoduSkI1dgPVqddjRtnbzQ
+         90kIvbR36572oTPt6eZri0ZgorWYTODXWQKCL7cMbKzoOy7pLWXxSO5uWqdHO89K0iPU
+         Ky2qPxEjQSUcv6m9CiCHqf4OlAxVvFJQ3f0g+JVX+j6uQMZIZMvvgDAXXuaWd4FMg/5m
+         IOvF2W80+1Ml1C9ml8K8552DLaXJ1RFQN9uMB+Cje+eCt5Hq/Xf4PsxqE9uQwAeZXCuL
+         M8uLhzQHYbduG9efOF0CM3Z4rPTvlG8FF/KLymHuQCVbyZqtY7pgfpXmiaLenDbH6Zh4
+         ntCA==
+X-Gm-Message-State: APjAAAX5COpySbBWlnmTQOYNsb/c/kIwYfHH2u71/YLM6a5sdxp5sqIt
+        QRHrXcVva6Rl6owT9zxqqwDg2lk1f2t3PWMVZkDdMZSS+bqFg69vDQr0j8LrnPRawLcOaMsTWXY
+        WjiEHGpjcnGRoXdhXdeeKxgdgNGceo9fVTx1afFKZ
+X-Received: by 2002:a05:620a:718:: with SMTP id 24mr87453qkc.157.1571262514808;
+        Wed, 16 Oct 2019 14:48:34 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzVAXETPoHb1C+3a9i2Ionj1YmrL2Oz6IWFpXhjfCSWTuUZ1T1NFQTTKzGbexXPoe0TiIBXqpKiqboNgzd7Ymo=
+X-Received: by 2002:a05:620a:718:: with SMTP id 24mr87423qkc.157.1571262514349;
+ Wed, 16 Oct 2019 14:48:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <61b8e995-f5a2-8094-8e91-1a60019d2916@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 16 Oct 2019 21:47:15 +0000 (UTC)
+References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
+ <20191016213722.GA72810@google.com>
+In-Reply-To: <20191016213722.GA72810@google.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 16 Oct 2019 23:48:22 +0200
+Message-ID: <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
+Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 1:06 PM, Kamalesh Babulal wrote:
-> On 10/16/19 5:03 PM, Miroslav Benes wrote:
->> From: Joe Lawrence <joe.lawrence@redhat.com>
->>
->> Since livepatching depends upon ftrace handlers to implement "patched"
->> code functionality, verify that the ftrace_enabled sysctl value
->> interacts with livepatch registration as expected.  At the same time,
->> ensure that ftrace_enabled is set and part of the test environment
->> configuration that is saved and restored when running the selftests.
->>
->> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
->> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> 
-> [...]
->> diff --git a/tools/testing/selftests/livepatch/test-ftrace.sh b/tools/testing/selftests/livepatch/test-ftrace.sh
->> new file mode 100755
->> index 000000000000..e2a76887f40a
->> --- /dev/null
->> +++ b/tools/testing/selftests/livepatch/test-ftrace.sh
-> 
-> This test fails due to wrong file permissions, with the warning:
-> 
-> # Warning: file test-ftrace.sh is not executable, correct this.
-> not ok 4 selftests: livepatch: test-ftrace.sh
-> 
+On Wed, Oct 16, 2019 at 11:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc linux-acpi]
+>
+> On Wed, Oct 16, 2019 at 09:18:32PM +0200, Karol Herbst wrote:
+> > but setting the PCI_DEV_FLAGS_NO_D3 flag does prevent using the
+> > platform means of putting the device into D3cold, right? That's
+> > actually what should still happen, just the D3hot step should be
+> > skipped.
+>
+> If I understand correctly, when we put a device in D3cold on an ACPI
+> system, we do something like this:
+>
+>   pci_set_power_state(D3cold)
+>     if (PCI_DEV_FLAGS_NO_D3)
+>       return 0                                   <-- nothing at all if quirked
+>     pci_raw_set_power_state
+>       pci_write_config_word(PCI_PM_CTRL, D3hot)  <-- set to D3hot
+>     __pci_complete_power_transition(D3cold)
+>       pci_platform_power_transition(D3cold)
+>         platform_pci_set_power_state(D3cold)
+>           acpi_pci_set_power_state(D3cold)
+>             acpi_device_set_power(ACPI_STATE_D3_COLD)
+>               ...
+>                 acpi_evaluate_object("_OFF")     <-- set to D3cold
+>
+> I did not understand the connection with platform (ACPI) power
+> management from your patch.  It sounds like you want this entire path
+> except that you want to skip the PCI_PM_CTRL write?
+>
 
-Hi Kamalesh,
+exactly. I am running with this workaround for a while now and never
+had any fails with it anymore. The GPU gets turned off correctly and I
+see the same power savings, just that the GPU can be powered on again.
 
-Thanks for testing.  This error is weird as the git log says new file 
-mode: 100755.  'git am' of Miroslav's patchset gives me a new 
-test-ftrace.sh with "Access: (0775/-rwxrwxr-x)"  Did you apply the mbox 
-directly or.. ?
+> That seems like something Rafael should weigh in on.  I don't know
+> why we set the device to D3hot with PCI_PM_CTRL before using the ACPI
+> methods, and I don't know what the effect of skipping that is.  It
+> seems a little messy to slice out this tiny piece from the middle, but
+> maybe it makes sense.
+>
 
--- Joe
+afaik when I was talking with others in the past about it, Windows is
+doing that before using ACPI calls, but maybe they have some similar
+workarounds for certain intel bridges as well? I am sure it affects
+more than the one I am blacklisting here, but I rather want to check
+each device before blacklisting all kabylake and sky lake bridges (as
+those are the ones were this issue can be observed).
+
+Sadly we had no luck getting any information about such workaround out
+of Nvidia or Intel.
+
+> > On Wed, Oct 16, 2019 at 9:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Wed, Oct 16, 2019 at 04:44:49PM +0200, Karol Herbst wrote:
+> > > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> > > > states.
+> > > >
+> > > > v2: convert to pci_dev quirk
+> > > >     put a proper technical explanation of the issue as a in-code comment
+> > > > v3: disable it only for certain combinations of intel and nvidia hardware
+> > > >
+> > > > Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: Lyude Paul <lyude@redhat.com>
+> > > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > > > Cc: Mika Westerberg <mika.westerberg@intel.com>
+> > > > Cc: linux-pci@vger.kernel.org
+> > > > Cc: linux-pm@vger.kernel.org
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Cc: nouveau@lists.freedesktop.org
+> > > > ---
+> > > >  drivers/pci/pci.c    | 11 ++++++++++
+> > > >  drivers/pci/quirks.c | 52 ++++++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/pci.h  |  1 +
+> > > >  3 files changed, 64 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index b97d9e10c9cc..8e056eb7e6ff 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -805,6 +805,13 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+> > > >       return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
+> > > >  }
+> > > >
+> > > > +static inline bool parent_broken_child_pm(struct pci_dev *dev)
+> > > > +{
+> > > > +     if (!dev->bus || !dev->bus->self)
+> > > > +             return false;
+> > > > +     return dev->bus->self->broken_nv_runpm && dev->broken_nv_runpm;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * pci_raw_set_power_state - Use PCI PM registers to set the power state of
+> > > >   *                        given PCI device
+> > > > @@ -850,6 +857,10 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+> > > >          || (state == PCI_D2 && !dev->d2_support))
+> > > >               return -EIO;
+> > > >
+> > > > +     /* check if the bus controller causes issues */
+> > > > +     if (state != PCI_D0 && parent_broken_child_pm(dev))
+> > > > +             return 0;
+> > > > +
+> > > >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> > > >
+> > > >       /*
+> > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > index 44c4ae1abd00..c2f20b745dd4 100644
+> > > > --- a/drivers/pci/quirks.c
+> > > > +++ b/drivers/pci/quirks.c
+> > > > @@ -5268,3 +5268,55 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+> > > >  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+> > > >                             PCI_CLASS_DISPLAY_VGA, 8,
+> > > >                             quirk_reset_lenovo_thinkpad_p50_nvgpu);
+> > > > +
+> > > > +/*
+> > > > + * Some Intel PCIe bridges cause devices to disappear from the PCIe bus after
+> > > > + * those were put into D3cold state if they were put into a non D0 PCI PM
+> > > > + * device state before doing so.
+> > > > + *
+> > > > + * This leads to various issue different issues which all manifest differently,
+> > > > + * but have the same root cause:
+> > > > + *  - AIML code execution hits an infinite loop (as the coe waits on device
+> > > > + *    memory to change).
+> > > > + *  - kernel crashes, as all pci reads return -1, which most code isn't able
+> > > > + *    to handle well enough.
+> > > > + *  - sudden shutdowns, as the kernel identified an unrecoverable error after
+> > > > + *    userspace tries to access the GPU.
+> > > > + *
+> > > > + * In all cases dmesg will contain at least one line like this:
+> > > > + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
+> > > > + * followed by a lot of nouveau timeouts.
+> > > > + *
+> > > > + * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of the
+> > > > + * PCIe bridge controller in order to power down the GPU.
+> > > > + * Nonetheless, there are other code paths inside the ACPI firmware which use
+> > > > + * other registers, which seem to work fine:
+> > > > + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
+> > > > + *  - 0xb0 bit 0x10 (link disable)
+> > > > + * Changing the conditions inside the firmware by poking into the relevant
+> > > > + * addresses does resolve the issue, but it seemed to be ACPI private memory
+> > > > + * and not any device accessible memory at all, so there is no portable way of
+> > > > + * changing the conditions.
+> > > > + *
+> > > > + * The only systems where this behavior can be seen are hybrid graphics laptops
+> > > > + * with a secondary Nvidia Pascal GPU. It cannot be ruled out that this issue
+> > > > + * only occurs in combination with listed Intel PCIe bridge controllers and
+> > > > + * the mentioned GPUs or if it's only a hw bug in the bridge controller.
+> > > > + *
+> > > > + * But because this issue was NOT seen on laptops with an Nvidia Pascal GPU
+> > > > + * and an Intel Coffee Lake SoC, there is a higher chance of there being a bug
+> > > > + * in the bridge controller rather than in the GPU.
+> > > > + *
+> > > > + * This issue was not able to be reproduced on non laptop systems.
+> > > > + */
+> > > > +
+> > > > +static void quirk_broken_nv_runpm(struct pci_dev *dev)
+> > > > +{
+> > > > +     dev->broken_nv_runpm = 1;
+> > >
+> > > Can you use the existing PCI_DEV_FLAGS_NO_D3 flag for this instead of
+> > > adding a new flag?
+> > >
+> > > I would put the parent_broken_child_pm() logic here, if possible,
+> > > e.g., something like:
+> > >
+> > >   struct pci_dev *bridge = pci_upstream_bridge(dev);
+> > >
+> > >   if (bridge &&
+> > >       bridge->vendor == PCI_VENDOR_ID_INTEL && bridge->device == 0x1901)
+> > >         dev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
+> > >
+> > > > +}
+> > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+> > > > +                           PCI_BASE_CLASS_DISPLAY, 16,
+> > > > +                           quirk_broken_nv_runpm);
+> > > > +/* kaby lake */
+> > > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1901,
+> > > > +                     quirk_broken_nv_runpm);
+> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > > index ac8a6c4e1792..903a0b3a39ec 100644
+> > > > --- a/include/linux/pci.h
+> > > > +++ b/include/linux/pci.h
+> > > > @@ -416,6 +416,7 @@ struct pci_dev {
+> > > >       unsigned int    __aer_firmware_first_valid:1;
+> > > >       unsigned int    __aer_firmware_first:1;
+> > > >       unsigned int    broken_intx_masking:1;  /* INTx masking can't be used */
+> > > > +     unsigned int    broken_nv_runpm:1;      /* some combinations of intel bridge controller and nvidia GPUs break rtd3 */
+> > > >       unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O windows */
+> > > >       unsigned int    irq_managed:1;
+> > > >       unsigned int    has_secondary_link:1;
+> > > > --
+> > > > 2.21.0
+> > > >
