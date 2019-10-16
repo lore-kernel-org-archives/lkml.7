@@ -2,56 +2,54 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB57ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8632CFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1993821925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4F821925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263877;
-	bh=uvBViBBkafk8iJmfxd0yUP4wcRzonKBzObLXe0djPr0=;
+	s=default; t=1571263879;
+	bh=BakXtVNyWxfe6/6cNUyEpr7kiZiRERaM4EkEd9adm7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWN51lnphWzyriBOwL7iobaYksTwnfZg13sqVYdS/ICDF2yjBdyu5bEI1AFNu/WUf
-	 zMGXOUnKP4CT9Y3DfzfvFw35E5zUmwtikGezzQ5KsL2k5atjo64DgZb9P3YYN1o8Py
-	 SU4BNNwjaLNrW1Y8fsOJJuIh3TuF8fHfkdPOJSxk=
+	b=tO1RBlwsBrsUEBp+OCmT/yn1vYNRXdjRxt8MAeVjcmlk8r4QxYjvTxx+asIuuWbIQ
+	 BAwmZFsI3KBuct4E/7jakD/OPBSiaKfwtjf1m9oZCmzt8qyQj1011dyrY3d79UaAiC
+	 CIghtmMaK5Gqow8nev2F8yCz62doJH7U+JTXdzSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395435AbfJPV4s (ORCPT
+        id S2407273AbfJPWLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406639AbfJPV4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:23 -0400
+        id S2437924AbfJPV4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:50 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E454521925;
-        Wed, 16 Oct 2019 21:56:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8562F21925;
+        Wed, 16 Oct 2019 21:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262983;
-        bh=uvBViBBkafk8iJmfxd0yUP4wcRzonKBzObLXe0djPr0=;
+        s=default; t=1571263009;
+        bh=BakXtVNyWxfe6/6cNUyEpr7kiZiRERaM4EkEd9adm7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RW2bxk0LFucI4GKKtkRsGrPVhL4ODQ/Gm8+K8dzKUK5I/CVsXsrM8gF238YAwgHts
-         Dysz6mJ4Bzi9W0KC/f8WiyuzHIlFBJhz1A8ctKNsmkEUXLKEWSL1FP40dd0CjUj7gN
-         bQ58GqMml6VmkMOSRYUsFgWkHoydlRWxzsabIStw=
+        b=MrjHYQ31+PRoLRWDOnF6Q+H4bNorriRjz7/fC5CRprVOVFSgtq67WsMjY2QHF3jvw
+         UqOeO5Vh6OLROtNs9zpzbJI3PZTPRFAharsv/oRiSVIHLwJJqqr5LzmxG+Jys6ft0r
+         PMGtq3l0gteBLNXLOdvMbMtKeXMONOcsTfEwtUSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Dan Carpenter <dan.carpenter@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 52/65] Staging: fbtft: fix memory leak in fbtft_framebuffer_alloc
-Date:   Wed, 16 Oct 2019 14:51:06 -0700
-Message-Id: <20191016214836.910311538@linuxfoundation.org>
+        stable@vger.kernel.org, Rick Tseng <rtseng@nvidia.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 12/81] usb: xhci: wait for CNR controller not ready bit in xhci resume
+Date:   Wed, 16 Oct 2019 14:50:23 -0700
+Message-Id: <20191016214817.920493885@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
-References: <20191016214756.457746573@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,60 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Rick Tseng <rtseng@nvidia.com>
 
-[ Upstream commit 5bdea6060618cfcf1459dca137e89aee038ac8b9 ]
+commit a70bcbc322837eda1ab5994d12db941dc9733a7d upstream.
 
-In fbtft_framebuffer_alloc the error handling path should take care of
-releasing frame buffer after it is allocated via framebuffer_alloc, too.
-Therefore, in two failure cases the goto destination is changed to
-address this issue.
+NVIDIA 3.1 xHCI card would lose power when moving power state into D3Cold.
+Thus we need to wait for CNR bit to clear in xhci resume, just as in
+xhci init.
 
-Fixes: c296d5f9957c ("staging: fbtft: core support")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190930030949.28615-1-navid.emamdoost@gmail.com
+[Minor changes to comment and commit message -Mathias]
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Rick Tseng <rtseng@nvidia.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-6-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/staging/fbtft/fbtft-core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 6d0363deba619..0cbcbad8f0742 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -828,7 +828,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	if (par->gamma.curves && gamma) {
- 		if (fbtft_gamma_parse_str(par,
- 			par->gamma.curves, gamma, strlen(gamma)))
--			goto alloc_fail;
-+			goto release_framebuf;
- 	}
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1098,6 +1098,18 @@ int xhci_resume(struct xhci_hcd *xhci, b
+ 		hibernated = true;
  
- 	/* Transmit buffer */
-@@ -845,7 +845,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	if (txbuflen > 0) {
- 		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
- 		if (!txbuf)
--			goto alloc_fail;
-+			goto release_framebuf;
- 		par->txbuf.buf = txbuf;
- 		par->txbuf.len = txbuflen;
- 	}
-@@ -881,6 +881,9 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 
- 	return info;
- 
-+release_framebuf:
-+	framebuffer_release(info);
-+
- alloc_fail:
- 	vfree(vmem);
- 
--- 
-2.20.1
-
+ 	if (!hibernated) {
++		/*
++		 * Some controllers might lose power during suspend, so wait
++		 * for controller not ready bit to clear, just as in xHC init.
++		 */
++		retval = xhci_handshake(&xhci->op_regs->status,
++					STS_CNR, 0, 10 * 1000 * 1000);
++		if (retval) {
++			xhci_warn(xhci, "Controller not ready at resume %d\n",
++				  retval);
++			spin_unlock_irq(&xhci->lock);
++			return retval;
++		}
+ 		/* step 1: restore register */
+ 		xhci_restore_registers(xhci);
+ 		/* step 2: initialize command ring buffer */
 
 
