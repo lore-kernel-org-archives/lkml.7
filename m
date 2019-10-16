@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC97FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA9ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF1A207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C47D207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264314;
-	bh=kSRLvh1VGKPe24MHdjufCBfj8tkZ+ksvQLTkai6Q4+c=;
+	s=default; t=1571264316;
+	bh=f9IPlNHLKFCsJuY8349dycvrJB7cmi/z+5puEsg0Q7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwdQar8IpIm7wuDp5DLjAp6KXxXmXJfSzr0ynv9tQGN2utjuhvZG6BXkXMt6g7ZJ7
-	 7eWxV4zcuoIc2GYLX6tkvIOSNR0bVVfNHgrO26Pjh9CgnJzJQUiITeJUWq9eRJCka/
-	 GTaBROAn8ZcJGbFIKZbaM36MYM8DhCTvoy/mvTPg=
+	b=p+dAtZ7i73iIp4osh+yrPpTYjEkNxD03l5MMuXUt99dPrkvoLBX8ZRv1xYC5ScfzQ
+	 RscfICHwtUB/gcIj+BN7FEMMlLwAzLi6ra3KTHhOH0q9vDfW0vNa8MdF4H760k+t27
+	 Uq/6zvTeGgKGXNFVCW5GiahO8qa0TD80gFK+HC5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391203AbfJPWSd (ORCPT
+        id S2391797AbfJPWSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44320 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394989AbfJPVyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:25 -0400
+        id S2394996AbfJPVy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:26 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9723C21A49;
-        Wed, 16 Oct 2019 21:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A423421A4C;
+        Wed, 16 Oct 2019 21:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262864;
-        bh=kSRLvh1VGKPe24MHdjufCBfj8tkZ+ksvQLTkai6Q4+c=;
+        s=default; t=1571262865;
+        bh=f9IPlNHLKFCsJuY8349dycvrJB7cmi/z+5puEsg0Q7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHL9gfO8w4xT+2TBq6sMwCc+SCOjiC7iUo7Ci8GtWgAXb4KPimszI0IlBwTcgRjAU
-         rUqgPpiDQt7g4F5y448JRsj+xzITzOoef/VSm1D7FHzZ9luez8gSEZ+4SgOmo2VEzR
-         rkNZVccWkjSOWs7u97iPSh9SY/InNGZl1pFvDJqk=
+        b=VLdcnChFTCsJGgBOj/5gb2EykNnIGj8SUSahL09pWBqmXmmhkYfbEo8MDLuwwtHQ5
+         7V8johGqli6CCbgHELgYKrlpfqu76hmK135cwWug4bQnX6Wy6DO38apk1SPu4gykCB
+         OPh1V7sJTdUfwpw4z+fBIMJv2UoPBqPk1GVtXkao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH 4.9 30/92] crypto: caam - fix concurrency issue in givencrypt descriptor
-Date:   Wed, 16 Oct 2019 14:50:03 -0700
-Message-Id: <20191016214825.237765068@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 4.9 31/92] coresight: etm4x: Use explicit barriers on enable/disable
+Date:   Wed, 16 Oct 2019 14:50:04 -0700
+Message-Id: <20191016214826.438744632@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,90 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horia Geantă <horia.geanta@nxp.com>
+From: Andrew Murray <andrew.murray@arm.com>
 
-commit 48f89d2a2920166c35b1c0b69917dbb0390ebec7 upstream.
+commit 1004ce4c255fc3eb3ad9145ddd53547d1b7ce327 upstream.
 
-IV transfer from ofifo to class2 (set up at [29][30]) is not guaranteed
-to be scheduled before the data transfer from ofifo to external memory
-(set up at [38]:
+Synchronization is recommended before disabling the trace registers
+to prevent any start or stop points being speculative at the point
+of disabling the unit (section 7.3.77 of ARM IHI 0064D).
 
-[29] 10FA0004           ld: ind-nfifo (len=4) imm
-[30] 81F00010               <nfifo_entry: ofifo->class2 type=msg len=16>
-[31] 14820004           ld: ccb2-datasz len=4 offs=0 imm
-[32] 00000010               data:0x00000010
-[33] 8210010D    operation: cls1-op aes cbc init-final enc
-[34] A8080B04         math: (seqin + math0)->vseqout len=4
-[35] 28000010    seqfifold: skip len=16
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[38] 69300000   seqfifostr: msg len=vseqoutsz
-[39] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
+Synchronization is also recommended after programming the trace
+registers to ensure all updates are committed prior to normal code
+resuming (section 4.3.7 of ARM IHI 0064D).
 
-If ofifo -> external memory transfer happens first, DECO will hang
-(issuing a Watchdog Timeout error, if WDOG is enabled) waiting for
-data availability in ofifo for the ofifo -> c2 ififo transfer.
+Let's ensure these syncronization points are present in the code
+and clearly commented.
 
-Make sure IV transfer happens first by waiting for all CAAM internal
-transfers to end before starting payload transfer.
+Note that we could rely on the barriers in CS_LOCK and
+coresight_disclaim_device_unlocked or the context switch to user
+space - however coresight may be of use in the kernel.
 
-New descriptor with jump command inserted at [37]:
+On armv8 the mb macro is defined as dsb(sy) - Given that the etm4x is
+only used on armv8 let's directly use dsb(sy) instead of mb(). This
+removes some ambiguity and makes it easier to correlate the code with
+the TRM.
 
-[..]
-[36] A8080A04         math: (seqin + math0)->vseqin len=4
-[37] A1000401         jump: jsl1 all-match[!nfifopend] offset=[01] local->[38]
-[38] 2F1E0000    seqfifold: both msg1->2-last2-last1 len=vseqinsz
-[39] 69300000   seqfifostr: msg len=vseqoutsz
-[40] 5C20000C      seqstr: ccb2 ctx len=12 offs=0
-
-[Note: the issue is present in the descriptor from the very beginning
-(cf. Fixes tag). However I've marked it v4.19+ since it's the oldest
-maintained kernel that the patch applies clean against.]
-
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: 1acebad3d8db8 ("crypto: caam - faster aead implementation")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-[Horia: backport to v4.4, v4.9]
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+[Fixed capital letter for "use" in title]
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190829202842.580-11-mathieu.poirier@linaro.org
+Cc: stable@vger.kernel.org # 4.9+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/caam/caamalg.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -75,7 +75,7 @@
- #define DESC_AEAD_BASE			(4 * CAAM_CMD_SZ)
- #define DESC_AEAD_ENC_LEN		(DESC_AEAD_BASE + 11 * CAAM_CMD_SZ)
- #define DESC_AEAD_DEC_LEN		(DESC_AEAD_BASE + 15 * CAAM_CMD_SZ)
--#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 9 * CAAM_CMD_SZ)
-+#define DESC_AEAD_GIVENC_LEN		(DESC_AEAD_ENC_LEN + 10 * CAAM_CMD_SZ)
- 
- /* Note: Nonce is counted in enckeylen */
- #define DESC_AEAD_CTR_RFC3686_LEN	(4 * CAAM_CMD_SZ)
-@@ -474,6 +474,7 @@ static int aead_set_sh_desc(struct crypt
- 	u32 geniv, moveiv;
- 	u32 ctx1_iv_off = 0;
- 	u32 *desc;
-+	u32 *wait_cmd;
- 	const bool ctr_mode = ((ctx->class1_alg_type & OP_ALG_AAI_MASK) ==
- 			       OP_ALG_AAI_CTR_MOD128);
- 	const bool is_rfc3686 = alg->caam.rfc3686;
-@@ -736,6 +737,14 @@ copy_iv:
- 
- 	/* Will read cryptlen */
- 	append_math_add(desc, VARSEQINLEN, SEQINLEN, REG0, CAAM_CMD_SZ);
-+
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -181,6 +181,12 @@ static void etm4_enable_hw(void *info)
+ 	if (coresight_timeout(drvdata->base, TRCSTATR, TRCSTATR_IDLE_BIT, 0))
+ 		dev_err(drvdata->dev,
+ 			"timeout while waiting for Idle Trace Status\n");
 +	/*
-+	 * Wait for IV transfer (ofifo -> class2) to finish before starting
-+	 * ciphertext transfer (ofifo -> external memory).
++	 * As recommended by section 4.3.7 ("Synchronization when using the
++	 * memory-mapped interface") of ARM IHI 0064D
 +	 */
-+	wait_cmd = append_jump(desc, JUMP_JSL | JUMP_TEST_ALL | JUMP_COND_NIFP);
-+	set_jump_tgt_here(desc, wait_cmd);
-+
- 	append_seq_fifo_load(desc, 0, FIFOLD_CLASS_BOTH | KEY_VLF |
- 			     FIFOLD_TYPE_MSG1OUT2 | FIFOLD_TYPE_LASTBOTH);
- 	append_seq_fifo_store(desc, 0, FIFOST_TYPE_MESSAGE_DATA | KEY_VLF);
++	dsb(sy);
++	isb();
+ 
+ 	CS_LOCK(drvdata->base);
+ 
+@@ -323,8 +329,12 @@ static void etm4_disable_hw(void *info)
+ 	/* EN, bit[0] Trace unit enable bit */
+ 	control &= ~0x1;
+ 
+-	/* make sure everything completes before disabling */
+-	mb();
++	/*
++	 * Make sure everything completes before disabling, as recommended
++	 * by section 7.3.77 ("TRCVICTLR, ViewInst Main Control Register,
++	 * SSTATUS") of ARM IHI 0064D
++	 */
++	dsb(sy);
+ 	isb();
+ 	writel_relaxed(control, drvdata->base + TRCPRGCTLR);
+ 
 
 
