@@ -2,102 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCAFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6278CFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0272067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A702067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:58:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oP1xASFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405639AbfJPN6D (ORCPT
+        id S2405651AbfJPN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:58:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4220 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404326AbfJPN6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:58:03 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DDC6FBB39C77AC8A3C0D;
-        Wed, 16 Oct 2019 21:58:00 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 21:57:51 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kishon@ti.com>, <kstewart@linuxfoundation.org>,
-        <yuehaibing@huawei.com>, <swinslow@gmail.com>,
-        <gregkh@linuxfoundation.org>, <opensource@jilayne.com>,
-        <tglx@linutronix.de>, <info@metux.net>, <allison@lohutok.net>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] phy: hisilicon: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 16 Oct 2019 21:57:35 +0800
-Message-ID: <20191016135735.12576-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 16 Oct 2019 09:58:09 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:41840 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404397AbfJPN6J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:58:09 -0400
+Received: by mail-wr1-f43.google.com with SMTP id p4so12321111wrm.8;
+        Wed, 16 Oct 2019 06:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=agNGM0+r0bRpxGyTFrM8CjOeywto3DlsON2jMxMZt2M=;
+        b=oP1xASFk9dN3PSvh14079JkszzhkjMvZ6q3lgP2Jn8Ww1RnJDvkibuyQfPyENnAi+I
+         bf6QTPJVAsMPMInvHnwriUJkzIjzx4NyMPGIkBG0wXBexm5W0p9VpxWAyse77EH7oiBt
+         Nq6oL3M4axfYgnl1jB8q6juwDJ8DwZVKpQCC3+axJtxrkc/Kdctt8odRYMP4pb4CwaCq
+         nirPHfIVUNmrsnzwC1g8BljSEUpxM/WO+Qqk6eCreIws/gD5lQ2C3Jyr3A0Yj6oWuIRM
+         qZ6KGR7saf4DcCdtNunNLdkwFSVj46y4TVeLaaB3X+CcUxkKCXPkZftaQjCABNaE3a0k
+         9OGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=agNGM0+r0bRpxGyTFrM8CjOeywto3DlsON2jMxMZt2M=;
+        b=BXWSELem8U+QNKLFcuew6bIA5+Gr0iiyns+cI6MYao3qiivTMNtGJo0GOod55c2QJ1
+         XHI/o2HFJOLcxzSAkseSvwnPNOik/7wQeMi0sxD2qJHHJ4UHSfeftOscENu/xwihT/00
+         gMgEXjiK7utDKOqyqUQ5VdQ+tgoVpWeWGek2pkxH4/8h5Gus6lWc8iujUDzZiVBsMhwd
+         eupMFCLdDx9C84UzsY2gUl6WSSc0IN55i+dVjwayJBjuyk6pK1bazAMMROecVNM5QDrq
+         YwJ93GF4yKjLtiije10/UjEkg2c+NTGOhB1X4GUt2Mywhvqxh7eSRFJ6ENaBaJ+GzIsi
+         Y/Yg==
+X-Gm-Message-State: APjAAAWpzv5sTmYFN5wHCWS2ZwxHMW3c6962ckGQyp4oHShqcc/9bGr1
+        FXfrhAnVE+YWZtmAKMUKiYg=
+X-Google-Smtp-Source: APXvYqwIUeLdkrCtFN83aAWf5o/i8xnN8NWxaxm7VurNt8Jl1QU49l59jzklvxt1Qe25mD+xUO5j+A==
+X-Received: by 2002:a05:6000:11d2:: with SMTP id i18mr2966444wrx.109.1571234286960;
+        Wed, 16 Oct 2019 06:58:06 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id w125sm4831016wmg.32.2019.10.16.06.58.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 06:58:06 -0700 (PDT)
+Subject: Re: [PATCHv7 01/33] ns: Introduce Time Namespace
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+References: <20191011012341.846266-1-dima@arista.com>
+ <20191011012341.846266-2-dima@arista.com>
+ <80af93da-d497-81de-2a2a-179bb3bc852d@arm.com>
+ <alpine.DEB.2.21.1910161230070.2046@nanos.tec.linutronix.de>
+ <5f4c2f29-ca68-b19c-017f-d23730f6e871@arm.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <4f60ac96-c684-e4a8-e60d-e90c658db025@gmail.com>
+Date:   Wed, 16 Oct 2019 14:57:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <5f4c2f29-ca68-b19c-017f-d23730f6e871@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On 10/16/19 11:44 AM, Vincenzo Frascino wrote:
+> On 10/16/19 11:39 AM, Thomas Gleixner wrote:
+[..]
+>> config TIME_NS
+>> 	bool "TIME namespace"
+>> 	depends on GENERIC_VDSO_TIME_NS
+>> 	default y
+>>
+>> and in lib/vdso/Kconfig
+>>
+>> config GENERIC_VDSO_TIME_NS
+>> 	bool
+>>
+>> and let architectures which have support for the VDSO bits select it.
+>>
+> 
+> Agreed, this is even better.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 4 +---
- drivers/phy/hisilicon/phy-histb-combphy.c  | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-index 9b16f13..34a6a9a 100644
---- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-+++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-@@ -114,7 +114,6 @@ static int hisi_inno_phy_probe(struct platform_device *pdev)
- 	struct hisi_inno_phy_priv *priv;
- 	struct phy_provider *provider;
- 	struct device_node *child;
--	struct resource *res;
- 	int i = 0;
- 	int ret;
- 
-@@ -122,8 +121,7 @@ static int hisi_inno_phy_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->mmio = devm_ioremap_resource(dev, res);
-+	priv->mmio = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->mmio)) {
- 		ret = PTR_ERR(priv->mmio);
- 		return ret;
-diff --git a/drivers/phy/hisilicon/phy-histb-combphy.c b/drivers/phy/hisilicon/phy-histb-combphy.c
-index 62d10ef..f1cb3e4 100644
---- a/drivers/phy/hisilicon/phy-histb-combphy.c
-+++ b/drivers/phy/hisilicon/phy-histb-combphy.c
-@@ -195,7 +195,6 @@ static int histb_combphy_probe(struct platform_device *pdev)
- 	struct histb_combphy_priv *priv;
- 	struct device_node *np = dev->of_node;
- 	struct histb_combphy_mode *mode;
--	struct resource *res;
- 	u32 vals[3];
- 	int ret;
- 
-@@ -203,8 +202,7 @@ static int histb_combphy_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->mmio = devm_ioremap_resource(dev, res);
-+	priv->mmio = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->mmio)) {
- 		ret = PTR_ERR(priv->mmio);
- 		return ret;
--- 
-2.7.4
-
-
+Thanks, will fix in v8,
+          Dmitry
