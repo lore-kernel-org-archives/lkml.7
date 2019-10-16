@@ -2,111 +2,91 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D5FFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566BFFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FC12168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214FF2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:57:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+hwROET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393359AbfJPM5H (ORCPT
+        id S2393378AbfJPM5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:57:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42846 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731287AbfJPM5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:57:07 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9965C300C72A;
-        Wed, 16 Oct 2019 12:57:06 +0000 (UTC)
-Received: from [10.36.116.19] (ovpn-116-19.ams2.redhat.com [10.36.116.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7887560C4E;
-        Wed, 16 Oct 2019 12:57:04 +0000 (UTC)
-Subject: Re: [PATCH RFC v3 8/9] mm/memory_hotplug: Introduce
- offline_and_remove_memory()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-9-david@redhat.com>
- <20191016114708.GY317@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <0568676b-4a22-cd95-1de8-a43022aa6a9f@redhat.com>
-Date:   Wed, 16 Oct 2019 14:57:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 08:57:13 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39324 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393368AbfJPM5M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:57:12 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 4so22598868qki.6
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iKYnCxXI+enDKKpRO1ujL8VETmHUaDu3E+T33R6ISPM=;
+        b=g+hwROET54h2vndrV5UvySYq7yp4qvTU86tqp4hmxXDtqKunS2ZAkElaa58Q5b4Q8D
+         M1ywHBIht82QXc0sQVnbrPHvj/77gY5eosNK8hQ57ufu93BZWmbfvHTwXMyNa6fnpzXa
+         1PN3FvGDq+leBePGK/7aSGNWvUDLqMkfCcbyiVYHfRQtVyXktxQg8UuNek2nnYs/epA9
+         LTtVGWlzRReML6keZeXR3wcPzCm8eQWLQk3G/4OKsBlnUS3D94qdF20EvR61SCA9XRva
+         ssR4DyZSN19wIDjz3MgR9L2lJCmq5uSYaMwXvKF0seOtB1wgHwYAWSVCE58/8T/cafDj
+         cjzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iKYnCxXI+enDKKpRO1ujL8VETmHUaDu3E+T33R6ISPM=;
+        b=Lf3kbjwZQdlfQ0W+aHOl0qS5HxTylc08RCjWIq5Q5Gkn2J+p1xaXx8kLJZY0CFzqrc
+         I4FXGu2WOwMV3ItZ8biph5em5jpmEevSP1vSoMVQIzyZ6L8sbQR99+wTjg+pp/jL+RlR
+         /POP3I5Qa5BhiJgJPEwbgSs4S73kPM7oXMxmwMqShJhJ0PrkHid6AEYlVIG20mwOmMVr
+         Mcv21K5RbdC/HKXSTP91ejk2rll6b+SkHUZprZ+GiAiMC7eHy65UPCdJMfQQDFtC7aQ1
+         74zzsXAkuKlOg1B7eH3pUBB42+kgZMqkqlCFCuKKGZHJs/lAQ42fFEZHUd86ffjza9Ub
+         DGWQ==
+X-Gm-Message-State: APjAAAWeTOVHMepvtpT7E+Szn1kWhz1YhHedYxv02ohI1d4nxX/mHVyx
+        S6u0CEj/FXuNzcpjozGTYCnpvyKqDzm21P5Ivb76PA==
+X-Google-Smtp-Source: APXvYqznfR9xVNBpGb36Jsp8fvtPYC6w0IX8Z65LGupMXk2zMNyuYFGC3dG8oecpreWNjUjM4OyYtcubd/IaRbgJffA=
+X-Received: by 2002:a05:620a:34b:: with SMTP id t11mr38227900qkm.213.1571230629198;
+ Wed, 16 Oct 2019 05:57:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016114708.GY317@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 16 Oct 2019 12:57:06 +0000 (UTC)
+References: <20191007033200.13443-1-brgl@bgdev.pl> <20191014081220.GK4545@dell>
+In-Reply-To: <20191014081220.GK4545@dell>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 14:56:57 +0200
+Message-ID: <CACRpkda9Kco-bVPw1OA6FMpQ1L8dZ4WFJ227wTCM9rh5JE7-+A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] backlight: gpio: simplify the driver
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.10.19 13:47, Michal Hocko wrote:
-> On Thu 19-09-19 16:22:27, David Hildenbrand wrote:
->> virtio-mem wants to offline and remove a memory block once it unplugged
->> all subblocks (e.g., using alloc_contig_range()). Let's provide
->> an interface to do that from a driver. virtio-mem already supports to
->> offline partially unplugged memory blocks. Offlining a fully unplugged
->> memory block will not require to migrate any pages. All unplugged
->> subblocks are PageOffline() and have a reference count of 0 - so
->> offlining code will simply skip them.
->>
->> All we need an interface to trigger the "offlining" and the removing in a
->> single operation - to make sure the memory block cannot get onlined by
->> user space again before it gets removed.
->>
->> To keep things simple, allow to only work on a single memory block.
-> 
-> Without a user it is not really clear why do we need this interface.
-> I am also not really sure why do you want/need to control beyond the
-> offlining stage. Care to explain some more?
-> 
+On Mon, Oct 14, 2019 at 10:12 AM Lee Jones <lee.jones@linaro.org> wrote:
 
-The user is the next (small) patch in this series:
+> >  arch/sh/boards/mach-ecovec24/setup.c         |  33 ++++--
+>
+> I guess we're just waiting for the SH Acks now?
 
-https://lkml.org/lkml/2019/9/19/475
+The one maintainer with this board is probably overloaded.
 
-Let's assume virtio-mem added a memory block and that block was onlined 
-(e.g. by user space). E.g. 128MB.
+I would say just apply it, it can't hold back the entire series.
 
-On request, virtio-mem used alloc_contig_range() to logically unplug all 
-chunks (e.g., 4MB) of that memory block. virtio-mem marked all pages 
-PG_offline and dropped the reference count to 0 (to allow the memory 
-block to get offlined). Basically no memory of the memory block is still 
-in use by the system. So it is very desirable to remove that memory 
-block along with the vmemmap and the page tables. This frees up memory.
-
-In order to remove the memory block, it first has to be officially 
-offlined (e.g., make the memory block as offline). Then, the memory 
-block can get cleanly removed. Otherwise, try_remove_memory() will fail.
-
-To do this, virtio-mem needs an interface to perform both steps (offline 
-+ remove).
-
-There is no interface for a driver to offline a memory block. What I 
-propose here performs both steps (offline+remove) in a single step, as 
-that is really what the driver wants.
-
--- 
-
-Thanks,
-
-David / dhildenb
+Yours,
+Linus Walleij
