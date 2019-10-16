@@ -2,115 +2,147 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21D8FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F956FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F1E205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CED218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571226187;
-	bh=PmYKqxbOOvz8BV7rulnSKvx5ub0QO0AeeOamne1eykg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zNW5n5qRfcEufadY/ewkuiYJSU0qUHP7s1kHARl1q4HZYq8cdALdEdqw6nK9ziAvp
-	 r8VCn6LPP+YR+O/Qo6ScNAknSKZe+Du2javkM/wudVDYeErNk574AYzg+jMfLTUPNp
-	 f61bFlYuRVM2KdrePh7ewOLjyDoADct02htizTjU=
+	s=default; t=1571226207;
+	bh=940UZ5taO9qZKICPivNc9bHkEIx9Ran6nNxyGew2NPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IpGay3SAWu/6Je69kb5DMRc+vBAvhJvBCnvlXOlsQEmAIegVH8WRBCCiRZYMWKQIC
+	 mNMbCXlMEZhmUBmAKnGRxAErPa59NMHMIBQz8b2Br+6BnppQm2CpQO8fFLvIdSsP2o
+	 EltJqtsVAruM4qg0PdHZApH1ADrBoUuiP1Zq4010=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbfJPLnG (ORCPT
+        id S1729907AbfJPLn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:43:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfJPLnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:43:05 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14CC221848;
-        Wed, 16 Oct 2019 11:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571226185;
-        bh=PmYKqxbOOvz8BV7rulnSKvx5ub0QO0AeeOamne1eykg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=i1w1YZlGDYWLysQYdPGSEO8ia3QEop5kFW1QZeyZiycshs41S1t8NKKBqUzCxCeUh
-         RFXrccRyr7r/WmYMKN7k2gMXNJyd2Jn6n4Z6b8zYbd3lnr/IqfAuSP7p0H7Lt4DIds
-         lul6X0aPFKBqKJXEydY3BFN5TalV6VZM4AltHPTU=
-Date:   Wed, 16 Oct 2019 13:42:59 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-cc:     Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        Will Deacon <will.deacon@arm.com>, Torsten Duwe <duwe@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
-In-Reply-To: <20190724161500.GG2624@lakrids.cambridge.arm.com>
-Message-ID: <nycvar.YFH.7.76.1910161341520.13160@cbobk.fhfr.pm>
-References: <20190208150826.44EBC68DD2@newverein.lst.de> <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com> <20190311114945.GA5625@lst.de> <20190408153628.GL6139@lakrids.cambridge.arm.com> <20190409175238.GE9255@fuggles.cambridge.arm.com>
- <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com> <20190724161500.GG2624@lakrids.cambridge.arm.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 16 Oct 2019 07:43:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40922 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726214AbfJPLnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:43:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BBC97B3CC;
+        Wed, 16 Oct 2019 11:43:22 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 13:43:21 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Juergen Gross <jgross@suse.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
+ a reference count of 0
+Message-ID: <20191016114321.GX317@dhcp22.suse.cz>
+References: <20190919142228.5483-1-david@redhat.com>
+ <20190919142228.5483-7-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919142228.5483-7-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019, Mark Rutland wrote:
-
-> > > > > So what's the status now? Besides debatable minor style
-> > > > > issues there were no more objections to v8. Would this
-> > > > > go through the ARM repo or via the ftrace repo?
-> > > >
-> > > > Sorry agains for the delay on this. I'm now back in the office and in
-> > > > front of a computer daily, so I can spend a bit more time on this.
-> > > >
-> > > > Regardless of anything else, I think that we should queue the first
-> > > > three patches now. I've poked the relevant maintainers for their acks so
-> > > > that those can be taken via the arm64 tree.
-> > > >
-> > > > I'm happy to do the trivial cleanups on the last couple of patches (e.g.
-> > > > s/lr/x30), and I'm actively looking at the API rework I requested.
-> > >
-> > > Ok, I've picked up patches 1-3 and I'll wait for you to spin updates to the
-> > > last two.
-> > 
-> > Ok, I see that patches 1-3 are picked up and are already present in recent
-> > kernels.
-> > 
-> > Is there any progress on remaining two patches?
+On Thu 19-09-19 16:22:25, David Hildenbrand wrote:
+> virtio-mem wants to allow to offline memory blocks of which some parts
+> were unplugged, especially, to later offline and remove completely
+> unplugged memory blocks. The important part is that PageOffline() has
+> to remain set until the section is offline, so these pages will never
+> get accessed (e.g., when dumping). The pages should not be handed
+> back to the buddy (which would require clearing PageOffline() and
+> result in issues if offlining fails and the pages are suddenly in the
+> buddy).
 > 
-> I'm afraid that I've been distracted on other fronts, so I haven't made
-> progress there.
+> Let's use "PageOffline() + reference count = 0" as a sign to
+> memory offlining code that these pages can simply be skipped when
+> offlining, similar to free or HWPoison pages.
 > 
-> > Any help required?
+> Pass flags to test_pages_isolated(), similar as already done for
+> has_unmovable_pages(). Use a new flag to indicate the
+> requirement of memory offlining to skip over these special pages.
 > 
-> If you'd be happy to look at the cleanup I previously suggested for the
-> core, that would be great. When I last looked, it was simple to rework
-> things so that arch code doesn't have to define MCOUNT_ADDR, but I
-> hadn't figured out exactly how to split the core mcount assumptions from
-> the important state machine bits.
+> In has_unmovable_pages(), make sure the pages won't be detected as
+> movable. This is not strictly necessary, however makes e.g.,
+> alloc_contig_range() stop early, trying to isolate such page blocks -
+> compared to failing later when testing if all pages were isolated.
 > 
-> I'll take another look and see if I can provide more detail. :)
+> Also, make sure that when a reference to a PageOffline() page is
+> dropped, that the page will not be returned to the buddy.
+> 
+> memory devices (like virtio-mem) that want to make use of this
+> functionality have to make sure to synchronize against memory offlining,
+> using the memory hotplug notifier.
+> 
+> Alternative: Allow to offline with a reference count of 1
+> and use some other sign in the struct page that offlining is permitted.
 
-Hi Mark,
+Few questions. I do not see onlining code to take care of this special
+case. What should happen when offline && online?
+Should we allow to try_remove_memory to succeed with these pages?
+Do we really have hook into __put_page? Why do we even care about the
+reference count of those pages? Wouldn't it be just more consistent to
+elevate the reference count (I guess this is what you suggest in the
+last paragraph) and the virtio driver would return that page to the
+buddy by regular put_page. This is also related to the above question
+about the physical memory remove.
 
-has any progress been made on any front? Feels like this got stuck a bit.
+[...]
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d5d7944954b3..fef74720d8b4 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8221,6 +8221,15 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+>  		if (!page_ref_count(page)) {
+>  			if (PageBuddy(page))
+>  				iter += (1 << page_order(page)) - 1;
+> +			/*
+> +			* Memory devices allow to offline a page if it is
+> +			* marked PG_offline and has a reference count of 0.
+> +			* However, the pages are not movable as it would be
+> +			* required e.g., for alloc_contig_range().
+> +			*/
+> +			if (PageOffline(page) && !(flags & SKIP_OFFLINE))
+> +				if (++found > count)
+> +					goto unmovable;
+>  			continue;
+>  		}
 
-Thanks,
-
+Do we really need to distinguish offline and hwpoison pages? They are
+both unmovable for allocator purposes and offlineable for the hotplug,
+right? Should we just hide them behind a helper and use it rather than
+an explicit SKIP_$FOO?
 -- 
-Jiri Kosina
+Michal Hocko
 SUSE Labs
-
