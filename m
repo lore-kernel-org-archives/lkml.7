@@ -2,129 +2,141 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A49FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C935FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25B42067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AEA2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571224856;
+	bh=doIzJeXQHVjz1M7XJVXHJuv2iUQRkWCgC9w9YrOIaAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JpQ8RC5xpd+1mnUxQsF5W/86JrK7osiae2nMnYi8hu6SMk6r8ziTKMLYuIHfdAEWp
+	 vbBsMooMlPcRsEwguOS3aCvbdTGKZglgvppb5Fq20skDq+EYQ0CsydukkLs2shwk7d
+	 u+n0UHiONe48ZI0hhGCzBagR2rmrg3n+lIM2CPS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392728AbfJPLTV (ORCPT
+        id S2392703AbfJPLUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:19:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40230 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389063AbfJPLTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:19:20 -0400
-Received: from [213.220.153.21] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKhKo-0003tb-DZ; Wed, 16 Oct 2019 11:19:18 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     christian.brauner@ubuntu.com
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH bpf-next v4 1/3] bpf: use check_zeroed_user() in bpf_check_uarg_tail_zero()
-Date:   Wed, 16 Oct 2019 13:18:08 +0200
-Message-Id: <20191016111810.1799-2-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016111810.1799-1-christian.brauner@ubuntu.com>
-References: <20191016034432.4418-1-christian.brauner@ubuntu.com>
- <20191016111810.1799-1-christian.brauner@ubuntu.com>
+        Wed, 16 Oct 2019 07:20:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57446 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728406AbfJPLUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:20:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF6F0B304;
+        Wed, 16 Oct 2019 11:20:52 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 13:20:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH RFC v3 4/9] mm: Export alloc_contig_range() /
+ free_contig_range()
+Message-ID: <20191016112051.GW317@dhcp22.suse.cz>
+References: <20190919142228.5483-1-david@redhat.com>
+ <20190919142228.5483-5-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919142228.5483-5-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In v5.4-rc2 we added a new helper (cf. [1]) check_zeroed_user() which
-does what bpf_check_uarg_tail_zero() is doing generically. We're slowly
-switching such codepaths over to use check_zeroed_user() instead of
-using their own hand-rolled version.
+On Thu 19-09-19 16:22:23, David Hildenbrand wrote:
+> A virtio-mem device wants to allocate memory from the memory region it
+> manages in order to unplug it in the hypervisor - similar to
+> a balloon driver. Also, it might want to plug previously unplugged
+> (allocated) memory and give it back to Linux. alloc_contig_range() /
+> free_contig_range() seem to be the perfect interface for this task.
+> 
+> In contrast to existing balloon devices, a virtio-mem device operates
+> on bigger chunks (e.g., 4MB) and only on physical memory it manages. It
+> tracks which chunks (subblocks) are still plugged, so it can go ahead
+> and try to alloc_contig_range()+unplug them on unplug request, or
+> plug+free_contig_range() unplugged chunks on plug requests.
+> 
+> A virtio-mem device will use alloc_contig_range() / free_contig_range()
+> only on ranges that belong to the same node/zone in at least
+> MAX(MAX_ORDER - 1, pageblock_order) order granularity - e.g., 4MB on
+> x86-64. The virtio-mem device added that memory, so the memory
+> exists and does not contain any holes. virtio-mem will only try to allocate
+> on ZONE_NORMAL, never on ZONE_MOVABLE, just like when allocating
+> gigantic pages (we don't put unmovable data into the movable zone).
 
-[1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v1 */
-Link: https://lore.kernel.org/r/20191009160907.10981-2-christian.brauner@ubuntu.com
+Is there any real reason to export as GPL rather than generic
+EXPORT_SYMBOL? In other words do we need to restrict the usage this
+interface only to GPL modules and why if so. All other allocator APIs
+are EXPORT_SYMBOL so there should better be a good reason for this one
+to differ. I can understand that this one is slightly different by
+requesting a specific range of the memory but it is still under a full
+control of the core MM to say no.
 
-/* v2 */
-Link: https://lore.kernel.org/r/20191016004138.24845-2-christian.brauner@ubuntu.com
-- Alexei Starovoitov <ast@kernel.org>:
-  - Add a comment in bpf_check_uarg_tail_zero() to clarify that
-    copy_struct_from_user() should be used whenever possible instead.
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-/* v3 */
-Link: https://lore.kernel.org/r/20191016034432.4418-2-christian.brauner@ubuntu.com
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - use correct checks for check_zeroed_user()
+Other than that, I do not think exporting this function is harmful. It
+would be worse to reinvent it and do it wrong.
 
-/* v4 */
-- Alexei Starovoitov <ast@kernel.org>:
-  - remove unnecessary min() and max() calls
----
- kernel/bpf/syscall.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+I usually prefer to add a caller in the same patch, though, because it
+makes the usage explicit and clear.
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 82eabd4e38ad..8d112bc069c0 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -58,35 +58,26 @@ static const struct bpf_map_ops * const bpf_map_types[] = {
-  * There is a ToCToU between this function call and the following
-  * copy_from_user() call. However, this is not a concern since this function is
-  * meant to be a future-proofing of bits.
-+ *
-+ * Note, instead of using bpf_check_uarg_tail_zero() followed by
-+ * copy_from_user() use the dedicated copy_struct_from_user() helper which
-+ * performs both tasks whenever possible.
-  */
- int bpf_check_uarg_tail_zero(void __user *uaddr,
- 			     size_t expected_size,
- 			     size_t actual_size)
- {
--	unsigned char __user *addr;
--	unsigned char __user *end;
--	unsigned char val;
- 	int err;
- 
- 	if (unlikely(actual_size > PAGE_SIZE))	/* silly large */
- 		return -E2BIG;
- 
--	if (unlikely(!access_ok(uaddr, actual_size)))
--		return -EFAULT;
--
- 	if (actual_size <= expected_size)
- 		return 0;
- 
--	addr = uaddr + expected_size;
--	end  = uaddr + actual_size;
--
--	for (; addr < end; addr++) {
--		err = get_user(val, addr);
--		if (err)
--			return err;
--		if (val)
--			return -E2BIG;
--	}
-+	err = check_zeroed_user(uaddr + expected_size, actual_size - expected_size);
-+	if (err <= 0)
-+		return err ?: -E2BIG;
- 
- 	return 0;
- }
+Acked-by: Michal Hocko <mhocko@suse.com> # to export contig range allocator API
+
+> ---
+>  mm/page_alloc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3334a769eb91..d5d7944954b3 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8469,6 +8469,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+>  				pfn_max_align_up(end), migratetype);
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(alloc_contig_range);
+>  #endif /* CONFIG_CONTIG_ALLOC */
+>  
+>  void free_contig_range(unsigned long pfn, unsigned int nr_pages)
+> @@ -8483,6 +8484,7 @@ void free_contig_range(unsigned long pfn, unsigned int nr_pages)
+>  	}
+>  	WARN(count != 0, "%d pages are still in use!\n", count);
+>  }
+> +EXPORT_SYMBOL_GPL(free_contig_range);
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  /*
+> -- 
+> 2.21.0
+
 -- 
-2.23.0
-
+Michal Hocko
+SUSE Labs
