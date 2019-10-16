@@ -2,91 +2,120 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F338FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14232FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43722082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E230520854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:02:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eavAjY99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392537AbfJPLAg (ORCPT
+        id S2392581AbfJPLCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:00:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3400 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfJPLAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:00:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 04:00:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
-   d="scan'208";a="225749572"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.130])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Oct 2019 04:00:32 -0700
-Date:   Wed, 16 Oct 2019 14:00:31 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-Message-ID: <20191016110031.GE10184@linux.intel.com>
-References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
- <20191004182711.GC6945@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
- <20191007000520.GA17116@linux.intel.com>
- <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
- <20191008234935.GA13926@linux.intel.com>
- <20191008235339.GB13926@linux.intel.com>
- <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
- <20191014190033.GA15552@linux.intel.com>
- <1571081397.3728.9.camel@HansenPartnership.com>
+        Wed, 16 Oct 2019 07:02:02 -0400
+Received: from mail-eopbgr10066.outbound.protection.outlook.com ([40.107.1.66]:48286
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726083AbfJPLCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:02:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kz7torD2zd4MvCR6wU7lK2u9zdqG3isApDfog6wHBjJuHnoW7m8THfXJ92vImUwcFxL1bb+Iw5f9zg7bKvn6Occ8v6KJ7SvR6mIPQ269en2fnVLXs+SM2jzg/eZKhT7y6mgFadyitkp1IxZ6LBp1lJqYhTTo59ao9z7d3nctXJecFWNloQ/MmwP9mdigwxtZRCPW367yrH9N9ihTxQtUhIDue9ZhLjwjvV/m+PdIjk/c+AkoKrWJGWQByNTMWGiXbrLalelAN9gAQssMkjAfbltIhDzdFamZiTtEtZyV6m+fOSx/Mo3t0Nd3OQ+JBDk+kcesX7LUktKyUNrtCGauxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZC0s8H2jNEl7qNSIrVIkOcb7mNC+168VZoIPI+EBrkk=;
+ b=EHhLUbpKlg5DXobSTQ5ZVN5/KF8TdOcHi7LMfaifY3W+h4JLBQGdq+0GyP8UXrwnvncERuow7D1gewEwuNxetidd0FNUusDcB/wa0duIY04/ewKgp57JYH6p7liYNY8f6VB3jGmH6QyqCurfipiKbFAu2mV/na0oYbKcN1kwVuWj07jv0K80aQhgPoWsrJ3gTq0xmMWY0MONOYQPNc7QAH0Wk3R47ZRVc4Ie/VibT+xEHmgNAlQX7jdo/gIE2GFztSR4Lz8JW0kRt3gdHEENzGOMhrU2pFP7K3I2BRSBdaTkNKnOlEToi8d6IGqS75Esw6+unwURF+Ro4Ctbe2A51A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZC0s8H2jNEl7qNSIrVIkOcb7mNC+168VZoIPI+EBrkk=;
+ b=eavAjY99AxUSXE6kan8codSvCp/JoG73hOZntQU2q7fMn6AyhyhvIBtNVFeWsWxFMfHDfBUjxPTe+XfDtsJdk+0RYE80VMGy1N3buVK8OrrUTsik2VKtDD0L0H5XhUdteJbX/xMBjn1tUSOOK13cGAow1U3XT9OYmtklD9SqXpk=
+Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.20.18) by
+ VI1PR0402MB3679.eurprd04.prod.outlook.com (52.134.13.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Wed, 16 Oct 2019 11:01:57 +0000
+Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com
+ ([fe80::d0fc:54d4:86f4:b1d2]) by VI1PR0402MB2863.eurprd04.prod.outlook.com
+ ([fe80::d0fc:54d4:86f4:b1d2%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 11:01:57 +0000
+From:   Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 3/5] serial: fsl_linflexuart: Be consistent with the
+ name
+Thread-Topic: [PATCH v6 3/5] serial: fsl_linflexuart: Be consistent with the
+ name
+Thread-Index: AQHVhBEget+54Njm0Um0wC+XV9FxYQ==
+Date:   Wed, 16 Oct 2019 11:01:57 +0000
+Message-ID: <VI1PR0402MB2863EC2DF6464234DE4E0A16DF920@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <1570726348-6420-1-git-send-email-stefan-gabriel.mirea@nxp.com>
+ <1570726348-6420-4-git-send-email-stefan-gabriel.mirea@nxp.com>
+ <20191015190155.GA1140159@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stefan-gabriel.mirea@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 40bad12d-7fad-47df-9b09-08d752284326
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VI1PR0402MB3679:|VI1PR0402MB3679:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3679BD349F27ADED558DBF84DF920@VI1PR0402MB3679.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0192E812EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(199004)(189003)(53546011)(316002)(102836004)(74316002)(486006)(305945005)(81156014)(7736002)(446003)(86362001)(54906003)(476003)(8676002)(55016002)(6436002)(52536014)(2906002)(9686003)(229853002)(81166006)(186003)(5660300002)(26005)(8936002)(6506007)(4326008)(64756008)(558084003)(33656002)(71200400001)(71190400001)(66946007)(76116006)(91956017)(66476007)(256004)(66446008)(66556008)(7416002)(7696005)(25786009)(76176011)(6916009)(14454004)(66066001)(478600001)(99286004)(6246003)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3679;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UuN6y66MLXQQjBy69LXejFCBemQkk7g0WqIioDyg4k9YaqNYQDh2wDKzUF3Itph1AeFZDcNR/Ofmk56IUyAllHxIRR+C8ojvoqjfb9FnmUcbGQdMthYxmgm+zxYYHZWUCHC3qhq7LpgoQoC3h25y42UqsZD4HuOlZjOG3I0yepo2qhcuL5ER8WXRPkosQ18jK8PWZNHMuY9cLIvtmgB3vs3WBPZfIcYlDzVVQanaKMwIHDI0FCRBwwPXIowqRKCOlGsZWNAcgW2dbPmHY2tkjgWduI9HBJ9+eKmfsV2adIFrPDgizxI6NaWkPimckuKpNWcrMCvZicnZINu7MymMt8hwsG+/+qn3znFcUCkkfTN+UXuD+/3GqE059ulFhm6IA5QQDNL777afv7XIstZk3TlCYanhsolhy+E0X9XbgT4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571081397.3728.9.camel@HansenPartnership.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40bad12d-7fad-47df-9b09-08d752284326
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 11:01:57.3348
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1s8TCWGOPefbN/x1X+R1jkW/j+qHJYPZob1EPJ5ZuTzmPYMWKpkvsvN094+NQ0qd9Ok/W5wCOGGWxMXHRMzrlXOpUxLVduXf64YPbyLKbFk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3679
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:29:57PM -0700, James Bottomley wrote:
-> The job of the in-kernel rng is simply to produce a mixed entropy pool
-> from which we can draw random numbers.  The idea is that quite a few
-> attackers have identified the rng as being a weak point in the security
-> architecture of the kernel, so if we mix entropy from all the sources
-> we have, you have to compromise most of them to gain some predictive
-> power over the rng sequence.
-
-The documentation says that krng is suitable for key generation.
-Should the documentation changed to state that it is unsuitable?
-
-> The point is not how certified the TPM RNG is, the point is that it's a
-> single source and if we rely on it solely for some applications, like
-> trusted keys, then it gives the attackers a single known point to go
-> after.  This may be impossible for script kiddies, but it won't be for
-> nation states ... are you going to exclusively trust the random number
-> you got from your chinese certified TPM?
-
-I'd suggest approach where TPM RNG result is xored with krng result.
-
-> Remember also that the attack doesn't have to be to the TPM only, it
-> could be the pathway by which we get the random number, which involves
-> components outside of the TPM certification.
-
-Yeah, I do get this.
-
-/Jarkko
+Hello Greg,=0A=
+=0A=
+On 10/15/2019 10:05 PM, Greg KH wrote:=0A=
+> =0A=
+> This patch does not apply to my tree :(=0A=
+> =0A=
+=0A=
+Thanks for letting me know; I will rebase it in v7.=0A=
+=0A=
+Regards,=0A=
+Stefan=0A=
