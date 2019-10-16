@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FA9FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED84FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A5921A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F3721A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+a1VT2O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2tUHLOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404890AbfJPRId (ORCPT
+        id S2394088AbfJPRIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:08:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34741 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389259AbfJPRIb (ORCPT
+        Wed, 16 Oct 2019 13:08:37 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41433 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389259AbfJPRIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:08:31 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r22so18145466lfm.1;
-        Wed, 16 Oct 2019 10:08:30 -0700 (PDT)
+        Wed, 16 Oct 2019 13:08:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r2so18091438lfn.8;
+        Wed, 16 Oct 2019 10:08:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FuDtedlY48DcctCZGWagsRf8MsM87uwA3mMuVGQ2AP8=;
-        b=j+a1VT2OS4bm7ECykAC43ju60WarYAfWCbRzuFLrL1hxbpgI3Z4j7pRhUEai/49rJ9
-         i48Z56uH5ua66STUHM58TXOltWf4jqVt4q70XzNx6Xa/pb+7PaTc9wej5Uc6Wn5/krkQ
-         Vb5+qH2HJrsvo4vOpu/boufSBlQMCwGX9+hcTLZy3E696r2y0B23YccJG92eOKxRjjzJ
-         fvBSjdk9kz2z5Rin4tvxtefT/UsjzQ9A2Vht8QkBkV33orbNGrGwyM5GMDqwjZP8Jlgj
-         qKETLs4Jb5W07NgAbvDu2uVy5YSvJHNegP8luJGJOGZUHoKkAQ9Dvqv6sVk1rmMfwZP/
-         zr2Q==
+        bh=tPzq/4pAdFPsSANJ/9NHJEoF3soP3uhPziVivyFbVzY=;
+        b=p2tUHLOCFaKYtSzu+8kqWT2Dzna3tCZCKO0yQhQ0QcSNFhesJBaDW4i8xBo9fc8T3f
+         g4eJS93zAfvcr0wQv321p5gCDYU8yH11j7caUaImTHabE7jMqFUhfsMfEfncCCqpvda1
+         JxleoaFtrXcAMuQ0kM0H7K6Uh6gAE7Iqnx3mwfp69rfGBM6pO7eiVCa7GjaVPh5JmNON
+         cnFSELeJrbWBRGjeHBuHMwLciJgxseg5AG5TFGnCrsxzIDYHgYDX4RSIahqW49/yQDuo
+         gmMmpIVwBMdBUFEMHczk+8drg+XldueaYcTmFPEZ85TA3lhIOO/rfDiJle9687mWEZOV
+         IMlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FuDtedlY48DcctCZGWagsRf8MsM87uwA3mMuVGQ2AP8=;
-        b=eYpbH9QG43SeINBZuzrQaaXbFmxC/tSjQTSakajQIuwWfu23KsxjDskq93ipH7ItBN
-         I2/ZM1pce6wU1eCuwLMgnevPGFWWlqFeGECeJN3nyPpScBv8w8IRVhLdPfgURFB8nfOp
-         Be3rVwBMRf3WhQF3bB90uGS69TxUSyzdDuJ5TfRkFRmhb646yI1emN/WqfQyjJhrv0uQ
-         U/sQWc6U+H/rHJtVp3B2fU1G3IJcFZw1cyMN5EJ7D78PkRkLXirrm0EN7OxC4loa+XGh
-         wPQQLq9b4pZgM9qOIAxL7jped56UVWAOGxlQTk7iW8mU5CIgiMn32+ALVgYe6uyP0m1i
-         rLAw==
-X-Gm-Message-State: APjAAAUtqLxjpzu5CQah3F/5uV8fQK3rv8JVBEVGEr7o9KLAqMpFj2x6
-        pvVqgz4x3HW9xDU74KEclMM=
-X-Google-Smtp-Source: APXvYqybaFGO1u4fZEPYMstx4sfISrbUPkeIsHhbcRYljDhIpvBSINMvFHrAxe5eS+JI8E/hZaMnnA==
-X-Received: by 2002:a19:6a08:: with SMTP id u8mr1490535lfu.74.1571245709687;
-        Wed, 16 Oct 2019 10:08:29 -0700 (PDT)
+        bh=tPzq/4pAdFPsSANJ/9NHJEoF3soP3uhPziVivyFbVzY=;
+        b=iljaUr71jys+IFCwAOAFPNXheuVfDjM74YLoFe+FJrRNsMoe6DfGC6E1f6jPI8A+wM
+         X3JYIZ3376Jnw/h/HebWpd1s2wIeNSOggESWJ0Wx8seFrsJ/TgZBOKkWB5gcP4t2hopf
+         cxzQECCM4KoixApSmwq1k3uAVtP78A/9jktC0bU1CkMTyBEmzfTkcPzFMLGCJTMtNlMv
+         GYdbD+DRUo4HNomwykf/dr2Bd6RdliFF+rI1YbvO8GjhTcF2dYGeR5vQCXmXihmDilSN
+         aHz48+QGRNMSviHUVL43dftaOo4bvkTx0TQkNqba9+GyhS4i0r2LHsUJEr1CDdB6pWJm
+         BgQw==
+X-Gm-Message-State: APjAAAWwcJUhIXmokWcCtSiCK0vrtjpprv/Yr28wCvpbHgYBYTv8jlyD
+        8N1DXkokVLhHbsb6eI+m2nc=
+X-Google-Smtp-Source: APXvYqztlIKXFcwsX9T4q5xwz9eoGg3GnsOg0q124ETsT305HLl5q3GH2LzOddyA4J/Q6XbgkwM9Cw==
+X-Received: by 2002:ac2:4830:: with SMTP id 16mr521889lft.35.1571245712219;
+        Wed, 16 Oct 2019 10:08:32 -0700 (PDT)
 Received: from localhost.localdomain ([87.101.228.250])
-        by smtp.gmail.com with ESMTPSA id q24sm6299182ljj.6.2019.10.16.10.08.27
+        by smtp.gmail.com with ESMTPSA id q24sm6299182ljj.6.2019.10.16.10.08.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 16 Oct 2019 10:08:29 -0700 (PDT)
+        Wed, 16 Oct 2019 10:08:31 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -63,9 +63,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 1/2] arm64: dts: meson-gxm-vega-s96: set rc-vega-s9x ir keymap
-Date:   Wed, 16 Oct 2019 21:07:36 +0400
-Message-Id: <1571245657-4471-2-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: meson-gxbb-vega-s95: set rc-vega-s9x ir keymap
+Date:   Wed, 16 Oct 2019 21:07:37 +0400
+Message-Id: <1571245657-4471-3-git-send-email-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571245657-4471-1-git-send-email-christianshewitt@gmail.com>
 References: <1571245657-4471-1-git-send-email-christianshewitt@gmail.com>
@@ -74,25 +74,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an IR node to the Vega S96 dts to include the rc-vega-s9x keymap.
+Add the rc-vega-s9x keymap to the existing IR node in the device tree.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-index e2ea675..0bdf51d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-@@ -35,3 +35,7 @@
- 		reg = <0>;
- 	};
- };
-+
-+&ir {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 43b11e3..0cc6d18 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -152,6 +152,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&remote_input_ao_pins>;
+ 	pinctrl-names = "default";
 +	linux,rc-map-name = "rc-vega-s9x";
-+};
+ };
+ 
+ &pwm_ef {
 -- 
 2.7.4
 
