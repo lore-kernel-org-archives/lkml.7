@@ -2,120 +2,77 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFA2FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1401FA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8C62168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B4E2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406275AbfJPQZe (ORCPT
+        id S2393625AbfJPQZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:25:34 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53038 "EHLO mga17.intel.com"
+        Wed, 16 Oct 2019 12:25:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:12345 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392349AbfJPQZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:25:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1733056AbfJPQZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:25:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 09:25:33 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 09:25:48 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
-   d="scan'208";a="189729232"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.58]) ([10.255.31.58])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 09:25:29 -0700
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
- <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
- <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
- <20190925180931.GG31852@linux.intel.com>
- <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
- <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
- <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
- <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
- <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
- <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
- <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <bea889c5-1599-1eb8-ff3a-3bde1e58afa3@intel.com>
-Date:   Thu, 17 Oct 2019 00:25:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+   d="scan'208";a="202116161"
+Received: from hagarwal-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.5.165])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2019 09:25:44 -0700
+Date:   Wed, 16 Oct 2019 19:25:43 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191016162543.GB6279@linux.intel.com>
+References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com>
+ <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com>
+ <20191008235339.GB13926@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+ <20191014190033.GA15552@linux.intel.com>
+ <1571081397.3728.9.camel@HansenPartnership.com>
+ <20191016110031.GE10184@linux.intel.com>
+ <1571229252.3477.7.camel@HansenPartnership.com>
 MIME-Version: 1.0
-In-Reply-To: <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571229252.3477.7.camel@HansenPartnership.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/2019 11:37 PM, Paolo Bonzini wrote:
-> On 16/10/19 16:43, Thomas Gleixner wrote:
->>
->> N | #AC       | #AC enabled | SMT | Ctrl    | Guest | Action
->> R | available | on host     |     | exposed | #AC   |
->> --|-----------|-------------|-----|---------|-------|---------------------
->>    |           |             |     |         |       |
->> 0 | N         |     x       |  x  |   N     |   x   | None
->>    |           |             |     |         |       |
->> 1 | Y         |     N       |  x  |   N     |   x   | None
-> 
-> So far so good.
-> 
->> 2 | Y         |     Y       |  x  |   Y     |   Y   | Forward to guest
->>
->> 3 | Y         |     Y       |  N  |   Y     |   N   | A) Store in vCPU and
->>    |           |             |     |         |       |    toggle on VMENTER/EXIT
->>    |           |             |     |         |       |
->>    |           |             |     |         |       | B) SIGBUS or KVM exit code
-> 
-> (2) is problematic for the SMT=y case, because of what happens when #AC
-> is disabled on the host---safe guests can start to be susceptible to
-> DoS.
-> 
-> For (3), which is the SMT=n case,, the behavior is the same independent of
-> guest #AC.
-> 
-> So I would change these two lines to:
-> 
->    2 | Y         |     Y       |  Y  |   N     |   x   | On first guest #AC,
->      |           |             |     |         |       | disable globally on host.
->      |           |             |     |         |       |
->    3 | Y         |     Y       |  N  |   Y     |   x   | Switch MSR_TEST_CTRL on
->      |           |             |     |         |       | enter/exit, plus:
->      |           |             |     |         |       | A) #AC forwarded to guest.
->      |           |             |     |         |       | B) SIGBUS or KVM exit code
->
+On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley wrote:
+> reversible ciphers are generally frowned upon in random number
+> generation, that's why the krng uses chacha20.  In general I think we
+> shouldn't try to code our own mixing and instead should get the krng to
+> do it for us using whatever the algorithm du jour that the crypto guys
+> have blessed is.  That's why I proposed adding the TPM output to the
+> krng as entropy input and then taking the output of the krng.
 
-I just want to get confirmed that in (3), we should split into 2 case:
+It is already registered as hwrng. What else? Was the issue that
+it is only used as seed when the rng is init'd first? I haven't
+at this point gone to the internals of krng.
 
-a) if host has it enabled, still apply the constraint that guest is 
-forcibly enabled? so we don't switch MSR_TEST_CTL.
-
-b) if host has it disabled, we can switch MSR_TEST_CTL on enter/exit.
+/Jarkko
