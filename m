@@ -2,108 +2,70 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36483FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1096FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7BB2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:54:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUUc212a"
+	by mail.kernel.org (Postfix) with ESMTP id ADB252168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391538AbfJPMyg (ORCPT
+        id S2391564AbfJPMzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:54:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44485 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfJPMyf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:54:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e10so10261090pgd.11;
-        Wed, 16 Oct 2019 05:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8a9HNA2BKGzGwxQrVAzjlpqsmr7lfX1r2QUJLnuq4M8=;
-        b=ZUUc212azMCOIP56SZCnXe9tI35MmHs9g8a+tqb/WMJmGQ1dJKa83hOdA91+Mav88U
-         8MpozPbLu0g3jY80UGoIFAy+AT9ljM5Nyl3fD5UaAtWWNHm0GRvP5QvAFPNfTvM5wOOL
-         /UaUEo07Zx5U3olsTfM38GliySpyAt5iZum+AdKo7EC38tgQBT+NO5UCZXGzsDnytyF2
-         AgRp02Ei2cmQT3AAJlzdvPx6o0EUlorvm2QV1tuYqwzppzuWRAMv6U460znOzKsHn1WH
-         69q25o8g8+sixoJuNZPVeIYyDRLLABE2cdBIxvO7mwLFn/NarAzZl6OUNVAvqiwk69r/
-         yK7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8a9HNA2BKGzGwxQrVAzjlpqsmr7lfX1r2QUJLnuq4M8=;
-        b=AZ2KmnnAQ3Eq+wAbI6DxKepcinF67gGfc/W5Jy/YQwGyvg3qU544/7zVxkL6LJejhF
-         Y7hbDBr/P5pg5BJaLZOY6TxcEU46t9e/n1pBKUcPlP2GLth+ZD3SLKr4oitRPFcApV1V
-         7nq0rIb8Y0pVEAEBDERLlPt0hkaKB/uwhJISIvW/TA8cHCa4O6n63OPH/iMbs+WzvfdM
-         cF9BOx1Bs6WWu0Xoy1MBbaedO5hmgC7HOw70WHOeexNb0RmuJkCU130mHDhCikHLT1lj
-         FnAy9mQHuN5QwcRmTujsTzY0TOkC7dz4uXL7XF5IYgtD5kq1f/2dZqURZitUaUyD2Vju
-         o+iQ==
-X-Gm-Message-State: APjAAAXC0F59cDR5w/XmXp29BeFLF40lYB5P6NEMbXSaTot0lXIt3ySb
-        I91/jD8QYtJtxFBS6JGb+VI=
-X-Google-Smtp-Source: APXvYqwkSyOIiNgoq7akH/I2XecLVnJJ7aw3IKPENmDImEh16Pi/oo9zVzBOZnn1TMawcSuoq5EWZQ==
-X-Received: by 2002:aa7:8b4d:: with SMTP id i13mr45697833pfd.226.1571230468438;
-        Wed, 16 Oct 2019 05:54:28 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id r18sm19049233pgm.31.2019.10.16.05.54.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 05:54:27 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] leds: an30259a: add a check for devm_regmap_init_i2c
-Date:   Wed, 16 Oct 2019 20:54:03 +0800
-Message-Id: <20191016125403.23359-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 16 Oct 2019 08:55:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:39148 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727881AbfJPMzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:55:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EB3528;
+        Wed, 16 Oct 2019 05:55:43 -0700 (PDT)
+Received: from arrakis.emea.arm.com (unknown [10.1.196.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F6E33F68E;
+        Wed, 16 Oct 2019 05:55:42 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 13:55:39 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v4] arm64: use generic free_initrd_mem()
+Message-ID: <20191016125539.GH49619@arrakis.emea.arm.com>
+References: <1569657746-31672-1-git-send-email-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569657746-31672-1-git-send-email-rppt@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-an30259a_probe misses a check for devm_regmap_init_i2c and may cause
-problems.
-Add a check and print errors like other leds drivers.
+On Sat, Sep 28, 2019 at 11:02:26AM +0300, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> arm64 calls memblock_free() for the initrd area in its implementation of
+> free_initrd_mem(), but this call has no actual effect that late in the boot
+> process. By the time initrd is freed, all the reserved memory is managed by
+> the page allocator and the memblock.reserved is unused, so the only purpose
+> of the memblock_free() call is to keep track of initrd memory for debugging
+> and accounting.
+> 
+> Without the memblock_free() call the only difference between arm64 and the
+> generic versions of free_initrd_mem() is the memory poisoning.
+> 
+> Move memblock_free() call to the generic code, enable it there
+> for the architectures that define ARCH_KEEP_MEMBLOCK and use the generic
+> implementation of free_initrd_mem() on arm64.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Use goto exit instead of return to destroy the mutex when failed.
+Queued for 5.5. Thanks.
 
- drivers/leds/leds-an30259a.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
-index 250dc9d6f635..82350a28a564 100644
---- a/drivers/leds/leds-an30259a.c
-+++ b/drivers/leds/leds-an30259a.c
-@@ -305,6 +305,13 @@ static int an30259a_probe(struct i2c_client *client)
- 
- 	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
- 
-+	if (IS_ERR(chip->regmap)) {
-+		err = PTR_ERR(chip->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			err);
-+		goto exit;
-+	}
-+
- 	for (i = 0; i < chip->num_leds; i++) {
- 		struct led_init_data init_data = {};
- 
 -- 
-2.20.1
-
+Catalin
