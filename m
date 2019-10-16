@@ -2,101 +2,86 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F5EECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB88AECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52272067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F6E2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390384AbfJPA7Q (ORCPT
+        id S2390412AbfJPBAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:59:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1974 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfJPA7Q (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:59:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 17:59:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,301,1566889200"; 
-   d="scan'208";a="370642349"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.98]) ([10.239.196.98])
-  by orsmga005.jf.intel.com with ESMTP; 15 Oct 2019 17:59:13 -0700
-Subject: Re: [PATCH] perf list: Hide deprecated events by default
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191015025357.8708-1-yao.jin@linux.intel.com>
- <20191015091401.GE10951@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <627305a7-3aec-037a-1c36-6ca884f35d1d@linux.intel.com>
-Date:   Wed, 16 Oct 2019 08:59:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 21:00:33 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:30014 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726315AbfJPBAd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 21:00:33 -0400
+X-IronPort-AV: E=Sophos;i="5.67,301,1566835200"; 
+   d="scan'208";a="77023489"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 16 Oct 2019 09:00:31 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 14C874CE14F4;
+        Wed, 16 Oct 2019 09:00:10 +0800 (CST)
+Received: from G08CNEXMBPEKD03.g08.fujitsu.local ([10.167.33.86]) by
+ G08CNEXCHPEKD03.g08.fujitsu.local ([10.167.33.85]) with mapi id
+ 14.03.0439.000; Wed, 16 Oct 2019 09:00:26 +0800
+From:   "Su, Yanjun" <suyj.fnst@cn.fujitsu.com>
+To:     "trondmy@gmail.com" <trondmy@gmail.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: About patch NFS: Fix O_DIRECT accounting of number of bytes
+ read/written
+Thread-Topic: About patch NFS: Fix O_DIRECT accounting of number of bytes
+ read/written
+Thread-Index: AdWDupUDFq5cvVv1QGGoMCLng+/bzA==
+Date:   Wed, 16 Oct 2019 01:00:30 +0000
+Message-ID: <9608C5E5429A7846A89FDA46D5296B97334E3824@G08CNEXMBPEKD03.g08.fujitsu.local>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.167.226.33]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191015091401.GE10951@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-yoursite-MailScanner-ID: 14C874CE14F4.AEBB8
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/15/2019 5:14 PM, Jiri Olsa wrote:
-> On Tue, Oct 15, 2019 at 10:53:57AM +0800, Jin Yao wrote:
->> There are some deprecated events listed by perf list. But we can't remove
->> them from perf list with ease because some old scripts may use them.
->>
->> Deprecated events are old names of renamed events.  When an event gets
->> renamed the old name is kept around for some time and marked with
->> Deprecated. The newer Intel event lists in the tree already have these
->> headers.
->>
->> So we need to keep them in the event list, but provide a new option to
->> show them. The new option is "--deprecated".
->>
->> With this patch, the deprecated events are hidden by default but they can
->> be displayed when option "--deprecated" is enabled.
-> 
-> not sure it's wise to hide them, because people will not read man page
-> to find --deprecated option, they will rather complain right away ;-)
-> 
-> how about to display them as another topic, like:
-> 
-> pipeline:
-> 	...
-> uncore:
-> 	...
-> deprecated:
-> 	...
-> 
-> jirka
-> 
-
-Hi Jiri,
-
-I don't know if we add a new topic "deprecated" in perf list output, 
-does the old script need to be modified as well?
-
-Say the events are moved to the "deprecated" section, I just guess the 
-script needs the modification.
-
-That's just my personal guess. :)
-
-Thanks
-Jin Yao
-
-
-
-
+SGkgdHJvbmQsDQpCZWNhdXNlIE15IG1haWwgc3lzdGVtIGNhbnQgcmVjZWl2
+ZSBuZnMgbWFpbCBsaXN0oa9zIG1haWxzLCBJIHJlcGx5IHlvdXIgcGF0Y2gg
+aGVyZS4NCkkgaGF2ZSBzb21lIHF1ZXN0aW9uIGZvciB0aGUgcGF0Y2guDQoN
+Cj5Oby4gQmFzaWMgT19ESVJFQ1QgZG9lcyBub3QgZ3VhcmFudGVlIGF0b21p
+Y2l0eSBvZiByZXF1ZXN0cywgd2hpY2ggaXMNCj53aHkgd2UgZG8gbm90IGhh
+dmUgZ2VuZXJpYyBsb2NraW5nIGF0IHRoZSBWRlMgbGV2ZWwgd2hlbiByZWFk
+aW5nIGFuZA0KPndyaXRpbmcuIFRoZSBvbmx5IGd1YXJhbnRlZSBiZWluZyBv
+ZmZlcmVkIGlzIHRoYXQgT19ESVJFQ1QgYW5kIGJ1ZmZlcmVkDQo+d3JpdGVz
+IGRvIG5vdCBjb2xsaWRlLg0KRG8geW91IG1lYW4gb3RoZXIgZnMgYWxzbyBj
+YW50IGd1YXJhbnRlZSBhdG9taWNpdHkgb2YgT19ESVJFQ1QgcmVxdWVzdCBv
+ciBqdXN0IG5mcz8NCg0KPklPVzogSSB0aGluayB0aGUgYmFzaWMgcHJlbWlz
+ZSBmb3IgdGhpcyB0ZXN0IGlzIGp1c3QgYnJva2VuIChhcyBJDQo+Y29tbWVu
+dGVkIGluIHRoZSBwYXRjaCBzZXJpZXMgSSBzZW50KSBiZWNhdXNlIGl0IGlz
+IGFzc3VtaW5nIGENCj5iZWhhdmlvdXIgdGhhdCBpcyBzaW1wbHkgbm90IGd1
+YXJhbnRlZWQuDQpTbyB0aGUgZ2VuZXJpYy80NjUgb2YgeGZzdGVzdHMgY2Fu
+oa90IGFwcGx5IHRvIG5mcyBmb3Igbm93LCBhbSBJIHJpZ2h0Pw0KDQo+QlRX
+OiBub3RlIHRoYXQgYnVmZmVyZWQgd3JpdGVzIGhhdmUgdGhlIHNhbWUgcHJv
+cGVydHkuIFRoZXkgYXJlIG9yZGVyZWQNCj53aGVuIGJlaW5nIHdyaXR0ZW4g
+aW50byB0aGUgcGFnZSBjYWNoZSwgbWVhbmluZyB0aGF0IHJlYWRzIG9uIHRo
+ZSBzYW1lDQo+Y2xpZW50IHdpbGwgc2VlIG5vIGhvbGVzLCBob3dldmVyIGlm
+IHlvdSB0cnkgdG8gcmVhZCBmcm9tIGFub3RoZXINCj5jbGllbnQsIHRoZW4g
+eW91IHdpbGwgc2VlIHRoZSBzYW1lIGJlaGF2aW91ciwgd2l0aCB0ZW1wb3Jh
+cnkgaG9sZXMNCj5tYWdpY2FsbHkgYXBwZWFyaW5nIGluIHRoZSBmaWxlLg0K
+QXMgeW91IHNheSwgbmZzIGJ1ZmZlcmVkIHdyaXRlIGFsc28gaGFzIHRoZSBo
+b2xlIHByb2JsZW0gd2l0aCBtdWx0aXBsZSByL3cgb24gZGlmZmVyZW50IGNs
+aWVudHMuDQpJIHdhbnQgdG8ga25vdyBpZiB0aGUgcHJvYmxlbSBleGlzdHMg
+aW4gb3RoZXIgbG9jYWwgZnMgc3VjaCBhcyB4ZnMsZXh0ND8NCg0KVGhhbmtz
+IGluIGFkdmFuY2UuDQoKCg==
