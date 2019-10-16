@@ -2,110 +2,142 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B223CECE59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4353ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8357E2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC88D2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SvmV5Lle"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPI8JjSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389528AbfJPBow (ORCPT
+        id S2389557AbfJPBvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:44:52 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35013 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfJPBow (ORCPT
+        Tue, 15 Oct 2019 21:51:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39232 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfJPBvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:44:52 -0400
-Received: by mail-il1-f194.google.com with SMTP id j9so801040ilr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 18:44:51 -0700 (PDT)
+        Tue, 15 Oct 2019 21:51:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v4so13645017pff.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 18:51:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9cw9NzCx7epGU/Xvw2wyJAAx8RJsP4I6+3SDXP5hV5Y=;
-        b=SvmV5LleMFDNduOG3ZnOMQucqdJuqRVjwOZVpPy+uyZWlbkqgM73zq46LfGYZDJdyz
-         dlHlBftp3GdbnS1cuXYXRlh3Hq7WQ+BAI92XnMX2Om9PAnPiw3/sathpHMJ439wK4Zjd
-         DBc/Zkm/Acqw2RQeO9T60fcVTjsUMu3dhDtl5JgAFSnMlmcfzZoU1C3t5psaQJFBhMit
-         /LCO3+HsxI/gqR9aP+16jZv7BjUaDTprjoZGnJX1s4VrAqVp9YbQL7QMrBwgcNBwGJN7
-         L1HM5y+VmS/+rHTFUwcKFhTZ+X2oGWzrTuHTWWIHeKl9u12V8JSRhFCUF9oINu7JL4vB
-         l7Kw==
+         :cc;
+        bh=eInMsMe+BJaYRY1Pz9oWe+U9MwphvcdZCLcBAxvz7R0=;
+        b=XPI8JjSsYj2wNPJu04c2XrN1/PeiTZfQIUnpdo/TyHS6cpar5/1bLRDjwA0cPCx6be
+         n2YvCGW7epfY3GWj1ROYKCzbAYH8LTfKoC9HTIukwIP+IFA76LYQ38jP5uNUZ1+ydZx5
+         ZI4YJCpAjhjueDXz6a1lbLprnoEEeJpCKgx4XVW0vGzLcWfbVzzvm7tQChbAm8p5s7Ej
+         k2ylWDmyDhfbh0bCaxt1fvxQb4bIfU44/U0wop9nrLb57GKqMxHajEPt1y8UzQLXV9C9
+         B76LN9xOBBh8AU7kAAG6T8ZJtmBpolQnOrUbbrEvzuZIv2s91bNWbNl1ScmVJZZv2Oqf
+         hI5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9cw9NzCx7epGU/Xvw2wyJAAx8RJsP4I6+3SDXP5hV5Y=;
-        b=joBkJdq3v4BCXax9aEJWS4tbgyV3SBK+34oY0tFjfBdph6lvAYf1rCVbynikR7hEi+
-         eXEqqwaU+0xiXFAMoR9PKu9V+YuuyDldLk/qespfMxJiu82+OP0PPzgLu47fIl2fSwX9
-         YrXviF5Shw6NXc9th3Ve6+AAtblr+2yw449C2lDb+ehaXv0YGcjBGv/wYBFRHTXamDn6
-         bGVLZpQH7YQrRl3OxTuhgzLjdYd5LS62eY37YEkJsubeom0b+HKLPT3h3JBFQE3aHyIo
-         rv9X6+PJtDIV8TcTSDlDzQi0paiLCq9GHiTAWEMVgSGtrzCvoOWVDktFM8xy6diercN8
-         f7og==
-X-Gm-Message-State: APjAAAUpqT3hsMll3U+JHcXsGhQDVtN0mjicyNHqGtKBCL/vckeyR011
-        Lp9B0Lhz4+cQIKSTMNc5PeoDABBcNgBdE4HkpwA=
-X-Google-Smtp-Source: APXvYqyU+TBYsARRfZ7iQjAiQwiOiz0lI+XMM1Up+CNpl9TgTQFA0vfAXnaxfGtvljOBJdS3DnGO2D+9AI0FBq4feIo=
-X-Received: by 2002:a92:8746:: with SMTP id d6mr9458720ilm.267.1571190290945;
- Tue, 15 Oct 2019 18:44:50 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=eInMsMe+BJaYRY1Pz9oWe+U9MwphvcdZCLcBAxvz7R0=;
+        b=pacwHh8HmigBi87FQIrgpFXRv3LRWekFYzoywHmYK1lvfWI3yGjSnwERnokLtzbTgd
+         y0ntuy4ey1uOMWtq9D52geZg3HQ5f6Kh9h2KOOmUwSpsYMmApxCHBRahaCOOfDQJPeUN
+         3XW6MsFkO64m1EGlfGEpViY6TOvDx3GerzQBBJRai9JkZ0PkdbvIF/lhz2Sqsf/kd+LD
+         kRuVyrWLPnF/kWePzRK8MZYcbACr1t+938CNMaapmlXMiEVkl7ydQIsUUmQUMpPe76c0
+         INLQZDG0D+EUcs4tX9XfQsxir+mzbY0Y/1mGoO00147mGIFCp/J7Qia4BFrC7AfD2Why
+         2Zew==
+X-Gm-Message-State: APjAAAU/wU6vOstMSphZJS53rLclNownPcgWM3J+Xb/L8C528i1B0IP0
+        kJClzv30Nvz913Rc39YTq7JNDpBEovBRxO/LnymghwF9uoM=
+X-Google-Smtp-Source: APXvYqwRKPbjtP3iHgUwdE5xgVuxjM/o+4isROAa/cr/OlgflkHBhgT2X2KSWEZJdk2KR7aGLa/Ihza4EKunVksUgVQ=
+X-Received: by 2002:a63:5a03:: with SMTP id o3mr4805222pgb.381.1571190696394;
+ Tue, 15 Oct 2019 18:51:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191008093711.3410-1-thomas_os@shipmail.org> <20191015100653.ittq4b2mx7pszky5@box>
-In-Reply-To: <20191015100653.ittq4b2mx7pszky5@box>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 15 Oct 2019 18:44:39 -0700
-Message-ID: <CAA9_cmcSXYB1jo1=CQ78eXVcyGWm1_TjQKd-Gmg0yAO3tObOFw@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: Fix a huge pud insertion race during faulting
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>, Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>
+References: <CAKwvOdnDVe-dahZGnRtzMrx-AH_C+2Lf20qjFQHNtn9xh=Okzw@mail.gmail.com>
+ <9e4d6378-5032-8521-13a9-d9d9519d07de@amd.com> <CAK8P3a3_Q15hKT=gyupb0FrPX1xV3tEBpVaYy1LF0kMUj2u8hw@mail.gmail.com>
+ <CAKwvOdnLxm_tZ_qR1D-BE64Z3QaMC2h79ooobdRVAzmCD_2_Sg@mail.gmail.com> <20191015202636.GA1671072@rani>
+In-Reply-To: <20191015202636.GA1671072@rani>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 15 Oct 2019 18:51:26 -0700
+Message-ID: <CAKwvOd=yGXMwdoxKCD2gcEgevozf41jVmqCkW7CU=Xvd7mqtjw@mail.gmail.com>
+Subject: Re: AMDGPU and 16B stack alignment
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, "S, Shirish" <sshankar@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "yshuiv7@gmail.com" <yshuiv7@gmail.com>,
+        "andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 3:06 AM Kirill A. Shutemov <kirill@shutemov.name> w=
-rote:
+On Tue, Oct 15, 2019 at 1:26 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On Tue, Oct 08, 2019 at 11:37:11AM +0200, Thomas Hellstr=C3=B6m (VMware) =
-wrote:
-> > From: Thomas Hellstrom <thellstrom@vmware.com>
+> On Tue, Oct 15, 2019 at 11:05:56AM -0700, Nick Desaulniers wrote:
+> > Hmmm...I would have liked to remove it outright, as it is an ABI
+> > mismatch that is likely to result in instability and non-fun-to-debug
+> > runtime issues in the future.  I suspect my patch does work for GCC
+> > 7.1+.  The question is: Do we want to either:
+> > 1. mark AMDGPU broken for GCC < 7.1, or
+> > 2. continue supporting it via stack alignment mismatch?
 > >
-> > A huge pud page can theoretically be faulted in racing with pmd_alloc()
-> > in __handle_mm_fault(). That will lead to pmd_alloc() returning an
-> > invalid pmd pointer. Fix this by adding a pud_trans_unstable() function
-> > similar to pmd_trans_unstable() and check whether the pud is really sta=
-ble
-> > before using the pmd pointer.
+> > 2 is brittle, and may break at any point in the future, but if it's
+> > working for someone it does make me feel bad to outright disable it.
+> > What I'd image 2 looks like is (psuedo code in a Makefile):
 > >
-> > Race:
-> > Thread 1:             Thread 2:                 Comment
-> > create_huge_pud()                               Fallback - not taken.
-> >                     create_huge_pud()         Taken.
-> > pmd_alloc()                                     Returns an invalid poin=
-ter.
+> > if CC_IS_GCC && GCC_VERSION < 7.1:
+> >   set stack alignment to 16B and hope for the best
 > >
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> > Fixes: a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent hu=
-gepages")
-> > Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> > ---
-> > RFC: We include pud_devmap() as an unstable PUD flag. Is this correct?
-> >      Do the same for pmds?
+> > So my diff would be amended to keep the stack alignment flags, but
+> > only to support GCC < 7.1.  And that assumes my change compiles with
+> > GCC 7.1+. (Looks like it does for me locally with GCC 8.3, but I would
+> > feel even more confident if someone with hardware to test on and GCC
+> > 7.1+ could boot test).
+> > --
+> > Thanks,
+> > ~Nick Desaulniers
 >
-> I *think* it is correct and we should do the same for PMD, but I may be
-> wrong.
->
-> Dan, Matthew, could you comment on this?
+> If we do keep it, would adding -mstackrealign make it more robust?
+> That's simple and will only add the alignment to functions that require
+> 16-byte alignment (at least on gcc).
 
-The _devmap() check in these paths near _trans_unstable() has always
-been about avoiding assumptions that the corresponding page might be
-page cache or anonymous which for dax it's neither and does not behave
-like a typical page.
+I think there's also `-mincoming-stack-boundary=`.
+https://github.com/ClangBuiltLinux/linux/issues/735#issuecomment-540038017
+
+>
+> Alternative is to use
+> __attribute__((force_align_arg_pointer)) on functions that might be
+> called from 8-byte-aligned code.
+
+Which is hard to automate and easy to forget.  Likely a large diff to fix today.
+
+>
+> It looks like -mstackrealign should work from gcc 5.3 onwards.
+
+The kernel would generally like to support GCC 4.9+.
+
+There's plenty of different ways to keep layering on duct tape and
+bailing wire to support differing ABIs, but that's just adding
+technical debt that will have to be repaid one day.  That's why the
+cleanest solution IMO is mark the driver broken for old toolchains,
+and use a code-base-consistent stack alignment.  Bending over
+backwards to support old toolchains means accepting stack alignment
+mismatches, which is in the "unspecified behavior" ring of the
+"undefined behavior" Venn diagram.  I have the same opinion on relying
+on explicitly undefined behavior.
+
+I'll send patches for fixing up Clang, but please consider my strong
+advice to generally avoid stack alignment mismatches, regardless of
+compiler.
+--
+Thanks,
+~Nick Desaulniers
