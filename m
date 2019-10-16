@@ -2,215 +2,241 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD2FFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1D2FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B5D2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A38620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:49:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jQCbkyQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405493AbfJPNs6 (ORCPT
+        id S2405503AbfJPNt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfJPNs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:48:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE2AE20663;
-        Wed, 16 Oct 2019 13:48:55 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 09:48:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     mingo@redhat.com, jpoimboe@redhat.com, jikos@kernel.org,
-        pmladek@suse.com, joe.lawrence@redhat.com,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        shuah@kernel.org, kamalesh@linux.vnet.ibm.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] ftrace: Introduce PERMANENT ftrace_ops flag
-Message-ID: <20191016094853.3913f5ae@gandalf.local.home>
-In-Reply-To: <20191016113316.13415-2-mbenes@suse.cz>
-References: <20191016113316.13415-1-mbenes@suse.cz>
-        <20191016113316.13415-2-mbenes@suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 16 Oct 2019 09:49:26 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38616 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfJPNtZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:49:25 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A41B39F4;
+        Wed, 16 Oct 2019 15:49:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1571233762;
+        bh=m7N8TtJXfjC42gO466PT2HSc5Zs3uaZEy9xf0T8y9V8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jQCbkyQviloXjO0M2K2SRrxUXfHpBT/gXpajaCfWa6vLM59P9Vtz+aSkvQtzUFnS7
+         6Cknzy5Izisv4nytRvGP/iP3DX3R+ig9hfI5ICmzTN8vA68PCfsBRRa77//qlUTPZC
+         wzydgIaydspn95DMP626xOOagoiC9BFUh/wjPF24=
+Date:   Wed, 16 Oct 2019 16:49:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/8] drm: rcar-du: crtc: Control CMM operations
+Message-ID: <20191016134920.GE5175@pendragon.ideasonboard.com>
+References: <20191016085548.105703-1-jacopo+renesas@jmondi.org>
+ <20191016085548.105703-6-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191016085548.105703-6-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 13:33:13 +0200
-Miroslav Benes <mbenes@suse.cz> wrote:
+Hi Jacopo,
 
-> Livepatch uses ftrace for redirection to new patched functions. It means
-> that if ftrace is disabled, all live patched functions are disabled as
-> well. Toggling global 'ftrace_enabled' sysctl thus affect it directly.
-> It is not a problem per se, because only administrator can set sysctl
-> values, but it still may be surprising.
+Thank you for the patch.
+
+On Wed, Oct 16, 2019 at 10:55:45AM +0200, Jacopo Mondi wrote:
+> Implement CMM handling in the crtc begin and enable atomic callbacks,
+> and enable CMM unit through the Display Extensional Functions
+> register at group setup time.
 > 
-> Introduce PERMANENT ftrace_ops flag to amend this. If the
-> FTRACE_OPS_FL_PERMANENT is set on any ftrace ops, the tracing cannot be
-> disabled by disabling ftrace_enabled. Equally, a callback with the flag
-> set cannot be registered if ftrace_enabled is disabled.
-> 
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 55 +++++++++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 10 +++++
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  |  5 +++
+>  3 files changed, 70 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 23f1d6cc1719..d7ad491577f3 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -21,6 +21,7 @@
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_vblank.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -474,6 +475,45 @@ static void rcar_du_crtc_wait_page_flip(struct rcar_du_crtc *rcrtc)
+>  	rcar_du_crtc_finish_page_flip(rcrtc);
+>  }
+>  
+> +/* -----------------------------------------------------------------------------
+> + * Color Management Module (CMM)
+> + */
+> +
+> +static int rcar_du_cmm_check(struct drm_crtc *crtc,
+> +			     struct drm_crtc_state *state)
+> +{
+> +	struct drm_property_blob *drm_lut = state->gamma_lut;
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct device *dev = rcrtc->dev->dev;
+> +
+> +	if (!rcrtc->cmm || !drm_lut)
 
-I pulled in this patch as is, but then I realized we have a race. This
-race has been there before this patch series, and actually, been there
-since the dawn of ftrace.
+As the gamma LUT property is only created when CMM is present, can't you
+drop the first part of this condition ?
 
-I realized that the user can modify ftrace_enabled out of lock context.
-That is, the ftrace_enabled is modified directly from the sysctl code,
-without taking the ftrace_lock mutex. Which means if the user was
-starting and stopping function tracing while playing with the
-ftrace_enabled switch, it could potentially cause an accounting failure.
+> +		return 0;
+> +
+> +	/* We only accept fully populated LUT tables. */
+> +	if (drm_color_lut_size(drm_lut) != CM2_LUT_SIZE) {
+> +		dev_err(dev, "invalid gamma lut size: %lu bytes\n",
+> +			drm_lut->length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rcar_du_cmm_setup(struct drm_crtc *crtc)
+> +{
+> +	struct drm_property_blob *drm_lut = crtc->state->gamma_lut;
+> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +	struct rcar_cmm_config cmm_config = {};
+> +
+> +	if (!rcrtc->cmm)
+> +		return;
+> +
+> +	if (drm_lut)
+> +		cmm_config.lut.table = (struct drm_color_lut *)drm_lut->data;
+> +
+> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> +}
+> +
+>  /* -----------------------------------------------------------------------------
+>   * Start/Stop and Suspend/Resume
+>   */
+> @@ -619,6 +659,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_disable(rcrtc);
+>  
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_disable(rcrtc->cmm);
+> +
+>  	/*
+>  	 * Select switch sync mode. This stops display operation and configures
+>  	 * the HSYNC and VSYNC signals as inputs.
+> @@ -642,6 +685,11 @@ static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
+>  {
+>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(state);
+>  	struct drm_encoder *encoder;
+> +	int ret;
+> +
+> +	ret = rcar_du_cmm_check(crtc, state);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* Store the routes from the CRTC output to the DU outputs. */
+>  	rstate->outputs = 0;
+> @@ -667,6 +715,8 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	struct rcar_du_crtc_state *rstate = to_rcar_crtc_state(crtc->state);
+>  	struct rcar_du_device *rcdu = rcrtc->dev;
+>  
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_enable(rcrtc->cmm);
+>  	rcar_du_crtc_get(rcrtc);
+>  
+>  	/*
+> @@ -686,6 +736,7 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	}
+>  
+>  	rcar_du_crtc_start(rcrtc);
+> +	rcar_du_cmm_setup(crtc);
 
-I'm going to apply this patch on top of yours. It reverses the role of
-how ftrace_enabled is set in the sysctl handler. Instead of having it
-directly modify ftrace_enabled, I have it modify a new variable called
-sysctl_ftrace_enabled. I no longer need the last_ftrace_enabled. This
-way we only need to set or disable ftrace_enabled on a change and if
-all conditions are met.
+Let's add a TODO here to figure out why we can't setup CMM before
+starting the CRTC.
 
-Thoughts?
+With these two small issues fixed,
 
--- Steve
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 8385cafe4f9f..aa2e2c7cef9e 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -79,6 +79,7 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
- #ifdef CONFIG_FUNCTION_TRACER
- 
- extern int ftrace_enabled;
-+extern int sysctl_ftrace_enabled;
- extern int
- ftrace_enable_sysctl(struct ctl_table *table, int write,
- 		     void __user *buffer, size_t *lenp,
-@@ -638,6 +639,7 @@ static inline void tracer_disable(void)
- {
- #ifdef CONFIG_FUNCTION_TRACER
- 	ftrace_enabled = 0;
-+	sysctl_ftrace_enabled = 0;
- #endif
- }
- 
-@@ -651,6 +653,7 @@ static inline int __ftrace_enabled_save(void)
- #ifdef CONFIG_FUNCTION_TRACER
- 	int saved_ftrace_enabled = ftrace_enabled;
- 	ftrace_enabled = 0;
-+	sysctl_ftrace_enabled = 0;
- 	return saved_ftrace_enabled;
- #else
- 	return 0;
-@@ -661,6 +664,7 @@ static inline void __ftrace_enabled_restore(int enabled)
- {
- #ifdef CONFIG_FUNCTION_TRACER
- 	ftrace_enabled = enabled;
-+	sysctl_ftrace_enabled = enabled;
- #endif
- }
- 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 00fcea236eba..773fdfc6c645 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -648,7 +648,7 @@ static struct ctl_table kern_table[] = {
- #ifdef CONFIG_FUNCTION_TRACER
- 	{
- 		.procname	= "ftrace_enabled",
--		.data		= &ftrace_enabled,
-+		.data		= &sysctl_ftrace_enabled,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= ftrace_enable_sysctl,
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index dacb8b50a263..b55c9a4e2b5b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -88,7 +88,7 @@ struct ftrace_ops ftrace_list_end __read_mostly = {
- 
- /* ftrace_enabled is a method to turn ftrace on or off */
- int ftrace_enabled __read_mostly;
--static int last_ftrace_enabled;
-+int sysctl_ftrace_enabled __read_mostly;
- 
- /* Current function tracing op */
- struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
-@@ -6221,7 +6221,7 @@ void __init ftrace_init(void)
- 	pr_info("ftrace: allocating %ld entries in %ld pages\n",
- 		count, count / ENTRIES_PER_PAGE + 1);
- 
--	last_ftrace_enabled = ftrace_enabled = 1;
-+	sysctl_ftrace_enabled = ftrace_enabled = 1;
- 
- 	ret = ftrace_process_locs(NULL,
- 				  __start_mcount_loc,
-@@ -6265,6 +6265,7 @@ struct ftrace_ops global_ops = {
- static int __init ftrace_nodyn_init(void)
- {
- 	ftrace_enabled = 1;
-+	sysctl_ftrace_enabled = 1;
- 	return 0;
- }
- core_initcall(ftrace_nodyn_init);
-@@ -6714,6 +6715,7 @@ void ftrace_kill(void)
- {
- 	ftrace_disabled = 1;
- 	ftrace_enabled = 0;
-+	sysctl_ftrace_enabled = 0;
- 	ftrace_trace_function = ftrace_stub;
- }
- 
-@@ -6796,10 +6798,12 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
- 
- 	ret = proc_dointvec(table, write, buffer, lenp, ppos);
- 
--	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
-+	if (ret || !write || (ftrace_enabled == !!sysctl_ftrace_enabled))
- 		goto out;
- 
--	if (ftrace_enabled) {
-+	if (sysctl_ftrace_enabled) {
-+
-+		ftrace_enabled = true;
- 
- 		/* we are starting ftrace again */
- 		if (rcu_dereference_protected(ftrace_ops_list,
-@@ -6810,19 +6814,21 @@ ftrace_enable_sysctl(struct ctl_table *table, int write,
- 
- 	} else {
- 		if (is_permanent_ops_registered()) {
--			ftrace_enabled = true;
- 			ret = -EBUSY;
- 			goto out;
- 		}
- 
-+		ftrace_enabled = false;
-+
- 		/* stopping ftrace calls (just send to ftrace_stub) */
- 		ftrace_trace_function = ftrace_stub;
- 
- 		ftrace_shutdown_sysctl();
- 	}
- 
--	last_ftrace_enabled = !!ftrace_enabled;
-  out:
-+	sysctl_ftrace_enabled = ftrace_enabled;
-+
- 	mutex_unlock(&ftrace_lock);
- 	return ret;
- }
+>  }
+>  
+>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> @@ -739,6 +790,10 @@ static void rcar_du_crtc_atomic_begin(struct drm_crtc *crtc,
+>  	 */
+>  	rcar_du_crtc_get(rcrtc);
+>  
+> +	/* If the active state changed, we let .atomic_enable handle CMM. */
+> +	if (crtc->state->color_mgmt_changed && !crtc->state->active_changed)
+> +		rcar_du_cmm_setup(crtc);
+> +
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_atomic_begin(rcrtc);
+>  }
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9eee47969e77..88a783ceb3e9 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -135,6 +135,7 @@ static void rcar_du_group_setup_didsr(struct rcar_du_group *rgrp)
+>  static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  {
+>  	struct rcar_du_device *rcdu = rgrp->dev;
+> +	u32 defr7 = DEFR7_CODE;
+>  
+>  	/* Enable extended features */
+>  	rcar_du_group_write(rgrp, DEFR, DEFR_CODE | DEFR_DEFE);
+> @@ -147,6 +148,15 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  
+>  	rcar_du_group_setup_pins(rgrp);
+>  
+> +	/*
+> +	 * TODO: Handle routing of the DU output to CMM dynamically, as we
+> +	 * should bypass CMM completely when no color management feature is
+> +	 * used.
+> +	 */
+> +	defr7 |= (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> +		 (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> +	rcar_du_group_write(rgrp, DEFR7, defr7);
+> +
+>  	if (rcdu->info->gen >= 2) {
+>  		rcar_du_group_setup_defr8(rgrp);
+>  		rcar_du_group_setup_didsr(rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> index bc87f080b170..fb9964949368 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> @@ -197,6 +197,11 @@
+>  #define DEFR6_MLOS1		(1 << 2)
+>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+>  
+> +#define DEFR7			0x000ec
+> +#define DEFR7_CODE		(0x7779 << 16)
+> +#define DEFR7_CMME1		BIT(6)
+> +#define DEFR7_CMME0		BIT(4)
+> +
+>  /* -----------------------------------------------------------------------------
+>   * R8A7790-only Control Registers
+>   */
+
+-- 
+Regards,
+
+Laurent Pinchart
