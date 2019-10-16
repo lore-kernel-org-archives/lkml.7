@@ -2,181 +2,146 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD9FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A659FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E3121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B80021928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqykYkLQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tVc3cNAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394202AbfJPSBP (ORCPT
+        id S2394223AbfJPSDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:01:15 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38629 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390034AbfJPSBO (ORCPT
+        Wed, 16 Oct 2019 14:03:45 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:34319 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394193AbfJPSDm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:01:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u28so18237546lfc.5;
-        Wed, 16 Oct 2019 11:01:12 -0700 (PDT)
+        Wed, 16 Oct 2019 14:03:42 -0400
+Received: by mail-lf1-f45.google.com with SMTP id r22so18274878lfm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 11:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OFGd9l1Ms/jemwqks9POnbIY3QfrE8Ry5qUQvT3z8R8=;
-        b=IqykYkLQM0I+dXWItSXOxPYvmXxG+wi9kilvZoDTRuFAh1IBdXOETIhPoCsbgXmQzV
-         u99X1kDKTb4HK8bhHu0HUVyMqeJ/VBUIQ4FGrn5RafoTxHxUy3Kq8MOI88X4C2Om7S1O
-         WBX6K7OL4Ssws9HoTwhoim+FXJewrb9iBNCPDsROaRVSjaLfSiSHQWwqPPb8PtNFHRES
-         O5ifpGNvhp06KMsH0JwLdRYjHB1s5yAY3YCcLNzGlDD7q13KN6wccvSo1Rig9tOMwXUj
-         8v66Bgtbo7EjQxhMQGGhH2Y5B73M/OQFSD6NAx5TLA3KpfJT+SdA+5GGJZmFZiBTwHxy
-         FA4Q==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=AxiBOWwioKNOAlob2YOaqH2vPs3/2WKeZ6AlzDzO3Ww=;
+        b=tVc3cNAJCclzWoo3iBCEOhRu2E4JBW8wuhROHsr4Tre2nPuPcuANmoWFMVy9IAAmLi
+         lFH7VkaXHH9P97F5nreWNUMcOFNY4AMN3zaaSQ2wM2W6AtFbOYVY8LGtJLPWI89hPJi0
+         QFPbnXyFK0eK5yMD7pT32kR5po4rcBFD+99fWEMpPNO0ZykOcWG5yLtBGTMRTSwVN56v
+         2xikLtTUK81QhjAIizm/si+ZsR9SG/rWpoS9KuRgKXCnKoqUt75mjCpDFNz0jKLjl5FV
+         uFEzOjQluPvbiVXncZdWBwwzifvmQ7s8iCDjYHxDxPope7pyk3Egs5Cecm84MB/Y0Pj1
+         TZ3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OFGd9l1Ms/jemwqks9POnbIY3QfrE8Ry5qUQvT3z8R8=;
-        b=AeYYpO2bK81dzKWywgT8fKLSrDOWZe0w+cuq1tGIEdBLiI/6uyRiPYhK7DHC+PQz/8
-         1/TD0byo2XURkZ8iq/n1WLnu5M4WVr4DkNs9WItCZLSY9lP8SsqObuqrOGep90Bitt3H
-         MMnhwR6USY4F2hMv1lZSSGG8vJZMPKb5JB9ZaqaiAsrT8M3nlz1JptZxnt4c2BbCb7K2
-         GM+nuNj0rzWOt9BjntJNa3kHj8t9BbSIBa+wnEAvPuU48OKoYpMLhRenUH3HGaxR1RYP
-         qB4ZknZdp6bOq6Sm0QJ68zdS/zxrbubMHIhSOeVVpDgkaa69hBOodUIwUqffEFX3e6sa
-         R9fA==
-X-Gm-Message-State: APjAAAUxpCvlS5vm3HuzB+XZbNKqsUsCRwb8qQjuIiKRi6kPUem/qJij
-        g+o4vlyPDyuG6Bpo7lTN+HkINrOf
-X-Google-Smtp-Source: APXvYqyCal4YZfdL2eOhbuoELDCFdG2QhcMhXNJ519NC1YqJ8oO0i1zo66d1Es81ZpqFzo37QhCwHA==
-X-Received: by 2002:ac2:4550:: with SMTP id j16mr8584501lfm.126.1571248871734;
-        Wed, 16 Oct 2019 11:01:11 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id g26sm6824840lje.80.2019.10.16.11.01.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2019 11:01:11 -0700 (PDT)
-Subject: Re: [RFT][PATCH 2/3] cpufreq: Use per-policy frequency QoS
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <2811202.iOFZ6YHztY@kreacher> <20154332.AJkCBzCetj@kreacher>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1707f018-fc6b-0122-17e0-635340daa4ef@gmail.com>
-Date:   Wed, 16 Oct 2019 21:01:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=AxiBOWwioKNOAlob2YOaqH2vPs3/2WKeZ6AlzDzO3Ww=;
+        b=eJrMYwebLtCDbYsvOjkCv5Wttzg1XK7GSDRRFuwhcNps4vH3BcwRo3OPtWqp4R5IHt
+         SoWkxAPn0M4iTy4io5R0912YjoxsykZEY9w4K31TCaqz1JUOMS1hP3akqwTLgTa9k9nV
+         8a6RGKqvX6MkPenxQnSrexAJ4Q5tP6j0kMlwuFrBNYOZyte+xgE4LAEJ5X1Tccau/RQv
+         wEw3ygCMmzZXTBU7yBfF03wgHwGME+wnnGK0eXrIrNOSkl81zCKN1AD4DewO/Hixvxqf
+         nNsREoGTxMlxgIuwu6GydR2zdlOqq57D8pvdwRXxS3l0rVp/3m4Yupxyvy9vTouNc3zw
+         RH6w==
+X-Gm-Message-State: APjAAAXDrGr8yfMJaaiOx8nuUrlxPpEiVsATENpo05eMzxa5ntCHWdJu
+        EWiaqgHTBCDZP7idCN69Tco/JcpQ7C1q73Kake5XjA==
+X-Google-Smtp-Source: APXvYqxjEqUK/3Y3Yt48nURJagxbHHrIDKovPqiIJQHoiHt+SO9AabUnFyGHOpj1JUlvjye3vJDF0C4fcXwDXSVbio4=
+X-Received: by 2002:ac2:4566:: with SMTP id k6mr7104996lfm.132.1571249019669;
+ Wed, 16 Oct 2019 11:03:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20154332.AJkCBzCetj@kreacher>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 16 Oct 2019 23:33:28 +0530
+Message-ID: <CA+G9fYv=OJOwat_KqDBRFRZbTWfgjuFA-X3F5ZuJXJ8yrr1Tyw@mail.gmail.com>
+Subject: linux-next: 20191016: remove_proc_entry: removing non-empty directory
+ 'net/dev_snmp6', leaking at least 'lo'
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.10.2019 13:47, Rafael J. Wysocki пишет:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Replace the CPU device PM QoS used for the management of min and max
-> frequency constraints in cpufreq (and its users) with per-policy
-> frequency QoS to avoid problems with cpufreq policies covering
-> more then one CPU.
-> 
-> Namely, a cpufreq driver is registered with the subsys interface
-> which calls cpufreq_add_dev() for each CPU, starting from CPU0, so
-> currently the PM QoS notifiers are added to the first CPU in the
-> policy (i.e. CPU0 in the majority of cases).
-> 
-> In turn, when the cpufreq driver is unregistered, the subsys interface
-> doing that calls cpufreq_remove_dev() for each CPU, starting from CPU0,
-> and the PM QoS notifiers are only removed when cpufreq_remove_dev() is
-> called for the last CPU in the policy, say CPUx, which as a rule is
-> not CPU0 if the policy covers more than one CPU.  Then, the PM QoS
-> notifiers cannot be removed, because CPUx does not have them, and
-> they are still there in the device PM QoS notifiers list of CPU0,
-> which prevents new PM QoS notifiers from being registered for CPU0
-> on the next attempt to register the cpufreq driver.
-> 
-> The same issue occurs when the first CPU in the policy goes offline
-> before unregistering the driver.
-> 
-> After this change it does not matter which CPU is the policy CPU at
-> the driver registration time and whether or not it is online all the
-> time, because the frequency QoS is per policy and not per CPU.
-> 
-> Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
-> Reported-by: Dmitry Osipenko <digetx@gmail.com>
-> Reported-by: Sudeep Holla <sudeep.holla@arm.com>
-> Diagnosed-by: Viresh Kumar <viresh.kumar@linaro.org> 
-> Link: https://lore.kernel.org/linux-pm/5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org/T/#md2d89e95906b8c91c15f582146173dce2e86e99f
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> Applies on top of https://patchwork.kernel.org/patch/11191343/
-> 
-> ---
->  drivers/acpi/processor_driver.c            |    9 +---
->  drivers/acpi/processor_perflib.c           |   18 ++++----
->  drivers/acpi/processor_thermal.c           |   18 ++++----
->  drivers/cpufreq/cpufreq.c                  |   59 ++++++++++++-----------------
->  drivers/cpufreq/intel_pstate.c             |   30 +++++++-------
->  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c      |   15 +++----
->  drivers/macintosh/windfarm_cpufreq_clamp.c |   38 ++++++++++--------
->  drivers/thermal/cpu_cooling.c              |   14 +++---
->  include/acpi/processor.h                   |   20 ++++-----
->  include/linux/cpufreq.h                    |    7 ++-
->  10 files changed, 114 insertions(+), 114 deletions(-)
+Linux next 20191016 booting on x86_64, arm and arm64 popping up kernel
+warning while booting. Please find full log link and kernel config.
 
-Thanks, Rafael! The use-after-free bug is fixed for me.
+Linux version 5.4.0-rc3-next-20191016 (oe-user@oe-host) (gcc version
+7.3.0 (GCC)) #1 SMP Wed Oct 16 05:26:04 UTC 2019
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+[    4.212923] ------------[ cut here ]------------
+[    4.217585] remove_proc_entry: removing non-empty directory
+'net/dev_snmp6', leaking at least 'lo'
+[    4.226560] WARNING: CPU: 1 PID: 1 at
+/usr/src/kernel/fs/proc/generic.c:682 remove_proc_entry+0x17a/0x190
+[    4.227544] Modules linked in:
+[    4.236693] usb 1-6: new high-speed USB device number 2 using xhci_hcd
+[    4.227544] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+5.4.0-rc3-next-20191016 #1
+[    4.227544] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[    4.227544] RIP: 0010:remove_proc_entry+0x17a/0x190
+[    4.227544] Code: 00 f0 03 b6 48 c7 c7 20 2e 3b b6 48 0f 45 c2 49
+8b 94 24 a8 00 00 00 4c 8b 80 d0 00 00 00 48 8b 92 d0 00 00 00 e8 66
+bd d2 ff <0f> 0b e9 71 ff ff ff e8 1a c0 d2 ff 66 2e 0f 1f 84 00 00 00
+00 00
+[    4.227544] RSP: 0000:ffffa893c0027d90 EFLAGS: 00010282
+[    4.227544] RAX: 0000000000000000 RBX: ffff939fecba38b0 RCX: 0000000000000006
+[    4.227544] RDX: 000000000000023f RSI: ffff939feea38848 RDI: ffff939feea38000
+[    4.227544] RBP: ffffa893c0027dc0 R08: 0000000000000000 R09: 0000000000000000
+[    4.227544] R10: 0000000000000000 R11: 0000000000000000 R12: ffff939fecba3800
+[    4.227544] R13: ffff939feebea300 R14: ffffffffb6779028 R15: ffffffffb6852818
+[    4.227544] FS:  0000000000000000(0000) GS:ffff939fef880000(0000)
+knlGS:0000000000000000
+[    4.227544] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    4.227544] CR2: 0000000000000000 CR3: 000000021c610001 CR4: 00000000003606e0
+[    4.227544] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    4.227544] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    4.227544] Call Trace:
+[    4.227544]  ipv6_proc_exit_net+0x33/0x50
+[    4.227544]  ops_exit_list.isra.9+0x3b/0x70
+[    4.227544]  unregister_pernet_operations+0xd5/0x130
+[    4.372356] usb 1-6: New USB device found, idVendor=0781,
+idProduct=5567, bcdDevice= 1.27
+[    4.227544]  ? af_unix_init+0x53/0x53
+[    4.227544]  unregister_pernet_subsys+0x21/0x30
+[    4.227544]  ipv6_misc_proc_exit+0x15/0x20
+[    4.227544]  inet6_init+0x2e0/0x379
+[    4.227544]  do_one_initcall+0x61/0x2ea
+[    4.383957] usb 1-6: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[    4.227544]  ? set_debug_rodata+0x17/0x17
+[    4.227544]  ? rcu_read_lock_sched_held+0x4f/0x80
+[    4.227544]  kernel_init_freeable+0x1ce/0x261
+[    4.392145] usb 1-6: Product: Cruzer Blade
+[    4.227544]  ? rest_init+0x250/0x250
+[    4.227544]  kernel_init+0xe/0x110
+[    4.227544]  ret_from_fork+0x3a/0x50
+[    4.399727] usb 1-6: Manufacturer: SanDisk
+[    4.227544] irq event stamp: 1259654
+[    4.410691] usb 1-6: SerialNumber: 4C530012151025118543
+[    4.227544] hardirqs last  enabled at (1259653):
+[<ffffffffb4d6f4d8>] console_unlock+0x458/0x5c0
+[    4.227544] hardirqs last disabled at (1259654):
+[<ffffffffb4c01e3a>] trace_hardirqs_off_thunk+0x1a/0x20
+[    4.227544] softirqs last  enabled at (1259650):
+[<ffffffffb5e00338>] __do_softirq+0x338/0x43a
+[    4.420405] usb-storage 1-6:1.0: USB Mass Storage device detected
+[    4.227544] softirqs last disabled at (1259639):
+[<ffffffffb4cfe728>] irq_exit+0xb8/0xc0
+[    4.227544] ---[ end trace 7d85f17ab93457e2 ]---
+[    4.497490] scsi host8: usb-storage 1-6:1.0
+#
+[    4.523053] NET: Unregistered protocol family 10
 
-Viresh, I'm still seeing the warning splat after cpufreq-dt reloading. It looks like there is a
-problem with dev_pm_opp_set_supported_hw() which should be re-applied after
-dev_pm_opp_of_cpumask_remove_table() in order to avoid that warning, but setting supported hardware
-is not a part of the cpufreq-dt driver and thus I think there is a problem here.
+Full test log:
+https://qa-reports.linaro.org/lkft/linux-next-oe-sanity/build/next-20191016/testrun/968688/log
 
-[   43.362906] ------------[ cut here ]------------
-[   43.363403] WARNING: CPU: 2 PID: 224 at lib/refcount.c:156 dev_pm_opp_of_add_table+0x59/0x128
-[   43.364119] refcount_t: increment on 0; use-after-free.
-[   43.364562] Modules linked in: cpufreq_dt(+) tegra30_devfreq [last unloaded: cpufreq_dt]
-[   43.365268] CPU: 2 PID: 224 Comm: modprobe Tainted: G        W
-5.4.0-rc3-next-20191016-00202-gdc740c468ab7 #2651
-[   43.366167] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-[   43.366747] [<c011116d>] (unwind_backtrace) from [<c010bb05>] (show_stack+0x11/0x14)
-[   43.367417] [<c010bb05>] (show_stack) from [<c0d75aad>] (dump_stack+0x89/0x98)
-[   43.368046] [<c0d75aad>] (dump_stack) from [<c0127813>] (__warn+0x10f/0x110)
-[   43.368650] [<c0127813>] (__warn) from [<c0127b09>] (warn_slowpath_fmt+0x61/0x78)
-[   43.369292] [<c0127b09>] (warn_slowpath_fmt) from [<c095b161>] (dev_pm_opp_of_add_table+0x59/0x128)
-[   43.370057] [<c095b161>] (dev_pm_opp_of_add_table) from [<c095b261>]
-(dev_pm_opp_of_cpumask_add_table+0x31/0x88)
-[   43.370946] [<c095b261>] (dev_pm_opp_of_cpumask_add_table) from [<bf80024d>]
-(cpufreq_init+0xd9/0x280 [cpufreq_dt])
-[   43.371853] [<bf80024d>] (cpufreq_init [cpufreq_dt]) from [<c095ec63>] (cpufreq_online+0x3eb/0x890)
-[   43.372638] [<c095ec63>] (cpufreq_online) from [<c095f191>] (cpufreq_add_dev+0x79/0x80)
-[   43.373340] [<c095f191>] (cpufreq_add_dev) from [<c07201db>] (subsys_interface_register+0xc3/0x100)
-[   43.374113] [<c07201db>] (subsys_interface_register) from [<c095d91b>]
-(cpufreq_register_driver+0x13b/0x1f0)
-[   43.374960] [<c095d91b>] (cpufreq_register_driver) from [<bf80047d>] (dt_cpufreq_probe+0x89/0xe0
-[cpufreq_dt])
-[   43.375818] [<bf80047d>] (dt_cpufreq_probe [cpufreq_dt]) from [<c0723df9>]
-(platform_drv_probe+0x49/0x88)
-[   43.376630] [<c0723df9>] (platform_drv_probe) from [<c0721aa1>] (really_probe+0x109/0x378)
-[   43.377330] [<c0721aa1>] (really_probe) from [<c0721e5b>] (driver_probe_device+0x57/0x15c)
-[   43.378030] [<c0721e5b>] (driver_probe_device) from [<c072210d>] (device_driver_attach+0x61/0x64)
-[   43.378776] [<c072210d>] (device_driver_attach) from [<c0722159>] (__driver_attach+0x49/0xa0)
-[   43.379493] [<c0722159>] (__driver_attach) from [<c071fe35>] (bus_for_each_dev+0x69/0x94)
-[   43.380185] [<c071fe35>] (bus_for_each_dev) from [<c0720f39>] (bus_add_driver+0x179/0x1e8)
-[   43.380883] [<c0720f39>] (bus_add_driver) from [<c0722cbf>] (driver_register+0x8f/0x130)
-[   43.381584] [<c0722cbf>] (driver_register) from [<bf80d017>] (dt_cpufreq_platdrv_init+0x17/0x1000
-[cpufreq_dt])
-[   43.382447] [<bf80d017>] (dt_cpufreq_platdrv_init [cpufreq_dt]) from [<d7fca400>] (0xd7fca400)
-[   43.383252] ---[ end trace f68728a0d3053b55 ]---
+kernel config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/626/config
 
+- Naresh
