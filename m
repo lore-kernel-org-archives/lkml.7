@@ -2,143 +2,264 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA5AECE59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19677ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBFB2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571198051;
-	bh=gNHAvwMGTCIlJRAkHuI/y+TtL9M1c/JkjdEvh8RVg74=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Js2PX8FZkHQjvhmckL5gcoTOz4zS2BIAJxTJFBYibUUqFK1/2YEldSeJo2c1+e1TS
-	 LQArzR54dRTpOlujPm1yy1hRvN1YJeQwRuiUav+VbQjgF8LFYOskbupY2AK8d1f5Gv
-	 gFxnZ4x5IpNID2aTfidsUzOhrRzzSdmnshkRYrMk=
+	by mail.kernel.org (Postfix) with ESMTP id CD34320854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="CYw85NRN";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="CYw85NRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391001AbfJPDyK (ORCPT
+        id S2391118AbfJPDyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388069AbfJPDyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:54:09 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [76.14.14.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E88020854;
-        Wed, 16 Oct 2019 03:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571198048;
-        bh=gNHAvwMGTCIlJRAkHuI/y+TtL9M1c/JkjdEvh8RVg74=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=lCpxWjrx8I0qfzTWDbLV87Ai4upvnEMtF/O+Ef+/DdlABn8ypKShlTKxCoI/T6kZC
-         /FdIkrhmHl+BK13RwMnTi1HKrxKq6pjlXTu/dk62Sk0kYx1l11+xVJ7WBFY9yFia+C
-         IjWkp65lTvPH/gUDGdlCS5MfVjkgTiBCN/kA2BBI=
-Date:   Tue, 15 Oct 2019 20:54:07 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     20191015102402.1978-1-laijs@linux.alibaba.com
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 6/7] rcu: rename some CONFIG_PREEMPTION to
- CONFIG_PREEMPT_RCU
-Message-ID: <20191016035407.GB2689@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191015102850.2079-1-laijs@linux.alibaba.com>
- <20191015102850.2079-4-laijs@linux.alibaba.com>
+        Tue, 15 Oct 2019 23:54:39 -0400
+Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:60597
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728710AbfJPDyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:54:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PE9KpLY8iAabt3/UAFMFGsIzXD9Fd3FEumMHjeaXtFc=;
+ b=CYw85NRNmaXNyuda4ro1ywoz9SV+DivpSPfnMXYanST190X4r+t4dk3g6L4MFex3VkSAwI+glCJ/kKcwzQ1Q9Dzrix2UmLxGfYhtseNl7IgzbtZjOsGLTLAeu85T7AK7xTHxSFi76wLMajlQrmPc9D/tXi2XizrMBFmmarDgZMo=
+Received: from VI1PR08CA0128.eurprd08.prod.outlook.com (2603:10a6:800:d4::30)
+ by DBBPR08MB4871.eurprd08.prod.outlook.com (2603:10a6:10:da::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.22; Wed, 16 Oct
+ 2019 03:54:27 +0000
+Received: from VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::206) by VI1PR08CA0128.outlook.office365.com
+ (2603:10a6:800:d4::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Wed, 16 Oct 2019 03:54:25 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT040.mail.protection.outlook.com (10.152.18.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Wed, 16 Oct 2019 03:54:24 +0000
+Received: ("Tessian outbound 081de437afc7:v33"); Wed, 16 Oct 2019 03:54:20 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 087f0afb0663.3 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.2.52])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0BA5B422-A7B6-40B6-8CF8-3DB3893C63F3.1;
+        Wed, 16 Oct 2019 03:54:15 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01lp2052.outbound.protection.outlook.com [104.47.2.52])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 087f0afb0663.3
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 16 Oct 2019 03:54:15 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b9mrZi5STR5Z8Z0ArQbJPkpU3r9hlbxkEmMC+fSU6myjdIv8CFpj/whAFDgYliIvp9xnFK5OVpJU2+4uj2uc8PdVeE846CT0McX0FTsDs8f80vdARli6NojUhx6YkpImIbHqBQNprLOMcmPWR4aaPOBcHE7PAidlON80TQxWGra9LaXti6haXb7+ZMj9qxlXluglHTDVnDY2P+bPdMYshBwNclYF7pfChhJcO4421Haee7s3q1xTy36a/9tAmNsdeN2egx5WB3SUTXtmkcH1teJ4KhzDewJWxAz91lHqlDrQaoHjHLToxScva/E+TCea/MHw+8ZIlvhmJto8vYw0JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PE9KpLY8iAabt3/UAFMFGsIzXD9Fd3FEumMHjeaXtFc=;
+ b=Bek2r4xBk/zcqdMUga0B6qAFTEtSb3RIf+5bl4kGiKWmwladiA7GcI4RzyoHEEHlQTwt5V+nra0O90+zNDfua4vvKNm1q70S6RaXXyiQ6dO7hmFy3b/Am6xC2PL0L3ctPlgN8NzcpbL3HimJcbjgMHcJrN40k7/rQr9lraPYwLd0keOSYrP1R99w7dzMVgkRGLu//+lQDHrHnuLIF7kjv+RTcCGnjt91NpXjb2H3MESOTwxHC65ECbVLzLwtZjFruPnXWffaKG7Bu7Np+aljIm1uxupiaeFh3CHj5uICN9U5fx5PqyEN8l6q1cnvwagqdsxSDW9SjnHU27+UMLYLXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PE9KpLY8iAabt3/UAFMFGsIzXD9Fd3FEumMHjeaXtFc=;
+ b=CYw85NRNmaXNyuda4ro1ywoz9SV+DivpSPfnMXYanST190X4r+t4dk3g6L4MFex3VkSAwI+glCJ/kKcwzQ1Q9Dzrix2UmLxGfYhtseNl7IgzbtZjOsGLTLAeu85T7AK7xTHxSFi76wLMajlQrmPc9D/tXi2XizrMBFmmarDgZMo=
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) by
+ HE1PR0801MB1945.eurprd08.prod.outlook.com (10.168.94.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Wed, 16 Oct 2019 03:54:12 +0000
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::b056:4113:e0bd:110d]) by HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::b056:4113:e0bd:110d%6]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 03:54:11 +0000
+From:   "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+To:     Mark Rutland <Mark.Rutland@arm.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: RE: [PATCH v5 1/6] psci: Export psci_ops.conduit symbol as modules
+ will use it.
+Thread-Topic: [PATCH v5 1/6] psci: Export psci_ops.conduit symbol as modules
+ will use it.
+Thread-Index: AQHVg0YvYzzWm5D4UkuNpSkRp5s31Kdb9F2AgACvT8A=
+Date:   Wed, 16 Oct 2019 03:54:11 +0000
+Message-ID: <HE1PR0801MB1676A17D66AE91F7E0792877F4920@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20191015104822.13890-1-jianyong.wu@arm.com>
+ <20191015104822.13890-2-jianyong.wu@arm.com>
+ <20191015172453.GE24604@lakrids.cambridge.arm.com>
+In-Reply-To: <20191015172453.GE24604@lakrids.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: fdc2e4b7-610c-412b-9e9c-427993879c74.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 4d3fe8a3-477b-4ffd-056c-08d751ec88de
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: HE1PR0801MB1945:|HE1PR0801MB1945:|DBBPR08MB4871:
+X-MS-Exchange-PUrlCount: 1
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DBBPR08MB487167802188A9CE285E90C2F4920@DBBPR08MB4871.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:862;OLM:862;
+x-forefront-prvs: 0192E812EC
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(346002)(396003)(136003)(13464003)(189003)(199004)(102836004)(55016002)(6246003)(81166006)(229853002)(7696005)(81156014)(53546011)(6306002)(8936002)(6506007)(86362001)(14444005)(478600001)(6862004)(6116002)(256004)(6636002)(5660300002)(76176011)(9686003)(186003)(26005)(52536014)(486006)(6436002)(66066001)(55236004)(446003)(8676002)(11346002)(476003)(316002)(3846002)(14454004)(71190400001)(71200400001)(7416002)(7736002)(25786009)(54906003)(74316002)(966005)(305945005)(99286004)(2906002)(66946007)(33656002)(4326008)(66476007)(64756008)(66446008)(76116006)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1945;H:HE1PR0801MB1676.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: gZc36TzA4pOPtQ/n+KbDvf/sYvv2PdXcXgjX5d4rztmaSTkhTw/Y3u/UtztCrMGqCoLRk9ue5AwlZODp15z8+81BaTWY4P0USBUKDEcbWZDLX8mdVeCrS7wuHxt6JhrgPxBzqiJIkKdCWKRfKu6Mel+iYN6Yj4l2w5axevVROn45EL+2AeW1+26NaK5M6IAZKp6B7rWSOm++Ci45LfOlSqYaDb3Y+u4Gk5qg/oWVsHEomU/ePYZvuwGssKgRE/f6l62BDAEczEQYzyFsKXTLcJi3Jnc2LSY73TgI6kl0A/MJYVo4dWYz/dQU3IEphRFu34uhINWxTbbUCU5OQ5qDIS/klfibsC4ytjdabTINVO/ovNCrZqWVt0nvztpeETJclIprszrF5/vQUC8NlmpcO/Uhi0Bj56I7BpwTA8de5KhY8nVXv9TqPAf6x7WkF8sCRz+d+hp/Ml7K91CZ4IFyBA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015102850.2079-4-laijs@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1945
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(13464003)(189003)(199004)(102836004)(22756006)(53546011)(76176011)(450100002)(46406003)(86362001)(9686003)(33656002)(97756001)(316002)(63350400001)(446003)(229853002)(36906005)(6506007)(99286004)(8746002)(54906003)(66066001)(5660300002)(26005)(26826003)(478600001)(7696005)(8936002)(47776003)(186003)(23726003)(81166006)(81156014)(55016002)(6636002)(6116002)(6246003)(76130400001)(6306002)(476003)(14444005)(966005)(3846002)(52536014)(14454004)(8676002)(486006)(356004)(336012)(2906002)(70586007)(4326008)(25786009)(74316002)(50466002)(11346002)(126002)(6862004)(305945005)(70206006)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4871;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: b96f3795-012e-474d-870d-08d751ec814b
+NoDisclaimer: True
+X-Forefront-PRVS: 0192E812EC
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cxWWC8UiwXyvwJ5MS9bAAqM4BFFpVx9IX4dR/srS3vXfwt1GdI25B2vjU8iysKddiKfLNnlcoVN+IsAqv1GDGodvLFXzEXnFuDJUktVahJviMXGVDzrxXVZTRBCOs7aEaTJT41LYJo7F4Lgr9pe4ZQRZyiqdTLWB3t47LQELVr79rZXy86pAzH6FsyQbzWiHuebxWf1RIBwparKNqITZwj3U/1aEKyFuCMt6ppzKrNLMY3hrFelJU7wKhZDSkJVi9y7ROVxE5heE/ke2PGW9+2XsDE+RLtpP0Kg2Z+VHCM1T4yQBvv57pYGmBMTNqxjw98HwiHPB7OICEHC2ddMd6+oaTS53i2wgOjPBD5EuoKczkgQaR1yQntmlNFgOdGUlxnQSix9SmlABinPIKLGAln9Ef8dEWFm6+ol2ufJ1G+cBKDzvjka/fb6sLw2djDK4fSdV6Ryin5n13QMwDfG55Q==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2019 03:54:24.4866
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d3fe8a3-477b-4ffd-056c-08d751ec88de
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 10:28:48AM +0000, Lai Jiangshan wrote:
-> CONFIG_PREEMPTION and CONFIG_PREEMPT_RCU are always identical,
-> but some code depends on CONFIG_PREEMPTION to access to
-> rcu_preempt functionalitis. This patch changes CONFIG_PREEMPTION
-> to CONFIG_PREEMPT_RCU in these cases.
-> 
-> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+Hi Mark,
 
-I believe that this does not cause problems with Sebastian's patch
-"[PATCH 27/34] rcu: Use CONFIG_PREEMPTION where appropriate", but could
-you please check?
+> -----Original Message-----
+> From: Mark Rutland <mark.rutland@arm.com>
+> Sent: Wednesday, October 16, 2019 1:25 AM
+> To: Jianyong Wu (Arm Technology China) <Jianyong.Wu@arm.com>
+> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
+> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
+> maz@kernel.org; richardcochran@gmail.com; will@kernel.org; Suzuki
+> Poulose <Suzuki.Poulose@arm.com>; linux-kernel@vger.kernel.org; linux-
+> arm-kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
+> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
+> (Arm Technology China) <Kaly.Xin@arm.com>; Justin He (Arm Technology
+> China) <Justin.He@arm.com>; nd <nd@arm.com>
+> Subject: Re: [PATCH v5 1/6] psci: Export psci_ops.conduit symbol as modul=
+es
+> will use it.
+>=20
+> On Tue, Oct 15, 2019 at 06:48:17PM +0800, Jianyong Wu wrote:
+> > If arm_smccc_1_1_invoke used in modules, psci_ops.conduit should be
+> > export.
+> >
+> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+>=20
+> I have a patch queued [1] in the arm64 tree which adds
+> arm_smccc_1_1_get_conduit() for this purpose.
+>=20
+> Please use that, adding an EXPORT_SYMBOL() if necessary.
+>=20
 
-							Thanx, Paul
+Great, I will apply it next version.
 
-> ---
->  kernel/rcu/tree.c       | 4 ++--
->  kernel/rcu/tree_stall.h | 6 +++---
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 7db5ea06a9ed..81eb64fcf5ab 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1926,7 +1926,7 @@ rcu_report_unblock_qs_rnp(struct rcu_node *rnp, unsigned long flags)
->  	struct rcu_node *rnp_p;
->  
->  	raw_lockdep_assert_held_rcu_node(rnp);
-> -	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_PREEMPTION)) ||
-> +	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_PREEMPT_RCU)) ||
->  	    WARN_ON_ONCE(rcu_preempt_blocked_readers_cgp(rnp)) ||
->  	    rnp->qsmask != 0) {
->  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> @@ -2294,7 +2294,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
->  		mask = 0;
->  		raw_spin_lock_irqsave_rcu_node(rnp, flags);
->  		if (rnp->qsmask == 0) {
-> -			if (!IS_ENABLED(CONFIG_PREEMPTION) ||
-> +			if (!IS_ENABLED(CONFIG_PREEMPT_RCU) ||
->  			    rcu_preempt_blocked_readers_cgp(rnp)) {
->  				/*
->  				 * No point in scanning bits because they
-> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> index 0b75426ebb3e..55f9b84790d3 100644
-> --- a/kernel/rcu/tree_stall.h
-> +++ b/kernel/rcu/tree_stall.h
-> @@ -163,7 +163,7 @@ static void rcu_iw_handler(struct irq_work *iwp)
->  //
->  // Printing RCU CPU stall warnings
->  
-> -#ifdef CONFIG_PREEMPTION
-> +#ifdef CONFIG_PREEMPT_RCU
->  
->  /*
->   * Dump detailed information for all tasks blocking the current RCU
-> @@ -215,7 +215,7 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
->  	return ndetected;
->  }
->  
-> -#else /* #ifdef CONFIG_PREEMPTION */
-> +#else /* #ifdef CONFIG_PREEMPT_RCU */
->  
->  /*
->   * Because preemptible RCU does not exist, we never have to check for
-> @@ -233,7 +233,7 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
->  {
->  	return 0;
->  }
-> -#endif /* #else #ifdef CONFIG_PREEMPTION */
-> +#endif /* #else #ifdef CONFIG_PREEMPT_RCU */
->  
->  /*
->   * Dump stacks of all tasks running on stalled CPUs.  First try using
-> -- 
-> 2.20.1
-> 
+Thanks
+Jianyong Wu
+
+> Thanks,
+> Mark.
+>=20
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=
+=3D
+> for-next/smccc-conduit-
+> cleanup&id=3D6b7fe77c334ae59fed9500140e08f4f896b36871
+>=20
+> > ---
+> >  drivers/firmware/psci/psci.c | 6 ++++++
+> >  include/linux/arm-smccc.h    | 2 +-
+> >  include/linux/psci.h         | 1 +
+> >  3 files changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/psci/psci.c
+> > b/drivers/firmware/psci/psci.c index f82ccd39a913..35c4eaab1451 100644
+> > --- a/drivers/firmware/psci/psci.c
+> > +++ b/drivers/firmware/psci/psci.c
+> > @@ -212,6 +212,12 @@ static unsigned long
+> psci_migrate_info_up_cpu(void)
+> >  			      0, 0, 0);
+> >  }
+> >
+> > +enum psci_conduit psci_get_conduit(void) {
+> > +	return psci_ops.conduit;
+> > +}
+> > +EXPORT_SYMBOL(psci_get_conduit);
+> > +
+> >  static void set_conduit(enum psci_conduit conduit)  {
+> >  	switch (conduit) {
+> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> > index 552cbd49abe8..a6e4d3e3d10a 100644
+> > --- a/include/linux/arm-smccc.h
+> > +++ b/include/linux/arm-smccc.h
+> > @@ -357,7 +357,7 @@ asmlinkage void __arm_smccc_hvc(unsigned long
+> a0, unsigned long a1,
+> >   * The return value also provides the conduit that was used.
+> >   */
+> >  #define arm_smccc_1_1_invoke(...) ({
+> 	\
+> > -		int method =3D psci_ops.conduit;				\
+> > +		int method =3D psci_get_conduit();			\
+> >  		switch (method) {					\
+> >  		case PSCI_CONDUIT_HVC:
+> 	\
+> >  			arm_smccc_1_1_hvc(__VA_ARGS__);
+> 	\
+> > diff --git a/include/linux/psci.h b/include/linux/psci.h index
+> > a8a15613c157..e5cedc986049 100644
+> > --- a/include/linux/psci.h
+> > +++ b/include/linux/psci.h
+> > @@ -42,6 +42,7 @@ struct psci_operations {
+> >  	enum smccc_version smccc_version;
+> >  };
+> >
+> > +extern enum psci_conduit psci_get_conduit(void);
+> >  extern struct psci_operations psci_ops;
+> >
+> >  #if defined(CONFIG_ARM_PSCI_FW)
+> > --
+> > 2.17.1
+> >
