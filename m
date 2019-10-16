@@ -2,113 +2,403 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B19AECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9904AECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5856721925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595E621848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:35:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dWkY2bjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390184AbfJPIe4 (ORCPT
+        id S2390921AbfJPIfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:34:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59226 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbfJPIey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:34:54 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B13CC8535C;
-        Wed, 16 Oct 2019 08:34:54 +0000 (UTC)
-Received: from [10.36.117.237] (ovpn-117-237.ams2.redhat.com [10.36.117.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78C195C1B5;
-        Wed, 16 Oct 2019 08:34:53 +0000 (UTC)
-Subject: Re: [PATCH] mm, soft-offline: convert parameter to pfn
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191016070924.GA10178@hori.linux.bs1.fc.nec.co.jp>
- <e931b14b-da27-2720-5344-b5c0b08b38ad@redhat.com>
- <20191016082735.GB13770@hori.linux.bs1.fc.nec.co.jp>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <c78962ba-ffa1-90e2-0116-6c94d082de2f@redhat.com>
-Date:   Wed, 16 Oct 2019 10:34:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20191016082735.GB13770@hori.linux.bs1.fc.nec.co.jp>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 16 Oct 2019 08:34:54 +0000 (UTC)
+        Wed, 16 Oct 2019 04:35:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41754 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730588AbfJPIfB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:35:01 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q7so14242560pfh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ocjfgkAIk3zBEH1r4Pnco3V25IOOt125MvwCh5NPDI8=;
+        b=dWkY2bjnrjqih1MlG6yAVGagLetA5wDxJfYVOynqWs3xCWj9/ItOF1QOk3DisF5ZuY
+         3t+EUiwJwiYKzBq8WqL5FWAz0IaEvBFUhwZI13sz71MFxTSrN/XY3CxhBlCN34fk2e27
+         3Q8Fq1ULhaVy09/6hGohj0T0blpqwl0hFga/jbzTryHjmg7B0HvIyn90sFgAQ9wlkdYb
+         Z9IbOXsmfEyaIRgpUl6KNiugiyncoMMcjpUrguTVdgQeXcW/p2HI74kBQATDUjlq2/lZ
+         pkcN7ola7XJscbOlp4rNdvPF8Vptfoi5C8l0t4Chx/I79vjRHwYYTxOoZcnd9ss0HrRo
+         kQMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ocjfgkAIk3zBEH1r4Pnco3V25IOOt125MvwCh5NPDI8=;
+        b=hatjSHH7t/QCEuGXV4ygKnNTGINyD7O0QDI4f/Qr0By/fX76MEDoiNaoL/u4iWVsI9
+         ryBdfv1zxZk2GVWpBwOTJBg/f4t848YHUfI6lPYH1w3E0bliUQi3YpvDNBuw7E/iHyMl
+         QQ3wlTmlS2jwN0ztaNC87tdeXxs3n39NzFkuJeM6LS+zXzLRKP2CXsTa2ExZcDJWkMOF
+         HpkzwpQBSJrZ/1YJpMwqd+6DeWA4iAEaY9tUpfz4CEzgyIl722qv8X2pbNkHQelAZW2G
+         3yt2yQibyM95/U4CNIwnH9F15yn+J0QdhctPhRCL1uyJzl2mJcf52yxl/l/K1Uqm+mRq
+         q58g==
+X-Gm-Message-State: APjAAAUcF0MdZGQ9dLXXHk3MeVMw8y7s8DZKymXd/NTPjBhPbp6c35Dz
+        wqT6613ixl2jpB9ybN1cpNZOCw==
+X-Google-Smtp-Source: APXvYqzbACQzAB2fsc1Ch/nwY40cp6BSew2vZ7BCGsBxFJL3u5OQ0Ju/RKkpASP0Et47AH03KKMtMQ==
+X-Received: by 2002:a62:1b45:: with SMTP id b66mr43525068pfb.34.1571214899830;
+        Wed, 16 Oct 2019 01:34:59 -0700 (PDT)
+Received: from localhost.localdomain ([85.203.47.199])
+        by smtp.gmail.com with ESMTPSA id d19sm1745960pjz.5.2019.10.16.01.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 16 Oct 2019 01:34:59 -0700 (PDT)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v6 1/3] uacce: Add documents for uacce
+Date:   Wed, 16 Oct 2019 16:34:31 +0800
+Message-Id: <1571214873-27359-2-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571214873-27359-1-git-send-email-zhangfei.gao@linaro.org>
+References: <1571214873-27359-1-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.10.19 10:27, Naoya Horiguchi wrote:
-> On Wed, Oct 16, 2019 at 09:56:19AM +0200, David Hildenbrand wrote:
->> On 16.10.19 09:09, Naoya Horiguchi wrote:
->>> Hi,
->>>
->>> I wrote a simple cleanup for parameter of soft_offline_page(),
->>> based on thread https://lkml.org/lkml/2019/10/11/57.
->>>
->>> I know that we need more cleanup on hwpoison-inject, but I think
->>> that will be mentioned in re-write patchset Oscar is preparing now.
->>> So let me shared only this part as a separate one now.
-> ...
->>
->> I think you should rebase that patch on linux-next (where the
->> pfn_to_online_page() check is in place). I assume you'll want to move the
->> pfn_to_online_page() check into soft_offline_page() then as well?
-> 
-> I rebased to next-20191016. And yes, we will move pfn_to_online_page()
-> into soft offline code.  It seems that we can also move pfn_valid(),
-> but is simply moving like below good enough for you?
+From: Kenneth Lee <liguozhu@hisilicon.com>
 
-At least I can't am the patch to current next/master (due to  
-pfn_to_online_page()).
+Uacce (Unified/User-space-access-intended Accelerator Framework) is
+a kernel module targets to provide Shared Virtual Addressing (SVA)
+between the accelerator and process.
 
-> 
->    @@ -1877,11 +1877,17 @@ static int soft_offline_free_page(struct page *page)
->      * This is not a 100% solution for all memory, but tries to be
->      * ``good enough'' for the majority of memory.
->      */
->    -int soft_offline_page(struct page *page, int flags)
->    +int soft_offline_page(unsigned long pfn, int flags)
->     {
->     	int ret;
->    -	unsigned long pfn = page_to_pfn(page);
->    +	struct page *page;
->     
->    +	if (!pfn_valid(pfn))
->    +		return -ENXIO;
->    +	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
->    +	if (!pfn_to_online_page(pfn))
->    +		return -EIO;
->    +	page = pfn_to_page(pfn);
->     	if (is_zone_device_page(page)) {
->     		pr_debug_ratelimited("soft_offline: %#lx page is device page\n",
->     				pfn);
->    --
-> 
-> Or we might have an option to do as memory_failure() does like below:
+This patch add document to explain how it works.
 
-In contrast to soft offlining, memory failure can deal with devmem. So I  
-think the above makes sense.
+Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+---
+ Documentation/misc-devices/uacce.rst | 297 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 297 insertions(+)
+ create mode 100644 Documentation/misc-devices/uacce.rst
 
+diff --git a/Documentation/misc-devices/uacce.rst b/Documentation/misc-devices/uacce.rst
+new file mode 100644
+index 0000000..05c1e09
+--- /dev/null
++++ b/Documentation/misc-devices/uacce.rst
+@@ -0,0 +1,297 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++Introduction of Uacce
++=========================
++
++Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
++provide Shared Virtual Addressing (SVA) between accelerators and processes.
++So accelerator can access any data structure of the main cpu.
++This differs from the data sharing between cpu and io device, which share
++data content rather than address.
++Because of the unified address, hardware and user space of process can
++share the same virtual address in the communication.
++Uacce takes the hardware accelerator as a heterogeneous processor, while
++IOMMU share the same CPU page tables and as a result the same translation
++from va to pa.
++
++	 __________________________       __________________________
++	|                          |     |                          |
++	|  User application (CPU)  |     |   Hardware Accelerator   |
++	|__________________________|     |__________________________|
++
++	             |                                 |
++	             | va                              | va
++	             V                                 V
++                 __________                        __________
++                |          |                      |          |
++                |   MMU    |                      |  IOMMU   |
++                |__________|                      |__________|
++		     |                                 |
++	             |                                 |
++	             V pa                              V pa
++		 _______________________________________
++		|                                       |
++		|              Memory                   |
++		|_______________________________________|
++
++
++
++Architecture
++------------
++
++Uacce is the kernel module, taking charge of iommu and address sharing.
++The user drivers and libraries are called WarpDrive.
++
++A virtual concept, queue, is used for the communication. It provides a
++FIFO-like interface. And it maintains a unified address space between the
++application and all involved hardware.
++
++                             ___________________                  ________________
++                            |                   |   user API     |                |
++                            | WarpDrive library | ------------>  |  user driver   |
++                            |___________________|                |________________|
++                                     |                                    |
++                                     |                                    |
++                                     | queue fd                           |
++                                     |                                    |
++                                     |                                    |
++                                     v                                    |
++     ___________________         _________                                |
++    |                   |       |         |                               | mmap memory
++    | Other framework   |       |  uacce  |                               | r/w interface
++    | crypto/nic/others |       |_________|                               |
++    |___________________|                                                 |
++             |                       |                                    |
++             | register              | register                           |
++             |                       |                                    |
++             |                       |                                    |
++             |                _________________       __________          |
++             |               |                 |     |          |         |
++              -------------  |  Device Driver  |     |  IOMMU   |         |
++                             |_________________|     |__________|         |
++                                     |                                    |
++                                     |                                    V
++                                     |                            ___________________
++                                     |                           |                   |
++                                     --------------------------  |  Device(Hardware) |
++                                                                 |___________________|
++
++
++How does it work
++================
++
++Uacce uses mmap and IOMMU to play the trick.
++
++Uacce create a chrdev for every device registered to it. New queue is
++created when user application open the chrdev. The file descriptor is used
++as the user handle of the queue.
++The accelerator device present itself as an Uacce object, which exports as
++chrdev to the user space. The user application communicates with the
++hardware by ioctl (as control path) or share memory (as data path).
++
++The control path to the hardware is via file operation, while data path is
++via mmap space of the queue fd.
++
++The queue file address space:
++
++enum uacce_qfrt {
++	UACCE_QFRT_MMIO = 0,	/* device mmio region */
++	UACCE_QFRT_DKO = 1,	/* device kernel-only region */
++	UACCE_QFRT_DUS = 2,	/* device user share region */
++	UACCE_QFRT_SS = 3,	/* static shared memory (for non-sva devices) */
++	UACCE_QFRT_MAX = 16,
++};
++
++All regions are optional and differ from device type to type. The
++communication protocol is wrapped by the user driver.
++
++The device mmio region is mapped to the hardware mmio space. It is generally
++used for doorbell or other notification to the hardware. It is not fast enough
++as data channel.
++
++The device kernel-only region is necessary only if the device IOMMU has no
++PASID support or it cannot send kernel-only address request. In this case, if
++kernel need to share memory with the device, kernel has to share iova address
++space with the user process via mmap, to prevent iova conflict.
++
++The device user share region is used for share data buffer between user process
++and device. It can be merged into other regions. But a separated region can help
++on device state management. For example, the device can be started when this
++region is mapped.
++
++The static share virtual memory region is used for share data buffer with the
++device and can be shared among queues / devices.
++Its size is set according to the application requirement.
++
++
++The user API
++------------
++
++We adopt a polling style interface in the user space: ::
++
++	int wd_request_queue(struct wd_queue *q);
++	void wd_release_queue(struct wd_queue *q);
++	int wd_send(struct wd_queue *q, void *req);
++	int wd_recv(struct wd_queue *q, void **req);
++	int wd_recv_sync(struct wd_queue *q, void **req);
++	void wd_flush(struct wd_queue *q);
++
++wd_recv_sync() is a wrapper to its non-sync version. It will trap into
++kernel and wait until the queue become available.
++
++If the queue do not support SVA/SVM. The following helper functions
++can be used to create Static Virtual Share Memory: ::
++
++	void *wd_reserve_memory(struct wd_queue *q, size_t size);
++	int wd_share_reserved_memory(struct wd_queue *q,
++				     struct wd_queue *target_q);
++
++The user API is not mandatory. It is simply a suggestion and hint what the
++kernel interface is supposed to be.
++
++
++The user driver
++---------------
++
++The queue file mmap space will need a user driver to wrap the communication
++protocol. Uacce provides some attributes in sysfs for the user driver to
++match the right accelerator accordingly.
++More details in Documentation/ABI/testing/sysfs-driver-uacce.
++
++
++The Uacce register API
++-----------------------
++The register API is defined in uacce.h.
++
++struct uacce_interface {
++	char name[32];
++	unsigned int flags;
++	struct uacce_ops *ops;
++};
++
++According to the IOMMU capability, uacce_interface flags can be:
++
++UACCE_DEV_SVA (0x1)
++	Support shared virtual address
++
++UACCE_DEV_SHARE_DOMAIN (0)
++	This is used for device which does not support pasid.
++
++struct uacce_device *uacce_register(struct device *parent,
++				    struct uacce_interface *interface);
++void uacce_unregister(struct uacce_device *uacce);
++
++uacce_register results can be:
++a. If uacce module is not compiled, ERR_PTR(-ENODEV)
++b. Succeed with the desired flags
++c. Succeed with the negotiated flags, for example
++   uacce_interface.flags = UACCE_DEV_SVA but uacce->flags = ~UACCE_DEV_SVA
++So user driver need check return value as well as the negotiated uacce->flags.
++
++
++The Memory Sharing Model
++------------------------
++The perfect form of a Uacce device is to support SVM/SVA. We built this upon
++Jean Philippe Brucker's SVA patches. [1]
++
++If the hardware support UACCE_DEV_SVA, the user process's page table is
++shared to the opened queue. So the device can access any address in the
++process address space.
++And it can raise a page fault if the physical page is not available yet.
++It can also access the address in the kernel space, which is referred by
++another page table particular to the kernel. Most of IOMMU implementation can
++handle this by a tag on the address request of the device. For example, ARM
++SMMU uses SSV bit to indicate that the address request is for kernel or user
++space.
++Queue file regions can be used:
++UACCE_QFRT_MMIO: device mmio region (map to user)
++UACCE_QFRT_DUS: device user share (map to dev and user)
++
++If the device does not support UACCE_DEV_SVA, Uacce allow only one process at
++the same time. DMA API cannot be used as well, since Uacce will create an
++unmanaged iommu_domain for the device.
++Queue file regions can be used:
++UACCE_QFRT_MMIO: device mmio region (map to user)
++UACCE_QFRT_DKO: device kernel-only (map to dev, no user)
++UACCE_QFRT_DUS: device user share (map to dev and user)
++UACCE_QFRT_SS:  static shared memory (map to devs and user)
++
++
++The Fork Scenario
++=================
++For a process with allocated queues and shared memory, what happen if it forks
++a child?
++
++The fd of the queue will be duplicated on folk, so the child can send request
++to the same queue as its parent. But the requests which is sent from processes
++except for the one who opens the queue will be blocked.
++
++It is recommended to add O_CLOEXEC to the queue file.
++
++The queue mmap space has a VM_DONTCOPY in its VMA. So the child will lose all
++those VMAs.
++
++This is a reason why Uacce does not adopt the mode used in VFIO and
++InfiniBand.  Both solutions can set any user pointer for hardware sharing.
++But they cannot support fork when the dma is in process. Or the
++"Copy-On-Write" procedure will make the parent process lost its physical
++pages.
++
++
++Difference to the VFIO and IB framework
++---------------------------------------
++The essential function of Uacce is to let the device access the user
++address directly. There are many device drivers doing the same in the kernel.
++And both VFIO and IB can provide similar functions in framework level.
++
++But Uacce has a different goal: "share address space". It is
++not taken the request to the accelerator as an enclosure data structure. It
++takes the accelerator as another thread of the same process. So the
++accelerator can refer to any address used by the process.
++
++Both VFIO and IB are taken this as "memory sharing", not "address sharing".
++They care more on sharing the block of memory. But if there is an address
++stored in the block and referring to another memory region. The address may
++not be valid.
++
++By adding more constraints to the VFIO and IB framework, in some sense, we may
++achieve a similar goal. But we gave it up finally. Both VFIO and IB have extra
++assumption which is unnecessary to Uacce. They may hurt each other if we
++try to merge them together.
++
++VFIO manages resource of a hardware as a "virtual device". If a device need to
++serve a separated application. It must isolate the resource as a separate
++virtual device.  And the life cycle of the application and virtual device are
++unnecessary unrelated. And most concepts, such as bus, driver, probe and
++so on, to make it as a "device" is unnecessary either. And the logic added to
++VFIO to make address sharing do no help on "creating a virtual device".
++
++IB creates a "verbs" standard for sharing memory region to another remote
++entity.  Most of these verbs are to make memory region between entities to be
++synchronized.  This is not what accelerator need. Accelerator is in the same
++memory system with the CPU. It refers to the same memory system among CPU and
++devices. So the local memory terms/verbs are good enough for it. Extra "verbs"
++are not necessary. And its queue (like queue pair in IB) is the communication
++channel direct to the accelerator hardware. There is nothing about memory
++itself.
++
++Further, both VFIO and IB use the "pin" (get_user_page) way to lock local
++memory in place.  This is flexible. But it can cause other problems. For
++example, if the user process fork a child process. The COW procedure may make
++the parent process lost its pages which are sharing with the device. These may
++be fixed in the future. But is not going to be easy. (There is a discussion
++about this on Linux Plumbers Conference 2018 [2])
++
++So we choose to build the solution directly on top of IOMMU interface. IOMMU
++is the essential way for device and process to share their page mapping from
++the hardware perspective. It will be safe to create a software solution on
++this assumption.  Uacce manages the IOMMU interface for the accelerator
++device, so the device driver can export some of the resources to the user
++space. Uacce than can make sure the device and the process have the same
++address space.
++
++
++References
++==========
++.. [1] http://jpbrucker.net/sva/
++.. [2] https://lwn.net/Articles/774411/
 -- 
+2.7.4
 
-Thanks,
-
-David / dhildenb
