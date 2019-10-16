@@ -2,51 +2,53 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70BDFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D52ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF44021925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E704521D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262772;
-	bh=b9tJJIYUCqo6di2o1/Abyy0VUXK9ssE4EWroc7sMp/4=;
+	s=default; t=1571262781;
+	bh=UaQM8EDlWYVsbySsIvNkxpYAX4mU7VUzUz6zMqmEr04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjRuXJM3fKYFfXNva9vACHopA5Io+8+CBy6xPz+7S/qx6dDi/6CX8WmGzHKE2guB5
-	 yiY0T18ds9XAiPs8gtMn3Otd/G/fqD20Od9gq7ODmpRI9kRF+MRPSYgWnpwZnWM+Xn
-	 sLCkBBqgfzj5X0Sk4LZlcFCKQzcxlAsnbOTjTQCE=
+	b=dRQSa/dH2PwhBSeq11oxdhWyCQkeHFUJyXoqeIWdb7vaOymNUvPGKIH35c6lAnxD+
+	 ECwZeQOPTW8U1SrbHfZly4rCpxt5j7klDcTjNrtRzqPbo1i+VvHoOSXMPkhooO0QQ2
+	 VA2olLebzMF4fR/2q6GygLt3Xc6ldZpmysD1Y80U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436885AbfJPVwv (ORCPT
+        id S2437172AbfJPVw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729703AbfJPVwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:52:51 -0400
+        id S2437081AbfJPVw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:52:58 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C46B320872;
-        Wed, 16 Oct 2019 21:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EABA21A49;
+        Wed, 16 Oct 2019 21:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262770;
-        bh=b9tJJIYUCqo6di2o1/Abyy0VUXK9ssE4EWroc7sMp/4=;
+        s=default; t=1571262777;
+        bh=UaQM8EDlWYVsbySsIvNkxpYAX4mU7VUzUz6zMqmEr04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/nQTMEUrzzSgpfKF9U84z4Ayi9cZzby4BU7koQR7jN4iF5sCQJctkym6h3IqdDxz
-         J5YxSc3u1gAkr+JhZa3zHuw5aMhCIv29kU9OxeLJ5viTlgQ1JGjjpzloUxd6/QsfS8
-         T2j3IoZVLOhkDkptRCugaMF6cX4n+gWL5QucXgLU=
+        b=vY5xybHDwtwOHaVHcL3vT7XWMYD7y/t6Nf4BMUWJ1QxiTvvRN52uuWg972ik0FrO4
+         2TLRgH6b0mDc/XbmKIsKMYLcKJxnFYs20Q1lTbAJYlJ9ltFTyF1aJIQJwQxG7QQznG
+         JLGHNmvxVIR5ImT9eSOxKiETPeBTcfWKRQL8zwPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 11/79] cfg80211: initialize on-stack chandefs
-Date:   Wed, 16 Oct 2019 14:49:46 -0700
-Message-Id: <20191016214740.295829525@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 18/79] thermal: Fix use-after-free when unregistering thermal zone device
+Date:   Wed, 16 Oct 2019 14:49:53 -0700
+Message-Id: <20191016214747.151924484@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,72 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit f43e5210c739fe76a4b0ed851559d6902f20ceb1 upstream.
+[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
 
-In a few places we don't properly initialize on-stack chandefs,
-resulting in EDMG data to be non-zero, which broke things.
+thermal_zone_device_unregister() cancels the delayed work that polls the
+thermal zone, but it does not wait for it to finish. This is racy with
+respect to the freeing of the thermal zone device, which can result in a
+use-after-free [1].
 
-Additionally, in a few places we rely on the driver to init the
-data completely, but perhaps we shouldn't as non-EDMG drivers
-may not initialize the EDMG data, also initialize it there.
+Fix this by waiting for the delayed work to finish before freeing the
+thermal zone device. Note that thermal_zone_device_set_polling() is
+never invoked from an atomic context, so it is safe to call
+cancel_delayed_work_sync() that can block.
 
-Cc: stable@vger.kernel.org
-Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/1569239475-I2dcce394ecf873376c386a78f31c2ec8b538fa25@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[1]
+[  +0.002221] ==================================================================
+[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
+[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
 
+[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
+[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
+[  +0.000012] Call Trace:
+[  +0.000021]  dump_stack+0xa9/0x10e
+[  +0.000020]  print_address_description.cold.2+0x9/0x25e
+[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
+[  +0.000016]  kasan_report+0xe/0x20
+[  +0.000016]  __mutex_lock+0x1076/0x11c0
+[  +0.000014]  step_wise_throttle+0x72/0x150
+[  +0.000018]  handle_thermal_trip+0x167/0x760
+[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
+[  +0.000019]  process_one_work+0x969/0x16f0
+[  +0.000017]  worker_thread+0x91/0xc40
+[  +0.000014]  kthread+0x33d/0x400
+[  +0.000015]  ret_from_fork+0x3a/0x50
+
+[  +0.000020] Allocated by task 1:
+[  +0.000015]  save_stack+0x19/0x80
+[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
+[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
+[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
+[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
+[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
+[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
+[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
+[  +0.000014]  local_pci_probe+0xc3/0x150
+[  +0.000013]  pci_device_probe+0x280/0x410
+[  +0.000013]  really_probe+0x26a/0xbb0
+[  +0.000013]  driver_probe_device+0x208/0x2e0
+[  +0.000013]  device_driver_attach+0xfe/0x140
+[  +0.000013]  __driver_attach+0x110/0x310
+[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
+[  +0.000013]  driver_register+0x1c0/0x400
+[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
+[  +0.000014]  do_one_initcall+0x239/0x4dd
+[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
+[  +0.000012]  kernel_init+0x11/0x18b
+[  +0.000013]  ret_from_fork+0x3a/0x50
+
+[  +0.000015] Freed by task 581:
+[  +0.000013]  save_stack+0x19/0x80
+[  +0.000014]  __kasan_slab_free+0x125/0x170
+[  +0.000013]  kfree+0xf3/0x310
+[  +0.000013]  thermal_release+0xc7/0xf0
+[  +0.000014]  device_release+0x77/0x200
+[  +0.000014]  kobject_put+0x1a8/0x4c0
+[  +0.000014]  device_unregister+0x38/0xc0
+[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
+[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
+[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
+[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
+[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
+[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
+[  +0.000013]  genl_rcv_msg+0xca/0x170
+[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
+[  +0.000012]  genl_rcv+0x29/0x40
+[  +0.000013]  netlink_unicast+0x49b/0x660
+[  +0.000013]  netlink_sendmsg+0x755/0xc90
+[  +0.000013]  __sys_sendto+0x3de/0x430
+[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
+[  +0.000013]  do_syscall_64+0xa4/0x4d0
+[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
+               which belongs to the cache kmalloc-2k of size 2048
+[  +0.000012] The buggy address is located 1096 bytes inside of
+               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
+[  +0.000007] The buggy address belongs to the page:
+[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
+[  +0.000020] flags: 0x200000000010200(slab|head)
+[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
+[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
+[  +0.000007] page dumped because: kasan: bad access detected
+
+[  +0.000012] Memory state around the buggy address:
+[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000008]                                                  ^
+[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000007] ==================================================================
+
+Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
+Reported-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c     |    4 +++-
- net/wireless/reg.c         |    2 +-
- net/wireless/wext-compat.c |    2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/thermal/thermal_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -1934,6 +1934,8 @@ static int nl80211_parse_chandef(struct
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 3d5f8f432b5b1..929092fc25ef5 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -402,7 +402,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
+ 		mod_delayed_work(system_freezable_wq, &tz->poll_queue,
+ 				 msecs_to_jiffies(delay));
+ 	else
+-		cancel_delayed_work(&tz->poll_queue);
++		cancel_delayed_work_sync(&tz->poll_queue);
+ }
  
- 	control_freq = nla_get_u32(info->attrs[NL80211_ATTR_WIPHY_FREQ]);
- 
-+	memset(chandef, 0, sizeof(*chandef));
-+
- 	chandef->chan = ieee80211_get_channel(&rdev->wiphy, control_freq);
- 	chandef->width = NL80211_CHAN_WIDTH_20_NOHT;
- 	chandef->center_freq1 = control_freq;
-@@ -2402,7 +2404,7 @@ static int nl80211_send_iface(struct sk_
- 
- 	if (rdev->ops->get_channel) {
- 		int ret;
--		struct cfg80211_chan_def chandef;
-+		struct cfg80211_chan_def chandef = {};
- 
- 		ret = rdev_get_channel(rdev, wdev, &chandef);
- 		if (ret == 0) {
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -1604,7 +1604,7 @@ static void reg_call_notifier(struct wip
- 
- static bool reg_wdev_chan_valid(struct wiphy *wiphy, struct wireless_dev *wdev)
- {
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
- 	enum nl80211_iftype iftype;
- 
---- a/net/wireless/wext-compat.c
-+++ b/net/wireless/wext-compat.c
-@@ -821,7 +821,7 @@ static int cfg80211_wext_giwfreq(struct
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
--	struct cfg80211_chan_def chandef;
-+	struct cfg80211_chan_def chandef = {};
- 	int ret;
- 
- 	switch (wdev->iftype) {
+ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+-- 
+2.20.1
+
 
 
