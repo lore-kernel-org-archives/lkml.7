@@ -2,111 +2,113 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34DC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D8DECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEF620872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CDF20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfJPIxh (ORCPT
+        id S2391680AbfJPIyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:53:37 -0400
-Received: from gofer.mess.org ([88.97.38.141]:44443 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391694AbfJPIxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:53:37 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 6D812C6389; Wed, 16 Oct 2019 09:53:34 +0100 (BST)
-Date:   Wed, 16 Oct 2019 09:53:34 +0100
-From:   Sean Young <sean@mess.org>
-To:     Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Cc:     Michael Krufky <mkrufky@linuxtv.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot+98730b985cad4931a552@syzkaller.appspotmail.com
-Subject: Re: [PATCH] media: cxusb: fix uninitialized local variable
-Message-ID: <20191016085334.GA1345@gofer.mess.org>
-References: <20191015200315.28830-1-vvidic@valentin-vidic.from.hr>
+        Wed, 16 Oct 2019 04:54:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53688 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732135AbfJPIye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:54:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 455E6AEC4;
+        Wed, 16 Oct 2019 08:54:33 +0000 (UTC)
+Message-ID: <52cb6d848c5d1d7d0e8dc359e9c3fe6c00ddceeb.camel@suse.de>
+Subject: Re: [PATCH -next v2] arm64: mm: Fix unused variable warning in
+ zone_sizes_init
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 16 Oct 2019 10:54:31 +0200
+In-Reply-To: <20191016031107.30045-1-natechancellor@gmail.com>
+References: <20191015224304.20963-1-natechancellor@gmail.com>
+         <20191016031107.30045-1-natechancellor@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-XL1H6941T8hAsoF71YoD"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015200315.28830-1-vvidic@valentin-vidic.from.hr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
 
-Thank you for your patch.
+--=-XL1H6941T8hAsoF71YoD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 15, 2019 at 10:03:15PM +0200, Valentin Vidic wrote:
-> Make sure ircode does not contain random values if the call to
-> cxusb_ctrl_msg fails for some reason.
-> 
-> Reported-by: syzbot+98730b985cad4931a552@syzkaller.appspotmail.com
-> Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+On Tue, 2019-10-15 at 20:11 -0700, Nathan Chancellor wrote:
+> When building arm64 allnoconfig, CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32
+> get disabled so there is a warning about max_dma being unused.
+>=20
+> ../arch/arm64/mm/init.c:215:16: warning: unused variable 'max_dma'
+> [-Wunused-variable]
+>         unsigned long max_dma =3D min;
+>                       ^
+> 1 warning generated.
+>=20
+> Add an ifdef around the variable to fix this.
+>=20
+> Fixes: 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > ---
->  drivers/media/usb/dvb-usb/cxusb.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-> index f02fa0a67aa4..afcd88dd96c0 100644
-> --- a/drivers/media/usb/dvb-usb/cxusb.c
-> +++ b/drivers/media/usb/dvb-usb/cxusb.c
-> @@ -519,7 +519,7 @@ static int cxusb_d680_dmb_streaming_ctrl(struct dvb_usb_adapter *adap,
->  
->  static int cxusb_rc_query(struct dvb_usb_device *d)
->  {
-> -	u8 ircode[4];
-> +	u8 ircode[4] = { 0 };
->  
->  	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
+>=20
+> v1 -> v2:
+>=20
+> * Fix check for CONFIG_ZONE_DMA32 as pointed out by Will.
+>=20
+>  arch/arm64/mm/init.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 44f07fdf7a59..359c3b08b968 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -212,7 +212,9 @@ static void __init zone_sizes_init(unsigned long min,
+> unsigned long max)
+>  	struct memblock_region *reg;
+>  	unsigned long zone_size[MAX_NR_ZONES], zhole_size[MAX_NR_ZONES];
+>  	unsigned long max_dma32 =3D min;
+> +#if defined(CONFIG_ZONE_DMA) || defined(CONFIG_ZONE_DMA32)
+>  	unsigned long max_dma =3D min;
+> +#endif
+> =20
+>  	memset(zone_size, 0, sizeof(zone_size));
+> =20
 
-The correct to do here is check the return value of cxusb_ctrl_msg() and
-to not proceed if it failed, rather than assume the value of 0.
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Also note that:
+Thanks!
 
-	https://patchwork.linuxtv.org/patch/59448/
 
-Is already being merged.
+--=-XL1H6941T8hAsoF71YoD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Thanks
-Sean
+-----BEGIN PGP SIGNATURE-----
 
->  
-> @@ -531,7 +531,7 @@ static int cxusb_rc_query(struct dvb_usb_device *d)
->  
->  static int cxusb_bluebird2_rc_query(struct dvb_usb_device *d)
->  {
-> -	u8 ircode[4];
-> +	u8 ircode[4] = { 0 };
->  	struct i2c_msg msg = {
->  		.addr = 0x6b,
->  		.flags = I2C_M_RD,
-> @@ -550,7 +550,7 @@ static int cxusb_bluebird2_rc_query(struct dvb_usb_device *d)
->  
->  static int cxusb_d680_dmb_rc_query(struct dvb_usb_device *d)
->  {
-> -	u8 ircode[2];
-> +	u8 ircode[2] = { 0 };
->  
->  	if (cxusb_ctrl_msg(d, 0x10, NULL, 0, ircode, 2) < 0)
->  		return 0;
-> @@ -989,7 +989,7 @@ static int cxusb_dee1601_frontend_attach(struct dvb_usb_adapter *adap)
->  
->  static int cxusb_dualdig4_frontend_attach(struct dvb_usb_adapter *adap)
->  {
-> -	u8 ircode[4];
-> +	u8 ircode[4] = { 0 };
->  	int i;
->  	struct i2c_msg msg = {
->  		.addr = 0x6b,
-> -- 
-> 2.20.1
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2m2sgACgkQlfZmHno8
+x/7nEwf+LdOYEsxQAo4l3mtCRbpNKjXVZ2OFojqmoIsNuqZIqyPBsjYenMIxAvm2
+ytDau7vxVIP2CaX3ozL3bHrVeEeYW4M3QUZxotu0iIP92s+6wJt5RVPP7eiwESrK
+6m3eCPfbuYbk427JLLliu18X0cpDAgzPtLURkSSs44p9eTIQys0y+1HEexmArZr9
+afEwVp0p+X9hkQPI3+Se3ezBFIzFr3Jo2dC8UTrNy0k4hwIi3MCVD/3FEtXsz1DA
+YS+z16lCsKBk1jCZ9TDcbUsvZ0eaPUSvDpHFWhglqTR7YiDhyPoPrEvcf7DeP2Ah
+KnaMCQsCM47uhChDL7WzDjudTAVKlw==
+=KDT/
+-----END PGP SIGNATURE-----
+
+--=-XL1H6941T8hAsoF71YoD--
+
