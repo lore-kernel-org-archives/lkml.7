@@ -2,120 +2,82 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7869FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96B0FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9060621848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571230041;
-	bh=EVKJl8eI/ER7gNsvakkImwnG6i3maP9p+Xpd0sSgFHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vvfpBqLjm8Pg1nKIg97N2TTpvHRVC5lZrZhw/86ADKgCxYG8EPIFKu08lCMWYkEQZ
-	 I4/hutxNt5zFufy1hJ6QInDFPQZwnHwnPFyDwgRlB/17UTv2o1Ym2dUjgyc5sU226y
-	 X+i3vu/TpjiTUs2aZtcC7L5hHiI/HctAOBFBRmKU=
+	by mail.kernel.org (Postfix) with ESMTP id B3A24218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393254AbfJPMrU (ORCPT
+        id S2393261AbfJPMsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:47:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35552 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388855AbfJPMrU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:47:20 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p30so14251363pgl.2;
-        Wed, 16 Oct 2019 05:47:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rq3f4eSp8CIkVoHGSORWyEkMMIc3Sw4eQTsm9V9rf2g=;
-        b=au50oT2NSPX7rC67A9Rgrd7RefLKrT2LB3kY/ByGZbTSuOf5ad2TOwoVDqAN9UIVyk
-         mdXYIX73xCfCXSvyeyNmB+qAi28C52kNVnGyLTLJUQuZJx+Y0vSZngxrLqvAsTF8/SmD
-         laMin8995YinlrUPOFqtbpLd5GglFMs1r9D8BwsC6cBdnnqY1coX6J+8kSqgSNXZ8qfd
-         xdHPuDQQdFT9yRERBzgPuB5PzfDQM+MjSlcx+yr0PeWVb3diXN8ur55yCe+FynczCmAg
-         ePWqc0/tWRasdYkj65C2f64x5k3PduW7tN8Iu3h4BEiib0KHyjLK8TGekRjicZcJm7lm
-         0LXg==
-X-Gm-Message-State: APjAAAUNF3aJGOwkcE8v4qrrvwlaabpkl1TQdtRmihe8LpRfMblmbPFZ
-        R5wDvYJm4hjo9vr6F6h6ktc=
-X-Google-Smtp-Source: APXvYqxXeJUjiiG3waBwmyhci4T1gcY8YNpB2uTrlbsBKl/glHPqm2PbQTCIMDpRZuX/+szbuVY8Kg==
-X-Received: by 2002:a62:86c5:: with SMTP id x188mr45003130pfd.228.1571230037854;
-        Wed, 16 Oct 2019 05:47:17 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y138sm28615611pfb.174.2019.10.16.05.47.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 05:47:16 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id F3CBB40251; Wed, 16 Oct 2019 12:47:15 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 12:47:15 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     linux-kselftest@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, keescook@chromium.org,
-        yzaikin@google.com, akpm@linux-foundation.org,
-        yamada.masahiro@socionext.com, catalin.marinas@arm.com,
-        joe.lawrence@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
-        schowdary@nvidia.com, urezki@gmail.com,
-        andriy.shevchenko@linux.intel.com, changbin.du@intel.com,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 linux-kselftest-test 0/3] kunit: support building
- core/tests as modules
-Message-ID: <20191016124715.GG16384@42.do-not-panic.com>
-References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
- <20191014092051.GZ16384@42.do-not-panic.com>
- <alpine.LRH.2.20.1910141452470.6620@dhcp-10-175-191-179.vpn.oracle.com>
+        Wed, 16 Oct 2019 08:48:31 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53124 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390639AbfJPMsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:48:31 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A20E7200534;
+        Wed, 16 Oct 2019 14:48:29 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 94E9C20052F;
+        Wed, 16 Oct 2019 14:48:29 +0200 (CEST)
+Received: from fsr-ub1664-026.ea.freescale.net (fsr-ub1664-026.ea.freescale.net [10.171.81.59])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E789D205D2;
+        Wed, 16 Oct 2019 14:48:28 +0200 (CEST)
+From:   Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+To:     corbet@lwn.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, catalin.marinas@arm.com,
+        will@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com
+Cc:     jslaby@suse.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Eddy=20Petri=C8=99or?= <eddy.petrisor@nxp.com>
+Subject: [PATCH v7 1/5] dt-bindings: arm: fsl: Add the S32V234-EVB board
+Date:   Wed, 16 Oct 2019 15:48:23 +0300
+Message-Id: <1571230107-8493-2-git-send-email-stefan-gabriel.mirea@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571230107-8493-1-git-send-email-stefan-gabriel.mirea@nxp.com>
+References: <1571230107-8493-1-git-send-email-stefan-gabriel.mirea@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.1910141452470.6620@dhcp-10-175-191-179.vpn.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 03:02:03PM +0100, Alan Maguire wrote:
-> 
-> 
-> On Mon, 14 Oct 2019, Luis Chamberlain wrote:
-> 
-> > On Tue, Oct 08, 2019 at 03:55:43PM +0100, Alan Maguire wrote:
-> > > The current kunit execution model is to provide base kunit functionality
-> > > and tests built-in to the kernel.  The aim of this series is to allow
-> > > building kunit itself and tests as modules.  This in turn allows a
-> > > simple form of selective execution; load the module you wish to test.
-> > > In doing so, kunit itself (if also built as a module) will be loaded as
-> > > an implicit dependency.
-> > > 
-> > > Because this requires a core API modification - if a module delivers
-> > > multiple suites, they must be declared with the kunit_test_suites()
-> > > macro - we're proposing this patch as a candidate to be applied to the
-> > > test tree before too many kunit consumers appear.  We attempt to deal
-> > > with existing consumers in patch 1.
-> > 
-> > This is neat and makes sense to me.
-> 
-> Thanks for taking a look!
-> 
-> > However the ordering of the patches
-> > seems odd. If modules depend on kunit module, then shouldn't that go
-> > first? Ie, we want this to be bisectable in proper order.
-> > 
-> 
-> The reasoning here is it seemed a more likely scenario that users mught  
-> build kunit built-in (CONFIG_KUNIT=y) along with test suites built as 
-> modules (CONFIG_KUNIT_TEST=m). So the intermediate state after patch 2 - 
-> tests buildable as modules while kunit is still built-in-only - made more 
-> sense to me as something users might do in practice so that's why I 
-> ordered things that way.  I'm working on a new revision of the patchset
-> though, so if you feel strongly about this shout and I'll try and accommodate
-> the alternative ordering.
+From: Eddy Petrișor <eddy.petrisor@nxp.com>
 
-No, that makes sense. All good.
+Add entry for the NXP S32V234 Customer Evaluation Board to the board/SoC
+bindings.
 
-  Luis
+Signed-off-by: Eddy Petrișor <eddy.petrisor@nxp.com>
+Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b4b4e6573b5..c211f4f82e25 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -335,4 +335,10 @@ properties:
+               - fsl,ls2088a-rdb
+           - const: fsl,ls2088a
+ 
++      - description: S32V234 based Boards
++        items:
++          - enum:
++              - fsl,s32v234-evb           # S32V234-EVB2 Customer Evaluation Board
++          - const: fsl,s32v234
++
+ ...
+-- 
+2.22.0
+
