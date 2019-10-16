@@ -2,110 +2,114 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BECFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9B0C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F3A20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HPTMJU73"
+	by mail.kernel.org (Postfix) with ESMTP id 9AB6620650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404491AbfJPKJW (ORCPT
+        id S2404502AbfJPKL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:09:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41198 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbfJPKJV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:09:21 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GA90T6077650;
-        Wed, 16 Oct 2019 05:09:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571220540;
-        bh=KNxeu9yfZ4RGKar+cjwljVCo17/rn+guhBIxyB5Xi5Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HPTMJU739RMoB0ZNu8pPABGgIMHbJ4MMLVqxFPrm0LDF1NQbbshmld+lDmDazw4Ph
-         NppIfYVJTQWyg8jCEfNgYHOAD/fgsOWYMy9SWi1Jg6coE1IHiU0yebMSR7gtvttsAB
-         PFzUJjvfwyKnee3TpFiK1povC+/dsI5Mvy4W3ZCw=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GA90V3127814
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 05:09:00 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 05:08:53 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 05:08:53 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GA8vjP092532;
-        Wed, 16 Oct 2019 05:08:58 -0500
-Subject: Re: [PATCH v2 0/2] usb: cdns3: fixes for 5.4-rc
-To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
-CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
-        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191016100452.32613-1-rogerq@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <6435c2c9-c8fb-3ec8-5e5c-b1d3b72b0b2e@ti.com>
-Date:   Wed, 16 Oct 2019 13:08:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 06:11:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42444 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730479AbfJPKL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:11:28 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D0EFA315C036;
+        Wed, 16 Oct 2019 10:11:27 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 35CD75D6B2;
+        Wed, 16 Oct 2019 10:11:23 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 12:11:22 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, john.garry@huawei.com, ak@linux.intel.com,
+        lukemujica@google.com, kan.liang@linux.intel.com,
+        yuzenghui@huawei.com, linux-kernel@vger.kernel.org,
+        hushiyuan@huawei.com, linfeilong@huawei.com
+Subject: Re: [PATCH] perf jevents: Fix resource leak in process_mapfile()
+Message-ID: <20191016101122.GB15580@krava>
+References: <bf113089-e3cd-50f9-f7ed-17d07512a702@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016100452.32613-1-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf113089-e3cd-50f9-f7ed-17d07512a702@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 16 Oct 2019 10:11:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Greg
+On Wed, Oct 16, 2019 at 03:47:23PM +0800, Yunfeng Ye wrote:
+> There are memory leaks and file descriptor resource leaks in
+> process_mapfile().
+> 
+> Fix this by adding free() and fclose() on the error paths.
+> 
+> Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 
-I see that you've already picked up v1.
-V2 is a very minor fix and this series can be ignored.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-cheers,
--roger
+thanks,
+jirka
 
-On 16/10/2019 13:04, Roger Quadros wrote:
-> Hi,
+> ---
+>  tools/perf/pmu-events/jevents.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> Here are 2 fixes we found while testing the cdns3 driver
-> on our platform.
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index e2837260ca4d..6e60d4cff592 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+>  	char *line, *p;
+>  	int line_num;
+>  	char *tblname;
+> +	int ret = 0;
 > 
-> The first one fixes a corner case where super-speed in host mode
-> doesn't work if device was plugged before the cdns3 driver probes.
+>  	pr_info("%s: Processing mapfile %s\n", prog, fpath);
 > 
-> The second one fixes the case when gadget driver is
-> limited to full-speed.
+> @@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+>  	if (!mapfp) {
+>  		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
+>  				fpath);
+> +		free(line);
+>  		return -1;
+>  	}
 > 
-> cheers,
-> -roger
+> @@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
+>  			/* TODO Deal with lines longer than 16K */
+>  			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
+>  					prog, fpath, line_num);
+> -			return -1;
+> +			ret = -1;
+> +			goto out;
+>  		}
+>  		line[strlen(line)-1] = '\0';
 > 
-> Changelog:
-> v2
-> - treat USB_DR_MODE_UNKNOWN as error case
+> @@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
 > 
-> Roger Quadros (2):
->    usb: cdns3: fix cdns3_core_init_role()
->    usb: cdns3: gadget: Fix full-speed mode
+>  out:
+>  	print_mapping_table_suffix(outfp);
+> -	return 0;
+> +	fclose(mapfp);
+> +	free(line);
+> +	return ret;
+>  }
 > 
->   drivers/usb/cdns3/core.c   | 22 +++++++++++++++++++++-
->   drivers/usb/cdns3/gadget.c |  1 +
->   2 files changed, 22 insertions(+), 1 deletion(-)
+>  /*
+> -- 
+> 2.7.4.3
 > 
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
