@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8908FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8DAFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05F1207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6497C207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264004;
-	bh=j6J6/XrfGH0dGCQ64DCTclHY+iBTFT8Fgdv2TEDikSw=;
+	s=default; t=1571264011;
+	bh=+L2m0d+XklJPtiibixn3X0QJoAzTHcW0+W3FP5p2sME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wu8lO9YuaSZwRpFyUzb7BH4nIA6PaNC/iWdJpMB7OFtsY8LVZRoRA4PSP0ClgRRQf
-	 CRmq2n8ogNcf3xIlXP+6DoX/umum8KfPqaleO4mLslvr2WbCqDjbGcD9RU7rpznZbM
-	 90vBWF08GwgaJCK4SDhdAtqZglntPwMceXtvB5lM=
+	b=CUMp+bzXeCD5PKRUwLgQLq1COz+kZW63YkGMcgYAlDJV6DfTwQrd1TTVbj7TK+9B7
+	 awajjGth8x/97VsogqPiUSSa3/sJpE3QpyW6GMXMN/Ocz+mvGPNPnfUBqmtkesg46v
+	 lPMugUufh99qSFSaOiV+tE7DiBHsQ+OoyFVgnAng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439315AbfJPWNX (ORCPT
+        id S2439326AbfJPWN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47004 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437843AbfJPVzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:54 -0400
+        id S2395374AbfJPVzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:52 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD5C4218DE;
-        Wed, 16 Oct 2019 21:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5380F21928;
+        Wed, 16 Oct 2019 21:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262953;
-        bh=j6J6/XrfGH0dGCQ64DCTclHY+iBTFT8Fgdv2TEDikSw=;
+        s=default; t=1571262951;
+        bh=+L2m0d+XklJPtiibixn3X0QJoAzTHcW0+W3FP5p2sME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPsbSneWmjkLIL6ELXtQuK46gKUxmF2Z9PlO0E2VAhhxLVsB8U9UHEpsp/hDFJvtf
-         Lj4XQ/DZcKwxPAX58Tb77JAWQl8g4ZmKV4TYmM2/WuwEOJWVfOb3/iL4PSbnpf11sF
-         mgBe5rmVx/5eDZYFF9bl/J3yuCHdarwRa7SPnjs0=
+        b=U0oyAI5BVy0Ha1Bm8KadupCxqQ07jSecoKGfkylaKNfAPfE8MWK2dZmZAK/uPR/Hw
+         0XPD6J/SakPDlIOHCUDi5ziphvnCh2s5mBa/SWD4HVD2E+CAXiMvPTr7YVQw6a4USi
+         qcsH9rjzhDc9/Td2/LcAO2vvLcZS6iMNdFG9CRqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Peter Korsgaard <jacmet@sunsite.dk>
-Subject: [PATCH 4.14 23/65] serial: uartlite: fix exit path null pointer
-Date:   Wed, 16 Oct 2019 14:50:37 -0700
-Message-Id: <20191016214819.179163209@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 21/65] USB: chaoskey: fix use-after-free on release
+Date:   Wed, 16 Oct 2019 14:50:35 -0700
+Message-Id: <20191016214816.453677699@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -59,43 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit a553add0846f355a28ed4e81134012e4a1e280c2 upstream.
+commit 93ddb1f56ae102f14f9e46a9a9c8017faa970003 upstream.
 
-Call uart_unregister_driver() conditionally instead of
-unconditionally, only if it has been previously registered.
+The driver was accessing its struct usb_interface in its release()
+callback without holding a reference. This would lead to a
+use-after-free whenever the device was disconnected while the character
+device was still open.
 
-This uses driver.state, just as the sh-sci.c driver does.
-
-Fixes this null pointer dereference in tty_unregister_driver(),
-since the 'driver' argument is null:
-
-  general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-  RIP: 0010:tty_unregister_driver+0x25/0x1d0
-
-Fixes: 238b8721a554 ("[PATCH] serial uartlite driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Peter Korsgaard <jacmet@sunsite.dk>
-Link: https://lore.kernel.org/r/9c8e6581-6fcc-a595-0897-4d90f5d710df@infradead.org
+Fixes: 66e3e591891d ("usb: Add driver for Altus Metrum ChaosKey device (v2)")
+Cc: stable <stable@vger.kernel.org>     # 4.1
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009153848.8664-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/uartlite.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/misc/chaoskey.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -746,7 +746,8 @@ err_uart:
- static void __exit ulite_exit(void)
- {
- 	platform_driver_unregister(&ulite_platform_driver);
--	uart_unregister_driver(&ulite_uart_driver);
-+	if (ulite_uart_driver.state)
-+		uart_unregister_driver(&ulite_uart_driver);
+--- a/drivers/usb/misc/chaoskey.c
++++ b/drivers/usb/misc/chaoskey.c
+@@ -106,6 +106,7 @@ static void chaoskey_free(struct chaoske
+ 		usb_free_urb(dev->urb);
+ 		kfree(dev->name);
+ 		kfree(dev->buf);
++		usb_put_intf(dev->interface);
+ 		kfree(dev);
+ 	}
  }
+@@ -153,6 +154,8 @@ static int chaoskey_probe(struct usb_int
+ 	if (dev == NULL)
+ 		goto out;
  
- module_init(ulite_init);
++	dev->interface = usb_get_intf(interface);
++
+ 	dev->buf = kmalloc(size, GFP_KERNEL);
+ 
+ 	if (dev->buf == NULL)
+@@ -186,8 +189,6 @@ static int chaoskey_probe(struct usb_int
+ 		strcat(dev->name, udev->serial);
+ 	}
+ 
+-	dev->interface = interface;
+-
+ 	dev->in_ep = in_ep;
+ 
+ 	if (le16_to_cpu(udev->descriptor.idVendor) != ALEA_VENDOR_ID)
 
 
