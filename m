@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4FBFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1D1FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6EA2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E8A2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PLXp6KeE"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="y4VFtabE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405151AbfJPMOR (ORCPT
+        id S2405162AbfJPMOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:14:17 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49585 "EHLO
+        Wed, 16 Oct 2019 08:14:18 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3954 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405032AbfJPMOP (ORCPT
+        by vger.kernel.org with ESMTP id S2405083AbfJPMOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 08:14:15 -0400
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9GC6ftG026522;
-        Wed, 16 Oct 2019 14:14:00 +0200
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9GC6eeM026519;
+        Wed, 16 Oct 2019 14:14:01 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=pnor4yyg9faPFc0SOMUAqiQzsJEo1AMmtpZ8aOYAexk=;
- b=PLXp6KeEnEEZpeubqTAjybZLixix3NcwVlAWk+1Va8wxBnW6oa26xxl4qaIZhe32SNjC
- nOOd4ItPFPNCzwKP0tPaER+GRIl2J/c4M1PqURREqWkiIZudCCysdsyKf9DtYdO/PCqb
- EJYVJ8QdCzbrBtVk7rcs0DRR1YnDn5XZhFP+iZX0zEr5b5GmTiKUCqZEfurqwfPJCWJK
- xdlHxPKXiK4IWaB5al4rlTysIeHBx//9VWjGF4ai/+KvEU61rp4WLac3NqouXCxfHOZk
- OshuPdPsBGc0gzRWxvvu1LttCPkPqEQeB8c0rnNBcEzRuNglX5hNeGN4jQTvoGfOmzRB VQ== 
+ bh=1cUGDzXXsUx288sdgvJBcP5wG3KT3Z/CAWtG2DDFRX8=;
+ b=y4VFtabEqag3ebZopFcaDl19V4SDZwYfmLCIo4cJ+42pXl14X9M383+pHket7csx8INo
+ UNCIOQQKE4aBqZpHSj9aiRxY2OmN3jjbHk6ePxiZf706JJ3W23II1k2HAvYMNGO9GrBf
+ jF4tIdnuELg5TGQUU/fHxbWkz9T54WsSlsn/c6Cu25x255cTWYQ9GlP/Eo/gCG8R2uzW
+ Qj5pXwHIyLvzJ+2GEyW4TUT36tXLIFxvQ4TtklzSthhVtpU53ImqJB98f/ZD4nMk/Y1W
+ 1TaThyDhUCko4SVOc3sgdie9CcbumEl0B68goDArW44iy4Vql3F0Uudd9TQyP7QTb6yu mQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4kx60er-1
+        by mx07-00178001.pphosted.com with ESMTP id 2vk4kx60eu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Oct 2019 14:13:59 +0200
+        Wed, 16 Oct 2019 14:14:01 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 680D710002A;
-        Wed, 16 Oct 2019 14:13:59 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5526420A92D;
-        Wed, 16 Oct 2019 14:13:59 +0200 (CEST)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct
- 2019 14:13:59 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7A8ED10002A;
+        Wed, 16 Oct 2019 14:14:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CAEB20A92D;
+        Wed, 16 Oct 2019 14:14:00 +0200 (CEST)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct
+ 2019 14:14:00 +0200
 Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct 2019 14:13:58
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct 2019 14:13:59
  +0200
 From:   Fabien Dessenne <fabien.dessenne@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -62,9 +62,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>
 CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 1/2] dt-bindings: mailbox: stm32-ipcc: Updates for wakeup management
-Date:   Wed, 16 Oct 2019 14:13:48 +0200
-Message-ID: <1571228029-31652-2-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 2/2] mailbox: stm32-ipcc: Update wakeup management
+Date:   Wed, 16 Oct 2019 14:13:49 +0200
+Message-ID: <1571228029-31652-3-git-send-email-fabien.dessenne@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571228029-31652-1-git-send-email-fabien.dessenne@st.com>
 References: <1571228029-31652-1-git-send-email-fabien.dessenne@st.com>
@@ -79,30 +79,109 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The wakeup specific IRQ management is no more needed to wake up the stm32
-plaform.
+plaform. A relationship has been established between the EXTI and
+the RX IRQ, just need to declare the EXTI interrupt instead of the
+IPCC RX IRQ.
 
 Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mailbox/stm32-ipcc.c | 36 +++++++-----------------------------
+ 1 file changed, 7 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-index 1d2b7fe..139c06a 100644
---- a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-+++ b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-@@ -14,9 +14,9 @@ Required properties:
-                    property. Must contain the following entries:
-                    - "rx"
-                    - "tx"
--                   - "wakeup"
- - interrupts:   Interrupt specifiers for "rx channel occupied", "tx channel
--                free" and "system wakeup".
-+                free". If "wakeup-source" is set the rx interrupt is the
-+                one used to wake up the system.
- - #mbox-cells:  Number of cells required for the mailbox specifier. Must be 1.
-                 The data contained in the mbox specifier of the "mboxes"
-                 property in the client node is the mailbox channel index.
+diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
+index 5c2d1e1..ef96688 100644
+--- a/drivers/mailbox/stm32-ipcc.c
++++ b/drivers/mailbox/stm32-ipcc.c
+@@ -52,7 +52,6 @@ struct stm32_ipcc {
+ 	struct clk *clk;
+ 	spinlock_t lock; /* protect access to IPCC registers */
+ 	int irqs[IPCC_IRQ_NUM];
+-	int wkp;
+ 	u32 proc_id;
+ 	u32 n_chans;
+ 	u32 xcr;
+@@ -282,16 +281,9 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 
+ 	/* wakeup */
+ 	if (of_property_read_bool(np, "wakeup-source")) {
+-		ipcc->wkp = platform_get_irq_byname(pdev, "wakeup");
+-		if (ipcc->wkp < 0) {
+-			if (ipcc->wkp != -EPROBE_DEFER)
+-				dev_err(dev, "could not get wakeup IRQ\n");
+-			ret = ipcc->wkp;
+-			goto err_clk;
+-		}
+-
+ 		device_set_wakeup_capable(dev, true);
+-		ret = dev_pm_set_dedicated_wake_irq(dev, ipcc->wkp);
++
++		ret = dev_pm_set_wake_irq(dev, ipcc->irqs[IPCC_IRQ_RX]);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to set wake up irq\n");
+ 			goto err_init_wkp;
+@@ -334,10 +326,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_irq_wkp:
+-	if (ipcc->wkp)
++	if (of_property_read_bool(np, "wakeup-source"))
+ 		dev_pm_clear_wake_irq(dev);
+ err_init_wkp:
+-	device_init_wakeup(dev, false);
++	device_set_wakeup_capable(dev, false);
+ err_clk:
+ 	clk_disable_unprepare(ipcc->clk);
+ 	return ret;
+@@ -345,27 +337,17 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 
+ static int stm32_ipcc_remove(struct platform_device *pdev)
+ {
+-	struct stm32_ipcc *ipcc = platform_get_drvdata(pdev);
++	struct device *dev = &pdev->dev;
+ 
+-	if (ipcc->wkp)
++	if (of_property_read_bool(dev->of_node, "wakeup-source"))
+ 		dev_pm_clear_wake_irq(&pdev->dev);
+ 
+-	device_init_wakeup(&pdev->dev, false);
++	device_set_wakeup_capable(dev, false);
+ 
+ 	return 0;
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-static void stm32_ipcc_set_irq_wake(struct device *dev, bool enable)
+-{
+-	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
+-	unsigned int i;
+-
+-	if (device_may_wakeup(dev))
+-		for (i = 0; i < IPCC_IRQ_NUM; i++)
+-			irq_set_irq_wake(ipcc->irqs[i], enable);
+-}
+-
+ static int stm32_ipcc_suspend(struct device *dev)
+ {
+ 	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
+@@ -373,8 +355,6 @@ static int stm32_ipcc_suspend(struct device *dev)
+ 	ipcc->xmr = readl_relaxed(ipcc->reg_proc + IPCC_XMR);
+ 	ipcc->xcr = readl_relaxed(ipcc->reg_proc + IPCC_XCR);
+ 
+-	stm32_ipcc_set_irq_wake(dev, true);
+-
+ 	return 0;
+ }
+ 
+@@ -382,8 +362,6 @@ static int stm32_ipcc_resume(struct device *dev)
+ {
+ 	struct stm32_ipcc *ipcc = dev_get_drvdata(dev);
+ 
+-	stm32_ipcc_set_irq_wake(dev, false);
+-
+ 	writel_relaxed(ipcc->xmr, ipcc->reg_proc + IPCC_XMR);
+ 	writel_relaxed(ipcc->xcr, ipcc->reg_proc + IPCC_XCR);
+ 
 -- 
 2.7.4
 
