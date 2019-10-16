@@ -2,195 +2,94 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47797C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF3FC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC8C20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FE020650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bgO95zmf"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EA00SE6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392233AbfJPKJO (ORCPT
+        id S2392245AbfJPKJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:09:14 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:6866 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727235AbfJPKJN (ORCPT
+        Wed, 16 Oct 2019 06:09:17 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:43568 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727235AbfJPKJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:09:13 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9G9vJSb022321;
-        Wed, 16 Oct 2019 12:08:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=DRK6nnWxIpQcRpa27goNNKQ6VsydMmtRJ5E896Ce4Mg=;
- b=bgO95zmf6k2aVs9w1Xi40fm7M97azWEHfHLRVkbo0ZJC5b8wbkMYjy3JqcGa/3hDtU0V
- a05oW0Z2xC+WtxdaqXmFvJSIC5d8mRebsgQ2gbwHQCcHBrjAlDqrdLtQG869tjSoHhtP
- bB9U3dxRq3HkKMd4MSk5tFrPp0gemXEoUjf8Chyhjstyx9zuSluokafzcfjR6hcdMNUH
- ZTTJ/EKLLxFqT+Wx4Y/tB9Go12HCV/e7mZuqVVqTs6yBEmPhYXEb0NDZ/5mVM9AcTrOZ
- yBiTzslx4ssweZHkXlP4z3lwYc8XBKg+K4PgT3xZQFZtj0PaIz3KNoZS0hOVI8iOVFPq GA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vk4kx5eyf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Oct 2019 12:08:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07B0410002A;
-        Wed, 16 Oct 2019 12:08:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C67EE205D2C;
-        Wed, 16 Oct 2019 12:08:56 +0200 (CEST)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct
- 2019 12:08:56 +0200
-Received: from [10.48.0.192] (10.48.0.192) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 16 Oct 2019 12:08:56
- +0200
-Subject: Re: [PATCH v2 3/3] pwm: stm32: add power management support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <benjamin.gaignard@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
- <1570193633-6600-4-git-send-email-fabrice.gasnier@st.com>
- <20191016070635.GC1296874@ulmo>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <15371530-a932-08b7-dd78-a7e20d213203@st.com>
-Date:   Wed, 16 Oct 2019 12:08:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 06:09:16 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9GA51sp009174;
+        Wed, 16 Oct 2019 05:09:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=wY7mAvj5F21+V86bnuE18PYzkAjmvRHb8mMHS3hceXQ=;
+ b=EA00SE6Z2E3k7SYFmqLaahzFj9XBNXjotsuUm/KPxWHyilfAJAm5KZPxQmDDAJgrJUle
+ gnJUdIu3m1gPVluI0VzrM0AX1MdVV/iAOspKE8s/QO1nKSpmsxQkQfyJoUEt4/lXWVew
+ LF6SWzPJAJWOR2PKHdG4CaibjbMB8WtQqdgVSmrR41mibmFPlpRucfSj++0eq28ey8OI
+ SMP0stSn8afBqt+M1O/iK/mZvq+3iAlZZUfF8bB3guzQMjGxX6mPTHo3W2v/TfMfmhz0
+ qZU8xVquIHF32s7/MTVCNiLTmcVXo6jMXqbbLwD2Y03PXK3bCfQXNh10hu5x7koRn8j7 cQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2vkc83dbua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 16 Oct 2019 05:09:06 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 16 Oct
+ 2019 11:09:04 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 16 Oct 2019 11:09:04 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id AB4E92C1;
+        Wed, 16 Oct 2019 10:09:04 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 10:09:04 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 12/36] ARM: s3c64xx: remove mach/hardware.h
+Message-ID: <20191016100904.GC31391@ediswmail.ad.cirrus.com>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-12-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20191016070635.GC1296874@ulmo>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-16_03:2019-10-15,2019-10-16 signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191010203043.1241612-12-arnd@arndb.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 suspectscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=942 adultscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1910160090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 9:06 AM, Thierry Reding wrote:
-> On Fri, Oct 04, 2019 at 02:53:53PM +0200, Fabrice Gasnier wrote:
->> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
->> channel isn't active. Let the PWM consumers disable it during their own
->> suspend sequence, see [1]. So, perform a check here, and handle the
->> pinctrl states. Also restore the break inputs upon resume, as registers
->> content may be lost when going to low power mode.
->>
->> [1] https://lkml.org/lkml/2019/2/5/770
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->> Changes in v2:
->> Follow Uwe suggestions/remarks:
->> - Add a precursor patch to ease reviewing
->> - Use registers read instead of pwm_get_state
->> - Add a comment to mention registers content may be lost in low power mode
->> ---
->>  drivers/pwm/pwm-stm32.c | 38 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
+On Thu, Oct 10, 2019 at 10:29:56PM +0200, Arnd Bergmann wrote:
+> This header is empty and conflicts with the s3c24xx version
+> of the same file when we merge the two, so stop including it.
 > 
-> Applied, thanks. I made two minor changes, though, see below.
-> 
->>
->> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
->> index cf8658c..546b661 100644
->> --- a/drivers/pwm/pwm-stm32.c
->> +++ b/drivers/pwm/pwm-stm32.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/mfd/stm32-timers.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->> +#include <linux/pinctrl/consumer.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/pwm.h>
->>  
->> @@ -655,6 +656,42 @@ static int stm32_pwm_remove(struct platform_device *pdev)
->>  	return 0;
->>  }
->>  
->> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
->> +{
->> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
->> +	unsigned int ch;
-> 
-> I renamed this to just "i", which is more idiomatic for loop variables.
-> The function is small enough not to need to differentiate between loop
-> variables.
-> 
->> +	u32 ccer, mask;
->> +
->> +	/* Look for active channels */
->> +	ccer = active_channels(priv);
->> +
->> +	for (ch = 0; ch < priv->chip.npwm; ch++) {
->> +		mask = TIM_CCER_CC1E << (ch * 4);
->> +		if (ccer & mask) {
->> +			dev_err(dev, "The consumer didn't stop us (%s)\n",
->> +				priv->chip.pwms[ch].label);
-> 
-> Changed this to:
-> 
-> 	"PWM %u still in use by consumer %s\n", i, priv->chip.pwms[i].label
-> 
-> I think that might help clarify which PWM is still enabled in case the
-> consumers don't set a label.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-Hi Thierry,
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Many thanks for all the improvements on this series!
-
-Best Regards,
-Fabrice
-
-> 
-> Thierry
-> 
->> +			return -EBUSY;
->> +		}
->> +	}
->> +
->> +	return pinctrl_pm_select_sleep_state(dev);
->> +}
->> +
->> +static int __maybe_unused stm32_pwm_resume(struct device *dev)
->> +{
->> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	ret = pinctrl_pm_select_default_state(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* restore breakinput registers that may have been lost in low power */
->> +	return stm32_pwm_apply_breakinputs(priv);
->> +}
->> +
->> +static SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_resume);
->> +
->>  static const struct of_device_id stm32_pwm_of_match[] = {
->>  	{ .compatible = "st,stm32-pwm",	},
->>  	{ /* end node */ },
->> @@ -667,6 +704,7 @@ static struct platform_driver stm32_pwm_driver = {
->>  	.driver	= {
->>  		.name = "stm32-pwm",
->>  		.of_match_table = stm32_pwm_of_match,
->> +		.pm = &stm32_pwm_pm_ops,
->>  	},
->>  };
->>  module_platform_driver(stm32_pwm_driver);
->> -- 
->> 2.7.4
->>
+Thanks,
+Charles
