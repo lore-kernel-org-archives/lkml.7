@@ -2,75 +2,138 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D6CFA3721
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9404ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DEE2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9844B2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="y0vQuP5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733222AbfJPBwn (ORCPT
+        id S2388241AbfJPByU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:52:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:21397 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728338AbfJPBwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:52:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 18:52:42 -0700
-X-IronPort-AV: E=Sophos;i="5.67,302,1566889200"; 
-   d="scan'208";a="186007667"
-Received: from unknown (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 15 Oct 2019 18:52:40 -0700
-Subject: Re: [PATCH] KVM: X86: Make fpu allocation a common function
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20191014162247.61461-1-xiaoyao.li@intel.com>
- <87y2xn462e.fsf@vitty.brq.redhat.com>
- <d14d22e2-d74c-ed73-b5bb-3ed5eb087deb@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <6cc430c1-5729-c2d3-df11-3bf1ec1272f8@intel.com>
-Date:   Wed, 16 Oct 2019 09:52:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 15 Oct 2019 21:54:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38236 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfJPByU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 21:54:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w3so6353674pgt.5
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 18:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sW6Kr6EUz7rX5dHEbanmtPwyhYGa11s9qoO8PB91xwg=;
+        b=y0vQuP5DtjBl8KzkKmSS7SXOvaPBJr4sYiPAF2WPXb7nx8y+IEUgL/kyrJXsiptwqZ
+         n5Iv6M8vg50oRKF4XIfaSRVVFyE95JIevoK5/Ey3WlAZI1u0JUNk0wo+wBRLaTKMTWVJ
+         FefRrnvZjSjfXoSAaEd+/EKf85UkR4cr96yanUGdD2awv4SvXfPpE0H6dcS77JFdcj6X
+         y2o0Bnu3VrC5/B1hEOaxOmfvaS6eq00D23D2VfxgFUS4yWEwlphsL5RnkGDGqSqc/Gsn
+         Z+tpL53Ye9o5KePGGh8rBGcY2UYkFGOb+55kkEE0WL9qFRsCiUVon7S3sHk5VWZ5hHYk
+         Geig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sW6Kr6EUz7rX5dHEbanmtPwyhYGa11s9qoO8PB91xwg=;
+        b=U1zww7GFQzdZb0dsNUKCifHfgOb9xbmzZ99OGFrtG6LhgnDxKOQXUz+U7lqDRCJaMz
+         36Mi1ZCxKuc10oWyhp3iZGc3UhwGvlL6yw5TYNs0P88I77PITXw/c0hW3PQXmeY4kPCR
+         BwaQknCRxagFPuwWIfLjG2gWTAgw1Ss78weMYFXKOYCkUXLj2a0jPcCGHgePHWC9iLCt
+         /nuwEScOXMLfvd+rmPikNUqSRHMRZPh4EkKctwWIC/mYHhHUyBnjGass2VINSuEb1KvN
+         VimP7hktGe9mekzuFMzN6fQthfVJMo+NaRSRkTTUnLZ+aitlKhpSfmaQ641k8bzCtwdY
+         6IFg==
+X-Gm-Message-State: APjAAAVhQJv+W5qjZPZwV9S47i0F2I2MdestMCUIoMIWXIFovpDJ2Rsz
+        EVO/QJmn5+3yPu69o1MPtynNHw==
+X-Google-Smtp-Source: APXvYqwL2+GWeShyoqkAFDgZaBqSlRnbFG5KUO1F9bCx+36sFbahEpqGpni5iPfASMoeOicMcsIauw==
+X-Received: by 2002:aa7:99c7:: with SMTP id v7mr42243796pfi.165.1571190859542;
+        Tue, 15 Oct 2019 18:54:19 -0700 (PDT)
+Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
+        by smtp.gmail.com with ESMTPSA id m5sm22355135pgt.15.2019.10.15.18.54.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 15 Oct 2019 18:54:18 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: [PATCH v2] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
+Date:   Wed, 16 Oct 2019 09:54:08 +0800
+Message-Id: <20191016015408.11091-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-In-Reply-To: <d14d22e2-d74c-ed73-b5bb-3ed5eb087deb@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/2019 5:28 PM, Paolo Bonzini wrote:
-> On 14/10/19 18:58, Vitaly Kuznetsov wrote:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>
->>> They are duplicated codes to create vcpu.arch.{user,guest}_fpu in VMX
->>> and SVM. Make them common functions.
->>>
->>> No functional change intended.
->> Would it rather make sense to move this code to
->> kvm_arch_vcpu_create()/kvm_arch_vcpu_destroy() instead?
->>
-> 
-> user_fpu could be made percpu too...  That would save a bit of memory
-> for each vCPU.  I'm holding on Xiaoyao's patch because a lot of the code
-> he's touching would go away then.
+The RTL8723BU has problems connecting to AP after each warm reboot.
+Sometimes it returns no scan result, and in most cases, it fails
+the authentication for unknown reason. However, it works totally
+fine after cold reboot.
 
-Sorry, I don't get clear your attitude.
-Do you mean the generic common function is not so better that I'd better 
-to implement the percpu solution?
+Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
+for cold reboot and warm reboot, the registers imply that the MAC
+is already powered and thus some procedures are skipped during
+driver initialization. Double checked the vendor driver, it reads
+the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
+during initialization based on them. This commit only tells the
+RTL8723BU to do full initialization without checking MAC status.
 
-> Paolo
-> 
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
+
+Note:
+  v2: fix typo of commit message
+
+
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
+ 3 files changed, 5 insertions(+)
+
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index 22e95b11bfbb..6598c8d786ea 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -1425,6 +1425,7 @@ struct rtl8xxxu_fileops {
+ 	u8 has_s0s1:1;
+ 	u8 has_tx_report:1;
+ 	u8 gen2_thermal_meter:1;
++	u8 needs_full_init:1;
+ 	u32 adda_1t_init;
+ 	u32 adda_1t_path_on;
+ 	u32 adda_2t_path_on_a;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index 9ba661b3d767..a1c3787abe2e 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -1668,6 +1668,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
+ 	.has_s0s1 = 1,
+ 	.has_tx_report = 1,
+ 	.gen2_thermal_meter = 1,
++	.needs_full_init = 1,
+ 	.adda_1t_init = 0x01c00014,
+ 	.adda_1t_path_on = 0x01c00014,
+ 	.adda_2t_path_on_a = 0x01c00014,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index e4c1b08c8070..8420cb269b8d 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3900,6 +3900,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 	else
+ 		macpower = true;
+ 
++	if (fops->needs_full_init)
++		macpower = false;
++
+ 	ret = fops->power_on(priv);
+ 	if (ret < 0) {
+ 		dev_warn(dev, "%s: Failed power on\n", __func__);
+-- 
+2.23.0
+
