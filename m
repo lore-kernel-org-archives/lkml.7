@@ -2,130 +2,117 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0422FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F81FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97A9218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571231736;
-	bh=IcnqT7RQVBovweaVEALr0lBoNn170n6vif3YcfLUwK8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i4L/IMZf+e8Sue0cJ3DU47Ktvo65D9LADjK34T2unbZ6Q8eIf1m12eWjLhBw8eXA6
-	 wR6nvcLUhRuMZb5f/XRvCvxKQNXg7cfwbCZaQP2z5o09OTTZ32T2ZmIx4i4t8xyzCk
-	 NeWOXOxda0LFLx4nHYXuyfQm3SslUK8SaJ0qg2rs=
+	by mail.kernel.org (Postfix) with ESMTP id BACC72064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:16:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5HWQ7i7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391762AbfJPNPf (ORCPT
+        id S2393475AbfJPNQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfJPNPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:15:35 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2BAB21925;
-        Wed, 16 Oct 2019 13:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571231734;
-        bh=IcnqT7RQVBovweaVEALr0lBoNn170n6vif3YcfLUwK8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nb3sfhmWYplKyJ6Jp3DpoLlQq/qomzbD39TynD+136xDVYL8TWUi2rX7ZCbnvO85y
-         c+DTLJP2AsYG8A/3H9pgWFU2/OJBdQDNVvPW6wYaVYuIzXXtx/x4jStH6DXd8K1Uqs
-         Z9s8mgbv7Y6+C1biIH7R0yLCavlmbP0O1VT/zn1w=
-Received: by mail-qt1-f169.google.com with SMTP id 3so36068090qta.1;
-        Wed, 16 Oct 2019 06:15:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAVdr4L4pXj4ATLFp0l1LfqOTGeDvC3xbUGP34RGbeib8G1dvD2a
-        4LPKHN/RjAQht1RNlF5oq6Iq/Tx59p/SrtLAiA==
-X-Google-Smtp-Source: APXvYqwKs5UdvUeaFRW8bLvhtjp7znKBxIpTPywHIn8FBNhWh5DCfYY8yxrL5NLWwtGcIotNhvWLT8UwzY3fVixQOzY=
-X-Received: by 2002:ac8:44d9:: with SMTP id b25mr45955617qto.300.1571231732993;
- Wed, 16 Oct 2019 06:15:32 -0700 (PDT)
+        Wed, 16 Oct 2019 09:16:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38868 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfJPNQe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:16:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id b20so24007436ljj.5;
+        Wed, 16 Oct 2019 06:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2eaJx/OyqQZZTAm5CsVFp16VmzPO10Nk4o0s0ZEsAbE=;
+        b=L5HWQ7i77HCMSkrt+9MBCEIdM82oyxiO56FPQ4V3yuINQD7Bb0RPXG52TTouiLOMxW
+         1SbxmWqaWiXG2jPJB0ZOZ/lXqPBmk3ybN0zcrvyRcDxZg35c4UuPA9mBfaTDL+WxtW2V
+         PqxIhB2Z9tjHnD+Yj/pOvGBl46PUNlhH77QoTB2LG6z6u2Ro1Uq8qWly+wGjKSYpkvdu
+         A3DITIXXAswEdW3GgsF4+ZG6hPQaOgxMhr4SFIbbCIDy64ZObuIypKVTGQPPImIeMI3S
+         X4rdl/yRlhDMjY9MUNwhpeBWde3RHKyElIZ4RLPeSr4zfVc+Epr5eAdvkNmg5W2ALqii
+         FPew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2eaJx/OyqQZZTAm5CsVFp16VmzPO10Nk4o0s0ZEsAbE=;
+        b=GpPws1sP2kra8nWWf7r9aKq6bLseC0pgOZK28zfwdbWPWXgQXneniUMyishwIb82VA
+         LDeyghuq+WWPJCPJvU8Sc5wp5ZLCgO7Oi8rN2ZuJObtP0pSnpk895GbrhlDwgY3mUWPI
+         fmsCsGi5BCLFnNEILq+EeNwQeNyfNR8mIM1hTOu2crP7ZapVzGeddO1MKZ6s5YCgwJpW
+         NkZuoprJiimeV1piIAo3hES9Ymi3PO2K14lYYzPR56oCIKTi3AbrQxBkcTELwqCdm56v
+         YpwAnabqJh4y+bmP/fuMevPe0PZkQeHmiP2CDOjQzl6Ju6YUKIcSZNDbbXkGdj9/201Q
+         HWqg==
+X-Gm-Message-State: APjAAAWXyYB4hAoVJZZ9ghXIKOy1MCLFU/2f5nB4yuU8NDA0mzgtRvCm
+        EOyIqJZhiYwK7hR1sGlO9uqo9KuI
+X-Google-Smtp-Source: APXvYqwLPxmgwfFTEd8ELrVAVxO3Sr1h1NF0s2EVJlAjvaMb778NDDAG/JFViNEb+c3Tu7tEFOTw2w==
+X-Received: by 2002:a2e:8593:: with SMTP id b19mr26008676lji.34.1571231789792;
+        Wed, 16 Oct 2019 06:16:29 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id m17sm9866003lje.0.2019.10.16.06.16.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 06:16:29 -0700 (PDT)
+Subject: Re: [PATCH v1 00/17] NVIDIA Tegra20 CPUFreq driver major update
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191016052716.yipztnpg7bcuzhfn@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8cf055a3-57fd-c275-9e74-a9fb5d284866@gmail.com>
+Date:   Wed, 16 Oct 2019 16:16:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191001233923.16514-1-aford173@gmail.com> <20191001233923.16514-5-aford173@gmail.com>
- <20191009233130.GA1002@bogus> <CAHCN7xLCvN1v00H10KUX625awz+nea6rhA_LYnftspjaZ+od-g@mail.gmail.com>
-In-Reply-To: <CAHCN7xLCvN1v00H10KUX625awz+nea6rhA_LYnftspjaZ+od-g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 16 Oct 2019 08:15:21 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJoPda6Oj14WTdm737Mydn+pzvdqkyCPry+zU7drheq=g@mail.gmail.com>
-Message-ID: <CAL_JsqJoPda6Oj14WTdm737Mydn+pzvdqkyCPry+zU7drheq=g@mail.gmail.com>
-Subject: Re: [PATCH V4 2/3] dt-bindings: Add Logic PD Type 28 display panel
-To:     Adam Ford <aford173@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191016052716.yipztnpg7bcuzhfn@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 6:04 PM Adam Ford <aford173@gmail.com> wrote:
->
-> On Wed, Oct 9, 2019 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 06:39:22PM -0500, Adam Ford wrote:
-> > > This patch adds documentation of device tree bindings for the WVGA panel
-> > > Logic PD Type 28 display.
-> > >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > > ---
-> > > V4:  Update per Rob H's suggestions and copy other panel yaml example from 5.4-rc1
-> > > V3:  Correct build errors from 'make dt_binding_check'
-> >
-> > The example still fails to build here.
->
-> I cannot replicate the build error on 5.4-RC3 at least for this
-> binding on V4 of the patch.  I get build error on other bindings.
->
-> $ make dt_binding_check ARCH=arm
-> scripts/kconfig/conf  --syncconfig Kconfig
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-> /home/aford/src/linux/Documentation/devicetree/bindings/net/adi,adin.yaml:
-> ignoring, error in schema 'adi,rx-internal-delay-ps'
-> warning: no schema found in file:
-> Documentation/devicetree/bindings/net/adi,adin.yaml
-> /home/aford/src/linux/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml:
-> ignoring, error in schema '0'
-> warning: no schema found in file:
-> Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
->   CHKDT   Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
->   ....
->   CHKDT   Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
->   CHKDT   Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
->   CHKDT   Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
->   CHKDT   Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
->  ...
->  CHKDT   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-ir.yaml
->   CHKDT   Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml:
-> $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match
-> actual filename
-> Documentation/devicetree/bindings/Makefile:12: recipe for target
-> 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts'
-> failed
-> make[1]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts]
-> Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
->
-> I took out some of the logs to make it less chatty.  I don't know
-> anything about yaml or what the expectations are, so if there is a
-> test beyond 'make dt_binding_check' please let me know.
+16.10.2019 08:27, Viresh Kumar пишет:
+> On 16-10-19, 00:16, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This series moves intermediate-clk handling from tegra20-cpufreq into
+>> tegra-clk driver, this allows us to switch to generic cpufreq-dt driver
+>> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+>> of the box. All boards need to adopt CPU OPPs in their device-trees in
+>> order to get cpufreq support. This series adds OPPs only to selective
+>> boards because there is assumption in a current device-trees that CPU
+>> voltage is set for 1GHz freq and this won't work for those CPUs that
+>> can go over 1GHz and thus require voltage regulators to be set up for
+>> voltage scaling support (CC'ed Marcel for Toradex boards). We could
+>> probably add delete-node for OPPs over 1GHz if there are not actively
+>> maintained boards.
+> 
+> How do you want to get these patches merged ? Can I just pick the cpufreq bits
+> alone ?
+> 
 
-Perhaps 'make -k' is needed because of the other failures. Or try on
-top of linux-next which should all be fixed.
+The cpufreq bits strictly depend on the clk patches and the regulators
+coupler/balancer series. Hence all patches in this series should collect
+acks from relevant maintainers and then Thierry will pick up the
+patchsets in a correct order via tegra tree, at least that's my vision.
 
-Rob
+Thierry, are you okay with that approach?
