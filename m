@@ -2,78 +2,177 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6D8FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA620FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCEC21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="l+GxzaXF"
+	by mail.kernel.org (Postfix) with ESMTP id 8646421835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394721AbfJPUYM (ORCPT
+        id S2437146AbfJPUZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:24:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49306 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388251AbfJPUYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:24:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=lp9sGSeBUfNCINz8D0KXuszYBQzAqsZQkv+K4LudJSs=; b=l+GxzaXFjS8l3ToLipq/WrGhgo
-        8vvhof4mQ7FXr+CAR85chuh6HDr9DMnMBjTDb1eTmX4fZ9vysDuZgTkA5SGMU7GoKLD5AhbLjPWYb
-        yV1LrfjlU0Zo0E10BjUkZs0FtGhiCZOT9eUBDaPhWb0PNQHYKhZ9PvGMLMhosMCtMYqs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iKpps-00017G-Bz; Wed, 16 Oct 2019 22:23:56 +0200
-Date:   Wed, 16 Oct 2019 22:23:56 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] dt-bindings: net: dsa: qca,ar9331 switch
- documentation
-Message-ID: <20191016202356.GM17013@lunn.ch>
-References: <20191014061549.3669-1-o.rempel@pengutronix.de>
- <20191014061549.3669-3-o.rempel@pengutronix.de>
+        Wed, 16 Oct 2019 16:25:44 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:55826 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437132AbfJPUZo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 16:25:44 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iKprY-0001x2-7E; Wed, 16 Oct 2019 20:25:40 +0000
+Date:   Wed, 16 Oct 2019 21:25:40 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] Convert filldir[64]() from __put_user() to
+ unsafe_put_user()
+Message-ID: <20191016202540.GQ26530@ZenIV.linux.org.uk>
+References: <CAHk-=wiAyZmsEp6oQQgHiuaDU0bLj=OVHSGV_OfvHRSXNPYABw@mail.gmail.com>
+ <CAHk-=wgOWxqwqCFuP_Bw=Hxxf9njeHJs0OLNGNc63peNd=kRqw@mail.gmail.com>
+ <20191010195504.GI26530@ZenIV.linux.org.uk>
+ <CAHk-=wgWRQo0m7TUCK4T_J-3Vqte+p-FWzvT3CB1jJHgX-KctA@mail.gmail.com>
+ <20191011001104.GJ26530@ZenIV.linux.org.uk>
+ <CAHk-=wgg3jzkk-jObm1FLVYGS8JCTiKppEnA00_QX7Wsm5ieLQ@mail.gmail.com>
+ <20191013181333.GK26530@ZenIV.linux.org.uk>
+ <CAHk-=wgrWGyACBM8N8KP7Pu_2VopuzM4A12yQz6Eo=X2Jpwzcw@mail.gmail.com>
+ <20191013191050.GL26530@ZenIV.linux.org.uk>
+ <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014061549.3669-3-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wjJNE9hOKuatqh6SFf4nd65LG4ZR3gQSgg+rjSpVxe89w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 08:15:47AM +0200, Oleksij Rempel wrote:
-> Atheros AR9331 has built-in 5 port switch. The switch can be configured
-> to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
-> ethernet controller or to be used directly by the switch over second ethernet
-> controller.
+On Sun, Oct 13, 2019 at 12:22:38PM -0700, Linus Torvalds wrote:
+> On Sun, Oct 13, 2019 at 12:10 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > No arguments re put_user_ex side of things...  Below is a completely
+> > untested patch for get_user_ex elimination (it seems to build, but that's
+> > it); in any case, I would really like to see comments from x86 folks
+> > before it goes anywhere.
+> 
+> Please don't do this:
+> 
+> > +       if (unlikely(__copy_from_user(&sc, usc, sizeof(sc))))
+> > +               goto Efault;
+> 
+> Why would you use __copy_from_user()? Just don't.
+> 
+> > +       if (unlikely(__copy_from_user(&v, user_vm86,
+> > +                       offsetof(struct vm86_struct, int_revectored))))
+> 
+> Same here.
+> 
+> There's no excuse for __copy_from_user().
 
-Hi Oleksij
+FWIW, callers of __copy_from_user() remaining in the generic code:
 
-How exactly is this phy sharing controlled? I did not see anything in
-the driver. Is there a mux we need to set?
+1) regset.h:user_regset_copyin().  Switch to copy_from_user(); the calling
+conventions of regset ->set() (as well as the method name) are atrocious,
+but there are too many instances to mix any work in that direction into
+this series.  Yes, nominally it's an inline, but IRL it's too large and
+has many callers in the same file(s), so any optimizations of inlining
+__copy_from_user() will be lost and there's more than enough work done
+there to make access_ok() a noise.  And in this case it doesn't pay
+to try and lift user_access_begin() into the callers - the work done
+between the calls is often too non-trivial to be done in such area.
+The same goes for other regset.h stuff; eventually we might want to
+try and come up with saner API, but that's a separate story.
 
-    Andrew
+2) default csum_partial_copy_from_user().  What we need to do is
+turn it into default csum_and_copy_from_user().  This
+#ifndef _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
+static inline
+__wsum csum_and_copy_from_user (const void __user *src, void *dst,
+                                      int len, __wsum sum, int *err_ptr)
+{
+        if (access_ok(src, len))
+                return csum_partial_copy_from_user(src, dst, len, sum, err_ptr);
+
+        if (len)
+                *err_ptr = -EFAULT;
+
+        return sum;
+}
+#endif
+in checksum.h is the only thing that calls that sucker and we can bloody
+well combine them and make the users of lib/checksum.h define
+_HAVE_ARCH_COPY_AND_CSUM_FROM_USER.  That puts us reasonably close
+to having _HAVE_ARCH_COPY_AND_CSUM_FROM_USER unconditional and in any
+case, __copy_from_user() in lib/checksum.h turns into copy_from_user().
+
+3) firewire ioctl_queue_iso().  Convert to copy_from_user(), lose the
+access_ok() before the loop.  Definitely not an unsafe_... situation
+(we call fw_iso_context_queue() after each chunk; _not_ something
+we want under user_access_begin()/user_access_end()) and it's really
+not worth trying to save on access_ok() checks there.
+
+4) pstore persistent_ram_update_user().  Obvious copy_from_user(); definitely
+lose access_ok() in the caller (persistent_ram_write_user()), along with
+the one in write_pmsg() (several calls back by the callchain).
+
+5) test_kasan: lose the function, lose the tests...
+
+6) drivers/scsi/sg.c nest: sg_read() ones are memdup_user() in disguise
+(i.e. fold with immediately preceding kmalloc()s).  sg_new_write() -
+fold with access_ok() into copy_from_user() (for both call sites).
+sg_write() - lose access_ok(), use copy_from_user() (both call sites)
+and get_user() (instead of the solitary __get_user() there).
+
+7) i915 ones are, frankly, terrifying.  Consider e.g. this one:
+                relocs = kvmalloc_array(size, 1, GFP_KERNEL);
+                if (!relocs) {
+                        err = -ENOMEM;
+                        goto err;
+                }
+
+                /* copy_from_user is limited to < 4GiB */
+                copied = 0;
+                do {
+                        unsigned int len =
+                                min_t(u64, BIT_ULL(31), size - copied);
+
+                        if (__copy_from_user((char *)relocs + copied,
+                                             (char __user *)urelocs + copied,
+                                             len))
+                                goto end;
+
+                        copied += len;
+                } while (copied < size);
+Is that for real?  Are they *really* trying to allocate and copy >2Gb of
+userland data?  That's eb_copy_relocations() and that crap is itself in
+a loop.  Sizes come from user-supplied data.  WTF?  It's some weird
+kmemdup lookalike and I'd rather heard from maintainers of that thing
+before doing anything with it.
+
+8) vhost_copy_from_user().  Need comments from mst - it's been a while since I crawled
+through that code and I'd need his ACK anyway.  The logics with positioning of
+access_ok() in there is non-trivial and I'm not sure how much of that serves
+as early input validation and how much can be taken out and replaced by use of
+place copy_from_user() and friends.
+
+9) KVM.  There I'm not sure that access_ok() would be the right thing to
+do.  kvm_is_error_hva() tends to serve as the range check in that and similar
+places; it's not the same situation as with NMI, but...
+
+And that's it - everything else is in arch/*.  Looking at arch/x86, we have
+	* insanity in math_emu (unchecked return value, for example)
+	* a bunch sigframe-related code.  Some want to use unsafe_...
+(or raw_...) variant, some should probably go for copy_from_user().
+FPU-related stuff is particularly interesting in that respect - there
+we have several inline functions nearby that contain nothing but
+stac + instruction + clac + exception handling.  And in quite a few
+cases it would've been cleaner to lift stac/clac into the callers, since
+they combine nicely.
+	* regset_tls_set(): use copy_from_user().
+	* one in kvm walk_addr_generic stuff.  If nothing else,
+that one smells like __get_user() - we seem to be copying a single
+PTE.  And again, it's using kvm_is_error_hva().
