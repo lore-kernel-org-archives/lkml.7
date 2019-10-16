@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2B8ECE59D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFE7ECE59E
 	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DA720873
+	by mail.kernel.org (Postfix) with ESMTP id 8534020872
 	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732979AbfJPHUM (ORCPT
+        id S2389616AbfJPHUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:20:12 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4166 "EHLO huawei.com"
+        Wed, 16 Oct 2019 03:20:21 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4174 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730832AbfJPHUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:20:11 -0400
+        id S1733012AbfJPHUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:20:16 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 83B3E8F779998ED6A93C;
+        by Forcepoint Email with ESMTP id AEEE3A785B089A540842;
         Wed, 16 Oct 2019 15:20:08 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 16 Oct 2019 15:19:59 +0800
+ 14.3.439.0; Wed, 16 Oct 2019 15:20:00 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 08/12] net: hns3: introduce ring_to_netdev() in enet module
-Date:   Wed, 16 Oct 2019 15:17:07 +0800
-Message-ID: <1571210231-29154-9-git-send-email-tanhuazhong@huawei.com>
+        Jian Shen <shenjian15@huawei.com>,
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 12/12] net: hns3: log and clear hardware error after reset complete
+Date:   Wed, 16 Oct 2019 15:17:11 +0800
+Message-ID: <1571210231-29154-13-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
 References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,115 +47,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-There are a few places that need to access the netdev of a ring
-through ring->tqp->handle->kinfo.netdev, and ring->tqp is a struct
-which both in enet and hclge modules, it is better to use the
-struct that is only used in enet module.
+When device is resetting, the CMDQ service may be stopped until
+reset completed. If a new RAS error occurs at this moment, it
+will no be able to clear the RAS source. This patch fixes it
+by clear the RAS source after reset complete.
 
-This patch adds the ring_to_netdev() to access the netdev of ring
-through ring->tqp_vector->napi.dev.
-
-Also, struct hns3_enet_ring is a frequently used in critical data
-path, so make it cacheline aligned as struct hns3_enet_tqp_vector.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 14 +++++++-------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  4 +++-
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index a0810b3..7ddeb9c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2481,7 +2481,7 @@ static int is_valid_clean_head(struct hns3_enet_ring *ring, int h)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 60aba81..a47e46e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -9798,6 +9798,9 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 		return ret;
+ 	}
  
- void hns3_clean_tx_ring(struct hns3_enet_ring *ring)
- {
--	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
-+	struct net_device *netdev = ring_to_netdev(ring);
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	struct netdev_queue *dev_queue;
- 	int bytes, pkts;
-@@ -2563,7 +2563,7 @@ static void hns3_nic_alloc_rx_buffers(struct hns3_enet_ring *ring,
- 				ring->stats.sw_err_cnt++;
- 				u64_stats_update_end(&ring->syncp);
- 
--				hns3_rl_err(ring->tqp_vector->napi.dev,
-+				hns3_rl_err(ring_to_netdev(ring),
- 					    "alloc rx buffer failed: %d\n",
- 					    ret);
- 				break;
-@@ -2672,7 +2672,7 @@ static int hns3_gro_complete(struct sk_buff *skb, u32 l234info)
- static void hns3_rx_checksum(struct hns3_enet_ring *ring, struct sk_buff *skb,
- 			     u32 l234info, u32 bd_base_info, u32 ol_info)
- {
--	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
-+	struct net_device *netdev = ring_to_netdev(ring);
- 	int l3_type, l4_type;
- 	int ol4_type;
- 
-@@ -2788,7 +2788,7 @@ static int hns3_alloc_skb(struct hns3_enet_ring *ring, unsigned int length,
- {
- #define HNS3_NEED_ADD_FRAG	1
- 	struct hns3_desc_cb *desc_cb = &ring->desc_cb[ring->next_to_clean];
--	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
-+	struct net_device *netdev = ring_to_netdev(ring);
- 	struct sk_buff *skb;
- 
- 	ring->skb = napi_alloc_skb(&ring->tqp_vector->napi, HNS3_RX_HEAD_SIZE);
-@@ -2869,7 +2869,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
- 			new_skb = napi_alloc_skb(&ring->tqp_vector->napi,
- 						 HNS3_RX_HEAD_SIZE);
- 			if (unlikely(!new_skb)) {
--				hns3_rl_err(ring->tqp_vector->napi.dev,
-+				hns3_rl_err(ring_to_netdev(ring),
- 					    "alloc rx fraglist skb fail\n");
- 				return -ENXIO;
- 			}
-@@ -2945,7 +2945,7 @@ static void hns3_set_rx_skb_rss_type(struct hns3_enet_ring *ring,
- 
- static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb)
- {
--	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
-+	struct net_device *netdev = ring_to_netdev(ring);
- 	enum hns3_pkt_l2t_type l2_frame_type;
- 	u32 bd_base_info, l234info, ol_info;
- 	struct hns3_desc *desc;
-@@ -4227,7 +4227,7 @@ static int hns3_clear_rx_ring(struct hns3_enet_ring *ring)
- 				/* if alloc new buffer fail, exit directly
- 				 * and reclear in up flow.
- 				 */
--				netdev_warn(ring->tqp->handle->kinfo.netdev,
-+				netdev_warn(ring_to_netdev(ring),
- 					    "reserve buffer map failed, ret = %d\n",
- 					    ret);
- 				return ret;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 3322284..0725dc5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -435,7 +435,7 @@ struct hns3_enet_ring {
- 	int pending_buf;
- 	struct sk_buff *skb;
- 	struct sk_buff *tail_skb;
--};
-+} ____cacheline_internodealigned_in_smp;
- 
- enum hns3_flow_level_range {
- 	HNS3_FLOW_LOW = 0,
-@@ -607,6 +607,8 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
- 
- #define ring_to_dev(ring) ((ring)->dev)
- 
-+#define ring_to_netdev(ring)	((ring)->tqp_vector->napi.dev)
++	/* Log and clear the hw errors those already occurred */
++	hclge_handle_all_hns_hw_errors(ae_dev);
 +
- #define ring_to_dma_dir(ring) (HNAE3_IS_TX_RING(ring) ? \
- 	DMA_TO_DEVICE : DMA_FROM_DEVICE)
- 
+ 	/* Re-enable the hw error interrupts because
+ 	 * the interrupts get disabled on global reset.
+ 	 */
 -- 
 2.7.4
 
