@@ -2,236 +2,178 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AD1ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B68ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77522168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B637E2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zYuc2eZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391876AbfJPJG4 (ORCPT
+        id S2391864AbfJPJIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:06:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44442 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbfJPJG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:06:56 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4D41309B142;
-        Wed, 16 Oct 2019 09:06:55 +0000 (UTC)
-Received: from [10.36.117.237] (ovpn-117-237.ams2.redhat.com [10.36.117.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7492360852;
-        Wed, 16 Oct 2019 09:06:54 +0000 (UTC)
-Subject: Re: [PATCH v1] drivers/base/memory.c: Drop the mem_sysfs_mutex
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20190925082621.4927-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <0977bbdc-b862-acd6-3f55-bd04fd42215a@redhat.com>
-Date:   Wed, 16 Oct 2019 11:06:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 16 Oct 2019 05:08:31 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:37039 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730579AbfJPJIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:08:30 -0400
+Received: by mail-vs1-f68.google.com with SMTP id p13so15114034vsr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NdVzA6qPVlAmhSw+AF0RzsUEa7rtQhimXzVFQeLQmeY=;
+        b=zYuc2eZ9oGLA1uBehnPVw3qQghPYysUXj+5+wQkhQ8Q0vhUZYyls8WZWwVTpZaz/f0
+         xx8XuURCVETsEjW7RrxU1lVytuaF9SDoyRLW/7wZZGtdLI8npkck9Gwy33hWjJsm9t8V
+         HNuJYmlMK0sCHnbt1jceoZARW15VMQkafTKURVi4D+6C9YBX2PowbgGNj8IZdSgFQXQy
+         /kELXCPaXG+99tz2Wh2H+ep7a8hf4uHc7CHJoWN2CoezsBwtXMFbvWs0xSs7WBraLDdG
+         sXnrjlzPIDxhfFwhCBi1hoys4BDH/gpaAv4sVVTUG00b5u/K0RO0PDYFLJ6I94sGrokH
+         L3pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NdVzA6qPVlAmhSw+AF0RzsUEa7rtQhimXzVFQeLQmeY=;
+        b=Xzdg8OCmkKq9K3QQW40CeNkEpE6EmBPzg//rrTOjgIO/472yj0U8g9Dd9GhowZ+tXk
+         g1SIAmjloZ2ogttMwsOpF35IljimIYBG8W+OFpwR0TJJKheon9c0Fl4sWpCQxNpO4zCW
+         QgyuU2SVpMon+oln63kEUzfHqeduw6T6joW206FJVsOQxpL1IECJqyELNeqKEfBxv2Nw
+         M/smh4iZ9VWsMYO1Y0u8EkUoxEpr26c3iIsKiPZuAHzVRemMks35/SpJ/065v42mo6Oy
+         MsMKlxyaXAUyEjQo+VMzdcgIbxrD/5FsDEUuQPvLFSkuio3LjwrRBTEDAyZwac4Nw5k1
+         kzIw==
+X-Gm-Message-State: APjAAAVd/MlpuHVlrs9S0LwUfM6ifKonNcfwFD9pA2TSbHKPol5Qq8tq
+        KPoxG2mprW7JSCA34nWwI6wkqnoYOMvnckicz1z0Rw==
+X-Google-Smtp-Source: APXvYqzUUdjO1L90uCeShcgC6GevLXtyLsvHvDJTSP9JdgM4/IYVfwW7FFgabsmOFF/VTLlGKr6pTf/ZFohS3hAj90I=
+X-Received: by 2002:a67:edce:: with SMTP id e14mr16990631vsp.182.1571216909051;
+ Wed, 16 Oct 2019 02:08:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190925082621.4927-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 16 Oct 2019 09:06:55 +0000 (UTC)
+References: <20191004090114.30694-1-glaroque@baylibre.com> <20191004090114.30694-5-glaroque@baylibre.com>
+In-Reply-To: <20191004090114.30694-5-glaroque@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 16 Oct 2019 14:38:18 +0530
+Message-ID: <CAHLCerN+SCuWZJw4OgR7KuDWpkXf5xo-1q=pe0axH2W=DffUXw@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] arm64: dts: meson: g12: Add minimal thermal zone
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.09.19 10:26, David Hildenbrand wrote:
-> The mem_sysfs_mutex isn't really helpful. Also, it's not really clear what
-> the mutex protects at all.
-> 
-> The device lists of the memory subsystem are protected separately. We don't
-> need that mutex when looking up. creating, or removing independent
-> devices. find_memory_block_by_id() will perform locking on its own and
-> grab a reference of the returned device.
-> 
-> At the time memory_dev_init() is called, we cannot have concurrent
-> hot(un)plug operations yet - we're still fairly early during boot. We
-> don't need any locking.
-> 
-> The creation/removal of memory block devices should be protected
-> on a higher level - especially using the device hotplug lock to avoid
-> documented issues (see Documentation/core-api/memory-hotplug.rst) - or
-> if that is reworked, using similar locking.
-> 
-> Protecting in the context of these functions only doesn't really make
-> sense. Especially, if we would have a situation where the same memory
-> blocks are created/deleted at the same time, there is something horribly
-> going wrong (imagining adding/removing a DIMM at the same time from two
-> call paths) - after the functions succeeded something else in the
-> callers would blow up (e.g., create_memory_block_devices() succeeded but
-> there are no memory block devices anymore).
-> 
-> All relevant call paths (except when adding memory early during boot
-> via ACPI, which is now documented) hold the device hotplug lock when
-> adding memory, and when removing memory. Let's document that instead.
-> 
-> Add a simple safety net to create_memory_block_devices() in case we
-> would actually remove memory blocks while adding them, so we'll never
-> dereference a NULL pointer. Simplify memory_dev_init() now that the
-> lock is gone.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Fri, Oct 4, 2019 at 2:31 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> Add minimal thermal zone for two temperature sensor
+> One is located close to the DDR and the other one is
+> located close to the PLLs (between the CPU and GPU)
+>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
 > ---
-> 
-> Tested using my usual x86-64 DIMM based hot(un)plug setup.
-> 
-> ---
->   drivers/base/memory.c | 33 ++++++++++++++-------------------
->   1 file changed, 14 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 6bea4f3f8040..634aab8e1e19 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -19,15 +19,12 @@
->   #include <linux/memory.h>
->   #include <linux/memory_hotplug.h>
->   #include <linux/mm.h>
-> -#include <linux/mutex.h>
->   #include <linux/stat.h>
->   #include <linux/slab.h>
->   
->   #include <linux/atomic.h>
->   #include <linux/uaccess.h>
->   
-> -static DEFINE_MUTEX(mem_sysfs_mutex);
-> -
->   #define MEMORY_CLASS_NAME	"memory"
->   
->   #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
-> @@ -702,6 +699,8 @@ static void unregister_memory(struct memory_block *memory)
->    * Create memory block devices for the given memory area. Start and size
->    * have to be aligned to memory block granularity. Memory block devices
->    * will be initialized as offline.
-> + *
-> + * Called under device_hotplug_lock.
->    */
->   int create_memory_block_devices(unsigned long start, unsigned long size)
->   {
-> @@ -715,7 +714,6 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
->   			 !IS_ALIGNED(size, memory_block_size_bytes())))
->   		return -EINVAL;
->   
-> -	mutex_lock(&mem_sysfs_mutex);
->   	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
->   		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
->   		if (ret)
-> @@ -727,11 +725,12 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
->   		for (block_id = start_block_id; block_id != end_block_id;
->   		     block_id++) {
->   			mem = find_memory_block_by_id(block_id);
-> +			if (WARN_ON_ONCE(!mem))
-> +				continue;
->   			mem->section_count = 0;
->   			unregister_memory(mem);
->   		}
->   	}
-> -	mutex_unlock(&mem_sysfs_mutex);
->   	return ret;
->   }
->   
-> @@ -739,6 +738,8 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
->    * Remove memory block devices for the given memory area. Start and size
->    * have to be aligned to memory block granularity. Memory block devices
->    * have to be offline.
-> + *
-> + * Called under device_hotplug_lock.
->    */
->   void remove_memory_block_devices(unsigned long start, unsigned long size)
->   {
-> @@ -751,7 +752,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
->   			 !IS_ALIGNED(size, memory_block_size_bytes())))
->   		return;
->   
-> -	mutex_lock(&mem_sysfs_mutex);
->   	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
->   		mem = find_memory_block_by_id(block_id);
->   		if (WARN_ON_ONCE(!mem))
-> @@ -760,7 +760,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
->   		unregister_memory_block_under_nodes(mem);
->   		unregister_memory(mem);
->   	}
-> -	mutex_unlock(&mem_sysfs_mutex);
->   }
->   
->   /* return true if the memory block is offlined, otherwise, return false */
-> @@ -794,12 +793,13 @@ static const struct attribute_group *memory_root_attr_groups[] = {
->   };
->   
->   /*
-> - * Initialize the sysfs support for memory devices...
-> + * Initialize the sysfs support for memory devices. At the time this function
-> + * is called, we cannot have concurrent creation/deletion of memory block
-> + * devices, the device_hotplug_lock is not needed.
->    */
->   void __init memory_dev_init(void)
->   {
->   	int ret;
-> -	int err;
->   	unsigned long block_sz, nr;
->   
->   	/* Validate the configured memory block size */
-> @@ -810,24 +810,19 @@ void __init memory_dev_init(void)
->   
->   	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
->   	if (ret)
-> -		goto out;
-> +		panic("%s() failed to register subsystem: %d\n", __func__, ret);
->   
->   	/*
->   	 * Create entries for memory sections that were found
->   	 * during boot and have been initialized
->   	 */
-> -	mutex_lock(&mem_sysfs_mutex);
->   	for (nr = 0; nr <= __highest_present_section_nr;
->   	     nr += sections_per_block) {
-> -		err = add_memory_block(nr);
-> -		if (!ret)
-> -			ret = err;
-> +		ret = add_memory_block(nr);
-> +		if (ret)
-> +			panic("%s() failed to add memory block: %d\n", __func__,
-> +			      ret);
->   	}
-> -	mutex_unlock(&mem_sysfs_mutex);
-> -
-> -out:
-> -	if (ret)
-> -		panic("%s() failed: %d\n", __func__, ret);
->   }
->   
->   /**
-> 
-
-Ping,
-
-this lock does neither protect any data structure, nor is it helpful to 
-guarantee any ordering.
-
--- 
-
-Thanks,
-
-David / dhildenb
+>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> index 0660d9ef6a86..a98c16e163c2 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+>  #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>
+>  / {
+>         interrupt-parent = <&gic>;
+> @@ -94,6 +95,61 @@
+>                 #size-cells = <2>;
+>                 ranges;
+>
+> +               thermal-zones {
+> +                       cpu_thermal: cpu-thermal {
+> +                               polling-delay = <1000>;
+> +                               polling-delay-passive = <100>;
+> +                               thermal-sensors = <&cpu_temp>;
+> +
+> +                               trips {
+> +                                       cpu_passive: cpu-passive {
+> +                                               temperature = <85000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "passive";
+> +                                       };
+> +
+> +                                       cpu_hot: cpu-hot {
+> +                                               temperature = <95000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "hot";
+> +                                       };
+> +
+> +                                       cpu_critical: cpu-critical {
+> +                                               temperature = <110000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "critical";
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       ddr_thermal: ddr-thermal {
+> +                               polling-delay = <1000>;
+> +                               polling-delay-passive = <100>;
+> +                               thermal-sensors = <&ddr_temp>;
+> +
+> +                               trips {
+> +                                       ddr_passive: ddr-passive {
+> +                                               temperature = <85000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "passive";
+> +                                       };
+> +
+> +                                       ddr_critical: ddr-critical {
+> +                                               temperature = <110000>; /* millicelsius */
+> +                                               hysteresis = <2000>; /* millicelsius */
+> +                                               type = "critical";
+> +                                       };
+> +                               };
+> +
+> +                               cooling-maps {
+> +                                       map {
+> +                                               trip = <&ddr_passive>;
+> +                                               cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+>                 ethmac: ethernet@ff3f0000 {
+>                         compatible = "amlogic,meson-axg-dwmac",
+>                                      "snps,dwmac-3.70a",
+> @@ -2412,6 +2468,7 @@
+>                         assigned-clock-rates = <0>, /* Do Nothing */
+>                                                <800000000>,
+>                                                <0>; /* Do Nothing */
+> +                       #cooling-cells = <2>;
+>                 };
+>         };
+>
+> --
+> 2.17.1
+>
