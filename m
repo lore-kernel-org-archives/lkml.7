@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF24CFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F244BECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B810E218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED6A218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7ysRnFJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GlwUaK99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394522AbfJPThu (ORCPT
+        id S2394512AbfJPThs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:37:50 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38283 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394488AbfJPThk (ORCPT
+        Wed, 16 Oct 2019 15:37:48 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33433 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394493AbfJPThk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 15:37:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p4so3368435qkf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:37:38 -0700 (PDT)
+Received: by mail-qk1-f193.google.com with SMTP id x134so23941088qkb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=n/EfPfS/rzayptMKHYVpYurUSNAbaOippVZDRNzUE4k=;
-        b=F7ysRnFJGgjboY0XKIl3CtLjZJFKjN3OJG4bCNjVjWav0TojjT7TlmD3PaAM6iQR9u
-         GcS1Z5nBswY2DKOKvyJO/RvfLfj7i0rWvBNgLB88JfwDCy5oYNpt7b3atBSY+sipZjr/
-         bF5X2OMqJwz/Ou9jLpokuEH3QARY+FUTC2MiGwgqv9Gde2DlexNMDXUSZgQdneRlaFB6
-         lqGBlMzHG+5HX+EN8CN0rrN6Hfi+wrfQBnR00tko+t/VJLtGGAEm6fvdThSOJikYa+wi
-         /vD0th1bPwVwJYlguPu+7gbN0zL9mEjngSxc6XxE+EeeqafD4MbtcpRxcc50fYQdkQNM
-         iyfg==
+        bh=97s95T4wB8D9WrZ0/COnoxS/a+SRIAWB8dyFC3vn+tQ=;
+        b=GlwUaK9975uKLB3Il8iCJWGw/WsurZbpXrfmvB0+cOiSlTw33tqB9UabOx9UJXv+Py
+         Ysh/dTg6ZIn4vamzHcJM6xAi+ICquA2136RhPwyUOL8hSeVjsNtkt7Sl7oRNq6Xpm7OZ
+         fsofHsRW4JP2sDrS9ml6JUy5xcCUNdSnzWE+RwqfZYdptSJEF9AvxmqycZAFKSflbzNd
+         /HKCAjlNMVxg1QsA7M4yAJyT0hrPGZ1lc89+aXpqKYp7sJ/p7JNvrSqYz7DKG3yclS6O
+         YNjQ6KcDd7F1Yxc0kARpql5np+oJ3Nj+EhLex92Qsd2OkJm1dXy7GUXDMMDIuH2X3Wdq
+         jfxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=n/EfPfS/rzayptMKHYVpYurUSNAbaOippVZDRNzUE4k=;
-        b=edV+2zNH61KcN7C5nxJKLJH7JyZMmh+hGmp+nqeE2jrm1N9t1MIEdoxCgkX73L3cvr
-         lbMmmfHdv12DRT6DbLdD1kPFLos2TGD4zYaHSK/hH5YKiG+zUDppQqw3NVG1Zn6vD+Fr
-         xcG/YZQF8/1g314+/9KJ9K940XIUDvsVYJUqyehWupcTPlrqbETYplhA9LOf0KrDmC6Y
-         6E8UdBMI3qdQ9Zi14WsjuS/ANC7XqVjssXTAfxUEgEW+yJpxyPS89NfuInUWAThTSDnb
-         Zz1cldLg5gCT7mS39rIDor83NDZ7ek07X4nkY7cwpV2pNT9Hw4+aVe4+lBQBP8uWL+v3
-         ULXw==
-X-Gm-Message-State: APjAAAV5HmNp6Q3LdslYSZEQ2lqwWp+ewb9IlfUIL2JbuOvcpe6h5Iy8
-        sxPKRgkbx+/ypJf/C92PAmmRTg==
-X-Google-Smtp-Source: APXvYqysYd7L9p+e4+IwwD6T7cSHsFrZy5H/RVDaOTydJlo6DwCvGscuYB6HjYK4z+zLYTb2qhRraA==
-X-Received: by 2002:a37:907:: with SMTP id 7mr43233321qkj.129.1571254657726;
-        Wed, 16 Oct 2019 12:37:37 -0700 (PDT)
+        bh=97s95T4wB8D9WrZ0/COnoxS/a+SRIAWB8dyFC3vn+tQ=;
+        b=MmGZrowbhOPSdpKrXyubprHDtcjPgsbxXt06nk8XlqnB0Fb6nGKX4WXYRcgiT2y05W
+         4EfAzTwy0HFFz9ONTc2vURHYQM3aA4WO/ZLwJEIESmYcZl+nZhSgLEXSLzd4ZegjtOnw
+         M3gFARLxspmaqRs4QzkqFSlJCqD44n8kxTox7hjTcuHBxp7GtrhFwbuDBcb6GkTg205K
+         D14qcDNV3habtHewQdf69oU+t6U2bwzZwb5BRFQt0R3Pl3ahIYiCMkra9/xTZIQrS97C
+         mBeuKnYA7C5prXl1S33ef05coYAqPiHeByhKQZ09PbAsv/FcyDYN1nMXw4REhfnRGsHC
+         Vucg==
+X-Gm-Message-State: APjAAAU/CO9A7GZqx3TMhJrOguv9stfIEPFaGKCk6MSTqWwl1rREcLdm
+        WTWOkyFxe5U46oMDkuPmYEtEfg==
+X-Google-Smtp-Source: APXvYqxix4EGuSLyW4lz+Vd5S9/hkoP/Kwx8aDCIGHmO8XLmv+D/JG/TETbJaTMwknuMZ1ioIcVHig==
+X-Received: by 2002:a37:4146:: with SMTP id o67mr28594780qka.23.1571254659370;
+        Wed, 16 Oct 2019 12:37:39 -0700 (PDT)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id 54sm16246030qts.75.2019.10.16.12.37.36
+        by smtp.googlemail.com with ESMTPSA id 54sm16246030qts.75.2019.10.16.12.37.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 16 Oct 2019 12:37:37 -0700 (PDT)
+        Wed, 16 Oct 2019 12:37:38 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -63,9 +63,9 @@ Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
         rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power controller binding to describe thermal warming device
-Date:   Wed, 16 Oct 2019 15:37:20 -0400
-Message-Id: <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
+Subject: [PATCH v3 7/7] arm64: dts: qcom: Add mx power domain as thermal warming device.
+Date:   Wed, 16 Oct 2019 15:37:21 -0400
+Message-Id: <1571254641-13626-8-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
 References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
@@ -74,35 +74,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RPMh power controller hosts mx domain that can be used as thermal
-warming device. Add a sub-node to specify this.
+RPMh hosts mx power domain that can be used to warm up the SoC.
+Add sub-node to rpmhpd node for mx to be recognized
+as thermal warming device on sdm845.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
- Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-index eb35b22..fff695d 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-@@ -18,6 +18,16 @@ Required Properties:
- Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
- various OPPs for different platforms as well as Power domain indexes
- 
-+= SUBNODES
-+RPMh alsp hosts power domains that can behave as thermal warming device.
-+These are expressed as subnodes of the RPMh. The name of the node is used
-+to identify the power domain and must therefor be "mx".
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 0222f48..0671c8a 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3788,6 +3788,11 @@
+ 						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+ 					};
+ 				};
 +
-+- #cooling-cells:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: must be 2
-+
- Example: rpmh power domain controller and OPP table
++				mx_cdev: mx {
++					#cooling-cells = <2>;
++					.name = "mx";
++				};
+ 			};
  
- #include <dt-bindings/power/qcom-rpmhpd.h>
+ 			rsc_hlos: interconnect {
 -- 
 2.1.4
 
