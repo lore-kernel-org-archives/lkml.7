@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8B5FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F44ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28C92168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3B22168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264581;
-	bh=z7e3b64ZxZUuiZOLYpXZAucDMCG1LD6KLGmUQ5zSqqs=;
+	s=default; t=1571264586;
+	bh=h9SQcFept3pB+xkQBM+FRgICSsNP72okiwEZoRRoA3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmdMEsHz6CrldLkTpd80hOGKVDeq+GvU0BuXukLlC01lDh7NwyCQWOXtVmFwmjAWy
-	 0WByUtHh67aQH0+YvE/qLsnx2fr6PocVvv2peUddLhCcCXVN4POr8vOTdhVlR9a9mx
-	 8wzkA2d8Pwklj90IQpD2LUIRc38ERxShGrNF15z0=
+	b=Nlu0/9DkGX5S2l/iAufzFBL41rVGpwAf/CJ9vyb59Uz4ECndDRtjVsl/eH9t5F7lu
+	 kIowYwtx5pVSXyyhEIcOgV0x9HsWAYoGRUZnhRr19fjAMweCt4nXcdqczXJ6XHlQwj
+	 7Om0P3tgpB/aWMHqtOxxP3WWYKQpZiHVb+WM4tPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437497AbfJPWW7 (ORCPT
+        id S2439406AbfJPWXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41678 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394818AbfJPVxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:05 -0400
+        id S2394810AbfJPVxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:04 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39EFA20872;
-        Wed, 16 Oct 2019 21:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2310621925;
+        Wed, 16 Oct 2019 21:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262785;
-        bh=z7e3b64ZxZUuiZOLYpXZAucDMCG1LD6KLGmUQ5zSqqs=;
+        s=default; t=1571262784;
+        bh=h9SQcFept3pB+xkQBM+FRgICSsNP72okiwEZoRRoA3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUNe/wgxdst/LLoscWWLkAAs56Zj+erdjHSIoxKpsTwV50v28U6xFM3mT8mu/lv9q
-         +iYSQlEL38teYFRV3Nu+uaPKCcmvg7DHex0wD9ZNq2AcdqnAP1oElNlVuU/QUL/3tp
-         iZtDA6nXFPe2A2vRhGN4KmQU2Mopm7QeydhdYXdk=
+        b=RoSyf2cHOhskonkMEpQp0CBmYEbYJ93PRTFprwGFeRu2Z4cr1Lcd//s+4lSsDS5zY
+         G5wHUuGNq6C+7xlDBDzaAgj9JefqvW+iTlb+2FbK+78YheTkh/OM1mHx9FZCSsTRv9
+         Kmhueb5L2wvdZh1NSyPHjgLL5XSIT9BxdeOqJHNE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 26/79] nl80211: validate beacon head
-Date:   Wed, 16 Oct 2019 14:50:01 -0700
-Message-Id: <20191016214754.046642225@linuxfoundation.org>
+        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 25/79] cfg80211: Use const more consistently in for_each_element macros
+Date:   Wed, 16 Oct 2019 14:50:00 -0700
+Message-Id: <20191016214753.108991885@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -58,79 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Jouni Malinen <j@w1.fi>
 
-commit f88eb7c0d002a67ef31aeb7850b42ff69abc46dc upstream.
+commit 7388afe09143210f555bdd6c75035e9acc1fab96 upstream.
 
-We currently don't validate the beacon head, i.e. the header,
-fixed part and elements that are to go in front of the TIM
-element. This means that the variable elements there can be
-malformed, e.g. have a length exceeding the buffer size, but
-most downstream code from this assumes that this has already
-been checked.
+Enforce the first argument to be a correct type of a pointer to struct
+element and avoid unnecessary typecasts from const to non-const pointers
+(the change in validate_ie_attr() is needed to make this part work). In
+addition, avoid signed/unsigned comparison within for_each_element() and
+mark struct element packed just in case.
 
-Add the necessary checks to the netlink policy.
-
-Cc: stable@vger.kernel.org
-Fixes: ed1b6cc7f80f ("cfg80211/nl80211: add beacon settings")
-Link: https://lore.kernel.org/r/1569009255-I7ac7fbe9436e9d8733439eab8acbbd35e55c74ef@changeid
+Signed-off-by: Jouni Malinen <j@w1.fi>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |   35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ include/linux/ieee80211.h |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -210,6 +210,36 @@ cfg80211_get_dev_from_info(struct net *n
- 	return __cfg80211_rdev_from_attrs(netns, info->attrs);
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -2554,16 +2554,16 @@ struct element {
+ 	u8 id;
+ 	u8 datalen;
+ 	u8 data[];
+-};
++} __packed;
+ 
+ /* element iteration helpers */
+-#define for_each_element(element, _data, _datalen)			\
+-	for (element = (void *)(_data);					\
+-	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
+-		sizeof(*element) &&					\
+-	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
+-		sizeof(*element) + element->datalen;			\
+-	     element = (void *)(element->data + element->datalen))
++#define for_each_element(_elem, _data, _datalen)			\
++	for (_elem = (const struct element *)(_data);			\
++	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
++		(int)sizeof(*_elem) &&					\
++	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
++		(int)sizeof(*_elem) + _elem->datalen;			\
++	     _elem = (const struct element *)(_elem->data + _elem->datalen))
+ 
+ #define for_each_element_id(element, _id, data, datalen)		\
+ 	for_each_element(element, data, datalen)			\
+@@ -2600,7 +2600,7 @@ struct element {
+ static inline bool for_each_element_completed(const struct element *element,
+ 					      const void *data, size_t datalen)
+ {
+-	return (u8 *)element == (u8 *)data + datalen;
++	return (const u8 *)element == (const u8 *)data + datalen;
  }
  
-+static int validate_beacon_head(const struct nlattr *attr)
-+{
-+	const u8 *data = nla_data(attr);
-+	unsigned int len = nla_len(attr);
-+	const struct element *elem;
-+	const struct ieee80211_mgmt *mgmt = (void *)data;
-+	unsigned int fixedlen = offsetof(struct ieee80211_mgmt,
-+					 u.beacon.variable);
-+
-+	if (len < fixedlen)
-+		goto err;
-+
-+	if (ieee80211_hdrlen(mgmt->frame_control) !=
-+	    offsetof(struct ieee80211_mgmt, u.beacon))
-+		goto err;
-+
-+	data += fixedlen;
-+	len -= fixedlen;
-+
-+	for_each_element(elem, data, len) {
-+		/* nothing */
-+	}
-+
-+	if (for_each_element_completed(elem, data, len))
-+		return 0;
-+
-+err:
-+	return -EINVAL;
-+}
-+
- /* policy for the attributes */
- static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
- 	[NL80211_ATTR_WIPHY] = { .type = NLA_U32 },
-@@ -3214,6 +3244,11 @@ static int nl80211_parse_beacon(struct n
- 	memset(bcn, 0, sizeof(*bcn));
- 
- 	if (attrs[NL80211_ATTR_BEACON_HEAD]) {
-+		int ret = validate_beacon_head(attrs[NL80211_ATTR_BEACON_HEAD]);
-+
-+		if (ret)
-+			return ret;
-+
- 		bcn->head = nla_data(attrs[NL80211_ATTR_BEACON_HEAD]);
- 		bcn->head_len = nla_len(attrs[NL80211_ATTR_BEACON_HEAD]);
- 		if (!bcn->head_len)
+ #endif /* LINUX_IEEE80211_H */
 
 
