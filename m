@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1DAFA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A8FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86C021928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70822168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263716;
-	bh=q1wAHGpEpuMOW0RNo+VIIgY/Vr19O8NYM/TfsXkvQaU=;
+	s=default; t=1571263722;
+	bh=nDFW/KXTTRLxhK+S/6xxs6fJH57zdvFinbc4C0dY+u8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nm7hUOVV61msAPeTovs90lgchRi1gTnEARNtSQRfoOSWK/UQpt/pv0HBjxa6zFbAo
-	 He8isYjq/H8ciU2Wj9uvxRSSIWnWp4ZvI0pua4bIpCputrV7pyyYGMg0SCs/BO8Ck4
-	 scXX4DE9remk/dNLA6ZdosAoxAviKePu+uDzi1+A=
+	b=rkzRlgGuDJgpuZeOR/oXqvT0/HXvtxsLwQI3zx8sznmI0D6p94ICVc0+H5whglizP
+	 KJSfjDnovvTWJDwf7T6keanL3xmggj4C28PGKJnuhM4k+omVPmn66SYf1gFu39Hl7h
+	 BUP7PVpOZZXwTEsGz/vxib3yQDor3yh4qw2OpSMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392656AbfJPWIc (ORCPT
+        id S2438037AbfJPV5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:08:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50714 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406682AbfJPV5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:47 -0400
+        id S2437946AbfJPV5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:00 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D829F218DE;
-        Wed, 16 Oct 2019 21:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35D9321928;
+        Wed, 16 Oct 2019 21:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263067;
-        bh=q1wAHGpEpuMOW0RNo+VIIgY/Vr19O8NYM/TfsXkvQaU=;
+        s=default; t=1571263019;
+        bh=nDFW/KXTTRLxhK+S/6xxs6fJH57zdvFinbc4C0dY+u8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K7EBXigVtPviw025NI8eJ6oLLWsuaqgwqMuXFJ9iM944K5l1YzAmkMMtFVPezM1LM
-         qlJqPTYneF51O5oNNTHO+xE5eb60WOlBTlDj/aRilMN6xgsbeiURLXpwMiEZjKImwj
-         kZXiDtOJW9VLARN3JXXIpdtBF3XLU2u5EYqupca8=
+        b=zcg9mfPg/PFnigQO0Y6vLrT4ZZyHXxyNUxwE7NKqV3bsMkowezEqsTCLSG8ZDatDj
+         zHoVkVokIS05g8nOusjgEAwmg2pq/dB7jnYl3SWxl/IQP5gKrK4MOPHySgzmBPNrzx
+         8yvwuUlyFdovW6+bZM7N0AobDwyReof7SupKpoqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meng Zhuo <mengzhuo1203@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>
-Subject: [PATCH 4.19 67/81] MIPS: elf_hwcap: Export userspace ASEs
-Date:   Wed, 16 Oct 2019 14:51:18 -0700
-Message-Id: <20191016214845.704568025@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 20/81] USB: iowarrior: fix use-after-free after driver unbind
+Date:   Wed, 16 Oct 2019 14:50:31 -0700
+Message-Id: <20191016214825.689061824@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,89 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 38dffe1e4dde1d3174fdce09d67370412843ebb5 upstream.
+commit b5f8d46867ca233d773408ffbe691a8062ed718f upstream.
 
-A Golang developer reported MIPS hwcap isn't reflecting instructions
-that the processor actually supported so programs can't apply optimized
-code at runtime.
+Make sure to stop also the asynchronous write URBs on disconnect() to
+avoid use-after-free in the completion handler after driver unbind.
 
-Thus we export the ASEs that can be used in userspace programs.
-
-Reported-by: Meng Zhuo <mengzhuo1203@gmail.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: 946b960d13c1 ("USB: add driver for iowarrior devices.")
+Cc: stable <stable@vger.kernel.org>	# 2.6.21: 51a2f077c44e ("USB: introduce usb_anchor")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009104846.5925-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/uapi/asm/hwcap.h |   11 +++++++++++
- arch/mips/kernel/cpu-probe.c       |   33 +++++++++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/usb/misc/iowarrior.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/mips/include/uapi/asm/hwcap.h
-+++ b/arch/mips/include/uapi/asm/hwcap.h
-@@ -6,5 +6,16 @@
- #define HWCAP_MIPS_R6		(1 << 0)
- #define HWCAP_MIPS_MSA		(1 << 1)
- #define HWCAP_MIPS_CRC32	(1 << 2)
-+#define HWCAP_MIPS_MIPS16	(1 << 3)
-+#define HWCAP_MIPS_MDMX     (1 << 4)
-+#define HWCAP_MIPS_MIPS3D   (1 << 5)
-+#define HWCAP_MIPS_SMARTMIPS (1 << 6)
-+#define HWCAP_MIPS_DSP      (1 << 7)
-+#define HWCAP_MIPS_DSP2     (1 << 8)
-+#define HWCAP_MIPS_DSP3     (1 << 9)
-+#define HWCAP_MIPS_MIPS16E2 (1 << 10)
-+#define HWCAP_LOONGSON_MMI  (1 << 11)
-+#define HWCAP_LOONGSON_EXT  (1 << 12)
-+#define HWCAP_LOONGSON_EXT2 (1 << 13)
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -87,6 +87,7 @@ struct iowarrior {
+ 	char chip_serial[9];		/* the serial number string of the chip connected */
+ 	int report_size;		/* number of bytes in a report */
+ 	u16 product_id;
++	struct usb_anchor submitted;
+ };
  
- #endif /* _UAPI_ASM_HWCAP_H */
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -2105,6 +2105,39 @@ void cpu_probe(void)
- 		elf_hwcap |= HWCAP_MIPS_MSA;
- 	}
+ /*--------------*/
+@@ -425,11 +426,13 @@ static ssize_t iowarrior_write(struct fi
+ 			retval = -EFAULT;
+ 			goto error;
+ 		}
++		usb_anchor_urb(int_out_urb, &dev->submitted);
+ 		retval = usb_submit_urb(int_out_urb, GFP_KERNEL);
+ 		if (retval) {
+ 			dev_dbg(&dev->interface->dev,
+ 				"submit error %d for urb nr.%d\n",
+ 				retval, atomic_read(&dev->write_busy));
++			usb_unanchor_urb(int_out_urb);
+ 			goto error;
+ 		}
+ 		/* submit was ok */
+@@ -770,6 +773,8 @@ static int iowarrior_probe(struct usb_in
+ 	iface_desc = interface->cur_altsetting;
+ 	dev->product_id = le16_to_cpu(udev->descriptor.idProduct);
  
-+	if (cpu_has_mips16)
-+		elf_hwcap |= HWCAP_MIPS_MIPS16;
++	init_usb_anchor(&dev->submitted);
 +
-+	if (cpu_has_mdmx)
-+		elf_hwcap |= HWCAP_MIPS_MDMX;
-+
-+	if (cpu_has_mips3d)
-+		elf_hwcap |= HWCAP_MIPS_MIPS3D;
-+
-+	if (cpu_has_smartmips)
-+		elf_hwcap |= HWCAP_MIPS_SMARTMIPS;
-+
-+	if (cpu_has_dsp)
-+		elf_hwcap |= HWCAP_MIPS_DSP;
-+
-+	if (cpu_has_dsp2)
-+		elf_hwcap |= HWCAP_MIPS_DSP2;
-+
-+	if (cpu_has_dsp3)
-+		elf_hwcap |= HWCAP_MIPS_DSP3;
-+
-+	if (cpu_has_mips16e2)
-+		elf_hwcap |= HWCAP_MIPS_MIPS16E2;
-+
-+	if (cpu_has_loongson_mmi)
-+		elf_hwcap |= HWCAP_LOONGSON_MMI;
-+
-+	if (cpu_has_loongson_ext)
-+		elf_hwcap |= HWCAP_LOONGSON_EXT;
-+
-+	if (cpu_has_loongson_ext2)
-+		elf_hwcap |= HWCAP_LOONGSON_EXT2;
-+
- 	if (cpu_has_vz)
- 		cpu_probe_vz(c);
- 
+ 	res = usb_find_last_int_in_endpoint(iface_desc, &dev->int_in_endpoint);
+ 	if (res) {
+ 		dev_err(&interface->dev, "no interrupt-in endpoint found\n");
+@@ -885,6 +890,7 @@ static void iowarrior_disconnect(struct
+ 		   Deleting the device is postponed until close() was called.
+ 		 */
+ 		usb_kill_urb(dev->int_in_urb);
++		usb_kill_anchored_urbs(&dev->submitted);
+ 		wake_up_interruptible(&dev->read_wait);
+ 		wake_up_interruptible(&dev->write_wait);
+ 		mutex_unlock(&dev->mutex);
 
 
