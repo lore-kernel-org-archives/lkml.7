@@ -2,147 +2,96 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F956FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99044FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CED218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571226207;
-	bh=940UZ5taO9qZKICPivNc9bHkEIx9Ran6nNxyGew2NPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IpGay3SAWu/6Je69kb5DMRc+vBAvhJvBCnvlXOlsQEmAIegVH8WRBCCiRZYMWKQIC
-	 mNMbCXlMEZhmUBmAKnGRxAErPa59NMHMIBQz8b2Br+6BnppQm2CpQO8fFLvIdSsP2o
-	 EltJqtsVAruM4qg0PdHZApH1ADrBoUuiP1Zq4010=
+	by mail.kernel.org (Postfix) with ESMTP id 72405205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZLm0NJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfJPLn0 (ORCPT
+        id S1730668AbfJPLnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:43:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40922 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726214AbfJPLnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:43:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BBC97B3CC;
-        Wed, 16 Oct 2019 11:43:22 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 13:43:21 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Juergen Gross <jgross@suse.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
- a reference count of 0
-Message-ID: <20191016114321.GX317@dhcp22.suse.cz>
-References: <20190919142228.5483-1-david@redhat.com>
- <20190919142228.5483-7-david@redhat.com>
+        Wed, 16 Oct 2019 07:43:50 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:34537 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfJPLnt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:43:49 -0400
+Received: by mail-io1-f43.google.com with SMTP id q1so53441780ion.1;
+        Wed, 16 Oct 2019 04:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jJXwx8s5PeYIoSlC+P3xZXzWppbK8BXaw3+mWypgBzs=;
+        b=pZLm0NJ/8t65/7jmJMDMxEMW0oN4uRJqGRHDnEiswfoguFzw7d3GgqhfOd1Cm8T6I+
+         4imPwGn3M9iqyw78dT7/3fAAwql+/vY/NM1m7Me58yqKqVuRN/bb7ZeLUcFi3nt1ldUe
+         DGO2GhRNP7ifg2/+qVSdDiDU/Envn97SBG2dREDG0n8hn3ERroRZjRRc3a6VjkZmel2U
+         Us1WyCfEiqoTdYN9orUobsAPZ699aqqsHRxiH+rbFYjbZSTyaSuF98+vgfO1zu9krrBO
+         MLOQMZ8Un5vpB2wFnp79uUIyw1Ffqlvp2VrVyOWsezlOi187MPxKEkHfmuOLNdeu3ha9
+         8hnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jJXwx8s5PeYIoSlC+P3xZXzWppbK8BXaw3+mWypgBzs=;
+        b=UOGCzGxkzq7dWGw8/uIDOXrkiGaXupCCjDofUo7nX/4L3v2JYlFmo4/bAVwyXqeuoa
+         C+iG9KiDNc8UQ4Om0QNnw8eApsmAGFXFhjOnCsd41ehZaXiYkOD0qtUIokGf5ESRNo2G
+         11yxTQlaGKG+7l6c75b9sNgXY5Um2TssDcL0qSaZ4toPuvvDYX0otGdlRZApRzlYLvMg
+         AZ05s+FtRhsu1B0+UP/ZFNMOZ5MFjeMgb95pWc2Ic3+FxaSi5j+GPrObR9BVs+KXDesh
+         uGuiE6RqvobnaPn9M2XTOc83QdTpboDc5T9WnA5B383fyhr+Ll00fzBvbIRuXmLKQQhU
+         5L9A==
+X-Gm-Message-State: APjAAAXvvaO0EkIgs65anDFjzQ82euT/tCtXVgb9zEVqQM3HpGZNHT6A
+        nUPtjhBrKij+oMG9eJOZgYadO3Wf/M5wxe+0kg4=
+X-Google-Smtp-Source: APXvYqySgL7/QGeQFsTtEb6NDaA9MbZmAOYFF5TD+NUX2VWsmTpcVfREpI4FJRBTbApUjb5bbadeKbJcGfmZnnUdFPw=
+X-Received: by 2002:a5d:8b8b:: with SMTP id p11mr5059443iol.2.1571226228398;
+ Wed, 16 Oct 2019 04:43:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919142228.5483-7-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <7933ce8f-ca1b-6ed8-14b9-59679130dc47@web.de> <CA+Ln22GpcMF5e8wjwoRH0wExyoGfta4n3YuaOBNDE+rfqhSZjg@mail.gmail.com>
+ <39a142ae-e0a1-0683-d68c-128b388f480e@web.de>
+In-Reply-To: <39a142ae-e0a1-0683-d68c-128b388f480e@web.de>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Wed, 16 Oct 2019 20:43:37 +0900
+Message-ID: <CA+Ln22FCH-q-joG6i=K2u=3vZTwwytkk0Q48oKekGkVb+VtL3Q@mail.gmail.com>
+Subject: Re: clk: samsung: Checking a kmemdup() call in _samsung_clk_register_pll()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Aditya Pakki <pakki001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19-09-19 16:22:25, David Hildenbrand wrote:
-> virtio-mem wants to allow to offline memory blocks of which some parts
-> were unplugged, especially, to later offline and remove completely
-> unplugged memory blocks. The important part is that PageOffline() has
-> to remain set until the section is offline, so these pages will never
-> get accessed (e.g., when dumping). The pages should not be handed
-> back to the buddy (which would require clearing PageOffline() and
-> result in issues if offlining fails and the pages are suddenly in the
-> buddy).
-> 
-> Let's use "PageOffline() + reference count = 0" as a sign to
-> memory offlining code that these pages can simply be skipped when
-> offlining, similar to free or HWPoison pages.
-> 
-> Pass flags to test_pages_isolated(), similar as already done for
-> has_unmovable_pages(). Use a new flag to indicate the
-> requirement of memory offlining to skip over these special pages.
-> 
-> In has_unmovable_pages(), make sure the pages won't be detected as
-> movable. This is not strictly necessary, however makes e.g.,
-> alloc_contig_range() stop early, trying to isolate such page blocks -
-> compared to failing later when testing if all pages were isolated.
-> 
-> Also, make sure that when a reference to a PageOffline() page is
-> dropped, that the page will not be returned to the buddy.
-> 
-> memory devices (like virtio-mem) that want to make use of this
-> functionality have to make sure to synchronize against memory offlining,
-> using the memory hotplug notifier.
-> 
-> Alternative: Allow to offline with a reference count of 1
-> and use some other sign in the struct page that offlining is permitted.
+2019=E5=B9=B410=E6=9C=8816=E6=97=A5(=E6=B0=B4) 2:55 Markus Elfring <Markus.=
+Elfring@web.de>:
+>
+> > That said, there is no need to print any warnings or error messages on
+> > allocation failure, so technically they could be removed.
+>
+> Do you find information sufficient from the Linux allocation failure repo=
+rt?
 
-Few questions. I do not see onlining code to take care of this special
-case. What should happen when offline && online?
-Should we allow to try_remove_memory to succeed with these pages?
-Do we really have hook into __put_page? Why do we even care about the
-reference count of those pages? Wouldn't it be just more consistent to
-elevate the reference count (I guess this is what you suggest in the
-last paragraph) and the virtio driver would return that page to the
-buddy by regular put_page. This is also related to the above question
-about the physical memory remove.
+A backtrace should be enough for this kind of a failure that shouldn't
+normally happen and if happens, then the rest of the system must be in
+a state already about to fail anyway.
 
-[...]
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d5d7944954b3..fef74720d8b4 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8221,6 +8221,15 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
->  		if (!page_ref_count(page)) {
->  			if (PageBuddy(page))
->  				iter += (1 << page_order(page)) - 1;
-> +			/*
-> +			* Memory devices allow to offline a page if it is
-> +			* marked PG_offline and has a reference count of 0.
-> +			* However, the pages are not movable as it would be
-> +			* required e.g., for alloc_contig_range().
-> +			*/
-> +			if (PageOffline(page) && !(flags & SKIP_OFFLINE))
-> +				if (++found > count)
-> +					goto unmovable;
->  			continue;
->  		}
-
-Do we really need to distinguish offline and hwpoison pages? They are
-both unmovable for allocator purposes and offlineable for the hotplug,
-right? Should we just hide them behind a helper and use it rather than
-an explicit SKIP_$FOO?
--- 
-Michal Hocko
-SUSE Labs
+Best regards,
+Tomasz
