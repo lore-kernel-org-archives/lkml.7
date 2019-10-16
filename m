@@ -2,185 +2,291 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CB8FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BF0FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32CE20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="kxVEGT/o"
+	by mail.kernel.org (Postfix) with ESMTP id 4D5E121835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406478AbfJPQvD (ORCPT
+        id S2406488AbfJPQwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:51:03 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41704 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406468AbfJPQvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:51:02 -0400
-Received: by mail-vs1-f67.google.com with SMTP id l2so16030462vsr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=39+L7uTpKiUnwyMszInidREucesuvpkGs3DnCgLxrOc=;
-        b=kxVEGT/otZz4heGzzrhb8yZ07E1GnHC0Eu7ysL3Bmnf+5nwTha37D1OFD3PYSgA0oi
-         XUJBSw6OJm7gbKWLiXoaMPMIoiOeufjjAiEv5BCKXWUlE+6v8qkAwYZufLFX4BX1l7/5
-         w+xDeefkWxcFskLw9zBbJdJzJmVb32G2d5Zc+3CAGZ0fgr459hvF83wirifXNNclh9x1
-         scQPk4ZKrngge0bgXBU2sx9Lg7UhxHSuN4wc5xi4+UiLmzeHDgyehZSDhKwtdnRR3+zI
-         gtEYYGAHmEJg5VYRwBSD2nfakt6EJPJudUn4iUzzqLXBzrqlFccKv07jWFH1meMwcsrV
-         Al/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=39+L7uTpKiUnwyMszInidREucesuvpkGs3DnCgLxrOc=;
-        b=RaJpQYRc2rDGW+5/3210tBOGv14mV0TwoJRxTr3DAIPI/D1QhaB0pNYdOmLyFzjb/z
-         +D6y8RfO+JD0seinNvH+8hx8bQGivqi21/GlZqM0kd0aklR+qvm0aqQUavNfigRSRS2d
-         1Sgo9aaS3K6uArrp6ytBB7QkGp4UdwDFkyLeG6WCXzk9Zu4xlEA8hJMg3/Ko9lNKbKx2
-         rOEt0CDph2BX5K2yOn1QDfoRKsVSCIt4sRTD3frsZXywb9s7g4MAjLtoHDsXYxGzUq2T
-         DAILsn1LqLKF5iYdtMvjOsc5BpekRywIaZDNXwMGPlIGhp4P13mxToRPwWw6vf6uQAUo
-         t0Tw==
-X-Gm-Message-State: APjAAAWvy04q1ZYCFnH78Zc24ppAAOkpg7oGENbVkNAwP6Tec/R/Eo4/
-        5FWDS2h8MpIA9eye5xA8kliBdre7FD384t/jUcTA3A==
-X-Google-Smtp-Source: APXvYqyw4yXx24p8ogTGL5bftlhNrFh7WkWp///SDgw3PVl7BPJcIHB6ySjRkph5gstYwAdH+gBq1qw6ObNBgETE2gc=
-X-Received: by 2002:a05:6102:2142:: with SMTP id h2mr23725307vsg.27.1571244659605;
- Wed, 16 Oct 2019 09:50:59 -0700 (PDT)
+        Wed, 16 Oct 2019 12:52:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49790 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406438AbfJPQwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:52:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 06556AC2C;
+        Wed, 16 Oct 2019 16:51:59 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     rubini@gnudd.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     hch@infradead.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH] x86/PCI: sta2x11: use default DMA address translation ops
+Date:   Wed, 16 Oct 2019 18:51:37 +0200
+Message-Id: <20191016165138.24636-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191015061349.141448-1-wvw@google.com>
-In-Reply-To: <20191015061349.141448-1-wvw@google.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 16 Oct 2019 22:20:48 +0530
-Message-ID: <CAHLCerNffKDgJKqaVTH3Kp_QfBLtm2M4H80xFDy=2fGXTVQR+w@mail.gmail.com>
-Subject: Re: [PATCH] thermal: create softlink by name for thermal_zone and cooling_device
-To:     Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 11:43 AM Wei Wang <wvw@google.com> wrote:
->
-> The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> numbers are subject to change due to device tree change. This usually
-> leads to tree traversal in userspace code.
-> The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> cooling_device respectively.
+The devices found behind this PCIe chip have unusual DMA mapping
+constraints as there is an AMBA interconnect placed in between them and
+the different PCI endpoints. The offset between physical memory
+addresses and AMBA's view is provided by reading a PCI config register,
+which is saved and used whenever DMA mapping is needed.
 
-I like this.
+It turns out that this DMA setup can be represented by properly setting
+'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
+enable fixup. And ultimately allows us to get rid of this device's
+custom DMA functions.
 
-> Signed-off-by: Wei Wang <wvw@google.com>
-> ---
->  drivers/thermal/thermal_core.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index d4481cc8958f..0ff8fb1d7b0a 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -22,6 +22,7 @@
->  #include <net/netlink.h>
->  #include <net/genetlink.h>
->  #include <linux/suspend.h>
-> +#include <linux/kobject.h>
->
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/thermal.h>
-> @@ -46,6 +47,8 @@ static DEFINE_MUTEX(poweroff_lock);
->
->  static atomic_t in_suspend;
->  static bool power_off_triggered;
-> +static struct kobject *cdev_link_kobj;
-> +static struct kobject *tz_link_kobj;
->
->  static struct thermal_governor *def_governor;
->
-> @@ -954,7 +957,7 @@ __thermal_cooling_device_register(struct device_node *np,
->         struct thermal_zone_device *pos = NULL;
->         int result;
->
-> -       if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> +       if (!type || !type[0] || strlen(type) >= THERMAL_NAME_LENGTH)
->                 return ERR_PTR(-EINVAL);
+Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() is
+moved to avoid warnings whenever CONFIG_PM is not enabled.
 
-This should be a separate fix, if needed.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
->         if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> @@ -989,9 +992,15 @@ __thermal_cooling_device_register(struct device_node *np,
->                 return ERR_PTR(result);
->         }
->
-> -       /* Add 'this' new cdev to the global cdev list */
-> +       /* Add 'this' new cdev to the global cdev list and create link*/
->         mutex_lock(&thermal_list_lock);
->         list_add(&cdev->node, &thermal_cdev_list);
-> +       if (!cdev_link_kobj)
-> +               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-> +                                               cdev->device.kobj.parent);
-> +       if (!cdev_link_kobj || sysfs_create_link(cdev_link_kobj,
-> +                                               &cdev->device.kobj, cdev->type))
-> +               dev_err(&cdev->device, "Failed to create cdev-by-name link\n");
+Note: This was only compile tested.
 
-Any reason not to use the following form instead? It seems easier to read.
+ arch/x86/Kconfig              |   1 -
+ arch/x86/include/asm/device.h |   3 -
+ arch/x86/pci/sta2x11-fixup.c  | 135 +++++++---------------------------
+ 3 files changed, 25 insertions(+), 114 deletions(-)
 
-if (!cdev_link_kobj) {
-               cdev_link_kobj = kobject_create_and_add("cdev-by-name",
-                                               cdev->device.kobj.parent);
-              ret = sysfs_create_link(cdev_link_kobj,
-                                              &cdev->device.kobj, cdev->type))
-              if (ret)
-                       dev_err(&cdev->device, "Failed to create
-cdev-by-name link\n");
-}
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index abe822d52167..9c2a51e1cb59 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -708,7 +708,6 @@ config X86_SUPPORTS_MEMORY_FAILURE
+ config STA2X11
+ 	bool "STA2X11 Companion Chip Support"
+ 	depends on X86_32_NON_STANDARD && PCI
+-	select ARCH_HAS_PHYS_TO_DMA
+ 	select SWIOTLB
+ 	select MFD_STA2X11
+ 	select GPIOLIB
+diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
+index a8f6c809d9b1..5e12c63b47aa 100644
+--- a/arch/x86/include/asm/device.h
++++ b/arch/x86/include/asm/device.h
+@@ -6,9 +6,6 @@ struct dev_archdata {
+ #if defined(CONFIG_INTEL_IOMMU) || defined(CONFIG_AMD_IOMMU)
+ 	void *iommu; /* hook for IOMMU specific extension */
+ #endif
+-#ifdef CONFIG_STA2X11
+-	bool is_sta2x11;
+-#endif
+ };
+ 
+ #if defined(CONFIG_X86_DEV_DMA_OPS) && defined(CONFIG_PCI_DOMAINS)
+diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
+index 6269a175385d..db46d4dfe58a 100644
+--- a/arch/x86/pci/sta2x11-fixup.c
++++ b/arch/x86/pci/sta2x11-fixup.c
+@@ -30,7 +30,6 @@ struct sta2x11_ahb_regs { /* saved during suspend */
+ };
+ 
+ struct sta2x11_mapping {
+-	u32 amba_base;
+ 	int is_suspended;
+ 	struct sta2x11_ahb_regs regs[STA2X11_NR_FUNCS];
+ };
+@@ -92,18 +91,6 @@ static int sta2x11_pdev_to_ep(struct pci_dev *pdev)
+ 	return pdev->bus->number - instance->bus0;
+ }
+ 
+-static struct sta2x11_mapping *sta2x11_pdev_to_mapping(struct pci_dev *pdev)
+-{
+-	struct sta2x11_instance *instance;
+-	int ep;
+-
+-	instance = sta2x11_pdev_to_instance(pdev);
+-	if (!instance)
+-		return NULL;
+-	ep = sta2x11_pdev_to_ep(pdev);
+-	return instance->map + ep;
+-}
+-
+ /* This is exported, as some devices need to access the MFD registers */
+ struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev)
+ {
+@@ -111,39 +98,6 @@ struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev)
+ }
+ EXPORT_SYMBOL(sta2x11_get_instance);
+ 
+-
+-/**
+- * p2a - Translate physical address to STA2x11 AMBA address,
+- *       used for DMA transfers to STA2x11
+- * @p: Physical address
+- * @pdev: PCI device (must be hosted within the connext)
+- */
+-static dma_addr_t p2a(dma_addr_t p, struct pci_dev *pdev)
+-{
+-	struct sta2x11_mapping *map;
+-	dma_addr_t a;
+-
+-	map = sta2x11_pdev_to_mapping(pdev);
+-	a = p + map->amba_base;
+-	return a;
+-}
+-
+-/**
+- * a2p - Translate STA2x11 AMBA address to physical address
+- *       used for DMA transfers from STA2x11
+- * @a: STA2x11 AMBA address
+- * @pdev: PCI device (must be hosted within the connext)
+- */
+-static dma_addr_t a2p(dma_addr_t a, struct pci_dev *pdev)
+-{
+-	struct sta2x11_mapping *map;
+-	dma_addr_t p;
+-
+-	map = sta2x11_pdev_to_mapping(pdev);
+-	p = a - map->amba_base;
+-	return p;
+-}
+-
+ /* At setup time, we use our own ops if the device is a ConneXt one */
+ static void sta2x11_setup_pdev(struct pci_dev *pdev)
+ {
+@@ -151,70 +105,12 @@ static void sta2x11_setup_pdev(struct pci_dev *pdev)
+ 
+ 	if (!instance) /* either a sta2x11 bridge or another ST device */
+ 		return;
+-	pci_set_consistent_dma_mask(pdev, STA2X11_AMBA_SIZE - 1);
+-	pci_set_dma_mask(pdev, STA2X11_AMBA_SIZE - 1);
+-	pdev->dev.archdata.is_sta2x11 = true;
+ 
+ 	/* We must enable all devices as master, for audio DMA to work */
+ 	pci_set_master(pdev);
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_STMICRO, PCI_ANY_ID, sta2x11_setup_pdev);
+ 
+-/*
+- * The following three functions are exported (used in swiotlb: FIXME)
+- */
+-/**
+- * dma_capable - Check if device can manage DMA transfers (FIXME: kill it)
+- * @dev: device for a PCI device
+- * @addr: DMA address
+- * @size: DMA size
+- */
+-bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
+-{
+-	struct sta2x11_mapping *map;
+-
+-	if (!dev->archdata.is_sta2x11) {
+-		if (!dev->dma_mask)
+-			return false;
+-		return addr + size - 1 <= *dev->dma_mask;
+-	}
+-
+-	map = sta2x11_pdev_to_mapping(to_pci_dev(dev));
+-
+-	if (!map || (addr < map->amba_base))
+-		return false;
+-	if (addr + size >= map->amba_base + STA2X11_AMBA_SIZE) {
+-		return false;
+-	}
+-
+-	return true;
+-}
+-
+-/**
+- * __phys_to_dma - Return the DMA AMBA address used for this STA2x11 device
+- * @dev: device for a PCI device
+- * @paddr: Physical address
+- */
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+-{
+-	if (!dev->archdata.is_sta2x11)
+-		return paddr;
+-	return p2a(paddr, to_pci_dev(dev));
+-}
+-
+-/**
+- * dma_to_phys - Return the physical address used for this STA2x11 DMA address
+- * @dev: device for a PCI device
+- * @daddr: STA2x11 AMBA DMA address
+- */
+-phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
+-{
+-	if (!dev->archdata.is_sta2x11)
+-		return daddr;
+-	return a2p(daddr, to_pci_dev(dev));
+-}
+-
+-
+ /*
+  * At boot we must set up the mappings for the pcie-to-amba bridge.
+  * It involves device access, and the same happens at suspend/resume time
+@@ -234,12 +130,20 @@ phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
+ /* At probe time, enable mapping for each endpoint, using the pdev */
+ static void sta2x11_map_ep(struct pci_dev *pdev)
+ {
+-	struct sta2x11_mapping *map = sta2x11_pdev_to_mapping(pdev);
++	struct sta2x11_instance *instance = sta2x11_pdev_to_instance(pdev);
++	struct device *dev = &pdev->dev;
++	u32 amba_base;
+ 	int i;
+ 
+-	if (!map)
++	if (!instance)
+ 		return;
+-	pci_read_config_dword(pdev, AHB_BASE(0), &map->amba_base);
++
++	pci_read_config_dword(pdev, AHB_BASE(0), &amba_base);
++	dev->dma_pfn_offset = PFN_DOWN(-amba_base);
++	dev->bus_dma_mask = amba_base + STA2X11_AMBA_SIZE - 1;
++
++	pci_set_consistent_dma_mask(pdev, amba_base + STA2X11_AMBA_SIZE - 1);
++	pci_set_dma_mask(pdev, amba_base + STA2X11_AMBA_SIZE - 1);
+ 
+ 	/* Configure AHB mapping */
+ 	pci_write_config_dword(pdev, AHB_PEXLBASE(0), 0);
+@@ -252,14 +156,25 @@ static void sta2x11_map_ep(struct pci_dev *pdev)
+ 		pci_write_config_dword(pdev, AHB_CRW(i), 0);
+ 
+ 	dev_info(&pdev->dev,
+-		 "sta2x11: Map EP %i: AMBA address %#8x-%#8x\n",
+-		 sta2x11_pdev_to_ep(pdev),  map->amba_base,
+-		 map->amba_base + STA2X11_AMBA_SIZE - 1);
++		 "sta2x11: Map EP %i: AMBA address %#8x-%#8llx\n",
++		 sta2x11_pdev_to_ep(pdev), amba_base, dev->bus_dma_mask);
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_STMICRO, PCI_ANY_ID, sta2x11_map_ep);
+ 
+ #ifdef CONFIG_PM /* Some register values must be saved and restored */
+ 
++static struct sta2x11_mapping *sta2x11_pdev_to_mapping(struct pci_dev *pdev)
++{
++	struct sta2x11_instance *instance;
++	int ep;
++
++	instance = sta2x11_pdev_to_instance(pdev);
++	if (!instance)
++		return NULL;
++	ep = sta2x11_pdev_to_ep(pdev);
++	return instance->map + ep;
++}
++
+ static void suspend_mapping(struct pci_dev *pdev)
+ {
+ 	struct sta2x11_mapping *map = sta2x11_pdev_to_mapping(pdev);
+-- 
+2.23.0
 
->         mutex_unlock(&thermal_list_lock);
->
->         /* Update binding information for 'this' new cdev */
-> @@ -1157,6 +1166,8 @@ void thermal_cooling_device_unregister(struct thermal_cooling_device *cdev)
->                         }
->                 }
->         }
-> +       if (cdev_link_kobj)
-> +               sysfs_remove_link(cdev_link_kobj, cdev->type);
->
->         mutex_unlock(&thermal_list_lock);
->
-> @@ -1340,6 +1351,12 @@ thermal_zone_device_register(const char *type, int trips, int mask,
->
->         mutex_lock(&thermal_list_lock);
->         list_add_tail(&tz->node, &thermal_tz_list);
-> +       if (!tz_link_kobj)
-> +               tz_link_kobj = kobject_create_and_add("tz-by-name",
-> +                                               tz->device.kobj.parent);
-> +       if (!tz_link_kobj || sysfs_create_link(tz_link_kobj,
-> +                                               &tz->device.kobj, tz->type))
-> +               dev_err(&tz->device, "Failed to create tz-by-name link\n");
-
-Same as above.
-
->         mutex_unlock(&thermal_list_lock);
->
->         /* Bind cooling devices for this zone */
-> @@ -1411,6 +1428,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
->                         }
->                 }
->         }
-> +       if (tz_link_kobj)
-> +               sysfs_remove_link(tz_link_kobj, tz->type);
->
->         mutex_unlock(&thermal_list_lock);
->
-> --
-> 2.23.0.700.g56cf767bdb-goog
->
