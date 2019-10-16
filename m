@@ -2,155 +2,123 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC106C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BF6C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3992067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3981120873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Osi9UjzI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gffNxPX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbfJPGOC (ORCPT
+        id S2387928AbfJPGTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:14:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36806 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfJPGOC (ORCPT
+        Wed, 16 Oct 2019 02:19:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43193 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbfJPGTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:14:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id j11so10754764plk.3;
-        Tue, 15 Oct 2019 23:14:01 -0700 (PDT)
+        Wed, 16 Oct 2019 02:19:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j18so26484760wrq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 23:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ws1WO5M7d4Tu7v3DIlAQw4A7zpDh0cpMdpB6luxKIBI=;
-        b=Osi9UjzIp6AnYiGqmasdbgc5oOxivyhSWNSIf3W7tfZj0ClRj1FhZ7L+lMq+NUC0Y0
-         dxDuajpDijjUrD9vo3MR1Ebpd/4ePPEB478kGblDyugBx8Y6nJrRAxOcjIT3fiU5+Uvf
-         oxSo8GRRFjRWZLvqAh10cxG4D/5XoOcL47OP5stHgbVYqilMAI66Pep2n6OueTuia51J
-         GTXSpWF3B0puJ0/qZNiwmGVqIWSr5DurwtU/PAUeJKr58mOgj0bDbeyOodTgoAPjUBuX
-         9P2l+WmL7WJNOZ1OysC/SwB8MUmngtl7krsSItiYBoF1jGtALNm1Rsr3X7vFmZvUokTd
-         DQtA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YRhrTB62D4V/UFoC3f7Dy9VxNzwea0kYw4JJIDyNnSU=;
+        b=gffNxPX59uLp8d/gUW5M7E6+ht3fLmLfSJgrgYUe1tI7Afeyq6CzJQ+74I6+AmU/z/
+         LCxua/tgSJOllX2PjdMVZeJvnP0ag9dr/fxDqwqp/VddGOOGCVTOTcUt0EU2EnzWOTqU
+         RxXnz4wgoSk81+fFaU14kCZSCs3zePHw0unCHMU0JPUBY5lIPVNvqiZnZ04YBtvQKgDQ
+         HpdVT8WRcKE9oDhNiAVcKWTT0LS3Yqc1Ultg55vUfNYknQMR/m9KWI0GKJlDKkLdc9rj
+         OdjIf4UnX2hBqQMJACFydhYY7OgZIs841Bu3TJXMwsNzfUGHuD6/H97Ls+FNG+P7MyTQ
+         zYKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ws1WO5M7d4Tu7v3DIlAQw4A7zpDh0cpMdpB6luxKIBI=;
-        b=JsoAWmSRAvsL48XI52y/Oc1XfgW6zly8HW+U1JUqQD6cbwpRylwBoaEf68TU7DSqG9
-         BX4v9RVk0XzNBY54F2G+ZK0lHRXHlQJms27pApsOt3r1zBsS/GSEWpgd+fsvwBCvScKI
-         sMiVaKu5i6FHf6CmHRU+WvylZO5zuSmePGMQuS/yuEkb9w8K+/XxZRD1OX7zOH2QWAu/
-         RVcNB1JPQZSYlfykwkzGVL69Baxb4Y/UqVP6q6vYu4k9zaE8ghqxeauDAgCHsChUZUvR
-         i0vYZz/y7+6Agy5nDIqwtBvktTK+lXi7+x4HsD2I9klpX3WqQ4Tplm+PkHUFZi3Uev7T
-         pB6Q==
-X-Gm-Message-State: APjAAAXoAQp8ebv3T66UPyvJ29Dvym82tCpFh5p50g7m40BkuqXD8NLr
-        XOY3Sq6q8T5a168YXzLjpfs=
-X-Google-Smtp-Source: APXvYqxp9q+kARjAqeN6XdrJY5XNQxHWBW2f5CSxYU1m6B406cBbiZnDzxWE8kPZiK3q9O/Lx4N37A==
-X-Received: by 2002:a17:902:82cb:: with SMTP id u11mr38599845plz.315.1571206441188;
-        Tue, 15 Oct 2019 23:14:01 -0700 (PDT)
-Received: from Gentoo.localdomain ([103.231.90.170])
-        by smtp.gmail.com with ESMTPSA id q3sm32998595pgj.54.2019.10.15.23.13.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 23:14:00 -0700 (PDT)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org, bfields@fieldses.org,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] scripts : prune-kernel : prune kernels generalized way
-Date:   Wed, 16 Oct 2019 11:43:12 +0530
-Message-Id: <20191016061312.10626-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YRhrTB62D4V/UFoC3f7Dy9VxNzwea0kYw4JJIDyNnSU=;
+        b=SNkVaGzRQTlfL6Uf4AtebtGTlLfxiCBnMIknowBGO8V2NQcypfkPUGDiCJ1vsrm3l9
+         Bynk/OKusOC2vouzvqUrejbiiGYYMADu4SqccDGBmy4ED75iuL2fAQi2oXyRjOCBqNjs
+         3jtW4kw+HoFj2LonKQ8u/I/xvEQRjcaRSEzU8xCr8dBMT5iYsMPaPRSANga2guel31Bm
+         FHfk2yZs2KeA3ttPKMCFxhg1l7a8Lgt2gcLN/gLyHXcjlaT0cZEZ9m7UlhA/6JMp1Qf/
+         fXVzUJ2/MB+3E5+nPYpScYeY89XHaXthynVSTY05/0TkR3kO1oprtnACq/i0nGsDLkYi
+         nxIg==
+X-Gm-Message-State: APjAAAW6V8A5GIP+3HvC3LLBmCnMlSpdEQDqWxrVMisncMnUUSOqPDA2
+        TGvVfZmANmxygoEIM3CgAhCWpw==
+X-Google-Smtp-Source: APXvYqyKm24zfNyAXdbf8pS+DsTWKRvLuNz2vGQv6C7u2rAu4IGWRBvmbdVbgFvVvDmpGDOwl7yD5w==
+X-Received: by 2002:adf:c98b:: with SMTP id f11mr1155362wrh.274.1571206738605;
+        Tue, 15 Oct 2019 23:18:58 -0700 (PDT)
+Received: from dell ([95.149.164.86])
+        by smtp.gmail.com with ESMTPSA id a3sm3004392wmc.3.2019.10.15.23.18.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 15 Oct 2019 23:18:57 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 07:18:56 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v10 4/6] mfd: ioc3: Add driver for SGI IOC3 chip
+Message-ID: <20191016061856.GA4365@dell>
+References: <20191015120953.2597-1-tbogendoerfer@suse.de>
+ <20191015120953.2597-5-tbogendoerfer@suse.de>
+ <20191015122349.612a230b@cakuba.netronome.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191015122349.612a230b@cakuba.netronome.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will remove old kernel from the system in a selective way.
+On Tue, 15 Oct 2019, Jakub Kicinski wrote:
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
-Thanks, a bunch to Randy for the hand holding . :)
+> On Tue, 15 Oct 2019 14:09:49 +0200, Thomas Bogendoerfer wrote:
+> > SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
+> > It also supports connecting a SuperIO chip for serial and parallel
+> > interfaces. IOC3 is used inside various SGI systemboards and add-on
+> > cards with different equipped external interfaces.
+> > 
+> > Support for ethernet and serial interfaces were implemented inside
+> > the network driver. This patchset moves out the not network related
+> > parts to a new MFD driver, which takes care of card detection,
+> > setup of platform devices and interrupt distribution for the subdevices.
+> > 
+> > Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> 
+> Looks good, I think.
 
- scripts/prune-kernel | 71 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 59 insertions(+), 12 deletions(-)
+Is that a Reviewed-by?
 
-diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-index e8aa940bc0a9..78dd4c854b2b 100755
---- a/scripts/prune-kernel
-+++ b/scripts/prune-kernel
-@@ -5,17 +5,64 @@
- # again, /boot and /lib/modules/ eventually fill up.
- # Dumb script to purge that stuff:
+If so, it doesn't sound like a very convincing one?
 
-+#for f in "$@"
-+#do
-+#        if rpm -qf "/lib/modules/$f" >/dev/null; then
-+#                echo "keeping $f (installed from rpm)"
-+#        elif [ $(uname -r) = "$f" ]; then
-+#                echo "keeping $f (running kernel) "
-+#        else
-+#                echo "removing $f"
-+#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
-+#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
-+#                rm -rf "/lib/modules/$f"
-+#                new-kernel-pkg --remove $f
-+#        fi
-+#done
-+boot_dir=/boot
-+modules_dir=/lib/modules
-+
-+function remove_old_kernel(){
-+	cd $boot_dir
-+	rm -If vmlinuz-$kenrel_version System.map-$kernel_version config-$kernel_verison
-+}
-+function remove_old_kernel_modules_dir(){
-+	cd $modules_dir
-+	rm -rf $modules_version
-+}
-+printf "\n\n Enlist the installed kernels \n\n"
-+
-+find $boot_dir -name "vmlinuz-*" -type f  -exec ls -1 {} \;
-+
-+printf "\n\n\n Please give the kernel version to remove: %s"
-+read kernel_version
-+
-+remove_old_kernel
-+
-+printf "\n\n Enlist the installed modules directory \n\n"
-+
-+find $modules_dir  -maxdepth 0 -type d -exec ls -1 {} \;
-+
-+printf "\n\n Please give the full modules directory name to remove: %s"
-+read modules_version
-+
-+remove_old_kernel_modules_dir
-+
-+printf "\n\n Removed kernel version: $kernel_version and associcated modules: $modules_version ...Done \n"
-+while :
- do
-+printf "\n\n Do you want to remove another?[YN] : %s"
-+read response
-+
-+if [[ $response == "Y" ]];then
-+	printf "Please give another version to remove : %s"
-+	read kernel_version
-+	remove_old_kernel
-+	printf "\n\n Please give the full modules directory name to remove: %s"
-+	read modules_version
-+	remove_old_kernel_modules_dir
-+elif [[ $response == "N" ]];then
-+	printf "\n\n Alright,no more. \n\n"
-+	exit 1
-+fi
- done
---
-2.21.0
+If not, it's probably not worth replying at all.
 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
