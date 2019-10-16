@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E4BFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F414AFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F89207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0A1207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263613;
-	bh=UlGrKMgXgRaTB19PpiO2d5UObMhWdYR3TmQmAa+QV6Y=;
+	s=default; t=1571263616;
+	bh=ONS2EygcQU152NOuMAZMhNEtFoUo4KLiKujogzhpwkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epoZ5/TS4U4I1yeFN4C5Ak3OB13GJqj+HqDz/q/gApWmuj519XzQTiDwk6mzWCvid
-	 cR2C9RSJ3tsZGUfOS7d//cfLUQzbjZsIfueNKSjAx+S3qAQARk6dDHaNRKz411n/0I
-	 z+7GR2OGtelY4poKycC12PowMDGG79de7dcrYfhE=
+	b=LJEbFJ2rw2FC60UC1mFsMzp5lNBItnBZLN9trlRQA/1W01Vy9WkI+jVDHd3dNdIPV
+	 J+Z/tfC7WcE+QpcFYrQI17T5NXLD1Efh08b8MSIME0yPVt3+muABIb9TvoJ4goJsKt
+	 SZgDp7lml/K4ckM1wpPQHf7YreUh/gIk1dOPsJ/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406715AbfJPV6X (ORCPT
+        id S2407015AbfJPWGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438009AbfJPV53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:29 -0400
+        id S2438143AbfJPV6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:23 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720DD21D7F;
-        Wed, 16 Oct 2019 21:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86F8920872;
+        Wed, 16 Oct 2019 21:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263048;
-        bh=UlGrKMgXgRaTB19PpiO2d5UObMhWdYR3TmQmAa+QV6Y=;
+        s=default; t=1571263102;
+        bh=ONS2EygcQU152NOuMAZMhNEtFoUo4KLiKujogzhpwkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3NE6y4UTI0vR8aFjSA39lgx5oFApQ+pe2b6jNde/Ltrmng899uHinJ0ZxeEQ7MCv
-         tEtGMWm4IsdVdyvczNCOcFyfLJJRmZoJj6ljQboidRwS0eR1PzOEMPH3ywLhLvRXd7
-         NbsqcnnHErYGwXpqsu0zL3YqyrhkFodrX8w6w5v8=
+        b=OGsKmEtTHI6/7yobLzpUo5XPhGb9lFjUwTyPfDYuhoFM80QYVo+VwaAD1DA98ckuw
+         iW8g7RJtHESJ+fAxN775L59SRdlCrRcAy+yoAtiwra1Wlxqp9bWv8ZTExlKzxdqFRD
+         /La7iI81he6mvnuecWpPLxfvP88l4QCzQBgjobuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 53/81] CIFS: Gracefully handle QueryInfo errors during open
-Date:   Wed, 16 Oct 2019 14:51:04 -0700
-Message-Id: <20191016214841.532817992@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 006/112] USB: usb-skeleton: fix NULL-deref on disconnect
+Date:   Wed, 16 Oct 2019 14:49:58 -0700
+Message-Id: <20191016214845.594625051@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
+References: <20191016214844.038848564@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,45 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 30573a82fb179420b8aac30a3a3595aa96a93156 upstream.
+commit bed5ef230943863b9abf5eae226a20fad9a8ff71 upstream.
 
-Currently if the client identifies problems when processing
-metadata returned in CREATE response, the open handle is being
-leaked. This causes multiple problems like a file missing a lease
-break by that client which causes high latencies to other clients
-accessing the file. Another side-effect of this is that the file
-can't be deleted.
+The driver was using its struct usb_interface pointer as an inverted
+disconnected flag and was setting it to NULL before making sure all
+completion handlers had run. This could lead to NULL-pointer
+dereferences in the dev_err() statements in the completion handlers
+which relies on said pointer.
 
-Fix this by closing the file after the client hits an error after
-the file was opened and the open descriptor wasn't returned to
-the user space. Also convert -ESTALE to -EOPENSTALE to allow
-the VFS to revalidate a dentry and retry the open.
+Fix this by using a dedicated disconnected flag.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Note that this is also addresses a NULL-pointer dereference at release()
+and a struct usb_interface reference leak introduced by a recent runtime
+PM fix, which depends on and should have been submitted together with
+this patch.
+
+Fixes: 4212cd74ca6f ("USB: usb-skeleton.c: remove err() usage")
+Fixes: 5c290a5e42c3 ("USB: usb-skeleton: fix runtime PM after driver unbind")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009170944.30057-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/usb-skeleton.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -252,6 +252,12 @@ cifs_nt_open(char *full_path, struct ino
- 		rc = cifs_get_inode_info(&inode, full_path, buf, inode->i_sb,
- 					 xid, fid);
+--- a/drivers/usb/usb-skeleton.c
++++ b/drivers/usb/usb-skeleton.c
+@@ -59,6 +59,7 @@ struct usb_skel {
+ 	spinlock_t		err_lock;		/* lock for errors */
+ 	struct kref		kref;
+ 	struct mutex		io_mutex;		/* synchronize I/O with disconnect */
++	unsigned long		disconnected:1;
+ 	wait_queue_head_t	bulk_in_wait;		/* to wait for an ongoing read */
+ };
+ #define to_skel_dev(d) container_of(d, struct usb_skel, kref)
+@@ -236,7 +237,7 @@ static ssize_t skel_read(struct file *fi
+ 	if (rv < 0)
+ 		return rv;
  
-+	if (rc) {
-+		server->ops->close(xid, tcon, fid);
-+		if (rc == -ESTALE)
-+			rc = -EOPENSTALE;
-+	}
-+
- out:
- 	kfree(buf);
- 	return rc;
+-	if (!dev->interface) {		/* disconnect() was called */
++	if (dev->disconnected) {		/* disconnect() was called */
+ 		rv = -ENODEV;
+ 		goto exit;
+ 	}
+@@ -418,7 +419,7 @@ static ssize_t skel_write(struct file *f
+ 
+ 	/* this lock makes sure we don't submit URBs to gone devices */
+ 	mutex_lock(&dev->io_mutex);
+-	if (!dev->interface) {		/* disconnect() was called */
++	if (dev->disconnected) {		/* disconnect() was called */
+ 		mutex_unlock(&dev->io_mutex);
+ 		retval = -ENODEV;
+ 		goto error;
+@@ -569,7 +570,7 @@ static void skel_disconnect(struct usb_i
+ 
+ 	/* prevent more I/O from starting */
+ 	mutex_lock(&dev->io_mutex);
+-	dev->interface = NULL;
++	dev->disconnected = 1;
+ 	mutex_unlock(&dev->io_mutex);
+ 
+ 	usb_kill_anchored_urbs(&dev->submitted);
 
 
