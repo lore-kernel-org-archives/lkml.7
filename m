@@ -4,125 +4,234 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E76CECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AD1ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFB52168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77522168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391862AbfJPJGs (ORCPT
+        id S2391876AbfJPJG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:06:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39375 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbfJPJGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:06:48 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iKfGO-0005Bp-Li; Wed, 16 Oct 2019 11:06:36 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iKfGG-00081t-Jv; Wed, 16 Oct 2019 11:06:28 +0200
-Date:   Wed, 16 Oct 2019 11:06:28 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Wed, 16 Oct 2019 05:06:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44442 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727399AbfJPJG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:06:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4D41309B142;
+        Wed, 16 Oct 2019 09:06:55 +0000 (UTC)
+Received: from [10.36.117.237] (ovpn-117-237.ams2.redhat.com [10.36.117.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7492360852;
+        Wed, 16 Oct 2019 09:06:54 +0000 (UTC)
+Subject: Re: [PATCH v1] drivers/base/memory.c: Drop the mem_sysfs_mutex
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rui Miguel Silva <rmfrfs@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v2] media: imx7-mipi-csis: Add a check for
- devm_regulator_get
-Message-ID: <20191016090628.7l5u4ytdqr2jlasg@pengutronix.de>
-References: <20191015135915.6530-1-hslester96@gmail.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+References: <20190925082621.4927-1-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <0977bbdc-b862-acd6-3f55-bd04fd42215a@redhat.com>
+Date:   Wed, 16 Oct 2019 11:06:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015135915.6530-1-hslester96@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:05:27 up 151 days, 15:23, 101 users,  load average: 0.19, 0.20,
- 0.10
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190925082621.4927-1-david@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 16 Oct 2019 09:06:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chuhong,
-
-On 19-10-15 21:59, Chuhong Yuan wrote:
-> devm_regulator_get may return an error but mipi_csis_phy_init misses
-> a check for it.
-> This may lead to problems when regulator_set_voltage uses the unchecked
-> pointer.
-> This patch adds a check for devm_regulator_get to avoid potential risk.
+On 25.09.19 10:26, David Hildenbrand wrote:
+> The mem_sysfs_mutex isn't really helpful. Also, it's not really clear what
+> the mutex protects at all.
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> The device lists of the memory subsystem are protected separately. We don't
+> need that mutex when looking up. creating, or removing independent
+> devices. find_memory_block_by_id() will perform locking on its own and
+> grab a reference of the returned device.
+> 
+> At the time memory_dev_init() is called, we cannot have concurrent
+> hot(un)plug operations yet - we're still fairly early during boot. We
+> don't need any locking.
+> 
+> The creation/removal of memory block devices should be protected
+> on a higher level - especially using the device hotplug lock to avoid
+> documented issues (see Documentation/core-api/memory-hotplug.rst) - or
+> if that is reworked, using similar locking.
+> 
+> Protecting in the context of these functions only doesn't really make
+> sense. Especially, if we would have a situation where the same memory
+> blocks are created/deleted at the same time, there is something horribly
+> going wrong (imagining adding/removing a DIMM at the same time from two
+> call paths) - after the functions succeeded something else in the
+> callers would blow up (e.g., create_memory_block_devices() succeeded but
+> there are no memory block devices anymore).
+> 
+> All relevant call paths (except when adding memory early during boot
+> via ACPI, which is now documented) hold the device hotplug lock when
+> adding memory, and when removing memory. Let's document that instead.
+> 
+> Add a simple safety net to create_memory_block_devices() in case we
+> would actually remove memory blocks while adding them, so we'll never
+> dereference a NULL pointer. Simplify memory_dev_init() now that the
+> lock is gone.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
-> Changes in v2:
->   - Add a check in mipi_csis_probe for the modified mipi_csis_phy_init.
+> 
+> Tested using my usual x86-64 DIMM based hot(un)plug setup.
+> 
+> ---
+>   drivers/base/memory.c | 33 ++++++++++++++-------------------
+>   1 file changed, 14 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 6bea4f3f8040..634aab8e1e19 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -19,15 +19,12 @@
+>   #include <linux/memory.h>
+>   #include <linux/memory_hotplug.h>
+>   #include <linux/mm.h>
+> -#include <linux/mutex.h>
+>   #include <linux/stat.h>
+>   #include <linux/slab.h>
+>   
+>   #include <linux/atomic.h>
+>   #include <linux/uaccess.h>
+>   
+> -static DEFINE_MUTEX(mem_sysfs_mutex);
+> -
+>   #define MEMORY_CLASS_NAME	"memory"
+>   
+>   #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+> @@ -702,6 +699,8 @@ static void unregister_memory(struct memory_block *memory)
+>    * Create memory block devices for the given memory area. Start and size
+>    * have to be aligned to memory block granularity. Memory block devices
+>    * will be initialized as offline.
+> + *
+> + * Called under device_hotplug_lock.
+>    */
+>   int create_memory_block_devices(unsigned long start, unsigned long size)
+>   {
+> @@ -715,7 +714,6 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+>   			 !IS_ALIGNED(size, memory_block_size_bytes())))
+>   		return -EINVAL;
+>   
+> -	mutex_lock(&mem_sysfs_mutex);
+>   	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+>   		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
+>   		if (ret)
+> @@ -727,11 +725,12 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+>   		for (block_id = start_block_id; block_id != end_block_id;
+>   		     block_id++) {
+>   			mem = find_memory_block_by_id(block_id);
+> +			if (WARN_ON_ONCE(!mem))
+> +				continue;
+>   			mem->section_count = 0;
+>   			unregister_memory(mem);
+>   		}
+>   	}
+> -	mutex_unlock(&mem_sysfs_mutex);
+>   	return ret;
+>   }
+>   
+> @@ -739,6 +738,8 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+>    * Remove memory block devices for the given memory area. Start and size
+>    * have to be aligned to memory block granularity. Memory block devices
+>    * have to be offline.
+> + *
+> + * Called under device_hotplug_lock.
+>    */
+>   void remove_memory_block_devices(unsigned long start, unsigned long size)
+>   {
+> @@ -751,7 +752,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+>   			 !IS_ALIGNED(size, memory_block_size_bytes())))
+>   		return;
+>   
+> -	mutex_lock(&mem_sysfs_mutex);
+>   	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+>   		mem = find_memory_block_by_id(block_id);
+>   		if (WARN_ON_ONCE(!mem))
+> @@ -760,7 +760,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+>   		unregister_memory_block_under_nodes(mem);
+>   		unregister_memory(mem);
+>   	}
+> -	mutex_unlock(&mem_sysfs_mutex);
+>   }
+>   
+>   /* return true if the memory block is offlined, otherwise, return false */
+> @@ -794,12 +793,13 @@ static const struct attribute_group *memory_root_attr_groups[] = {
+>   };
+>   
+>   /*
+> - * Initialize the sysfs support for memory devices...
+> + * Initialize the sysfs support for memory devices. At the time this function
+> + * is called, we cannot have concurrent creation/deletion of memory block
+> + * devices, the device_hotplug_lock is not needed.
+>    */
+>   void __init memory_dev_init(void)
+>   {
+>   	int ret;
+> -	int err;
+>   	unsigned long block_sz, nr;
+>   
+>   	/* Validate the configured memory block size */
+> @@ -810,24 +810,19 @@ void __init memory_dev_init(void)
+>   
+>   	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
+>   	if (ret)
+> -		goto out;
+> +		panic("%s() failed to register subsystem: %d\n", __func__, ret);
+>   
+>   	/*
+>   	 * Create entries for memory sections that were found
+>   	 * during boot and have been initialized
+>   	 */
+> -	mutex_lock(&mem_sysfs_mutex);
+>   	for (nr = 0; nr <= __highest_present_section_nr;
+>   	     nr += sections_per_block) {
+> -		err = add_memory_block(nr);
+> -		if (!ret)
+> -			ret = err;
+> +		ret = add_memory_block(nr);
+> +		if (ret)
+> +			panic("%s() failed to add memory block: %d\n", __func__,
+> +			      ret);
+>   	}
+> -	mutex_unlock(&mem_sysfs_mutex);
+> -
+> -out:
+> -	if (ret)
+> -		panic("%s() failed: %d\n", __func__, ret);
+>   }
+>   
+>   /**
+> 
 
-Did you miss the check for -EPROBE_DEFER?
+Ping,
 
-Regards,
-  Marco
-
-> 
->  drivers/staging/media/imx/imx7-mipi-csis.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 73d8354e618c..e8a6acaa969e 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
->  static int mipi_csis_phy_init(struct csi_state *state)
->  {
->  	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
-> +	if (IS_ERR(state->mipi_phy_regulator))
-> +		return PTR_ERR(state->mipi_phy_regulator);
->  
->  	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
->  				     1000000);
-> @@ -966,7 +968,10 @@ static int mipi_csis_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	mipi_csis_phy_init(state);
-> +	ret = mipi_csis_phy_init(state);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	mipi_csis_phy_reset(state);
->  
->  	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -- 
-> 2.20.1
-> 
-> 
-> 
+this lock does neither protect any data structure, nor is it helpful to 
+guarantee any ordering.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+Thanks,
+
+David / dhildenb
