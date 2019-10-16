@@ -2,122 +2,107 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AAAFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118E9FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDA4218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B59218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571237467;
+	bh=Xh/9gWmwBKdF+8neE3kItdxVMfpHXwc3n8w1uZywGNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ROH4tnF69OW2u4pxKt59eUoeg5Fe3AZ5GL5ZSuojvdZUEjhxhESMQpkrNL0j16SPT
+	 9OwTSJy5vt4nAxdxTZz2ys5ji6YNksHcPYmPAQgZPdKjVq/cgquoZ1NxHKHVD62v2K
+	 VAsiJ6kG/P7Z9GsBxv1PdgiwHj5k6O+TnSO6LxLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393314AbfJPOut (ORCPT
+        id S2393836AbfJPOvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:50:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50475 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388751AbfJPOus (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:50:48 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iKkdJ-00073D-B5; Wed, 16 Oct 2019 16:50:37 +0200
-Date:   Wed, 16 Oct 2019 16:50:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Wed, 16 Oct 2019 10:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390729AbfJPOvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:51:06 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331AE2168B;
+        Wed, 16 Oct 2019 14:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571237465;
+        bh=Xh/9gWmwBKdF+8neE3kItdxVMfpHXwc3n8w1uZywGNQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bMkLi5d63UN14+72d9h18uH19CkeKG76vGq+CqQ+wIG2Cyem630Ojwrt9CEOdzh1f
+         nfcG0oLaZc2le2vb93goK32+ObpHGn+url2irqclWJw+pWdZempUJgMh0VLuA1KDwD
+         FgYwaZLYrXiSq3mJDbHG9vjPT2zA1qR1eMkuVBy4=
+Date:   Wed, 16 Oct 2019 16:51:03 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Code Kipper <codekipper@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-In-Reply-To: <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
-Message-ID: <alpine.DEB.2.21.1910161646160.2046@nanos.tec.linutronix.de>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de> <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <alpine.DEB.2.21.1910161244060.2046@nanos.tec.linutronix.de> <3a12810b-1196-b70a-aa2e-9fe17dc7341a@redhat.com> <b2c42a64-eb42-1f18-f609-42eec3faef18@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
+Subject: Re: [PATCH v6 1/7] ASoC: sun4i-i2s: Move channel select offset
+Message-ID: <20191016145103.im4h75qi2fcdcmar@gilmour>
+References: <20191016070740.121435-1-codekipper@gmail.com>
+ <20191016070740.121435-2-codekipper@gmail.com>
+ <20191016080420.4cbxn2hdt3wwtrhl@gilmour>
+ <CAEKpxBmNCA4U8-X8iSwOxBZ7T3dp6352S2Kfxc6f5E4N671zvg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fi6amry3fbotqfax"
+Content-Disposition: inline
+In-Reply-To: <CAEKpxBmNCA4U8-X8iSwOxBZ7T3dp6352S2Kfxc6f5E4N671zvg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019, Xiaoyao Li wrote:
-> On 10/16/2019 7:58 PM, Paolo Bonzini wrote:
-> > > With your proposal you render #AC useless even on hosts which have SMT
-> > > disabled, which is just wrong. There are enough good reasons to disable
-> > > SMT.
-> > 
-> > My lazy "solution" only applies to SMT enabled.  When SMT is either not
-> > supported, or disabled as in "nosmt=force", we can virtualize it like
-> > the posted patches have done so far.
-> > 
-> 
-> Do we really need to divide it into two cases of SMT enabled and SMT disabled?
 
-Yes. See the matrix I just sent.
+--fi6amry3fbotqfax
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > I agree that with SMT enabled the situation is truly bad, but we surely
-> > > can
-> > > be smarter than just disabling it globally unconditionally and forever.
-> > > 
-> > > Plus we want a knob which treats guests triggering #AC in the same way as
-> > > we treat user space, i.e. kill them with SIGBUS.
-> > 
-> > Yes, that's a valid alternative.  But if SMT is possible, I think the
-> > only sane possibilities are global disable and SIGBUS.  SIGBUS (or
-> > better, a new KVM_RUN exit code) can be acceptable for debugging guests too.
-> 
-> If SIGBUS, why need to globally disable?
+On Wed, Oct 16, 2019 at 10:41:31AM +0200, Code Kipper wrote:
+> On Wed, 16 Oct 2019 at 10:04, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Wed, Oct 16, 2019 at 09:07:34AM +0200, codekipper@gmail.com wrote:
+> > > From: Marcus Cooper <codekipper@gmail.com>
+> > >
+> > > On the newer SoCs the offset is used to set the mode of the
+> > > connection. As it is to be used elsewhere then it makes sense
+> > > to move it to the main structure.
+> >
+> > Elsewhere where, and to do what?
+> Thanks...How does this sound?
+>
+> As it is to be used to set the same offset for each TX data channel in use
+> during multi-channel audio then let's move it to the main structure.
 
-See the matrix I just sent.
+That still doesn't explain why you want to move it to the main
+structure. It's there, it's calculated already, and can be used during
+multi-channel audio if you set it up in the same function. What you
+need to explain is why you can't do it in the same function.
 
-> When there is an #AC due to split-lock in guest, KVM only has below two
-> choices:
-> 1) inject back into guest.
->    - If kvm advertise this feature to guest, and guest kernel is latest, and
-> guest kernel must enable it too. It's the happy case that guest can handler it
-> on its own purpose.
->    - Any other cases, guest get an unexpected #AC and crash.
+Maxime
 
-That's just wrong for obvious reasons.
+--fi6amry3fbotqfax
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 2) report to userspace (I think the same like a SIGBUS)
+-----BEGIN PGP SIGNATURE-----
 
-No. What guarantees that userspace qemu handles the SIGBUS sanely?
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXacuVwAKCRDj7w1vZxhR
+xTaQAP0X2iGfJ5IY9S8B+s9Zh5MP11erZjYLItvMfIJTyW5EAgD/QxPJRbfuSz03
+Mqd/XK6k/sf6xBYpSzArepQAruvCDQs=
+=rCXO
+-----END PGP SIGNATURE-----
 
-> So for simplicity, we can do what Paolo suggested that don't advertise this
-> feature and report #AC to userspace when an #AC due to split-lock in guest
-> *but* we never disable the host's split-lock detection due to guest's
-> split-lock.
-
-No, you can't.
-
-Guess what happens when you just boot some existing guest on a #AC enabled
-host without having updated qemu to handle the exit code/SIGBUS.
-
-It simply will crash and burn in nonsensical ways. Same as reinjecting it
-into the guest and letting it crash.
-
-Thanks,
-
-	tglx
-
-
+--fi6amry3fbotqfax--
