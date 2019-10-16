@@ -2,95 +2,130 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE643FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A13FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDA421925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594F921925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBh6QYKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393941AbfJPOUC (ORCPT
+        id S2393957AbfJPOUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:20:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4224 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727442AbfJPOUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:20:01 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2C655EECCF023BF90BBA;
-        Wed, 16 Oct 2019 22:20:00 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 22:19:54 +0800
-Subject: Re: [PATCH v2] perf kmem: Fix memory leak in compact_gfp_flags()
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <hushiyuan@huawei.com>, <linfeilong@huawei.com>
-References: <7fd48f77-fbc4-b99f-60c1-ccc7d8d287e9@huawei.com>
- <20191016140651.GF22835@kernel.org>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <fc49d489-3ea3-104d-6409-ea0438818ef3@huawei.com>
-Date:   Wed, 16 Oct 2019 22:19:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 16 Oct 2019 10:20:08 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40846 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393943AbfJPOUH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:20:07 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f23so2142479lfk.7;
+        Wed, 16 Oct 2019 07:20:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+5GVeXUsNTKRD7nI80WxY7NGPp8wxmIdfIuqXlentqk=;
+        b=sBh6QYKgOgCu4gMfkvOftsEMGSteOjetdyaAI1OsXKNFyHllDHwkEPyOP/YI7MzDFS
+         i9XUsdtl5lJ2avwDtXmahDALdD6jKGKFn76Bl0AfISFgvTYxidpJMRZIEDoAbx0g8mTW
+         6cqNbqTHEG/7635IgoQyzRdRWE3zhdGK2q2iLO6oPrfEt+7lfjK9OQxWLYIdMRDpB09t
+         uQU3Wj3VfXAuotv/V54LRQMtvNlve9U8l7aHgTXJN3H1/uWKtJTtpmrLHXZC4soU7mpP
+         f2YPytDFjxsDqa6v2I/dMSppH05wrW2i5H7piRr35zKdyKP9yBR2/d7/oyhiuBQugmYE
+         2e8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+5GVeXUsNTKRD7nI80WxY7NGPp8wxmIdfIuqXlentqk=;
+        b=aZpddXhm4o8f3KejeYTsulOKZouOj1UN3zyNUmsgmSqmHF1Yey7lTl8m12AsUWiZgm
+         R5Zv2ouGd1NKUb0jinnIh8WqGv/2xWq/pWWrCpjRx19fuNZoPL5Vjt601+BXdHnvfqaF
+         4l6qvKTtpcFvwJ5+NvxVj1XRsNxSiwGMHUvj6LYi29bsKubCjxF10qnGsPKXsulYgvcZ
+         VFRcWMm//4sMlRS6WRAW6iUjZ3SK9pldgmd50sRtV4yOdTaH+jf5anU8ZLvzyZnsv4xY
+         Dj7UszM93LZvJfBwmHea5kvcZHC5JtMMOc7/MAquYAEKbKoNj1Y/sB2YmfPqaJgvurTP
+         Ai6g==
+X-Gm-Message-State: APjAAAUXZy2Tf3piUZKA3CRx+ofaDMOj9nKvHHQX0M624bSEihaMiQp6
+        +uFj+j6hoGZYgPbpabSTqcYd6W8t
+X-Google-Smtp-Source: APXvYqycvQtQ48h3Trd2F44847GlKWuh2TeLS/AO5nfxSjr3wgNCA7+XnvoMdGiGkUg6rDTL3w9aYQ==
+X-Received: by 2002:ac2:4650:: with SMTP id s16mr1212030lfo.32.1571235603749;
+        Wed, 16 Oct 2019 07:20:03 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id c21sm6429120lff.61.2019.10.16.07.20.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 07:20:03 -0700 (PDT)
+Subject: Re: [PATCH v1 00/17] NVIDIA Tegra20 CPUFreq driver major update
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191016052716.yipztnpg7bcuzhfn@vireshk-i7>
+ <8cf055a3-57fd-c275-9e74-a9fb5d284866@gmail.com>
+ <20191016140121.GA1862769@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d0cf9fca-eb95-1986-4c2d-ae3cded324b0@gmail.com>
+Date:   Wed, 16 Oct 2019 17:20:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191016140651.GF22835@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191016140121.GA1862769@ulmo>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/10/16 22:06, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Oct 16, 2019 at 09:26:50PM +0800, Yunfeng Ye escreveu:
->> The memory @orig_flags is allocated by strdup(), it is freed on the
->> normal path, but leak to free on the error path.
+16.10.2019 17:01, Thierry Reding пишет:
+> On Wed, Oct 16, 2019 at 04:16:27PM +0300, Dmitry Osipenko wrote:
+>> 16.10.2019 08:27, Viresh Kumar пишет:
+>>> On 16-10-19, 00:16, Dmitry Osipenko wrote:
+>>>> Hello,
+>>>>
+>>>> This series moves intermediate-clk handling from tegra20-cpufreq into
+>>>> tegra-clk driver, this allows us to switch to generic cpufreq-dt driver
+>>>> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+>>>> of the box. All boards need to adopt CPU OPPs in their device-trees in
+>>>> order to get cpufreq support. This series adds OPPs only to selective
+>>>> boards because there is assumption in a current device-trees that CPU
+>>>> voltage is set for 1GHz freq and this won't work for those CPUs that
+>>>> can go over 1GHz and thus require voltage regulators to be set up for
+>>>> voltage scaling support (CC'ed Marcel for Toradex boards). We could
+>>>> probably add delete-node for OPPs over 1GHz if there are not actively
+>>>> maintained boards.
+>>>
+>>> How do you want to get these patches merged ? Can I just pick the cpufreq bits
+>>> alone ?
+>>>
 >>
->> Fix this by adding free(orig_flags) on the error path.
+>> The cpufreq bits strictly depend on the clk patches and the regulators
+>> coupler/balancer series. Hence all patches in this series should collect
+>> acks from relevant maintainers and then Thierry will pick up the
+>> patchsets in a correct order via tegra tree, at least that's my vision.
 >>
->> Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->> v1 -> v2:
->>  - add "Fixes:" message
+>> Thierry, are you okay with that approach?
 > 
-> No need for that, I did it already, just next time look for when the
-> problem you fixed was introduced, that way the various bots out there
-> can pick this up for backports, i.e. your fix has a higher chance of
-> being beneficial to more systems.
-> 
-Normally I will add "Fixes:", this time is forgot. thanks.
+> Works for me. I already have a set of clock patches that I'd like to
+> merge via the Tegra tree because of a runtime dependency, so it'd be
+> easy to apply these on top of that.
 
-> - Arnaldo
->  
->>  tools/perf/builtin-kmem.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
->> index 1e61e353f579..9661671cc26e 100644
->> --- a/tools/perf/builtin-kmem.c
->> +++ b/tools/perf/builtin-kmem.c
->> @@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
->>  			new = realloc(new_flags, len + strlen(cpt) + 2);
->>  			if (new == NULL) {
->>  				free(new_flags);
->> +				free(orig_flags);
->>  				return NULL;
->>  			}
->>
->> -- 
->> 2.7.4.3
-> 
+Awesome, thank you very much!
 
+Viresh, then only acks to the patches related to cpufreq driver are
+needed from you for this series.
