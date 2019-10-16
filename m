@@ -2,101 +2,140 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349CFFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4B9FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7FB21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B148421835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="EriZvZ61"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCND4nsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406329AbfJPQcH (ORCPT
+        id S2406309AbfJPQcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:32:07 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35240 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406213AbfJPQcH (ORCPT
+        Wed, 16 Oct 2019 12:32:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36597 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390111AbfJPQcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:32:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v8so21836039eds.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:32:05 -0700 (PDT)
+        Wed, 16 Oct 2019 12:32:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so28838817wrd.3;
+        Wed, 16 Oct 2019 09:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=li50XsAB2VPn+/18ATYBNIxXsxb19ToHWwK0bY8hLFo=;
-        b=EriZvZ61/49DnW9dz1N6YVkL3EQI5Lg969vC0qrzamzjwn6BZXK3mNc4zXESop9Ht8
-         8CjEtCmCXmbrJcvEsIaAU4PbtYeSSh1vqiydCkR7uNOqvco0uLwmWDNiUqc58T+V/BVX
-         zjwg4IrLhgbyuro1W0BPs5bCjB2isSWb676pC92EDjFaSKG30Zuw+1BdmwJJu+6y04yu
-         7R1KsXWcYZK5Lp4CsSMcotyzL4pJOleBxBdHGW4asmvOliAE6Kqn+ecZ5W05gayLDD9d
-         nNkhDX3nBZ8evYz4uk7Ikv23R+7+0wiHE/WJDnHEynPy/NHBOzzfeF9q3unVifwjicuU
-         zGTA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1IL8KzN4eED7MJkMylgKBjULCBhCLDg5VeoFVt5LveI=;
+        b=eCND4nsOyqYAezMnMU37cySOpp5nLngSuyJa0Z+cWB+wLpxW+4pdPfI3lVITMQhUVb
+         +0XD4rsNM8jrLIZUuXL5R66YYOrsXgThdlFMqP7TrTVsOOaHF/Tc9nOv+ILcB8NCA2d5
+         iZG0V4qY5LNwMj0a+sEydSHjRWnJRbbTDX4c8b5LveFIwo4gozQ52Ce1I/W+Fbpiywq9
+         dOkRnBds7Op7Yrqqj9w2s/fcaIAs6+vYFGZtVeJEKm3PEie841QFnky0wILH1UUf++oN
+         Jw+Me7HTdZBwbIONgu1mtUZ8YMv7sl+NlXYjN8Uphs74vxoqB6BQXq2nUuJkDCFsRld9
+         Bbew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=li50XsAB2VPn+/18ATYBNIxXsxb19ToHWwK0bY8hLFo=;
-        b=tKtm2w6XcfwAOpeEnbyiHq5QGnjg4ge5+d1uCT5ey6CAfsiZ62o14A4R85rLRsaVJ7
-         GMUxhUVBwKrj0WBH4iCTAxD4b2/MopDTtaTf/W5qbYraeIL71C7qdcoLPJpJ//9UsF9D
-         Rwmi1PJxGytxu2oXUvDdYXjFjCzoSvWKa/ymcCaypTUqHBPS5EM9v8pd5HEDfagCd0/2
-         A+zhHM0yFP0WKOHHRAn3Fn/gbuX9Ki4zOw3dt8rKluI5D8JKt8G44/ak1Dwcjix3NXlT
-         bvfZfFmXntVvWjVpYhNAMng/AR2c2cr4Ro63dojrE9WdO2v6PP+k6+4PHVigMpeWAL2w
-         G8iA==
-X-Gm-Message-State: APjAAAVKjsgRJfWhX2KR0NaRURX7aC8ssqWYxzMMeVVTTw/nQ02OfRu1
-        gpcEzQhKZQtjUbo2zAJ1jSKuYbToiLQAShggA6hYdA==
-X-Google-Smtp-Source: APXvYqwxzVM4CYtWezB0pwXW5mwnwa3o7i3cBWeQj1ynMkvyu/Uz7CIBBn53oyJLn/r2ogqRCDiHREeACm67YSs9mBk=
-X-Received: by 2002:a50:cbc2:: with SMTP id l2mr41075561edi.304.1571243524399;
- Wed, 16 Oct 2019 09:32:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1IL8KzN4eED7MJkMylgKBjULCBhCLDg5VeoFVt5LveI=;
+        b=RwztK+pz0hUXs+5gCEch2k+gsX5UiYVae6pbDFMmM2s4gcNwZ4aQHGi/BczvjZ7A0/
+         ijTZSyhJpJ3KONl7hn9Dr7GMBVSuxQGEUb024M+cLWRGK0bAvm1B8PPFmYl3n6mj4dFc
+         qinXHW0ABPZ4ZY6KKfci0Xij+5PIw303WW1gbBvKNnMAwkG96ouQDIQ/1cJDRR5IX5tI
+         n4FcLMMEA1DpXn+jU7izzBkWJ0v6QOsBrjlSdG4RCWv39no3KKm+v+SQYZXWvvL7c4he
+         BwJjACsXJ6wtgsVGLao0pdSDw2XFGs/UoMHYfAKdQmT2RTcVcM62uc4bZ9TqBbgFyD02
+         Ieow==
+X-Gm-Message-State: APjAAAUnwF67LP9SQ+8uUSkBZOtoM8TP1DzaaGC+SvTlnpNtAUV9y0t6
+        pWMuH0LqMM3cU8e02O7KfvA=
+X-Google-Smtp-Source: APXvYqxuH63ig5G6nfHASUQgTWm3NGdPCshxv4cee3gvvED+PjjhRI5a0HIWN82XSTyHvy9sVMp4Eg==
+X-Received: by 2002:adf:ed84:: with SMTP id c4mr3352316wro.333.1571243552893;
+        Wed, 16 Oct 2019 09:32:32 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id v11sm2970044wml.30.2019.10.16.09.32.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 16 Oct 2019 09:32:31 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 18:32:31 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20191016163231.dgvurzdqcifunw35@pali>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190829205631.uhz6jdboneej3j3c@pali>
+ <184209.1567120696@turing-police>
+ <20190829233506.GT5281@sasha-vm>
+ <20190830075647.wvhrx4asnkrfkkwk@pali>
+ <20191016140353.4hrncxa5wkx47oau@pali>
+ <20191016143113.GS31224@sasha-vm>
+ <20191016160349.pwghlg566hh2o7id@pali>
+ <20191016162211.GA505532@kroah.com>
 MIME-Version: 1.0
-References: <20191014202135.429009-1-pasha.tatashin@soleen.com> <20191016151246.GA4261@linux.intel.com>
-In-Reply-To: <20191016151246.GA4261@linux.intel.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 16 Oct 2019 12:31:53 -0400
-Message-ID: <CA+CK2bB+q4HLnW4Yf+0yFPb0K6B-kMdP17jnh9NjYpLWj=yBgw@mail.gmail.com>
-Subject: Re: [PATCH v2] tpm/tpm_ftpm_tee: add shutdown call back
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        peterhuewe@gmx.de, jgg@ziepe.ca,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com,
-        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
-        sumit.garg@linaro.org, rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="uulki3czcfzmvzao"
+Content-Disposition: inline
+In-Reply-To: <20191016162211.GA505532@kroah.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:12 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Mon, Oct 14, 2019 at 04:21:35PM -0400, Pavel Tatashin wrote:
-> > add shutdown call back to close existing session with fTPM TA
-> > to support kexec scenario.
->
-> Sentences start in English with a capital letter :-)
->
 
-OK
+--uulki3czcfzmvzao
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-*
-> > + * ftpm_tee_shutdown - shutdown the TPM device
->
-> A function name has to have parentheses in kdoc. I know this not
-> consistently done in the subsystem ATM but this is what is documented
-> here:
->
-> https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
->
+On Wednesday 16 October 2019 09:22:11 Greg Kroah-Hartman wrote:
+> On Wed, Oct 16, 2019 at 06:03:49PM +0200, Pali Roh=C3=A1r wrote:
+> > > Can I assume you will be implementing TexFAT support once the spec is
+> > > available?
+> >=20
+> > I cannot promise that I would implement something which I do not know
+> > how is working... It depends on how complicated TexFAT is and also how
+> > future exfat support in kernel would look like.
+> >=20
+> > But I'm interesting in implementing it.
+>=20
+> What devices need TexFAT?  I thought it the old devices that used it are
+> long obsolete and gone.  How is this feature going to be tested/used?
 
-OK.
+Hi Greg! Per 3.1.16 of exFAT specification [1], TexFAT extension is the
+only way how to use more FAT tables, like in FAT32 (where you normally
+have two FATs). Secondary FAT table can be used e.g. for redundancy or
+data recovery. For FAT32 volumes, e.g. fsck.fat uses secondary FAT table
+when first one is corrupted.
 
-A new version is sent out.
+Usage of just one FAT table in exFAT is just step backward from FAT32 as
+secondary FAT table is sometimes the only way how to recover broken FAT
+fs. So I do not think that exFAT is for old devices, but rather
+non-exFAT is for old devices. Modern filesystems have journal or other
+technique to do (fast|some) recovery, exFAT has nothing.
 
-Pasha
+And how is this feature going to be used? That depends on specification.
+
+[1] - https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specifica=
+tion#3116-numberoffats-field
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--uulki3czcfzmvzao
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXadGHQAKCRCL8Mk9A+RD
+Ukm6AJ9ab4GclmcB/R83hw/wIqInUfSArwCeLEPDX7XQcg6sMkgXJ6qqa0gQCcE=
+=Ni+T
+-----END PGP SIGNATURE-----
+
+--uulki3czcfzmvzao--
