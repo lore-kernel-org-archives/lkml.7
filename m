@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE58C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20555ECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8959620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B5920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732993AbfJPDot (ORCPT
+        id S1733190AbfJPDou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:44:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55614 "EHLO
+        Tue, 15 Oct 2019 23:44:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55617 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbfJPDos (ORCPT
+        with ESMTP id S1731894AbfJPDot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:44:48 -0400
+        Tue, 15 Oct 2019 23:44:49 -0400
 Received: from [213.220.153.21] (helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKaEw-0000Wg-Tw; Wed, 16 Oct 2019 03:44:46 +0000
+        id 1iKaEx-0000Wg-BU; Wed, 16 Oct 2019 03:44:47 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     christian.brauner@ubuntu.com
 Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
         kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH v3 1/3] bpf: use check_zeroed_user() in bpf_check_uarg_tail_zero()
-Date:   Wed, 16 Oct 2019 05:44:30 +0200
-Message-Id: <20191016034432.4418-2-christian.brauner@ubuntu.com>
+Subject: [PATCH v3 2/3] bpf: use copy_struct_from_user() in bpf_prog_get_info_by_fd()
+Date:   Wed, 16 Oct 2019 05:44:31 +0200
+Message-Id: <20191016034432.4418-3-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016034432.4418-1-christian.brauner@ubuntu.com>
 References: <20191016004138.24845-1-christian.brauner@ubuntu.com>
@@ -44,10 +44,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In v5.4-rc2 we added a new helper (cf. [1]) check_zeroed_user() which
-does what bpf_check_uarg_tail_zero() is doing generically. We're slowly
-switching such codepaths over to use check_zeroed_user() instead of
-using their own hand-rolled version.
+In v5.4-rc2 we added a new helper (cf. [1]) copy_struct_from_user().
+This helper is intended for all codepaths that copy structs from
+userspace that are versioned by size. bpf_prog_get_info_by_fd() does
+exactly what copy_struct_from_user() is doing.
+Note that copy_struct_from_user() is calling min() already. So
+technically, the min_t() call could go. But the info_len is used further
+below so leave it.
 
 [1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
 Cc: Alexei Starovoitov <ast@kernel.org>
@@ -57,70 +60,47 @@ Acked-by: Aleksa Sarai <cyphar@cyphar.com>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v1 */
-Link: https://lore.kernel.org/r/20191009160907.10981-2-christian.brauner@ubuntu.com
+Link: https://lore.kernel.org/r/20191009160907.10981-3-christian.brauner@ubuntu.com
 
 /* v2 */
-Link: https://lore.kernel.org/r/20191016004138.24845-2-christian.brauner@ubuntu.com
+Link: https://lore.kernel.org/r/20191016004138.24845-3-christian.brauner@ubuntu.com
 - Alexei Starovoitov <ast@kernel.org>:
-  - Add a comment in bpf_check_uarg_tail_zero() to clarify that
-    copy_struct_from_user() should be used whenever possible instead.
+  - remove unneeded initialization
 
 /* v3 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - use correct checks for check_zeroed_user()
+unchanged
 ---
- kernel/bpf/syscall.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+ kernel/bpf/syscall.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 82eabd4e38ad..40edcaeccd71 100644
+index 40edcaeccd71..151447f314ca 100644
 --- a/kernel/bpf/syscall.c
 +++ b/kernel/bpf/syscall.c
-@@ -58,35 +58,28 @@ static const struct bpf_map_ops * const bpf_map_types[] = {
-  * There is a ToCToU between this function call and the following
-  * copy_from_user() call. However, this is not a concern since this function is
-  * meant to be a future-proofing of bits.
-+ *
-+ * Note, instead of using bpf_check_uarg_tail_zero() followed by
-+ * copy_from_user() use the dedicated copy_struct_from_user() helper which
-+ * performs both tasks whenever possible.
-  */
- int bpf_check_uarg_tail_zero(void __user *uaddr,
- 			     size_t expected_size,
- 			     size_t actual_size)
+@@ -2306,20 +2306,17 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
+ 				   union bpf_attr __user *uattr)
  {
--	unsigned char __user *addr;
--	unsigned char __user *end;
--	unsigned char val;
-+	size_t size = min(expected_size, actual_size);
-+	size_t rest = max(expected_size, actual_size) - size;
+ 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
+-	struct bpf_prog_info info = {};
++	struct bpf_prog_info info;
+ 	u32 info_len = attr->info.info_len;
+ 	struct bpf_prog_stats stats;
+ 	char __user *uinsns;
+ 	u32 ulen;
  	int err;
  
- 	if (unlikely(actual_size > PAGE_SIZE))	/* silly large */
- 		return -E2BIG;
- 
--	if (unlikely(!access_ok(uaddr, actual_size)))
+-	err = bpf_check_uarg_tail_zero(uinfo, sizeof(info), info_len);
++	info_len = min_t(u32, sizeof(info), info_len);
++	err = copy_struct_from_user(&info, sizeof(info), uinfo, info_len);
+ 	if (err)
+ 		return err;
+-	info_len = min_t(u32, sizeof(info), info_len);
+-
+-	if (copy_from_user(&info, uinfo, info_len))
 -		return -EFAULT;
--
- 	if (actual_size <= expected_size)
- 		return 0;
  
--	addr = uaddr + expected_size;
--	end  = uaddr + actual_size;
--
--	for (; addr < end; addr++) {
--		err = get_user(val, addr);
--		if (err)
--			return err;
--		if (val)
--			return -E2BIG;
--	}
-+	err = check_zeroed_user(uaddr + expected_size, rest);
-+	if (err <= 0)
-+		return err ?: -E2BIG;
- 
- 	return 0;
- }
+ 	info.type = prog->type;
+ 	info.id = prog->aux->id;
 -- 
 2.23.0
 
