@@ -2,131 +2,109 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB898ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F36ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEA121848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E8B20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="FXSR/VSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbfJPJTz (ORCPT
+        id S1732453AbfJPJUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:19:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46304 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726480AbfJPJTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:19:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 53F5BB213;
-        Wed, 16 Oct 2019 09:18:40 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 181F31E3BDE; Wed, 16 Oct 2019 11:18:40 +0200 (CEST)
-Date:   Wed, 16 Oct 2019 11:18:40 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Jan Kara <jack@suse.cz>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "tj@kernel.org" <tj@kernel.org>, Dennis Zhou <dennis@kernel.org>
-Subject: Re: [PATCH v2] cgroup, blkcg: prevent dirty inodes to pin dying
- memory cgroups
-Message-ID: <20191016091840.GC30337@quack2.suse.cz>
-References: <20191010234036.2860655-1-guro@fb.com>
- <20191015090933.GA21104@quack2.suse.cz>
- <20191015214041.GA24736@tower.DHCP.thefacebook.com>
+        Wed, 16 Oct 2019 05:20:32 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:19987 "EHLO mail1.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfJPJUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:20:31 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Wed, 16 Oct 2019 05:20:31 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1571217631; x=1602753631;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kKIuy6KHImHHQv8CRduIvGuN6BHhgWA18/nOgMiEItI=;
+  b=FXSR/VScbb5tNM8MrimcwM3Q7tm6rhZSNuUIRFcxht8nf7CEav/bDEZl
+   Of1/qsSt4hsNbYOU0SCpBd0yKuyl76HxHTQZsy7cytRX/+umNoodxWQhq
+   5Cw4RfKvYY097TIyo7xA+8FT1eoI1PRwUCxiyfP+6zmHja5ItQsw2bjAO
+   er6MF/wAykqrxaMVMTdYgKSHnlf756/DPYGDQrJ9atlY/cJN64+qNx+Zc
+   5GAXOIYwiTSl0D+dXhUgofTPZSazkkyNmEjflZgg9L/vXH56arp2o+Q9U
+   L4qoI8wIP6yUhFC5YauyVzSxNnVfOtRnR4d2QOqnDYepH+NWqI5faPgzk
+   A==;
+IronPort-SDR: qNGUlV/AfLiwMs+w8r2vA/UExC2ZaWjO5V1PGrkkN2PW4suNle81PyESJSG1SHJoEx1+Cccpmq
+ rb+mimXGlno5cekbWkx+/zEepLdrMNkoVJAARODs5e5rB9QZV5g/cCT/2VOq7lF8OKfE1KvGwn
+ b8TLl7EIsFA9yvU6BteH1gx99B8yElHm1LK2vmz0wbmCkG9eMWbXdjYsJTN7Mwzg7vhMHUl3xi
+ ra/UI6lVoyvtiDB6DtLVLVimLTfeNRgzJobvrhLnunlSsBYBfTTQzK0LCwm6QG+aNpwCPG618L
+ o+E=
+X-IronPort-AV: E=Sophos;i="5.67,303,1566856800"; 
+   d="scan'208";a="20289456"
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     <stable@vger.kernel.org>
+CC:     <festevam@gmail.com>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <perex@perex.cz>, <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Richard Leitner <richard.leitner@skidata.com>
+Subject: [PATCH v5.3] ASoC: sgtl5000: add ADC mute control
+Date:   Wed, 16 Oct 2019 11:13:04 +0200
+Message-ID: <20191016091304.15870-1-richard.leitner@skidata.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191015214041.GA24736@tower.DHCP.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex5srv.skidata.net (192.168.111.83) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 15-10-19 21:40:45, Roman Gushchin wrote:
-> On Tue, Oct 15, 2019 at 11:09:33AM +0200, Jan Kara wrote:
-> > On Thu 10-10-19 16:40:36, Roman Gushchin wrote:
-> > 
-> > > @@ -426,7 +431,7 @@ static void inode_switch_wbs_work_fn(struct work_struct *work)
-> > >  	if (!list_empty(&inode->i_io_list)) {
-> > >  		struct inode *pos;
-> > >  
-> > > -		inode_io_list_del_locked(inode, old_wb);
-> > > +		inode_io_list_del_locked(inode, old_wb, false);
-> > >  		inode->i_wb = new_wb;
-> > >  		list_for_each_entry(pos, &new_wb->b_dirty, i_io_list)
-> > >  			if (time_after_eq(inode->dirtied_when,
-> > 
-> > This bit looks wrong. Not the change you made as such but the fact that you
-> > can now move inode from b_attached list of old wb to the dirty list of new
-> > wb.
-> 
-> Hm, can you, please, elaborate a bit more why it's wrong?
-> The reference to the old_wb will be dropped by the switching code.
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-My point is that the code in full looks like:
+Upstream commit 631bc8f0134a ("ASoC: sgtl5000: Fix of unmute outputs on
+probe"), which is e9f621efaebd in v5.3 replaced snd_soc_component_write
+with snd_soc_component_update_bits and therefore no longer cleared the
+MUTE_ADC flag. This caused the ADC to stay muted and recording doesn't
+work any longer. This patch fixes this problem by adding a Switch control
+for MUTE_ADC.
 
-        if (!list_empty(&inode->i_io_list)) {
-                struct inode *pos;
+commit 694b14554d75 ("ASoC: sgtl5000: add ADC mute control") upstream
 
-                inode_io_list_del_locked(inode, old_wb);
-                inode->i_wb = new_wb;
-                list_for_each_entry(pos, &new_wb->b_dirty, i_io_list)
-                        if (time_after_eq(inode->dirtied_when,
-                                          pos->dirtied_when))
-                                break;
-                inode_io_list_move_locked(inode, new_wb, pos->i_io_list.prev);
-        } else {
+This control mute/unmute the ADC input of SGTL5000
+using its CHIP_ANA_CTRL register.
 
-So inode is always moved from some io list in old_wb to b_dirty list of
-new_wb. This is fine when it could be only on b_dirty, b_io, b_more_io lists
-of old_wb. But once you add b_attached list to the game, it is not correct
-anymore. You should not add clean inode to b_dirty list of new_wb.
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-5-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+Fixes: e9f621efaebd ("ASoC: sgtl5000: Fix of unmute outputs on probe")
+---
+ sound/soc/codecs/sgtl5000.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > > +
-> > > +	list_for_each_entry_safe(inode, tmp, &wb->b_attached, i_io_list) {
-> > > +		if (!spin_trylock(&inode->i_lock))
-> > > +			continue;
-> > > +		xa_lock_irq(&inode->i_mapping->i_pages);
-> > > +		if (!(inode->i_state &
-> > > +		      (I_FREEING | I_CLEAR | I_SYNC | I_DIRTY | I_WB_SWITCH))) {
-> > > +			WARN_ON_ONCE(inode->i_wb != wb);
-> > > +			inode->i_wb = NULL;
-> > > +			wb_put(wb);
-> > 
-> > Hum, currently the code assumes that once i_wb is set, it never becomes
-> > NULL again. In particular the inode e.g. in
-> > fs/fs-writeback.c:inode_congested() or generally unlocked_inode_to_wb_begin()
-> > users could get broken by this. The i_wb switching code is so complex
-> > exactly because of these interactions.
-> > 
-> > Maybe you thought through the interactions and things are actually fine but
-> > if nothing else you'd need a big fat comment here explaining why this is
-> > fine and update inode_congested() comments etc.
-> 
-> Yeah, I thought that once inode is clean and not switching it's safe to clear
-> the i_wb pointer, but seems that it's not completely true.
->
-> One idea I have is to always release wbs using rcu delayed work, so that
-> it will be save to dereference i_wb pointer under rcu, if only it's not NULL
-> (the check has to be added). I'll try to implement this scheme, but if you
-> know in advance that it's not gonna work, please, let me know.
-
-I think I'd just drop inode_to_wb_is_valid() because once i_wb can change
-to NULL, that function is just pointless in that single callsite. Also we
-have to count with the fact that unlocked_inode_to_wb_begin() can return
-NULL and gracefully do as much as possible in that case for all the
-callers. And I agree that those occurences in mm/page-writeback.c should be
-blocked by inode being clean and you holding all those locks so you can
-warn if that happens I guess.
-
-								Honza
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 3f28e7862b5b..b65232521ea8 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -720,6 +720,7 @@ static const struct snd_kcontrol_new sgtl5000_snd_controls[] = {
+ 			SGTL5000_CHIP_ANA_ADC_CTRL,
+ 			8, 1, 0, capture_6db_attenuate),
+ 	SOC_SINGLE("Capture ZC Switch", SGTL5000_CHIP_ANA_CTRL, 1, 1, 0),
++	SOC_SINGLE("Capture Switch", SGTL5000_CHIP_ANA_CTRL, 0, 1, 1),
+ 
+ 	SOC_DOUBLE_TLV("Headphone Playback Volume",
+ 			SGTL5000_CHIP_ANA_HP_CTRL,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.21.0
+
