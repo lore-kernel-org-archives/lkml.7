@@ -2,122 +2,192 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6DECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7941BC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E564C21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A1F21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:33:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LIpQPLqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389488AbfJPIcj (ORCPT
+        id S2389838AbfJPIdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:32:39 -0400
-Received: from mx2a.mailbox.org ([80.241.60.219]:28169 "EHLO mx2a.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbfJPIcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:32:39 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2a.mailbox.org (Postfix) with ESMTPS id 5201CA1F82;
-        Wed, 16 Oct 2019 10:32:34 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id VpkJpA2e4UPE; Wed, 16 Oct 2019 10:32:29 +0200 (CEST)
-Date:   Wed, 16 Oct 2019 19:32:19 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
- operations
-Message-ID: <20191016083218.ttsaqnxpjh5i5bgv@yavin.dot.cyphar.com>
-References: <20191012010539.6131-1-cyphar@cyphar.com>
- <20191014154136.GF18794@devbig004.ftw2.facebook.com>
- <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
- <20191014163307.GG18794@devbig004.ftw2.facebook.com>
+        Wed, 16 Oct 2019 04:33:07 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39400 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388364AbfJPIdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:33:06 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G8WSR3035081;
+        Wed, 16 Oct 2019 03:32:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571214748;
+        bh=s39FpZDsIVijRksoigZfypRpHO/kfg6d4vyQscJS4zg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LIpQPLqRojaXAO9e6h2CjCm6EfW3BMXspS/9xYx3A4KALSm/3UDMadNC/jHJ+JW3d
+         oz8i6my0ueNEkbJRnwRO1wIN7oXK9JDg3SJ6K+NdhJTDqGFwTk7szvxN8BTnjpEb1/
+         m/YZuQGEOOFhtM3zGDYHW4/jTkdakRyh2jXAUF1E=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G8WSmb033171
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 03:32:28 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 03:32:21 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 03:32:28 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G8WKU2052788;
+        Wed, 16 Oct 2019 03:32:22 -0500
+Subject: Re: [PATCH v3 2/3] mtd: spi-nor: cadence-quadspi: Disable the DAC for
+ Intel LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <richard@nod.at>, <jwboyer@gmail.com>,
+        <boris.brezillon@free-electrons.com>, <cyrille.pitchen@atmel.com>,
+        <david.oberhollenzer@sigma-star.at>, <miquel.raynal@bootlin.com>,
+        <tudor.ambarus@gmail.com>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20190909104733.14273-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190909104733.14273-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <85355c80-1344-db22-ae31-0f20f30b9754@ti.com>
+Date:   Wed, 16 Oct 2019 14:02:50 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jvbscg62ooyqvvh3"
-Content-Disposition: inline
-In-Reply-To: <20191014163307.GG18794@devbig004.ftw2.facebook.com>
+In-Reply-To: <20190909104733.14273-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jvbscg62ooyqvvh3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 2019-10-14, Tejun Heo <tj@kernel.org> wrote:
-> Hello, Aleksa.
->=20
-> On Tue, Oct 15, 2019 at 02:59:31AM +1100, Aleksa Sarai wrote:
-> > On 2019-10-14, Tejun Heo <tj@kernel.org> wrote:
-> > > On Sat, Oct 12, 2019 at 12:05:39PM +1100, Aleksa Sarai wrote:
-> > > > Because pids->limit can be changed concurrently (but we don't want =
-to
-> > > > take a lock because it would be needlessly expensive), use the
-> > > > appropriate memory barriers.
-> > >=20
-> > > I can't quite tell what problem it's fixing.  Can you elaborate a
-> > > scenario where the current code would break that your patch fixes?
-> >=20
-> > As far as I can tell, not using *_ONCE() here means that if you had a
-> > process changing pids->limit from A to B, a process might be able to
-> > temporarily exceed pids->limit -- because pids->limit accesses are not
-> > protected by mutexes and the C compiler can produce confusing
-> > intermediate values for pids->limit[1].
-> >
-> > But this is more of a correctness fix than one fixing an actually
-> > exploitable bug -- given the kernel memory model work, it seems like a
-> > good idea to just use READ_ONCE() and WRITE_ONCE() for shared memory
-> > access.
->=20
-> READ/WRITE_ONCE provides protection against compiler generating
-> multiple accesses for a single operation.  It won't prevent split
-> writes / reads of 64bit variables on 32bit machines.  For that, you'd
-> have to switch them to atomic64_t's.
+On 09/09/19 4:17 PM, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> on Intel's Lightning Mountain(LGM) SoCs QSPI controller do not use
 
-Maybe I'm misunderstanding Documentation/atomic_t.txt, but it looks to
-me like it's explicitly saying that I shouldn't use atomic64_t if I'm
-just using it for fetching and assignment.
+s/on/On
 
-> The non-RMW ops are (typically) regular LOADs and STOREs and are
-> canonically implemented using READ_ONCE(), WRITE_ONCE(),
-> smp_load_acquire() and smp_store_release() respectively. Therefore, if
-> you find yourself only using the Non-RMW operations of atomic_t, you
-> do not in fact need atomic_t at all and are doing it wrong.
+> Direct Access Controller(DAC).
+> 
+> This patch introduces to properly disable the Direct Access Controller
 
-As for 64-bit on 32-bit machines -- that is a separate issue, but from
-[1] it seems to me like there are more problems that *_ONCE() fixes than
-just split reads and writes.
+"This patch adds a quirk to disable..." or something something similar
 
-[1]: https://lwn.net/Articles/793253/
+> for data transfer instead it uses indirect data transfer.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  drivers/mtd/spi-nor/Kconfig           |  2 +-
+>  drivers/mtd/spi-nor/cadence-quadspi.c | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 6de83277ce8b..ba2e372ae514 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -34,7 +34,7 @@ config SPI_ASPEED_SMC
+>  
+>  config SPI_CADENCE_QUADSPI
+>  	tristate "Cadence Quad SPI controller"
+> -	depends on OF && (ARM || ARM64 || COMPILE_TEST)
+> +	depends on OF && (ARM || ARM64 || COMPILE_TEST || X86)
+>  	help
+>  	  Enable support for the Cadence Quad SPI Flash controller.
+>  
+> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+> index 67f15a1f16fd..73b9fbd1508a 100644
+> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+> @@ -33,6 +33,7 @@
+>  
+>  /* Quirks */
+>  #define CQSPI_NEEDS_WR_DELAY		BIT(0)
+> +#define CQSPI_DISABLE_DAC_MODE		BIT(1)
+>  
+>  /* Capabilities mask */
+>  #define CQSPI_BASE_HWCAPS_MASK					\
+> @@ -609,6 +610,13 @@ static int cqspi_write_setup(struct spi_nor *nor)
+>  	struct cqspi_st *cqspi = f_pdata->cqspi;
+>  	void __iomem *reg_base = cqspi->iobase;
+>  
+> +	/* Disable direct access controller */
+> +	if (!f_pdata->use_direct_mode) {
+> +		reg = readl(reg_base + CQSPI_REG_CONFIG);
+> +		reg &= ~CQSPI_REG_CONFIG_ENB_DIR_ACC_CTRL;
+> +		writel(reg, reg_base + CQSPI_REG_CONFIG);
+> +	}
+> +
+>  	/* Set opcode. */
+>  	reg = nor->program_opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
+>  	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
+> @@ -1328,6 +1336,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>  	struct resource *res_ahb;
+>  	struct reset_control *rstc, *rstc_ocp;
+>  	const struct cqspi_driver_platdata *ddata;
+> +	struct cqspi_flash_pdata *f_pdata;
+>  	int ret;
+>  	int irq;
+>  
+> @@ -1436,6 +1445,9 @@ static int cqspi_probe(struct platform_device *pdev)
+>  		goto probe_setup_failed;
+>  	}
+>  
+> +	if (ddata && (ddata->quirks & CQSPI_DISABLE_DAC_MODE))
+> +		f_pdata->use_direct_mode = false;
+> +
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+If you do this here, you will still end up acquiring a DMA channel in
+cqspi_request_mmap_dma() (called from cqspi_setup_flash()). So, please
+move the check to cqspi_setup_flash().
 
---jvbscg62ooyqvvh3
-Content-Type: application/pgp-signature; name="signature.asc"
+>  	return ret;
+>  probe_setup_failed:
+>  	cqspi_controller_enable(cqspi, 0);
+> @@ -1510,6 +1522,11 @@ static const struct cqspi_driver_platdata am654_ospi = {
+>  	.quirks = CQSPI_NEEDS_WR_DELAY,
+>  };
+>  
+> +static const struct cqspi_driver_platdata intel_lgm_qspi = {
+> +	.hwcaps_mask = CQSPI_BASE_HWCAPS_MASK,
+> +	.quirks = CQSPI_DISABLE_DAC_MODE,
+> +};
+> +
+>  static const struct of_device_id cqspi_dt_ids[] = {
+>  	{
+>  		.compatible = "cdns,qspi-nor",
+> @@ -1523,6 +1540,10 @@ static const struct of_device_id cqspi_dt_ids[] = {
+>  		.compatible = "ti,am654-ospi",
+>  		.data = &am654_ospi,
+>  	},
+> +	{
+> +		.compatible = "intel,lgm-qspi",
+> +		.data = &intel_lgm_qspi,
+> +	},
+>  	{ /* end of table */ }
+>  };
+>  
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXabVjwAKCRCdlLljIbnQ
-Eo+bAP4twCdIzc/3irINS1h8+SDHb5Id/IYDo/ool67sAVKdmAD/ddb+01/LuSQE
-N1Ie5O8BQm/MY6wpbxlAT69EyW1n8QY=
-=rCSZ
------END PGP SIGNATURE-----
-
---jvbscg62ooyqvvh3--
+-- 
+Regards
+Vignesh
