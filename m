@@ -2,132 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5948ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F174C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970FA2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0782082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:50:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="JDRvwufl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KCZ+f1LS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391361AbfJPHuA (ORCPT
+        id S2391374AbfJPHuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:50:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53223 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391302AbfJPHt7 (ORCPT
+        Wed, 16 Oct 2019 03:50:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57086 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391302AbfJPHuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:49:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r19so1724300wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Of9U+idySm1f7zahNIvCqAevKwBri2ZmJMTLKSSsyAM=;
-        b=JDRvwuflF5JjJLkwOlEL2zXx2Czdzdk9RV9OXNAYOpDXXQ4yv0GekH0yOJQe1pT7O2
-         IRKQSJMqSBmS6z2WLJC1ofVqU8cSOIgIGXwY6bmOjrqCkWReRrv8leYVraJrh9DmU3r7
-         0/Ygo/0nut2WZSooZoC9k31IeP/GV7VM4gJbdtZzwwgBFKv1G4ecEZdHYVJ0KaX7f2GQ
-         v7ABD7pi/PISIFSmTixlj/iWL2w6meSHc1pqL2Mne5K9Vo9yPM4Qt82NpO7SuJO4v6P0
-         mAUI4EpTdWMiwujK0Z0h5B2BvJIAjQAO++ja/8NStba6ltxtj9uzBAaWaqqaURNnVnyo
-         vY4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Of9U+idySm1f7zahNIvCqAevKwBri2ZmJMTLKSSsyAM=;
-        b=XxWWnOlaBEbMcbLzWhgpK4qFaBdL9icJnN77z5dGD9zLjqIjWkJcFx0yC7KdeaFpP5
-         u4jGxHr+VRXMMyH9FmT/+CmREh0pCzi2BtPggpLi7WKdjZsQ8fw6nfPU3OF21+rcjAlB
-         mjc1zBcNqDQ8s8cUCxVNWStQ6D/m2mRXdFkpuSb4iNH3FWucP/izd3E1Kwh2W5x6QBcI
-         fdFDx66WCYvZ/hJcRJtnH4L1NdfnYyAi0HlR5fSBwL3y6R5j6oq+NvW8mW9LeowLQLqN
-         xzVYRMeStFKv1TuWSPNgHmCFD5yBePaW/ZnSVMI0YYykj7dLXnN5d1Ze0k32AtMdthPU
-         ijMw==
-X-Gm-Message-State: APjAAAVDMhji0fxarSDq5EerBsmnUmg8EMACOgDLZlGLcZIwxrx0BwfE
-        hEzTSK4cNMhYhnyGa2YIrRdH5nTg0AFov94jKwVPSA==
-X-Google-Smtp-Source: APXvYqz3LCGD0ihBV0I11F3X+PJJZ+xeWK2dkBbT4TN59RQ/UGEIL7SmGAdg9INWz7ievs7QPV0ci0GAdJyvMVB+QuY=
-X-Received: by 2002:a05:600c:214f:: with SMTP id v15mr2001725wml.177.1571212197232;
- Wed, 16 Oct 2019 00:49:57 -0700 (PDT)
+        Wed, 16 Oct 2019 03:50:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gHzug1GaUc7ezNj7bFyKz/sT6qVftQ/c/eZSM2ZX/yA=; b=KCZ+f1LSz+WgwwiREH87xcTq/
+        gdAvldI5Mhnc/Q14EWgLX8/WgPcNqstNJEAWsC5WoFJHN+AxJtLVDmeP9Qmf1IRwh/ho/R4hTHGgw
+        MVY8hfrR2oLY+aCCeR8uMeudZ2hNu21TKkPW4RZkvYIAcIes4+edKfjInFEG10Yg9y/t0UwCGAEws
+        0Tsp1c2BB+5htwUkDzZuv8VVC5p3AahL7ThhupbnCqduKuC+6NSo9mg9AH8eE+jllee2nJ6eV8pmZ
+        GRzY87IwtVS1UFmc2euekMg/WlWdrK0MQkIjkt5aXdrTqY66a5Z8c2OEQrIoCowYWG3LeTHMl+HoP
+        0C78MuyDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKe49-0001yz-LA; Wed, 16 Oct 2019 07:49:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F197303C1E;
+        Wed, 16 Oct 2019 09:48:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3936520B972E4; Wed, 16 Oct 2019 09:49:51 +0200 (CEST)
+Date:   Wed, 16 Oct 2019 09:49:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20191016074951.GM2328@hirez.programming.kicks-ass.net>
+References: <20191010115449.22044b53@gandalf.local.home>
+ <20191010172819.GS2328@hirez.programming.kicks-ass.net>
+ <20191011125903.GN2359@hirez.programming.kicks-ass.net>
+ <20191015130739.GA23565@linux-8ccs>
+ <20191015135634.GK2328@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
+ <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
+ <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
 MIME-Version: 1.0
-References: <20191016073408.7299-1-greentime.hu@sifive.com>
-In-Reply-To: <20191016073408.7299-1-greentime.hu@sifive.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 16 Oct 2019 13:19:45 +0530
-Message-ID: <CAAhSdy275aL_hicDWUBKF+9_dr+FWfvZi0__Zm2=FzzpkYj22w@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: fix virtual address overlapped in FIXADDR_START
- and VMEMMAP_START
-To:     greentime.hu@sifive.com
-Cc:     Greentime Hu <green.hu@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015182705.1aeec284@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 1:04 PM <greentime.hu@sifive.com> wrote:
->
-> From: Greentime Hu <greentime.hu@sifive.com>
->
-> This patch fixes the virtual address layout in pgtable.h.
-> The virtual address of FIXADDR_START and VMEMMAP_START should not be overlapped.
-> These addresses will be existed at the same time in Linux kernel that they can't
-> be overlapped.
->
-> Fixes: d95f1a542c3d ("RISC-V: Implement sparsemem")
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> ---
->  arch/riscv/include/asm/pgtable.h | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 4f4162d90586..b927fb4ecf1c 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -87,14 +87,6 @@ extern pgd_t swapper_pg_dir[];
->  #define VMALLOC_END      (PAGE_OFFSET - 1)
->  #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
->
-> -#define FIXADDR_TOP      VMALLOC_START
-> -#ifdef CONFIG_64BIT
-> -#define FIXADDR_SIZE     PMD_SIZE
-> -#else
-> -#define FIXADDR_SIZE     PGDIR_SIZE
-> -#endif
-> -#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-> -
->  /*
->   * Roughly size the vmemmap space to be large enough to fit enough
->   * struct pages to map half the virtual address space. Then
-> @@ -108,6 +100,14 @@ extern pgd_t swapper_pg_dir[];
->
->  #define vmemmap                ((struct page *)VMEMMAP_START)
->
-> +#define FIXADDR_TOP      (VMEMMAP_START)
-> +#ifdef CONFIG_64BIT
-> +#define FIXADDR_SIZE     PMD_SIZE
-> +#else
-> +#define FIXADDR_SIZE     PGDIR_SIZE
-> +#endif
-> +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-> +
->  /*
->   * ZERO_PAGE is a global shared page that is always zero,
->   * used for zero-mapped memory areas, etc.
-> --
-> 2.17.1
->
+On Tue, Oct 15, 2019 at 06:27:05PM -0400, Steven Rostedt wrote:
 
-Looks good to me.
+> (7) Seventh session, titled "klp-convert and livepatch relocations", was led
+> by Joe Lawrence.
+> 
+> Joe started the session with problem statement: accessing non exported / static
+> symbols from inside the patch module. One possible workardound is manually via
+> kallsyms. Second workaround is klp-convert, which actually creates proper
+> relocations inside the livepatch module from the symbol database during the
+> final .ko link.
+> Currently module loader looks for special livepatch relocations and resolves
+> those during runtime; kernel support for these relocations have so far been
+> added for x86 only. Special livepatch relocations are supported and processed
+> also on other architectures. Special quirks/sections are not yet supported.
+> Plus klp-convert would still be needed even with late module patching update.
+> vmlinux or modules could have ambiguous static symbols.
+> 
+> It turns out that the features / bugs below have to be resolved before we
+> can claim the klp-convert support for relocation complete:
+>     - handle all the corner cases (jump labels, static keys, ...) properly and
+>       have a good regression tests in place
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+I suppose all the patches in this series-of-series here will make life
+harder for KLP, static_call() and 2 byte jumps etc..
 
-Regards,
-Anup
+>     - one day we might (or might not) add support for out-of-tree modules which
+>       need klp-convert
+>     - BFD bug 24456 (multiple relocations to the same .text section)
+
+
