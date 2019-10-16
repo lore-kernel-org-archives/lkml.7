@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550A5FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70225FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDD121D7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528472064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436770AbfJPT2b (ORCPT
+        id S2436788AbfJPT2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:28:31 -0400
-Received: from mailoutvs7.siol.net ([185.57.226.198]:46362 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436749AbfJPT2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:28:30 -0400
+        Wed, 16 Oct 2019 15:28:39 -0400
+Received: from mailoutvs50.siol.net ([185.57.226.241]:46392 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2436772AbfJPT2g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 15:28:36 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id ED39E524483;
-        Wed, 16 Oct 2019 21:28:26 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTP id A44FE52462C;
+        Wed, 16 Oct 2019 21:28:31 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
         by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id kngUXKedAVqz; Wed, 16 Oct 2019 21:28:26 +0200 (CEST)
+        with ESMTP id I-E62lmLyREJ; Wed, 16 Oct 2019 21:28:31 +0200 (CEST)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 981B252459B;
-        Wed, 16 Oct 2019 21:28:26 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPS id 5DC0F5241BC;
+        Wed, 16 Oct 2019 21:28:31 +0200 (CEST)
 Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 46B43524483;
-        Wed, 16 Oct 2019 21:28:24 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPSA id 10E8952462C;
+        Wed, 16 Oct 2019 21:28:29 +0200 (CEST)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     mripard@kernel.org, wens@csie.org
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
         hverkuil@xs4all.nl, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 4/6] dt-bindings: media: Add Allwinner H3 Deinterlace binding
-Date:   Wed, 16 Oct 2019 21:28:05 +0200
-Message-Id: <20191016192807.1278987-5-jernej.skrabec@siol.net>
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: [PATCH v3 6/6] dts: arm: sun8i: h3: Enable deinterlace unit
+Date:   Wed, 16 Oct 2019 21:28:07 +0200
+Message-Id: <20191016192807.1278987-7-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016192807.1278987-1-jernej.skrabec@siol.net>
 References: <20191016192807.1278987-1-jernej.skrabec@siol.net>
@@ -53,103 +53,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H3 Deinterlace core is used for deinterlacing interlaced video
-content. Core can also be found on some later SoCs, like H5 and R40.
+Allwinner H3 SoC contains deinterlace unit, which can be used in
+combination with VPU unit to decode and process interlaced videos.
+
+Add a node for it.
 
 Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- .../media/allwinner,sun8i-h3-deinterlace.yaml | 75 +++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun=
-8i-h3-deinterlace.yaml
+ arch/arm/boot/dts/sun8i-h3.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun8i-h3-d=
-einterlace.yaml b/Documentation/devicetree/bindings/media/allwinner,sun8i=
--h3-deinterlace.yaml
-new file mode 100644
-index 000000000000..2d27643340ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterl=
-ace.yaml
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/allwinner,sun8i-h3-deinterlace.=
-yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3=
+.dtsi
+index e37c30e811d3..7a59c57d2114 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -120,6 +120,19 @@
+ 	};
+=20
+ 	soc {
++		deinterlace: deinterlace@1400000 {
++			compatible =3D "allwinner,sun8i-h3-deinterlace";
++			reg =3D <0x01400000 0x20000>;
++			clocks =3D <&ccu CLK_BUS_DEINTERLACE>,
++				 <&ccu CLK_DEINTERLACE>,
++				 <&ccu CLK_DRAM_DEINTERLACE>;
++			clock-names =3D "bus", "mod", "ram";
++			resets =3D <&ccu RST_BUS_DEINTERLACE>;
++			interrupts =3D <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++			interconnects =3D <&mbus 9>;
++			interconnect-names =3D "dma-mem";
++		};
 +
-+title: Allwinner H3 Deinterlace Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <mripard@kernel.org>
-+
-+description: |-
-+  The Allwinner H3 and later has a deinterlace core used for
-+  deinterlacing interlaced video content.
-+
-+properties:
-+  compatible:
-+    const: allwinner,sun8i-h3-deinterlace
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Deinterlace interface clock
-+      - description: Deinterlace module clock
-+      - description: Deinterlace DRAM clock
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: mod
-+      - const: ram
-+
-+  resets:
-+    maxItems: 1
-+
-+  interconnects:
-+    maxItems: 1
-+
-+  interconnect-names:
-+    const: dma-mem
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/sun8i-h3-ccu.h>
-+    #include <dt-bindings/reset/sun8i-h3-ccu.h>
-+
-+    deinterlace: deinterlace@1400000 {
-+        compatible =3D "allwinner,sun8i-h3-deinterlace";
-+        reg =3D <0x01400000 0x20000>;
-+        clocks =3D <&ccu CLK_BUS_DEINTERLACE>,
-+                 <&ccu CLK_DEINTERLACE>,
-+                 <&ccu CLK_DRAM_DEINTERLACE>;
-+        clock-names =3D "bus", "mod", "ram";
-+        resets =3D <&ccu RST_BUS_DEINTERLACE>;
-+        interrupts =3D <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+        interconnects =3D <&mbus 9>;
-+        interconnect-names =3D "dma-mem";
-+    };
-+
-+...
+ 		syscon: system-control@1c00000 {
+ 			compatible =3D "allwinner,sun8i-h3-system-control";
+ 			reg =3D <0x01c00000 0x1000>;
 --=20
 2.23.0
 
