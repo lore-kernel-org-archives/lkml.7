@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794CCFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284DBECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D66121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0029221925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263884;
-	bh=Y8vjRB1HKyf86CsVZF6f3sro0+PODNZ0qgmKF8X/scU=;
+	s=default; t=1571263887;
+	bh=O8UjQ4x0Fx6h09P9x5rGbqkTYxcErLtEExEddN8goos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ph+DnzsMFpbGOUthjKtaw97f/XLGQdYTr65/6OK36RANrpXPd+z5rAo5YDDLQLEL7
-	 /LTDznghkY1XXk8We9myRZesJcZHqUYKdlxJs8yoQMw4ZuPIzr3nhui8avxmKzJxpZ
-	 IusP0s5NDT+QrqIR93WHZ4QjAt7VvKSjHefhCd6Y=
+	b=xDIluS4GHzCwqJKsDxbUYRfmKv35iiEfi6BrbW7i5y9F+bGDnVOMYxemfK46RGD2S
+	 Dg/tyafK+xszOPTN6fSDwXTlHhZ2XgndOub/yZYbnrUBq9t6h1JIm/HolI+EcGv8Hv
+	 VZsR4VuUMxKHjtzwZq7lrg1PMzXXNZm3KJtp6LH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407284AbfJPWLW (ORCPT
+        id S2407294AbfJPWLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391393AbfJPV4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:48 -0400
+        id S2390317AbfJPV4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:47 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE92121D7A;
-        Wed, 16 Oct 2019 21:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A541B218DE;
+        Wed, 16 Oct 2019 21:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263007;
-        bh=Y8vjRB1HKyf86CsVZF6f3sro0+PODNZ0qgmKF8X/scU=;
+        s=default; t=1571263006;
+        bh=O8UjQ4x0Fx6h09P9x5rGbqkTYxcErLtEExEddN8goos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uir8u3BjWw/QNbs5H2joU1FUxAZ5+iX0QzU56e59X3MrXBDEXFklY2mbCuUUqGw0m
-         RTgRuiiSFWfUicc20mRmwL7h/AcqckmsFWgKabTF7pP0Zm94yxGaeASpvPJXxSarlQ
-         8jyrZjaCsV0nuqNMNwamaYVJQoAaYUtTuxBk5wqM=
+        b=BvmIuF5oT7CAyS3WgSpLb8Iy4IVtpkp5MKnNAOrG8n/LfWE2X+JxJkrQbJwTd7sBX
+         gP2dpLlCIDnKw4FiXL1E+XOIAHwTZNpsNemVTjv+rMn4AIIJLvxI/EFRmQ0h6Paee1
+         Me4FVkbdQgBADLHnC229r4a39A95+9Q6sr0yQTwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 01/81] panic: ensure preemption is disabled during panic()
-Date:   Wed, 16 Oct 2019 14:50:12 -0700
-Message-Id: <20191016214806.623585425@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 36/65] USB: legousbtower: fix potential NULL-deref on disconnect
+Date:   Wed, 16 Oct 2019 14:50:50 -0700
+Message-Id: <20191016214827.704428536@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
-References: <20191016214805.727399379@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,82 +58,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
+commit cd81e6fa8e033e7bcd59415b4a65672b4780030b upstream.
 
-Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
-calling CPU in an infinite loop, but with interrupts and preemption
-enabled.  From this state, userspace can continue to be scheduled,
-despite the system being "dead" as far as the kernel is concerned.
+The driver is using its struct usb_device pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg and dev_err statements in the
+completion handlers which relies on said pointer.
 
-This is easily reproducible on arm64 when booting with "nosmp" on the
-command line; a couple of shell scripts print out a periodic "Ping"
-message whilst another triggers a crash by writing to
-/proc/sysrq-trigger:
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
 
-  | sysrq: Trigger a crash
-  | Kernel panic - not syncing: sysrq triggered crash
-  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
-  | Hardware name: linux,dummy-virt (DT)
-  | Call trace:
-  |  dump_backtrace+0x0/0x148
-  |  show_stack+0x14/0x20
-  |  dump_stack+0xa0/0xc4
-  |  panic+0x140/0x32c
-  |  sysrq_handle_reboot+0x0/0x20
-  |  __handle_sysrq+0x124/0x190
-  |  write_sysrq_trigger+0x64/0x88
-  |  proc_reg_write+0x60/0xa8
-  |  __vfs_write+0x18/0x40
-  |  vfs_write+0xa4/0x1b8
-  |  ksys_write+0x64/0xf0
-  |  __arm64_sys_write+0x14/0x20
-  |  el0_svc_common.constprop.0+0xb0/0x168
-  |  el0_svc_handler+0x28/0x78
-  |  el0_svc+0x8/0xc
-  | Kernel Offset: disabled
-  | CPU features: 0x0002,24002004
-  | Memory Limit: none
-  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
-  |  Ping 2!
-  |  Ping 1!
-  |  Ping 1!
-  |  Ping 2!
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
 
-The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
-otherwise local interrupts are disabled in 'smp_send_stop()'.
-
-Disable preemption in 'panic()' before re-enabling interrupts.
-
-Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
-Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
-Signed-off-by: Will Deacon <will@kernel.org>
-Reported-by: Xogium <contact@xogium.me>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 9d974b2a06e3 ("USB: legousbtower.c: remove err() usage")
+Fixes: fef526cae700 ("USB: legousbtower: remove custom debug macro")
+Fixes: 4dae99638097 ("USB: legotower: remove custom debug macro and module parameter")
+Cc: stable <stable@vger.kernel.org>     # 3.5
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190919083039.30898-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/panic.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/misc/legousbtower.c |   26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -149,6 +149,7 @@ void panic(const char *fmt, ...)
- 	 * after setting panic_cpu) from invoking panic() again.
- 	 */
- 	local_irq_disable();
-+	preempt_disable_notrace();
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -194,6 +194,7 @@ struct lego_usb_tower {
+ 	unsigned char		minor;		/* the starting minor number for this device */
  
- 	/*
- 	 * It's possible to come here directly from a panic-assertion and
+ 	int			open_count;	/* number of times this port has been opened */
++	unsigned long		disconnected:1;
+ 
+ 	char*			read_buffer;
+ 	size_t			read_buffer_length; /* this much came in */
+@@ -293,8 +294,6 @@ static inline void lego_usb_tower_debug_
+  */
+ static inline void tower_delete (struct lego_usb_tower *dev)
+ {
+-	tower_abort_transfers (dev);
+-
+ 	/* free data structures */
+ 	usb_free_urb(dev->interrupt_in_urb);
+ 	usb_free_urb(dev->interrupt_out_urb);
+@@ -434,7 +433,8 @@ static int tower_release (struct inode *
+ 		retval = -ENODEV;
+ 		goto unlock_exit;
+ 	}
+-	if (dev->udev == NULL) {
++
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 
+ 		/* unlock here as tower_delete frees dev */
+@@ -470,10 +470,9 @@ static void tower_abort_transfers (struc
+ 	if (dev->interrupt_in_running) {
+ 		dev->interrupt_in_running = 0;
+ 		mb();
+-		if (dev->udev)
+-			usb_kill_urb (dev->interrupt_in_urb);
++		usb_kill_urb(dev->interrupt_in_urb);
+ 	}
+-	if (dev->interrupt_out_busy && dev->udev)
++	if (dev->interrupt_out_busy)
+ 		usb_kill_urb(dev->interrupt_out_urb);
+ }
+ 
+@@ -509,7 +508,7 @@ static unsigned int tower_poll (struct f
+ 
+ 	dev = file->private_data;
+ 
+-	if (!dev->udev)
++	if (dev->disconnected)
+ 		return POLLERR | POLLHUP;
+ 
+ 	poll_wait(file, &dev->read_wait, wait);
+@@ -556,7 +555,7 @@ static ssize_t tower_read (struct file *
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -642,7 +641,7 @@ static ssize_t tower_write (struct file
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -751,7 +750,7 @@ static void tower_interrupt_in_callback
+ 
+ resubmit:
+ 	/* resubmit if we're still running */
+-	if (dev->interrupt_in_running && dev->udev) {
++	if (dev->interrupt_in_running) {
+ 		retval = usb_submit_urb (dev->interrupt_in_urb, GFP_ATOMIC);
+ 		if (retval)
+ 			dev_err(&dev->udev->dev,
+@@ -816,6 +815,7 @@ static int tower_probe (struct usb_inter
+ 
+ 	dev->udev = udev;
+ 	dev->open_count = 0;
++	dev->disconnected = 0;
+ 
+ 	dev->read_buffer = NULL;
+ 	dev->read_buffer_length = 0;
+@@ -941,6 +941,10 @@ static void tower_disconnect (struct usb
+ 	/* give back our minor and prevent further open() */
+ 	usb_deregister_dev (interface, &tower_class);
+ 
++	/* stop I/O */
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&dev->lock);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+@@ -948,7 +952,7 @@ static void tower_disconnect (struct usb
+ 		mutex_unlock(&dev->lock);
+ 		tower_delete (dev);
+ 	} else {
+-		dev->udev = NULL;
++		dev->disconnected = 1;
+ 		/* wake up pollers */
+ 		wake_up_interruptible_all(&dev->read_wait);
+ 		wake_up_interruptible_all(&dev->write_wait);
 
 
