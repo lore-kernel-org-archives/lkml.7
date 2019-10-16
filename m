@@ -2,100 +2,235 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AA3ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DD4FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653D82053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFDD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hu69XPON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403935AbfJPTXE (ORCPT
+        id S2403986AbfJPTYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:23:04 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39208 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732079AbfJPTXD (ORCPT
+        Wed, 16 Oct 2019 15:24:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20220 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732079AbfJPTYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:23:03 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v4so2174pff.6
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:23:03 -0700 (PDT)
+        Wed, 16 Oct 2019 15:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571253854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u+joB9E6UZPllDI/uMX85cBeAjG+t2HNX9sXYOx1X8g=;
+        b=Hu69XPON+KyDUbg7ST83fNJYW8boJqu0hF/fZrzUUvotlJ0EdF+BlFeR4l0GwPKHiThBv/
+        dz9e63t6B/m/Fx6sDMw9fTJmR1pzTV5qwG+4VwCxxJqLNRzzTdS2+UfrsFdj+SS409weFP
+        KK0NL3RV/7dKMWLkIE0EwbohitDTlD0=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-yHF7bnP3O1K0xPzv2qe6wQ-1; Wed, 16 Oct 2019 15:24:13 -0400
+Received: by mail-qk1-f200.google.com with SMTP id k67so24851744qkc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 12:24:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=yNrX5NxWK+qA1o6LaqqAm41/yReowE+lc1hULeA+iQo=;
-        b=ZohNnU5mT6F0h+ULa1wjD41vkkAVkv0+5NhFIu1833YdanBq3Fe7IUX2exPLORum/8
-         Hff+W4UnAkegM/V1w6wSaL9Y0ucnJkNgKdOq0vEr6ktR+BwZzPcxAz/lM9zIGQUgUJki
-         aAwtrMHnM8yiE0HSKFZVFdKPD0s33eTNY+qsxkkDsMSg0RcvKXVzaNI6kKA96Ml+76Tt
-         iFLsN6Z2RUTpmyWlR8iOzgETWLqxvfeS5KnaPF0bYtXRzTqqJjEyU7q6aQ7D52rWmlGX
-         Zk+U3B4mdzWaPUwm6Qod6TPAHCaXrjdwSD55edWkQAldu97cO25XtPBi98q5OFuVIHPU
-         JnYA==
-X-Gm-Message-State: APjAAAUHVKX42qfMTjXLiP4IpHeKE2eJsPUhcXRxrT/wTchswe1xBm8Z
-        wZ7isyCBy8RdMtgJM1VnblRFFw==
-X-Google-Smtp-Source: APXvYqxL7QA2f4fhE3Wl5GbWBvWdaQkuQMrMb1TNzwEQ1pCL0mnhlQdr9u9/Zf+Usvn7SVZWcaa+RA==
-X-Received: by 2002:a65:500c:: with SMTP id f12mr16812322pgo.233.1571253782761;
-        Wed, 16 Oct 2019 12:23:02 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id k6sm26188868pfg.162.2019.10.16.12.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 12:23:02 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 12:23:02 -0700 (PDT)
-X-Google-Original-Date: Wed, 16 Oct 2019 12:22:58 PDT (-0700)
-Subject:     Re: [PATCH v3 1/3] kasan: Archs don't check memmove if not support it.
-In-Reply-To: <c9fa9eb25a5c0b1f733494dfd439f056c6e938fd.1570514544.git.nickhu@andestech.com>
-CC:     alankao@andestech.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, aryabinin@virtuozzo.com, glider@google.com,
-        dvyukov@google.com, corbet@lwn.net, alexios.zavras@intel.com,
-        allison@lohutok.net, Anup Patel <Anup.Patel@wdc.com>,
-        tglx@linutronix.de, Greg KH <gregkh@linuxfoundation.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        kstewart@linuxfoundation.org, linux-doc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        nickhu@andestech.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     nickhu@andestech.com
-Message-ID: <mhng-5f3ce9b5-2b64-48d7-a661-7bedf58c50a5@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OG+jqdqRkE3Fucg+g07dRFYdPcRlmZaD+wZIXULv1fU=;
+        b=Y7Esk82SXUkYmr5/ZpCaDuznAxKSKMW+XiPShwrfmGe+74CRXGQcbv9xqg9uloj6wp
+         DIR3SVA6m6KqOLJ9G8fldMn/If6DiPwwOLHsUDXDY2nCGsXdwnznMPDF+uDdaKH2x8gx
+         RUATiUXFzA/o2Ae2kK9oUOOLokKVwnSucUZWaLVYX8ZphEvdCFLue7esyq4YZuuOUg9S
+         ps/w9kzU92M6RbWGseLgFD2OVcSOyNeEwdG1+hfzvztj1PN+ghS1xdIGEQG+PMX6d2Qb
+         X/aJN/vTYek6F6m/4Sh3ty27e8cJgr92KueNuJfVb/XAtbDGjyvzjS+rHPEtyeJ52KFY
+         90Sw==
+X-Gm-Message-State: APjAAAXFSkEq/t080EGZInvVZ83M7Z7uUOFwcsOB0xx7Qr+80UtxzfYD
+        sDMgQngEhejLudnwo6p4/Ge0291mMexgas8Aa1K+k41Q2uK7Q/VJ7Ze9VfFGbiJ0HEsjPaC19Kq
+        tXJIMsfCBdRY+xzrMlpITT+gsbFlg+W+ZkGEH5+6P
+X-Received: by 2002:aed:2f04:: with SMTP id l4mr46618840qtd.345.1571253852067;
+        Wed, 16 Oct 2019 12:24:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxJGUkVMN1rT2RR/9I/7CYwWp05qb4PET+7QL6jvz7eLSbBq0S4l3QRmyFViI/7SGmF8kDGBGlGhD/+k0HuDBo=
+X-Received: by 2002:aed:2f04:: with SMTP id l4mr46618816qtd.345.1571253851841;
+ Wed, 16 Oct 2019 12:24:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191016182935.5616-1-andrew.smirnov@gmail.com> <20191016182935.5616-3-andrew.smirnov@gmail.com>
+In-Reply-To: <20191016182935.5616-3-andrew.smirnov@gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 16 Oct 2019 21:24:00 +0200
+Message-ID: <CAO-hwJ++YWtX29YefGzaEfCLDA=npZwUxDCkDzxALAmLLqv7FQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] HID: logitech-hidpp: rework device validation
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Sam Bazely <sambazley@fastmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        Austin Palmer <austinp@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+X-MC-Unique: yHF7bnP3O1K0xPzv2qe6wQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 07 Oct 2019 23:11:51 PDT (-0700), nickhu@andestech.com wrote:
-> Skip the memmove checking for those archs who don't support it.
->
-> Signed-off-by: Nick Hu <nickhu@andestech.com>
-> ---
->  mm/kasan/common.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 6814d6d6a023..897f9520bab3 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -107,6 +107,7 @@ void *memset(void *addr, int c, size_t len)
->  	return __memset(addr, c, len);
->  }
->
-> +#ifdef __HAVE_ARCH_MEMMOVE
->  #undef memmove
->  void *memmove(void *dest, const void *src, size_t len)
->  {
-> @@ -115,6 +116,7 @@ void *memmove(void *dest, const void *src, size_t len)
->
->  	return __memmove(dest, src, len);
->  }
-> +#endif
->
->  #undef memcpy
->  void *memcpy(void *dest, const void *src, size_t len)
+Hi Andrey,
 
-I think this is backwards: we shouldn't be defining an arch-specific memmove 
-symbol when KASAN is enabled.  If we do it this way then we're defeating the 
-memmove checks, which doesn't seem like the right way to go.
+On Wed, Oct 16, 2019 at 8:30 PM Andrey Smirnov <andrew.smirnov@gmail.com> w=
+rote:
+>
+> G920 device only advertises REPORT_ID_HIDPP_LONG and
+> REPORT_ID_HIDPP_VERY_LONG in its HID report descriptor, so querying
+> for REPORT_ID_HIDPP_SHORT with optional=3Dfalse will always fail and
+> prevent G920 to be recognized as a valid HID++ device.
+>
+> To fix this and improve some other aspects, modify
+> hidpp_validate_device() as follows:
+>
+>   - Inline the code of hidpp_validate_report() to simplify
+>     distingushing between non-present and invalid report descriptors
+>
+>   - Drop the check for id >=3D HID_MAX_IDS || id < 0 since all of our
+>     IDs are static and known to satisfy that at compile time
+>
+>   - Change the algorithms to check all possible report
+>     types (including very long report) and deem the device as a valid
+>     HID++ device if it supports at least one
+>
+>   - Treat invalid report length as a hard stop for the validation
+>     algorithm, meaning that if any of the supported reports has
+>     invalid length we assume the worst and treat the device as a
+>     generic HID device.
+>
+>   - Fold initialization of hidpp->very_long_report_length into
+>     hidpp_validate_device() since it already fetches very long report
+>     length and validates its value
+>
+> Fixes: fe3ee1ec007b ("HID: logitech-hidpp: allow non HID++ devices to be =
+handled by this module")
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204191
+> Reported-by: Sam Bazely <sambazley@fastmail.com>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Cc: Henrik Rydberg <rydberg@bitmath.org>
+> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> Cc: Austin Palmer <austinp@valvesoftware.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org # 5.2+
+> ---
+>  drivers/hid/hid-logitech-hidpp.c | 54 ++++++++++++++++++--------------
+>  1 file changed, 30 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-=
+hidpp.c
+> index 85911586b3b6..8c4be991f387 100644
+> --- a/drivers/hid/hid-logitech-hidpp.c
+> +++ b/drivers/hid/hid-logitech-hidpp.c
+> @@ -3498,34 +3498,45 @@ static int hidpp_get_report_length(struct hid_dev=
+ice *hdev, int id)
+>         return report->field[0]->report_count + 1;
+>  }
+>
+> -static bool hidpp_validate_report(struct hid_device *hdev, int id,
+> -                                 int expected_length, bool optional)
+> +static bool hidpp_validate_device(struct hid_device *hdev)
+>  {
+> -       int report_length;
+> +       struct hidpp_device *hidpp =3D hid_get_drvdata(hdev);
+> +       int id, report_length, supported_reports =3D 0;
+> +
+> +       id =3D REPORT_ID_HIDPP_SHORT;
+> +       report_length =3D hidpp_get_report_length(hdev, id);
+> +       if (report_length) {
+> +               if (report_length < HIDPP_REPORT_SHORT_LENGTH)
+> +                       goto bad_device;
+>
+> -       if (id >=3D HID_MAX_IDS || id < 0) {
+> -               hid_err(hdev, "invalid HID report id %u\n", id);
+> -               return false;
+> +               supported_reports++;
+>         }
+>
+> +       id =3D REPORT_ID_HIDPP_LONG;
+>         report_length =3D hidpp_get_report_length(hdev, id);
+> -       if (!report_length)
+> -               return optional;
+> +       if (report_length) {
+> +               if (report_length < HIDPP_REPORT_LONG_LENGTH)
+> +                       goto bad_device;
+>
+> -       if (report_length < expected_length) {
+> -               hid_warn(hdev, "not enough values in hidpp report %d\n", =
+id);
+> -               return false;
+> +               supported_reports++;
+>         }
+>
+> -       return true;
+> -}
+> +       id =3D REPORT_ID_HIDPP_VERY_LONG;
+> +       report_length =3D hidpp_get_report_length(hdev, id);
+> +       if (report_length) {
+> +               if (report_length > HIDPP_REPORT_LONG_LENGTH &&
+> +                   report_length < HIDPP_REPORT_VERY_LONG_MAX_LENGTH)
+
+Can you double check the conditions here?
+It's late, but I think you inverted the tests as we expect the report
+length to be between HIDPP_REPORT_LONG_LENGTH and
+HIDPP_REPORT_VERY_LONG_MAX_LENGTH inclusive, while here this creates a
+bad_device.
+
+Other than that, I really like the series.
+
+Cheers,
+Benjamin
+
+> +                       goto bad_device;
+>
+> -static bool hidpp_validate_device(struct hid_device *hdev)
+> -{
+> -       return hidpp_validate_report(hdev, REPORT_ID_HIDPP_SHORT,
+> -                                    HIDPP_REPORT_SHORT_LENGTH, false) &&
+> -              hidpp_validate_report(hdev, REPORT_ID_HIDPP_LONG,
+> -                                    HIDPP_REPORT_LONG_LENGTH, true);
+> +               supported_reports++;
+> +               hidpp->very_long_report_length =3D report_length;
+> +       }
+> +
+> +       return supported_reports;
+> +
+> +bad_device:
+> +       hid_warn(hdev, "not enough values in hidpp report %d\n", id);
+> +       return false;
+>  }
+>
+>  static bool hidpp_application_equals(struct hid_device *hdev,
+> @@ -3572,11 +3583,6 @@ static int hidpp_probe(struct hid_device *hdev, co=
+nst struct hid_device_id *id)
+>                 return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+>         }
+>
+> -       hidpp->very_long_report_length =3D
+> -               hidpp_get_report_length(hdev, REPORT_ID_HIDPP_VERY_LONG);
+> -       if (hidpp->very_long_report_length > HIDPP_REPORT_VERY_LONG_MAX_L=
+ENGTH)
+> -               hidpp->very_long_report_length =3D HIDPP_REPORT_VERY_LONG=
+_MAX_LENGTH;
+> -
+>         if (id->group =3D=3D HID_GROUP_LOGITECH_DJ_DEVICE)
+>                 hidpp->quirks |=3D HIDPP_QUIRK_UNIFYING;
+>
+> --
+> 2.21.0
+>
+
