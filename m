@@ -2,147 +2,158 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77769FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E97DFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB2B20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186B020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="iE77W2j8"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="coFJjl0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406297AbfJPQbQ (ORCPT
+        id S2406310AbfJPQbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:31:16 -0400
-Received: from vulcan.natalenko.name ([104.207.131.136]:41274 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405807AbfJPQbN (ORCPT
+        Wed, 16 Oct 2019 12:31:19 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35074 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405807AbfJPQbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:31:13 -0400
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id 6EDFE604743;
-        Wed, 16 Oct 2019 18:31:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1571243469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f5ClBeSGQZuxuvvXCwUIlZlu0fB+e4NrR7Ixq109qtA=;
-        b=iE77W2j8VjWmzkRi/PaQJs9KBZb+JRoq905SOA3jxnUN0ya9MuZ6FLFA4MZ2EOwPwOBqY1
-        vYRKZ3u/eXr+hC+h/9/VqBG42FtUILGopQs/N8dtrpLXv6xezUQNH3Al6HsUZ5NUfJm9Xs
-        d3qEHU6kHT30Nqw9HYLnPAGR4myTvh0=
+        Wed, 16 Oct 2019 12:31:18 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w2so23360667qkf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TTgFblTilWPLhT8MMkcXspcKpW5vjx4zEloAKyzJGi0=;
+        b=coFJjl0HJ+uHFdg/bI6YXY7wiaUzK1aPDE5YOVuYUMg1nQZgO/cfYCiQmzo/YtiC4w
+         SlhtLAroVPdlEVGO5aeCmlYdzdYJFQxi03+NiMjE4NnF7k0Yqi94dPrvrn8T3mMx3IOx
+         hd7Hh7peaPx05gIOGe5GHwPEP2X0Bhl3OHY8cAmfY0VEFiDDVmYyWVc5u4RsJ2UYApXN
+         wC7ypZP2CtXmmQ0LQy47RpwchV6Yb5CnUPNXcsH2jmKOTESumQg7/NK+2vzpL57jtm5Y
+         DlVjxc7a+Vgojx5DHU5c2Rot9/Plh/6GL5qf9YKsLGvMXt3n+3r14apyCEpdy++H9WEm
+         TBAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TTgFblTilWPLhT8MMkcXspcKpW5vjx4zEloAKyzJGi0=;
+        b=abjGkoIEpez5NDfTl/8yidomzXJ1c+kLoqn6T7c4p33Y6YsrgB9Zxp6BLPIaOBMsBo
+         xF5B0/+2Bp4NtK82MeoKh3UsML0ncfMTSUXJEOQdhyRhTATJ36lVBQj0/ik2jOaUv+zR
+         jHLb9Z/+RW3+Wb6Vlb+uOFK+To9j17K7wQAmgOlWyJq2tG5FzKnm+CV7brTQwEaU82kE
+         TzzNx9ggGS6P9KHrF8nYC+YvmXU3/4pHuJv/xVghAH5jg2w9Il08twpGyP++yq8uccju
+         1fso3kAHRn2uFx4Gy5+1zPHvYbgYY78YzMGfGpXW3Dd9Kc61RZeN3Y1uKOEjBec+XLaz
+         8ojg==
+X-Gm-Message-State: APjAAAWhG5bY+HC+8zsXzahWv21TSi3Geqbxj4T3h/jCRyRMUFReQOJl
+        75PRRPGe7tEzjWq7QXSIlSOC+Q==
+X-Google-Smtp-Source: APXvYqyHCJf1i88vRUK7SbxeLerxK/xfkkBAD/iRk3OjZtPqNBNflP4CyHeu77wsKOU1yNNd980c0A==
+X-Received: by 2002:a05:620a:1012:: with SMTP id z18mr42381240qkj.275.1571243476948;
+        Wed, 16 Oct 2019 09:31:16 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id u39sm13506560qtj.34.2019.10.16.09.31.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 09:31:16 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com,
+        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
+        sumit.garg@linaro.org, rdunlap@infradead.org
+Subject: [PATCH v3] tpm/tpm_ftpm_tee: add shutdown call back
+Date:   Wed, 16 Oct 2019 12:31:14 -0400
+Message-Id: <20191016163114.985542-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 16 Oct 2019 18:31:09 +0200
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Lorenzo Bianconi <lorenzo@kernel.org>
-Cc:     linux-mediatek@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: mt76x2e hardware restart
-In-Reply-To: <f7695bc79d40bbc96744a639b1243027@natalenko.name>
-References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
- <c6d621759c190f7810d898765115f3b4@natalenko.name>
- <9d581001e2e6cece418329842b2b0959@natalenko.name>
- <20191012165028.GA8739@lore-desk-wlan.lan>
- <f7695bc79d40bbc96744a639b1243027@natalenko.name>
-Message-ID: <96f43a2103a9f2be152c53f867f5805c@natalenko.name>
-X-Sender: oleksandr@natalenko.name
-User-Agent: Roundcube Webmail/1.3.10
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=arc-20170712; t=1571243469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f5ClBeSGQZuxuvvXCwUIlZlu0fB+e4NrR7Ixq109qtA=;
-        b=EJlYGk6WtfIdQNWtMr2cQy9J8J7w28KTQLCRDdRHUa6oxniLZklcRFvYgF2g6mTRl3kBNh
-        BKWTFueWGni/EjMP8AJQaXYrdeiOYsbjJk88ugWY98jLPwAQZDwktXhL5Stx8WhyrOWI5J
-        jtiAdepknOAnKo2f2TYUEwqzAsYBrP0=
-ARC-Seal: i=1; s=arc-20170712; d=natalenko.name; t=1571243469; a=rsa-sha256;
-        cv=none;
-        b=jJrQEg6/HMw06QL5mt4o5gVFnTj55BAufh0fnZYwOph+/Zla/u4ds82EcRRkFszIQdYDPV
-        Ghplm+tOxd3O/p9j55laqVbtbQy30GsDKV5Ol/rOG4saVke9YVU9wm/lHzsD24mqmZ5amP
-        DfKMcjCDf9SVTnJXreOUpcdtkGpS2ko=
-ARC-Authentication-Results: i=1;
-        vulcan.natalenko.name;
-        auth=pass smtp.auth=oleksandr@natalenko.name smtp.mailfrom=oleksandr@natalenko.name
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+Add shutdown call back to close existing session with fTPM TA
+to support kexec scenario.
 
-On 15.10.2019 18:52, Oleksandr Natalenko wrote:
-> Thanks for the answer and the IRC discussion. As agreed I've applied
-> [1] and [2], and have just swapped the card to try it again. So far,
-> it works fine in 5 GHz band in 802.11ac mode as an AP.
-> 
-> I'll give it more load with my phone over evening, and we can discuss
-> what to do next (if needed) tomorrow again. Or feel free to drop me an
-> email today.
-> 
-> Thanks for your efforts.
-> 
-> [1]
-> https://github.com/LorenzoBianconi/wireless-drivers-next/commit/cf3436c42a297967235a9c9778620c585100529e.patch
-> [2]
-> https://github.com/LorenzoBianconi/wireless-drivers-next/commit/aad256eb62620f9646d39c1aa69234f50c89eed8.patch
+Add parentheses to function names in comments as specified in kdoc.
 
-As agreed, here are iperf3 results, AP to STA distance is 2 meters.
+Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ drivers/char/tpm/tpm_ftpm_tee.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-Client sends, TCP:
-
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  70.4 MBytes  59.0 Mbits/sec  3800             
-sender
-[  5]   0.00-10.03  sec  70.0 MBytes  58.6 Mbits/sec                  
-receiver
-
-Client receives, TCP:
-
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.06  sec   196 MBytes   163 Mbits/sec  3081             
-sender
-[  5]   0.00-10.01  sec   191 MBytes   160 Mbits/sec                  
-receiver
-
-Client sends, UDP, 128 streams:
-
-[ ID] Interval           Transfer     Bitrate         Jitter    
-Lost/Total Datagrams
-[SUM]   0.00-10.00  sec   160 MBytes   134 Mbits/sec  0.000 ms  0/115894 
-(0%)  sender
-[SUM]   0.00-10.01  sec   160 MBytes   134 Mbits/sec  0.347 ms  0/115892 
-(0%)  receiver
-
-Client receives, UDP, 128 streams:
-
-[ ID] Interval           Transfer     Bitrate         Jitter    
-Lost/Total Datagrams
-[SUM]   0.00-10.01  sec   119 MBytes  99.4 Mbits/sec  0.000 ms  0/85888 
-(0%)  sender
-[SUM]   0.00-10.00  sec   119 MBytes  99.5 Mbits/sec  0.877 ms  0/85888 
-(0%)  receiver
-
-Given the HW is not the most powerful, the key point here is that 
-nothing crashed after doing these tests.
-
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 6640a14dbe48..22bf553ccf9d 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -32,7 +32,7 @@ static const uuid_t ftpm_ta_uuid =
+ 		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
+ 
+ /**
+- * ftpm_tee_tpm_op_recv - retrieve fTPM response.
++ * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
+  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
+  * @buf:	the buffer to store data.
+  * @count:	the number of bytes to read.
+@@ -61,7 +61,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ }
+ 
+ /**
+- * ftpm_tee_tpm_op_send - send TPM commands through the TEE shared memory.
++ * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
+  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
+  * @buf:	the buffer to send.
+  * @len:	the number of bytes to send.
+@@ -208,7 +208,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+ }
+ 
+ /**
+- * ftpm_tee_probe - initialize the fTPM
++ * ftpm_tee_probe() - initialize the fTPM
+  * @pdev: the platform_device description.
+  *
+  * Return:
+@@ -298,7 +298,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+ }
+ 
+ /**
+- * ftpm_tee_remove - remove the TPM device
++ * ftpm_tee_remove() - remove the TPM device
+  * @pdev: the platform_device description.
+  *
+  * Return:
+@@ -328,6 +328,19 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/**
++ * ftpm_tee_shutdown() - shutdown the TPM device
++ * @pdev: the platform_device description.
++ */
++static void ftpm_tee_shutdown(struct platform_device *pdev)
++{
++	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
++
++	tee_shm_free(pvt_data->shm);
++	tee_client_close_session(pvt_data->ctx, pvt_data->session);
++	tee_client_close_context(pvt_data->ctx);
++}
++
+ static const struct of_device_id of_ftpm_tee_ids[] = {
+ 	{ .compatible = "microsoft,ftpm" },
+ 	{ }
+@@ -341,6 +354,7 @@ static struct platform_driver ftpm_tee_driver = {
+ 	},
+ 	.probe = ftpm_tee_probe,
+ 	.remove = ftpm_tee_remove,
++	.shutdown = ftpm_tee_shutdown,
+ };
+ 
+ module_platform_driver(ftpm_tee_driver);
 -- 
-   Oleksandr Natalenko (post-factum)
+2.23.0
+
