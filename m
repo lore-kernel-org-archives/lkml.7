@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A290FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3A5FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA5B218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A12222BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263071;
-	bh=E2zSj+5l3fEHkyKOKlJHqKi0v60aNokAkhOX6t/Y5CM=;
+	s=default; t=1571263074;
+	bh=yk9sT55xKYSbTU7SwJdDXKQs5jxFZqeLsk4v9Gu/aQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DEcnsYa8XsAyzO3Lh4wzefTjAPUC7eni+AWFvI5YnX29FTGCiaKXVW7LQkAC+gfVL
-	 ThZuDXNP1Di1ngbohmtfPBeniYZRlmNYOnK3j43nEx65jjMe1D2Ku43wFeO4nu1ca1
-	 fPdmZCCc1Nh7677GLHkQ9OqVwVaO4vsipUtOGRQI=
+	b=GR0XSNSB0AVyv+74dtied/VZ8N0Kn9zUUYUv16qzvYVxm7lhXO+o31NVJZKSxuk5V
+	 MX3+tOy0Q9HerDYZcS+CF/4xbKaH4Tyz4MAxvMhPQHPMHxf+qXeb//kJihXqxjJ0Gj
+	 j9WaMdHKXF1IW5cJcNSzblJ+2yfcfbCigHlFLw+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438056AbfJPV5t (ORCPT
+        id S2395547AbfJPV5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49296 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391497AbfJPV5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:02 -0400
+        id S2395441AbfJPV5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:04 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE9821D7A;
-        Wed, 16 Oct 2019 21:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1705320872;
+        Wed, 16 Oct 2019 21:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263021;
-        bh=E2zSj+5l3fEHkyKOKlJHqKi0v60aNokAkhOX6t/Y5CM=;
+        s=default; t=1571263022;
+        bh=yk9sT55xKYSbTU7SwJdDXKQs5jxFZqeLsk4v9Gu/aQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPMWAa8rsGjGtahkYFAXJMkYkB881C4xXExz7Pi8Lh4DTiD998jGYniDe7vZ8uwIa
-         DIjtj9Xq6dmZwuc2gIl3kvWJWT7Qgi+QGrYzBiasNKsIW0bKgL36xgC94SIV9Ys7zq
-         UAMkvXa39HWmZA2KQztox0oPVzns3kEfOYMxXwwM=
+        b=FzNpN+s/2N9vCJyGKM/9C4zN1CYF7vhdqa54EvXg0Tq6qME2noICXPppKVyczHJn6
+         VuLVi3dxgTosd/qbBU8VB7L9iQNimILt2P3zvL7H6ZoYB7nuyPKomgZugOgVJFGL0o
+         RW4q/30H8RKMC6stnYTGKUjiIOk89hptcZgbTh3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 22/81] USB: chaoskey: fix use-after-free on release
-Date:   Wed, 16 Oct 2019 14:50:33 -0700
-Message-Id: <20191016214826.645129419@linuxfoundation.org>
+Subject: [PATCH 4.19 23/81] USB: ldusb: fix NULL-derefs on driver unbind
+Date:   Wed, 16 Oct 2019 14:50:34 -0700
+Message-Id: <20191016214826.995001530@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,50 +60,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 93ddb1f56ae102f14f9e46a9a9c8017faa970003 upstream.
+commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
 
-The driver was accessing its struct usb_interface in its release()
-callback without holding a reference. This would lead to a
-use-after-free whenever the device was disconnected while the character
-device was still open.
+The driver was using its struct usb_interface pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg, dev_warn and dev_err statements in
+the completion handlers which relies on said pointer.
 
-Fixes: 66e3e591891d ("usb: Add driver for Altus Metrum ChaosKey device (v2)")
-Cc: stable <stable@vger.kernel.org>     # 4.1
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
+
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
+
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-3-johan@kernel.org
+Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/chaoskey.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/misc/ldusb.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/misc/chaoskey.c
-+++ b/drivers/usb/misc/chaoskey.c
-@@ -98,6 +98,7 @@ static void chaoskey_free(struct chaoske
- 		usb_free_urb(dev->urb);
- 		kfree(dev->name);
- 		kfree(dev->buf);
-+		usb_put_intf(dev->interface);
- 		kfree(dev);
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -153,6 +153,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
+ struct ld_usb {
+ 	struct mutex		mutex;		/* locks this structure */
+ 	struct usb_interface	*intf;		/* save off the usb interface pointer */
++	unsigned long		disconnected:1;
+ 
+ 	int			open_count;	/* number of times this port has been opened */
+ 
+@@ -192,12 +193,10 @@ static void ld_usb_abort_transfers(struc
+ 	/* shutdown transfer */
+ 	if (dev->interrupt_in_running) {
+ 		dev->interrupt_in_running = 0;
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_in_urb);
++		usb_kill_urb(dev->interrupt_in_urb);
  	}
+ 	if (dev->interrupt_out_busy)
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_out_urb);
++		usb_kill_urb(dev->interrupt_out_urb);
  }
-@@ -145,6 +146,8 @@ static int chaoskey_probe(struct usb_int
- 	if (dev == NULL)
- 		goto out;
  
-+	dev->interface = usb_get_intf(interface);
-+
- 	dev->buf = kmalloc(size, GFP_KERNEL);
+ /**
+@@ -205,8 +204,6 @@ static void ld_usb_abort_transfers(struc
+  */
+ static void ld_usb_delete(struct ld_usb *dev)
+ {
+-	ld_usb_abort_transfers(dev);
+-
+ 	/* free data structures */
+ 	usb_free_urb(dev->interrupt_in_urb);
+ 	usb_free_urb(dev->interrupt_out_urb);
+@@ -263,7 +260,7 @@ static void ld_usb_interrupt_in_callback
  
- 	if (dev->buf == NULL)
-@@ -174,8 +177,6 @@ static int chaoskey_probe(struct usb_int
- 			goto out;
+ resubmit:
+ 	/* resubmit if we're still running */
+-	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
++	if (dev->interrupt_in_running && !dev->buffer_overflow) {
+ 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
+ 		if (retval) {
+ 			dev_err(&dev->intf->dev,
+@@ -392,7 +389,7 @@ static int ld_usb_release(struct inode *
+ 		retval = -ENODEV;
+ 		goto unlock_exit;
+ 	}
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 		mutex_unlock(&dev->mutex);
+ 		/* unlock here as ld_usb_delete frees dev */
+@@ -423,7 +420,7 @@ static __poll_t ld_usb_poll(struct file
+ 
+ 	dev = file->private_data;
+ 
+-	if (!dev->intf)
++	if (dev->disconnected)
+ 		return EPOLLERR | EPOLLHUP;
+ 
+ 	poll_wait(file, &dev->read_wait, wait);
+@@ -462,7 +459,7 @@ static ssize_t ld_usb_read(struct file *
  	}
  
--	dev->interface = interface;
--
- 	dev->in_ep = in_ep;
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -542,7 +539,7 @@ static ssize_t ld_usb_write(struct file
+ 	}
  
- 	if (le16_to_cpu(udev->descriptor.idVendor) != ALEA_VENDOR_ID)
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -764,6 +761,9 @@ static void ld_usb_disconnect(struct usb
+ 	/* give back our minor */
+ 	usb_deregister_dev(intf, &ld_usb_class);
+ 
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&dev->mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+@@ -771,7 +771,7 @@ static void ld_usb_disconnect(struct usb
+ 		mutex_unlock(&dev->mutex);
+ 		ld_usb_delete(dev);
+ 	} else {
+-		dev->intf = NULL;
++		dev->disconnected = 1;
+ 		/* wake up pollers */
+ 		wake_up_interruptible_all(&dev->read_wait);
+ 		wake_up_interruptible_all(&dev->write_wait);
 
 
