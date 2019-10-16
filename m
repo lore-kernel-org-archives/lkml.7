@@ -2,105 +2,96 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E43FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE4EFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297DB218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DB12168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gW2jvxqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404802AbfJPOy7 (ORCPT
+        id S2404843AbfJPOzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfJPOy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:54:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAACE2168B;
-        Wed, 16 Oct 2019 14:54:57 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 10:54:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qu Wenruo <wqu@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org
-Subject: Re: [PATCH] tools/lib/traceevent, perf tools: Handle %pU format
- correctly
-Message-ID: <20191016105456.0b8d2310@gandalf.local.home>
-In-Reply-To: <20191016063920.20791-1-wqu@suse.com>
-References: <20191016063920.20791-1-wqu@suse.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 16 Oct 2019 10:55:11 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47238 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfJPOzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:55:10 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GElKxc124421;
+        Wed, 16 Oct 2019 14:54:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=r44O34qzc0k+ZTr+o+pUijPkcyNeplDRN6mlyThNKVk=;
+ b=gW2jvxqheJFSkpJbARyXyrxAYhwam+IiUHrBI7xDdX3mqpAyXrVaL07mJLXBog92q36K
+ hcMKXJVeWZbeSshxVzb8ZGeWb16w595Q+aitLnyIdiOyIXkYHFxdprtnn86iWpDSaWkG
+ jvBafqQ+mfPqUDcg9BohYEmetrmmQqyWg+ftVj9NtZSpPH6Vov4BRq7tyfRgpsa2NUQo
+ vsoJvBleBKrttZq5IPjW1KRXPPkarOsgVFE9CFfihBIBFk9xSJIJf7xmkzs6kQa4ftm9
+ wWU6K4bwQE2YDYR9nGW0Wp+dtU2BhODq+wp3F2gNyzFW+0fZKfFCEqpE7k5SfsYfevsR +g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vk6sqqjs3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 14:54:54 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GEmnaj194932;
+        Wed, 16 Oct 2019 14:54:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vnf7thbn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 14:54:53 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9GEsi97027860;
+        Wed, 16 Oct 2019 14:54:45 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Oct 2019 14:54:40 +0000
+Date:   Wed, 16 Oct 2019 17:54:32 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Chandra Annamaneni <chandra627@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        gneukum1@gmail.com, michael.scheiderer@fau.de,
+        fabian.krueger@fau.de, linux-kernel@vger.kernel.org,
+        simon@nikanor.nu
+Subject: Re: [PATCH 2/4] staging: KPC2000: kpc2000_spi.c: Fix style issues
+ (alignment)
+Message-ID: <20191016145354.GB24678@kadam>
+References: <20191016074927.20056-1-chandra627@gmail.com>
+ <20191016074927.20056-2-chandra627@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016074927.20056-2-chandra627@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910160129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9412 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910160129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 14:39:20 +0800
-Qu Wenruo <wqu@suse.com> wrote:
+On Wed, Oct 16, 2019 at 12:49:25AM -0700, Chandra Annamaneni wrote:
+> Resolved: "CHECK: Alignment should match open parenthesis" from checkpatch
+> 
 
-> +static void print_uuid_arg(struct trace_seq *s, void *data, int size,
-> +			   struct tep_event *event, struct tep_print_arg *arg)
-> +{
-> +	const char *fmt;
-> +	unsigned char *buf;
-> +
-> +	fmt = "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x";
-> +	if (arg->type != TEP_PRINT_FIELD) {
-> +		trace_seq_printf(s, "ARG TYPE NOT FIELID but %d", arg->type);
-> +		return;
-> +	}
-> +
-> +	if (!arg->field.field) {
-> +		arg->field.field = tep_find_any_field(event, arg->field.name);
-> +		if (!arg->field.field) {
-> +			do_warning("%s: field %s not found",
-> +				   __func__, arg->field.name);
-> +			return;
-> +		}
-> +	}
-> +	buf = data + arg->field.field->offset;
+I think you accidentally copied the wrong commit message.  This one
+and the next are the same.  This description doesn't match the patch.
 
-You also need to make sure the data field is not smaller than 16 bytes.
+regards,
+dan carpenter
 
-	if (arg->field.field->size < 16) {
-		trace_seq_puts(s, "INVALIDUUID");
-		return;
-	}
-
-> +
-> +	trace_seq_printf(s, fmt, buf[0], buf[1], buf[2], buf[3], buf[4], buf[5],
-> +		         buf[6], buf[7], buf[8], buf[9], buf[10], buf[11], buf[12],
-> +			 buf[13], buf[14], buf[15]);
-> +}
-> +
-
-Hmm, I know print_mac_addr() does something similar as this, but this
-is getting a bit extreme (too many arguments!). What about doing:
-
-	for (i = 0; i < 4; i++)
-		trace_seq_printf(s, "%02x", buf++);
-
-	for (i = 0; i < 3; i++)
-		trace_seq_printf(s, "-%02x%02x", buf[i * 2], buf[i * 2 + 1]);
-
-	buf += 6;
-
-	trace_seq_putc(s, '-');
-
-	for (i = 0; i < 6; i++)
-		trace_seq_printf(s, "%02x", buf++);
-
-
-
-Hmm, not sure the above is better, but having that many arguments just
-looks ugly to me.
-
--- Steve
