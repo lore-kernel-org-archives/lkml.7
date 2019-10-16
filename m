@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A9EECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BC0ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E88C21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F96A21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262806;
-	bh=VIgycL42FaxYZvfYvFylTUsM+pW3BJ+crMbYSoZQlCI=;
+	s=default; t=1571262808;
+	bh=aPLnSOzZT4loR5rK2tPSmqEFPGBuW5B8uEE8ucMTXuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PLuwiGGfisUyd/nNvSGPQ7QSg8yP4zR/qk43bC2JZ1QwPCGTyJ9RErRUb9hR8fBo
-	 38C1Wwtl0fdX4kI3gV4+QcygtKgtyNyw3lSsgnYoa7yra/PRvfeRa6XD8dgjzvDmMb
-	 /AQ3DHB7AN/cSgtJh92qKdQj1LsxtiRsS7uomyhI=
+	b=2b1mkZzAalWyJnU7f9SeHhxqGBJuys/OEZt3Wnp3WTKbH+YGVJiNsKuh6iI0aaJx1
+	 1Upprer6N14QT3VAM4mjEe1GAMxfJzY/QoZlljiLCE7Qcvit5NhTKx/7iLBG1n4tXa
+	 LfjvsdWHVW+t/gptSKySlkm+pTU7Au3PNRAP7tTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394852AbfJPVxZ (ORCPT
+        id S2394865AbfJPVx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42066 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437513AbfJPVxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:20 -0400
+        id S2437518AbfJPVxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:21 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD9B21A4C;
-        Wed, 16 Oct 2019 21:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DAC21A49;
+        Wed, 16 Oct 2019 21:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262799;
-        bh=VIgycL42FaxYZvfYvFylTUsM+pW3BJ+crMbYSoZQlCI=;
+        s=default; t=1571262801;
+        bh=aPLnSOzZT4loR5rK2tPSmqEFPGBuW5B8uEE8ucMTXuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLCbxOL6yooFWwVOWcVk4vZcUcBQXrTyTCj8TP2dTlgi8EnU8wxhIVegK3sL9DDB7
-         kUDIxWwLefjq1CqmgiB+S+E+ldjJrwzwZCGdxlle7flMptoZ4MQVVPrfv/qTPqWWZn
-         0ZA1f5ImqUmUao/3P2UmKME1FaVIekyCvJ+Fnsrc=
+        b=O1e267XH9brNl7DTdt8y5/sJCYCZiLBYFKuH5omlTxngHOsh34vavym+zRuGIxtJl
+         MOpEsFuiqdocdyrlipbFrrAgmXpQiaH7JIVFDuiSe0wtgWJe4s/AznQ6RlfirH7MA9
+         F84qrgF1kjVnWTNCUhoMGLOgoD/IzU7jDovrlZ6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.4 04/79] s390/cio: exclude subchannels with no parent from pseudo check
-Date:   Wed, 16 Oct 2019 14:49:39 -0700
-Message-Id: <20191016214733.936954745@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 06/79] ASoC: Define a set of DAPM pre/post-up events
+Date:   Wed, 16 Oct 2019 14:49:41 -0700
+Message-Id: <20191016214735.229352934@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,54 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-commit ab5758848039de9a4b249d46e4ab591197eebaf2 upstream.
+commit cfc8f568aada98f9608a0a62511ca18d647613e2 upstream.
 
-ccw console is created early in start_kernel and used before css is
-initialized or ccw console subchannel is registered. Until then console
-subchannel does not have a parent. For that reason assume subchannels
-with no parent are not pseudo subchannels. This fixes the following
-kasan finding:
-
-BUG: KASAN: global-out-of-bounds in sch_is_pseudo_sch+0x8e/0x98
-Read of size 8 at addr 00000000000005e8 by task swapper/0/0
-
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc8-07370-g6ac43dd12538 #2
-Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
-Call Trace:
-([<000000000012cd76>] show_stack+0x14e/0x1e0)
- [<0000000001f7fb44>] dump_stack+0x1a4/0x1f8
- [<00000000007d7afc>] print_address_description+0x64/0x3c8
- [<00000000007d75f6>] __kasan_report+0x14e/0x180
- [<00000000018a2986>] sch_is_pseudo_sch+0x8e/0x98
- [<000000000189b950>] cio_enable_subchannel+0x1d0/0x510
- [<00000000018cac7c>] ccw_device_recognition+0x12c/0x188
- [<0000000002ceb1a8>] ccw_device_enable_console+0x138/0x340
- [<0000000002cf1cbe>] con3215_init+0x25e/0x300
- [<0000000002c8770a>] console_init+0x68a/0x9b8
- [<0000000002c6a3d6>] start_kernel+0x4fe/0x728
- [<0000000000100070>] startup_continue+0x70/0xd0
+Prepare to use SND_SOC_DAPM_PRE_POST_PMU definition to
+reduce coming code size and make it more readable.
 
 Cc: stable@vger.kernel.org
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/20190719100524.23300-2-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/cio/css.c |    2 ++
+ include/sound/soc-dapm.h |    2 ++
  1 file changed, 2 insertions(+)
 
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -1120,6 +1120,8 @@ device_initcall(cio_settle_init);
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -335,6 +335,8 @@ struct device;
+ #define SND_SOC_DAPM_WILL_PMD   0x80    /* called at start of sequence */
+ #define SND_SOC_DAPM_PRE_POST_PMD \
+ 				(SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD)
++#define SND_SOC_DAPM_PRE_POST_PMU \
++				(SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU)
  
- int sch_is_pseudo_sch(struct subchannel *sch)
- {
-+	if (!sch->dev.parent)
-+		return 0;
- 	return sch == to_css(sch->dev.parent)->pseudo_subchannel;
- }
- 
+ /* convenience event type detection */
+ #define SND_SOC_DAPM_EVENT_ON(e)	\
 
 
