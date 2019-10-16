@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DDAECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30856FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEF220872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7FA20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263453;
-	bh=ErdbU82ThM3I9cHDFmp0MNhZUp0TxhFVzZStJVwB6h8=;
+	s=default; t=1571263458;
+	bh=hBzaPLWMlU+AIxsjy3lQg77sD59CSAafwrLjn5pho+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fBYfmakYXOSuGOIA+Nhz5kJMlctZUfcKMoYWGy8s1aVi8a/NBDZnsf0rnywu+mpEI
-	 XTMj8yDhhYSeo0UkTC8S2hZyhteOKHX1OglbMpkCYOXUbg2aIaju8KcQYfXbOGMuF2
-	 gHzNbbMzYw2KdqjU589UScHMtH6l+Z8TmanoN/Ow=
+	b=1XnnzOQUTeVAHZBpAsDqeNVwADO2g3ZtGepf2JFBFJWXEWjBKXuJX2CEZzMfl4p4i
+	 xRUqEyti2W/phkAgvhnR8894vsic/mbu1M3h+m0KOaGLXI6xF7Oj9dPKT6+mY99eLV
+	 n6v9Ro086djGOVcjdDRHxqXfVEM5BsKBcmfA0qG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406840AbfJPWEL (ORCPT
+        id S2438392AbfJPV7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438416AbfJPV7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:11 -0400
+        id S2404125AbfJPV6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:12 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 771BC21D7A;
-        Wed, 16 Oct 2019 21:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FC121D80;
+        Wed, 16 Oct 2019 21:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263150;
-        bh=ErdbU82ThM3I9cHDFmp0MNhZUp0TxhFVzZStJVwB6h8=;
+        s=default; t=1571263092;
+        bh=hBzaPLWMlU+AIxsjy3lQg77sD59CSAafwrLjn5pho+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntiOtuJfW+b4eA3WCjvbyNK1R5xCs+trQshov+qBHUwCdyNHxI78BF+kosfvBQYse
-         4hTsqgE5VyFiZAmPdPs4oA0HOuEfjanFfj5y+HjJooXjJXZSaNJqGv2ft6WqJ+Tckj
-         npIzrMegDMdLJLdq+BNamT/xeOresYWoe6LA89bA=
+        b=D5+1Q8dwKaCa4A7ywp3JmmTIc43VMf68Ao78rfKnt6WvpOF3USmaXWxJVBASauLOo
+         vli0nFn9NB7vzRcd4hiQYLvYeFUcdPfn1oSn+BXOZ57Ms1sywlK16griuwXdIXjyOY
+         3xkBl5wo495FmP31AHyLEqPKCqc+zlA00SFgC2Ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 078/112] mm/vmpressure.c: fix a signedness bug in vmpressure_register_event()
-Date:   Wed, 16 Oct 2019 14:51:10 -0700
-Message-Id: <20191016214904.308616614@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.3 013/112] xhci: Increase STS_SAVE timeout in xhci_suspend()
+Date:   Wed, 16 Oct 2019 14:50:05 -0700
+Message-Id: <20191016214847.438460379@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -66,91 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 518a86713078168acd67cf50bc0b45d54b4cce6c upstream.
+commit ac343366846a445bb81f0a0e8f16abb8bd5d5d88 upstream.
 
-The "mode" and "level" variables are enums and in this context GCC will
-treat them as unsigned ints so the error handling is never triggered.
+After commit f7fac17ca925 ("xhci: Convert xhci_handshake() to use
+readl_poll_timeout_atomic()"), ASMedia xHCI may fail to suspend.
 
-I also removed the bogus initializer because it isn't required any more
-and it's sort of confusing.
+Although the algorithms are essentially the same, the old max timeout is
+(usec + usec * time of doing readl()), and the new max timeout is just
+usec, which is much less than the old one.
 
-[akpm@linux-foundation.org: reduce implicit and explicit typecasting]
-[akpm@linux-foundation.org: fix return value, add comment, per Matthew]
-Link: http://lkml.kernel.org/r/20190925110449.GO3264@mwanda
-Fixes: 3cadfa2b9497 ("mm/vmpressure.c: convert to use match_string() helper")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Matthew Wilcox <willy@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Enrico Weigelt <info@metux.net>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Increase the timeout to make ASMedia xHCI able to suspend again.
+
+BugLink: https://bugs.launchpad.net/bugs/1844021
+Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
+Cc: <stable@vger.kernel.org> # v5.2+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-8-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmpressure.c |   20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/usb/host/xhci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/vmpressure.c
-+++ b/mm/vmpressure.c
-@@ -355,6 +355,9 @@ void vmpressure_prio(gfp_t gfp, struct m
-  * "hierarchy" or "local").
-  *
-  * To be used as memcg event method.
-+ *
-+ * Return: 0 on success, -ENOMEM on memory failure or -EINVAL if @args could
-+ * not be parsed.
-  */
- int vmpressure_register_event(struct mem_cgroup *memcg,
- 			      struct eventfd_ctx *eventfd, const char *args)
-@@ -362,7 +365,7 @@ int vmpressure_register_event(struct mem
- 	struct vmpressure *vmpr = memcg_to_vmpressure(memcg);
- 	struct vmpressure_event *ev;
- 	enum vmpressure_modes mode = VMPRESSURE_NO_PASSTHROUGH;
--	enum vmpressure_levels level = -1;
-+	enum vmpressure_levels level;
- 	char *spec, *spec_orig;
- 	char *token;
- 	int ret = 0;
-@@ -375,20 +378,18 @@ int vmpressure_register_event(struct mem
- 
- 	/* Find required level */
- 	token = strsep(&spec, ",");
--	level = match_string(vmpressure_str_levels, VMPRESSURE_NUM_LEVELS, token);
--	if (level < 0) {
--		ret = level;
-+	ret = match_string(vmpressure_str_levels, VMPRESSURE_NUM_LEVELS, token);
-+	if (ret < 0)
- 		goto out;
--	}
-+	level = ret;
- 
- 	/* Find optional mode */
- 	token = strsep(&spec, ",");
- 	if (token) {
--		mode = match_string(vmpressure_str_modes, VMPRESSURE_NUM_MODES, token);
--		if (mode < 0) {
--			ret = mode;
-+		ret = match_string(vmpressure_str_modes, VMPRESSURE_NUM_MODES, token);
-+		if (ret < 0)
- 			goto out;
--		}
-+		mode = ret;
- 	}
- 
- 	ev = kzalloc(sizeof(*ev), GFP_KERNEL);
-@@ -404,6 +405,7 @@ int vmpressure_register_event(struct mem
- 	mutex_lock(&vmpr->events_lock);
- 	list_add(&ev->node, &vmpr->events);
- 	mutex_unlock(&vmpr->events_lock);
-+	ret = 0;
- out:
- 	kfree(spec_orig);
- 	return ret;
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1032,7 +1032,7 @@ int xhci_suspend(struct xhci_hcd *xhci,
+ 	writel(command, &xhci->op_regs->command);
+ 	xhci->broken_suspend = 0;
+ 	if (xhci_handshake(&xhci->op_regs->status,
+-				STS_SAVE, 0, 10 * 1000)) {
++				STS_SAVE, 0, 20 * 1000)) {
+ 	/*
+ 	 * AMD SNPS xHC 3.0 occasionally does not clear the
+ 	 * SSS bit of USBSTS and when driver tries to poll
 
 
