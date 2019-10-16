@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C45FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5359ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B0821D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D363218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262853;
-	bh=z72wx2EaZvibjF+VOQ1SeH3ikXwxpb0sbeFq1vOr6Z0=;
+	s=default; t=1571262858;
+	bh=aIQcL4b/tb/PvwmoHrsNLvrqkU7fYpR0I51Q/CTrS70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b/7g4c3/t5sXKG8r2wf4bdVXmQrVNLMdFtahnqmQ7UPO1KQjPxuYMM9BPLECASST4
-	 9mc0Y5E1LWfBYS6XUISDSxFZA2Uucs3OlYnp3zvUKrGniHNC4JNNmQlPeEShnAsYW2
-	 idQYWcWK8HkeMYXBijmJ0wHGF3ECYdvGqQhWAwuc=
+	b=qfcPDz+GeR6OZNRuVl1KV8h6wZLP+Z1PKEC9QWZ7z2owhxto4Wm+P+MwoVZxSyfyc
+	 h6if4iR/AHhiALhsyT0+XhzOlo2GKoysaUuA9TkCqJ+jFpGO/DgxurAMgfJVMGDWZ6
+	 rY/K9YjX8R7iEyfTsqtU9ns2nuFgEsB6oy0IoLvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437701AbfJPVyL (ORCPT
+        id S1728051AbfJPVyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbfJPVyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:03 -0400
+        id S2437661AbfJPVyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:04 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A5721925;
-        Wed, 16 Oct 2019 21:54:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3969C21D7C;
+        Wed, 16 Oct 2019 21:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262842;
-        bh=z72wx2EaZvibjF+VOQ1SeH3ikXwxpb0sbeFq1vOr6Z0=;
+        s=default; t=1571262844;
+        bh=aIQcL4b/tb/PvwmoHrsNLvrqkU7fYpR0I51Q/CTrS70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1lsOZ0f3KY1qT44/1lfx3/ZSZhRXvGSAytlIdJkELQMjHB7sceBdyOeL89l39wyzt
-         4165m4E92qz2mrlZCKul4CLR7EV9miXw7Q3uchdTiaPitWdqoLQ9QVgT9mD1CHSqj9
-         OPdFE+eCExHTDM8DYCnBbvA1uqg1rEGzVnWADJxc=
+        b=z4v1V3DNsa0AhYE9Y1Mj752VLzQfAd8RAl2tSyFs55ZDrdT52o6BkthTG0SDHwpDu
+         1M6OhmHUBhnv3CBni48qSobIGAurhcMiaItcQJa8dOKasqB35qa9ssbUxgkvYfDhuH
+         AVnTc30syxVhYqoY4F2ErMsTPaTBarjdyGE9m9cI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
-Subject: [PATCH 4.4 38/79] USB: adutux: remove redundant variable minor
-Date:   Wed, 16 Oct 2019 14:50:13 -0700
-Message-Id: <20191016214801.532031203@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.9 02/92] s390/topology: avoid firing events before kobjs are created
+Date:   Wed, 16 Oct 2019 14:49:35 -0700
+Message-Id: <20191016214801.569162744@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
-References: <20191016214729.758892904@linuxfoundation.org>
+In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
+References: <20191016214759.600329427@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,38 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 8444efc4a052332d643ed5c8aebcca148c7de032 upstream.
+commit f3122a79a1b0a113d3aea748e0ec26f2cb2889de upstream.
 
-Variable minor is being assigned but never read, hence it is redundant
-and can be removed. Cleans up clang warning:
+arch_update_cpu_topology is first called from:
+kernel_init_freeable->sched_init_smp->sched_init_domains
 
-drivers/usb/misc/adutux.c:770:2: warning: Value stored to 'minor' is
-never read
+even before cpus has been registered in:
+kernel_init_freeable->do_one_initcall->s390_smp_init
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Do not trigger kobject_uevent change events until cpu devices are
+actually created. Fixes the following kasan findings:
+
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb40/0xee0
+Read of size 8 at addr 0000000000000020 by task swapper/0/1
+
+BUG: KASAN: global-out-of-bounds in kobject_uevent_env+0xb36/0xee0
+Read of size 8 at addr 0000000000000018 by task swapper/0/1
+
+CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
+Hardware name: IBM 3906 M04 704 (LPAR)
+Call Trace:
+([<0000000143c6db7e>] show_stack+0x14e/0x1a8)
+ [<0000000145956498>] dump_stack+0x1d0/0x218
+ [<000000014429fb4c>] print_address_description+0x64/0x380
+ [<000000014429f630>] __kasan_report+0x138/0x168
+ [<0000000145960b96>] kobject_uevent_env+0xb36/0xee0
+ [<0000000143c7c47c>] arch_update_cpu_topology+0x104/0x108
+ [<0000000143df9e22>] sched_init_domains+0x62/0xe8
+ [<000000014644c94a>] sched_init_smp+0x3a/0xc0
+ [<0000000146433a20>] kernel_init_freeable+0x558/0x958
+ [<000000014599002a>] kernel_init+0x22/0x160
+ [<00000001459a71d4>] ret_from_fork+0x28/0x30
+ [<00000001459a71dc>] kernel_thread_starter+0x0/0x10
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/adutux.c |    2 --
- 1 file changed, 2 deletions(-)
+ arch/s390/kernel/topology.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -800,13 +800,11 @@ error:
- static void adu_disconnect(struct usb_interface *interface)
- {
- 	struct adu_device *dev;
--	int minor;
- 
- 	dev = usb_get_intfdata(interface);
- 
- 	mutex_lock(&dev->mtx);	/* not interruptible */
- 	dev->udev = NULL;	/* poison */
--	minor = dev->minor;
- 	usb_deregister_dev(interface, &adu_class);
- 	mutex_unlock(&dev->mtx);
- 
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -256,7 +256,8 @@ int arch_update_cpu_topology(void)
+ 		topology_update_polarization_simple();
+ 	for_each_online_cpu(cpu) {
+ 		dev = get_cpu_device(cpu);
+-		kobject_uevent(&dev->kobj, KOBJ_CHANGE);
++		if (dev)
++			kobject_uevent(&dev->kobj, KOBJ_CHANGE);
+ 	}
+ 	return rc;
+ }
 
 
