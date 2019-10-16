@@ -2,112 +2,133 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F28FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24BAFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402B1205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E5E205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:20:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Lryg5TbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405184AbfJPMUX (ORCPT
+        id S2405202AbfJPMU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:20:23 -0400
-Received: from relay.sw.ru ([185.231.240.75]:56526 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392928AbfJPMUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:20:22 -0400
-Received: from [172.16.25.5]
-        by relay.sw.ru with esmtp (Exim 4.92.2)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1iKiHd-0008JI-Fd; Wed, 16 Oct 2019 15:20:05 +0300
-Subject: Re: [PATCH v8 1/5] kasan: support backing vmalloc space with real
- shadow memory
-To:     Daniel Axtens <dja@axtens.net>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, x86@kernel.org, glider@google.com,
-        luto@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com
-References: <20191001065834.8880-1-dja@axtens.net>
- <20191001065834.8880-2-dja@axtens.net>
- <352cb4fa-2e57-7e3b-23af-898e113bbe22@virtuozzo.com>
- <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <8f573b40-3a5a-ed36-dffb-4a54faf3c4e1@virtuozzo.com>
-Date:   Wed, 16 Oct 2019 15:19:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 16 Oct 2019 08:20:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46855 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405188AbfJPMU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:20:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so27754897wrv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dmrMhgpUSf60d5nh3MAEGQy/4z6O1wG97cbLuW1Vm/Q=;
+        b=Lryg5TbKNuFD1H9KnYSEFIXh7TPiZG5JT6QcacCuclZQ7ucsqtGD2RjLXMfRQNQn11
+         4H8eWrGeyw6gS2x8zrZV2LRijZHZHDiWAS/WnxWrN5PilX42PAZxtYhpJffHaZ93Q0Xb
+         5yV952iEPXu5/aHNYguUVK3s07QjWaKL860yK9MwH+R94+/TR/9tWxOOY1gav0+m4s/U
+         lvNZoW05LWMCbBwqgknxmY8ZP4NZTlosLfG3f18WVt4LJYwYzJNr0WPoF+YeGPyAH+RQ
+         aNAel85fvckPLTBuXDBW0+kffLA1BAfpPJuw4dw1Cg57p4zBtdSOr4WtIQnK3hTn9zNn
+         y1oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dmrMhgpUSf60d5nh3MAEGQy/4z6O1wG97cbLuW1Vm/Q=;
+        b=DtLmcCWMxFmweFHsM0/uqG6h5sRretosPjMr5r0n29BFsW8C5/mGJJ43jAL0AUn4rQ
+         qvELP6xbwJvxf1oLdCLqGfg9/vAlwkqWxVhF7gpC0u+A4vAuWcNjpVKjSzcqVJRLu/GE
+         wctqY5vu1n9iqpEISHFLVSGN2T34jcQg5x7pHb1QehtP4nc2SK6rL2a2Nvr4FPr/gruP
+         24dUIgCCy+kiEpOQxzl+PnHPg/ysXMPaVLBBoHdsM+0I6ikU3vBuGgNmxKIQjPpAoRHh
+         VYKUMbokKgZKIKusH52Wj6evWaHxYsMhXM1wI8irwy5IsCCjMBQgKxbb9Fpb0vyWV/B0
+         58pw==
+X-Gm-Message-State: APjAAAXcKRxHW7pjRzbsnc90OM3PJI8wqh9UBDBMSGsChZMphcPIGqqk
+        mZMOgqgtdzSQW3YFK5iAgaGnPQ==
+X-Google-Smtp-Source: APXvYqwfPRjX6bZCyWbED2wZKVclukgcm82IW4MA8rMSeU9WhVqp0vA8KEy24wGzUe87U8Bz3v5M6A==
+X-Received: by 2002:adf:e542:: with SMTP id z2mr2327859wrm.338.1571228426355;
+        Wed, 16 Oct 2019 05:20:26 -0700 (PDT)
+Received: from netronome.com (penelope-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:c685:8ff:fe7c:9971])
+        by smtp.gmail.com with ESMTPSA id s12sm26946038wra.82.2019.10.16.05.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 05:20:25 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 14:20:23 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: Bluetooth: missed cpu_to_le16 conversion in
+ hci_init4_req
+Message-ID: <20191016122022.kz4xzx4hzmtuoh5l@netronome.com>
+References: <20191016113943.19256-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <87ftjvtoo7.fsf@dja-thinkpad.axtens.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016113943.19256-1-ben.dooks@codethink.co.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/14/19 4:57 PM, Daniel Axtens wrote:
-> Hi Andrey,
+On Wed, Oct 16, 2019 at 12:39:43PM +0100, Ben Dooks (Codethink) wrote:
+> It looks like in hci_init4_req() the request is being
+> initialised from cpu-endian data but the packet is specified
+> to be little-endian. This causes an warning from sparse due
+> to __le16 to u16 conversion.
 > 
+> Fix this by using cpu_to_le16() on the two fields in the packet.
 > 
->>> +	/*
->>> +	 * Ensure poisoning is visible before the shadow is made visible
->>> +	 * to other CPUs.
->>> +	 */
->>> +	smp_wmb();
->>
->> I'm not quite understand what this barrier do and why it needed.
->> And if it's really needed there should be a pairing barrier
->> on the other side which I don't see.
+> net/bluetooth/hci_core.c:845:27: warning: incorrect type in assignment (different base types)
+> net/bluetooth/hci_core.c:845:27:    expected restricted __le16 [usertype] tx_len
+> net/bluetooth/hci_core.c:845:27:    got unsigned short [usertype] le_max_tx_len
+> net/bluetooth/hci_core.c:846:28: warning: incorrect type in assignment (different base types)
+> net/bluetooth/hci_core.c:846:28:    expected restricted __le16 [usertype] tx_time
+> net/bluetooth/hci_core.c:846:28:    got unsigned short [usertype] le_max_tx_time
 > 
-> Mark might be better able to answer this, but my understanding is that
-> we want to make sure that we never have a situation where the writes are
-> reordered so that PTE is installed before all the poisioning is written
-> out. I think it follows the logic in __pte_alloc() in mm/memory.c:
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Marcel Holtmann <marcel@holtmann.org>
+> Cc: Johan Hedberg <johan.hedberg@gmail.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: linux-bluetooth@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  net/bluetooth/hci_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> 	/*
-> 	 * Ensure all pte setup (eg. pte page lock and page clearing) are
-> 	 * visible before the pte is made visible to other CPUs by being
-> 	 * put into page tables.
-> 	 *
-> 	 * The other side of the story is the pointer chasing in the page
-> 	 * table walking code (when walking the page table without locking;
-> 	 * ie. most of the time). Fortunately, these data accesses consist
-> 	 * of a chain of data-dependent loads, meaning most CPUs (alpha
-> 	 * being the notable exception) will already guarantee loads are
-> 	 * seen in-order. See the alpha page table accessors for the
-> 	 * smp_read_barrier_depends() barriers in page table walking code.
-> 	 */
-> 	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 04bc79359a17..b2559d4bed81 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -842,8 +842,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
+>  	if (hdev->le_features[0] & HCI_LE_DATA_LEN_EXT) {
+>  		struct hci_cp_le_write_def_data_len cp;
+>  
+> -		cp.tx_len = hdev->le_max_tx_len;
+> -		cp.tx_time = hdev->le_max_tx_time;
+> +		cp.tx_len = cpu_to_le16(hdev->le_max_tx_len);
+> +		cp.tx_time = cpu_to_le16(hdev->le_max_tx_time);
+
+I would suggest that the naming of the le_ fields of struct hci_dev
+implies that the values stored in those fields should be little endian
+(but those that are more than bone byte wide are not).
+
+In any case, the question arises as to if this has ever worked on big
+endian machines.
+
+>  		hci_req_add(req, HCI_OP_LE_WRITE_DEF_DATA_LEN, sizeof(cp), &cp);
+>  	}
+>  
+> -- 
+> 2.23.0
 > 
-> I can clarify the comment.
-> 
-
-I don't see how is this relevant here.
-
-barrier in __pte_alloc() for very the following case:
-
-CPU 0							CPU 1
-__pte_alloc():                                          pte_offset_kernel(pmd_t * dir, unsigned long address):
-     pgtable_t new = pte_alloc_one(mm);                        pte_t *new = (pte_t *) pmd_page_vaddr(*dir) + ((address >> PAGE_SHIFT) & (PTRS_PER_PAGE - 1));  
-     smp_wmb();                                                smp_read_barrier_depends();
-     pmd_populate(mm, pmd, new);
-							/* do something with pte, e.g. check if (pte_none(*new)) */
-
-
-It's needed to ensure that if CPU1 sees pmd_populate() it also sees initialized contents of the 'new'.
-
-In our case the barrier would have been needed if we had the other side like this:
-
-if (!pte_none(*vmalloc_shadow_pte)) {
-	shadow_addr = (unsigned long)__va(pte_pfn(*vmalloc_shadow_pte) << PAGE_SHIFT);
-	smp_read_barrier_depends();
-	*shadow_addr; /* read the shadow, barrier ensures that if we see installed pte, we will see initialized shadow memory. */
-}
-
-
-Without such other side the barrier is pointless.
