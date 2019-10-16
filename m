@@ -2,136 +2,154 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E213FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCB4FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D062067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ip5/2yuI"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC832168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405346AbfJPN3Z (ORCPT
+        id S2405354AbfJPNav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:29:25 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34309 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730142AbfJPN3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:29:25 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j19so24061140lja.1;
-        Wed, 16 Oct 2019 06:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0zuQ6WlphP3GLKAO64VehzUGUxpcevfofxKNJyniNKY=;
-        b=ip5/2yuI67JEFe/mVoBmH4WWKAZPlmVUJvh65wnYuCA4EcZZqWNujbRa5T6z94wnTo
-         dt47qXlThCanJRW+YOoy6SjpIpmhBBEhi37X3zRWN5HuqH6QUbFskNiYOROl/7ikk+H4
-         X7PoIsY0uWEOF8Bzv8Qt11UX99eQ2yQf3ioZ5LaTo4Kdt25bp5eD+zitb7Owk6sfXwwA
-         YGCBwAvbT3EZvrjAT79dYkGM1UZ10cbYafDAKa0byZXEtWYUGsfCetcPdRDEDTK5VCai
-         H4XZaX/y00MKZ2pd3r233U2qf659JVx0m1MhIQnBupPPaYFRZKbhTw6z/I671OL2D+MC
-         fJxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0zuQ6WlphP3GLKAO64VehzUGUxpcevfofxKNJyniNKY=;
-        b=qymmdYDuonH82hJiHtzTApSA++brwN6do1GyfL+3oxNwBATN9Pnd7t3Vh70BDKaUwh
-         DvF/Y0kDOq6hZ1cl3+wWWVd866b3PSu9CsYUY0do1Cn4N5WV9xxC8wJT1C8K+xdFj5/m
-         8aT6b+GjSITuX4z9i0mQYcesLs3r6MazR9l6czpUtPDkNjHOCkHZzsGfTjqmi10jsT6t
-         56ijsylOSzgB/LNLTzd5pxUYWjPdH5NWdJ2E0+duwW1tnxSidYZD92SG0o3fzQJ/rEV7
-         VI21LqcC2XEKl4Fi2LDx17vwkmmpoyPT0ixLc984IJvLndQL1iuPlAoPWXLKr9h9szgN
-         eHsw==
-X-Gm-Message-State: APjAAAVZBQt3boC/T5vxb81GXEyLBqDgSC4BBlWZGcGVG7CXW6YOS5GS
-        NypOJhy4FoIRnL5+qouHe5Gsa6MX
-X-Google-Smtp-Source: APXvYqwlcIVCIDajACVzs0yXeLGMk4o/kTl6pSqxAdmgs6AzOAeh0m77uNfrHbodavkF4OBPNTAHzQ==
-X-Received: by 2002:a2e:569a:: with SMTP id k26mr26062243lje.256.1571232562125;
-        Wed, 16 Oct 2019 06:29:22 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id z8sm7740724lfg.18.2019.10.16.06.29.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2019 06:29:21 -0700 (PDT)
-Subject: Re: [PATCH v1 07/17] cpufreq: tegra20: Use generic cpufreq-dt driver
- (Tegra30 supported now)
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191015211618.20758-1-digetx@gmail.com>
- <20191015211618.20758-8-digetx@gmail.com>
- <20191016051802.rrxv56vtvxfm6qqe@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <13a9ebd6-8dce-0217-d306-defb8eb6fb96@gmail.com>
-Date:   Wed, 16 Oct 2019 16:29:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 16 Oct 2019 09:30:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4219 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388342AbfJPNau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:30:50 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1ED8C5D4AE5A087F7F66;
+        Wed, 16 Oct 2019 21:30:47 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.179) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 21:30:37 +0800
+Subject: Re: [PATCH v6 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
+ UNCORE driver.
+To:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1571218608-15933-1-git-send-email-gkulkarni@marvell.com>
+ <1571218608-15933-3-git-send-email-gkulkarni@marvell.com>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Jan Glauber <jglauber@marvell.com>,
+        "Jayachandran Chandrasekharan Nair" <jnair@marvell.com>,
+        "gklkml16@gmail.com" <gklkml16@gmail.com>,
+        Robert Richter <rrichter@marvell.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b8e1a637-faf4-4567-7d3e-a4f13dfa1cf0@huawei.com>
+Date:   Wed, 16 Oct 2019 14:30:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191016051802.rrxv56vtvxfm6qqe@vireshk-i7>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571218608-15933-3-git-send-email-gkulkarni@marvell.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.10.2019 08:18, Viresh Kumar пишет:
-> On 16-10-19, 00:16, Dmitry Osipenko wrote:
->> Re-parenting to intermediate clock is supported now by the clock driver
->> and thus there is no need in a customized CPUFreq driver, all that code
->> is common for both Tegra20 and Tegra30. The available CPU freqs are now
->> specified in device-tree in a form of OPPs, all users should update their
->> device-trees.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/cpufreq/Kconfig.arm          |   4 +-
->>  drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
->>  drivers/cpufreq/tegra20-cpufreq.c    | 236 ++++++---------------------
->>  3 files changed, 55 insertions(+), 187 deletions(-)
->>
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index a905796f7f85..2118c45d0acd 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -301,8 +301,8 @@ config ARM_TANGO_CPUFREQ
->>  	default y
->>  
->>  config ARM_TEGRA20_CPUFREQ
->> -	tristate "Tegra20 CPUFreq support"
->> -	depends on ARCH_TEGRA
->> +	bool "Tegra20 CPUFreq support"
-> 
-> Google is currently working on the GKI (generic kernel image) project where they
-> want to use a single kernel image with modules for all kind of android devices.
-> And for that they need all such drivers to be built as module. Since this is
-> already an module, I would ask you to keep it as is instead of moving it to bool
-> here. Else some google guy will switch it back as module later on.
-> 
-> LGTM otherwise. Nice work. Thanks.
-> 
 
-Okay, I'll keep the modularity in v2.
+> +TX2_EVENT_ATTR(req_pktsent, CCPI2_EVENT_REQ_PKT_SENT);
+> +TX2_EVENT_ATTR(snoop_pktsent, CCPI2_EVENT_SNOOP_PKT_SENT);
+> +TX2_EVENT_ATTR(data_pktsent, CCPI2_EVENT_DATA_PKT_SENT);
+> +TX2_EVENT_ATTR(gic_pktsent, CCPI2_EVENT_GIC_PKT_SENT);
+> +
+> +static struct attribute *ccpi2_pmu_events_attrs[] = {
+> +	&tx2_pmu_event_attr_req_pktsent.attr.attr,
+> +	&tx2_pmu_event_attr_snoop_pktsent.attr.attr,
+> +	&tx2_pmu_event_attr_data_pktsent.attr.attr,
+> +	&tx2_pmu_event_attr_gic_pktsent.attr.attr,
+> +	NULL,
+> +};
 
-Although, tegra20-cpufreq isn't a driver anymore because now it merely
-prepares OPP table for the cpufreq-dt driver, which is really a one-shot
-action that is enough to do during boot and thus modularity is a bit
-redundant here.
+Hi Ganapatrao,
+
+Have you considered adding these as uncore pmu-events in the perf tool?
+
+Some advantages I see:
+- perf list is not swamped with all these uncore events per PMU
+For the Hisi uncore events, we get 100s of events (>600 on the board I 
+just tested, which is crazy)
+- can add more description in the JSON files
+- less stuff in the kernel
+
+> +
+>  static const struct attribute_group l3c_pmu_events_attr_group = {
+>  	.name = "events",
+>  	.attrs = l3c_pmu_events_attrs,
+> @@ -174,6 +240,11 @@ static const struct attribute_group dmc_pmu_events_attr_group = {
+>  	.attrs = dmc_pmu_events_attrs,
+>  };
+
+[...]
+
+>  		tx2_pmu->attr_groups = l3c_pmu_attr_groups;
+>  		tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
+>  				"uncore_l3c_%d", tx2_pmu->node);
+> @@ -665,10 +846,13 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
+>  		tx2_pmu->stop_event = uncore_stop_event_l3c;
+>  		break;
+>  	case PMU_TYPE_DMC:
+> -		tx2_pmu->max_counters = TX2_PMU_MAX_COUNTERS;
+> +		tx2_pmu->max_counters = TX2_PMU_DMC_L3C_MAX_COUNTERS;
+> +		tx2_pmu->counters_mask = 0x3;
+>  		tx2_pmu->prorate_factor = TX2_PMU_DMC_CHANNELS;
+>  		tx2_pmu->max_events = DMC_EVENT_MAX;
+> +		tx2_pmu->events_mask = 0x1f;
+>  		tx2_pmu->hrtimer_interval = TX2_PMU_HRTIMER_INTERVAL;
+> +		tx2_pmu->hrtimer_callback = tx2_hrtimer_callback;
+>  		tx2_pmu->attr_groups = dmc_pmu_attr_groups;
+>  		tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
+>  				"uncore_dmc_%d", tx2_pmu->node);
+> @@ -676,6 +860,21 @@ static struct tx2_uncore_pmu *tx2_uncore_pmu_init_dev(struct device *dev,
+>  		tx2_pmu->start_event = uncore_start_event_dmc;
+>  		tx2_pmu->stop_event = uncore_stop_event_dmc;
+>  		break;
+> +	case PMU_TYPE_CCPI2:
+> +		/* CCPI2 has 8 counters */
+> +		tx2_pmu->max_counters = TX2_PMU_CCPI2_MAX_COUNTERS;
+> +		tx2_pmu->counters_mask = 0x7;
+> +		tx2_pmu->prorate_factor = 1;
+> +		tx2_pmu->max_events = CCPI2_EVENT_MAX;
+> +		tx2_pmu->events_mask = 0x1ff;
+> +		tx2_pmu->attr_groups = ccpi2_pmu_attr_groups;
+> +		tx2_pmu->name = devm_kasprintf(dev, GFP_KERNEL,
+> +				"uncore_ccpi2_%d", tx2_pmu->node);
+
+Do you need to check this for name == NULL?
+
+> +		tx2_pmu->init_cntr_base = init_cntr_base_ccpi2;
+> +		tx2_pmu->start_event = uncore_start_event_ccpi2;
+> +		tx2_pmu->stop_event = uncore_stop_event_ccpi2;
+> +		tx2_pmu->hrtimer_callback = NULL;
+> +		break;
+>  	case PMU_TYPE_INVALID:
+>  		devm_kfree(dev, tx2_pmu);
+>  		return NULL;
+> @@ -744,7 +943,9 @@ static int tx2_uncore_pmu_offline_cpu(unsigned int cpu,
+>  	if (cpu != tx2_pmu->cpu)
+>  		return 0;
+>
+> -	hrtimer_cancel(&tx2_pmu->hrtimer);
+> +	if (tx2_pmu->hrtimer_callback)
+> +		hrtimer_cancel(&tx2_pmu->hrtimer);
+> +
+>  	cpumask_copy(&cpu_online_mask_temp, cpu_online_mask);
+>  	cpumask_clear_cpu(cpu, &cpu_online_mask_temp);
+>  	new_cpu = cpumask_any_and(
+>
+
+Thanks,
+John
+
+
