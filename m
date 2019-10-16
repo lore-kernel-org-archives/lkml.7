@@ -2,468 +2,208 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50391FA372C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDBCFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F2A21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068AF20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:14:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NyUB0++E";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H7h5u8vA"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DU5vQSyM";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DU5vQSyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404582AbfJPKOi (ORCPT
+        id S2392260AbfJPKOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:14:38 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49326 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfJPKOh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:14:37 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BCEDB60D70; Wed, 16 Oct 2019 10:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571220876;
-        bh=1L3i7+fyFuzskviUT43640Hev0JiOHS5V1Tski79Yfo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyUB0++EDNkUq/yrG5ai6Pqp4o9ifVDbi8AZn44LOHOu0xU9cGGQGXpQ5sthEjFMB
-         qP74sf23iC9aifclTdC+q93oNeNoAmto9S8T3NAqz9bzE8kicw5vrRDea4ldQvWx9t
-         lvrQ2sdgMRDd/mEjA2wXVfoI1I26J7cB7R/Ngsas=
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A125760A7E;
-        Wed, 16 Oct 2019 10:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571220870;
-        bh=1L3i7+fyFuzskviUT43640Hev0JiOHS5V1Tski79Yfo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7h5u8vAY2fRZalduFWSOm7sDXXVU6HM5dKtjvS7Te5Hj37pcJAOaCLmtsHcU1uKl
-         YVL751ka5Te4O+0inH7XsNSTwd40MXRtW6Wk1r6HwKtmB/K8A+Cw3sdyganGUO2/7R
-         PxbKXenMvSPVog70GbWwAtc71L3C85XdsgjVwXt8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A125760A7E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V7 4/6] backlight: qcom-wled: Add support for WLED4 peripheral.
-Date:   Wed, 16 Oct 2019 15:43:44 +0530
-Message-Id: <1571220826-7740-5-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
-References: <1571220826-7740-1-git-send-email-kgunda@codeaurora.org>
+        Wed, 16 Oct 2019 06:14:42 -0400
+Received: from mail-eopbgr00067.outbound.protection.outlook.com ([40.107.0.67]:55874
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727235AbfJPKOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 06:14:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KFNSm98Rrp9kw1XgvlA4IKw/0rjvZeetA6DDh2GHmU=;
+ b=DU5vQSyM7IZWt24pRgQZKjH/7fk9IESk3Ige599XVk7adPrVqAOqmTdmTroZedJ5k677ExgfsJ+O9dhOt6WMoafgVuP+Q1mveSarwRS56rT2AIoMbstQ4vTsgB9w8HNU3kawHfwrmPg/H+n8VsvgO6oenJkhJrFCSwjllWuRnZE=
+Received: from VI1PR08CA0254.eurprd08.prod.outlook.com (2603:10a6:803:dc::27)
+ by DB7PR08MB3372.eurprd08.prod.outlook.com (2603:10a6:10:4f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.17; Wed, 16 Oct
+ 2019 10:12:54 +0000
+Received: from AM5EUR03FT046.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::207) by VI1PR08CA0254.outlook.office365.com
+ (2603:10a6:803:dc::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16 via Frontend
+ Transport; Wed, 16 Oct 2019 10:12:54 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT046.mail.protection.outlook.com (10.152.16.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Wed, 16 Oct 2019 10:12:52 +0000
+Received: ("Tessian outbound 0939a6bab6b1:v33"); Wed, 16 Oct 2019 10:12:52 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 3b2406841a3ebc8d
+X-CR-MTA-TID: 64aa7808
+Received: from 5edff9ff4dac.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.9.51])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 2172D6B4-84D4-4126-8CFB-EE17093DBF68.1;
+        Wed, 16 Oct 2019 10:12:46 +0000
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-ve1eur03lp2051.outbound.protection.outlook.com [104.47.9.51])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 5edff9ff4dac.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Wed, 16 Oct 2019 10:12:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WzBOlo+2cY+RHES4V1ChQ7eq6sRyq55z99qHUc3dIruhwjqnN0od5NwHv0IqQrR1nZkle+EeW+9ysSg9shWtp1H5XzlQgvSlR7zpQzNQB5cTyixcm/hgNypCgWa36c/3rzVIVKmyISCx6E1o2M4bpfAADKandmfXlxvsv/irQo19omJV6kMK6M/3hZzPL6u29rGRC6A94XA7JG+EJIdn/VanU1OwS6Ci6sPsDOCwtdo31/wos0Ri+syDhJ+ksethT2vLQE/Mne1a/+8vueKIKtWKusDEszPiVdQYTT5E2aRmLm+mo7SO2k6JjisyLOLG1VYOE86lPk24RzuHvCzecw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KFNSm98Rrp9kw1XgvlA4IKw/0rjvZeetA6DDh2GHmU=;
+ b=IECsnya534K8PzhPSxelgMNHu5/Ft323go5zqj7RBLfzWmivAlOUY9gJHD9Zfe6wjs8U1Mer1QswmhF5ISJVOGRkI/Uz9PoReGVAWrzH6Q3K72b2BDcClnLngk1MoxhpwNwr5QZ8nba7vZS6aJlHuDPbIZwiKzVxawg5yRiEpPwQWr91AAjoTIShjmrndBhUDO1/Q97efhREDlpSvMNUex1HlpeksJjRd5mAeQp4qD/7PxeQ6TriCkHibGkbg8i9ytvlMrmV5xQ1LMAJdFMxoR+yL8YNTUk8Ny0YfF2v79eS+DEefYRfZIRFYoJcEk/PvrWdHZGo7oIlGbfHMITAKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/KFNSm98Rrp9kw1XgvlA4IKw/0rjvZeetA6DDh2GHmU=;
+ b=DU5vQSyM7IZWt24pRgQZKjH/7fk9IESk3Ige599XVk7adPrVqAOqmTdmTroZedJ5k677ExgfsJ+O9dhOt6WMoafgVuP+Q1mveSarwRS56rT2AIoMbstQ4vTsgB9w8HNU3kawHfwrmPg/H+n8VsvgO6oenJkhJrFCSwjllWuRnZE=
+Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com (10.172.218.15) by
+ AM4PR0802MB2337.eurprd08.prod.outlook.com (10.172.218.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.21; Wed, 16 Oct 2019 10:12:44 +0000
+Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com
+ ([fe80::9c3e:dc5:e056:9f89]) by AM4PR0802MB2242.eurprd08.prod.outlook.com
+ ([fe80::9c3e:dc5:e056:9f89%12]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 10:12:43 +0000
+From:   James Clark <James.Clark@arm.com>
+To:     Tan Xiaojun <tanxiaojun@huawei.com>,
+        Jeremy Linton <Jeremy.Linton@arm.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
+        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
+        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Kim Phillips <Kim.Phillips@amd.com>
+CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
+        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
+        "liwei391@huawei.com" <liwei391@huawei.com>,
+        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Al Grant <Al.Grant@arm.com>, nd <nd@arm.com>
+Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
+ events
+Thread-Topic: [RFC PATCH 2/3] perf tools: Add support for "report" for some
+ spe events
+Thread-Index: AQHVSRBYwzSrk8h9+0+uZFn2bs0fiabxxmkAgACaVACAWJIigIAFtiSAgAHjIoCAAAW6gIAACz6AgArlPgA=
+Date:   Wed, 16 Oct 2019 10:12:43 +0000
+Message-ID: <58bed363-41ee-e425-a36e-e3c69d1a4e90@arm.com>
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+ <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
+ <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
+ <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
+ <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
+ <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
+ <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
+ <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
+In-Reply-To: <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.96.140]
+x-clientproxiedby: AM4PR07CA0029.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::42) To AM4PR0802MB2242.eurprd08.prod.outlook.com
+ (2603:10a6:200:5f::15)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=James.Clark@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: f0a3200e-5324-4462-8ffe-08d7522167b7
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: AM4PR0802MB2337:|AM4PR0802MB2337:|DB7PR08MB3372:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR08MB33721BE5B503908D462DBEFEE2920@DB7PR08MB3372.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 0192E812EC
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(199004)(189003)(76176011)(36756003)(71190400001)(66946007)(71200400001)(66556008)(186003)(66476007)(110136005)(54906003)(316002)(2501003)(66446008)(64756008)(6506007)(102836004)(26005)(7736002)(52116002)(14454004)(6246003)(386003)(99286004)(256004)(66066001)(6512007)(81156014)(8936002)(7416002)(478600001)(8676002)(31696002)(305945005)(81166006)(25786009)(6116002)(3846002)(44832011)(2616005)(476003)(31686004)(11346002)(5660300002)(2906002)(4326008)(229853002)(446003)(486006)(2201001)(6486002)(86362001)(6436002)(21314003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0802MB2337;H:AM4PR0802MB2242.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: EKTnx5zdkSZsFiVc1H9iWj8Yc9qr84WMBHTayEMib2905YEpXDJiNxZOTbffYA7/Ojjxs4naKz5NnqqPu3QvVVNQ6D5UuekM3pXIzoc2+k6oLaHEoTLoVLl7LIosTIg81ses7iH5uJZPQmF4gEPe3P+7qiwcFinSVtvNVypw7sHvzH1LrwEKX8ejueOxpQV0x/2c543YTQHuSuhhxDpQY+xawIMR/z1xrwcCI2LiZd0+Yg3cnnvDv+xsM98LQPTWK/lWhuz+VStam6ILfPq1pThtZRY+oQH2jAAj0SX9rX0IdvN8iQF3uULCCozaoC/4JtTyixmd5WIDPo5B6qQSy556p24A75Jvdn4CoDtcq90RCy+2tT/fjVKbl1J9JCNk3uGHBEU7QdENxfvNao6Afm7VPaTSOrE2Q+uvFhO0H+8=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <6D50A32F91C7D94A9752A1E7B029CD57@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2337
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=James.Clark@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT046.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(189003)(199004)(126002)(2616005)(386003)(5660300002)(26005)(476003)(63350400001)(36906005)(11346002)(47776003)(446003)(336012)(6246003)(450100002)(14454004)(6506007)(26826003)(486006)(6116002)(110136005)(186003)(22756006)(54906003)(316002)(3846002)(70206006)(70586007)(8936002)(8676002)(8746002)(81156014)(81166006)(76130400001)(31696002)(36756003)(356004)(99286004)(4326008)(6512007)(31686004)(50466002)(6486002)(2201001)(86362001)(7736002)(229853002)(66066001)(305945005)(23746002)(25786009)(2906002)(478600001)(76176011)(2501003)(102836004)(21314003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3372;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 4f4c34fd-4fa1-4b35-ae40-08d752216274
+NoDisclaimer: True
+X-Forefront-PRVS: 0192E812EC
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2am5IklEPjvtKtdSieJMgMkKvYu22k9pMq9wuv8BkM76cnrS9a3As5DUtNSk2WbJ2zXxiF8yhHkiEm0XpRTFXnT/aKJHhgpOBJGfbMTBVf4J3/aIrZTzDHhvlUq0W7AZkGdFKr78Qn6xZvAPeSHDPXAqrquWdtqgJSsfeTiLFZHx67ToZIslJd502FIejZt6nP5STXtW2lgZC3wYo2n4XbDTZSgz8KzRuS0WauHSAcD41X3BMie7Rj88IgxxvW3GeylAaeCROdocS/pH6h1YE2KKCJLjbY/6QvAIPF0/WTeZMImGuEMPiIET9Zg84tWTPPThiQ3N7wcOVW00SozsEc0FtFNFoss0TjGbk55BzTnvs8mYr+jN8z2wpQgejzfR+QvaFqlOjNcTBRVbVjuhhBdVsGAH6od39NWc+6qkrxM=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2019 10:12:52.2775
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0a3200e-5324-4462-8ffe-08d7522167b7
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3372
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WLED4 peripheral is present on some PMICs like pmi8998 and
-pm660l. It has a different register map and configurations
-are also different. Add support for it.
+Hi Xiaojun,
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/video/backlight/qcom-wled.c | 263 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 257 insertions(+), 6 deletions(-)
+>>
+>> What do you mean when the user specifies "event:pp", if the SPE is avail=
+able, configure and record the spe data directly via the perf event open sy=
+scall?
+>> (perf.data itself is the same as using -e arm_spe_0//xxx?)
+>=20
+> I mean, for the perf record, if the user does not add ":pp" to these even=
+ts, the original process is taken, and if ":pp" is added, the spe process i=
+s taken.
+>=20
 
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index 45eeda4..2807b4b 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -17,7 +17,7 @@
- 
- #define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
- 
--/* WLED3 control registers */
-+/* WLED3/WLED4 control registers */
- #define WLED3_CTRL_REG_MOD_EN				0x46
- #define  WLED3_CTRL_REG_MOD_EN_MASK			BIT(7)
- #define  WLED3_CTRL_REG_MOD_EN_SHIFT			7
-@@ -31,7 +31,7 @@
- #define WLED3_CTRL_REG_ILIMIT				0x4e
- #define  WLED3_CTRL_REG_ILIMIT_MASK			GENMASK(2, 0)
- 
--/* WLED3 sink registers */
-+/* WLED3/WLED4 sink registers */
- #define WLED3_SINK_REG_SYNC				0x47
- #define  WLED3_SINK_REG_SYNC_CLEAR			0x00
- 
-@@ -56,6 +56,28 @@
- #define WLED3_SINK_REG_STR_CABC(n)			(0x66 + (n * 0x10))
- #define  WLED3_SINK_REG_STR_CABC_MASK			BIT(7)
- 
-+/* WLED4 specific sink registers */
-+#define WLED4_SINK_REG_CURR_SINK			0x46
-+#define  WLED4_SINK_REG_CURR_SINK_MASK			GENMASK(7, 4)
-+#define  WLED4_SINK_REG_CURR_SINK_SHFT			4
-+
-+/* WLED4 specific per-'string' registers below */
-+#define WLED4_SINK_REG_STR_MOD_EN(n)			(0x50 + (n * 0x10))
-+#define  WLED4_SINK_REG_STR_MOD_MASK			BIT(7)
-+
-+#define WLED4_SINK_REG_STR_FULL_SCALE_CURR(n)		(0x52 + (n * 0x10))
-+#define  WLED4_SINK_REG_STR_FULL_SCALE_CURR_MASK	GENMASK(3, 0)
-+
-+#define WLED4_SINK_REG_STR_MOD_SRC(n)			(0x53 + (n * 0x10))
-+#define  WLED4_SINK_REG_STR_MOD_SRC_MASK		BIT(0)
-+#define  WLED4_SINK_REG_STR_MOD_SRC_INT			0x00
-+#define  WLED4_SINK_REG_STR_MOD_SRC_EXT			0x01
-+
-+#define WLED4_SINK_REG_STR_CABC(n)			(0x56 + (n * 0x10))
-+#define  WLED4_SINK_REG_STR_CABC_MASK			BIT(7)
-+
-+#define WLED4_SINK_REG_BRIGHT(n)			(0x57 + (n * 0x10))
-+
- struct wled_var_cfg {
- 	const u32 *values;
- 	u32 (*fn)(u32);
-@@ -90,6 +112,7 @@ struct wled {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	u16 ctrl_addr;
-+	u16 sink_addr;
- 	u16 max_string_count;
- 	u32 brightness;
- 	u32 max_brightness;
-@@ -116,6 +139,29 @@ static int wled3_set_brightness(struct wled *wled, u16 brightness)
- 	return 0;
- }
- 
-+static int wled4_set_brightness(struct wled *wled, u16 brightness)
-+{
-+	int rc, i;
-+	u16 low_limit = wled->max_brightness * 4 / 1000;
-+	u8 v[2];
-+
-+	/* WLED4's lower limit of operation is 0.4% */
-+	if (brightness > 0 && brightness < low_limit)
-+		brightness = low_limit;
-+
-+	v[0] = brightness & 0xff;
-+	v[1] = (brightness >> 8) & 0xf;
-+
-+	for (i = 0;  i < wled->cfg.num_strings; ++i) {
-+		rc = regmap_bulk_write(wled->regmap, wled->sink_addr +
-+				       WLED4_SINK_REG_BRIGHT(i), v, 2);
-+		if (rc < 0)
-+			return rc;
-+	}
-+
-+	return 0;
-+}
-+
- static int wled_module_enable(struct wled *wled, int val)
- {
- 	int rc;
-@@ -267,6 +313,120 @@ static int wled3_setup(struct wled *wled)
- 	.enabled_strings = {0, 1, 2, 3},
- };
- 
-+static int wled4_setup(struct wled *wled)
-+{
-+	int rc, temp, i, j;
-+	u16 addr;
-+	u8 sink_en = 0;
-+	u32 sink_cfg = 0;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_OVP,
-+				WLED3_CTRL_REG_OVP_MASK, wled->cfg.ovp);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_ILIMIT,
-+				WLED3_CTRL_REG_ILIMIT_MASK,
-+				wled->cfg.boost_i_limit);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_FREQ,
-+				WLED3_CTRL_REG_FREQ_MASK,
-+				wled->cfg.switch_freq);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_read(wled->regmap, wled->sink_addr +
-+			 WLED4_SINK_REG_CURR_SINK, &sink_cfg);
-+	if (rc < 0)
-+		return rc;
-+
-+	for (i = 0; i < wled->cfg.num_strings; i++) {
-+		j = wled->cfg.enabled_strings[i];
-+		temp = j + WLED4_SINK_REG_CURR_SINK_SHFT;
-+		sink_en |= 1 << temp;
-+	}
-+
-+	if (sink_cfg == sink_en)
-+		return 0;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-+				WLED4_SINK_REG_CURR_SINK_MASK, 0);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
-+				WLED3_CTRL_REG_MOD_EN,
-+				WLED3_CTRL_REG_MOD_EN_MASK, 0);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Per sink/string configuration */
-+	for (i = 0; i < wled->cfg.num_strings; i++) {
-+		j = wled->cfg.enabled_strings[i];
-+
-+		addr = wled->sink_addr +
-+				WLED4_SINK_REG_STR_MOD_EN(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED4_SINK_REG_STR_MOD_MASK,
-+					WLED4_SINK_REG_STR_MOD_MASK);
-+		if (rc < 0)
-+			return rc;
-+
-+		addr = wled->sink_addr +
-+				WLED4_SINK_REG_STR_FULL_SCALE_CURR(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED4_SINK_REG_STR_FULL_SCALE_CURR_MASK,
-+					wled->cfg.string_i_limit);
-+		if (rc < 0)
-+			return rc;
-+
-+		addr = wled->sink_addr +
-+				WLED4_SINK_REG_STR_CABC(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED4_SINK_REG_STR_CABC_MASK,
-+					wled->cfg.cabc ?
-+					WLED4_SINK_REG_STR_CABC_MASK : 0);
-+		if (rc < 0)
-+			return rc;
-+	}
-+
-+	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
-+				WLED3_CTRL_REG_MOD_EN,
-+				WLED3_CTRL_REG_MOD_EN_MASK,
-+				WLED3_CTRL_REG_MOD_EN_MASK);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-+				WLED4_SINK_REG_CURR_SINK_MASK, sink_en);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = wled_sync_toggle(wled);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to toggle sync reg rc:%d\n", rc);
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct wled_config wled4_config_defaults = {
-+	.boost_i_limit = 4,
-+	.string_i_limit = 10,
-+	.ovp = 1,
-+	.num_strings = 4,
-+	.switch_freq = 11,
-+	.cabc = false,
-+};
-+
- static const u32 wled3_boost_i_limit_values[] = {
- 	105, 385, 525, 805, 980, 1260, 1400, 1680,
- };
-@@ -276,6 +436,15 @@ static int wled3_setup(struct wled *wled)
- 	.size = ARRAY_SIZE(wled3_boost_i_limit_values),
- };
- 
-+static const u32 wled4_boost_i_limit_values[] = {
-+	105, 280, 450, 620, 970, 1150, 1300, 1500,
-+};
-+
-+static const struct wled_var_cfg wled4_boost_i_limit_cfg = {
-+	.values = wled4_boost_i_limit_values,
-+	.size = ARRAY_SIZE(wled4_boost_i_limit_values),
-+};
-+
- static const u32 wled3_ovp_values[] = {
- 	35, 32, 29, 27,
- };
-@@ -285,6 +454,15 @@ static int wled3_setup(struct wled *wled)
- 	.size = ARRAY_SIZE(wled3_ovp_values),
- };
- 
-+static const u32 wled4_ovp_values[] = {
-+	31100, 29600, 19600, 18100,
-+};
-+
-+static const struct wled_var_cfg wled4_ovp_cfg = {
-+	.values = wled4_ovp_values,
-+	.size = ARRAY_SIZE(wled4_ovp_values),
-+};
-+
- static u32 wled3_num_strings_values_fn(u32 idx)
- {
- 	return idx + 1;
-@@ -295,6 +473,11 @@ static u32 wled3_num_strings_values_fn(u32 idx)
- 	.size = 3,
- };
- 
-+static const struct wled_var_cfg wled4_num_strings_cfg = {
-+	.fn = wled3_num_strings_values_fn,
-+	.size = 4,
-+};
-+
- static u32 wled3_switch_freq_values_fn(u32 idx)
- {
- 	return 19200 / (2 * (1 + idx));
-@@ -309,10 +492,24 @@ static u32 wled3_switch_freq_values_fn(u32 idx)
- 	.size = 26,
- };
- 
-+static const u32 wled4_string_i_limit_values[] = {
-+	0, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000,
-+	22500, 25000, 27500, 30000,
-+};
-+
-+static const struct wled_var_cfg wled4_string_i_limit_cfg = {
-+	.values = wled4_string_i_limit_values,
-+	.size = ARRAY_SIZE(wled4_string_i_limit_values),
-+};
-+
- static const struct wled_var_cfg wled3_string_cfg = {
- 	.size = 8,
- };
- 
-+static const struct wled_var_cfg wled4_string_cfg = {
-+	.size = 16,
-+};
-+
- static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
- {
- 	if (idx >= cfg->size)
-@@ -361,6 +558,34 @@ static int wled_configure(struct wled *wled, int version)
- 		},
- 	};
- 
-+	const struct wled_u32_opts wled4_opts[] = {
-+		{
-+			.name = "qcom,current-boost-limit",
-+			.val_ptr = &cfg->boost_i_limit,
-+			.cfg = &wled4_boost_i_limit_cfg,
-+		},
-+		{
-+			.name = "qcom,current-limit-microamp",
-+			.val_ptr = &cfg->string_i_limit,
-+			.cfg = &wled4_string_i_limit_cfg,
-+		},
-+		{
-+			.name = "qcom,ovp-millivolt",
-+			.val_ptr = &cfg->ovp,
-+			.cfg = &wled4_ovp_cfg,
-+		},
-+		{
-+			.name = "qcom,switching-freq",
-+			.val_ptr = &cfg->switch_freq,
-+			.cfg = &wled3_switch_freq_cfg,
-+		},
-+		{
-+			.name = "qcom,num-strings",
-+			.val_ptr = &cfg->num_strings,
-+			.cfg = &wled4_num_strings_cfg,
-+		},
-+	};
-+
- 	const struct wled_bool_opts bool_opts[] = {
- 		{ "qcom,cs-out", &cfg->cs_out_en, },
- 		{ "qcom,ext-gen", &cfg->ext_gen, },
-@@ -374,10 +599,6 @@ static int wled_configure(struct wled *wled, int version)
- 	}
- 	wled->ctrl_addr = be32_to_cpu(*prop_addr);
- 
--	rc = of_property_read_string(dev->of_node, "label", &wled->name);
--	if (rc)
--		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
--
- 	switch (version) {
- 	case 3:
- 		u32_opts = wled3_opts;
-@@ -385,6 +606,22 @@ static int wled_configure(struct wled *wled, int version)
- 		*cfg = wled3_config_defaults;
- 		wled->wled_set_brightness = wled3_set_brightness;
- 		wled->max_string_count = 3;
-+		wled->sink_addr = wled->ctrl_addr;
-+		break;
-+
-+	case 4:
-+		u32_opts = wled4_opts;
-+		size = ARRAY_SIZE(wled4_opts);
-+		*cfg = wled4_config_defaults;
-+		wled->wled_set_brightness = wled4_set_brightness;
-+		wled->max_string_count = 4;
-+
-+		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
-+		if (!prop_addr) {
-+			dev_err(wled->dev, "invalid IO resources\n");
-+			return -EINVAL;
-+		}
-+		wled->sink_addr = be32_to_cpu(*prop_addr);
- 		break;
- 
- 	default:
-@@ -392,6 +629,10 @@ static int wled_configure(struct wled *wled, int version)
- 		return -EINVAL;
- 	}
- 
-+	rc = of_property_read_string(dev->of_node, "label", &wled->name);
-+	if (rc)
-+		wled->name = dev->of_node->name;
-+
- 	for (i = 0; i < size; ++i) {
- 		rc = of_property_read_u32(dev->of_node, u32_opts[i].name, &val);
- 		if (rc == -EINVAL) {
-@@ -483,6 +724,14 @@ static int wled_probe(struct platform_device *pdev)
- 		}
- 		break;
- 
-+	case 4:
-+		rc = wled4_setup(wled);
-+		if (rc) {
-+			dev_err(&pdev->dev, "wled4_setup failed\n");
-+			return rc;
-+		}
-+		break;
-+
- 	default:
- 		dev_err(wled->dev, "Invalid WLED version\n");
- 		break;
-@@ -503,6 +752,8 @@ static int wled_probe(struct platform_device *pdev)
- 
- static const struct of_device_id wled_match_table[] = {
- 	{ .compatible = "qcom,pm8941-wled", .data = (void *)3 },
-+	{ .compatible = "qcom,pmi8998-wled", .data = (void *)4 },
-+	{ .compatible = "qcom,pm660l-wled", .data = (void *)4 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, wled_match_table);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+Yes we think this is the best way to do it considering that SPE has been im=
+plemented as a separate PMU and it will be very difficult to do it in the K=
+ernel when the precise_ip attribute is set.
+
+I think doing everything in userspace is easiest. This will at least mean t=
+hat users of Perf don't have to be aware of the details of SPE to get preci=
+se sample data.
+
+So if the user specifies "event:p" when SPE is available, the SPE PMU is au=
+tomatically configured data is recorded. If the user also specifies -e arm_=
+spe_0//xxx and wants to do some manual configuration, then that could overr=
+ide the automatic configuration.
+
+
+James
 
