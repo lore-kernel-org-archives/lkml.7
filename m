@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07F5ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FCDECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B872621925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC56D21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262882;
-	bh=gYuQsYl1SzxCGOE22YKWlWGbBKVnNOPK0ervu2KNH9w=;
+	s=default; t=1571262887;
+	bh=XcoT/50f9fWF2zLsvDahJadR7e2rbv6TMDZt5+85trw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sKS6RpFbJASk72AYOIKAI/9TWTf3Z1be1/hF+/H5ZQ87Z3vU7/qPmV1fFykpSxgwh
-	 Ihwj8X8uI5C7CTmUnktLoiLzCRHvKRnXaJdT/6k7+APxcby3EZOuGQlY2jZQw1URoo
-	 JxcvWKKSM7rzp9hO2KCC67LHG80uWo0iJNg+0I0w=
+	b=jw+kGyFKvs/P5yIUnaVCi/eDHsBE/7nzlL1deFju7Bw4f8v2xmcg4vRKm45FsU1+3
+	 883xg2bHmsZig/vORbcowUrnKIsqxZmP8KTUMRj3yE3gLX3qyEYUsuHQFUJFkRhlcn
+	 HRfENfP6uoOEYu0nFlN2q448ssK/YVT1snzHxLf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395042AbfJPVyl (ORCPT
+        id S2395066AbfJPVyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395002AbfJPVy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:28 -0400
+        id S2395016AbfJPVyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:33 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AED521D7C;
-        Wed, 16 Oct 2019 21:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F7320872;
+        Wed, 16 Oct 2019 21:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262867;
-        bh=gYuQsYl1SzxCGOE22YKWlWGbBKVnNOPK0ervu2KNH9w=;
+        s=default; t=1571262872;
+        bh=XcoT/50f9fWF2zLsvDahJadR7e2rbv6TMDZt5+85trw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InqaqwE5D0LOk9qVZ5aUFPun47emkdJGje/pR2PXFeaWv3TDfA9dW9kpsDPRcHKwo
-         SNIh2OCw0PKBVVn2eDqIParR8Bd+8k6Puies/66i2tKwlrNnlSBU41nET92bG8MApn
-         LJNZYDmcP8/EpyDK/EqhdnQrn1ETtxUeYETWj/No=
+        b=b50RGf7/FBrlupqKn3osH6Qf2bA4pwq+G0s3sDmrHFFqkXXbzU4Q8DjyEmwMFwOIw
+         FF0XzRJU1LwDantR8BucOvvKmLkumUgfuLdiSmCVx2y9CBwfLFsCGBwy/upiIBi1Nf
+         Y6wFb0BeToCbGETv4fiei/4za/NfLaz/v1LpSstc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 33/92] cfg80211: Use const more consistently in for_each_element macros
-Date:   Wed, 16 Oct 2019 14:50:06 -0700
-Message-Id: <20191016214827.040911961@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 36/92] panic: ensure preemption is disabled during panic()
+Date:   Wed, 16 Oct 2019 14:50:09 -0700
+Message-Id: <20191016214828.213152289@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,59 +64,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Will Deacon <will@kernel.org>
 
-commit 7388afe09143210f555bdd6c75035e9acc1fab96 upstream.
+commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
 
-Enforce the first argument to be a correct type of a pointer to struct
-element and avoid unnecessary typecasts from const to non-const pointers
-(the change in validate_ie_attr() is needed to make this part work). In
-addition, avoid signed/unsigned comparison within for_each_element() and
-mark struct element packed just in case.
+Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
+calling CPU in an infinite loop, but with interrupts and preemption
+enabled.  From this state, userspace can continue to be scheduled,
+despite the system being "dead" as far as the kernel is concerned.
 
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This is easily reproducible on arm64 when booting with "nosmp" on the
+command line; a couple of shell scripts print out a periodic "Ping"
+message whilst another triggers a crash by writing to
+/proc/sysrq-trigger:
+
+  | sysrq: Trigger a crash
+  | Kernel panic - not syncing: sysrq triggered crash
+  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
+  | Hardware name: linux,dummy-virt (DT)
+  | Call trace:
+  |  dump_backtrace+0x0/0x148
+  |  show_stack+0x14/0x20
+  |  dump_stack+0xa0/0xc4
+  |  panic+0x140/0x32c
+  |  sysrq_handle_reboot+0x0/0x20
+  |  __handle_sysrq+0x124/0x190
+  |  write_sysrq_trigger+0x64/0x88
+  |  proc_reg_write+0x60/0xa8
+  |  __vfs_write+0x18/0x40
+  |  vfs_write+0xa4/0x1b8
+  |  ksys_write+0x64/0xf0
+  |  __arm64_sys_write+0x14/0x20
+  |  el0_svc_common.constprop.0+0xb0/0x168
+  |  el0_svc_handler+0x28/0x78
+  |  el0_svc+0x8/0xc
+  | Kernel Offset: disabled
+  | CPU features: 0x0002,24002004
+  | Memory Limit: none
+  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
+  |  Ping 2!
+  |  Ping 1!
+  |  Ping 1!
+  |  Ping 2!
+
+The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
+otherwise local interrupts are disabled in 'smp_send_stop()'.
+
+Disable preemption in 'panic()' before re-enabling interrupts.
+
+Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
+Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
+Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Xogium <contact@xogium.me>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ieee80211.h |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/panic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -2634,16 +2634,16 @@ struct element {
- 	u8 id;
- 	u8 datalen;
- 	u8 data[];
--};
-+} __packed;
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -144,6 +144,7 @@ void panic(const char *fmt, ...)
+ 	 * after setting panic_cpu) from invoking panic() again.
+ 	 */
+ 	local_irq_disable();
++	preempt_disable_notrace();
  
- /* element iteration helpers */
--#define for_each_element(element, _data, _datalen)			\
--	for (element = (void *)(_data);					\
--	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
--		sizeof(*element) &&					\
--	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
--		sizeof(*element) + element->datalen;			\
--	     element = (void *)(element->data + element->datalen))
-+#define for_each_element(_elem, _data, _datalen)			\
-+	for (_elem = (const struct element *)(_data);			\
-+	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
-+		(int)sizeof(*_elem) &&					\
-+	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
-+		(int)sizeof(*_elem) + _elem->datalen;			\
-+	     _elem = (const struct element *)(_elem->data + _elem->datalen))
- 
- #define for_each_element_id(element, _id, data, datalen)		\
- 	for_each_element(element, data, datalen)			\
-@@ -2680,7 +2680,7 @@ struct element {
- static inline bool for_each_element_completed(const struct element *element,
- 					      const void *data, size_t datalen)
- {
--	return (u8 *)element == (u8 *)data + datalen;
-+	return (const u8 *)element == (const u8 *)data + datalen;
- }
- 
- #endif /* LINUX_IEEE80211_H */
+ 	/*
+ 	 * It's possible to come here directly from a panic-assertion and
 
 
