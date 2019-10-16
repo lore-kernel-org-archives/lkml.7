@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01545FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A5CFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00FB207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F472207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264437;
-	bh=UlGrKMgXgRaTB19PpiO2d5UObMhWdYR3TmQmAa+QV6Y=;
+	s=default; t=1571264441;
+	bh=pOCrst16gNH88uIbZ4MKF+ZZd8DAYqOcxYzBcFMGtB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wejh4GioGlLJ/KTNqsy7cHcasCUHE37i9JijWXJLjVMzHkJISIfD94ecfY3ujJkZ5
-	 DPtFHO15OzB1b1/rNRqPRtC75+4owrPHScePdhoLV0D4ULBG9dUYEcE4ky+df0ci9y
-	 eQgfDtaWFxBHpx0bQkx5KwPX+RNB6m/dZq2VGJzo=
+	b=xWqYnhT1GgpALU2ChHTSh0pLMlydSKQtZmIgyAyHIloaMTPVniSKOkHWOTHrqdPrF
+	 CmcInAd9wO/R3W1q8N4WwSeTuPoy530dD/tK/FFbpAJk74zhUy2g6aiTWeKebFgL8r
+	 Tbzl8T/2HW4MBixxUaoEgURLR0T7hc7ZEtO9+iAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407507AbfJPWUg (ORCPT
+        id S2437579AbfJPVxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437587AbfJPVxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:46 -0400
+        id S2437534AbfJPVxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:34 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA36F218DE;
-        Wed, 16 Oct 2019 21:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7797A20872;
+        Wed, 16 Oct 2019 21:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262825;
-        bh=UlGrKMgXgRaTB19PpiO2d5UObMhWdYR3TmQmAa+QV6Y=;
+        s=default; t=1571262813;
+        bh=pOCrst16gNH88uIbZ4MKF+ZZd8DAYqOcxYzBcFMGtB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LZA3o9sQnyAHsXKdp05lLn1zwF3Sos5v2k8fcsq78l8EfePoq+V1+ZeKK8rxrsvU4
-         qhYdfJXTpXHen0bYGTiPesMBxO/Q7c3kNR2xsVk0XU1fxLax61xPJwe8bb9B/13rwU
-         ECzycDWt8x4cqVbVy2GJztztdNVDukT42NSUpCug=
+        b=ydgxTh+ENwvXMdD7TUV885kBDvCzJH4acvl0BB2hL0WviHMnKrsEZPqEYKUJgAQfC
+         3b4wCmBOyhRANbV3AUOMAd4QAECe9VstelheOXULJNnGvVjDQWLNMF6rAC5Vk98fgS
+         5g+9DNgDGobpZtWgt/fVswo9Irw0fw6FN3vG1Rc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.4 68/79] CIFS: Gracefully handle QueryInfo errors during open
-Date:   Wed, 16 Oct 2019 14:50:43 -0700
-Message-Id: <20191016214827.195807586@linuxfoundation.org>
+        stable@vger.kernel.org, Jacky Cao <Jacky.Cao@sony.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.4 56/79] USB: dummy-hcd: fix power budget for SuperSpeed mode
+Date:   Wed, 16 Oct 2019 14:50:31 -0700
+Message-Id: <20191016214819.206934415@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -59,45 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Jacky.Cao@sony.com <Jacky.Cao@sony.com>
 
-commit 30573a82fb179420b8aac30a3a3595aa96a93156 upstream.
+commit 2636d49b64671d3d90ecc4daf971b58df3956519 upstream.
 
-Currently if the client identifies problems when processing
-metadata returned in CREATE response, the open handle is being
-leaked. This causes multiple problems like a file missing a lease
-break by that client which causes high latencies to other clients
-accessing the file. Another side-effect of this is that the file
-can't be deleted.
+The power budget for SuperSpeed mode should be 900 mA
+according to USB specification, so set the power budget
+to 900mA for dummy_start_ss which is only used for
+SuperSpeed mode.
 
-Fix this by closing the file after the client hits an error after
-the file was opened and the open descriptor wasn't returned to
-the user space. Also convert -ESTALE to -EOPENSTALE to allow
-the VFS to revalidate a dentry and retry the open.
+If the max power consumption of SuperSpeed device is
+larger than 500 mA, insufficient available bus power
+error happens in usb_choose_configuration function
+when the device connects to dummy hcd.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/16EA1F625E922C43B00B9D82250220500871CDE5@APYOKXMS108.ap.sony.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/gadget/udc/dummy_hcd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -252,6 +252,12 @@ cifs_nt_open(char *full_path, struct ino
- 		rc = cifs_get_inode_info(&inode, full_path, buf, inode->i_sb,
- 					 xid, fid);
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -50,6 +50,7 @@
+ #define DRIVER_VERSION	"02 May 2005"
  
-+	if (rc) {
-+		server->ops->close(xid, tcon, fid);
-+		if (rc == -ESTALE)
-+			rc = -EOPENSTALE;
-+	}
-+
- out:
- 	kfree(buf);
- 	return rc;
+ #define POWER_BUDGET	500	/* in mA; use 8 for low-power port testing */
++#define POWER_BUDGET_3	900	/* in mA */
+ 
+ static const char	driver_name[] = "dummy_hcd";
+ static const char	driver_desc[] = "USB Host+Gadget Emulator";
+@@ -2435,7 +2436,7 @@ static int dummy_start_ss(struct dummy_h
+ 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
+ 	dum_hcd->stream_en_ep = 0;
+ 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
+-	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET;
++	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET_3;
+ 	dummy_hcd_to_hcd(dum_hcd)->state = HC_STATE_RUNNING;
+ 	dummy_hcd_to_hcd(dum_hcd)->uses_new_polling = 1;
+ #ifdef CONFIG_USB_OTG
 
 
