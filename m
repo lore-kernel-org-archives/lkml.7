@@ -2,301 +2,124 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF65FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9FBFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B0E20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668D021925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571223969;
+	bh=DEzcaZE8dflGJCaySKoUPuLayC/pmbRRduSZM4TBn9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nVQezqOsh8f0/sbm5Mbw1Mf1SfKLNE1itA80ceAp+lgiZUzFpbpN5aKaY7Wz+82wS
+	 OCZck8jWH4xVvtiQgqpKVI1uyZDlxqAlcPHHmDGgGdcp3DRrNoAcOft+4eE4zIVy4T
+	 Z6eT87MaDmi/PLr5MTUBvZ/byDkOqtN1Dh37iDTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392597AbfJPLFL (ORCPT
+        id S2404816AbfJPLGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:05:11 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:48172 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfJPLFL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:05:11 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKh6l-0004pY-QH; Wed, 16 Oct 2019 12:04:47 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKh6l-0006Pw-EC; Wed, 16 Oct 2019 12:04:47 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: bpf: add static in net/core/filter.c
-Date:   Wed, 16 Oct 2019 12:04:46 +0100
-Message-Id: <20191016110446.24622-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 07:06:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45938 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388896AbfJPLGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:06:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF7F3B1ED;
+        Wed, 16 Oct 2019 11:06:05 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 13:06:04 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 2/3] mm/vmalloc: respect passed gfp_mask when do
+ preloading
+Message-ID: <20191016110604.GT317@dhcp22.suse.cz>
+References: <20191016095438.12391-1-urezki@gmail.com>
+ <20191016095438.12391-2-urezki@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016095438.12391-2-urezki@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a number of structs in net/core/filter.c
-that are not exported or declared outside of the
-file. Fix the following warnings by making these
-all static:
+On Wed 16-10-19 11:54:37, Uladzislau Rezki (Sony) wrote:
+> alloc_vmap_area() is given a gfp_mask for the page allocator.
+> Let's respect that mask and consider it even in the case when
+> doing regular CPU preloading, i.e. where a context can sleep.
 
-net/core/filter.c:8465:31: warning: symbol 'sk_filter_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8472:27: warning: symbol 'sk_filter_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8476:31: warning: symbol 'tc_cls_act_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8484:27: warning: symbol 'tc_cls_act_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8488:31: warning: symbol 'xdp_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8495:27: warning: symbol 'xdp_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8499:31: warning: symbol 'cg_skb_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8505:27: warning: symbol 'cg_skb_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8509:31: warning: symbol 'lwt_in_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8515:27: warning: symbol 'lwt_in_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8519:31: warning: symbol 'lwt_out_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8525:27: warning: symbol 'lwt_out_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8529:31: warning: symbol 'lwt_xmit_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8536:27: warning: symbol 'lwt_xmit_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8540:31: warning: symbol 'lwt_seg6local_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8546:27: warning: symbol 'lwt_seg6local_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8550:31: warning: symbol 'cg_sock_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8556:27: warning: symbol 'cg_sock_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8559:31: warning: symbol 'cg_sock_addr_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8565:27: warning: symbol 'cg_sock_addr_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8568:31: warning: symbol 'sock_ops_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8574:27: warning: symbol 'sock_ops_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8577:31: warning: symbol 'sk_skb_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8584:27: warning: symbol 'sk_skb_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8587:31: warning: symbol 'sk_msg_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8594:27: warning: symbol 'sk_msg_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8597:31: warning: symbol 'flow_dissector_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8603:27: warning: symbol 'flow_dissector_prog_ops' was not declared. Should it be static?
-net/core/filter.c:8929:31: warning: symbol 'sk_reuseport_verifier_ops' was not declared. Should it be static?
-net/core/filter.c:8935:27: warning: symbol 'sk_reuseport_prog_ops' was not declared. Should it be static?
+This is explaining what but it doesn't say why. I would go with
+"
+Allocation functions should comply with the given gfp_mask as much as
+possible. The preallocation code in alloc_vmap_area doesn't follow that
+pattern and it is using a hardcoded GFP_KERNEL. Although this doesn't
+really make much difference because vmalloc is not GFP_NOWAIT compliant
+in general (e.g. page table allocations are GFP_KERNEL) there is no
+reason to spread that bad habit and it is good to fix the antipattern.
+"
+> 
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- net/core/filter.c | 60 +++++++++++++++++++++++------------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index ed6563622ce3..f7338fee41f8 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8462,18 +8462,18 @@ static u32 sk_msg_convert_ctx_access(enum bpf_access_type type,
- 	return insn - insn_buf;
- }
- 
--const struct bpf_verifier_ops sk_filter_verifier_ops = {
-+static const struct bpf_verifier_ops sk_filter_verifier_ops = {
- 	.get_func_proto		= sk_filter_func_proto,
- 	.is_valid_access	= sk_filter_is_valid_access,
- 	.convert_ctx_access	= bpf_convert_ctx_access,
- 	.gen_ld_abs		= bpf_gen_ld_abs,
- };
- 
--const struct bpf_prog_ops sk_filter_prog_ops = {
-+static const struct bpf_prog_ops sk_filter_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops tc_cls_act_verifier_ops = {
-+static const struct bpf_verifier_ops tc_cls_act_verifier_ops = {
- 	.get_func_proto		= tc_cls_act_func_proto,
- 	.is_valid_access	= tc_cls_act_is_valid_access,
- 	.convert_ctx_access	= tc_cls_act_convert_ctx_access,
-@@ -8481,126 +8481,126 @@ const struct bpf_verifier_ops tc_cls_act_verifier_ops = {
- 	.gen_ld_abs		= bpf_gen_ld_abs,
- };
- 
--const struct bpf_prog_ops tc_cls_act_prog_ops = {
-+static const struct bpf_prog_ops tc_cls_act_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops xdp_verifier_ops = {
-+static const struct bpf_verifier_ops xdp_verifier_ops = {
- 	.get_func_proto		= xdp_func_proto,
- 	.is_valid_access	= xdp_is_valid_access,
- 	.convert_ctx_access	= xdp_convert_ctx_access,
- 	.gen_prologue		= bpf_noop_prologue,
- };
- 
--const struct bpf_prog_ops xdp_prog_ops = {
-+static const struct bpf_prog_ops xdp_prog_ops = {
- 	.test_run		= bpf_prog_test_run_xdp,
- };
- 
--const struct bpf_verifier_ops cg_skb_verifier_ops = {
-+static const struct bpf_verifier_ops cg_skb_verifier_ops = {
- 	.get_func_proto		= cg_skb_func_proto,
- 	.is_valid_access	= cg_skb_is_valid_access,
- 	.convert_ctx_access	= bpf_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops cg_skb_prog_ops = {
-+static const struct bpf_prog_ops cg_skb_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops lwt_in_verifier_ops = {
-+static const struct bpf_verifier_ops lwt_in_verifier_ops = {
- 	.get_func_proto		= lwt_in_func_proto,
- 	.is_valid_access	= lwt_is_valid_access,
- 	.convert_ctx_access	= bpf_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops lwt_in_prog_ops = {
-+static const struct bpf_prog_ops lwt_in_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops lwt_out_verifier_ops = {
-+static const struct bpf_verifier_ops lwt_out_verifier_ops = {
- 	.get_func_proto		= lwt_out_func_proto,
- 	.is_valid_access	= lwt_is_valid_access,
- 	.convert_ctx_access	= bpf_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops lwt_out_prog_ops = {
-+static const struct bpf_prog_ops lwt_out_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops lwt_xmit_verifier_ops = {
-+static const struct bpf_verifier_ops lwt_xmit_verifier_ops = {
- 	.get_func_proto		= lwt_xmit_func_proto,
- 	.is_valid_access	= lwt_is_valid_access,
- 	.convert_ctx_access	= bpf_convert_ctx_access,
- 	.gen_prologue		= tc_cls_act_prologue,
- };
- 
--const struct bpf_prog_ops lwt_xmit_prog_ops = {
-+static const struct bpf_prog_ops lwt_xmit_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops lwt_seg6local_verifier_ops = {
-+static const struct bpf_verifier_ops lwt_seg6local_verifier_ops = {
- 	.get_func_proto		= lwt_seg6local_func_proto,
- 	.is_valid_access	= lwt_is_valid_access,
- 	.convert_ctx_access	= bpf_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops lwt_seg6local_prog_ops = {
-+static const struct bpf_prog_ops lwt_seg6local_prog_ops = {
- 	.test_run		= bpf_prog_test_run_skb,
- };
- 
--const struct bpf_verifier_ops cg_sock_verifier_ops = {
-+static const struct bpf_verifier_ops cg_sock_verifier_ops = {
- 	.get_func_proto		= sock_filter_func_proto,
- 	.is_valid_access	= sock_filter_is_valid_access,
- 	.convert_ctx_access	= bpf_sock_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops cg_sock_prog_ops = {
-+static const struct bpf_prog_ops cg_sock_prog_ops = {
- };
- 
--const struct bpf_verifier_ops cg_sock_addr_verifier_ops = {
-+static const struct bpf_verifier_ops cg_sock_addr_verifier_ops = {
- 	.get_func_proto		= sock_addr_func_proto,
- 	.is_valid_access	= sock_addr_is_valid_access,
- 	.convert_ctx_access	= sock_addr_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops cg_sock_addr_prog_ops = {
-+static const struct bpf_prog_ops cg_sock_addr_prog_ops = {
- };
- 
--const struct bpf_verifier_ops sock_ops_verifier_ops = {
-+static const struct bpf_verifier_ops sock_ops_verifier_ops = {
- 	.get_func_proto		= sock_ops_func_proto,
- 	.is_valid_access	= sock_ops_is_valid_access,
- 	.convert_ctx_access	= sock_ops_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops sock_ops_prog_ops = {
-+static const struct bpf_prog_ops sock_ops_prog_ops = {
- };
- 
--const struct bpf_verifier_ops sk_skb_verifier_ops = {
-+static const struct bpf_verifier_ops sk_skb_verifier_ops = {
- 	.get_func_proto		= sk_skb_func_proto,
- 	.is_valid_access	= sk_skb_is_valid_access,
- 	.convert_ctx_access	= sk_skb_convert_ctx_access,
- 	.gen_prologue		= sk_skb_prologue,
- };
- 
--const struct bpf_prog_ops sk_skb_prog_ops = {
-+static const struct bpf_prog_ops sk_skb_prog_ops = {
- };
- 
--const struct bpf_verifier_ops sk_msg_verifier_ops = {
-+static const struct bpf_verifier_ops sk_msg_verifier_ops = {
- 	.get_func_proto		= sk_msg_func_proto,
- 	.is_valid_access	= sk_msg_is_valid_access,
- 	.convert_ctx_access	= sk_msg_convert_ctx_access,
- 	.gen_prologue		= bpf_noop_prologue,
- };
- 
--const struct bpf_prog_ops sk_msg_prog_ops = {
-+static const struct bpf_prog_ops sk_msg_prog_ops = {
- };
- 
--const struct bpf_verifier_ops flow_dissector_verifier_ops = {
-+static const struct bpf_verifier_ops flow_dissector_verifier_ops = {
- 	.get_func_proto		= flow_dissector_func_proto,
- 	.is_valid_access	= flow_dissector_is_valid_access,
- 	.convert_ctx_access	= flow_dissector_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops flow_dissector_prog_ops = {
-+static const struct bpf_prog_ops flow_dissector_prog_ops = {
- 	.test_run		= bpf_prog_test_run_flow_dissector,
- };
- 
-@@ -8926,12 +8926,12 @@ static u32 sk_reuseport_convert_ctx_access(enum bpf_access_type type,
- 	return insn - insn_buf;
- }
- 
--const struct bpf_verifier_ops sk_reuseport_verifier_ops = {
-+static const struct bpf_verifier_ops sk_reuseport_verifier_ops = {
- 	.get_func_proto		= sk_reuseport_func_proto,
- 	.is_valid_access	= sk_reuseport_is_valid_access,
- 	.convert_ctx_access	= sk_reuseport_convert_ctx_access,
- };
- 
--const struct bpf_prog_ops sk_reuseport_prog_ops = {
-+static const struct bpf_prog_ops sk_reuseport_prog_ops = {
- };
- #endif /* CONFIG_INET */
+> ---
+>  mm/vmalloc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index b7b443bfdd92..593bf554518d 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1064,9 +1064,9 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  		return ERR_PTR(-EBUSY);
+>  
+>  	might_sleep();
+> +	gfp_mask = gfp_mask & GFP_RECLAIM_MASK;
+>  
+> -	va = kmem_cache_alloc_node(vmap_area_cachep,
+> -			gfp_mask & GFP_RECLAIM_MASK, node);
+> +	va = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
+>  	if (unlikely(!va))
+>  		return ERR_PTR(-ENOMEM);
+>  
+> @@ -1074,7 +1074,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  	 * Only scan the relevant parts containing pointers to other objects
+>  	 * to avoid false negatives.
+>  	 */
+> -	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask & GFP_RECLAIM_MASK);
+> +	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
+>  
+>  retry:
+>  	/*
+> @@ -1100,7 +1100,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  		 * Just proceed as it is. If needed "overflow" path
+>  		 * will refill the cache we allocate from.
+>  		 */
+> -		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
+> +		pva = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
+>  
+>  	spin_lock(&vmap_area_lock);
+>  
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.23.0
-
+Michal Hocko
+SUSE Labs
