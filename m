@@ -2,58 +2,51 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C90FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07F5ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6302421925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B872621925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262881;
-	bh=h6wRVoLPUSm/SKyRy9VEyl8Eo7KmTBlKk3hM820NPoo=;
+	s=default; t=1571262882;
+	bh=gYuQsYl1SzxCGOE22YKWlWGbBKVnNOPK0ervu2KNH9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pWM4UzUpjg0dVjCrls7A11yjYguVuUA1H8Q6Sls55qhdsTka4z5yPM8mUNubxKXPd
-	 bOoU+12nNXYpaFalPkoigmTRQV6ejfnl7PMgwyVbHNUNXjV8eVUiF3QQMhAi/Xm4j4
-	 OifwJBsFokP4ZvMBXVJi/jyHUd+IIlzcAg/1N5oc=
+	b=sKS6RpFbJASk72AYOIKAI/9TWTf3Z1be1/hF+/H5ZQ87Z3vU7/qPmV1fFykpSxgwh
+	 Ihwj8X8uI5C7CTmUnktLoiLzCRHvKRnXaJdT/6k7+APxcby3EZOuGQlY2jZQw1URoo
+	 JxcvWKKSM7rzp9hO2KCC67LHG80uWo0iJNg+0I0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395034AbfJPVyj (ORCPT
+        id S2395042AbfJPVyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44290 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394985AbfJPVyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:25 -0400
+        id S2395002AbfJPVy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:28 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521A421D7E;
-        Wed, 16 Oct 2019 21:54:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AED521D7C;
+        Wed, 16 Oct 2019 21:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262863;
-        bh=h6wRVoLPUSm/SKyRy9VEyl8Eo7KmTBlKk3hM820NPoo=;
+        s=default; t=1571262867;
+        bh=gYuQsYl1SzxCGOE22YKWlWGbBKVnNOPK0ervu2KNH9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IV/eFqhUMJAMqOQYS5e7k4r/UZkG9WNyEbdMKIUncuODupcY3N1EsUuWPMY7hUX2G
-         RqWufyrDo/M558x0VMYMsJVEZUPHQ8ejyysOick6eaS5p4ZktoqQVc1lHT7M5eFvSL
-         YUeF1ruYPJjDHhxiuTUCLki3Nt05R2+vwBX5fD30=
+        b=InqaqwE5D0LOk9qVZ5aUFPun47emkdJGje/pR2PXFeaWv3TDfA9dW9kpsDPRcHKwo
+         SNIh2OCw0PKBVVn2eDqIParR8Bd+8k6Puies/66i2tKwlrNnlSBU41nET92bG8MApn
+         LJNZYDmcP8/EpyDK/EqhdnQrn1ETtxUeYETWj/No=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 29/92] perf stat: Reset previous counts on repeat with interval
-Date:   Wed, 16 Oct 2019 14:50:02 -0700
-Message-Id: <20191016214824.135274289@linuxfoundation.org>
+        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 33/92] cfg80211: Use const more consistently in for_each_element macros
+Date:   Wed, 16 Oct 2019 14:50:06 -0700
+Message-Id: <20191016214827.040911961@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -66,168 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+From: Jouni Malinen <j@w1.fi>
 
-[ Upstream commit b63fd11cced17fcb8e133def29001b0f6aaa5e06 ]
+commit 7388afe09143210f555bdd6c75035e9acc1fab96 upstream.
 
-When using 'perf stat' with repeat and interval option, it shows wrong
-values for events.
+Enforce the first argument to be a correct type of a pointer to struct
+element and avoid unnecessary typecasts from const to non-const pointers
+(the change in validate_ie_attr() is needed to make this part work). In
+addition, avoid signed/unsigned comparison within for_each_element() and
+mark struct element packed just in case.
 
-The wrong values will be shown for the first interval on the second and
-subsequent repetitions.
+Signed-off-by: Jouni Malinen <j@w1.fi>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Without the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.000282489                 53      faults
-     2.000282489                513      sched:sched_switch
-     4.005478208              3,721      faults
-     4.005478208              2,666      sched:sched_switch
-     5.025470933                395      faults
-     5.025470933              1,307      sched:sched_switch
-     2.009602825 1,84,46,74,40,73,70,95,47,520      faults 		<------
-     2.009602825 1,84,46,74,40,73,70,95,49,568      sched:sched_switch  <------
-     4.019612206              4,730      faults
-     4.019612206              2,746      sched:sched_switch
-     5.039615484              3,953      faults
-     5.039615484              1,496      sched:sched_switch
-     2.000274620 1,84,46,74,40,73,70,95,47,520      faults		<------
-     2.000274620 1,84,46,74,40,73,70,95,47,520      sched:sched_switch	<------
-     4.000480342              4,282      faults
-     4.000480342              2,303      sched:sched_switch
-     5.000916811              1,322      faults
-     5.000916811              1,064      sched:sched_switch
-  #
-
-prev_raw_counts is allocated when using intervals. This is used when
-calculating the difference in the counts of events when using interval.
-
-The current counts are stored in prev_raw_counts to calculate the
-differences in the next iteration.
-
-On the first interval of the second and subsequent repetitions,
-prev_raw_counts would be the values stored in the last interval of the
-previous repetitions, while the current counts will only be for the
-first interval of the current repetition.
-
-Hence there is a possibility of events showing up as big number.
-
-Fix this by resetting prev_raw_counts whenever perf stat repeats the
-command.
-
-With the fix:
-
-  # perf stat -r 3 -I 2000 -e faults -e sched:sched_switch -a sleep 5
-
-     2.019349347              2,597      faults
-     2.019349347              2,753      sched:sched_switch
-     4.019577372              3,098      faults
-     4.019577372              2,532      sched:sched_switch
-     5.019415481              1,879      faults
-     5.019415481              1,356      sched:sched_switch
-     2.000178813              8,468      faults
-     2.000178813              2,254      sched:sched_switch
-     4.000404621              7,440      faults
-     4.000404621              1,266      sched:sched_switch
-     5.040196079              2,458      faults
-     5.040196079                556      sched:sched_switch
-     2.000191939              6,870      faults
-     2.000191939              1,170      sched:sched_switch
-     4.000414103                541      faults
-     4.000414103                902      sched:sched_switch
-     5.000809863                450      faults
-     5.000809863                364      sched:sched_switch
-  #
-
-Committer notes:
-
-This was broken since the cset introducing the --interval feature, i.e.
---repeat + --interval wasn't tested at that point, add the Fixes tag so
-that automatic scripts can pick this up.
-
-Fixes: 13370a9b5bb8 ("perf stat: Add interval printing")
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: stable@vger.kernel.org # v3.9+
-Link: http://lore.kernel.org/lkml/20190904094738.9558-2-srikar@linux.vnet.ibm.com
-[ Fixed up conflicts with libperf, i.e. some perf_{evsel,evlist} lost the 'perf' prefix ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-stat.c |  3 +++
- tools/perf/util/stat.c    | 17 +++++++++++++++++
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 21 insertions(+)
+ include/linux/ieee80211.h |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index e55dbceadad6c..5cb58f3afa355 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2564,6 +2564,9 @@ int cmd_stat(int argc, const char **argv, const char *prefix __maybe_unused)
- 			fprintf(output, "[ perf stat: executing run #%d ... ]\n",
- 				run_idx + 1);
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -2634,16 +2634,16 @@ struct element {
+ 	u8 id;
+ 	u8 datalen;
+ 	u8 data[];
+-};
++} __packed;
  
-+		if (run_idx != 0)
-+			perf_evlist__reset_prev_raw_counts(evsel_list);
-+
- 		status = run_perf_stat(argc, argv);
- 		if (forever && status != -1 && !interval) {
- 			print_counters(NULL, argc, argv);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 39345c2ddfc22..d4f872f1750e6 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -145,6 +145,15 @@ static void perf_evsel__free_prev_raw_counts(struct perf_evsel *evsel)
- 	evsel->prev_raw_counts = NULL;
+ /* element iteration helpers */
+-#define for_each_element(element, _data, _datalen)			\
+-	for (element = (void *)(_data);					\
+-	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
+-		sizeof(*element) &&					\
+-	     (u8 *)(_data) + (_datalen) - (u8 *)element >=		\
+-		sizeof(*element) + element->datalen;			\
+-	     element = (void *)(element->data + element->datalen))
++#define for_each_element(_elem, _data, _datalen)			\
++	for (_elem = (const struct element *)(_data);			\
++	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
++		(int)sizeof(*_elem) &&					\
++	     (const u8 *)(_data) + (_datalen) - (const u8 *)_elem >=	\
++		(int)sizeof(*_elem) + _elem->datalen;			\
++	     _elem = (const struct element *)(_elem->data + _elem->datalen))
+ 
+ #define for_each_element_id(element, _id, data, datalen)		\
+ 	for_each_element(element, data, datalen)			\
+@@ -2680,7 +2680,7 @@ struct element {
+ static inline bool for_each_element_completed(const struct element *element,
+ 					      const void *data, size_t datalen)
+ {
+-	return (u8 *)element == (u8 *)data + datalen;
++	return (const u8 *)element == (const u8 *)data + datalen;
  }
  
-+static void perf_evsel__reset_prev_raw_counts(struct perf_evsel *evsel)
-+{
-+	if (evsel->prev_raw_counts) {
-+		evsel->prev_raw_counts->aggr.val = 0;
-+		evsel->prev_raw_counts->aggr.ena = 0;
-+		evsel->prev_raw_counts->aggr.run = 0;
-+       }
-+}
-+
- static int perf_evsel__alloc_stats(struct perf_evsel *evsel, bool alloc_raw)
- {
- 	int ncpus = perf_evsel__nr_cpus(evsel);
-@@ -195,6 +204,14 @@ void perf_evlist__reset_stats(struct perf_evlist *evlist)
- 	}
- }
- 
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__reset_prev_raw_counts(evsel);
-+}
-+
- static void zero_per_pkg(struct perf_evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index c29bb94c48a4b..b8845aceac31a 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -94,6 +94,7 @@ void perf_stat__print_shadow_stats(struct perf_evsel *evsel,
- int perf_evlist__alloc_stats(struct perf_evlist *evlist, bool alloc_raw);
- void perf_evlist__free_stats(struct perf_evlist *evlist);
- void perf_evlist__reset_stats(struct perf_evlist *evlist);
-+void perf_evlist__reset_prev_raw_counts(struct perf_evlist *evlist);
- 
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct perf_evsel *counter);
--- 
-2.20.1
-
+ #endif /* LINUX_IEEE80211_H */
 
 
