@@ -2,131 +2,128 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7365FFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2186FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526B9205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B934E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571229949;
+	bh=QgJWfhXNaWIdfb8oryrafUS5AiTR4RXOHCT8L72WYIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=taup9b4EOBdq+sSQbRif6RcazezEwGIuAQXk0BBkAryJNcQ0599WoPDE7GgFd6bSf
+	 0UJ0aQPhckrIMadb8oWH55RtdHo/561jv4+XZA+J9+wTjR3TglF7ivib2+2oMe84jP
+	 o/XIqJBJzA+qDNBcXg4wsIK3/Tv+YSoh/yyI6IIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393211AbfJPMpi (ORCPT
+        id S2393225AbfJPMps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:45:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42110 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393201AbfJPMpi (ORCPT
+        Wed, 16 Oct 2019 08:45:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41957 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390973AbfJPMps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:45:38 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKifu-0000vo-Mi; Wed, 16 Oct 2019 12:45:10 +0000
-Date:   Wed, 16 Oct 2019 14:45:09 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>, mingo@redhat.com,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, keescook@chromium.org,
-        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usercopy: Avoid soft lockups in test_check_nonzero_user()
-Message-ID: <20191016124508.7pbo5tl2ewsplzu7@wittgenstein>
-References: <20191010114007.o3bygjf4jlfk242e@yavin.dot.cyphar.com>
- <20191011022447.24249-1-mpe@ellerman.id.au>
- <20191011034810.xkmz3e4l5ezxvq57@yavin.dot.cyphar.com>
- <20191011094333.7hovhhacrvlf6uq6@wittgenstein>
- <87a7a0ub6j.fsf@mpe.ellerman.id.au>
+        Wed, 16 Oct 2019 08:45:48 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t10so11224042plr.8;
+        Wed, 16 Oct 2019 05:45:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MW2OPawZ1/S7yUUbg0Iwr6wr8CBZilFP35Sgfd8NrvI=;
+        b=llxF/QUkrOKyUU+KdhmQpMmMY9Gfd9z6w6tCedM4LOBAEk9O2YvP0V/NAHXsK4va1G
+         3Nwq9K+MBR+hkNVSiEOjfcj5JuCrTBk/BVAo8oCyEkLB/OXxMLy1UD78kDB4JPS9pbVR
+         rN61qwQL/SesmJPyMleE46qq4H+ZjZhNYJC4OBohquCLqVjIG5yz3sIIlKOpd5mZO2ZU
+         1H9H+aTjvNj8CwM1QBi+eUzpkpMgq+enRUamJvlsXMNkEaAfBFAwXwBZrKBEszwMAIfX
+         hlsP8IT6YHuRDbiDt4HiaFU4dmRlDX8EUncTUGvQFYKgDwqxsK2IqKIFMCSGMuslhguX
+         OCdw==
+X-Gm-Message-State: APjAAAVO9aPh0mKppK5HK6pDai7eZbfEuhx6j0rN8RAnZOjY5Bhd2LGF
+        gADR1yRtLRMQxhsklCqiX0g=
+X-Google-Smtp-Source: APXvYqyKGPR4ZK3MbBMfiZ9W9A5wG/MAiwUafwAuA5NTnFoMudfkEXwGcJ82nnpb3T+NzAZR6dFXmw==
+X-Received: by 2002:a17:902:8e81:: with SMTP id bg1mr7131785plb.137.1571229945751;
+        Wed, 16 Oct 2019 05:45:45 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c34sm3935476pgb.35.2019.10.16.05.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 05:45:44 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9DF5140251; Wed, 16 Oct 2019 12:45:43 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 12:45:43 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Message-ID: <20191016124543.GF16384@42.do-not-panic.com>
+References: <20191004145056.43267-1-hdegoede@redhat.com>
+ <20191011141036.GK16384@42.do-not-panic.com>
+ <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
+ <20191011153823.GS16384@42.do-not-panic.com>
+ <20191011163819.GA1295750@kroah.com>
+ <20191014092216.GA16384@42.do-not-panic.com>
+ <20191014092929.GA3050866@kroah.com>
+ <20191014103150.GB16384@42.do-not-panic.com>
+ <20191014105754.GA34057@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a7a0ub6j.fsf@mpe.ellerman.id.au>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191014105754.GA34057@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:28:20PM +1100, Michael Ellerman wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
-> > On Fri, Oct 11, 2019 at 02:48:10PM +1100, Aleksa Sarai wrote:
-> >> On 2019-10-11, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> >> > On a machine with a 64K PAGE_SIZE, the nested for loops in
-> >> > test_check_nonzero_user() can lead to soft lockups, eg:
-> >> > 
-> >> >   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
-> >> >   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum virtio_balloon ip_tables x_tables autofs4
-> >> >   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gcc-8.2.0-00001-gf5a1a536fa14-dirty #1151
-> >> >   ...
-> >> >   NIP __might_sleep+0x20/0xc0
-> >> >   LR  __might_fault+0x40/0x60
-> >> >   Call Trace:
-> >> >     check_zeroed_user+0x12c/0x200
-> >> >     test_user_copy_init+0x67c/0x1210 [test_user_copy]
-> >> >     do_one_initcall+0x60/0x340
-> >> >     do_init_module+0x7c/0x2f0
-> >> >     load_module+0x2d94/0x30e0
-> >> >     __do_sys_finit_module+0xc8/0x150
-> >> >     system_call+0x5c/0x68
-> >> > 
-> >> > Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
-> >> > tweak it to only scan a 1024 byte region, but make it cross the
-> >> > page boundary.
-> >> > 
-> >> > Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-> >> > Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
-> >> > Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> >> > ---
-> >> >  lib/test_user_copy.c | 23 ++++++++++++++++++++---
-> >> >  1 file changed, 20 insertions(+), 3 deletions(-)
-> >> > 
-> >> > How does this look? It runs in < 1s on my machine here.
-> >> > 
-> >> > cheers
-> >> > 
-> >> > diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
-> >> > index 950ee88cd6ac..9fb6bc609d4c 100644
-> >> > --- a/lib/test_user_copy.c
-> >> > +++ b/lib/test_user_copy.c
-> >> > @@ -47,9 +47,26 @@ static bool is_zeroed(void *from, size_t size)
-> >> >  static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
-> >> >  {
-> >> >  	int ret = 0;
-> >> > -	size_t start, end, i;
-> >> > -	size_t zero_start = size / 4;
-> >> > -	size_t zero_end = size - zero_start;
-> >> > +	size_t start, end, i, zero_start, zero_end;
-> >> > +
-> >> > +	if (test(size < 1024, "buffer too small"))
-> >> > +		return -EINVAL;
-> >> > +
-> >> > +	/*
-> >> > +	 * We want to cross a page boundary to exercise the code more
-> >> > +	 * effectively. We assume the buffer we're passed has a page boundary at
-> >> > +	 * size / 2. We also don't want to make the size we scan too large,
-> >> > +	 * otherwise the test can take a long time and cause soft lockups. So
-> >> > +	 * scan a 1024 byte region across the page boundary.
-> >> > +	 */
-> >> > +	start = size / 2 - 512;
-> >> > +	size = 1024;
-> >> 
-> >> I don't think it's necessary to do "size / 2" here -- you can just use
-> >> PAGE_SIZE directly and check above that "size == 2*PAGE_SIZE" (not that
-> >> this check is exceptionally necessary -- since there's only one caller
-> >> of this function and it's in the same file).
-> >
-> > Michael, in case you resend, can you make my life a little easier and do
-> > it on top of
-> > https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
-> > please. I have a fix from Aleksa sitting in there laready that _might_
-> > cause a conflict otherwise.
+On Mon, Oct 14, 2019 at 12:57:54PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Oct 14, 2019 at 10:31:50AM +0000, Luis Chamberlain wrote:
+> > On Mon, Oct 14, 2019 at 11:29:29AM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, Oct 14, 2019 at 09:22:16AM +0000, Luis Chamberlain wrote:
+> > > > On Fri, Oct 11, 2019 at 06:38:19PM +0200, Greg Kroah-Hartman wrote:
+> > > > > On Fri, Oct 11, 2019 at 03:38:23PM +0000, Luis Chamberlain wrote:
+> > > > > > On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
+> > > > > > > Hi,
+> > > > > > > 
+> > > > > > > On 10/11/19 4:10 PM, Luis Chamberlain wrote:
+> > > > > > > > Hey Hans, thanks for staying on top of this and follow up! For some
+> > > > > > > > reason the universe conspired against your first and last patch ([1/8],
+> > > > > > > > [8/8]), and I never got them. Could you bounce these or resend in case
+> > > > > > > > others confirm they also didn't get it?
+> > > > > > > 
+> > > > > > > I have received feedback from others on the first patch, so at least
+> > > > > > > that one has reached others. I've bounced patches 1 and 8 to you.
+> > > > > > 
+> > > > > > Thanks, can you also bounce the feedback received?
+> > > > > 
+> > > > > That is what lore.kernel.org is for...
+> > > > 
+> > > > If I have feedback on an email which I did not get I cannot easily reply to it.
+> > > 
+> > > I meant, use lore.kernel.org to download the mbox of the thread and then
+> > > use your email client to respond to whatever you need there.  This all
+> > > is public, no need to ask anyone else to bounce emails to you.
+> > 
+> > Last I looked it didn't allow you to downlaod an mbox of a thread...
 > 
-> No worries, done.
+> It can, from the front page of "all" threads, or on the thread itself,
+> at the bottom of the page.  Search for "download" on the page.
 
-Thank you!
-Christian
+Sweet! <insert sound of discovering an item in Legend of Zelda>
+
+  Luis
