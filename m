@@ -2,277 +2,95 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924EBECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BFCECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BADF21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E859D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NSrpYdVj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmxLnnlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391783AbfJPIll (ORCPT
+        id S2404116AbfJPIlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:41:41 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:53742 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390010AbfJPIlj (ORCPT
+        Wed, 16 Oct 2019 04:41:47 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35624 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391805AbfJPIlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:41:39 -0400
-Received: by mail-wm1-f74.google.com with SMTP id p6so667052wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:41:35 -0700 (PDT)
+        Wed, 16 Oct 2019 04:41:45 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w6so16754207lfl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 01:41:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7ROjjIT0dSiqK7weicBG4sWceIh3b0q1ZAIHDJ8V6Dk=;
-        b=NSrpYdVj6fvXpFrnYfMPpaxzWB8tZgAHeQar0WnBSBStaLWhUFgVJk9C/oS/EQde3j
-         MN4Pu2PiFyorxV2NAx67TfVsuapiiUeipddfWo7q/H/WBwZUnkM+6M8rF64LWI1zqnod
-         u5c2hdeezFE94Xt0CqiWPN9JZ+XWZGa2LmHJ17RvhMuYF8jJYNzHYmLp4bSOyQhnLb5n
-         wcTS/OQn6cmqiOthUHvG8diywSJRIpleWQFeeW+APiJo3NuWVCMKVB3OAzacpbRddg+g
-         eGRi/qTPu5x/ubxado+lIc7l9pv4VKTx9GmOiVRvCsEI/RgIn0MQsYWgNaf1gyqvzMor
-         8Gxw==
+        bh=P5rCHjs55GhS0d4QwWMR+IRXm4cU7A5acMAqOom+agM=;
+        b=cmxLnnlv3X8JzjYTOrMqk+TrttOUQO+7Ws5eEWIRsEywSi1lz7WA6MOWF2jvS2WjdU
+         kNnUvK2cVJU0uIxO8GhtsUwz7YRYCcSD4sc5HojMnTJHNi7TV/4LE0IDtg48eW6tv4EZ
+         yp0HfIdJ3n5GCBA/L3alVcWo6V6kJ0OkrWiyeEiCV+GqXCr+1HCkWjqYygrdRdst0E/s
+         Jw0IuQIhHHnjpLvdhnWnk2MEqsxtjlmE0E7FyNcMmIeJWuHqQMjPcMkbaaQ1Yx6fRUuw
+         p5rWDLQWh+mWjmnGrmjPilU4K8yetyUqCqxz6D/6lCKowZu9tOEzyy1oZ17LVeq65OFv
+         NAmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=7ROjjIT0dSiqK7weicBG4sWceIh3b0q1ZAIHDJ8V6Dk=;
-        b=q+cZBSI5E71bt6SIqfFsYdaVg514Ff5HX7aTt07XtaRgKggGLPextxpIadBsudqE4E
-         Gx9zGRnba3rHdELI2powX/BNkCBBiDkXg/b8jGgOaSpufw1ZovWl0kqf0xNM8lsaxs1R
-         r2izM+Zaf2BmQ0YIvUyr2BsEdG55dpmjIwVeVBWoJP6M96zTVEt0HPq8ZNWn3FnCgmS/
-         zbm8s/jJW0u44iWjnbyk9ZfdZjnXvB662OmQ7Zgy8vugK6Qax7DiwvcJdCAAaDBmRhSg
-         ZtxpEc8pQF6R0b20ezQj/4zTH+t4zjQG2Q2i2Jy4Ck3qfYF/zRngq76QP8/9RbE8l9JH
-         K2Eg==
-X-Gm-Message-State: APjAAAVCLIbE0AB3sSS+oOsTN30NRk91K04u4qPwR2buz0E8hAY/LOBO
-        BJu3cHGVXr8rtonnIwAzGEMbI0lr0A==
-X-Google-Smtp-Source: APXvYqyPTbF4tMvD/+6fq80mlU+ztvS58zl/Ed2jENLqLLVlUfZnkS670w03BnK/IEZ6vSaVSsQZVxJcuQ==
-X-Received: by 2002:adf:e983:: with SMTP id h3mr1520622wrm.95.1571215294184;
- Wed, 16 Oct 2019 01:41:34 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 10:39:59 +0200
-In-Reply-To: <20191016083959.186860-1-elver@google.com>
-Message-Id: <20191016083959.186860-9-elver@google.com>
-Mime-Version: 1.0
-References: <20191016083959.186860-1-elver@google.com>
-X-Mailer: git-send-email 2.23.0.700.g56cf767bdb-goog
-Subject: [PATCH 8/8] x86, kcsan: Enable KCSAN for x86
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, paulmck@linux.ibm.com, peterz@infradead.org,
-        tglx@linutronix.de, will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P5rCHjs55GhS0d4QwWMR+IRXm4cU7A5acMAqOom+agM=;
+        b=h66bY2AT6iJ/sA3qQgZw9GitHpxp5iA7lroZFfYtb01yk4DE7DuIGpRS6C7Xalt5mJ
+         4MvDrez9E3f+eU16y0vM8+4qSmEg53rzLkB2druxuaoegMekdupmu53YTDUzF0MNJsan
+         qijtujSBW1UVV9IWMhOgVUWlaaTckP64HKPOXIg2TZevyrb5JoLgoM0CM4QoR617X+Y8
+         PDyOZC0q5+HdsGYE+YIRflQQpfTA9XeQNfAGnjGuQKy/wCI+o8wbDfPAs/lPU91Nfl2+
+         GdNXX6wN91h9Uxf2y00KLGXsCAjv5ktOA176jxgSZmU1KDnoMyWVQWuC7KjXDBN1jQCa
+         S6Lw==
+X-Gm-Message-State: APjAAAXzRP2vwTfoWcdpbkHAPTbbHSBxw8MMvYFcjm5gjPNPsUC4CgG3
+        8WSzVEgfti1GvWQeni74AEKd0lM8kebdrQlRVAY=
+X-Google-Smtp-Source: APXvYqwMqRyrV6KURGxOk+nK8zfx8iulHbs2fxXoCl2l6ahgWaJLEk4ZRRTnkB348AtFsLAoa2OCoYz7BbpqTULv2UM=
+X-Received: by 2002:ac2:5610:: with SMTP id v16mr23568149lfd.93.1571215303287;
+ Wed, 16 Oct 2019 01:41:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191016070740.121435-1-codekipper@gmail.com> <20191016070740.121435-2-codekipper@gmail.com>
+ <20191016080420.4cbxn2hdt3wwtrhl@gilmour>
+In-Reply-To: <20191016080420.4cbxn2hdt3wwtrhl@gilmour>
+From:   Code Kipper <codekipper@gmail.com>
+Date:   Wed, 16 Oct 2019 10:41:31 +0200
+Message-ID: <CAEKpxBmNCA4U8-X8iSwOxBZ7T3dp6352S2Kfxc6f5E4N671zvg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/7] ASoC: sun4i-i2s: Move channel select offset
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables KCSAN for x86, with updates to build rules to not use
-KCSAN for several incompatible compilation units.
+On Wed, 16 Oct 2019 at 10:04, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Wed, Oct 16, 2019 at 09:07:34AM +0200, codekipper@gmail.com wrote:
+> > From: Marcus Cooper <codekipper@gmail.com>
+> >
+> > On the newer SoCs the offset is used to set the mode of the
+> > connection. As it is to be used elsewhere then it makes sense
+> > to move it to the main structure.
+>
+> Elsewhere where, and to do what?
+Thanks...How does this sound?
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- arch/x86/Kconfig                      | 1 +
- arch/x86/boot/Makefile                | 1 +
- arch/x86/boot/compressed/Makefile     | 1 +
- arch/x86/entry/vdso/Makefile          | 1 +
- arch/x86/include/asm/bitops.h         | 2 +-
- arch/x86/kernel/Makefile              | 6 ++++++
- arch/x86/kernel/cpu/Makefile          | 3 +++
- arch/x86/lib/Makefile                 | 2 ++
- arch/x86/mm/Makefile                  | 3 +++
- arch/x86/purgatory/Makefile           | 1 +
- arch/x86/realmode/Makefile            | 1 +
- arch/x86/realmode/rm/Makefile         | 1 +
- drivers/firmware/efi/libstub/Makefile | 1 +
- 13 files changed, 23 insertions(+), 1 deletion(-)
+As it is to be used to set the same offset for each TX data channel in use
+during multi-channel audio then let's move it to the main structure.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa28c58..81859be4a005 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -226,6 +226,7 @@ config X86
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
-+	select HAVE_ARCH_KCSAN if X86_64
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index e2839b5c246c..2f9e928acae6 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -10,6 +10,7 @@
- #
- 
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Kernel does not boot with kcov instrumentation here.
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 6b84afdd7538..0921689f7c70 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -18,6 +18,7 @@
- #	compressed vmlinux.bin.all + u32 size of vmlinux.bin.all
- 
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 0f2154106d01..d2cd34d2ac4e 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -12,6 +12,7 @@ include $(srctree)/lib/vdso/Makefile
- KBUILD_CFLAGS += $(DISABLE_LTO)
- KASAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 7d1f6a49bfae..a36d900960e4 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -201,7 +201,7 @@ arch_test_and_change_bit(long nr, volatile unsigned long *addr)
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
--static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-+static __no_kcsan_or_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
- {
- 	return ((1UL << (nr & (BITS_PER_LONG-1))) &
- 		(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3578ad248bc9..adccbbfa47e4 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -28,6 +28,12 @@ KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
- KASAN_SANITIZE_stacktrace.o				:= n
- KASAN_SANITIZE_paravirt.o				:= n
- 
-+KCSAN_SANITIZE_head$(BITS).o				:= n
-+KCSAN_SANITIZE_dumpstack.o				:= n
-+KCSAN_SANITIZE_dumpstack_$(BITS).o			:= n
-+KCSAN_SANITIZE_stacktrace.o				:= n
-+KCSAN_SANITIZE_paravirt.o				:= n
-+
- OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
- OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
- OBJECT_FILES_NON_STANDARD_paravirt_patch.o		:= y
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index d7a1e5a9331c..7651c4f37e5e 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -3,6 +3,9 @@
- # Makefile for x86-compatible CPU details, features and quirks
- #
- 
-+KCSAN_SANITIZE_common.o = n
-+KCSAN_SANITIZE_perf_event.o = n
-+
- # Don't trace early stages of a secondary CPU boot
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_common.o = -pg
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 5246db42de45..4e4b74f525f2 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -5,11 +5,13 @@
- 
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
-+KCSAN_SANITIZE_delay.o := n
- 
- # Early boot use of cmdline; don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KCOV_INSTRUMENT_cmdline.o := n
- KASAN_SANITIZE_cmdline.o  := n
-+KCSAN_SANITIZE_cmdline.o  := n
- 
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 84373dc9b341..ee871602f96a 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -7,6 +7,9 @@ KCOV_INSTRUMENT_mem_encrypt_identity.o	:= n
- KASAN_SANITIZE_mem_encrypt.o		:= n
- KASAN_SANITIZE_mem_encrypt_identity.o	:= n
- 
-+KCSAN_SANITIZE_mem_encrypt.o		:= n
-+KCSAN_SANITIZE_mem_encrypt_identity.o	:= n
-+
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_mem_encrypt.o		= -pg
- CFLAGS_REMOVE_mem_encrypt_identity.o	= -pg
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee5444379..72060744f34f 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -18,6 +18,7 @@ LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefa
- targets += purgatory.ro
- 
- KASAN_SANITIZE	:= n
-+KCSAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
- 
- # These are adjustments to the compiler flags used for objects that
-diff --git a/arch/x86/realmode/Makefile b/arch/x86/realmode/Makefile
-index 682c895753d9..4fc7ce2534dd 100644
---- a/arch/x86/realmode/Makefile
-+++ b/arch/x86/realmode/Makefile
-@@ -7,6 +7,7 @@
- #
- #
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- subdir- := rm
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index f60501a384f9..6f7fbe9dfda6 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -7,6 +7,7 @@
- #
- #
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 0460c7581220..a56981286623 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -32,6 +32,7 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
- 
- GCOV_PROFILE			:= n
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
--- 
-2.23.0.700.g56cf767bdb-goog
-
+BR,
+CK
+>
+> Maxime
