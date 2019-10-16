@@ -2,213 +2,84 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99C7ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D101ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B518A218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D2120854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 19:56:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sum1X28F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436771AbfJPTyO (ORCPT
+        id S2394606AbfJPT4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 15:54:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32958 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436685AbfJPTyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 15:54:14 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7FC5118C890F;
-        Wed, 16 Oct 2019 19:54:05 +0000 (UTC)
-Received: from dhcp-17-182.bos.redhat.com (ovpn-116-165.phx2.redhat.com [10.3.116.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D88011001925;
-        Wed, 16 Oct 2019 19:54:04 +0000 (UTC)
-Subject: Re: [PATCH] ipmi: Don't allow device module unload when in use
-To:     minyard@acm.org
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
-References: <20191014134141.GA25427@t560>
- <20191014154632.11103-1-minyard@acm.org>
- <f73aa2ef-e173-db85-e426-3bf380626f66@redhat.com>
- <20191016193349.GP14232@t560>
-From:   Tony Camuso <tcamuso@redhat.com>
-Message-ID: <c8660785-c99c-7f5c-25b7-6e37e08aa01f@redhat.com>
-Date:   Wed, 16 Oct 2019 15:54:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 16 Oct 2019 15:56:07 -0400
+Received: from mail-il1-f179.google.com ([209.85.166.179]:41613 "EHLO
+        mail-il1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730603AbfJPT4H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 15:56:07 -0400
+Received: by mail-il1-f179.google.com with SMTP id z10so3884240ilo.8;
+        Wed, 16 Oct 2019 12:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=h/P3JA46kWkR1ok83p5Cbw7TV2607e8IBxUrOI+c/JY=;
+        b=Sum1X28FKUFNIoD0TNCMnYgp67D/UN5XOavrIbFzvM2OhQqxcIp0ZcOU/WPmuTG97l
+         WrFb0fodakzC54W5Ff73sJr/YUykiA4jcILXc/kv0/7pBCt6XjQQvcQShAf2pTNkF6o+
+         b21vOXJhCIT/oiuwPd8iHKE9yOGo6CLKbT7sHkiElIe0Ryqnh8hmtoj9j8xxRU9s/HGz
+         VNKIigtDHhmedxxSla4gD2d/jwbsRQ7Vw1mIAq+CgTUZHQ9iG/79+BjXsZWv/g+GnZI2
+         R0JgYpjCuJqBF0TpAMWyBzyc69+1ffJpaxnK5gNrSrnGa8HFzJgBp3IxJvIozwH83w5Z
+         DDHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=h/P3JA46kWkR1ok83p5Cbw7TV2607e8IBxUrOI+c/JY=;
+        b=AfSmZEQyMxvq1y/NNvDbPdMMdroMIi5xLNgWDEPsZdtCKUJ1IYJvxSJW7D1fQEL7Mu
+         Bs+h8+jEeyj/PXn6t87yAuGwiE5WcvlW9i7y2MvQTcDADGK3XIyGMbT13zfhWgV7xuKu
+         wT7h3zyRYYf8xrZA1PEUg15SWrvmRacQSpdf+/RQGZPp1T7hX7zd8AepML1lup0RDXWt
+         /UbuNjbwO9ML3jbu3o7DeLB8P7txiqI7UdSppOGmvkLM3fCJYeDDhLkrCzUGjSTbvSPz
+         tFNre2OR/B4QQ3fiU6iLB0+ZGw/1sdx/aZx7NtGXcuIFPCJNLvLz7Sxos198Oq5q8grT
+         NEFQ==
+X-Gm-Message-State: APjAAAVAnbT/7c/r6k1FHiPOLp4X5rkKgUjbg85QuipIvBBxWmf74WXx
+        b7prxy1tP5GSoOpFyNgd413c1NOD779y/6vWU/U=
+X-Google-Smtp-Source: APXvYqwWRSTsjGSsfAbBn3FBmQk3IwJ5gHMMJQp1jBBJhZxZT6EEM6o0ey+7Uxf6QgNXcqBvjgCmILXp3weYahkWuSM=
+X-Received: by 2002:a92:5b98:: with SMTP id c24mr13115016ilg.158.1571255766169;
+ Wed, 16 Oct 2019 12:56:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191016193349.GP14232@t560>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 16 Oct 2019 19:54:13 +0000 (UTC)
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 16 Oct 2019 14:55:54 -0500
+Message-ID: <CAHCN7xJSz+QhOb4vE6b67jh5jnSOHnw79EyX8RW91TqPkD__Lw@mail.gmail.com>
+Subject: pwm_bl on i.MX6Q broken on 5.4-RC1+
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 3:33 PM, Corey Minyard wrote:
-> On Wed, Oct 16, 2019 at 03:25:56PM -0400, Tony Camuso wrote:
->> On 10/14/19 11:46 AM, minyard@acm.org wrote:
->>> From: Corey Minyard <cminyard@mvista.com>
->>>
->>> If something has the IPMI driver open, don't allow the device
->>> module to be unloaded.  Before it would unload and the user would
->>> get errors on use.
->>>
->>> This change is made on user request, and it makes it consistent
->>> with the I2C driver, which has the same behavior.
->>>
->>> It does change things a little bit with respect to kernel users.
->>> If the ACPI or IPMI watchdog (or any other kernel user) has
->>> created a user, then the device module cannot be unloaded.  Before
->>> it could be unloaded,
->>>
->>> This does not affect hot-plug.  If the device goes away (it's on
->>> something removable that is removed or is hot-removed via sysfs)
->>> then it still behaves as it did before.
->>>
->>> Reported-by: tony camuso <tcamuso@redhat.com>
->>> Signed-off-by: Corey Minyard <cminyard@mvista.com>
->>> ---
->>> Tony, here is a suggested change for this.  Can you look it over and
->>> see if it looks ok?
->>>
->>> Thanks,
->>>
->>> -corey
->>>
->>>    drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
->>>    include/linux/ipmi_smi.h            | 12 ++++++++----
->>>    2 files changed, 24 insertions(+), 11 deletions(-)
->>
->> Hi Corey.
->>
->> You changed ipmi_register_ipmi to ipmi_add_ipmi in ipmi_msghandler, but you
->> did not change it where it is actually called.
->>
->> # grep ipmi_register_smi drivers/char/ipmi/*.c
->> drivers/char/ipmi/ipmi_powernv.c:	rc = ipmi_register_smi(&ipmi_powernv_smi_handlers, ipmi, dev, 0);
->> drivers/char/ipmi/ipmi_si_intf.c:	rv = ipmi_register_smi(&handlers,
->> drivers/char/ipmi/ipmi_ssif.c:	rv = ipmi_register_smi(&ssif_info->handlers,
->>
->> Is there a reason for changing the interface name? Is this something
->> that I could do instead of troubling you with it?
-> 
-> I don't understand.  You don't say that anything went wrong, you just
-> referenced something I changed.
-> 
-> I changed the name so I could create a macro with that name to pass in
-> the module name.  Pretty standard to do in the kernel.  
+I have an i.MX6Q with an LCD and PWM controlled backlight.  On 5.4-RC1
+through the current master (16 Oct 2019), the backlight does not come
+on by default.  I can get it come on by manually setting the
+brightness, but any video activity seems to blank the screen again
+until I change the brightness again.
 
-Can't believe I missed that.
+I bisected the patch to 01ccf903edd6 ("pwm: Let pwm_get_state() return
+the last implemented state")
 
-> Is there a
-> compile or runtime issue?
-> 
-> -corey
+If I revert this patch on 5.4-rc3, the issue goes away.
 
-All is well, so far. Haven't finished testing.
+I was hoping someone might have a suggestion on how to fix it to play
+nicely with the iMX6Q PWM or revert if no solution can be found.
 
->>
->> Regards,
->> Tony
->>
->>
->>>
->>> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
->>> index 2aab80e19ae0..15680de18625 100644
->>> --- a/drivers/char/ipmi/ipmi_msghandler.c
->>> +++ b/drivers/char/ipmi/ipmi_msghandler.c
->>> @@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
->>>    #define IPMI_IPMB_NUM_SEQ	64
->>>    struct ipmi_smi {
->>> +	struct module *owner;
->>> +
->>>    	/* What interface number are we? */
->>>    	int intf_num;
->>> @@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
->>>    	if (rv)
->>>    		goto out_kfree;
->>> +	if (!try_module_get(intf->owner)) {
->>> +		rv = -ENODEV;
->>> +		goto out_kfree;
->>> +	}
->>> +	
->>>    	/* Note that each existing user holds a refcount to the interface. */
->>>    	kref_get(&intf->refcount);
->>> @@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
->>>    	}
->>>    	kref_put(&intf->refcount, intf_free);
->>> +	module_put(intf->owner);
->>>    }
->>>    int ipmi_destroy_user(struct ipmi_user *user)
->>> @@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
->>>     * been recently fetched, this will just use the cached data.  Otherwise
->>>     * it will run a new fetch.
->>>     *
->>> - * Except for the first time this is called (in ipmi_register_smi()),
->>> + * Except for the first time this is called (in ipmi_add_smi()),
->>>     * this will always return good data;
->>>     */
->>>    static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
->>> @@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work)
->>>    	kref_put(&intf->refcount, intf_free);
->>>    }
->>> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->>> -		      void		       *send_info,
->>> -		      struct device            *si_dev,
->>> -		      unsigned char            slave_addr)
->>> +int ipmi_add_smi(struct module         *owner,
->>> +		 const struct ipmi_smi_handlers *handlers,
->>> +		 void		       *send_info,
->>> +		 struct device         *si_dev,
->>> +		 unsigned char         slave_addr)
->>>    {
->>>    	int              i, j;
->>>    	int              rv;
->>> @@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->>>    		return rv;
->>>    	}
->>> -
->>> +	intf->owner = owner;
->>>    	intf->bmc = &intf->tmp_bmc;
->>>    	INIT_LIST_HEAD(&intf->bmc->intfs);
->>>    	mutex_init(&intf->bmc->dyn_mutex);
->>> @@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->>>    	return rv;
->>>    }
->>> -EXPORT_SYMBOL(ipmi_register_smi);
->>> +EXPORT_SYMBOL(ipmi_add_smi);
->>>    static void deliver_smi_err_response(struct ipmi_smi *intf,
->>>    				     struct ipmi_smi_msg *msg,
->>> diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
->>> index 4dc66157d872..deec18b8944a 100644
->>> --- a/include/linux/ipmi_smi.h
->>> +++ b/include/linux/ipmi_smi.h
->>> @@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
->>>     * is called, and the lower layer must get the interface from that
->>>     * call.
->>>     */
->>> -int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
->>> -		      void                     *send_info,
->>> -		      struct device            *dev,
->>> -		      unsigned char            slave_addr);
->>> +int ipmi_add_smi(struct module            *owner,
->>> +		 const struct ipmi_smi_handlers *handlers,
->>> +		 void                     *send_info,
->>> +		 struct device            *dev,
->>> +		 unsigned char            slave_addr);
->>> +
->>> +#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
->>> +	ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
->>>    /*
->>>     * Remove a low-level interface from the IPMI driver.  This will
->>>
->>
+thank you,
 
+adam
