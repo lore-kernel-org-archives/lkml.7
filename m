@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E00FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40190FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5534421928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC482168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263724;
-	bh=axZIwNdfKdDdPLE4tMS6r7yKnYi7SwZ0HbtEFjMZyz4=;
+	s=default; t=1571263727;
+	bh=2m19+YgUmMyrEpYecCFQt1Y2M/nrhbrEdoBxBlyVQxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=majsep1/m4YbNc7//EfuSwz1KmVSH6/nY7ERaytreemnDu3n/mzhrNKSSq25gByuG
-	 pdtPDF/GXCZqO4/90Ea/hdd9DAOgso/LDTQufUI9OGyF3W9mPN1Fle9rEm8SD38z69
-	 DPtYW1MBvdSzAHOxSeRXigpzWRVrKGzFBiU48u1w=
+	b=G27U0qp+UYrUsVxWo4oNnhUMGpsARrR4EDyXFLKuK4qqwIv+e/AU2nSbXzTakQ/Qw
+	 xJa4Um8e3LkCJvTQSS8MGVFhMiXxd+JX1jCRNsCF+srdcxJkjc0a8kJK/GgWwTmq3Y
+	 y3qH/oqGgo72TMBbtXXcLZLIBFL2JXD1yZz3b8pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395533AbfJPV5n (ORCPT
+        id S2404872AbfJPWIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391233AbfJPV46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:58 -0400
+        id S2437936AbfJPV5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:43 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 041F8218DE;
-        Wed, 16 Oct 2019 21:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E333121D7D;
+        Wed, 16 Oct 2019 21:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263017;
-        bh=axZIwNdfKdDdPLE4tMS6r7yKnYi7SwZ0HbtEFjMZyz4=;
+        s=default; t=1571263062;
+        bh=2m19+YgUmMyrEpYecCFQt1Y2M/nrhbrEdoBxBlyVQxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+tYoM7C2WK2FSb2OuFLOmZ4/XMMySRBIF85KfDzUK4HTx3F4yRtzJ2lhIg/HBHf6
-         P2X6ZV7a8n5zwCNXlVWd5Pjvx6959iQNaG2qpWAX304JKtSjkZ5XsMD3uvA/47aJqJ
-         HwbjEiuNalZe0VZW5EucfI24yEYFhz3EvAll9Exg=
+        b=jlbpxAqAL3BKxDOEiFuPvehIgQTbboWNgkJ7GrMceE+9+Ul37sQ5nOQ155fyyPiqR
+         BrKZJCR0A84PeIgZNc66gOaFpVj/1xdic3r2u5kW4ijOixBdkA+aCcyD3jh01MSQrq
+         QohTD3Kn4JfOb1WR6bRoMYmTmnc7Ss1Pznq8r47U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 19/81] USB: iowarrior: fix use-after-free on release
-Date:   Wed, 16 Oct 2019 14:50:30 -0700
-Message-Id: <20191016214825.028539641@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 64/81] btrfs: fix uninitialized ret in ref-verify
+Date:   Wed, 16 Oct 2019 14:51:15 -0700
+Message-Id: <20191016214844.557001120@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -58,43 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 80cd5479b525093a56ef768553045741af61b250 upstream.
+commit c5f4987e86f6692fdb12533ea1fc7a7bb98e555a upstream.
 
-The driver was accessing its struct usb_interface from its release()
-callback without holding a reference. This would lead to a
-use-after-free whenever debugging was enabled and the device was
-disconnected while its character device was open.
+Coverity caught a case where we could return with a uninitialized value
+in ret in process_leaf.  This is actually pretty likely because we could
+very easily run into a block group item key and have a garbage value in
+ret and think there was an errror.  Fix this by initializing ret to 0.
 
-Fixes: 549e83500b80 ("USB: iowarrior: Convert local dbg macro to dev_dbg")
-Cc: stable <stable@vger.kernel.org>     # 3.16
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009104846.5925-3-johan@kernel.org
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/ref-verify.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -243,6 +243,7 @@ static inline void iowarrior_delete(stru
- 	kfree(dev->int_in_buffer);
- 	usb_free_urb(dev->int_in_urb);
- 	kfree(dev->read_queue);
-+	usb_put_intf(dev->interface);
- 	kfree(dev);
- }
+--- a/fs/btrfs/ref-verify.c
++++ b/fs/btrfs/ref-verify.c
+@@ -511,7 +511,7 @@ static int process_leaf(struct btrfs_roo
+ 	struct btrfs_extent_data_ref *dref;
+ 	struct btrfs_shared_data_ref *sref;
+ 	u32 count;
+-	int i = 0, tree_block_level = 0, ret;
++	int i = 0, tree_block_level = 0, ret = 0;
+ 	struct btrfs_key key;
+ 	int nritems = btrfs_header_nritems(leaf);
  
-@@ -764,7 +765,7 @@ static int iowarrior_probe(struct usb_in
- 	init_waitqueue_head(&dev->write_wait);
- 
- 	dev->udev = udev;
--	dev->interface = interface;
-+	dev->interface = usb_get_intf(interface);
- 
- 	iface_desc = interface->cur_altsetting;
- 	dev->product_id = le16_to_cpu(udev->descriptor.idProduct);
 
 
