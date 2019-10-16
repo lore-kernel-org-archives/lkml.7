@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D557FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BEEECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCF221A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC6C218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263030;
-	bh=dlgjEkhjGzZAqHQIJgcRh8buxbVAOWa6jQVNzLlvn5w=;
+	s=default; t=1571263036;
+	bh=HdPM/9FoLj8uItAc5KmRuQ+e5lvgdJjgzjajg0U+Q1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6MzY2V74Ez7q8oJ/0Q46JdpD/kF4Aw5VIp8N+/1kWAbpADhL8y2ly1hGMX2Pxzah
-	 Vg++hkFYfVBj7TXxYAP5HYCeNMqznx/5TW3RWtor43XSJaCPXStgFGsDO/3IMg0gS+
-	 gdwnBQ7ZA5A9AbILVub/4TzcYqzNgPXmzQlVRN8Y=
+	b=fGDwrTwdfVuzOi2gFKEYmLPusUp30R6Hu/R2E+hIj/G0iw97SsWh1QpsAZLHnAZQP
+	 Dm+F+YCUYZCke0+ZMSEV+gxIVMk6fni9PwXy0XpzgiEVhGBKeyZl91iFyFqFsOg1Vc
+	 HCH34Z3Cw98gqeNWrBKoLrPRvfE6bFRkr8Hzy5QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406671AbfJPV5J (ORCPT
+        id S2389689AbfJPV5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48308 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391343AbfJPV4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:33 -0400
+        id S2395383AbfJPV4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:36 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A14F21D7F;
-        Wed, 16 Oct 2019 21:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B9B521928;
+        Wed, 16 Oct 2019 21:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262992;
-        bh=dlgjEkhjGzZAqHQIJgcRh8buxbVAOWa6jQVNzLlvn5w=;
+        s=default; t=1571262996;
+        bh=HdPM/9FoLj8uItAc5KmRuQ+e5lvgdJjgzjajg0U+Q1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oj0OTlcTbCKAbOdnuZ568gHrhzDVrUc9yl8oeheMZjraHUNhr9OGQ0UjZjQbYIjOA
-         rHBa7Dsa7nX0sOF31cnPOGuYfCfRAvj9yc7XrjJ/TMQB9qTKm4XIhIpeTSJEkeZybf
-         wwZ/QBY/+Uz9ygVd5yhG31Q9axG+MNJJXEkmCNjc=
+        b=W2cSUzU8pdtPnso8oTLhtVu50l9vtRSMvr59EFHY2kLDZeonRgqJNWGmVH2OwHkSg
+         PVrajj8RRZ4UUx9uZdVWHXV/iMCnWzeFpNVuJXyo6AZ3eHGQ5bZrFN9QVNe2JTp0nT
+         TVYNTXSWyrHbvURn+9VjpnDRwrJ4wGckhlbB9n+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 60/65] tracing/hwlat: Report total time spent in all NMIs during the sample
-Date:   Wed, 16 Oct 2019 14:51:14 -0700
-Message-Id: <20191016214839.553835136@linuxfoundation.org>
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 64/65] x86/asm: Fix MWAITX C-state hint value
+Date:   Wed, 16 Oct 2019 14:51:18 -0700
+Message-Id: <20191016214840.468371204@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -60,38 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
 
-commit 98dc19c11470ee6048aba723d77079ad2cda8a52 upstream.
+commit 454de1e7d970d6bc567686052329e4814842867c upstream.
 
-nmi_total_ts is supposed to record the total time spent in *all* NMIs
-that occur on the given CPU during the (active portion of the)
-sampling window. However, the code seems to be overwriting this
-variable for each NMI, thereby only recording the time spent in the
-most recent NMI. Fix it by accumulating the duration instead.
+As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
+and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
+of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
 
-Link: http://lkml.kernel.org/r/157073343544.17189.13911783866738671133.stgit@srivatsa-ubuntu
+Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
+this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
 
-Fixes: 7b2c86250122 ("tracing: Add NMI tracing in hwlat detector")
-Cc: stable@vger.kernel.org
-Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+This hasn't had any implications so far because setting reserved bits in
+EAX is simply ignored by the CPU.
+
+ [ bp: Fixup comment in delay_mwaitx() and massage. ]
+
+Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "x86@kernel.org" <x86@kernel.org>
+Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_hwlat.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/mwait.h |    2 +-
+ arch/x86/lib/delay.c         |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -152,7 +152,7 @@ void trace_hwlat_callback(bool enter)
- 		if (enter)
- 			nmi_ts_start = time_get();
- 		else
--			nmi_total_ts = time_get() - nmi_ts_start;
-+			nmi_total_ts += time_get() - nmi_ts_start;
- 	}
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -21,7 +21,7 @@
+ #define MWAIT_ECX_INTERRUPT_BREAK	0x1
+ #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+-#define MWAITX_DISABLE_CSTATES		0xf
++#define MWAITX_DISABLE_CSTATES		0xf0
  
- 	if (enter)
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -113,8 +113,8 @@ static void delay_mwaitx(unsigned long _
+ 		__monitorx(raw_cpu_ptr(&cpu_tss_rw), 0, 0);
+ 
+ 		/*
+-		 * AMD, like Intel, supports the EAX hint and EAX=0xf
+-		 * means, do not enter any deep C-state and we use it
++		 * AMD, like Intel's MWAIT version, supports the EAX hint and
++		 * EAX=0xf0 means, do not enter any deep C-state and we use it
+ 		 * here in delay() to minimize wakeup latency.
+ 		 */
+ 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
 
 
