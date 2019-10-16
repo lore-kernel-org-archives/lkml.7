@@ -2,103 +2,167 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90A4ECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0179ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746A020873
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F9E20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SfJcnijl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391100AbfJPEoo (ORCPT
+        id S2391178AbfJPEqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 00:44:44 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:59094 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389649AbfJPEon (ORCPT
+        Wed, 16 Oct 2019 00:46:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50834 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391117AbfJPEqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 00:44:43 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46tKTN4W6Pz1rGRY;
-        Wed, 16 Oct 2019 06:44:40 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46tKTN2mm1z1qvrr;
-        Wed, 16 Oct 2019 06:44:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 1VfeJ8X47Ze6; Wed, 16 Oct 2019 06:44:38 +0200 (CEST)
-X-Auth-Info: xwmaVoZ2F5eRtD1d1oRFGlQX+Mzrz5/g6FC4U/BJzf0=
-Received: from [192.168.1.106] (unknown [81.0.126.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 16 Oct 2019 06:44:38 +0200 (CEST)
-Reply-To: hs@denx.de
-Subject: Re: [PATCH 2/2] misc: add support for the cc1101 RF transceiver chip
- from TI
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-References: <20190922060356.58763-1-hs@denx.de>
- <20190922060356.58763-3-hs@denx.de> <20191011064342.GA1045420@kroah.com>
-From:   Heiko Schocher <hs@denx.de>
-Message-ID: <da8890e0-e727-ba2b-bc5e-faad327de4d8@denx.de>
-Date:   Wed, 16 Oct 2019 06:44:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Wed, 16 Oct 2019 00:46:12 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G4k1Q9130349;
+        Tue, 15 Oct 2019 23:46:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571201161;
+        bh=2e1ep+jz9ThULjwuPHURE/WBfxKsgQ0iJmPcL/PVeZo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SfJcnijlf1XwiD6nqRxlO3e9zzuqWTguFxaNWOVio66d/ssT0/dJd4IzEZMiEqzea
+         KRFef42cOE1obpQC6z4BX4mf0X6fh08o33i9nOX+whSfsc1OK5JIeVQqRZuvJSc7ph
+         cP+UWXKr3skoqMbAefp3lWgOo0a1IVNdamID15UA=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G4k1NQ001573
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Oct 2019 23:46:01 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
+ Oct 2019 23:45:54 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 15 Oct 2019 23:46:00 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G4jqTh107770;
+        Tue, 15 Oct 2019 23:45:54 -0500
+Subject: Re: [RFC PATCH 02/21] dt-bindings: PCI: Endpoint: Add DT bindings for
+ PCI EPF Device
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-ntb@googlegroups.com>
+References: <20190926112933.8922-1-kishon@ti.com>
+ <20190926112933.8922-3-kishon@ti.com> <20191015184243.GA10228@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <af3483e0-0533-4b13-64d1-b2cd6fedf514@ti.com>
+Date:   Wed, 16 Oct 2019 10:15:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191011064342.GA1045420@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191015184243.GA10228@bogus>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
 
-Am 11.10.2019 um 08:43 schrieb Greg Kroah-Hartman:
-> On Sun, Sep 22, 2019 at 08:03:56AM +0200, Heiko Schocher wrote:
->> +struct __attribute__ ((packed)) msg_queue_user {
->> +	int	type; /* CC1101_MSG_SET_ */
->> +};
->> +
->> +/* CC1101_MSG_DEFINE_CONFIG */
->> +struct __attribute__ ((packed)) config_param {
->> +	char addr;
->> +	char val;
->> +};
+
+On 16/10/19 12:12 AM, Rob Herring wrote:
+> On Thu, Sep 26, 2019 at 04:59:14PM +0530, Kishon Vijay Abraham I wrote:
+>> Add device tree bindings for PCI endpoint function device. The
+>> nodes for PCI endpoint function device should be attached to
+>> PCI endpoint function bus.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/endpoint/pci-epf.txt         | 28 +++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
 > 
-> {sigh}
+> This and the previous patch for the bus should be combined and please 
+> convert to a schema.
 
-Sorry for that ...
+Sure Rob. Thanks for the review.
 
-> None of these structures are valid ones to be passing to/from
-> userspace/kernel at all.  Please fix them up to work properly (i.e. use
-> the correct types and such).  I think there's a "how to write a correct
-> ioctl" document in the documentation directory somewhere, you might want
-> to search for that.
-
-Ok, the driver does not use ioctl only read/write, but the overall
-question is, has this driver at all a chance to go into mainline?
-
-I searched for "write a correct" in Documentation but get:
-
-$ grep -lr "write a correct" Documentation/
-$
-
-May "Documentation/ioctl/botching-up-ioctls.rst" helps, so I convert
-to use the __u* types, thanks!
-
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
+-Kishon
+> 
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+>> new file mode 100644
+>> index 000000000000..f006395fd526
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+>> @@ -0,0 +1,28 @@
+>> +PCI Endpoint Function Device
+>> +
+>> +This describes the generic bindings to be used when a device has to be
+>> +exposed to the remote host over PCIe. The device could be an actual
+>> +peripheral in the platform or a virtual device created by the software.
+>> +
+>> +epcs : phandle to the endpoint controller device
+>> +epc-names : the names of the endpoint controller device corresponding
+>> +	    to the EPCs present in the *epcs* phandle
+> 
+> Other than the NTB case, I'd expect the parent device to be the 
+> controller. Let's make NTB the exception...
+> 
+> 
+>> +vendor-id: used to identify device manufacturer
+>> +device-id: used to identify a particular device
+>> +baseclass-code: used to classify the type of function the device performs
+>> +subclass-code: used to identify more specifically the function of the device
+> 
+> Are these codes standard?
+> 
+> Powerpc has "class-code" already...
+> 
+>> +subsys-vendor-id: used to identify vendor of the add-in card or subsystem
+> 
+> Powerpc has "subsystem-vendor-id" already...
+> 
+>> +subsys-id: used to specify an id that is specific to a vendor
+>> +
+>> +Example:
+>> +Following is an example of NTB device exposed to the remote host.
+>> +
+>> +ntb {
+> 
+> This is going to need some sort of addressing (which implies 'reg')? If 
+> not, I don't understand why you have 2 levels.
+> 
+>> +	compatible = "pci-epf-ntb";
+>> +	epcs = <&pcie0_ep>, <&pcie1_ep>;
+>> +	epc-names = "primary", "secondary";
+>> +	vendor-id = /bits/ 16 <0x104c>;
+>> +	device-id = /bits/ 16 <0xb00d>;
+> 
+> These have a long history in OF and should be 32-bits (yes, we've let 
+> some cases of 16-bit creep in).
+> 
+>> +	num-mws = <4>;
+> 
+> Doesn't this apply to more than NTB?
+> 
+> Can't you just get the length of 'mws-size'?
+> 
+>> +	mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
+> 
+> Need to support 64-bit sizes?
+> 
+>> +};
+>> -- 
+>> 2.17.1
+>>
