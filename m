@@ -4,65 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80E3ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3C6ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DED620872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C4621E6F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263041;
-	bh=8Em2bsmIAcI/tf3Ihod02Uq15PYbjOQsMAOdNwSUvTk=;
+	s=default; t=1571263050;
+	bh=QnzyiG1RU6k+z3AYzuEm5NDXb59XVvAABJsQUEMmJf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CNVOJ4sjZBaAZuTfmdSgkJhbxX7Xxtx8EeUzXvZxW0d9GNoOvnOJQkvKgWUZsPij
-	 BwrD2rEgxcKBNZotHauNMGKTkeMoj6jqQILvXmCrUfWn8XODXGn+H/4moJgplSk79e
-	 cEF8L/s41tE6Te2xte9ZUQtctRAwRiUE9zeRzZFA=
+	b=n34CA+QUySvwDNzB6rtlll7IjevYrp/WgR43WSWP3GZdHis7/w8OhERzY9TGRgnHs
+	 rERFafzYXGI3CqkRVBmPJOxbRV+8qyMZUDGCm0DzCWe7eSgh+UamjA+5F6P4ygfWuY
+	 hGmOWVcNowBTUGGHFMSJ8mDR9HpjjndmspNlB1Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395462AbfJPV5U (ORCPT
+        id S2391803AbfJPV53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48668 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395417AbfJPV4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:44 -0400
+        id S2437931AbfJPV4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:52 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E8A21D7D;
-        Wed, 16 Oct 2019 21:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3AE8218DE;
+        Wed, 16 Oct 2019 21:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263003;
-        bh=8Em2bsmIAcI/tf3Ihod02Uq15PYbjOQsMAOdNwSUvTk=;
+        s=default; t=1571263011;
+        bh=QnzyiG1RU6k+z3AYzuEm5NDXb59XVvAABJsQUEMmJf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcPXBAAKzTiqlPdXsQ6seV/3ICMFLT4Qpban1IyigTKtBzCfgt5P65YO37F3O3v7L
-         115jhdnO1eOvCapNQ9BaQqyro7pZpDiSZHsimnEjBD2DlbvkVt3NAF4Lug3PEgGRwn
-         a/Nxgs84SkUIknWDgtafhvNOTO2ig+7SHUOFlD0s=
+        b=xN0CGx/EHvmjbCaXeum43DjaegBVQtCklvrofDiPk6ZIsZQaSQ0NARUNMdfEWkWOY
+         WNraNH+VnogbRmIA7jZcfTENtunmnJOcyxNZJe2JFZG+dVJjuEtgnGzBQttiJ2xRbb
+         WUwFYfZZ8oI0iiQG6ntcyb4PrjUv/0eVUH834wr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Talbert <swt@techie.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 43/65] efivar/ssdt: Dont iterate over EFI vars if no SSDT override was specified
-Date:   Wed, 16 Oct 2019 14:50:57 -0700
-Message-Id: <20191016214832.914076532@linuxfoundation.org>
+        stable@vger.kernel.org, Torez Smith <torez@redhat.com>,
+        Bill Kuzeja <william.kuzeja@stratus.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 13/81] xhci: Prevent deadlock when xhci adapter breaks during init
+Date:   Wed, 16 Oct 2019 14:50:24 -0700
+Message-Id: <20191016214818.188637314@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
-References: <20191016214756.457746573@linuxfoundation.org>
+In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
+References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,59 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Bill Kuzeja <William.Kuzeja@stratus.com>
 
-commit c05f8f92b701576b615f30aac31fabdc0648649b upstream.
+commit 8de66b0e6a56ff10dd00d2b0f2ae52e300178587 upstream.
 
-The kernel command line option efivar_ssdt= allows the name to be
-specified of an EFI variable containing an ACPI SSDT table that should
-be loaded into memory by the OS, and treated as if it was provided by
-the firmware.
+The system can hit a deadlock if an xhci adapter breaks while initializing.
+The deadlock is between two threads: thread 1 is tearing down the
+adapter and is stuck in usb_unlocked_disable_lpm waiting to lock the
+hcd->handwidth_mutex. Thread 2 is holding this mutex (while still trying
+to add a usb device), but is stuck in xhci_endpoint_reset waiting for a
+stop or config command to complete. A reboot is required to resolve.
 
-Currently, that code will always iterate over the EFI variables and
-compare each name with the provided name, even if the command line
-option wasn't set to begin with.
+It turns out when calling xhci_queue_stop_endpoint and
+xhci_queue_configure_endpoint in xhci_endpoint_reset, the return code is
+not checked for errors. If the timing is right and the adapter dies just
+before either of these commands get issued, we hang indefinitely waiting
+for a completion on a command that didn't get issued.
 
-So bail early when no variable name was provided. This works around a
-boot regression on the 2012 Mac Pro, as reported by Scott.
+This wasn't a problem before the following fix because we didn't send
+commands in xhci_endpoint_reset:
 
-Tested-by: Scott Talbert <swt@techie.net>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: <stable@vger.kernel.org> # v4.9+
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Fixes: 475fb4e8b2f4 ("efi / ACPI: load SSTDs from EFI variables")
-Link: https://lkml.kernel.org/r/20191002165904.8819-3-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+commit f5249461b504 ("xhci: Clear the host side toggle manually when
+    endpoint is soft reset")
+
+With the patch I am submitting, a duration test which breaks adapters
+during initialization (and which deadlocks with the standard kernel) runs
+without issue.
+
+Fixes: f5249461b504 ("xhci: Clear the host side toggle manually when endpoint is soft reset")
+Cc: <stable@vger.kernel.org> # v4.17+
+Cc: Torez Smith <torez@redhat.com>
+Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
+Signed-off-by: Torez Smith <torez@redhat.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-7-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/efi.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/host/xhci.c |   23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -266,6 +266,9 @@ static __init int efivar_ssdt_load(void)
- 	void *data;
- 	int ret;
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -3065,6 +3065,7 @@ static void xhci_endpoint_reset(struct u
+ 	unsigned int ep_index;
+ 	unsigned long flags;
+ 	u32 ep_flag;
++	int err;
  
-+	if (!efivar_ssdt[0])
-+		return 0;
+ 	xhci = hcd_to_xhci(hcd);
+ 	if (!host_ep->hcpriv)
+@@ -3114,7 +3115,17 @@ static void xhci_endpoint_reset(struct u
+ 		xhci_free_command(xhci, cfg_cmd);
+ 		goto cleanup;
+ 	}
+-	xhci_queue_stop_endpoint(xhci, stop_cmd, udev->slot_id, ep_index, 0);
 +
- 	ret = efivar_init(efivar_ssdt_iter, &entries, true, &entries);
++	err = xhci_queue_stop_endpoint(xhci, stop_cmd, udev->slot_id,
++					ep_index, 0);
++	if (err < 0) {
++		spin_unlock_irqrestore(&xhci->lock, flags);
++		xhci_free_command(xhci, cfg_cmd);
++		xhci_dbg(xhci, "%s: Failed to queue stop ep command, %d ",
++				__func__, err);
++		goto cleanup;
++	}
++
+ 	xhci_ring_cmd_db(xhci);
+ 	spin_unlock_irqrestore(&xhci->lock, flags);
  
- 	list_for_each_entry_safe(entry, aux, &entries, list) {
+@@ -3128,8 +3139,16 @@ static void xhci_endpoint_reset(struct u
+ 					   ctrl_ctx, ep_flag, ep_flag);
+ 	xhci_endpoint_copy(xhci, cfg_cmd->in_ctx, vdev->out_ctx, ep_index);
+ 
+-	xhci_queue_configure_endpoint(xhci, cfg_cmd, cfg_cmd->in_ctx->dma,
++	err = xhci_queue_configure_endpoint(xhci, cfg_cmd, cfg_cmd->in_ctx->dma,
+ 				      udev->slot_id, false);
++	if (err < 0) {
++		spin_unlock_irqrestore(&xhci->lock, flags);
++		xhci_free_command(xhci, cfg_cmd);
++		xhci_dbg(xhci, "%s: Failed to queue config ep command, %d ",
++				__func__, err);
++		goto cleanup;
++	}
++
+ 	xhci_ring_cmd_db(xhci);
+ 	spin_unlock_irqrestore(&xhci->lock, flags);
+ 
 
 
