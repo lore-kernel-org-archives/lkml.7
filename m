@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09585FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CDCFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D279521928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32D720872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263370;
-	bh=ChMHuqbRpVaU38KyVFzayEkPa1F0rqMRKTeJBwbhPE8=;
+	s=default; t=1571263377;
+	bh=PnK/FwqO/xgaKpMwhmCootWXP5GSiD5o327VEuPnSAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7iGTY6cWEv151qHQjyvzeU0LleNv/nUgmachB9eto/aldj9WNBQGFnQIfi4lovSx
-	 J1kTW3P3FVSo/JDtGZnRoa5sWPxoAuPvrkfdnP1PFX99SUnd453mn7sR25nwGQBKUx
-	 TF47rXoZko00uDFPd/uA9ymSSbYxAVxm64rM5TmY=
+	b=dTF2f7IRKeWi3rBvHgNBOWFTak6uppDKYKB+y/JzMLMdU9mxp9tZTfY9hixsKUg+U
+	 VNDCZK2/Pdu6e5BHD4zuBxMj3ZwkEQQxYy59xIhjhSaxS005Q8W3NTVfzNs7grHMOK
+	 F8iwjQ1CZ/cOQqO4kAxoOBv/I3FTL2wu/u93+WkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439038AbfJPWCs (ORCPT
+        id S2406769AbfJPWCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438555AbfJPV7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:59:36 -0400
+        id S2438543AbfJPV7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:33 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D20C218DE;
-        Wed, 16 Oct 2019 21:59:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03406218DE;
+        Wed, 16 Oct 2019 21:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263175;
-        bh=ChMHuqbRpVaU38KyVFzayEkPa1F0rqMRKTeJBwbhPE8=;
+        s=default; t=1571263173;
+        bh=PnK/FwqO/xgaKpMwhmCootWXP5GSiD5o327VEuPnSAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Utfm8B3gejHh3j28hQya7XKgJrSZ8e5Y4jTm7JFOfBJJJP/vcXzCF/VF7vq7ndxiX
-         B/OIvTwTT8Hu/6kaKK8J3CqESZIcfOKGGOOh2lbSpE17jWlsM+D3Ow/hdgRCW0wD3D
-         l0c1MaJX+f+Gl1oH5CeMZIGG1NANIYKSUI4EvjxM=
+        b=qHFNvpQl0Xmm6cmfnhcZoRXg2epyLfudGHEZxOMnOS9s02AkbYCxvbNgLcxsdf7vs
+         vesviiiGKWgzdNtVbzvxgEs95EsoRa667Wz0WC8p73it3acvw63hfnI4kKwJoKvc30
+         +v11HueMIXWvXCpq3IigePQDZS/KnP4h6Dv4PoBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.3 102/112] arm64/sve: Fix wrong free for task->thread.sve_state
-Date:   Wed, 16 Oct 2019 14:51:34 -0700
-Message-Id: <20191016214906.694759736@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 5.3 100/112] drm/msm: Use the correct dma_sync calls harder
+Date:   Wed, 16 Oct 2019 14:51:32 -0700
+Message-Id: <20191016214906.445819351@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -62,123 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+From: Rob Clark <robdclark@chromium.org>
 
-commit 4585fc59c0e813188d6a4c5de1f6976fce461fc2 upstream.
+commit 9f614197c744002f9968e82c649fdf7fe778e1e7 upstream.
 
-The system which has SVE feature crashed because of
-the memory pointed by task->thread.sve_state was destroyed
-by someone.
+Looks like the dma_sync calls don't do what we want on armv7 either.
+Fixes:
 
-That is because sve_state is freed while the forking the
-child process. The child process has the pointer of sve_state
-which is same as the parent's because the child's task_struct
-is copied from the parent's one. If the copy_process()
-fails as an error on somewhere, for example, copy_creds(),
-then the sve_state is freed even if the parent is alive.
-The flow is as follows.
+  Unable to handle kernel paging request at virtual address 50001000
+  pgd = (ptrval)
+  [50001000] *pgd=00000000
+  Internal error: Oops: 805 [#1] SMP ARM
+  Modules linked in:
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc6-00271-g9f159ae07f07 #4
+  Hardware name: Freescale i.MX53 (Device Tree Support)
+  PC is at v7_dma_clean_range+0x20/0x38
+  LR is at __dma_page_cpu_to_dev+0x28/0x90
+  pc : [<c011c76c>]    lr : [<c01181c4>]    psr: 20000013
+  sp : d80b5a88  ip : de96c000  fp : d840ce6c
+  r10: 00000000  r9 : 00000001  r8 : d843e010
+  r7 : 00000000  r6 : 00008000  r5 : ddb6c000  r4 : 00000000
+  r3 : 0000003f  r2 : 00000040  r1 : 50008000  r0 : 50001000
+  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+  Control: 10c5387d  Table: 70004019  DAC: 00000051
+  Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
 
-copy_process
-        p = dup_task_struct
-            => arch_dup_task_struct
-                *dst = *src;  // copy the entire region.
-:
-        retval = copy_creds
-        if (retval < 0)
-                goto bad_fork_free;
-:
-bad_fork_free:
-...
-        delayed_free_task(p);
-          => free_task
-             => arch_release_task_struct
-                => fpsimd_release_task
-                   => __sve_free
-                      => kfree(task->thread.sve_state);
-                         // free the parent's sve_state
-
-Move child's sve_state = NULL and clearing TIF_SVE flag
-to arch_dup_task_struct() so that the child doesn't free the
-parent's one.
-There is no need to wait until copy_process() to clear TIF_SVE for
-dst, because the thread flags for dst are initialized already by
-copying the src task_struct.
-This change simplifies the code, so get rid of comments that are no
-longer needed.
-
-As a note, arm64 used to have thread_info on the stack. So it
-would not be possible to clear TIF_SVE until the stack is initialized.
->From commit c02433dd6de3 ("arm64: split thread_info from task stack"),
-the thread_info is part of the task, so it should be valid to modify
-the flag from arch_dup_task_struct().
-
-Cc: stable@vger.kernel.org # 4.15.x-
-Fixes: bc0ee4760364 ("arm64/sve: Core task context handling")
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-Suggested-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Tested-by: Julien Grall <julien.grall@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: 3de433c5b38a ("drm/msm: Use the correct dma_sync calls in msm_gem")
+Tested-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/process.c |   32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -323,22 +323,27 @@ void arch_release_task_struct(struct tas
- 	fpsimd_release_task(tsk);
- }
- 
--/*
-- * src and dst may temporarily have aliased sve_state after task_struct
-- * is copied.  We cannot fix this properly here, because src may have
-- * live SVE state and dst's thread_info may not exist yet, so tweaking
-- * either src's or dst's TIF_SVE is not safe.
-- *
-- * The unaliasing is done in copy_thread() instead.  This works because
-- * dst is not schedulable or traceable until both of these functions
-- * have been called.
-- */
- int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -50,7 +50,7 @@ static void sync_for_device(struct msm_g
  {
- 	if (current->mm)
- 		fpsimd_preserve_current_state();
- 	*dst = *src;
+ 	struct device *dev = msm_obj->base.dev->dev;
  
-+	/* We rely on the above assignment to initialize dst's thread_flags: */
-+	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
-+
-+	/*
-+	 * Detach src's sve_state (if any) from dst so that it does not
-+	 * get erroneously used or freed prematurely.  dst's sve_state
-+	 * will be allocated on demand later on if dst uses SVE.
-+	 * For consistency, also clear TIF_SVE here: this could be done
-+	 * later in copy_process(), but to avoid tripping up future
-+	 * maintainers it is best not to leave TIF_SVE and sve_state in
-+	 * an inconsistent state, even temporarily.
-+	 */
-+	dst->thread.sve_state = NULL;
-+	clear_tsk_thread_flag(dst, TIF_SVE);
-+
- 	return 0;
- }
+-	if (get_dma_ops(dev)) {
++	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
+ 		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
+ 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	} else {
+@@ -63,7 +63,7 @@ static void sync_for_cpu(struct msm_gem_
+ {
+ 	struct device *dev = msm_obj->base.dev->dev;
  
-@@ -352,13 +357,6 @@ int copy_thread(unsigned long clone_flag
- 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
- 
- 	/*
--	 * Unalias p->thread.sve_state (if any) from the parent task
--	 * and disable discard SVE state for p:
--	 */
--	clear_tsk_thread_flag(p, TIF_SVE);
--	p->thread.sve_state = NULL;
--
--	/*
- 	 * In case p was allocated the same task_struct pointer as some
- 	 * other recently-exited task, make sure p is disassociated from
- 	 * any cpu that may have run that now-exited task recently.
+-	if (get_dma_ops(dev)) {
++	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
+ 		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
+ 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	} else {
 
 
