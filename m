@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CF6ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77157FA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7961321D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443A0222BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263140;
-	bh=4tGlNSxHASXe77fKr/iwjF7Jn4vL/P/jnQ4dXsy18IE=;
+	s=default; t=1571263143;
+	bh=b12KZj4m24KunwpGgNP4b0M2EsXKqxJq5IdkhF8bQHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SiRkr1irR+L1lof/Bg01yihyzxR+wUwgb6zTEf7WC5hcS0eXFcTpfbi82yysJqoE8
-	 fxDBg9r+Ao/YOzu2l8UeahfYYXA8Z/w/ukqZ8SVftREjaHaZ27liMkpxdzSciRjujS
-	 Bypxn3TyNhKlO423CACqYINCclYdAd+DLPaINoKc=
+	b=PA9MY+LK3GybDnYsNBMz1Uv7MInoKLnhjqjp2tAFw5By3YWwKYFEfGLP3RajaabQ2
+	 FXziivkKsRuD5M3ZCRNIPKvnG/NTg1g0qBsNKb/JyXWmqfod0RMNIQlRV1WfRZJE4Q
+	 HtWZwZJ+NM4q2xSfbnqle9cuz4z3Neqo9Bbp9pds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438349AbfJPV67 (ORCPT
+        id S2438363AbfJPV7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51472 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438120AbfJPV6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:10 -0400
+        id S2438125AbfJPV6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:12 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F7021D7C;
-        Wed, 16 Oct 2019 21:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 458FA21D7D;
+        Wed, 16 Oct 2019 21:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263089;
-        bh=4tGlNSxHASXe77fKr/iwjF7Jn4vL/P/jnQ4dXsy18IE=;
+        s=default; t=1571263090;
+        bh=b12KZj4m24KunwpGgNP4b0M2EsXKqxJq5IdkhF8bQHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iimiCU9YHyG4l5ylzBEUdVngre0AFrzKNrCz4/2BsXA83BklKosaOel3ciZCUqFXx
-         n6wqcZjezrwjrjKSftOQnL1Dg4YF95nG0irtYHu3I6hvoRA2t0YjgUt6EsLrPF2YrX
-         OJ0Tmcbz20TP9ArDsiTA/fz8S2rXXCdSeZz3UQuk=
+        b=oJXOdMykflMO2QHmeOedUqnNu4z9gn1iXR98BSO/5OkIc8nMwFxnsP/mXsSTwMG19
+         i5ro3nlsRypcnOmh5Rizmg8lVYgKl+EsYTfMdsYQMZH8im9eeNoEGSljVRKzt14198
+         +7kJbgAvFXm3pCSRqtJsVFulCiUcUQVU/iIDRmoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Lo=C3=AFc=20Yhuel?= <loic.yhuel@gmail.com>,
+        stable@vger.kernel.org, Rick Tseng <rtseng@nvidia.com>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.3 010/112] xhci: Fix USB 3.1 capability detection on early xHCI 1.1 spec based hosts
-Date:   Wed, 16 Oct 2019 14:50:02 -0700
-Message-Id: <20191016214846.596424574@linuxfoundation.org>
+Subject: [PATCH 5.3 011/112] usb: xhci: wait for CNR controller not ready bit in xhci resume
+Date:   Wed, 16 Oct 2019 14:50:03 -0700
+Message-Id: <20191016214846.972983264@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -60,55 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Rick Tseng <rtseng@nvidia.com>
 
-commit 47f50d61076523e1a0d5a070062c2311320eeca8 upstream.
+commit a70bcbc322837eda1ab5994d12db941dc9733a7d upstream.
 
-Early xHCI 1.1 spec did not mention USB 3.1 capable hosts should set
-sbrn to 0x31, or that the minor revision is a two digit BCD
-containing minor and sub-minor numbers.
-This was later clarified in xHCI 1.2.
+NVIDIA 3.1 xHCI card would lose power when moving power state into D3Cold.
+Thus we need to wait for CNR bit to clear in xhci resume, just as in
+xhci init.
 
-Some USB 3.1 capable hosts therefore have sbrn set to 0x30, or minor
-revision set to 0x1 instead of 0x10.
-
-Detect the USB 3.1 capability correctly for these hosts as well
-
-Fixes: ddd57980a0fd ("xhci: detect USB 3.2 capable host controllers correctly")
-Cc: <stable@vger.kernel.org> # v4.18+
-Cc: Loïc Yhuel <loic.yhuel@gmail.com>
+[Minor changes to comment and commit message -Mathias]
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Rick Tseng <rtseng@nvidia.com>
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-5-git-send-email-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/1570190373-30684-6-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/usb/host/xhci.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 --- a/drivers/usb/host/xhci.c
 +++ b/drivers/usb/host/xhci.c
-@@ -5078,11 +5078,18 @@ int xhci_gen_setup(struct usb_hcd *hcd,
- 		hcd->has_tt = 1;
- 	} else {
- 		/*
--		 * Some 3.1 hosts return sbrn 0x30, use xhci supported protocol
--		 * minor revision instead of sbrn. Minor revision is a two digit
--		 * BCD containing minor and sub-minor numbers, only show minor.
-+		 * Early xHCI 1.1 spec did not mention USB 3.1 capable hosts
-+		 * should return 0x31 for sbrn, or that the minor revision
-+		 * is a two digit BCD containig minor and sub-minor numbers.
-+		 * This was later clarified in xHCI 1.2.
-+		 *
-+		 * Some USB 3.1 capable hosts therefore have sbrn 0x30, and
-+		 * minor revision set to 0x1 instead of 0x10.
- 		 */
--		minor_rev = xhci->usb3_rhub.min_rev / 0x10;
-+		if (xhci->usb3_rhub.min_rev == 0x1)
-+			minor_rev = 1;
-+		else
-+			minor_rev = xhci->usb3_rhub.min_rev / 0x10;
+@@ -1108,6 +1108,18 @@ int xhci_resume(struct xhci_hcd *xhci, b
+ 		hibernated = true;
  
- 		switch (minor_rev) {
- 		case 2:
+ 	if (!hibernated) {
++		/*
++		 * Some controllers might lose power during suspend, so wait
++		 * for controller not ready bit to clear, just as in xHC init.
++		 */
++		retval = xhci_handshake(&xhci->op_regs->status,
++					STS_CNR, 0, 10 * 1000 * 1000);
++		if (retval) {
++			xhci_warn(xhci, "Controller not ready at resume %d\n",
++				  retval);
++			spin_unlock_irq(&xhci->lock);
++			return retval;
++		}
+ 		/* step 1: restore register */
+ 		xhci_restore_registers(xhci);
+ 		/* step 2: initialize command ring buffer */
 
 
