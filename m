@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18093C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A3EC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE66920854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B18A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:38:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EmnAyXTC"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Wgi2xGQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733171AbfJPHis (ORCPT
+        id S2387720AbfJPHiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:38:48 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56144 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726354AbfJPHis (ORCPT
+        Wed, 16 Oct 2019 03:38:52 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:10260 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733249AbfJPHiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:38:48 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9G7Z421009054
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:38:47 -0700
+        Wed, 16 Oct 2019 03:38:52 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9G7cn7O023120
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:38:51 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=5XOqhNR1oYjQKzKi/BOcNoUUF5+GyL1uiCud6eTs4WQ=;
- b=EmnAyXTCC6IaOeAylreWmYEFaFaC86iQvxYnsadI7EZPie02NsNcfvea+azo9Xt9MG4d
- XjfuEgwmGc4HQ3oqCzgcMCBlzjqoZJ6CGfTQdTsyzA1Dhmdw6bFgy3NyWVmOHOPXSyKj
- SGAAHPwO0RZBSQRGpIaxvROvBwnWjh7ulDo= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vn8jv60et-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:38:47 -0700
-Received: from 2401:db00:30:6007:face:0:1:0 (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 16 Oct 2019 00:38:45 -0700
+ content-type; s=facebook; bh=MK5hTX7LH355/cYgosDswthYAh0Wy8L1H+d9NWKNNBg=;
+ b=Wgi2xGQETunqs82rEJNJGxZ8bzKMLYxxCIkXSeQ8TXILl2qPzkjHgf+7JNw8VOFLaoyY
+ mnNcVXPH3gf27zy68odhTUAk92vuhcIgDxz/FE9h1QHRE6EKZfZi1Fo88TGg44Klr0dO
+ cA3/zrwRa8fdN3qvv5qrqFxqbQIW0Ebsz6k= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2vna13wfsb-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:38:50 -0700
+Received: from 2401:db00:2120:81ca:face:0:31:0 (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 16 Oct 2019 00:38:43 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 15F5862E2A2F; Wed, 16 Oct 2019 00:38:45 -0700 (PDT)
+        id F17B762E2A2F; Wed, 16 Oct 2019 00:38:42 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -52,9 +52,9 @@ CC:     <matthew.wilcox@oracle.com>, <kernel-team@fb.com>,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH 3/4] mm/thp: allow drop THP from page cache
-Date:   Wed, 16 Oct 2019 00:37:30 -0700
-Message-ID: <20191016073731.4076725-4-songliubraving@fb.com>
+Subject: [PATCH 2/4] mm/thp: fix node page state in split_huge_page_to_list()
+Date:   Wed, 16 Oct 2019 00:37:29 -0700
+Message-ID: <20191016073731.4076725-3-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191016073731.4076725-1-songliubraving@fb.com>
 References: <20191016073731.4076725-1-songliubraving@fb.com>
@@ -63,11 +63,11 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
  definitions=2019-10-16_03:2019-10-15,2019-10-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- mlxlogscore=582 phishscore=0 mlxscore=0 malwarescore=0 clxscore=1015
- suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910160070
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ malwarescore=0 mlxlogscore=981 priorityscore=1501 mlxscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910160071
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,63 +76,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 
-Once a THP is added to the page cache, it cannot be dropped via
-/proc/sys/vm/drop_caches. Fix this issue with proper handling in
-invalidate_mapping_pages() and __remove_mapping().
+Make sure split_huge_page_to_list() handle the state of shmem THP and
+file THP properly.
 
-Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+Fixes: 60fbf0ab5da1 ("mm,thp: stats for file backed THP")
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Tested-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- mm/truncate.c | 12 ++++++++++++
- mm/vmscan.c   |  3 ++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ mm/huge_memory.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 8563339041f6..dd9ebc1da356 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -592,6 +592,16 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
- 					unlock_page(page);
- 					continue;
- 				}
-+
-+				/* Take a pin outside pagevec */
-+				get_page(page);
-+
-+				/*
-+				 * Drop extra pins before trying to invalidate
-+				 * the huge page.
-+				 */
-+				pagevec_remove_exceptionals(&pvec);
-+				pagevec_release(&pvec);
- 			}
- 
- 			ret = invalidate_inode_page(page);
-@@ -602,6 +612,8 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
- 			 */
- 			if (!ret)
- 				deactivate_file_page(page);
-+			if (PageTransHuge(page))
-+				put_page(page);
- 			count += ret;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index c5cb6dcd6c69..13cc93785006 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2789,8 +2789,13 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 			ds_queue->split_queue_len--;
+ 			list_del(page_deferred_list(head));
  		}
- 		pagevec_remove_exceptionals(&pvec);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c6659bb758a4..1d80a188ad4a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -932,7 +932,8 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 	 * Note that if SetPageDirty is always performed via set_page_dirty,
- 	 * and thus under the i_pages lock, then this ordering is not required.
- 	 */
--	if (unlikely(PageTransHuge(page)) && PageSwapCache(page))
-+	if (unlikely(PageTransHuge(page)) &&
-+			(PageSwapCache(page) || !PageSwapBacked(page)))
- 		refcount = 1 + HPAGE_PMD_NR;
- 	else
- 		refcount = 2;
+-		if (mapping)
+-			__dec_node_page_state(page, NR_SHMEM_THPS);
++		if (mapping) {
++			if (PageSwapBacked(page))
++				__dec_node_page_state(page, NR_SHMEM_THPS);
++			else
++				__dec_node_page_state(page, NR_FILE_THPS);
++		}
++
+ 		spin_unlock(&ds_queue->split_queue_lock);
+ 		__split_huge_page(page, list, end, flags);
+ 		if (PageSwapCache(head)) {
 -- 
 2.17.1
 
