@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F880ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22010FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8D121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11C5207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264075;
-	bh=+Xx8dEvgQfqrBHSIOX0sGjnhqv4hoRx4grH9nfmkAtg=;
+	s=default; t=1571264079;
+	bh=xBv6euVUba1KDurWy57fxqcrbRNebHaS6oJgdEzMgek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U0R3VU3NnSxtI0uomsmeno0NiUYK+kTIHFj9R93EVpUlpxRMGqFpqj5YaFCgtNmQv
-	 xcYIDpfjFYC5L+MQRAK8T7sedlUDnBt49DBBdHvD9AmKmBI/jdYJbnDq4kp8UVuG0y
-	 imoMU9ibL8wpKKLA5k7JItxSkuxHHqtaJ7xbUxIk=
+	b=a2sv+zmOG7mMD7e+frL6tpP3VvIcFFKdiFFYppS0/VGxaBYxFTkAdwmDeq4Rjbwuc
+	 Z5V+dZ/EUdBb4mBTcaw9hRzds0xkkRci5ZSXHCJNElDPysMfU3Zd/D0JaVHt8L6ncT
+	 q76vKPOi9OSF/uJ/V9aHjO8Mb/5t5eSnmFibCll4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395294AbfJPVzk (ORCPT
+        id S2439342AbfJPWOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395252AbfJPVzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:33 -0400
+        id S2395295AbfJPVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:40 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ABBA21D7F;
-        Wed, 16 Oct 2019 21:55:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 026C3218DE;
+        Wed, 16 Oct 2019 21:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262932;
-        bh=+Xx8dEvgQfqrBHSIOX0sGjnhqv4hoRx4grH9nfmkAtg=;
+        s=default; t=1571262940;
+        bh=xBv6euVUba1KDurWy57fxqcrbRNebHaS6oJgdEzMgek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIIpjv+fGVWGMJRJ7NLrZloPPGEAQZfDEO1HeEw2/Xm7uaIXi7yW87Hfg296YDzPq
-         VTjYALCcJ0spv5GOexF1EbbSyIV3sn/Xedl7PYcsoQt92QrABhsTE9WTNTU/VOVnoU
-         QcreUb7kXbVWH+3p7qniuNhK7mIbs/Y08bBdUqBI=
+        b=QjsUCSBj2eWSY6bS4L7+QsOdals9XxAKH/O4XCzy9oFQDBfDRlgxyfsOENdOFxXW8
+         7TBbfAf4ygD+fsNEoVaUHVU/HX/zfdba4IeaxZQwkN7Bs7unhtoXBhlqfu6bwWBoEx
+         wHhurZX8unvzXDNUEz5j8W2o7+kEhilSnOHIhUCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 4.9 92/92] xfs: clear sb->s_fs_info on mount failure
-Date:   Wed, 16 Oct 2019 14:51:05 -0700
-Message-Id: <20191016214849.217245343@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Schmidt <jan@centricular.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 10/65] xhci: Check all endpoints for LPM timeout
+Date:   Wed, 16 Oct 2019 14:50:24 -0700
+Message-Id: <20191016214804.034964188@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
-References: <20191016214759.600329427@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,78 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Jan Schmidt <jan@centricular.com>
 
-commit c9fbd7bbc23dbdd73364be4d045e5d3612cf6e82 upstream.
+commit d500c63f80f2ea08ee300e57da5f2af1c13875f5 upstream.
 
-We recently had an oops reported on a 4.14 kernel in
-xfs_reclaim_inodes_count() where sb->s_fs_info pointed to garbage
-and so the m_perag_tree lookup walked into lala land.
+If an endpoint is encountered that returns USB3_LPM_DEVICE_INITIATED, keep
+checking further endpoints, as there might be periodic endpoints later
+that return USB3_LPM_DISABLED due to shorter service intervals.
 
-Essentially, the machine was under memory pressure when the mount
-was being run, xfs_fs_fill_super() failed after allocating the
-xfs_mount and attaching it to sb->s_fs_info. It then cleaned up and
-freed the xfs_mount, but the sb->s_fs_info field still pointed to
-the freed memory. Hence when the superblock shrinker then ran
-it fell off the bad pointer.
+Without this, the code can set too high a maximum-exit-latency and
+prevent the use of multiple USB3 cameras that should be able to work.
 
-With the superblock shrinker problem fixed at teh VFS level, this
-stale s_fs_info pointer is still a problem - we use it
-unconditionally in ->put_super when the superblock is being torn
-down, and hence we can still trip over it after a ->fill_super
-call failure. Hence we need to clear s_fs_info if
-xfs-fs_fill_super() fails, and we need to check if it's valid in
-the places it can potentially be dereferenced after a ->fill_super
-failure.
-
-Signed-Off-By: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jan Schmidt <jan@centricular.com>
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-4-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/xfs/xfs_super.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
 
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1674,6 +1674,7 @@ xfs_fs_fill_super(
-  out_close_devices:
- 	xfs_close_devices(mp);
-  out_free_fsname:
-+	sb->s_fs_info = NULL;
- 	xfs_free_fsname(mp);
- 	kfree(mp);
-  out:
-@@ -1691,6 +1692,10 @@ xfs_fs_put_super(
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
+---
+ drivers/usb/host/xhci.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4491,12 +4491,12 @@ static int xhci_update_timeout_for_endpo
+ 	alt_timeout = xhci_call_host_update_timeout_for_endpoint(xhci, udev,
+ 		desc, state, timeout);
  
-+	/* if ->fill_super failed, we have no mount to tear down */
-+	if (!sb->s_fs_info)
-+		return;
-+
- 	xfs_notice(mp, "Unmounting Filesystem");
- 	xfs_filestream_unmount(mp);
- 	xfs_unmountfs(mp);
-@@ -1700,6 +1705,8 @@ xfs_fs_put_super(
- 	xfs_destroy_percpu_counters(mp);
- 	xfs_destroy_mount_workqueues(mp);
- 	xfs_close_devices(mp);
-+
-+	sb->s_fs_info = NULL;
- 	xfs_free_fsname(mp);
- 	kfree(mp);
- }
-@@ -1719,6 +1726,9 @@ xfs_fs_nr_cached_objects(
- 	struct super_block	*sb,
- 	struct shrink_control	*sc)
- {
-+	/* Paranoia: catch incorrect calls during mount setup or teardown */
-+	if (WARN_ON_ONCE(!sb->s_fs_info))
-+		return 0;
- 	return xfs_reclaim_inodes_count(XFS_M(sb));
- }
- 
+-	/* If we found we can't enable hub-initiated LPM, or
++	/* If we found we can't enable hub-initiated LPM, and
+ 	 * the U1 or U2 exit latency was too high to allow
+-	 * device-initiated LPM as well, just stop searching.
++	 * device-initiated LPM as well, then we will disable LPM
++	 * for this device, so stop searching any further.
+ 	 */
+-	if (alt_timeout == USB3_LPM_DISABLED ||
+-			alt_timeout == USB3_LPM_DEVICE_INITIATED) {
++	if (alt_timeout == USB3_LPM_DISABLED) {
+ 		*timeout = alt_timeout;
+ 		return -E2BIG;
+ 	}
 
 
