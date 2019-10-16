@@ -2,75 +2,147 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FB0FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E15FFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C25C21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B27321A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRiX8SNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436517AbfJPSQp (ORCPT
+        id S2404890AbfJPSTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:16:45 -0400
-Received: from mga04.intel.com ([192.55.52.120]:44700 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732537AbfJPSQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:16:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 11:16:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
-   d="scan'208";a="202145476"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2019 11:16:42 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iKnqk-000DNQ-GY; Thu, 17 Oct 2019 02:16:42 +0800
-Date:   Thu, 17 Oct 2019 02:16:17 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     kbuild-all@lists.01.org, Joerg Roedel <jroedel@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH linux-next] iommu: Add gfp parameter to iommu_ops::
- __iommu_map() can be static
-Message-ID: <20191016181617.re56kjwb6waohm43@332d0cec05f4>
-References: <201910170219.0Cpe09fn%lkp@intel.com>
+        Wed, 16 Oct 2019 14:19:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34063 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732498AbfJPSTn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 14:19:43 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j19so25048057lja.1;
+        Wed, 16 Oct 2019 11:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wPowFu6H3nOXwpA2SAGf8+Ty4xoSESLjQljnj6+VTvY=;
+        b=PRiX8SNuyKlCxJxEtvTHgnt3YZN5FzALlfYjrf3LzguNTrX6Hx1Bc6k3/r7hM84h60
+         swXGAi7Wefb/K+/7reCOQ313MhBK/vYVjvJjbVPWC4nVvcVu7/+E+KO5sbgSnI9hZvoN
+         CxSYNmtOJ4b0zTRj9j0Cx/dM66UBF3O5+BhnwXNePiUk+Q77zSovIU8q2L+h+oJrI3hb
+         rhj9lGNCpUYmfWXLPZXW/ppFQg4B/rIWR/hNU+C7+hwcDOcZfIHvzquehGGG2zKH7BDC
+         CDxhmzjrZn86xruVmB5e9JAg3Poz1R4ukjgcZ4aAoWJcNTc0z+F2J5Ky2z14dyol0Koz
+         ppbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wPowFu6H3nOXwpA2SAGf8+Ty4xoSESLjQljnj6+VTvY=;
+        b=FUWvTUIJLC6RnnJCj74Furh0UozixeocIB3I1VstObuzs8oPQQfyda/74nLuctj46Q
+         vepFQmQi46pPW4wi+owFmtXUwTfAQSvtoW8BRKYreoOvWsVi1gAPn9uisF5WS9YbnNSM
+         yfE96u9z8O6ykyPFKDOqXpKKlyzOH67hMwYG9+rdi9YB54NbWXXkLQr1L2rY7cbIiImO
+         Bjm8i3xDpgauGw6ntGiaAWWe4oI7UG+k7JMbgVuHZtSPWPmR7t3HPo9Ys6R5YkhTWwzp
+         uPw+r+A8EQOqqExSMQ19vZmg/SA2ez+H0K2Ht9YqUxOI77sI5hqju4DHfVyJGSnKLeAf
+         8uXQ==
+X-Gm-Message-State: APjAAAWOqD6VX/JQmB9WPd9ZXs52AiS8RDgVpD7NA2xwS8Kfx1b7iHSU
+        LaPcLAnQn5uXs+/2CkpPe7bL8tq4
+X-Google-Smtp-Source: APXvYqxoJ/NW8A7QBs/GSZGE2wRbJU36T6N4cFKKZYlqR1WkN283xHFFSDChw09XU4/z7SP1mxVjfA==
+X-Received: by 2002:a2e:9e85:: with SMTP id f5mr23834443ljk.235.1571249980609;
+        Wed, 16 Oct 2019 11:19:40 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id x25sm6846332ljb.60.2019.10.16.11.19.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Oct 2019 11:19:39 -0700 (PDT)
+Subject: Re: [PATCH v1 07/17] cpufreq: tegra20: Use generic cpufreq-dt driver
+ (Tegra30 supported now)
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015211618.20758-1-digetx@gmail.com>
+ <20191015211618.20758-8-digetx@gmail.com>
+ <20191016051802.rrxv56vtvxfm6qqe@vireshk-i7>
+ <13a9ebd6-8dce-0217-d306-defb8eb6fb96@gmail.com>
+ <CAMdYzYoasuEobJLC4RLW_5WCNGnaKtTth0xKov0tUQuDhkX3EA@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b4eca03d-f86c-8e07-e04a-612e02820bd0@gmail.com>
+Date:   Wed, 16 Oct 2019 21:19:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201910170219.0Cpe09fn%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAMdYzYoasuEobJLC4RLW_5WCNGnaKtTth0xKov0tUQuDhkX3EA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+16.10.2019 17:58, Peter Geis пишет:
+> On Wed, Oct 16, 2019 at 9:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 16.10.2019 08:18, Viresh Kumar пишет:
+>>> On 16-10-19, 00:16, Dmitry Osipenko wrote:
+>>>> Re-parenting to intermediate clock is supported now by the clock driver
+>>>> and thus there is no need in a customized CPUFreq driver, all that code
+>>>> is common for both Tegra20 and Tegra30. The available CPU freqs are now
+>>>> specified in device-tree in a form of OPPs, all users should update their
+>>>> device-trees.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/cpufreq/Kconfig.arm          |   4 +-
+>>>>  drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
+>>>>  drivers/cpufreq/tegra20-cpufreq.c    | 236 ++++++---------------------
+>>>>  3 files changed, 55 insertions(+), 187 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>>>> index a905796f7f85..2118c45d0acd 100644
+>>>> --- a/drivers/cpufreq/Kconfig.arm
+>>>> +++ b/drivers/cpufreq/Kconfig.arm
+>>>> @@ -301,8 +301,8 @@ config ARM_TANGO_CPUFREQ
+>>>>      default y
+>>>>
+>>>>  config ARM_TEGRA20_CPUFREQ
+>>>> -    tristate "Tegra20 CPUFreq support"
+>>>> -    depends on ARCH_TEGRA
+>>>> +    bool "Tegra20 CPUFreq support"
+>>>
+>>> Google is currently working on the GKI (generic kernel image) project where they
+>>> want to use a single kernel image with modules for all kind of android devices.
+>>> And for that they need all such drivers to be built as module. Since this is
+>>> already an module, I would ask you to keep it as is instead of moving it to bool
+>>> here. Else some google guy will switch it back as module later on.
+>>>
+>>> LGTM otherwise. Nice work. Thanks.
+>>>
+>>
+>> Okay, I'll keep the modularity in v2.
+>>
+>> Although, tegra20-cpufreq isn't a driver anymore because now it merely
+>> prepares OPP table for the cpufreq-dt driver, which is really a one-shot
+>> action that is enough to do during boot and thus modularity is a bit
+>> redundant here.
+> 
+> I doubt Google will care much, since Android has moved on to aarch64.
+> Do they even support arm32 any more?
 
-Fixes: 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- iommu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index f8853dbf1c4eb..89bfdbbfaa11b 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1854,7 +1854,7 @@ static size_t iommu_pgsize(struct iommu_domain *domain,
- 	return pgsize;
- }
- 
--int __iommu_map(struct iommu_domain *domain, unsigned long iova,
-+static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
- 	      phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
- {
- 	const struct iommu_ops *ops = domain->ops;
+Yes, I don't think there is a real need to care about Google. They won't
+use pure upstream and won't care about older hardware any ways.
