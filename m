@@ -2,124 +2,209 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E91DC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC45C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632D821D80
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696662168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijBxkcdl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hahLTPEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404390AbfJPJy4 (ORCPT
+        id S2404399AbfJPJzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:54:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45991 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbfJPJyx (ORCPT
+        Wed, 16 Oct 2019 05:55:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33020 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbfJPJzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:54:53 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q64so23301639ljb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 02:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bZoZqPU58/r7tmZ5PSLpDxdfOuQtypWPAK4xAcMDbso=;
-        b=ijBxkcdl1C3p3Gf7uWxe52LorIx/LjRVkwiJGk0CWquv3ePAFCZEe2wexe2Fz3JwPO
-         esV4vb9Z4BI9Pngz2wu8YntDZSLjS9aeJKg33rADix7xL2qvVJEbliL8UkQYb2oodX/c
-         nTFchhA2yD3GZXz7ytWbJY46syb/wzIKfh4MTYpfxArMLUOUe7dKXBE0yiyCYg9jS2YC
-         SVTMBbaErQHePI585OlSi5XYmCK7LdQH3/ZYv7xon+fhEyTE2UK02EmGZwX+M7J/D5wL
-         L+JIgM6+u7B2SbK9HioC8RlEabIcuXU0yWorEcyOtH9xhbt2n0flhgdI2OCdcRwHR9+c
-         veTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bZoZqPU58/r7tmZ5PSLpDxdfOuQtypWPAK4xAcMDbso=;
-        b=s+VItEuxRPK2YFBpcs6JH533v4XUjeDfQiIJwUZJjU0uZk3zBA+NrXG28IaGTp+RM5
-         jiz2mQOy9RF6ThWcf/qcvu00J/SxJHIyZB/3l82MiixNwvE98ZA8LBhKtY0XoJieVXPv
-         hL3bTmS2ykPN5glpYtoCQH7aJaHTyfIBxQeMKHZ4iB5gBlsuCNr75XQr1/y9w6V+xPf4
-         ZmywlxQtTY/3bHWmYZTsK2gH/rsky4m4+59GsEU+YhoKhmsC8woYDU8nMLEPMpsgkP+y
-         OelpwpGVbKc7HQwC40Bu5eSFbUwkGFHRGycBD1k7CIIDg+p/rVMoruHaWzmbT2eQMqpX
-         Me7Q==
-X-Gm-Message-State: APjAAAUT/vYR8tgA4ozXNHOysc1o2ufW4Qor8KIiULOHBCjjhvla6lL3
-        LrKaBrni8dppFZ+y5qSXpRo=
-X-Google-Smtp-Source: APXvYqzPH+636QBSKvduXVSag2KSoZKJjqlR0+ZPMMRfitxESnYfCgGkOEj80hsD56wUCQvi6U1GZw==
-X-Received: by 2002:a2e:9bcb:: with SMTP id w11mr24632508ljj.11.1571219690788;
-        Wed, 16 Oct 2019 02:54:50 -0700 (PDT)
-Received: from pc636.semobile.internal ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id b2sm886452lfq.27.2019.10.16.02.54.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 02:54:50 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v3 3/3] mm/vmalloc: add more comments to the adjust_va_to_fit_type()
-Date:   Wed, 16 Oct 2019 11:54:38 +0200
-Message-Id: <20191016095438.12391-3-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191016095438.12391-1-urezki@gmail.com>
-References: <20191016095438.12391-1-urezki@gmail.com>
+        Wed, 16 Oct 2019 05:55:15 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G9sfBB080644;
+        Wed, 16 Oct 2019 04:54:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571219681;
+        bh=ilvmorCMdYLV72y3iRRl828Fp9lD2xDungHZT0n9FRU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hahLTPEGxEbDd5g7fTyGMLIpHg87uMKwqP4+TlO2o7Og00hHuXZSfrhRQ8fLCJFnE
+         uQ/gjBdIqAvGGdUsHS9OZZQWqhWv+P6c9FQ4cliyE8hOUyqQx8aPt+0pL+fUFV/Fjl
+         0E19L8NAJbj1G5dnD4nzw6qUkHWcs5tBFnp9Rt5M=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G9sfxC105364
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 04:54:41 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 04:54:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 04:54:40 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G9scFD113224;
+        Wed, 16 Oct 2019 04:54:39 -0500
+Subject: Re: [PATCH 1/2] usb: cdns3: fix cdns3_core_init_role()
+To:     Pawel Laszczak <pawell@cadence.com>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191007121601.25996-1-rogerq@ti.com>
+ <20191007121601.25996-2-rogerq@ti.com>
+ <BYAPR07MB470974496C7C59FDE615E5F3DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <715c8f74-2790-6546-66ae-c0aea53946ed@ti.com>
+ <BYAPR07MB470923F80C4B49D26291B268DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <3d2e7110-448f-d847-7668-bb20d7e03d22@ti.com>
+Date:   Wed, 16 Oct 2019 12:54:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR07MB470923F80C4B49D26291B268DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When fit type is NE_FIT_TYPE there is a need in one extra object.
-Usually the "ne_fit_preload_node" per-CPU variable has it and
-there is no need in GFP_NOWAIT allocation, but there are exceptions.
 
-This commit just adds more explanations, as a result giving
-answers on questions like when it can occur, how often, under
-which conditions and what happens if GFP_NOWAIT gets failed.
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/vmalloc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+On 16/10/2019 12:38, Pawel Laszczak wrote:
+>>
+>>
+>> Hi Pawel,
+>>
+>> On 16/10/2019 07:32, Pawel Laszczak wrote:
+>>> Hi Roger
+>>>
+>>>>
+>>>> At startup we should trigger the HW state machine
+>>>> only if it is OTG mode. Otherwise we should just
+>>>> start the respective role.
+>>>>
+>>>> Initialize idle role by default. If we don't do this then
+>>>> cdns3_idle_role_stop() is not called when switching to
+>>>> host/device role and so lane switch mechanism
+>>>> doesn't work. This results to super-speed device not working
+>>>> in one orientation if it was plugged before driver probe.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>>>> ---
+>>>> drivers/usb/cdns3/core.c | 20 +++++++++++++++++++-
+>>>> 1 file changed, 19 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+>>>> index 06f1e105be4e..1109dc5a4c39 100644
+>>>> --- a/drivers/usb/cdns3/core.c
+>>>> +++ b/drivers/usb/cdns3/core.c
+>>>> @@ -160,10 +160,28 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
+>>>> 	if (ret)
+>>>> 		goto err;
+>>>>
+>>>> -	if (cdns->dr_mode != USB_DR_MODE_OTG) {
+>>>> +	/* Initialize idle role to start with */
+>>>> +	ret = cdns3_role_start(cdns, USB_ROLE_NONE);
+>>>> +	if (ret)
+>>>> +		goto err;
+>>>> +
+>>>> +	switch (cdns->dr_mode) {
+>>>> +	case USB_DR_MODE_UNKNOWN:
+>>>
+>>> One note in this place. USB_DR_MODE_UNKNOWN is not possible in this place.
+>>> If cdns->dr_mode will be USB_DR_MODE_UNKNOWN then driver returns -EINVAL
+>>
+>> At which place? I could not find.
+> 
+> In this patch we can't see this line:
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/usb/cdns3/core.c#L159
+> There is called  cdns3_drd_update_mode(cdns);
+> 
+> int cdns3_drd_update_mode(struct cdns3 *cdns)
+> {
+> 	int ret = 0;
+> 
+> 	switch (cdns->dr_mode) {
+> 	case USB_DR_MODE_PERIPHERAL:
+> 		ret = cdns3_set_mode(cdns, USB_DR_MODE_PERIPHERAL);
+> 		break;
+> 	case USB_DR_MODE_HOST:
+> 		ret = cdns3_set_mode(cdns, USB_DR_MODE_HOST);
+> 		break;
+> 	case USB_DR_MODE_OTG:
+> 		ret = cdns3_init_otg_mode(cdns);
+> 		break;
+> 	default:
+> 		dev_err(cdns->dev, "Unsupported mode of operation %d\n",
+> 			cdns->dr_mode);
+> 		return -EINVAL;
+> 	}
+> 
+> 	return ret;
+> }
+> 
+> After calling cdns3_drd_update_mode  we have 2 first lines from this patch
+> 	if (ret)
+> 		goto err;
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 593bf554518d..2290a0d270e4 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -969,6 +969,19 @@ adjust_va_to_fit_type(struct vmap_area *va,
- 			 * There are a few exceptions though, as an example it is
- 			 * a first allocation (early boot up) when we have "one"
- 			 * big free space that has to be split.
-+			 *
-+			 * Also we can hit this path in case of regular "vmap"
-+			 * allocations, if "this" current CPU was not preloaded.
-+			 * See the comment in alloc_vmap_area() why. If so, then
-+			 * GFP_NOWAIT is used instead to get an extra object for
-+			 * split purpose. That is rare and most time does not
-+			 * occur.
-+			 *
-+			 * What happens if an allocation gets failed. Basically,
-+			 * an "overflow" path is triggered to purge lazily freed
-+			 * areas to free some memory, then, the "retry" path is
-+			 * triggered to repeat one more time. See more details
-+			 * in alloc_vmap_area() function.
- 			 */
- 			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
- 			if (!lva)
+I see now. I will update this patch to error out if dr_mode is USB_DR_MODE_UNKNOWN.
+Thanks.
+
+cheers,
+-roger
+
+> 
+> Pawel
+>>
+>>> some line before after returning form cdns3_drd_update_mode and in consequence
+>>> it jump to err label.
+>>>
+>>> Maybe for better readability it this condition should be treated here also as error.
+>>>
+>>>> +	case USB_DR_MODE_OTG:
+>>>> 		ret = cdns3_hw_role_switch(cdns);
+>>>> 		if (ret)
+>>>> 			goto err;
+>>>> +		break;
+>>>> +	case USB_DR_MODE_PERIPHERAL:
+>>>> +		ret = cdns3_role_start(cdns, USB_ROLE_DEVICE);
+>>>> +		if (ret)
+>>>> +			goto err;
+>>>> +		break;
+>>>> +	case USB_DR_MODE_HOST:
+>>>> +		ret = cdns3_role_start(cdns, USB_ROLE_HOST);
+>>>> +		if (ret)
+>>>> +			goto err;
+>>>> +		break;
+>>>> 	}
+>>>>
+>>>> 	return ret;
+>>>
+>>> Reviewed-by: Pawel Laszczak <pawell@cadence.com>
+>>> Tested-by: Pawel Laszczak <pawell@cadence.com>
+>>>
+>>> --
+>>> Regards,
+>>> Pawel
+>>>
+>>
+>> --
+>> cheers,
+>> -roger
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
 -- 
-2.20.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
