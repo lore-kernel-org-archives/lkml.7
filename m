@@ -2,131 +2,156 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0382AFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F2FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28D6205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="o14jG9dc";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="o14jG9dc"
+	by mail.kernel.org (Postfix) with ESMTP id DEE6E205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393123AbfJPMeQ (ORCPT
+        id S2391234AbfJPMgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:34:16 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55966 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733070AbfJPMeQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:34:16 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 95DF98EE0CC;
-        Wed, 16 Oct 2019 05:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571229255;
-        bh=DLovgWcYpoVQPuDx5Rz7kbFf0gXtdi0u6vI43N1Bp0g=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=o14jG9dc+ikKCo66qGBQlCFm7kBAJKESbhF9cGoKLps4Qdla9QfbpwQZTQdxwy4pr
-         Ie8/keP0YBtAJc2dqVABjG8Bk+7XZ8GO0TIJNzabgoJEmWxtYSrJ6FVvTTQf0x74lS
-         fmlDUGpZZHSpfBzrcxRH1i4cN9PklcmjSLJN2XEM=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MeFCJHFdFf8g; Wed, 16 Oct 2019 05:34:15 -0700 (PDT)
-Received: from [192.168.100.84] (unknown [24.246.103.29])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 16 Oct 2019 08:36:51 -0400
+Received: from mx2a.mailbox.org ([80.241.60.219]:62423 "EHLO mx2a.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbfJPMgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:36:51 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 61D5F8EE02B;
-        Wed, 16 Oct 2019 05:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1571229255;
-        bh=DLovgWcYpoVQPuDx5Rz7kbFf0gXtdi0u6vI43N1Bp0g=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=o14jG9dc+ikKCo66qGBQlCFm7kBAJKESbhF9cGoKLps4Qdla9QfbpwQZTQdxwy4pr
-         Ie8/keP0YBtAJc2dqVABjG8Bk+7XZ8GO0TIJNzabgoJEmWxtYSrJ6FVvTTQf0x74lS
-         fmlDUGpZZHSpfBzrcxRH1i4cN9PklcmjSLJN2XEM=
-Message-ID: <1571229252.3477.7.camel@HansenPartnership.com>
-Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Wed, 16 Oct 2019 08:34:12 -0400
-In-Reply-To: <20191016110031.GE10184@linux.intel.com>
-References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
-         <20191004182711.GC6945@linux.intel.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
-         <20191007000520.GA17116@linux.intel.com>
-         <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
-         <20191008234935.GA13926@linux.intel.com>
-         <20191008235339.GB13926@linux.intel.com>
-         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
-         <20191014190033.GA15552@linux.intel.com>
-         <1571081397.3728.9.camel@HansenPartnership.com>
-         <20191016110031.GE10184@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx2a.mailbox.org (Postfix) with ESMTPS id 77995A342B;
+        Wed, 16 Oct 2019 14:36:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id tTmkL1ywM9Xd; Wed, 16 Oct 2019 14:36:44 +0200 (CEST)
+Date:   Wed, 16 Oct 2019 23:36:30 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, christian@brauner.io, keescook@chromium.org,
+        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usercopy: Avoid soft lockups in
+ test_check_nonzero_user()
+Message-ID: <20191016123630.xxrw7ps5lddnscti@yavin.dot.cyphar.com>
+References: <20191011022447.24249-1-mpe@ellerman.id.au>
+ <20191016122732.13467-1-mpe@ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="stviwchrcmtw4mh2"
+Content-Disposition: inline
+In-Reply-To: <20191016122732.13467-1-mpe@ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-16 at 14:00 +0300, Jarkko Sakkinen wrote:
-> On Mon, Oct 14, 2019 at 12:29:57PM -0700, James Bottomley wrote:
-> > The job of the in-kernel rng is simply to produce a mixed entropy
-> > pool from which we can draw random numbers.  The idea is that quite
-> > a few attackers have identified the rng as being a weak point in
-> > the security architecture of the kernel, so if we mix entropy from
-> > all the sources we have, you have to compromise most of them to
-> > gain some predictive power over the rng sequence.
-> 
-> The documentation says that krng is suitable for key generation.
-> Should the documentation changed to state that it is unsuitable?
 
-How do you get that from the argument above?  The krng is about the
-best we have in terms of unpredictable key generation, so of course it
-is suitable ... provided you give the entropy enough time to have
-sufficient entropy.  It's also not foolproof ... Bernstein did a
-speculation about how you could compromise all our input sources for
-entropy.  However the more sources we have the more difficult the
-compromise becomes.
+--stviwchrcmtw4mh2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > The point is not how certified the TPM RNG is, the point is that
-> > it's a single source and if we rely on it solely for some
-> > applications, like trusted keys, then it gives the attackers a
-> > single known point to go after.  This may be impossible for script
-> > kiddies, but it won't be for nation states ... are you going to
-> > exclusively trust the random number you got from your chinese
-> > certified TPM?
-> 
-> I'd suggest approach where TPM RNG result is xored with krng result.
+On 2019-10-16, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> On a machine with a 64K PAGE_SIZE, the nested for loops in
+> test_check_nonzero_user() can lead to soft lockups, eg:
+>=20
+>   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
+>   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum =
+virtio_balloon ip_tables x_tables autofs4
+>   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gc=
+c-8.2.0-00001-gf5a1a536fa14-dirty #1151
+>   ...
+>   NIP __might_sleep+0x20/0xc0
+>   LR  __might_fault+0x40/0x60
+>   Call Trace:
+>     check_zeroed_user+0x12c/0x200
+>     test_user_copy_init+0x67c/0x1210 [test_user_copy]
+>     do_one_initcall+0x60/0x340
+>     do_init_module+0x7c/0x2f0
+>     load_module+0x2d94/0x30e0
+>     __do_sys_finit_module+0xc8/0x150
+>     system_call+0x5c/0x68
+>=20
+> Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
+> tweak it to only scan a 1024 byte region, but make it cross the
+> page boundary.
+>=20
+> Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+> Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 
-reversible ciphers are generally frowned upon in random number
-generation, that's why the krng uses chacha20.  In general I think we
-shouldn't try to code our own mixing and instead should get the krng to
-do it for us using whatever the algorithm du jour that the crypto guys
-have blessed is.  That's why I proposed adding the TPM output to the
-krng as entropy input and then taking the output of the krng.
+Thanks Michael.
 
-James
+Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
 
-> > Remember also that the attack doesn't have to be to the TPM only,
-> > it could be the pathway by which we get the random number, which
-> > involves components outside of the TPM certification.
-> 
-> Yeah, I do get this.
-> 
-> /Jarkko
-> 
+> ---
+>  lib/test_user_copy.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+>=20
+> v2: Rework calculation to just use PAGE_SIZE directly.
+>     Rebase onto Christian's tree.
+>=20
+> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+> index ad2372727b1b..5ff04d8fe971 100644
+> --- a/lib/test_user_copy.c
+> +++ b/lib/test_user_copy.c
+> @@ -47,9 +47,25 @@ static bool is_zeroed(void *from, size_t size)
+>  static int test_check_nonzero_user(char *kmem, char __user *umem, size_t=
+ size)
+>  {
+>  	int ret =3D 0;
+> -	size_t start, end, i;
+> -	size_t zero_start =3D size / 4;
+> -	size_t zero_end =3D size - zero_start;
+> +	size_t start, end, i, zero_start, zero_end;
+> +
+> +	if (test(size < 2 * PAGE_SIZE, "buffer too small"))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * We want to cross a page boundary to exercise the code more
+> +	 * effectively. We also don't want to make the size we scan too large,
+> +	 * otherwise the test can take a long time and cause soft lockups. So
+> +	 * scan a 1024 byte region across the page boundary.
+> +	 */
+> +	size =3D 1024;
+> +	start =3D PAGE_SIZE - (size / 2);
+> +
+> +	kmem +=3D start;
+> +	umem +=3D start;
+> +
+> +	zero_start =3D size / 4;
+> +	zero_end =3D size - zero_start;
+> =20
+>  	/*
+>  	 * We conduct a series of check_nonzero_user() tests on a block of
+> --=20
+> 2.21.0
+>=20
 
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--stviwchrcmtw4mh2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXacOywAKCRCdlLljIbnQ
+EjunAPwLT7OICYkWWCIWoyKSKO1WnDSAl2fybcz9swr6rtyU9wEA4DqowbsTnje6
+s3FRWj7E/3ijrEYKiOgqxM4TXu373Ak=
+=xkKe
+-----END PGP SIGNATURE-----
+
+--stviwchrcmtw4mh2--
