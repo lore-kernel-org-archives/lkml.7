@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D63ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C51ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F713207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05556207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264221;
-	bh=V4BRBRezsqDW9FCesNNYVtuI0Ud45BnOrAw/VPLoSY4=;
+	s=default; t=1571264224;
+	bh=UkZPZ2JHlM6NKJARZYfHgZ9GaZEYDT2KLd81t2jjAu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HT6/x1HQWWe5SmSDmixXEtrc9XLiQS9bKDOtgnoY3lJx7+ABBLdGNSsFYDefSnSO0
-	 R+B0qsV9td5KZU8h47bCYdEACMxdyji3goOAfrDSQ1MDEbyrIiBeHNkLVGy9J0HJZb
-	 f3WLu/xBiRfgB0O7DScwjljCS8I7sXN705OLUYTU=
+	b=jvS4DdsOnz5suCR4VJBWIqbVdNseES42/K+9IpTx8hj6uuF1qN2oaQYxFtWVLlGwO
+	 vHXVPW6Ab2ejMZ6XHHcNPjBb8G39yZtc4vzW32YYuJpB875JfTmvvvKUtOGuXkI6nD
+	 HYgpyEV1jWHKqVlMHzy5Z83JtZMSpKxwjIQy3sms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395123AbfJPVy6 (ORCPT
+        id S1729071AbfJPWRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45006 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395079AbfJPVyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:52 -0400
+        id S2395125AbfJPVy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:58 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D61521D7F;
-        Wed, 16 Oct 2019 21:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0834321D7F;
+        Wed, 16 Oct 2019 21:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262891;
-        bh=V4BRBRezsqDW9FCesNNYVtuI0Ud45BnOrAw/VPLoSY4=;
+        s=default; t=1571262898;
+        bh=UkZPZ2JHlM6NKJARZYfHgZ9GaZEYDT2KLd81t2jjAu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ja7Amr/7LkN3iMKT417ZxXXPTkjhwemGspLjR/fRWfuQKtRjnZNPJvlMNtiMzACBM
-         07qbeFRypO6cjG9Av89jp3weeaPG2/FhvzKvG0wfDLObRV1sLjYtIiJ4jYnjng4tD8
-         BgvI/jNmgmw3pfWbafgdVK18NYCl9q/jh1x+2hdE=
+        b=MWxXN6nyG/I/jc/53LvwvieXT8pLVcWRd0oouUDONBQKqKe6VEpB4sVjdhEsJ1zTc
+         MFhHbQPVKhPwQBHaLS+8dUydx+CryunAqzdoLy5Qnx7GJCGfJdhKI/+n1Wo+JJGhxc
+         3HYbpAFgQUMKX9eiey2lZreMdHBQD6Wa3fGn3XFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 48/92] USB: adutux: fix use-after-free on disconnect
-Date:   Wed, 16 Oct 2019 14:50:21 -0700
-Message-Id: <20191016214835.001785907@linuxfoundation.org>
+        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 05/92] KVM: nVMX: handle page fault in vmread fix
+Date:   Wed, 16 Oct 2019 14:49:38 -0700
+Message-Id: <20191016214803.873050331@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,52 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-commit 44efc269db7929f6275a1fa927ef082e533ecde0 upstream.
+During backport f7eea636c3d5 ("KVM: nVMX: handle page fault in vmread"),
+there was a mistake the exception reference should be passed to function
+kvm_write_guest_virt_system, instead of NULL, other wise, we will get
+NULL pointer deref, eg
 
-The driver was clearing its struct usb_device pointer, which it used as
-an inverted disconnected flag, before deregistering the character device
-and without serialising against racing release().
+kvm-unit-test triggered a NULL pointer deref below:
+[  948.518437] kvm [24114]: vcpu0, guest rIP: 0x407ef9 kvm_set_msr_common: MSR_IA32_DEBUGCTLMSR 0x3, nop
+[  949.106464] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+[  949.106707] PGD 0 P4D 0
+[  949.106872] Oops: 0002 [#1] SMP
+[  949.107038] CPU: 2 PID: 24126 Comm: qemu-2.7 Not tainted 4.19.77-pserver #4.19.77-1+feature+daily+update+20191005.1625+a4168bb~deb9
+[  949.107283] Hardware name: Dell Inc. Precision Tower 3620/09WH54, BIOS 2.7.3 01/31/2018
+[  949.107549] RIP: 0010:kvm_write_guest_virt_system+0x12/0x40 [kvm]
+[  949.107719] Code: c0 5d 41 5c 41 5d 41 5e 83 f8 03 41 0f 94 c0 41 c1 e0 02 e9 b0 ed ff ff 0f 1f 44 00 00 48 89 f0 c6 87 59 56 00 00 01 48 89 d6 <49> c7 00 00 00 00 00 89 ca 49 c7 40 08 00 00 00 00 49 c7 40 10 00
+[  949.108044] RSP: 0018:ffffb31b0a953cb0 EFLAGS: 00010202
+[  949.108216] RAX: 000000000046b4d8 RBX: ffff9e9f415b0000 RCX: 0000000000000008
+[  949.108389] RDX: ffffb31b0a953cc0 RSI: ffffb31b0a953cc0 RDI: ffff9e9f415b0000
+[  949.108562] RBP: 00000000d2e14928 R08: 0000000000000000 R09: 0000000000000000
+[  949.108733] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffffffffc8
+[  949.108907] R13: 0000000000000002 R14: ffff9e9f4f26f2e8 R15: 0000000000000000
+[  949.109079] FS:  00007eff8694c700(0000) GS:ffff9e9f51a80000(0000) knlGS:0000000031415928
+[  949.109318] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  949.109495] CR2: 0000000000000000 CR3: 00000003be53b002 CR4: 00000000003626e0
+[  949.109671] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  949.109845] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  949.110017] Call Trace:
+[  949.110186]  handle_vmread+0x22b/0x2f0 [kvm_intel]
+[  949.110356]  ? vmexit_fill_RSB+0xc/0x30 [kvm_intel]
+[  949.110549]  kvm_arch_vcpu_ioctl_run+0xa98/0x1b30 [kvm]
+[  949.110725]  ? kvm_vcpu_ioctl+0x388/0x5d0 [kvm]
+[  949.110901]  kvm_vcpu_ioctl+0x388/0x5d0 [kvm]
+[  949.111072]  do_vfs_ioctl+0xa2/0x620
 
-This could lead to a use-after-free if a racing release() callback
-observes the cleared pointer and frees the driver data before
-disconnect() is finished with it.
-
-This could also lead to NULL-pointer dereferences in a racing open().
-
-Fixes: f08812d5eb8f ("USB: FIx locks and urb->status in adutux (updated)")
-Cc: stable <stable@vger.kernel.org>     # 2.6.24
-Reported-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Tested-by: syzbot+0243cb250a51eeefb8cc@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190925092913.8608-1-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/usb/misc/adutux.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/adutux.c
-+++ b/drivers/usb/misc/adutux.c
-@@ -792,14 +792,15 @@ static void adu_disconnect(struct usb_in
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -7668,7 +7668,7 @@ static int handle_vmread(struct kvm_vcpu
+ 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
+ 		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
+ 						(is_long_mode(vcpu) ? 8 : 4),
+-						NULL))
++						&e))
+ 			kvm_inject_page_fault(vcpu, &e);
+ 	}
  
- 	dev = usb_get_intfdata(interface);
- 
--	mutex_lock(&dev->mtx);	/* not interruptible */
--	dev->udev = NULL;	/* poison */
- 	usb_deregister_dev(interface, &adu_class);
--	mutex_unlock(&dev->mtx);
- 
- 	mutex_lock(&adutux_mutex);
- 	usb_set_intfdata(interface, NULL);
- 
-+	mutex_lock(&dev->mtx);	/* not interruptible */
-+	dev->udev = NULL;	/* poison */
-+	mutex_unlock(&dev->mtx);
-+
- 	/* if the device is not opened, then we clean up right now */
- 	if (!dev->open_count)
- 		adu_delete(dev);
 
 
