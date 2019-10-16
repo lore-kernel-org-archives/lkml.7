@@ -2,91 +2,130 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9723BECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB409ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E5220872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6FA21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571215887;
+	bh=q+PfH9OuVEMCXy4VJ65Rgo+SdHDEQgG+pdh4Wzm6ajo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r85L901VrtFB7QeoB+Vn2MAUV+ohagzfJjoVdoe4DpILZB6tLgitY142cddr8YU25
+	 FCnud/koXeY9PPAzBpGzmkcK5D8N93UdIpwdcjP9iWLvZE8DhssIktFsrWZPyih596
+	 qi/r3L8M/yij6R4djaL4lWVMm2DO2XEafeWWGYTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfJPIub (ORCPT
+        id S2390068AbfJPIv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:50:31 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4182 "EHLO huawei.com"
+        Wed, 16 Oct 2019 04:51:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51868 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726640AbfJPIua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:50:30 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 654FF79F726037B6E36F;
-        Wed, 16 Oct 2019 16:50:29 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 16:50:21 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <TheSven73@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: fieldbus: arcx-anybus:use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 16 Oct 2019 16:50:16 +0800
-Message-ID: <20191016085016.23676-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726640AbfJPIv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:51:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 557A7AF5D;
+        Wed, 16 Oct 2019 08:51:24 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 10:51:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: Make alloc_gigantic_page() available for
+ general use
+Message-ID: <20191016085123.GO317@dhcp22.suse.cz>
+References: <1571211293-29974-1-git-send-email-anshuman.khandual@arm.com>
+ <c7ac9f99-a34f-c553-b216-b847d093cae9@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7ac9f99-a34f-c553-b216-b847d093cae9@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Wed 16-10-19 10:08:21, David Hildenbrand wrote:
+> On 16.10.19 09:34, Anshuman Khandual wrote:
+[...]
+> > +static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
+> > +				   unsigned long nr_pages)
+> > +{
+> > +	unsigned long i, end_pfn = start_pfn + nr_pages;
+> > +	struct page *page;
+> > +
+> > +	for (i = start_pfn; i < end_pfn; i++) {
+> > +		page = pfn_to_online_page(i);
+> > +		if (!page)
+> > +			return false;
+> > +
+> > +		if (page_zone(page) != z)
+> > +			return false;
+> > +
+> > +		if (PageReserved(page))
+> > +			return false;
+> > +
+> > +		if (page_count(page) > 0)
+> > +			return false;
+> > +
+> > +		if (PageHuge(page))
+> > +			return false;
+> > +	}
+> 
+> We might still try to allocate a lot of ranges that contain unmovable data
+> (we could avoid isolating a lot of page blocks in the first place). I'd love
+> to see something like pfn_range_movable() (similar, but different to
+> is_mem_section_removable(), which uses has_unmovable_pages()).
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/fieldbus/anybuss/arcx-anybus.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Just to make sure I understand. Do you want has_unmovable_pages to be
+called inside pfn_range_valid_contig?
+[...]
+> > +struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
+> > +				int nid, nodemask_t *nodemask)
+> > +{
+> > +	unsigned long ret, pfn, flags;
+> > +	struct zonelist *zonelist;
+> > +	struct zone *zone;
+> > +	struct zoneref *z;
+> > +
+> > +	zonelist = node_zonelist(nid, gfp_mask);
+> > +	for_each_zone_zonelist_nodemask(zone, z, zonelist,
+> > +					gfp_zone(gfp_mask), nodemask) {
+> 
+> One important part is to never use the MOVABLE zone here (otherwise
+> unmovable data would end up on the movable zone). But I guess the caller is
+> responsible for that (not pass GFP_MOVABLE) like gigantic pages do.
 
-diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-index 2ecffa4..5b8d0ba 100644
---- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-+++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-@@ -127,12 +127,10 @@ static const struct regmap_config arcx_regmap_cfg = {
- static struct regmap *create_parallel_regmap(struct platform_device *pdev,
- 					     int idx)
- {
--	struct resource *res;
- 	void __iomem *base;
- 	struct device *dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, idx + 1);
--	base = devm_ioremap_resource(dev, res);
-+	base = devm_platform_ioremap_resource(pdev, idx + 1);
- 	if (IS_ERR(base))
- 		return ERR_CAST(base);
- 	return devm_regmap_init_mmio(dev, base, &arcx_regmap_cfg);
-@@ -230,7 +228,6 @@ static int controller_probe(struct platform_device *pdev)
- 	struct regulator_config config = { };
- 	struct regulator_dev *regulator;
- 	int err, id;
--	struct resource *res;
- 	struct anybuss_host *host;
- 	u8 status1, cap;
- 
-@@ -244,8 +241,7 @@ static int controller_probe(struct platform_device *pdev)
- 		return PTR_ERR(cd->reset_gpiod);
- 
- 	/* CPLD control memory, sits at index 0 */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	cd->cpld_base = devm_ioremap_resource(dev, res);
-+	cd->cpld_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(cd->cpld_base)) {
- 		dev_err(dev,
- 			"failed to map cpld base address\n");
+Well, if the caller uses GFP_MOVABLE then the movability should be
+implemented in some form. If that is not the case then it is a bug on
+the caller behalf.
+
+> > +		spin_lock_irqsave(&zone->lock, flags);
+> > +
+> > +		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
+> 
+> This alignment does not make too much sense when allowing passing in !power
+> of two orders. Maybe the caller should specify the requested alignment
+> instead? Or should we enforce this to be aligned to make our life easier for
+> now?
+
+Are there any usecases that would require than the page alignment?
 -- 
-2.7.4
-
-
+Michal Hocko
+SUSE Labs
