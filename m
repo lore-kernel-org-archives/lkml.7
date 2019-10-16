@@ -2,127 +2,114 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0350FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B27FFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA2721848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE6021848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394064AbfJPO2W (ORCPT
+        id S2393021AbfJPOaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:28:22 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27537 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbfJPO2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:28:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 07:28:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
-   d="scan'208";a="202084763"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2019 07:28:21 -0700
-Received: from [10.125.252.157] (abudanko-mobl.ccr.corp.intel.com [10.125.252.157])
-        by linux.intel.com (Postfix) with ESMTP id CC68A580375;
-        Wed, 16 Oct 2019 07:28:18 -0700 (PDT)
-Subject: [PATCH v3 4/4] perf/core,x86: synchronize PMU task contexts on
- optimized context switches
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <792a98c7-ed89-6c35-f1d7-98ddc9c1a117@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <729e8b40-0d96-9df7-fc86-b7309df94bc9@linux.intel.com>
-Date:   Wed, 16 Oct 2019 17:28:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <792a98c7-ed89-6c35-f1d7-98ddc9c1a117@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 16 Oct 2019 10:30:07 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:56936 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728190AbfJPOaG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:30:06 -0400
+Received: from ramsan ([84.194.98.4])
+        by michel.telenet-ops.be with bizsmtp
+        id EEW42100V05gfCL06EW4fZ; Wed, 16 Oct 2019 16:30:04 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iKkJQ-0003mr-9U; Wed, 16 Oct 2019 16:30:04 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iKkJQ-0007RO-7Y; Wed, 16 Oct 2019 16:30:04 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] clocksource/drivers/sh_mtu2: Do not loop using platform_get_irq_by_name()
+Date:   Wed, 16 Oct 2019 16:30:03 +0200
+Message-Id: <20191016143003.28561-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As platform_get_irq_by_name() now prints an error when the interrupt
+does not exist, looping over possibly non-existing interrupts causes the
+printing of scary messages like:
 
-Install Intel specific PMU task context synchronization adapter and
-extend optimized context switch path with PMU specific task context
-synchronization to fix LBR callstack virtualization on context switches.
+    sh_mtu2 fcff0000.timer: IRQ tgi1a not found
+    sh_mtu2 fcff0000.timer: IRQ tgi2a not found
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Fix this by using the platform_irq_count() helper, to avoid touching
+non-existent interrupts.  Limit the returned number of interrupts to the
+maximum number of channels currently supported by the driver in a
+future-proof way, i.e. using ARRAY_SIZE() instead of a hardcoded number.
+
+Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/x86/events/intel/core.c | 7 +++++++
- kernel/events/core.c         | 9 +++++++++
- 2 files changed, 16 insertions(+)
+This is a fix for v5.4.
+---
+ drivers/clocksource/sh_mtu2.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 43c966d1208e..7cfa658cce4b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3819,6 +3819,12 @@ static void intel_pmu_sched_task(struct perf_event_context *ctx,
- 	intel_pmu_lbr_sched_task(ctx, sched_in);
+diff --git a/drivers/clocksource/sh_mtu2.c b/drivers/clocksource/sh_mtu2.c
+index 354b27d14a19bfce..62812f80b5cc0916 100644
+--- a/drivers/clocksource/sh_mtu2.c
++++ b/drivers/clocksource/sh_mtu2.c
+@@ -328,12 +328,13 @@ static int sh_mtu2_register(struct sh_mtu2_channel *ch, const char *name)
+ 	return 0;
  }
  
-+static void intel_pmu_sync_task_ctx(struct x86_perf_task_context *one,
-+				    struct x86_perf_task_context *another)
-+{
-+	intel_pmu_lbr_sync_task_ctx(one, another);
-+}
++static const unsigned int sh_mtu2_channel_offsets[] = {
++	0x300, 0x380, 0x000,
++};
 +
- static int intel_pmu_check_period(struct perf_event *event, u64 value)
+ static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
+ 				 struct sh_mtu2_device *mtu)
  {
- 	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
-@@ -3954,6 +3960,7 @@ static __initconst const struct x86_pmu intel_pmu = {
+-	static const unsigned int channel_offsets[] = {
+-		0x300, 0x380, 0x000,
+-	};
+ 	char name[6];
+ 	int irq;
+ 	int ret;
+@@ -356,7 +357,7 @@ static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
+ 		return ret;
+ 	}
  
- 	.guest_get_msrs		= intel_guest_get_msrs,
- 	.sched_task		= intel_pmu_sched_task,
-+	.sync_task_ctx		= intel_pmu_sync_task_ctx,
+-	ch->base = mtu->mapbase + channel_offsets[index];
++	ch->base = mtu->mapbase + sh_mtu2_channel_offsets[index];
+ 	ch->index = index;
  
- 	.check_period		= intel_pmu_check_period,
+ 	return sh_mtu2_register(ch, dev_name(&mtu->pdev->dev));
+@@ -408,7 +409,12 @@ static int sh_mtu2_setup(struct sh_mtu2_device *mtu,
+ 	}
  
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2aad959e6def..3c7edd8454ef 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3204,11 +3204,20 @@ static void perf_event_context_sched_out(struct task_struct *task, int ctxn,
- 		raw_spin_lock(&ctx->lock);
- 		raw_spin_lock_nested(&next_ctx->lock, SINGLE_DEPTH_NESTING);
- 		if (context_equiv(ctx, next_ctx)) {
-+			struct pmu *pmu = ctx->pmu;
+ 	/* Allocate and setup the channels. */
+-	mtu->num_channels = 3;
++	ret = platform_irq_count(pdev);
++	if (ret < 0)
++		goto err_unmap;
 +
- 			WRITE_ONCE(ctx->task, next);
- 			WRITE_ONCE(next_ctx->task, task);
++	mtu->num_channels = min_t(unsigned int, ret,
++				  ARRAY_SIZE(sh_mtu2_channel_offsets));
  
- 			swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
- 
-+			/*
-+			 * PMU specific parts of task perf context may require
-+			 * additional synchronization, at least for proper Intel
-+			 * LBR callstack data profiling;
-+			 */
-+			pmu->sync_task_ctx(ctx->task_ctx_data,
-+					   next_ctx->task_ctx_data);
- 			/*
- 			 * RCU_INIT_POINTER here is safe because we've not
- 			 * modified the ctx and the above modification of
+ 	mtu->channels = kcalloc(mtu->num_channels, sizeof(*mtu->channels),
+ 				GFP_KERNEL);
 -- 
-2.20.1
+2.17.1
 
