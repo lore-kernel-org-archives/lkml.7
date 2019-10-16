@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F98ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94E0ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B930721928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F2621928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264082;
-	bh=REzPX+ps4EsntGq1fEN2z9PLK2GMZpTroTB3Ljksu9A=;
+	s=default; t=1571264086;
+	bh=bqQD1JbQd7t0d/KBSwKHC0ES/WEKFwKh6Yj1/Q/t9aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nnaqy9/sfq2GnR4yjSrjqlstX1skNNO6dLqQ3C6zwu6EuC/451lynJJuO+0ignaTk
-	 N83KRKajmyF5N6PRaI47+brPCHZmDlXqennnq3NmeElkGYQtu7vlWJdU6BxmsHLrQN
-	 yHI2x17Z10+J7qXhjUpmmWfOSgl30OtiYkHr/CfY=
+	b=FfCVLbSQRPII1evKHtGhrqYf6KTU7sza5E4vYkdGVCw24AnLO3N1aZaqwOik/8q/a
+	 9bzkSm5Sdjt9vpwq/p41IgmTLu6eVxvBlX5m1nhoL0Rtywx/rfGKfXvLmCuDwvu3+r
+	 J/zT06jOhH4nP/PpkIKjonmMi5yG0Mz/qSu+BhOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405289AbfJPWOm (ORCPT
+        id S2395285AbfJPVzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46596 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395244AbfJPVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:40 -0400
+        id S2395244AbfJPVzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:32 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D7B21A49;
-        Wed, 16 Oct 2019 21:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE951218DE;
+        Wed, 16 Oct 2019 21:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262939;
-        bh=REzPX+ps4EsntGq1fEN2z9PLK2GMZpTroTB3Ljksu9A=;
+        s=default; t=1571262931;
+        bh=bqQD1JbQd7t0d/KBSwKHC0ES/WEKFwKh6Yj1/Q/t9aI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SqSziGYBbE2YpvGxC9eb4EXoTBE4RijsMuOpNakre6C+K+iBfIT7OIVlZaCsUoyZf
-         3Fl6qRj3qyf3nv0G+mXMZbmbozTXumaFt3g6Z8cX6D99u483+4tZ6v8hzRCjHI9Mnd
-         fbkU13TTeYVLc3N2L6yC7SO4mHFyIaLP8xvc2Ryw=
+        b=0TI8Zi2JhBlk7LlNeTzFIi84UOMEmAdjB428qEKN20wIBjyeJpnAJ23RNI7f1WTUV
+         0W3yKiqdc0YjQDi0AFz4gjS1Wx9kFz4uHt2NuE1kj8OpDFs+9LKkls3J5NdG6ke+PG
+         gixUXh5LGW9dua7BPnCBvUreLiEsbP2ieXjAKdZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 01/65] panic: ensure preemption is disabled during panic()
-Date:   Wed, 16 Oct 2019 14:50:15 -0700
-Message-Id: <20191016214756.999293102@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 91/92] x86/asm: Fix MWAITX C-state hint value
+Date:   Wed, 16 Oct 2019 14:51:04 -0700
+Message-Id: <20191016214848.802788649@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
-References: <20191016214756.457746573@linuxfoundation.org>
+In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
+References: <20191016214759.600329427@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,82 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
 
-commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
+commit 454de1e7d970d6bc567686052329e4814842867c upstream.
 
-Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
-calling CPU in an infinite loop, but with interrupts and preemption
-enabled.  From this state, userspace can continue to be scheduled,
-despite the system being "dead" as far as the kernel is concerned.
+As per "AMD64 Architecture Programmer's Manual Volume 3: General-Purpose
+and System Instructions", MWAITX EAX[7:4]+1 specifies the optional hint
+of the optimized C-state. For C0 state, EAX[7:4] should be set to 0xf.
 
-This is easily reproducible on arm64 when booting with "nosmp" on the
-command line; a couple of shell scripts print out a periodic "Ping"
-message whilst another triggers a crash by writing to
-/proc/sysrq-trigger:
+Currently, a value of 0xf is set for EAX[3:0] instead of EAX[7:4]. Fix
+this by changing MWAITX_DISABLE_CSTATES from 0xf to 0xf0.
 
-  | sysrq: Trigger a crash
-  | Kernel panic - not syncing: sysrq triggered crash
-  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
-  | Hardware name: linux,dummy-virt (DT)
-  | Call trace:
-  |  dump_backtrace+0x0/0x148
-  |  show_stack+0x14/0x20
-  |  dump_stack+0xa0/0xc4
-  |  panic+0x140/0x32c
-  |  sysrq_handle_reboot+0x0/0x20
-  |  __handle_sysrq+0x124/0x190
-  |  write_sysrq_trigger+0x64/0x88
-  |  proc_reg_write+0x60/0xa8
-  |  __vfs_write+0x18/0x40
-  |  vfs_write+0xa4/0x1b8
-  |  ksys_write+0x64/0xf0
-  |  __arm64_sys_write+0x14/0x20
-  |  el0_svc_common.constprop.0+0xb0/0x168
-  |  el0_svc_handler+0x28/0x78
-  |  el0_svc+0x8/0xc
-  | Kernel Offset: disabled
-  | CPU features: 0x0002,24002004
-  | Memory Limit: none
-  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
-  |  Ping 2!
-  |  Ping 1!
-  |  Ping 1!
-  |  Ping 2!
+This hasn't had any implications so far because setting reserved bits in
+EAX is simply ignored by the CPU.
 
-The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
-otherwise local interrupts are disabled in 'smp_send_stop()'.
+ [ bp: Fixup comment in delay_mwaitx() and massage. ]
 
-Disable preemption in 'panic()' before re-enabling interrupts.
-
-Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
-Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
-Signed-off-by: Will Deacon <will@kernel.org>
-Reported-by: Xogium <contact@xogium.me>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Feng Tang <feng.tang@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "x86@kernel.org" <x86@kernel.org>
+Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lkml.kernel.org/r/20191007190011.4859-1-Janakarajan.Natarajan@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/panic.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/mwait.h |    2 +-
+ arch/x86/lib/delay.c         |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -146,6 +146,7 @@ void panic(const char *fmt, ...)
- 	 * after setting panic_cpu) from invoking panic() again.
- 	 */
- 	local_irq_disable();
-+	preempt_disable_notrace();
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -19,7 +19,7 @@
+ #define MWAIT_ECX_INTERRUPT_BREAK	0x1
+ #define MWAITX_ECX_TIMER_ENABLE		BIT(1)
+ #define MWAITX_MAX_LOOPS		((u32)-1)
+-#define MWAITX_DISABLE_CSTATES		0xf
++#define MWAITX_DISABLE_CSTATES		0xf0
  
- 	/*
- 	 * It's possible to come here directly from a panic-assertion and
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+--- a/arch/x86/lib/delay.c
++++ b/arch/x86/lib/delay.c
+@@ -112,8 +112,8 @@ static void delay_mwaitx(unsigned long _
+ 		__monitorx(raw_cpu_ptr(&cpu_tss), 0, 0);
+ 
+ 		/*
+-		 * AMD, like Intel, supports the EAX hint and EAX=0xf
+-		 * means, do not enter any deep C-state and we use it
++		 * AMD, like Intel's MWAIT version, supports the EAX hint and
++		 * EAX=0xf0 means, do not enter any deep C-state and we use it
+ 		 * here in delay() to minimize wakeup latency.
+ 		 */
+ 		__mwaitx(MWAITX_DISABLE_CSTATES, delay, MWAITX_ECX_TIMER_ENABLE);
 
 
