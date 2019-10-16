@@ -2,99 +2,89 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB75AC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BEEC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C490C2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E227E21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571213064;
+	bh=rReuVb132ii3iV3YvU4PNL9utgLRGUbc4m/9hSBbvoo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m75KSWprpC1TPe1nJK05/EPc+gZj9TLmBZQamAi6nPmPaZWT+b/ymc4OyCGFrLubJ
+	 C+xFjsnWhjDmnmM/871bgXxE3bg/0bRQgiQbnbI5tSaHLcRZ8sj2nuWLkWzP3pr+Aq
+	 Jyd1+x6KIepEStFj2rM/caSlSlumv1xsYllYANOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391431AbfJPID2 (ORCPT
+        id S2391437AbfJPIEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:03:28 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:39857 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390590AbfJPID2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:03:28 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKeHF-0007Oi-H0; Wed, 16 Oct 2019 09:03:25 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKeHF-0003MF-1X; Wed, 16 Oct 2019 09:03:25 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [V2] PCI: sysfs: remove pci_bridge_groups and pcie_dev_groups
-Date:   Wed, 16 Oct 2019 09:03:24 +0100
-Message-Id: <20191016080324.12864-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 04:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727671AbfJPIEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:04:23 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CAA12168B;
+        Wed, 16 Oct 2019 08:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571213063;
+        bh=rReuVb132ii3iV3YvU4PNL9utgLRGUbc4m/9hSBbvoo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EKslahbuYYEfHHiHvt1LJUtrJWPfqhT+U1un2c0j+oyJD91TSdrEHjpXKqUUdPIJJ
+         mgavniH/wVMdLjNQLohrfunzsw+5485YLEid7Go0xRWtGD7O6wnaocKqQUEKalZxdD
+         IBQ8K1DJ/CSH4iz7+Qrrmxnjfi0bKsbH9cBkhfAM=
+Date:   Wed, 16 Oct 2019 10:04:20 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     codekipper@gmail.com
+Cc:     wens@csie.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, be17068@iperbole.bo.it
+Subject: Re: [PATCH v6 1/7] ASoC: sun4i-i2s: Move channel select offset
+Message-ID: <20191016080420.4cbxn2hdt3wwtrhl@gilmour>
+References: <20191016070740.121435-1-codekipper@gmail.com>
+ <20191016070740.121435-2-codekipper@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7ms26mvxh6nbjd52"
+Content-Disposition: inline
+In-Reply-To: <20191016070740.121435-2-codekipper@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-The pci_bridge_groups and pcie_dev_groups objects are
-not exported and not used at-all, so remove them to
-fix the following warnings from sparse:
+--7ms26mvxh6nbjd52
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-drivers/pci/pci-sysfs.c:1546:30: warning: symbol 'pci_bridge_groups' was not declared. Should it be static?
-drivers/pci/pci-sysfs.c:1555:30: warning: symbol 'pcie_dev_groups' was not declared. Should it be static?
+On Wed, Oct 16, 2019 at 09:07:34AM +0200, codekipper@gmail.com wrote:
+> From: Marcus Cooper <codekipper@gmail.com>
+>
+> On the newer SoCs the offset is used to set the mode of the
+> connection. As it is to be used elsewhere then it makes sense
+> to move it to the main structure.
 
-Also remove the unused pci_bridge_group and pcie_dev_group
-as they are not used any more.
+Elsewhere where, and to do what?
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Maxime
 
-fixup - more unused pci bits
----
- drivers/pci/pci-sysfs.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+--7ms26mvxh6nbjd52
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 793412954529..eaffb477c5bf 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1539,24 +1539,6 @@ const struct attribute_group *pci_dev_groups[] = {
- 	NULL,
- };
- 
--static const struct attribute_group pci_bridge_group = {
--	.attrs = pci_bridge_attrs,
--};
--
--const struct attribute_group *pci_bridge_groups[] = {
--	&pci_bridge_group,
--	NULL,
--};
--
--static const struct attribute_group pcie_dev_group = {
--	.attrs = pcie_dev_attrs,
--};
--
--const struct attribute_group *pcie_dev_groups[] = {
--	&pcie_dev_group,
--	NULL,
--};
--
- static const struct attribute_group pci_dev_hp_attr_group = {
- 	.attrs = pci_dev_hp_attrs,
- 	.is_visible = pci_dev_hp_attrs_are_visible,
--- 
-2.23.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXabPBAAKCRDj7w1vZxhR
+xWfVAP9ZDeCUM6YB6ieMATn24AtmYaqNFpUuWyfe7WmRM0R1qAEAkXYiT7NBO4dm
+xSC0H+a6BM1oFgGWjOiNULlLMAySTQ4=
+=HbkX
+-----END PGP SIGNATURE-----
+
+--7ms26mvxh6nbjd52--
