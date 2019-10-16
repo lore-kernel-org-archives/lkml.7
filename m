@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9960EECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24841ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C04120872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057D420872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732708AbfJPHUK (ORCPT
+        id S1732835AbfJPHUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:20:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4167 "EHLO huawei.com"
+        Wed, 16 Oct 2019 03:20:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4168 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726977AbfJPHUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:20:09 -0400
+        id S1730643AbfJPHUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:20:10 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8931F137143FFFC49AEA;
+        by Forcepoint Email with ESMTP id 8EBA7940BD9616D1673B;
         Wed, 16 Oct 2019 15:20:08 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 16 Oct 2019 15:19:58 +0800
+ 14.3.439.0; Wed, 16 Oct 2019 15:20:00 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
         Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: fix a use after freed problem in hns3_nic_maybe_stop_tx()
-Date:   Wed, 16 Oct 2019 15:17:02 +0800
-Message-ID: <1571210231-29154-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 11/12] net: hns3: do not allocate linear data for fraglist skb
+Date:   Wed, 16 Oct 2019 15:17:10 +0800
+Message-ID: <1571210231-29154-12-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
 References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,76 +49,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunsheng Lin <linyunsheng@huawei.com>
 
-Currently, hns3_nic_maybe_stop_tx() use skb_copy() to linearize a
-SKB if the BD num required by the SKB does not meet the hardware
-limitation, and it linearizes the SKB by allocating a new SKB and
-freeing the old SKB, if hns3_nic_maybe_stop_tx() returns -EBUSY,
-the sch_direct_xmit() still hold reference to old SKB and try to
-retransmit the old SKB when dev_hard_start_xmit() return TX_BUSY,
-which may cause use after freed problem.
+Currently, napi_alloc_skb() is used to allocate skb for fraglist
+when the head skb is not enough to hold the remaining data, and
+the remaining data is added to the frags part of the fraglist skb,
+leaving the linear part unused.
 
-This patch fixes it by using __skb_linearize() to linearize the
-SKB in hns3_nic_maybe_stop_tx().
+So this patch passes length of 0 to allocate fraglist skb with
+zero size of linear data.
 
-Fixes: 51e8439f3496 ("net: hns3: add 8 BD limit for tx flow")
+Fixes: 81ae0e0491f3 ("net: hns3: Add skb chain when num of RX buf exceeds MAX_SKB_FRAGS")
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 2cfdfbb..5a237f94 100644
+index 6172eb2..14111af 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1287,33 +1287,26 @@ static bool hns3_skb_need_linearized(struct sk_buff *skb, unsigned int *bd_size,
- }
+@@ -2866,8 +2866,7 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+ 			return -ENXIO;
  
- static int hns3_nic_maybe_stop_tx(struct net_device *netdev,
--				  struct sk_buff **out_skb)
-+				  struct sk_buff *skb)
- {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	unsigned int bd_size[HNS3_MAX_TSO_BD_NUM + 1U];
--	struct sk_buff *skb = *out_skb;
- 	struct hns3_enet_ring *ring;
- 	unsigned int bd_num;
- 
- 	ring = &priv->ring[skb->queue_mapping];
- 	bd_num = hns3_tx_bd_num(skb, bd_size);
- 	if (unlikely(bd_num > HNS3_MAX_NON_TSO_BD_NUM)) {
--		struct sk_buff *new_skb;
- 
- 		if (bd_num <= HNS3_MAX_TSO_BD_NUM && skb_is_gso(skb) &&
- 		    !hns3_skb_need_linearized(skb, bd_size, bd_num))
- 			goto out;
- 
--		/* manual split the send packet */
--		new_skb = skb_copy(skb, GFP_ATOMIC);
--		if (!new_skb)
-+		if (__skb_linearize(skb))
- 			return -ENOMEM;
--		dev_kfree_skb_any(skb);
--		*out_skb = new_skb;
--
--		bd_num = hns3_tx_bd_count(new_skb->len);
--		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_TSO_BD_NUM) ||
--		    (!skb_is_gso(new_skb) &&
-+		bd_num = hns3_tx_bd_count(skb->len);
-+		if ((skb_is_gso(skb) && bd_num > HNS3_MAX_TSO_BD_NUM) ||
-+		    (!skb_is_gso(skb) &&
- 		     bd_num > HNS3_MAX_NON_TSO_BD_NUM))
- 			return -ENOMEM;
- 
-@@ -1416,7 +1409,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- 	/* Prefetch the data used later */
- 	prefetch(skb->data);
- 
--	ret = hns3_nic_maybe_stop_tx(netdev, &skb);
-+	ret = hns3_nic_maybe_stop_tx(netdev, skb);
- 	if (unlikely(ret <= 0)) {
- 		if (ret == -EBUSY) {
- 			u64_stats_update_begin(&ring->syncp);
+ 		if (unlikely(ring->frag_num >= MAX_SKB_FRAGS)) {
+-			new_skb = napi_alloc_skb(&ring->tqp_vector->napi,
+-						 HNS3_RX_HEAD_SIZE);
++			new_skb = napi_alloc_skb(&ring->tqp_vector->napi, 0);
+ 			if (unlikely(!new_skb)) {
+ 				hns3_rl_err(ring_to_netdev(ring),
+ 					    "alloc rx fraglist skb fail\n");
 -- 
 2.7.4
 
