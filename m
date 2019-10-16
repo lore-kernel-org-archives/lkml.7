@@ -6,170 +6,127 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D50FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDD9FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A27720650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E664021928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405923AbfJPPzJ (ORCPT
+        id S2393083AbfJPP7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:55:09 -0400
-Received: from mga12.intel.com ([192.55.52.136]:39533 "EHLO mga12.intel.com"
+        Wed, 16 Oct 2019 11:59:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36652 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405860AbfJPPzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:55:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1729646AbfJPP7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:59:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 08:55:08 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 08:59:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
-   d="scan'208";a="370837343"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by orsmga005.jf.intel.com with ESMTP; 16 Oct 2019 08:55:06 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH v4 1/2] fpga: fpga-mgr: Add readback support
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        Alan Tull <atull@kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "kedare06@gmail.com" <kedare06@gmail.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+   d="scan'208";a="198994082"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga003.jf.intel.com with ESMTP; 16 Oct 2019 08:59:42 -0700
+Date:   Wed, 16 Oct 2019 08:59:42 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Nava kishore Manne <navam@xilinx.com>,
-        Siva Durga Prasad Paladugu <sivadur@xilinx.com>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>, agust@denx.de
-References: <1532672551-22146-1-git-send-email-appana.durga.rao@xilinx.com>
- <CANk1AXSEWcZ7Oqv5pgpwvJRyyFWk5gPtniXa7T+oe6-uywqEqA@mail.gmail.com>
- <MN2PR02MB6400CD5312983443A67DCC4EDC810@MN2PR02MB6400.namprd02.prod.outlook.com>
- <4476bf39-b665-50d8-fecd-d50687d10ca2@linux.intel.com>
- <20190927182308.GA6797@archbox>
- <f8a9bc07-0705-1318-eba2-8878e839d696@linux.intel.com>
- <20191007212058.GA2929169@archbox>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <bbacc271-a356-2a6c-8e08-0cc65cee6c0e@linux.intel.com>
-Date:   Wed, 16 Oct 2019 10:57:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+Message-ID: <20191016155942.GB5866@linux.intel.com>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <alpine.DEB.2.21.1910161038210.2046@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191007212058.GA2929169@archbox>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910161038210.2046@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
+On Wed, Oct 16, 2019 at 11:29:00AM +0200, Thomas Gleixner wrote:
+> >   - Modify the #AC handler to test/set the same atomic variable as the
+> >     sysfs knob.  This is the "disabled by kernel" flow.
+> 
+> That's the #AC in kernel handler, right?
 
-On 10/7/19 4:20 PM, Moritz Fischer wrote:
-> Hi Thor,
-> 
-> On Mon, Oct 07, 2019 at 01:06:51PM -0500, Thor Thayer wrote:
->> Hi Moritz,
->>
->> On 9/27/19 1:23 PM, Moritz Fischer wrote:
->>> Thor,
->>>
->>> On Fri, Sep 27, 2019 at 09:32:11AM -0500, Thor Thayer wrote:
->>>> Hi Kedar & Moritz,
->>>>
->>>> On 9/27/19 12:13 AM, Appana Durga Kedareswara Rao wrote:
->>>>> Hi Alan,
->>>>>
->>>>> Did you get a chance to send your framework changes to upstream?
->>> No they weren't upstreamed.
->>>
->>>>> @Moritz Fischer: If Alan couldn't send his patch series, Can we take this patch series??
->>>>> Please let me know your thoughts on this.
->>>
->>> Alan had some comments RE: #defines, I'll have to take another look.
->>>>>
->>>>> Regards,
->>>>> Kedar.
->>>>
->>>>
->>>> I'd like to see some mechanism added as well. Our CvP driver needs a way to
->>>> load images to the FPGA over the PCIe bus.
->>>
->>> Can you elaborate a bit on the CvP use-case and how that would work? Who
->>> would use the device how after loading the bitstream?
->>>
->>> Generally there are several use cases that I have collected mentally
->>> over the years:
->>>
->>> I) DFL use case:
->>>     - Mixed-set of drivers: Kernel and Userspace
->>>     - FPGA logic is discoverable through DFL
->>>     - Userspace application wants to reprogram FPGA
->>>
->>> II) DT configfs use case:
->>>     - Mixed-set of drivers: Kernel and Userspace
->>>     - FPGA logic is *not* discoverable (hence DT overlay)
->>>     - Userspace application wants to reprogram FPGA
->>>
->>> III) Thomas' case:
->>>     - Kernel only drivers (pcie bridge, pcie drivers, ...)
->>>     - FPGA logic is fully discoverable (i.e. PCIe endpoint
->>>       implemented in FPGA, connected to SoC via PCIe)
->>>     - Userspace application wants to reprogram FPGA
->>>
->>> IV) VFIO case:
->>>     - Usually exposes either entire device via vfio-pci or part via
->>>       vfio-mdev
->>>     - Loading (basic) bitstream at boot from flash
->>>     - vfio-mdev case can use FPGA region interface + ioctl
->>>     - Full VFIO case is similar to III)
->>>
->>> How does your CvP use case fit in? Collecting all the use-cases would
->>> help with moving forward on coming up with an API :)
->>>
->> The CvP case is the same as III) Thomas' case. The FPGA configuration
->> bitstream is downloaded over the PCIe.
->>
->> The one difference in my case is that there isn't an SoC. This is a Intel
->> host processor connecting to a non-SoC Stratix10/Arria10. The non-SoC
->> A10/S10, boots a minimal image (CvP) setting up the peripheral pins and
->> enabling the PCIe endpoint for CvP downloads.
->>
->> The host can then download bitstreams using the FPGA Manager through debugFS
->> and when the bitstream finishes downloading and the FPGA enters User Mode,
->> the functionality is available for the host to use.
-> 
-> I am generally confused by this driver. How does it work exactly? What
-> happens after altera-cvp binds a PCI device?
-> 
-> You can use it to download a bitstream (say we had the debugfs
-> interface), and then what happens next? How do I use the device? It
-> already has a PCI driver bound to it at that point?
+Yes.
 
-Sorry for the delay. In the CvP case, I reboot the host device leaving 
-the FPGA board powered so the new PCI interface is enumerated.
+> >   - Modify the debugfs/sysfs knob to only allow disabling split-lock
+> >     detection.  This is the "disabled globally" path, i.e. sends IPIs to
+> >     clear MSR_TEST_CTRL.split_lock on all online CPUs.
+> 
+> Why only disable? What's wrong with reenabling it? The shiny new driver you
+> are working on is triggering #AC. So in order to test the fix, you need to
+> reboot the machine instead of just unloading the module, reenabling #AC and
+> then loading the fixed one?
 
-There may be a better way. I'll need to research Thomas' use case. There 
-may be some good lessons to learn there.
+A re-enabling path adds complexity (though not much) and is undesirable
+for a production environment as a split-lock issue in the kernel isn't
+going to magically disappear.  And I thought that disable-only was also
+your preferred implementation based on a previous comment[*], but that
+comment may have been purely in the scope of userspace applications.
 
-Thanks,
+Anyways, my personal preference would be to keep things simple and not
+support a re-enabling path.  But then again, I do 99.9% of my development
+in VMs so my vote probably shouldn't count regarding the module issue.
 
-Thor
+[*] https://lkml.kernel.org/r/alpine.DEB.2.21.1904180832290.3174@nanos.tec.linutronix.de
 
+> >   - Modify the resume/init flow to clear MSR_TEST_CTRL.split_lock if it's
+> >     been disabled on *any* CPU via #AC or via the knob.
 > 
-> What happens next?
+> Fine.
 > 
-> Please tell me that not the only use-case for this is /dev/mem :)
+> >   - Remove KVM loading of MSR_TEST_CTRL, i.e. KVM *never* writes the CPU's
+> >     actual MSR_TEST_CTRL.  KVM still emulates MSR_TEST_CTRL so that the
+> >     guest can do WRMSR and handle its own #AC faults, but KVM doesn't
+> >     change the value in hardware.
+> > 
+> >       * Allowing guest to enable split-lock detection can induce #AC on
+> >         the host after it has been explicitly turned off, e.g. the sibling
+> >         hyperthread hits an #AC in the host kernel, or worse, causes a
+> >         different process in the host to SIGBUS.
+> >
+> >       * Allowing guest to disable split-lock detection opens up the host
+> >         to DoS attacks.
 > 
-> Thomas' use-case is different in that behind the FPGA device there are
-> actual other *discoverable* PCI devices that will get enumerated and
-> bind to separate drivers.
-> 
-> Thanks,
-> Moritz
-> 
-> PS: I'll be out this week on vacation starting tmr so responses might be delayed
-> 
+> Wasn't this discussed before and agreed on that if the host has AC enabled
+> that the guest should not be able to force disable it? I surely lost track
+> of this completely so my memory might trick me.
 
+Yes, I was restating that point, or at least attempting to.
+ 
+> The real question is what you do when the host has #AC enabled and the
+> guest 'disabled' it and triggers #AC. Is that going to be silently ignored
+> or is the intention to kill the guest in the same way as we kill userspace?
+> 
+> The latter would be the right thing, but given the fact that the current
+> kernels easily trigger #AC today, that would cause a major wreckage in
+> hosting scenarios. So I fear we need to bite the bullet and have a knob
+> which defaults to 'handle silently' and allows to enable the kill mechanics
+> on purpose. 'Handle silently' needs some logging of course, at least a per
+> guest counter which can be queried and a tracepoint.
