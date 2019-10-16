@@ -2,27 +2,27 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80B8FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A545FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F9B2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B51A2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404658AbfJPKsJ (ORCPT
+        id S2392561AbfJPKsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:48:09 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46265 "EHLO
+        Wed, 16 Oct 2019 06:48:08 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52840 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388377AbfJPKsG (ORCPT
+        with ESMTP id S1731877AbfJPKsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 06:48:06 -0400
 Received: from 79.184.255.51.ipv4.supernova.orange.pl (79.184.255.51) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 55930553095aead4; Wed, 16 Oct 2019 12:48:04 +0200
+ id aa54f32a6c5ccca0; Wed, 16 Oct 2019 12:48:02 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
@@ -30,9 +30,11 @@ Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Dmitry Osipenko <digetx@gmail.com>
-Subject: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and use it in cpufreq
-Date:   Wed, 16 Oct 2019 12:37:58 +0200
-Message-ID: <2811202.iOFZ6YHztY@kreacher>
+Subject: [RFT][PATCH 3/3] PM: QoS: Drop frequency QoS types from device PM QoS
+Date:   Wed, 16 Oct 2019 12:47:53 +0200
+Message-ID: <3223584.6srSoYZK3A@kreacher>
+In-Reply-To: <2811202.iOFZ6YHztY@kreacher>
+References: <2811202.iOFZ6YHztY@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -41,37 +43,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The motivation for this series is to address the problem discussed here:
+There are no more active users of DEV_PM_QOS_MIN_FREQUENCY and
+DEV_PM_QOS_MAX_FREQUENCY device PM QoS request types, so drop them
+along with the code supporting them.
 
-https://lore.kernel.org/linux-pm/5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org/T/#md2d89e95906b8c91c15f582146173dce2e86e99f
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/qos.c |   70 +----------------------------------------------
+ include/linux/pm_qos.h   |    8 -----
+ 2 files changed, 2 insertions(+), 76 deletions(-)
 
-and also reported here:
-
-https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
-
-Plus, generally speaking, using the policy CPU as a proxy for the policy
-with respect to PM QoS does not feel particularly straightforward to me
-and adds extra complexity.
-
-Anyway, the first patch adds frequency QoS that is based on "raw" PM QoS (kind
-of in analogy with device PM QoS) and is just about min and max frequency
-requests (no direct relationship to devices).
-
-The second patch switches over cpufreq and its users to the new frequency QoS.
-[The Fixes: tag has been tentatively added to it.]
-
-The third one removes frequency request types from device PM QoS.
-
-Unfortunately, the patches are rather big, but also they are quite
-straightforward.
-
-I didn't have the time to test this series, so giving it a go would be much
-appreciated.
-
-Thanks,
-Rafael
+Index: linux-pm/include/linux/pm_qos.h
+===================================================================
+--- linux-pm.orig/include/linux/pm_qos.h
++++ linux-pm/include/linux/pm_qos.h
+@@ -34,8 +34,6 @@ enum pm_qos_flags_status {
+ #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT	PM_QOS_LATENCY_ANY
+ #define PM_QOS_RESUME_LATENCY_NO_CONSTRAINT_NS	PM_QOS_LATENCY_ANY_NS
+ #define PM_QOS_LATENCY_TOLERANCE_DEFAULT_VALUE	0
+-#define PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE	0
+-#define PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE	(-1)
+ #define PM_QOS_LATENCY_TOLERANCE_NO_CONSTRAINT	(-1)
+ 
+ #define PM_QOS_FLAG_NO_POWER_OFF	(1 << 0)
+@@ -54,8 +52,6 @@ struct pm_qos_flags_request {
+ enum dev_pm_qos_req_type {
+ 	DEV_PM_QOS_RESUME_LATENCY = 1,
+ 	DEV_PM_QOS_LATENCY_TOLERANCE,
+-	DEV_PM_QOS_MIN_FREQUENCY,
+-	DEV_PM_QOS_MAX_FREQUENCY,
+ 	DEV_PM_QOS_FLAGS,
+ };
+ 
+@@ -97,14 +93,10 @@ struct pm_qos_flags {
+ struct dev_pm_qos {
+ 	struct pm_qos_constraints resume_latency;
+ 	struct pm_qos_constraints latency_tolerance;
+-	struct pm_qos_constraints min_frequency;
+-	struct pm_qos_constraints max_frequency;
+ 	struct pm_qos_flags flags;
+ 	struct dev_pm_qos_request *resume_latency_req;
+ 	struct dev_pm_qos_request *latency_tolerance_req;
+ 	struct dev_pm_qos_request *flags_req;
+-	struct dev_pm_qos_request *min_frequency_req;
+-	struct dev_pm_qos_request *max_frequency_req;
+ };
+ 
+ /* Action requested to pm_qos_update_target */
+Index: linux-pm/drivers/base/power/qos.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/qos.c
++++ linux-pm/drivers/base/power/qos.c
+@@ -115,20 +115,10 @@ s32 dev_pm_qos_read_value(struct device
+ 
+ 	spin_lock_irqsave(&dev->power.lock, flags);
+ 
+-	switch (type) {
+-	case DEV_PM_QOS_RESUME_LATENCY:
++	if (type == DEV_PM_QOS_RESUME_LATENCY) {
+ 		ret = IS_ERR_OR_NULL(qos) ? PM_QOS_RESUME_LATENCY_NO_CONSTRAINT
+ 			: pm_qos_read_value(&qos->resume_latency);
+-		break;
+-	case DEV_PM_QOS_MIN_FREQUENCY:
+-		ret = IS_ERR_OR_NULL(qos) ? PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE
+-			: pm_qos_read_value(&qos->min_frequency);
+-		break;
+-	case DEV_PM_QOS_MAX_FREQUENCY:
+-		ret = IS_ERR_OR_NULL(qos) ? PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE
+-			: pm_qos_read_value(&qos->max_frequency);
+-		break;
+-	default:
++	} else {
+ 		WARN_ON(1);
+ 		ret = 0;
+ 	}
+@@ -169,14 +159,6 @@ static int apply_constraint(struct dev_p
+ 			req->dev->power.set_latency_tolerance(req->dev, value);
+ 		}
+ 		break;
+-	case DEV_PM_QOS_MIN_FREQUENCY:
+-		ret = pm_qos_update_target(&qos->min_frequency,
+-					   &req->data.pnode, action, value);
+-		break;
+-	case DEV_PM_QOS_MAX_FREQUENCY:
+-		ret = pm_qos_update_target(&qos->max_frequency,
+-					   &req->data.pnode, action, value);
+-		break;
+ 	case DEV_PM_QOS_FLAGS:
+ 		ret = pm_qos_update_flags(&qos->flags, &req->data.flr,
+ 					  action, value);
+@@ -227,24 +209,6 @@ static int dev_pm_qos_constraints_alloca
+ 	c->no_constraint_value = PM_QOS_LATENCY_TOLERANCE_NO_CONSTRAINT;
+ 	c->type = PM_QOS_MIN;
+ 
+-	c = &qos->min_frequency;
+-	plist_head_init(&c->list);
+-	c->target_value = PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE;
+-	c->default_value = PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE;
+-	c->no_constraint_value = PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE;
+-	c->type = PM_QOS_MAX;
+-	c->notifiers = ++n;
+-	BLOCKING_INIT_NOTIFIER_HEAD(n);
+-
+-	c = &qos->max_frequency;
+-	plist_head_init(&c->list);
+-	c->target_value = PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE;
+-	c->default_value = PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE;
+-	c->no_constraint_value = PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE;
+-	c->type = PM_QOS_MIN;
+-	c->notifiers = ++n;
+-	BLOCKING_INIT_NOTIFIER_HEAD(n);
+-
+ 	INIT_LIST_HEAD(&qos->flags.list);
+ 
+ 	spin_lock_irq(&dev->power.lock);
+@@ -305,18 +269,6 @@ void dev_pm_qos_constraints_destroy(stru
+ 		memset(req, 0, sizeof(*req));
+ 	}
+ 
+-	c = &qos->min_frequency;
+-	plist_for_each_entry_safe(req, tmp, &c->list, data.pnode) {
+-		apply_constraint(req, PM_QOS_REMOVE_REQ, PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE);
+-		memset(req, 0, sizeof(*req));
+-	}
+-
+-	c = &qos->max_frequency;
+-	plist_for_each_entry_safe(req, tmp, &c->list, data.pnode) {
+-		apply_constraint(req, PM_QOS_REMOVE_REQ, PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
+-		memset(req, 0, sizeof(*req));
+-	}
+-
+ 	f = &qos->flags;
+ 	list_for_each_entry_safe(req, tmp, &f->list, data.flr.node) {
+ 		apply_constraint(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+@@ -428,8 +380,6 @@ static int __dev_pm_qos_update_request(s
+ 	switch(req->type) {
+ 	case DEV_PM_QOS_RESUME_LATENCY:
+ 	case DEV_PM_QOS_LATENCY_TOLERANCE:
+-	case DEV_PM_QOS_MIN_FREQUENCY:
+-	case DEV_PM_QOS_MAX_FREQUENCY:
+ 		curr_value = req->data.pnode.prio;
+ 		break;
+ 	case DEV_PM_QOS_FLAGS:
+@@ -557,14 +507,6 @@ int dev_pm_qos_add_notifier(struct devic
+ 		ret = blocking_notifier_chain_register(dev->power.qos->resume_latency.notifiers,
+ 						       notifier);
+ 		break;
+-	case DEV_PM_QOS_MIN_FREQUENCY:
+-		ret = blocking_notifier_chain_register(dev->power.qos->min_frequency.notifiers,
+-						       notifier);
+-		break;
+-	case DEV_PM_QOS_MAX_FREQUENCY:
+-		ret = blocking_notifier_chain_register(dev->power.qos->max_frequency.notifiers,
+-						       notifier);
+-		break;
+ 	default:
+ 		WARN_ON(1);
+ 		ret = -EINVAL;
+@@ -604,14 +546,6 @@ int dev_pm_qos_remove_notifier(struct de
+ 		ret = blocking_notifier_chain_unregister(dev->power.qos->resume_latency.notifiers,
+ 							 notifier);
+ 		break;
+-	case DEV_PM_QOS_MIN_FREQUENCY:
+-		ret = blocking_notifier_chain_unregister(dev->power.qos->min_frequency.notifiers,
+-							 notifier);
+-		break;
+-	case DEV_PM_QOS_MAX_FREQUENCY:
+-		ret = blocking_notifier_chain_unregister(dev->power.qos->max_frequency.notifiers,
+-							 notifier);
+-		break;
+ 	default:
+ 		WARN_ON(1);
+ 		ret = -EINVAL;
 
 
 
