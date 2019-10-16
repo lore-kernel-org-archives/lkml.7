@@ -2,137 +2,205 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EEBFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77557FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79E62067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hy6idP8W"
+	by mail.kernel.org (Postfix) with ESMTP id 5B9962064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393624AbfJPNZo (ORCPT
+        id S2404209AbfJPN0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:25:44 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38383 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732443AbfJPNZo (ORCPT
+        Wed, 16 Oct 2019 09:26:11 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:36397 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732443AbfJPN0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:25:44 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y18so18616335wrn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:25:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LRLu4A11zfU8KGwAdVgqHkptRBqIj1bDJ9MbP4ApwzY=;
-        b=Hy6idP8WsiZczQOU+0DFljKnF+Ij3Pr2psfHjQ3L5wewdp0jkSE9aR1Vl1efQkol06
-         ibzmUxUdZqbbUTbUuxoPzokqm335wzwiL2MRKgLmeicDKfmn4tbwrh7sDcs1a7PsOHPw
-         T8sd5Q0V79Ncd2PKLPGvWNvmIGahl0ZJ6iCtw0564QBFDiW25NE5fxVefa/FnvbqfRGy
-         Cw/lWRfkso3SyPYyChHUHQlcezNXvdjE+qkDgWWCa5/aUdDgMo+pP5h+zNBg+RYY5NI3
-         7vaEBnpZzZkjrWC8yMauxU6kNN9/ksEnJX776D230eSvNo2lBue9dKi+563g5GnrlVF9
-         LrZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LRLu4A11zfU8KGwAdVgqHkptRBqIj1bDJ9MbP4ApwzY=;
-        b=nPfxdzCdGcW46/dCBwiAy0bkxRoca5lqPvY4X+V7x395E/j/Gq2M205JjmCK9W0Jbd
-         GziLFc7XNjm9y48ANpEXkB5HrbnqPmLvSSiDPeBmbHuEtdv0tELQcicTGWFe7n5hSXNI
-         WPiPa524hjO/4aLQ7GB0HO6kXczVhkofp5W9LiRlY8r4zNjtdsXtw7NgRAnKP9vceWCu
-         3UMM1k35ztfZJkKhQkC1GCuFIA5bIPnbJDL5gEr+olVrcKjLQcXUgWnkV57c//QWYDfo
-         fpB9KDVyzNU8dDMbYb6zXDwMhOcf/GjWj754Bh+Mn/Ww7KkPBOfR3WIy7U/gcw6QxlTh
-         bGLg==
-X-Gm-Message-State: APjAAAXA+Dbp+bN4tpC5SGrsTEHsU3w3ECRyeRcEiOp4bIrybZOEp5YL
-        xrCKlXl68y6Wo6YycdulP7PVQTmMVnY=
-X-Google-Smtp-Source: APXvYqwAYuCb8pRWzypFXpMxx1FDAzOK+Bt1JVowOlSG7Wpg0WsXtJXtXVp/rZQ68DJwGlYOV9oYBA==
-X-Received: by 2002:a05:6000:1621:: with SMTP id v1mr2910776wrb.62.1571232341235;
-        Wed, 16 Oct 2019 06:25:41 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id y3sm8676071wmg.2.2019.10.16.06.25.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 06:25:40 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: expose card name in INFO IOCTL
-Date:   Wed, 16 Oct 2019 16:25:38 +0300
-Message-Id: <20191016132538.20746-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 16 Oct 2019 09:26:10 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id KjJUiHtixPduvKjJXirBb5; Wed, 16 Oct 2019 15:26:07 +0200
+Subject: Re: [PATCH] media: v4l2-ctrl: Add p_def to v4l2_ctrl_config
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191014141427.30708-1-ribalda@kernel.org>
+ <f03e39da-2fe0-b1af-c409-8460c2fc5e9f@xs4all.nl>
+ <CAPybu_1xBCVdcHKOwDFoM8wkrXWRSuFO1vUuB6Kp0rD6BREs1Q@mail.gmail.com>
+ <0e98973c-96a8-dc2e-295f-225ab3b1eae0@xs4all.nl>
+ <CAPybu_1to=P0s491p4pbaZMy+YAG88R5sORsvKQy9gKBL49f_w@mail.gmail.com>
+ <77204a05-34a5-f6f1-460f-bddaa8f2bb5c@xs4all.nl>
+ <CAPybu_3o9LLk2fHJPk7DmwKVB2Fubftdu+7VL=U6TM03rHTTiw@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <cc62a328-a33c-ec1d-8a41-489fcb937bfe@xs4all.nl>
+Date:   Wed, 16 Oct 2019 15:26:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAPybu_3o9LLk2fHJPk7DmwKVB2Fubftdu+7VL=U6TM03rHTTiw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfD5L3PK8Rhge9PgBedx/YG8pCaM0ANDqx1DI/aA5MHI2j3+pD6zF9MT/qR7iIxvf49ojpSX6v9I9Mgkw/SF14b8l9ZIhJOci/GCjqM2uJLBq6ho00Vkc
+ Z6rFCHXKnYmjRk2336xgUhbtnOrC106gPkwULvMqN8K/rqC+yQHNja8W83U9B84ANIV52V82Akzw5LI3hryhkrffb8TOquUlGJXrGX79AiL8JlO/p+0Z8aMD
+ eU1pYx20/Aa0bFnHzNm6oS5bncs0GsVmO4kO3q3B3txUTnj6ik9/cA0RFIO2lSaD
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable userspace processes, e.g. management utilities, to display the
-card name to the user, add the card name property to the HW_IP
-structure that is copied to the user in the INFO IOCTL.
+On 10/16/19 3:12 PM, Ricardo Ribalda Delgado wrote:
+> Hi Hans
+> 
+> On Wed, Oct 16, 2019 at 2:43 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 10/16/19 2:39 PM, Ricardo Ribalda Delgado wrote:
+>>> Hi Hans:
+>>>
+>>> On Wed, Oct 16, 2019 at 2:32 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>>>
+>>>> On 10/16/19 2:20 PM, Ricardo Ribalda Delgado wrote:
+>>>>> Hi Hans
+>>>>>
+>>>>> Not that awkward, the user has to use the brand new
+>>>>> v4l2_ctrl_ptr_create() ;). But if you prefer void * I can make the
+>>>>> change.
+>>>>
+>>>> Well, a struct v4l2_ctrl_config is typically a static const, so you can't use
+>>>> v4l2_ctrl_ptr_create().
+>>>>
+>>>> Hmm, perhaps it is as easy as:
+>>>>
+>>>> static const struct v4l2_area def_area = {
+>>>>         ...
+>>>> };
+>>>>
+>>>> static const struct v4l2_ctrl_config ctrl = {
+>>>>         ...
+>>>>
+>>>>         .p_def.p_area = &def_area,
+>>>>         ...
+>>>> };
+>>>>
+>>>> Can you do a quick compile check that I am not overlooking anything?
+>>>>
+>>>> If this works, then I'll take this patch.
+>>>
+>>> Testing with gcc 9.2.1
+>>>
+>>> This works fine, no warning/error:
+>>>
+>>> static struct v4l2_area unit_size = {
+>>> .width = UNIT_SIZE,
+>>> .height = UNIT_SIZE,
+>>> };
+>>> static struct v4l2_ctrl_config area_ctrl = {
+>>> .type = V4L2_CTRL_TYPE_AREA,
+>>> .flags = V4L2_CTRL_FLAG_READ_ONLY,
+>>> .p_def.p_area = &unit_size,
+>>> };
+>>>
+>>> but if unit_size is set as CONST:
+>>> static const struct v4l2_area
+>>>
+>>> Then:
+>>> drivers/qtec/qtec_sony.c: In function ‘qtec_sony_probe’:
+>>> drivers/qtec/qtec_sony.c:3151:19: warning: initialization discards
+>>> ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+>>>  3151 |   .p_def.p_area = &unit_size,
+>>>       |
+>>
+>> Hmm. So we need a const void *p_def instead.
+>>
+> 
+> If we make p_def in ctrl_config const then this will fail:
+> 
+> drivers/qtec/qtec_sony.c:3273:18: error: assignment of read-only member ‘p_def’
+>  3273 |  area_ctrl.p_def = v4l2_ctrl_ptr_create((void *)&unit_size);
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/goya/goya.c        | 3 +++
- drivers/misc/habanalabs/habanalabs_ioctl.c | 9 +++++++--
- include/uapi/misc/habanalabs.h             | 2 ++
- 3 files changed, 12 insertions(+), 2 deletions(-)
+area_ctrl should be const as well, I think. And then initialize this field in
+the structure with .p_def.p_area = &unit_size,
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index e8812154343f..d3ee9e2aa57e 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -396,6 +396,9 @@ void goya_get_fixed_properties(struct hl_device *hdev)
- 	prop->tpc_enabled_mask = TPC_ENABLED_MASK;
- 	prop->pcie_dbi_base_address = mmPCIE_DBI_BASE;
- 	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
-+
-+	strncpy(prop->armcp_info.card_name, GOYA_DEFAULT_CARD_NAME,
-+		CARD_NAME_MAX_LEN);
- }
- 
- /*
-diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
-index cd4b5a9ceac1..02d7491fa28f 100644
---- a/drivers/misc/habanalabs/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
-@@ -63,8 +63,13 @@ static int hw_ip_info(struct hl_device *hdev, struct hl_info_args *args)
- 	if (hw_ip.dram_size > 0)
- 		hw_ip.dram_enabled = 1;
- 	hw_ip.num_of_events = prop->num_of_events;
--	memcpy(hw_ip.armcp_version,
--		prop->armcp_info.armcp_version, VERSION_MAX_LEN);
-+
-+	memcpy(hw_ip.armcp_version, prop->armcp_info.armcp_version,
-+		min(VERSION_MAX_LEN, HL_INFO_VERSION_MAX_LEN));
-+
-+	memcpy(hw_ip.card_name, prop->armcp_info.card_name,
-+		min(CARD_NAME_MAX_LEN, HL_INFO_CARD_NAME_MAX_LEN));
-+
- 	hw_ip.armcp_cpld_version = le32_to_cpu(prop->armcp_info.cpld_version);
- 	hw_ip.psoc_pci_pll_nr = prop->psoc_pci_pll_nr;
- 	hw_ip.psoc_pci_pll_nf = prop->psoc_pci_pll_nf;
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index 783793c8be1c..e387d9e560b3 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -109,6 +109,7 @@ enum hl_device_status {
- #define HL_INFO_CLK_RATE		8
- 
- #define HL_INFO_VERSION_MAX_LEN	128
-+#define HL_INFO_CARD_NAME_MAX_LEN	16
- 
- struct hl_info_hw_ip_info {
- 	__u64 sram_base_address;
-@@ -127,6 +128,7 @@ struct hl_info_hw_ip_info {
- 	__u8 dram_enabled;
- 	__u8 pad[2];
- 	__u8 armcp_version[HL_INFO_VERSION_MAX_LEN];
-+	__u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
- };
- 
- struct hl_info_dram_usage {
--- 
-2.17.1
+Regards,
+
+	Hans
+
+> 
+> 
+> I think we need to leave it as in the proposed patch.
+> 
+>> Regards,
+>>
+>>         Hans
+>>
+>>>
+>>>>
+>>>> Regards,
+>>>>
+>>>>         Hans
+>>>>
+>>>>>
+>>>>> Regards
+>>>>>
+>>>>> On Wed, Oct 16, 2019 at 2:17 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>>>>>
+>>>>>> On 10/14/19 4:14 PM, Ricardo Ribalda Delgado wrote:
+>>>>>>> This allows setting the default value on compound controls created via
+>>>>>>> v4l2_ctrl_new_custom.
+>>>>>>>
+>>>>>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>>>>>> ---
+>>>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+>>>>>>>  include/media/v4l2-ctrls.h           | 2 ++
+>>>>>>>  2 files changed, 3 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>>>>>> index bf50d37ef6c1..12cf38f73f7b 100644
+>>>>>>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>>>>>>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>>>>>>> @@ -2583,7 +2583,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
+>>>>>>>                       type, min, max,
+>>>>>>>                       is_menu ? cfg->menu_skip_mask : step, def,
+>>>>>>>                       cfg->dims, cfg->elem_size,
+>>>>>>> -                     flags, qmenu, qmenu_int, ptr_null, priv);
+>>>>>>> +                     flags, qmenu, qmenu_int, cfg->p_def, priv);
+>>>>>>>       if (ctrl)
+>>>>>>>               ctrl->is_private = cfg->is_private;
+>>>>>>>       return ctrl;
+>>>>>>> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+>>>>>>> index 26205ba3a0a0..2fca5b823961 100644
+>>>>>>> --- a/include/media/v4l2-ctrls.h
+>>>>>>> +++ b/include/media/v4l2-ctrls.h
+>>>>>>> @@ -375,6 +375,7 @@ struct v4l2_ctrl_handler {
+>>>>>>>   * @max:     The control's maximum value.
+>>>>>>>   * @step:    The control's step value for non-menu controls.
+>>>>>>>   * @def:     The control's default value.
+>>>>>>> + * @p_def:   The control's default value for compound controls.
+>>>>>>>   * @dims:    The size of each dimension.
+>>>>>>>   * @elem_size:       The size in bytes of the control.
+>>>>>>>   * @flags:   The control's flags.
+>>>>>>> @@ -403,6 +404,7 @@ struct v4l2_ctrl_config {
+>>>>>>>       s64 max;
+>>>>>>>       u64 step;
+>>>>>>>       s64 def;
+>>>>>>> +     union v4l2_ctrl_ptr p_def;
+>>>>>>>       u32 dims[V4L2_CTRL_MAX_DIMS];
+>>>>>>>       u32 elem_size;
+>>>>>>>       u32 flags;
+>>>>>>>
+>>>>>>
+>>>>>> I'm not sure about this. It might be a bit awkward to initialize p_def given that it is a union.
+>>>>>>
+>>>>>> Perhaps a simple void pointer would be easier?
+>>>>>>
+>>>>>> Regards,
+>>>>>>
+>>>>>>         Hans
+>>>>
+>>
 
