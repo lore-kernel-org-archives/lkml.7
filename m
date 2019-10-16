@@ -2,351 +2,187 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72272C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DD6ECE59F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FB7217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCG3oi+w"
+	by mail.kernel.org (Postfix) with ESMTP id 92534217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403960AbfJPDeO (ORCPT
+        id S2403970AbfJPDeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:34:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38231 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403910AbfJPDeC (ORCPT
+        Tue, 15 Oct 2019 23:34:16 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42698 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2403911AbfJPDeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:34:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h195so13788723pfe.5
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 20:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xagVe9Yqjp30L3CH/AkBbW6XTA2w//rI82PLgD7cLOY=;
-        b=FCG3oi+wtp8WuNIu+Mj5Xi6zpckok2804ZhLuVVAM/UPmgGPZgIRNcoZ+FLno8BalL
-         9xR660aCw9gHCn4sb+789tetZoeFdSJms1H/XxtkX5QccB0ZsTiyzIc5daYbhF6X8FjX
-         h3XndUeWdDaDZCdbOkUyGiAwpjE+e26OxhohCVmIM52DCq6qgZuH89RiHbG16RPMIuoa
-         WxmViHk759exoEZaSWw6hHZut2L7m9+Q5RGVV8sKUC+l+kjNojogq9ZerxqGEMWAfoVK
-         i5DfeGg8sqY8Ayiudd5l2B5+1l2RU+FUpctMXiPgfZbsc3plPulJJyoT+biy3nkerECK
-         4brg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xagVe9Yqjp30L3CH/AkBbW6XTA2w//rI82PLgD7cLOY=;
-        b=rSV7M0CBidyMYrW7dGzCyPFuvi9Cusw7B9uE+go8GPba9E5P8AkSuZ0x+HTMK6gbw7
-         hc3iMwaf+0uVrAhNwppxn02gA9sKv1UwZB9hhZdU4LyPVAUJgQpywLKD9sH26a3shjXC
-         jnzgZ+X+1hB63qpHHHAmv/3GCXvEKkOP4NbgPSrOtuWLNFdBbXGsZA1k+3u7zgi8aBx4
-         /a3ciKPB9Yk+EMGgz7NoTNbXS/ySj7KBSTL6p3R50+X7GriEsZtcyHdjGi2dXFtgX8gp
-         ZBAoc3jR0MTPnXXjyDRfUxPjOuxq29Y6lgnQqrcdyXZszc7QSnOl9OUxfy24rOb1dlI5
-         KPUw==
-X-Gm-Message-State: APjAAAWODgRXsToWLKuotgRlz8xIC/3DhqDucFLN+HGwGbZ8bVgh0I3K
-        p0KWbnPB3/ypYjTrqo4TICS+BmwvmjU=
-X-Google-Smtp-Source: APXvYqyjznVOrrf/7tKLsDK6LxpZJ0h4ZdLLFiHJOkW6Rcda1DTtbAt+tRl/yGJyszQBRoTNvSQgXA==
-X-Received: by 2002:a62:ce01:: with SMTP id y1mr2104635pfg.176.1571196840691;
-        Tue, 15 Oct 2019 20:34:00 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id l23sm748356pjy.12.2019.10.15.20.33.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 20:34:00 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH v3 11/11] misc: hisi_hikey_usb: Driver to support usb functionality of Hikey960
-Date:   Wed, 16 Oct 2019 03:33:40 +0000
-Message-Id: <20191016033340.1288-12-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191016033340.1288-1-john.stultz@linaro.org>
-References: <20191016033340.1288-1-john.stultz@linaro.org>
+        Tue, 15 Oct 2019 23:34:13 -0400
+X-UUID: 8ecdb9dbaa284e0586e93ec9c31e477e-20191016
+X-UUID: 8ecdb9dbaa284e0586e93ec9c31e477e-20191016
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1432395595; Wed, 16 Oct 2019 11:34:07 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 16 Oct 2019 11:34:03 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 16 Oct 2019 11:34:02 +0800
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>
+CC:     Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
+        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
+        <chao.hao@mediatek.com>, <edison.hsieh@mediatek.com>
+Subject: [PATCH v4 5/7] iommu/mediatek: Move the tlb_sync into tlb_flush
+Date:   Wed, 16 Oct 2019 11:33:10 +0800
+Message-ID: <1571196792-12382-6-git-send-email-yong.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1571196792-12382-1-git-send-email-yong.wu@mediatek.com>
+References: <1571196792-12382-1-git-send-email-yong.wu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: C5018E1BE821F0B12DBD3BFF81ED24D602A6050BF1D33E0E29578E761BD871EC2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+Right now, the tlb_add_flush_nosync and tlb_sync always appear together.
+we merge the two functions into one(also move the tlb_lock into the new
+function). No functional change.
 
-The HiKey960 has a fairly complex USB configuration due to it
-needing to support a USB-C port for host/device mode and multiple
-USB-A ports in host mode using a single USB controller.
-
-See schematics here:
-  https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
-
-This driver acts as a usb-role-switch intermediary, intercepting
-the role switch notifications from the tcpm code, and passing
-them on to the dwc3 core.
-
-In doing so, it also controls the onboard hub and power gpios in
-order to properly route the data lines between the USB-C port
-and the onboard hub to the USB-A ports.
-
-NOTE: It was noted that controlling the TYPEC_VBUS_POWER_OFF and
-TYPEC_VBUS_POWER_ON values here is not reccomended. I'm looking
-for a way to remove that bit from the logic here, but wanted to
-still get feedback on this approach.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
-[jstultz: Major rework to make the driver a usb-role-switch
-          intermediary]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 ---
-v3:
-* Major rework to make the driver a usb-role-switch intermediary
-  rather then trying to do notifier callbacks from the role switch
-  logic
----
- drivers/misc/Kconfig          |   6 ++
- drivers/misc/Makefile         |   1 +
- drivers/misc/hisi_hikey_usb.c | 178 ++++++++++++++++++++++++++++++++++
- 3 files changed, 185 insertions(+)
- create mode 100644 drivers/misc/hisi_hikey_usb.c
+ drivers/iommu/mtk_iommu.c | 45 ++++++++++-----------------------------------
+ drivers/iommu/mtk_iommu.h |  1 -
+ 2 files changed, 10 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index c55b63750757..bf42d1e234ea 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -466,6 +466,12 @@ config PVPANIC
- 	  a paravirtualized device provided by QEMU; it lets a virtual machine
- 	  (guest) communicate panic events to the host.
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 1d7254c..0e5f41f 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -173,12 +173,16 @@ static void mtk_iommu_tlb_flush_all(void *cookie)
+ 	}
+ }
  
-+config HISI_HIKEY_USB
-+	tristate "USB functionality of HiSilicon Hikey Platform"
-+	depends on OF && GPIOLIB
-+	help
-+	  If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index c1860d35dc7e..e5e85ad0dd57 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -57,3 +57,4 @@ obj-y				+= cardreader/
- obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
- obj-$(CONFIG_HABANA_AI)		+= habanalabs/
- obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
-+obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
-diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
-new file mode 100644
-index 000000000000..32015bc9ccf6
---- /dev/null
-+++ b/drivers/misc/hisi_hikey_usb.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Support for usb functionality of Hikey series boards
-+ * based on Hisilicon Kirin Soc.
-+ *
-+ * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Authors: Yu Chen <chenyu56@huawei.com>
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/usb/role.h>
-+
-+#define DEVICE_DRIVER_NAME "hisi_hikey_usb"
-+
-+#define HUB_VBUS_POWER_ON 1
-+#define HUB_VBUS_POWER_OFF 0
-+#define USB_SWITCH_TO_HUB 1
-+#define USB_SWITCH_TO_TYPEC 0
-+#define TYPEC_VBUS_POWER_ON 1
-+#define TYPEC_VBUS_POWER_OFF 0
-+
-+struct hisi_hikey_usb {
-+	struct gpio_desc *otg_switch;
-+	struct gpio_desc *typec_vbus;
-+	struct gpio_desc *hub_vbus;
-+
-+	struct usb_role_switch *hub_role_sw;
-+	struct usb_role_switch *dev_role_sw;
-+	struct notifier_block nb;
-+};
-+
-+static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
-+{
-+	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
-+}
-+
-+static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-+			    int switch_to)
-+{
-+	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
-+}
-+
-+static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-+				 int value)
-+{
-+	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
-+}
-+
-+static int hub_usb_role_switch_set(struct device *dev, enum usb_role role)
-+{
-+	struct hisi_hikey_usb *hisi_hikey_usb = dev_get_drvdata(dev);
-+
-+	if (!hisi_hikey_usb || !hisi_hikey_usb->dev_role_sw)
-+		return -EINVAL;
-+
-+	switch (role) {
-+	case USB_ROLE_NONE:
-+		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
-+		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
-+		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
-+		break;
-+	case USB_ROLE_HOST:
-+		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
-+		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-+		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_ON);
-+		break;
-+	case USB_ROLE_DEVICE:
-+		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
-+		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
-+		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return usb_role_switch_set_role(hisi_hikey_usb->dev_role_sw, role);
-+}
-+
-+static enum usb_role hub_usb_role_switch_get(struct device *dev)
-+{
-+	struct hisi_hikey_usb *hisi_hikey_usb = dev_get_drvdata(dev);
-+
-+	if (!hisi_hikey_usb || !hisi_hikey_usb->dev_role_sw)
-+		return -EINVAL;
-+
-+	return usb_role_switch_get_role(hisi_hikey_usb->dev_role_sw);
-+}
-+
-+static int hisi_hikey_usb_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct hisi_hikey_usb *hisi_hikey_usb;
-+	struct usb_role_switch_desc hub_role_switch = {NULL};
-+
-+	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
-+	if (!hisi_hikey_usb)
-+		return -ENOMEM;
-+
-+	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(hisi_hikey_usb->typec_vbus))
-+		return PTR_ERR(hisi_hikey_usb->typec_vbus);
-+
-+	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch",
-+						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(hisi_hikey_usb->otg_switch))
-+		return PTR_ERR(hisi_hikey_usb->otg_switch);
-+
-+	/* hub-vdd33-en is optional */
-+	hisi_hikey_usb->hub_vbus = devm_gpiod_get_optional(dev, "hub-vdd33-en",
-+							   GPIOD_OUT_HIGH);
-+	if (IS_ERR(hisi_hikey_usb->hub_vbus))
-+		return PTR_ERR(hisi_hikey_usb->hub_vbus);
-+
-+	hisi_hikey_usb->dev_role_sw = usb_role_switch_get(dev);
-+	if (!hisi_hikey_usb->dev_role_sw)
-+		return -EPROBE_DEFER;
-+	if (IS_ERR(hisi_hikey_usb->dev_role_sw))
-+		return PTR_ERR(hisi_hikey_usb->dev_role_sw);
-+
-+	hub_role_switch.fwnode = dev_fwnode(dev);
-+	hub_role_switch.set = hub_usb_role_switch_set;
-+	hub_role_switch.get = hub_usb_role_switch_get;
-+	hisi_hikey_usb->hub_role_sw = usb_role_switch_register(dev,
-+							&hub_role_switch);
-+
-+	if (IS_ERR(hisi_hikey_usb->hub_role_sw)) {
-+		usb_role_switch_put(hisi_hikey_usb->dev_role_sw);
-+		return PTR_ERR(hisi_hikey_usb->hub_role_sw);
-+	}
-+
-+	platform_set_drvdata(pdev, hisi_hikey_usb);
-+
-+	return 0;
-+}
-+
-+static int  hisi_hikey_usb_remove(struct platform_device *pdev)
-+{
-+	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
-+
-+	if (hisi_hikey_usb->hub_role_sw)
-+		usb_role_switch_unregister(hisi_hikey_usb->hub_role_sw);
-+
-+	if (hisi_hikey_usb->dev_role_sw)
-+		usb_role_switch_put(hisi_hikey_usb->dev_role_sw);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id id_table_hisi_hikey_usb[] = {
-+	{.compatible = "hisilicon,gpio_hubv1"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, id_table_hisi_hikey_usb);
-+
-+static struct platform_driver hisi_hikey_usb_driver = {
-+	.probe = hisi_hikey_usb_probe,
-+	.remove = hisi_hikey_usb_remove,
-+	.driver = {
-+		.name = DEVICE_DRIVER_NAME,
-+		.of_match_table = id_table_hisi_hikey_usb,
-+	},
-+};
-+
-+module_platform_driver(hisi_hikey_usb_driver);
-+
-+MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-+MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
-+MODULE_LICENSE("GPL v2");
+-static void mtk_iommu_tlb_add_flush_nosync(unsigned long iova, size_t size,
++static void mtk_iommu_tlb_flush_range_sync(unsigned long iova, size_t size,
+ 					   size_t granule, void *cookie)
+ {
+ 	struct mtk_iommu_data *data = cookie;
++	unsigned long flags;
++	int ret;
++	u32 tmp;
+ 
+ 	for_each_m4u(data) {
++		spin_lock_irqsave(&data->tlb_lock, flags);
+ 		writel_relaxed(F_INVLD_EN1 | F_INVLD_EN0,
+ 			       data->base + REG_MMU_INV_SEL);
+ 
+@@ -187,21 +191,8 @@ static void mtk_iommu_tlb_add_flush_nosync(unsigned long iova, size_t size,
+ 			       data->base + REG_MMU_INVLD_END_A);
+ 		writel_relaxed(F_MMU_INV_RANGE,
+ 			       data->base + REG_MMU_INVALIDATE);
+-		data->tlb_flush_active = true;
+-	}
+-}
+-
+-static void mtk_iommu_tlb_sync(void *cookie)
+-{
+-	struct mtk_iommu_data *data = cookie;
+-	int ret;
+-	u32 tmp;
+-
+-	for_each_m4u(data) {
+-		/* Avoid timing out if there's nothing to wait for */
+-		if (!data->tlb_flush_active)
+-			return;
+ 
++		/* tlb sync */
+ 		ret = readl_poll_timeout_atomic(data->base + REG_MMU_CPE_DONE,
+ 						tmp, tmp != 0, 10, 100000);
+ 		if (ret) {
+@@ -211,22 +202,10 @@ static void mtk_iommu_tlb_sync(void *cookie)
+ 		}
+ 		/* Clear the CPE status */
+ 		writel_relaxed(0, data->base + REG_MMU_CPE_DONE);
+-		data->tlb_flush_active = false;
++		spin_unlock_irqrestore(&data->tlb_lock, flags);
+ 	}
+ }
+ 
+-static void mtk_iommu_tlb_flush_walk(unsigned long iova, size_t size,
+-				     size_t granule, void *cookie)
+-{
+-	struct mtk_iommu_data *data = cookie;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&data->tlb_lock, flags);
+-	mtk_iommu_tlb_add_flush_nosync(iova, size, granule, cookie);
+-	mtk_iommu_tlb_sync(cookie);
+-	spin_unlock_irqrestore(&data->tlb_lock, flags);
+-}
+-
+ static void mtk_iommu_tlb_flush_page_nosync(struct iommu_iotlb_gather *gather,
+ 					    unsigned long iova, size_t granule,
+ 					    void *cookie)
+@@ -239,8 +218,8 @@ static void mtk_iommu_tlb_flush_page_nosync(struct iommu_iotlb_gather *gather,
+ 
+ static const struct iommu_flush_ops mtk_iommu_flush_ops = {
+ 	.tlb_flush_all = mtk_iommu_tlb_flush_all,
+-	.tlb_flush_walk = mtk_iommu_tlb_flush_walk,
+-	.tlb_flush_leaf = mtk_iommu_tlb_flush_walk,
++	.tlb_flush_walk = mtk_iommu_tlb_flush_range_sync,
++	.tlb_flush_leaf = mtk_iommu_tlb_flush_range_sync,
+ 	.tlb_add_page = mtk_iommu_tlb_flush_page_nosync,
+ };
+ 
+@@ -455,16 +434,12 @@ static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
+ {
+ 	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
+ 	size_t length = gather->end - gather->start;
+-	unsigned long flags;
+ 
+ 	if (gather->start == ULONG_MAX)
+ 		return;
+ 
+-	spin_lock_irqsave(&data->tlb_lock, flags);
+-	mtk_iommu_tlb_add_flush_nosync(gather->start, length, gather->pgsize,
++	mtk_iommu_tlb_flush_range_sync(gather->start, length, gather->pgsize,
+ 				       data);
+-	mtk_iommu_tlb_sync(data);
+-	spin_unlock_irqrestore(&data->tlb_lock, flags);
+ }
+ 
+ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
+diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+index 8cae22d..ea949a3 100644
+--- a/drivers/iommu/mtk_iommu.h
++++ b/drivers/iommu/mtk_iommu.h
+@@ -57,7 +57,6 @@ struct mtk_iommu_data {
+ 	struct mtk_iommu_domain		*m4u_dom;
+ 	struct iommu_group		*m4u_group;
+ 	bool                            enable_4GB;
+-	bool				tlb_flush_active;
+ 	spinlock_t			tlb_lock; /* lock for tlb range flush */
+ 
+ 	struct iommu_device		iommu;
 -- 
-2.17.1
+1.9.1
 
