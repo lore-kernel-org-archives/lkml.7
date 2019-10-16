@@ -2,136 +2,106 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1011CECE58E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3BAECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F7C20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BE12067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 05:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3AjPm/u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YwMFAoU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbfJPFZx (ORCPT
+        id S1730622AbfJPF1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 01:25:53 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36080 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfJPFZx (ORCPT
+        Wed, 16 Oct 2019 01:27:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44471 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbfJPF1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 01:25:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 23so13569148pgk.3;
-        Tue, 15 Oct 2019 22:25:52 -0700 (PDT)
+        Wed, 16 Oct 2019 01:27:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e10so9567926pgd.11
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 22:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=tgB81cyefpFakuk6zdIviYL9506XtYk1wgoR57DN6ms=;
-        b=t3AjPm/ueds16Gdc4Of68h6MdRIa86PNBEG9y0li57o+Du0tLW/soOBC13TpTMbb5c
-         Jy0I1fdBqm7f7JqN91yx1u+AgkBhw+vHNLeOXb08q9HiI6GHXgioQXuAG1evS8e4Z8oz
-         KCUQaEABhM5N2zjxXb2oUMMox6UUGhPpyeIxKuLpBUK522qJjm5Dkopr33REYbN5TGrf
-         oHNy/z532OpDRetnTf8XSO7EQswSTCl8PdapIoVztalq9+gC+0lHx0cQ0Jx+/1MunUmC
-         LhC5Z7deAAYOgd8L2lpwjSZGNzQGfObMwrJZIf+Y8bqLEVHcyUlcvgi3ud6NSgfzVve9
-         FH1Q==
+        bh=c+hURjTVo/aYLCfa/Hz0445uoq4DnBCPweYQaNg80RE=;
+        b=YwMFAoU0heHyDD3IBl2x1cf1ZtcwEVCpkffQekoavrEeeW4lA1h7ksu5E+baEG875m
+         /NQrOSXT5b6WEePqqi5KsA2ojc3RGJDXXkFUqDv9QW+u2IyGhO7DpJqzls4jo8vOztPn
+         wFLEIdRAB9XNWMneT1KITqtxNPhB4hg7K2L2QLdA1TU/R58JNVLMeWyUz2Xg6BfhVK1B
+         V2JoUByRubqBAg/2Q1oBbeFLTAPA4jyc6BXISrwjDmSxZ+fgUK8hJgIK0bSMjROSAgct
+         qJ2c2Jk6LRa9rzSy1R+gQuKACuJOnHRUjAyifzTQJvo9dwZpYYbN8SVYPIH78QT7LjvX
+         C72w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tgB81cyefpFakuk6zdIviYL9506XtYk1wgoR57DN6ms=;
-        b=JPiVBeSSN6rvFAsRl4RM5JQgoZanFhhZuhEV404dRpYluC8+3v2k7cCmkb+Mh7zeE4
-         aLeotgoWnotfiWbonfaEyqLud1kTwoC7sRrHa7rfKgxBbb/qlJK8KhU+XAikMd5rpOZe
-         eg5ux+1oL+uh6PgrZFiV8b00fwaehyZWxHvRjjv0/FhW4/Tj1NZyoM09K4IuOTynpGl1
-         /utNWSs7FEwaAHMs1yqV4PQzHCMAq95MtLS9B91W3IddxNnJIGf1IkETIAqSPM8/iRLH
-         0vAlXnl5hVNtpzpO5RlLtCRULt8m4CU017OxRSXQz3l1m10bRup6epN9tuq+iWOwnBZo
-         wAyw==
-X-Gm-Message-State: APjAAAVeFWZVv2DgTiNvXSJTEAxuDHM8wARLQ3d6TGKdtc+plYuhXtMj
-        d+p8YJd2F2I8cEFQnZHKg1E=
-X-Google-Smtp-Source: APXvYqydb+5ITh8DgK3MAx2K6IDcb2fS1NWR7rTVdKOYao+qPBPYmgM4znQ/lj+TXnVeQTyVa+kO0w==
-X-Received: by 2002:a63:748:: with SMTP id 69mr24364599pgh.109.1571203552176;
-        Tue, 15 Oct 2019 22:25:52 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::8bc])
-        by smtp.gmail.com with ESMTPSA id i184sm26355174pge.5.2019.10.15.22.25.50
+        bh=c+hURjTVo/aYLCfa/Hz0445uoq4DnBCPweYQaNg80RE=;
+        b=ksKg4CuXzyEkY16//cEBWiDm33hOih1ssBn71xK5/lj7aOxg9BjDdf1+JSdBOlgWsq
+         4REAasubaeWp4ApK6eNvzVbbYwY7ucYGN8iVicjzxxIo+XqfuNpDRr/4vytTAXnDMKoy
+         ZsWozJuzibpO31sQHJ5s1ymXrFm6agO1VpvHR6b4tbm9qoVaJmJ07GhkXvhQUxcKeRuo
+         Kc567OaTLTK39SR98/fNstv2YcgV70l91q9da2wLQO3BR+StfvESwDFmDn622piI5Est
+         I6ZHY1XRjIIOXsqUX2TkTuDoFI9jE2rgWBN3M+nDmq6IvEKl7pdfkK9LXf3IifypDFTt
+         Cl6w==
+X-Gm-Message-State: APjAAAUPfVgwKiNHBelBXvKmtx6j06ZSahfvUsqCD9daKKmhGoy4XL56
+        5x0NPIEUqt95oEZGFK57DaKQOQ==
+X-Google-Smtp-Source: APXvYqwrC2hWVKfaRMlzUy8HycPTVMe+xH1vrIClOSut973FStL2ZIohmrOuxo+UhtZHAyb3vUdqTg==
+X-Received: by 2002:a63:4d61:: with SMTP id n33mr41993243pgl.158.1571203638688;
+        Tue, 15 Oct 2019 22:27:18 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id x65sm18642216pgb.75.2019.10.15.22.27.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 22:25:51 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 22:25:49 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH v3 2/3] bpf: use copy_struct_from_user() in
- bpf_prog_get_info_by_fd()
-Message-ID: <20191016052548.gktf2ctvee7mrwlr@ast-mbp>
-References: <20191016004138.24845-1-christian.brauner@ubuntu.com>
- <20191016034432.4418-1-christian.brauner@ubuntu.com>
- <20191016034432.4418-3-christian.brauner@ubuntu.com>
+        Tue, 15 Oct 2019 22:27:18 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 10:57:16 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/17] NVIDIA Tegra20 CPUFreq driver major update
+Message-ID: <20191016052716.yipztnpg7bcuzhfn@vireshk-i7>
+References: <20191015211618.20758-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016034432.4418-3-christian.brauner@ubuntu.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20191015211618.20758-1-digetx@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 05:44:31AM +0200, Christian Brauner wrote:
-> In v5.4-rc2 we added a new helper (cf. [1]) copy_struct_from_user().
-> This helper is intended for all codepaths that copy structs from
-> userspace that are versioned by size. bpf_prog_get_info_by_fd() does
-> exactly what copy_struct_from_user() is doing.
-> Note that copy_struct_from_user() is calling min() already. So
-> technically, the min_t() call could go. But the info_len is used further
-> below so leave it.
+On 16-10-19, 00:16, Dmitry Osipenko wrote:
+> Hello,
 > 
-> [1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: bpf@vger.kernel.org
-> Acked-by: Aleksa Sarai <cyphar@cyphar.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> ---
-> /* v1 */
-> Link: https://lore.kernel.org/r/20191009160907.10981-3-christian.brauner@ubuntu.com
-> 
-> /* v2 */
-> Link: https://lore.kernel.org/r/20191016004138.24845-3-christian.brauner@ubuntu.com
-> - Alexei Starovoitov <ast@kernel.org>:
->   - remove unneeded initialization
-> 
-> /* v3 */
-> unchanged
-> ---
->  kernel/bpf/syscall.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 40edcaeccd71..151447f314ca 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -2306,20 +2306,17 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
->  				   union bpf_attr __user *uattr)
->  {
->  	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
-> -	struct bpf_prog_info info = {};
-> +	struct bpf_prog_info info;
->  	u32 info_len = attr->info.info_len;
->  	struct bpf_prog_stats stats;
->  	char __user *uinsns;
->  	u32 ulen;
->  	int err;
->  
-> -	err = bpf_check_uarg_tail_zero(uinfo, sizeof(info), info_len);
-> +	info_len = min_t(u32, sizeof(info), info_len);
-> +	err = copy_struct_from_user(&info, sizeof(info), uinfo, info_len);
+> This series moves intermediate-clk handling from tegra20-cpufreq into
+> tegra-clk driver, this allows us to switch to generic cpufreq-dt driver
+> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+> of the box. All boards need to adopt CPU OPPs in their device-trees in
+> order to get cpufreq support. This series adds OPPs only to selective
+> boards because there is assumption in a current device-trees that CPU
+> voltage is set for 1GHz freq and this won't work for those CPUs that
+> can go over 1GHz and thus require voltage regulators to be set up for
+> voltage scaling support (CC'ed Marcel for Toradex boards). We could
+> probably add delete-node for OPPs over 1GHz if there are not actively
+> maintained boards.
 
-really?! min?!
-Frankly I'm disappointed in quality of these patches.
-Especially considering it's v3.
+How do you want to get these patches merged ? Can I just pick the cpufreq bits
+alone ?
 
-Just live the code alone.
-
+-- 
+viresh
