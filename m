@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807C1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E06DFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D652168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352A22168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263780;
-	bh=OuhpAZtWvGGN1P/s/XbrJ/IGUTkpi1O1QmxyxVUadR4=;
+	s=default; t=1571263785;
+	bh=ZGQlvPKmwwuGpmVF+kmEnuCd8wrKkvBiZBKBsh4ybRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C9Qfx68LpVxHYbQ86uZWrEr+YBE98qo2G1ZQydPhvh9gs62/eDu/UaEPD9GihAzve
-	 +P/fCN0ln+f9iSgfPs28OaIhBJMcEZF9cRjRCaJV12HKXPLwIjQDlzaNGSTg1rWHxh
-	 BpOa5JZ2O/aBPjBHIan6CajsOpYvp+xsXAru1/Jw=
+	b=rl6TPaQkTb8SpmWW6e6mFECcN4+iiN3MYqxitHtH5o+9Psqe3V5kXNpKUdTAgp1NG
+	 Lpz0CK6p4b+hXlWqimwsHGjMYULclaT7ydc1qdTDHLjRWeMX+2+dUALX2F9TQYlgsT
+	 W8cPsQC/EeRn7PpkoBh6Ozk0wK7v5c66xL2iMXt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407167AbfJPWJj (ORCPT
+        id S2395483AbfJPV51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50152 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406644AbfJPV52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:28 -0400
+        id S2437915AbfJPV4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:50 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ADE621928;
-        Wed, 16 Oct 2019 21:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A967321D7E;
+        Wed, 16 Oct 2019 21:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263047;
-        bh=OuhpAZtWvGGN1P/s/XbrJ/IGUTkpi1O1QmxyxVUadR4=;
+        s=default; t=1571263008;
+        bh=ZGQlvPKmwwuGpmVF+kmEnuCd8wrKkvBiZBKBsh4ybRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jlLBWg6mzfaaZCBIgeX/jr+E1Vp2Rr0L7w5WSqZWi1JR1MJaEc31O/RxZvCyxUw1S
-         A0sFLy6LjUdwlvZIc8atVB5ETzWXoKmWZ9NwuWW/n48KfuLNqvBvHKa9LYbRqBJ0eS
-         wVLIi730gsDojL2H9Uca30+hP9UnCamqKpjFTQZs=
+        b=b+0c2pc2usByO7/VUwObzNe5tSU9axGQdkpLuV4KpUeiRdkOtmS3VUFAioYv6ROKa
+         SsJ+sgb2LsHX9S9Lq9Coa1ttI/UfzgD7I8ZYVPRVbAziPfZe1FuFecD7IuR1Fv3Pl0
+         6CfXjt6DjF5Eb87Eig4Er+Su2BbuosE1GdVYKtAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <jbacik@fb.com>,
-        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 52/81] blk-wbt: fix performance regression in wbt scale_up/scale_down
-Date:   Wed, 16 Oct 2019 14:51:03 -0700
-Message-Id: <20191016214841.239919200@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Lo=C3=AFc=20Yhuel?= <loic.yhuel@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 11/81] xhci: Fix USB 3.1 capability detection on early xHCI 1.1 spec based hosts
+Date:   Wed, 16 Oct 2019 14:50:22 -0700
+Message-Id: <20191016214815.472904288@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -60,117 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit b84477d3ebb96294f87dc3161e53fa8fe22d9bfd upstream.
+commit 47f50d61076523e1a0d5a070062c2311320eeca8 upstream.
 
-scale_up wakes up waiters after scaling up. But after scaling max, it
-should not wake up more waiters as waiters will not have anything to
-do. This patch fixes this by making scale_up (and also scale_down)
-return when threshold is reached.
+Early xHCI 1.1 spec did not mention USB 3.1 capable hosts should set
+sbrn to 0x31, or that the minor revision is a two digit BCD
+containing minor and sub-minor numbers.
+This was later clarified in xHCI 1.2.
 
-This bug causes increased fdatasync latency when fdatasync and dd
-conv=sync are performed in parallel on 4.19 compared to 4.14. This
-bug was introduced during refactoring of blk-wbt code.
+Some USB 3.1 capable hosts therefore have sbrn set to 0x30, or minor
+revision set to 0x1 instead of 0x10.
 
-Fixes: a79050434b45 ("blk-rq-qos: refactor out common elements of blk-wbt")
-Cc: stable@vger.kernel.org
-Cc: Josef Bacik <jbacik@fb.com>
-Signed-off-by: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Detect the USB 3.1 capability correctly for these hosts as well
+
+Fixes: ddd57980a0fd ("xhci: detect USB 3.2 capable host controllers correctly")
+Cc: <stable@vger.kernel.org> # v4.18+
+Cc: Loïc Yhuel <loic.yhuel@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-5-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-rq-qos.c |   14 +++++++++-----
- block/blk-rq-qos.h |    4 ++--
- block/blk-wbt.c    |    6 ++++--
- 3 files changed, 15 insertions(+), 9 deletions(-)
+ drivers/usb/host/xhci.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -148,24 +148,27 @@ bool rq_depth_calc_max_depth(struct rq_d
- 	return ret;
- }
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -5036,11 +5036,18 @@ int xhci_gen_setup(struct usb_hcd *hcd,
+ 		hcd->has_tt = 1;
+ 	} else {
+ 		/*
+-		 * Some 3.1 hosts return sbrn 0x30, use xhci supported protocol
+-		 * minor revision instead of sbrn. Minor revision is a two digit
+-		 * BCD containing minor and sub-minor numbers, only show minor.
++		 * Early xHCI 1.1 spec did not mention USB 3.1 capable hosts
++		 * should return 0x31 for sbrn, or that the minor revision
++		 * is a two digit BCD containig minor and sub-minor numbers.
++		 * This was later clarified in xHCI 1.2.
++		 *
++		 * Some USB 3.1 capable hosts therefore have sbrn 0x30, and
++		 * minor revision set to 0x1 instead of 0x10.
+ 		 */
+-		minor_rev = xhci->usb3_rhub.min_rev / 0x10;
++		if (xhci->usb3_rhub.min_rev == 0x1)
++			minor_rev = 1;
++		else
++			minor_rev = xhci->usb3_rhub.min_rev / 0x10;
  
--void rq_depth_scale_up(struct rq_depth *rqd)
-+/* Returns true on success and false if scaling up wasn't possible */
-+bool rq_depth_scale_up(struct rq_depth *rqd)
- {
- 	/*
- 	 * Hit max in previous round, stop here
- 	 */
- 	if (rqd->scaled_max)
--		return;
-+		return false;
- 
- 	rqd->scale_step--;
- 
- 	rqd->scaled_max = rq_depth_calc_max_depth(rqd);
-+	return true;
- }
- 
- /*
-  * Scale rwb down. If 'hard_throttle' is set, do it quicker, since we
-- * had a latency violation.
-+ * had a latency violation. Returns true on success and returns false if
-+ * scaling down wasn't possible.
-  */
--void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
-+bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle)
- {
- 	/*
- 	 * Stop scaling down when we've hit the limit. This also prevents
-@@ -173,7 +176,7 @@ void rq_depth_scale_down(struct rq_depth
- 	 * keep up.
- 	 */
- 	if (rqd->max_depth == 1)
--		return;
-+		return false;
- 
- 	if (rqd->scale_step < 0 && hard_throttle)
- 		rqd->scale_step = 0;
-@@ -182,6 +185,7 @@ void rq_depth_scale_down(struct rq_depth
- 
- 	rqd->scaled_max = false;
- 	rq_depth_calc_max_depth(rqd);
-+	return true;
- }
- 
- void rq_qos_exit(struct request_queue *q)
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -94,8 +94,8 @@ static inline void rq_qos_del(struct req
- }
- 
- bool rq_wait_inc_below(struct rq_wait *rq_wait, unsigned int limit);
--void rq_depth_scale_up(struct rq_depth *rqd);
--void rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
-+bool rq_depth_scale_up(struct rq_depth *rqd);
-+bool rq_depth_scale_down(struct rq_depth *rqd, bool hard_throttle);
- bool rq_depth_calc_max_depth(struct rq_depth *rqd);
- 
- void rq_qos_cleanup(struct request_queue *, struct bio *);
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -307,7 +307,8 @@ static void calc_wb_limits(struct rq_wb
- 
- static void scale_up(struct rq_wb *rwb)
- {
--	rq_depth_scale_up(&rwb->rq_depth);
-+	if (!rq_depth_scale_up(&rwb->rq_depth))
-+		return;
- 	calc_wb_limits(rwb);
- 	rwb->unknown_cnt = 0;
- 	rwb_wake_all(rwb);
-@@ -316,7 +317,8 @@ static void scale_up(struct rq_wb *rwb)
- 
- static void scale_down(struct rq_wb *rwb, bool hard_throttle)
- {
--	rq_depth_scale_down(&rwb->rq_depth, hard_throttle);
-+	if (!rq_depth_scale_down(&rwb->rq_depth, hard_throttle))
-+		return;
- 	calc_wb_limits(rwb);
- 	rwb->unknown_cnt = 0;
- 	rwb_trace_step(rwb, "scale down");
+ 		switch (minor_rev) {
+ 		case 2:
 
 
