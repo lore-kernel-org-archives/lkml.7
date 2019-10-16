@@ -8,63 +8,61 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14105FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453F6FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA552067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE2D20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebMtAJuQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUCyKZEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389155AbfJPMGS (ORCPT
+        id S2389421AbfJPMGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:06:18 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44025 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfJPMGS (ORCPT
+        Wed, 16 Oct 2019 08:06:33 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43840 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfJPMGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:06:18 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i32so14165837pgl.10;
-        Wed, 16 Oct 2019 05:06:17 -0700 (PDT)
+        Wed, 16 Oct 2019 08:06:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a2so14587638pfo.10;
+        Wed, 16 Oct 2019 05:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=F55Wt5S26tfWJ9YDzUSzM52fARPw99KqXvjlrC+Fh3g=;
-        b=ebMtAJuQlngR44Vl7KMnrR+dFZ+Nrj0hqzA0pmoxrQ8fVwoy255CC5iS0TkYgBwldj
-         1m3eTLY6SrRNaEqZ7MkV9cv+dsAMAtEqRo1JYYHlcam860EhPfAKxCm4G2fEYaTFd2ld
-         SLOM7PU99kY8AySQ+cDC5EILWMSetW3CPlzjMtxg6KBdRF4uAE1YTqzrjhaj/g/0LAOa
-         b1FthkhUXBwClscDHg6Z+svRgzOjTJDTpTW+kJ7K8uBlMRAFCGc8wAQS8v9SZhVAFHKC
-         j2/Yr9DE8gNtE6qOMdGyiqDKOIb9UaRa6r1hOpGl6kpjyvrxENJKCS3Fq4go6uxUWRAE
-         f1aQ==
+        bh=E/ejZ8luhiq32Fwxo+jf6eQC8OVPoBMz2IzbQt/xaAA=;
+        b=SUCyKZEidz5mY5dNAF8kYaxNE0d953d/z5Y+P6bimQ1GUiJqMaucGYydUrqJfmfs9N
+         Dy0R2rENqFpCAmHrqlOV06LXIqjkeip2vBwW2L3ZUxJ442i9aF6LmOq1n/5r1kt2OptZ
+         HaTLaL3SQ6LxB3RRrMqLr6mJwuLnbvTuvH9tAO1fWsEjNAynuDt8zwLm0/g6ELSaMWiM
+         8+9KKwWptOEzJHZWd2nZWwpLRz2b7B5LSXeKczoPJbA9TOzMknzv4rbzjpS8ufge/qEO
+         KqKDkPmjNbc2o7RQqtziTF7n9cvFonRxUcvY+LFmCmgpfHv1IYmZk0qn4sPDO700rBvD
+         eFow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=F55Wt5S26tfWJ9YDzUSzM52fARPw99KqXvjlrC+Fh3g=;
-        b=b+JNIUQAgZ/QQmEJyZISYHJna7hwILUU2hRuMIj+FHF2J7kqYWd1q3r7SZb74V7afG
-         3Or4d//WIxlbec/rgF732aHlsHEzHPEcEpS6TnFh5G0v7MCLsfaxMC19Gh9kWLuHsA/i
-         8WxC7Sm0KnouWHEKRxYl6OguYJDAxcbHANBiIQhNLP0GaJiq5oYMYCLc3tThtwJX3wKX
-         lhTrVuS4kbBposASpUGIUwBCllHGuhMmj5qNmMj5HVskVv4YnD7hHPYx8xGq/NOP9qUC
-         asdc2K0t+pSRjfF8cBncmjRJpibFP55SEVXLLsC8P2Mmpdzr6lI8eNRh5Po13jgPxap9
-         f7Cg==
-X-Gm-Message-State: APjAAAWo2V/veEwTqMr9eqkM6bTMaz4AAiC7xO2ex+jzbZU+IF4pJJJY
-        cVO+TjSIH+Sht31eg0lcMoDeAMYUYlE=
-X-Google-Smtp-Source: APXvYqw2dVLQUTIg1pKd/sv8fErPpPzrpqUTL/fKfnkVJIl7Arsc/6Hacpewc6Ec/BgLci7MAYRgfA==
-X-Received: by 2002:a63:cc4a:: with SMTP id q10mr44514091pgi.221.1571227577442;
-        Wed, 16 Oct 2019 05:06:17 -0700 (PDT)
+        bh=E/ejZ8luhiq32Fwxo+jf6eQC8OVPoBMz2IzbQt/xaAA=;
+        b=bL/tU69V9Kid/ZtTgYktJLh4VVA1JtaCpAyOkGX0bqkaEhw07wb3iNHDBqs2IaeSQJ
+         uUbeqAxuvog7iJejyEUIu7a82hTopoiM+hWgX/LzNar3mYn0MxX5JtR3zi0RmAeGBaDg
+         2lBe0YM9ljUiwWcdQcObAdsmlEjpFwxksgIrNWQiay6ed97kgaD4lcmFtDe2dJmMZ/Qh
+         g2k7cOhlmBzGvogFiLdMZPjSFE6iRB1pKJRyjpJqVFIRJCn6eSlrjVnJgzd4PVmDWsYJ
+         gLtI6AVyyQPWUp5BNH4W4CL+JCoOwwe5tKg3nhe75HVHiJ3xCxsl2WbAZlqxyzkIekwn
+         4EHg==
+X-Gm-Message-State: APjAAAWVy/omk41FG7uSumSPgq98U7+OjuHDMXVkyiRcl/CKVrG/RLt1
+        6iDqigkMr1MAoyWUUPBIIYmMzmzISPw=
+X-Google-Smtp-Source: APXvYqyoRxGa81TfoUX8kNLcYZPWvYryL8FQqh6aE4uFGKG1P0EYMxn6wAXx/g3JAdUHh5ZaAyoR2Q==
+X-Received: by 2002:a63:eb08:: with SMTP id t8mr6895885pgh.49.1571227590148;
+        Wed, 16 Oct 2019 05:06:30 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id j16sm2641670pje.6.2019.10.16.05.06.12
+        by smtp.gmail.com with ESMTPSA id u7sm25259270pfn.61.2019.10.16.05.06.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 05:06:16 -0700 (PDT)
+        Wed, 16 Oct 2019 05:06:29 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] leds: an30259a: add a check for devm_regmap_init_i2c
-Date:   Wed, 16 Oct 2019 20:06:07 +0800
-Message-Id: <20191016120607.32718-1-hslester96@gmail.com>
+Subject: [PATCH 2/2] hfsplus: add a check for hfs_bnode_find
+Date:   Wed, 16 Oct 2019 20:06:20 +0800
+Message-Id: <20191016120621.304-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,33 +72,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-an30259a_probe misses a check for devm_regmap_init_i2c and may cause
-problems.
-Add a check and print errors like other leds drivers.
+hfs_brec_update_parent misses a check for hfs_bnode_find and may miss
+the failure.
+Add a check for it like what is done in again.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/leds/leds-an30259a.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/hfsplus/brec.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
-index 250dc9d6f635..03ad068f29f7 100644
---- a/drivers/leds/leds-an30259a.c
-+++ b/drivers/leds/leds-an30259a.c
-@@ -305,6 +305,13 @@ static int an30259a_probe(struct i2c_client *client)
- 
- 	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
- 
-+	if (IS_ERR(chip->regmap)) {
-+		err = PTR_ERR(chip->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			err);
-+		return err;
-+	}
-+
- 	for (i = 0; i < chip->num_leds; i++) {
- 		struct led_init_data init_data = {};
- 
+diff --git a/fs/hfsplus/brec.c b/fs/hfsplus/brec.c
+index 1918544a7871..22bada8288c4 100644
+--- a/fs/hfsplus/brec.c
++++ b/fs/hfsplus/brec.c
+@@ -434,6 +434,8 @@ static int hfs_brec_update_parent(struct hfs_find_data *fd)
+ 			new_node->parent = tree->root;
+ 		}
+ 		fd->bnode = hfs_bnode_find(tree, new_node->parent);
++		if (IS_ERR(fd->bnode))
++			return PTR_ERR(fd->bnode);
+ 		/* create index key and entry */
+ 		hfs_bnode_read_key(new_node, fd->search_key, 14);
+ 		cnid = cpu_to_be32(new_node->this);
 -- 
 2.20.1
 
