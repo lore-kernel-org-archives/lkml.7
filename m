@@ -2,80 +2,97 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89320FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F57EFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634A8218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BA1218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392309AbfJPOXk (ORCPT
+        id S2392360AbfJPOXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:23:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:41190 "EHLO foss.arm.com"
+        Wed, 16 Oct 2019 10:23:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:41208 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbfJPOXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:23:39 -0400
+        id S1727451AbfJPOXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 10:23:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B1F4142F;
-        Wed, 16 Oct 2019 07:23:39 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A62433F68E;
-        Wed, 16 Oct 2019 07:23:38 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     mike.kravetz@oracle.com, vincenzo.frascino@arm.com
-Subject: [PATCH] hugetlb: Fix clang compilation warning
-Date:   Wed, 16 Oct 2019 15:23:24 +0100
-Message-Id: <20191016142324.52250-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C76A142F;
+        Wed, 16 Oct 2019 07:23:46 -0700 (PDT)
+Received: from bogus (unknown [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EBCC3F68E;
+        Wed, 16 Oct 2019 07:23:45 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 15:23:43 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFT][PATCH 0/3] cpufreq / PM: QoS: Introduce frequency QoS and
+ use it in cpufreq
+Message-ID: <20191016142343.GB5330@bogus>
+References: <2811202.iOFZ6YHztY@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2811202.iOFZ6YHztY@kreacher>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building the kernel with a recent version of clang I noticed the warning
-below:
+On Wed, Oct 16, 2019 at 12:37:58PM +0200, Rafael J. Wysocki wrote:
+> Hi All,
+>
+> The motivation for this series is to address the problem discussed here:
+>
+> https://lore.kernel.org/linux-pm/5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org/T/#md2d89e95906b8c91c15f582146173dce2e86e99f
+>
+> and also reported here:
+>
+> https://lore.kernel.org/linux-pm/20191015155735.GA29105@bogus/
+>
+> Plus, generally speaking, using the policy CPU as a proxy for the policy
+> with respect to PM QoS does not feel particularly straightforward to me
+> and adds extra complexity.
+>
+> Anyway, the first patch adds frequency QoS that is based on "raw" PM QoS (kind
+> of in analogy with device PM QoS) and is just about min and max frequency
+> requests (no direct relationship to devices).
+>
+> The second patch switches over cpufreq and its users to the new frequency QoS.
+> [The Fixes: tag has been tentatively added to it.]
+>
+> The third one removes frequency request types from device PM QoS.
+>
+> Unfortunately, the patches are rather big, but also they are quite
+> straightforward.
+>
+> I didn't have the time to test this series, so giving it a go would be much
+> appreciated.
 
-mm/hugetlb.c:4055:40: warning: expression does not compute the number of
-elements in this array; element type is 'unsigned long', not 'u32'
-(aka 'unsigned int') [-Wsizeof-array-div]
-        hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
-                                          ~~~ ^
-mm/hugetlb.c:4049:16: note: array 'key' declared here
-        unsigned long key[2];
-                      ^
-mm/hugetlb.c:4055:40: note: place parentheses around the 'sizeof(u32)'
-expression to silence this warning
-        hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
-                                              ^  CC      fs/ext4/ialloc.o
+Thanks for the spinning these patches so quickly.
 
-Fix the warning adding parentheses around the sizeof(u32) expression.
+I did give it a spin, but unfortunately it doesn't fix the bug I reported.
+So I looked at my bug report in detail and looks like the cpufreq_driver
+variable is set to NULL at that point and it fails to dereference it
+while trying to execute:
+	ret = cpufreq_driver->verify(new_policy);
+(Hint verify is at offset 0x1c/28)
 
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- mm/hugetlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So I suspect some race as this platform with bL switcher tries to
+unregister and re-register the cpufreq driver during the boot.
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index ef37c85423a5..ce9ff2b35962 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4052,7 +4052,7 @@ u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 	key[0] = (unsigned long) mapping;
- 	key[1] = idx;
- 
--	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
-+	hash = jhash2((u32 *)&key, sizeof(key)/(sizeof(u32)), 0);
- 
- 	return hash & (num_fault_mutexes - 1);
- }
--- 
-2.23.0
+I need to spend more time on this as reverting the initial PM QoS patch
+to cpufreq.c makes the issue disappear.
 
+--
+Regards,
+Sudeep
