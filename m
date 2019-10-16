@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BC0ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4B7FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F96A21A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793CA222C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262808;
-	bh=aPLnSOzZT4loR5rK2tPSmqEFPGBuW5B8uEE8ucMTXuw=;
+	s=default; t=1571262810;
+	bh=A/GUR8jKlGoJbWO4krzlD2ky3UB/AYk6f6PkrqbWfYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2b1mkZzAalWyJnU7f9SeHhxqGBJuys/OEZt3Wnp3WTKbH+YGVJiNsKuh6iI0aaJx1
-	 1Upprer6N14QT3VAM4mjEe1GAMxfJzY/QoZlljiLCE7Qcvit5NhTKx/7iLBG1n4tXa
-	 LfjvsdWHVW+t/gptSKySlkm+pTU7Au3PNRAP7tTg=
+	b=p/Aq9VSlSiVip2kXxtwC0xZU8uKuMqvSz4iaW5s/VIMTpVZlUqv/QJXJnYpu8Kv85
+	 r1SUkpGpLTRon9WQzH8dVVe/IsIhq2JgweuzQRHMuCbkzbB2AQzdtPr6J8aQPQHAaW
+	 yZHjGT+ooxMG5hi2GLFd8YgEY+SBIyLaeN2AqTzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394865AbfJPVx1 (ORCPT
+        id S2394880AbfJPVx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42130 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437518AbfJPVxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:53:21 -0400
+        id S2394837AbfJPVxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:22 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DAC21A49;
-        Wed, 16 Oct 2019 21:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CE321A4C;
+        Wed, 16 Oct 2019 21:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1571262801;
-        bh=aPLnSOzZT4loR5rK2tPSmqEFPGBuW5B8uEE8ucMTXuw=;
+        bh=A/GUR8jKlGoJbWO4krzlD2ky3UB/AYk6f6PkrqbWfYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1e267XH9brNl7DTdt8y5/sJCYCZiLBYFKuH5omlTxngHOsh34vavym+zRuGIxtJl
-         MOpEsFuiqdocdyrlipbFrrAgmXpQiaH7JIVFDuiSe0wtgWJe4s/AznQ6RlfirH7MA9
-         F84qrgF1kjVnWTNCUhoMGLOgoD/IzU7jDovrlZ6w=
+        b=LusOh1wUhGqE212qpG8MbB2LrW4l0qfYXTFdjvEfi1asYBqPzvkhzs+9MOo0WMyjz
+         Pdwb93CumDI/21W9CnWZ/ff3Cz1JLsfxzEvqn6KYaniW1RZO7jnb4LLFww/aTjjPGW
+         g0/DzLk80L5mtCLxM8xbYMx8SGQRYDBG865Df9eM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 06/79] ASoC: Define a set of DAPM pre/post-up events
-Date:   Wed, 16 Oct 2019 14:49:41 -0700
-Message-Id: <20191016214735.229352934@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>
+Subject: [PATCH 4.4 07/79] powerpc/powernv: Restrict OPAL symbol map to only be readable by root
+Date:   Wed, 16 Oct 2019 14:49:42 -0700
+Message-Id: <20191016214736.089883453@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -63,36 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+From: Andrew Donnellan <ajd@linux.ibm.com>
 
-commit cfc8f568aada98f9608a0a62511ca18d647613e2 upstream.
+commit e7de4f7b64c23e503a8c42af98d56f2a7462bd6d upstream.
 
-Prepare to use SND_SOC_DAPM_PRE_POST_PMU definition to
-reduce coming code size and make it more readable.
+Currently the OPAL symbol map is globally readable, which seems bad as
+it contains physical addresses.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/20190719100524.23300-2-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Restrict it to root.
+
+Fixes: c8742f85125d ("powerpc/powernv: Expose OPAL firmware symbol map")
+Cc: stable@vger.kernel.org # v3.19+
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190503075253.22798-1-ajd@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/soc-dapm.h |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/platforms/powernv/opal.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/include/sound/soc-dapm.h
-+++ b/include/sound/soc-dapm.h
-@@ -335,6 +335,8 @@ struct device;
- #define SND_SOC_DAPM_WILL_PMD   0x80    /* called at start of sequence */
- #define SND_SOC_DAPM_PRE_POST_PMD \
- 				(SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD)
-+#define SND_SOC_DAPM_PRE_POST_PMU \
-+				(SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU)
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -580,7 +580,10 @@ static ssize_t symbol_map_read(struct fi
+ 				       bin_attr->size);
+ }
  
- /* convenience event type detection */
- #define SND_SOC_DAPM_EVENT_ON(e)	\
+-static BIN_ATTR_RO(symbol_map, 0);
++static struct bin_attribute symbol_map_attr = {
++	.attr = {.name = "symbol_map", .mode = 0400},
++	.read = symbol_map_read
++};
+ 
+ static void opal_export_symmap(void)
+ {
+@@ -597,10 +600,10 @@ static void opal_export_symmap(void)
+ 		return;
+ 
+ 	/* Setup attributes */
+-	bin_attr_symbol_map.private = __va(be64_to_cpu(syms[0]));
+-	bin_attr_symbol_map.size = be64_to_cpu(syms[1]);
++	symbol_map_attr.private = __va(be64_to_cpu(syms[0]));
++	symbol_map_attr.size = be64_to_cpu(syms[1]);
+ 
+-	rc = sysfs_create_bin_file(opal_kobj, &bin_attr_symbol_map);
++	rc = sysfs_create_bin_file(opal_kobj, &symbol_map_attr);
+ 	if (rc)
+ 		pr_warn("Error %d creating OPAL symbols file\n", rc);
+ }
 
 
