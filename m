@@ -2,136 +2,81 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF309FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEE0FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40A72067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D889E2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXVD9nR2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HGlLUHGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405023AbfJPMNR (ORCPT
+        id S2405069AbfJPMNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:13:17 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54290 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392915AbfJPMNR (ORCPT
+        Wed, 16 Oct 2019 08:13:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35509 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731285AbfJPMNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:13:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so2656800wmp.4;
-        Wed, 16 Oct 2019 05:13:15 -0700 (PDT)
+        Wed, 16 Oct 2019 08:13:51 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m7so23765385lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z5f0yIHlY12I4Q0pn5WdnGvacnYGRlqyDdoVhSRxe6w=;
-        b=KXVD9nR2ME+vjiKCYNNlVGSIEL/PKns1EI1ssBfrfHxMZ717aw8ibU2cG4R4m6NSqN
-         p3OmoJyT2lcjfH44LwfVR/VmCVbdH3GYLFw+V32nkyf8EcGxcvnqQpSRj0LQ3r10ocjB
-         8y5GPTJalQIciPmxHp4zSqM5VCiZEYK6BEnUw90H5439Tjy6JrHed1S+Pms/1sS/iH52
-         YCShR+vFhVmyMDOor5kVy3Tirlhg61IVASfyCzxIunRQdNrff4w8wb16pDV2veZUaH19
-         6zb+Q6HaZjq0dcc+V+f+wTmgUTvAfV8xRNZu7TeFl8ElKDDGLLdLHb+gYvtA8b2MkZlg
-         1UqA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gwAOuJ02/CmNLRHvM1+0qWUJI2vdB/CPjcxRe0gTmfs=;
+        b=HGlLUHGm8S/Vl+k3MY1zgTw0RMgNg16Hy9iyCo9W1KsN+asWjfDNyDhvnxak0iXuC4
+         RzAppZ3MSc3irAS7NtlwfvcE0/Cs+UyZa50Y3zMQSDsMSqedDidivTOd6BLzWZvjw0PK
+         abReKeIh11Dxh5DcAgNfz8tn+Z1+a6m0pq61W26X6JoxC1oPbycUYP0bwgOysFkQvRkg
+         WndepekugfextEI9bex7J8l1AyqNSrACd8gL8nO8netT9wjGt0Id9AYDXjM/KtQ0xhxh
+         bNXd805sxS01yNIb6nxz+FAEyI09tgMaaunICGWQxDglPwC9EPBbkIJ8MYPy9ZoHTUjR
+         DioA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z5f0yIHlY12I4Q0pn5WdnGvacnYGRlqyDdoVhSRxe6w=;
-        b=sxgLkyTOmXWL5jCRND3AAm1+LbjJWKtITXxbjgfQwArjECW7xLdbuYYWoIkRxo6vLZ
-         ulMJq7lKNYjqK9YaUQUw4ZzNp40L6mNZV0zjFQRbxqmaLYmvyjYxzH0M33SCPONpi0H/
-         DAtxXSTUx7nHmsjD5pZ+LOMTFKcms3JKGyc/V08b+QYFXDqmFGJBMWX2HJCPPWfheL5u
-         mJJKvECfqG32lgS4QfZFYaUwPiJbOfAlXYQVznfDuem6r/SjDiaWbOl4n05iMOw34KhZ
-         GM6DusNFunCP7EIT3dCp1RDXtW+8tS7dNWU15KjubJw4EKudcBJe8kuoTMLPh9r/eI7k
-         Fxfg==
-X-Gm-Message-State: APjAAAV/CBnDkP3jyhY4ZhKtPaBwUWgbnaCH2NHn0Tms6GSB+sOhfW59
-        1OBKvv43RSsnXgOktOx6NEs=
-X-Google-Smtp-Source: APXvYqyeVI+HFQYVT9eZ+9AlMthA0eXmjO4czOYpC+SavUTyCKX+/KdD9iVqXyFN9hlGr/yH4Fa32g==
-X-Received: by 2002:a1c:9a03:: with SMTP id c3mr3230806wme.109.1571227994744;
-        Wed, 16 Oct 2019 05:13:14 -0700 (PDT)
-Received: from jimi (bzq-82-81-225-244.cablep.bezeqint.net. [82.81.225.244])
-        by smtp.gmail.com with ESMTPSA id d193sm2995178wmd.0.2019.10.16.05.13.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 05:13:14 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 15:13:07 +0300
-From:   Eyal Birger <eyal.birger@gmail.com>
-To:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, shmulik.ladkani@gmail.com
-Subject: Re: [PATCH net] net: sched: act_mirred: drop skb's dst_entry in
- ingress redirection
-Message-ID: <20191016151307.40f63896@jimi>
-In-Reply-To: <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
-References: <20191012071620.8595-1-zhiyuan2048@linux.alibaba.com>
-        <CAM_iQpVkTb6Qf9J-PuXJoQTZa5ojN_oun64SMv9Kji7tZkxSyA@mail.gmail.com>
-        <e2bd3004-9f4b-f3ce-1214-2140f0b7cc61@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gwAOuJ02/CmNLRHvM1+0qWUJI2vdB/CPjcxRe0gTmfs=;
+        b=ri6LRHax6iDdNX2wsYwMpQrYIko1stXLHh8oLyrwnbmMo3TCFU13vceQvlf7Td9KhX
+         C/I26uDQjw6xdHR10AI3lmQhLgKKBT4iEMxH2fnqI48Y/3GcdPKcuk+ojrSNEiYdIGT3
+         LMOBT6UNBKdNz7lZvasJ71Qq1G5l5QJ88R1LX/OqQ6Af+CRq8IFxuyFr1OLYLVR4sRsq
+         +lVz0BkW/XdeRudPqUm75IU6stUfER1+0yQLCp2w/gEbxjszqmZEXJcyS93xjUQajcTm
+         dXPGllC86W5niZOwgWlv3fxDUPDs3PgB4yoCxyQYG3/YOrztFVCvPqTz7fzphsnli03d
+         8mug==
+X-Gm-Message-State: APjAAAXpNBFHDjxVO/2h6UAs2AxAZKypplRxJ2vEgRvP8vogfyeJYWW5
+        q5PVetVgNfu30yQrmlxFi+fZ6xsdLLb9IGV2Iwh0B5qT
+X-Google-Smtp-Source: APXvYqzcLm4ffYjz6L/K6mToL+dNjoyckx1raiIUkGvyOt2QIDTLZA0ue/HKnt9dEPr3w6FBUV2ydjWuON8gLRceMgU=
+X-Received: by 2002:a2e:481a:: with SMTP id v26mr18267416lja.41.1571228027497;
+ Wed, 16 Oct 2019 05:13:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191011154321.44f08f9a@xhacker.debian>
+In-Reply-To: <20191011154321.44f08f9a@xhacker.debian>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 14:13:36 +0200
+Message-ID: <CACRpkdb=FzN8sVc+u7SxgNkx11dWCLJK7rbJmOrk0gUN1T58zA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: berlin: as370: fix a typo s/spififib/spdifib
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Oct 11, 2019 at 9:55 AM Jisheng Zhang
+<Jisheng.Zhang@synaptics.com> wrote:
 
-On Wed, 16 Oct 2019 01:22:01 +0800
-Zhiyuan Hou <zhiyuan2048@linux.alibaba.com> wrote:
+> The function should be spdifib, fix this typo.
+>
+> Fixes: 423ddc580b13 ("pinctrl: berlin: add the as370 SoC pinctrl driver")
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-> On 2019/10/15 1:57 =E4=B8=8A=E5=8D=88, Cong Wang wrote:
-> > On Sat, Oct 12, 2019 at 12:16 AM Zhiyuan Hou
-> > <zhiyuan2048@linux.alibaba.com> wrote: =20
-> >> diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-> >> index 9ce073a05414..6108a64c0cd5 100644
-> >> --- a/net/sched/act_mirred.c
-> >> +++ b/net/sched/act_mirred.c
-> >> @@ -18,6 +18,7 @@
-> >>   #include <linux/gfp.h>
-> >>   #include <linux/if_arp.h>
-> >>   #include <net/net_namespace.h>
-> >> +#include <net/dst.h>
-> >>   #include <net/netlink.h>
-> >>   #include <net/pkt_sched.h>
-> >>   #include <net/pkt_cls.h>
-> >> @@ -298,8 +299,10 @@ static int tcf_mirred_act(struct sk_buff
-> >> *skb, const struct tc_action *a,
-> >>
-> >>          if (!want_ingress)
-> >>                  err =3D dev_queue_xmit(skb2);
-> >> -       else
-> >> +       else {
-> >> +               skb_dst_drop(skb2);
-> >>                  err =3D netif_receive_skb(skb2);
-> >> +       } =20
+Patch applied for fixes.
 
-> > Good catch!
-
-Indeed! Thanks for fixing this!
-
-> >
-> > I don't want to be picky, but it seems this is only needed
-> > when redirecting from egress to ingress, right? That is,
-> > ingress to ingress, or ingress to egress is okay? If not,
-> > please fix all the cases while you are on it? =20
-> Sure. But I think this patch is also needed when redirecting from
-> ingress to ingress. Because we cannot assure that a skb has null dst
-> in ingress redirection path. For example, if redirecting a skb from
-> loopback's ingress to other device's ingress, the skb will take a
-> dst.
->=20
-> As commit logs point out, skb with valid dst cannot be made routing
-> decision in following process. original dst may cause skb loss or
-> other unexpected behavior.
-
-On the other hand, removing the dst on ingress-to-ingress redirection
-may remove LWT information on incoming packets, which may be undesired.
-
-Eyal.
+Thanks!
+Linus Walleij
