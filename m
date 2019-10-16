@@ -2,134 +2,268 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F77ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A61AC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C81B2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575B92082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="y76gKMwR"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="RU4N7tUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391126AbfJPHqO (ORCPT
+        id S2391279AbfJPHqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:46:14 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:56012 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfJPHqN (ORCPT
+        Wed, 16 Oct 2019 03:46:18 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46756 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391268AbfJPHqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:46:13 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 9015F5C2224;
-        Wed, 16 Oct 2019 09:46:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1571211970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=24LCcIRDu1mOgkMkgGbPXpwZUoN/vIELrMh+T/KtHRI=;
-        b=y76gKMwRvWz3dUVPz5sfzwIrm2IoRP/QsBdk95pM2mzHN+u6A1RB6KiE/5ks5VUitgYDsm
-        U1WdMT0OUhCpGuBkCkKbXerYUbMLXN9S6ijIK3o7VURhVfs57STDY+8EB9vBWT7Z8sJwtZ
-        KrJcikDXTkE63QmPw6oOQ2X0oLL7fhg=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 16 Oct 2019 03:46:16 -0400
+Received: by mail-lf1-f68.google.com with SMTP id t8so16559123lfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 00:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QvRi7PNoggQszDfre8D+FBzcsSh0CBoNlDWz8tev6yQ=;
+        b=RU4N7tUwuMfI1VibR44SQ9yks8vKVb5eF1y46S/6t3LFTW4cFYnE80Pk+GUbw9adiY
+         7pkUda9TFfJCZh0Qnm9cHSUhUFa+fL1/80R0Qg8cq0fEMSiE/3ZYOfVy582xWOfe7GAx
+         BtuoalHwtq4x9rd3dhU0C8u0WLYIKTsURlQ7Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QvRi7PNoggQszDfre8D+FBzcsSh0CBoNlDWz8tev6yQ=;
+        b=ZF9BW5C6Xj4MEPNrncrdlUpJbJ7zhCt7TlcyckC/AT8lRgFPK49R5WV+Mljo69BACh
+         +NKb+lbosdjV3Sg6cyGe1yR0ghb0VfRuU5jlTVYLUlICRsR6f6EMmo8ScdR+ND0sfwbh
+         failjuZyvz802STSiHXOGOel9WEZK0rq6dHP0Btc/rNhSQkZ+tKfqk+QdK/zR8E1sYaD
+         PKUd1wTmz/evICSOfRbuQJv4C4qZGPu2EmKfBgsV3ZZIDO56ohyPfqzuxE3c/UmYIalL
+         YROnWEw/6MHGtwtT4LF2vS2OavMNGvka634kbe00zU/Iu4cj6oji8on8443EG5UY3808
+         juEQ==
+X-Gm-Message-State: APjAAAXducor+2MjL53ryzDEVq73yZ36HbVvVEao4fEXmnaoH8fVdGxk
+        ff1o0guagfKDh36wkEU2QQ4sF84SBwppG3aP
+X-Google-Smtp-Source: APXvYqyBmqGfoeKFBJH4OrBLDBFGebGhLmDfJwIYHLGKut9DDipI1Qyw/3UVrk5mWZI3oDJFyaWWGQ==
+X-Received: by 2002:a19:6759:: with SMTP id e25mr3829669lfj.80.1571211973028;
+        Wed, 16 Oct 2019 00:46:13 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id q26sm5650578lfd.53.2019.10.16.00.46.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 00:46:12 -0700 (PDT)
+Subject: Re: [RFC PATCH 03/21] pipe: Use head and tail pointers for the ring,
+ not cursor and length
+To:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <157117606853.15019.15459271147790470307.stgit@warthog.procyon.org.uk>
+ <157117609543.15019.17103851546424902507.stgit@warthog.procyon.org.uk>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <b8799179-d389-8005-4f6d-845febc3bb23@rasmusvillemoes.dk>
 Date:   Wed, 16 Oct 2019 09:46:10 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>, arm@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stefano Stabellini <stefano.stabellini@eu.citrix.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] drivers: firmware: psci: Register with kernel restart
- handler
-In-Reply-To: <20191015145147.1106247-4-thierry.reding@gmail.com>
-References: <20191015145147.1106247-1-thierry.reding@gmail.com>
- <20191015145147.1106247-4-thierry.reding@gmail.com>
-Message-ID: <e354a51deb667269744d6f415c711297@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <157117609543.15019.17103851546424902507.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-15 16:51, Thierry Reding wrote:
-> From: Guenter Roeck <linux@roeck-us.net>
+On 15/10/2019 23.48, David Howells wrote:
+> Convert pipes to use head and tail pointers for the buffer ring rather than
+> pointer and length as the latter requires two atomic ops to update (or a
+> combined op) whereas the former only requires one.
 > 
-> Register with kernel restart handler instead of setting arm_pm_restart
-> directly. This enables support for replacing the PSCI restart handler
-> with a different handler if necessary for a specific board.
+>  (1) The head pointer is the point at which production occurs and points to
+>      the slot in which the next buffer will be placed.  This is equivalent
+>      to pipe->curbuf + pipe->nrbufs.
 > 
-> Select a priority of 129 to indicate a higher than default priority, but
-> keep it as low as possible since PSCI reset is known to fail on some
-> boards.
+>      The head pointer belongs to the write-side.
 > 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-
-Looks good to me! And helps also in my case, a board which has a broken
-PSCI reset capability.
-
-Reviewed-by: Stefan Agner <stefan.agner@toradex.com>
-
---
-Stefan
-
-> ---
->  drivers/firmware/psci/psci.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+>  (2) The tail pointer is the point at which consumption occurs.  It points
+>      to the next slot to be consumed.  This is equivalent to pipe->curbuf.
 > 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index 84f4ff351c62..a41c6ba043a2 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -250,7 +250,8 @@ static int get_set_conduit_method(struct device_node *np)
->  	return 0;
->  }
+>      The tail pointer belongs to the read-side.
+> 
+>  (3) head and tail are allowed to run to UINT_MAX and wrap naturally.  They
+>      are only masked off when the array is being accessed, e.g.:
+> 
+> 	pipe->bufs[head & mask]
+> 
+>      This means that it is not necessary to have a dead slot in the ring as
+>      head == tail isn't ambiguous.
+> 
+>  (4) The ring is empty if "head == tail".
+> 
+>  (5) The occupancy of the ring is "head - tail".
+> 
+>  (6) The number of free slots in the ring is "(tail + pipe->ring_size) -
+>      head".
+
+Seems an odd way of writing pipe->ring_size - (head - tail) ; i.e.
+obviously #free slots is #size minus #occupancy.
+
+>  (7) The ring is full if "head >= (tail + pipe->ring_size)", which can also
+>      be written as "head - tail >= pipe->ring_size".
+>
+
+No it cannot, it _must_ be written in the latter form. Assuming
+sizeof(int)==1 for simplicity, consider ring_size = 16, tail = 240.
+Regardless whether head is 240, 241, ..., 255, 0, tail + ring_size wraps
+to 0, so the former expression states the ring is full in all cases.
+
+Better spell out somewhere that while head and tail are free-running, at
+any point in time they satisfy the invariant head - tail <= pipe_size
+(and also 0 <= head - tail, but that's a tautology for unsigned
+ints...). Then it's a matter of taste if one wants to write "full" as
+head-tail == pipe_size or head-tail >= pipe_size.
+
+> Also split pipe->buffers into pipe->ring_size (which indicates the size of the
+> ring) and pipe->max_usage (which restricts the amount of ring that write() is
+> allowed to fill).  This allows for a pipe that is both writable by the kernel
+> notification facility and by userspace, allowing plenty of ring space for
+> notifications to be added whilst preventing userspace from being able to use
+> up too much buffer space.
+
+That seems like something that should be added in a separate patch -
+adding ->max_usage and switching appropriate users of ->ring_size over,
+so it's more clear where you're using one or the other.
+
+> @@ -1949,8 +1950,12 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
 >  
-> -static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
-> +static int psci_sys_reset(struct notifier_block *nb, unsigned long action,
-> +			  void *data)
+>  	pipe_lock(pipe);
+>  
+> -	bufs = kvmalloc_array(pipe->nrbufs, sizeof(struct pipe_buffer),
+> -			      GFP_KERNEL);
+> +	head = pipe->head;
+> +	tail = pipe->tail;
+> +	mask = pipe->ring_size - 1;
+> +	count = head - tail;
+> +
+> +	bufs = kvmalloc_array(count, sizeof(struct pipe_buffer), GFP_KERNEL);
+>  	if (!bufs) {
+>  		pipe_unlock(pipe);
+>  		return -ENOMEM;
+> @@ -1958,8 +1963,8 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+>  
+>  	nbuf = 0;
+>  	rem = 0;
+> -	for (idx = 0; idx < pipe->nrbufs && rem < len; idx++)
+> -		rem += pipe->bufs[(pipe->curbuf + idx) & (pipe->buffers - 1)].len;
+> +	for (idx = tail; idx < head && rem < len; idx++)
+> +		rem += pipe->bufs[idx & mask].len;
+>  
+>  	ret = -EINVAL;
+>  	if (rem < len)
+> @@ -1970,16 +1975,16 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+>  		struct pipe_buffer *ibuf;
+>  		struct pipe_buffer *obuf;
+>  
+> -		BUG_ON(nbuf >= pipe->buffers);
+> -		BUG_ON(!pipe->nrbufs);
+> -		ibuf = &pipe->bufs[pipe->curbuf];
+> +		BUG_ON(nbuf >= pipe->ring_size);
+> +		BUG_ON(tail == head);
+> +		ibuf = &pipe->bufs[tail];
+
+I don't see where tail gets masked between tail = pipe->tail; above and
+here, but I may be missing it. In any case, how about seeding head and
+tail with something like 1<<20 when creating the pipe so bugs like that
+are hit more quickly.
+
+> @@ -515,17 +525,19 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+>  static long pipe_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 >  {
->  	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
->  	    psci_system_reset2_supported) {
-> @@ -263,8 +264,15 @@ static void psci_sys_reset(enum reboot_mode
-> reboot_mode, const char *cmd)
->  	} else {
->  		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+>  	struct pipe_inode_info *pipe = filp->private_data;
+> -	int count, buf, nrbufs;
+> +	int count, head, tail, mask;
+>  
+>  	switch (cmd) {
+>  		case FIONREAD:
+>  			__pipe_lock(pipe);
+>  			count = 0;
+> -			buf = pipe->curbuf;
+> -			nrbufs = pipe->nrbufs;
+> -			while (--nrbufs >= 0) {
+> -				count += pipe->bufs[buf].len;
+> -				buf = (buf+1) & (pipe->buffers - 1);
+> +			head = pipe->head;
+> +			tail = pipe->tail;
+> +			mask = pipe->ring_size - 1;
+> +
+> +			while (tail < head) {
+> +				count += pipe->bufs[tail & mask].len;
+> +				tail++;
+>  			}
+
+This is broken if head has wrapped but tail has not. It has to be "while
+(head - tail)" or perhaps just "while (tail != head)" or something along
+those lines.
+
+> @@ -1086,17 +1104,21 @@ static long pipe_set_size(struct pipe_inode_info *pipe, unsigned long arg)
 >  	}
-> +
-> +	return NOTIFY_DONE;
->  }
 >  
-> +static struct notifier_block psci_sys_reset_nb = {
-> +	.notifier_call = psci_sys_reset,
-> +	.priority = 129,
-> +};
-> +
->  static void psci_sys_poweroff(void)
+>  	/*
+> -	 * We can shrink the pipe, if arg >= pipe->nrbufs. Since we don't
+> -	 * expect a lot of shrink+grow operations, just free and allocate
+> -	 * again like we would do for growing. If the pipe currently
+> +	 * We can shrink the pipe, if arg is greater than the ring occupancy.
+> +	 * Since we don't expect a lot of shrink+grow operations, just free and
+> +	 * allocate again like we would do for growing.  If the pipe currently
+>  	 * contains more buffers than arg, then return busy.
+>  	 */
+> -	if (nr_pages < pipe->nrbufs) {
+> +	mask = pipe->ring_size - 1;
+> +	head = pipe->head & mask;
+> +	tail = pipe->tail & mask;
+> +	n = pipe->head - pipe->tail;
+
+I think it's confusing to "premask" head and tail here. Can you either
+drop that (pipe_set_size should hardly be a hot path?), or perhaps call
+them something else to avoid a future reader seeing an unmasked
+bufs[head] and thinking that's a bug?
+
+> @@ -1254,9 +1290,10 @@ static ssize_t pipe_get_pages(struct iov_iter *i,
+>  		   struct page **pages, size_t maxsize, unsigned maxpages,
+>  		   size_t *start)
 >  {
->  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
-> @@ -431,7 +439,7 @@ static void __init psci_0_2_set_functions(void)
+> +	unsigned int p_tail;
+> +	unsigned int i_head;
+>  	unsigned npages;
+>  	size_t capacity;
+> -	int idx;
 >  
->  	psci_ops.migrate_info_type = psci_migrate_info_type;
+>  	if (!maxsize)
+>  		return 0;
+> @@ -1264,12 +1301,15 @@ static ssize_t pipe_get_pages(struct iov_iter *i,
+>  	if (!sanity(i))
+>  		return -EFAULT;
 >  
-> -	arm_pm_restart = psci_sys_reset;
-> +	register_restart_handler(&psci_sys_reset_nb);
->  
->  	pm_power_off = psci_sys_poweroff;
->  }
+> -	data_start(i, &idx, start);
+> -	/* some of this one + all after this one */
+> -	npages = ((i->pipe->curbuf - idx - 1) & (i->pipe->buffers - 1)) + 1;
+> -	capacity = min(npages,maxpages) * PAGE_SIZE - *start;
+> +	data_start(i, &i_head, start);
+> +	p_tail = i->pipe->tail;
+> +	/* Amount of free space: some of this one + all after this one */
+> +	npages = (p_tail + i->pipe->ring_size) - i_head;
+
+Hm, it's not clear that this is equivalent to the old computation. Since
+it seems repeated in a few places, could it be factored to a little
+helper (before this patch) and the "some of this one + all after this
+one" comment perhaps expanded to explain what is going on?
+
+Rasmus
