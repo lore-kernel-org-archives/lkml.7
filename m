@@ -2,120 +2,219 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59670ECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A828AECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3054C2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE852067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izgh3XKF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKGp8B12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389355AbfJPBfp (ORCPT
+        id S2389410AbfJPBgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:35:45 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33001 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731322AbfJPBfo (ORCPT
+        Tue, 15 Oct 2019 21:36:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33571 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfJPBgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:35:44 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y127so16012432lfc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 18:35:43 -0700 (PDT)
+        Tue, 15 Oct 2019 21:36:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so13638891pfl.0;
+        Tue, 15 Oct 2019 18:36:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TAK0ELSb5Txq6hlGzxUJ6nHkFu1g4zycq1EzpQGbhM4=;
-        b=izgh3XKFqg2kZAGdfYdAfOhQQ6KpkjI8iTZ8c1Lr8PlQRMAZphydKFz78i+zSDlCSZ
-         UT5jsT8AgO7FABZndi3SeybQJpocK1a8s1lx0ntSmyfA5Soy3hfSq5O/AYWB8RfrBOoz
-         PAAu8kGYfbYEiDG+UJHdI8QtREm44JM2ifxHjZJZ5wxxDy4vPcnzczyggQaueoQWLuhV
-         AB4yexBVZ/OavmFHVuFZ74e0CPoXPldOBKZZs2sCk6Ukpzf1+F4XOXgXbx4TkPv0TF0m
-         FMGpa7XbKjTxEzdFnF0iIGulhptYSLodMrsV4MTy9cAcDDSWtSXkh9C1dybVb2KqIuQB
-         Pa2g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QgAe4xYxB5jPjSQpz9ktlhB3AkGxrIcyycu/dMTn2CM=;
+        b=nKGp8B12O5+R4Tt5Hks9vUJPiaxotVkrXBd7XsNtRMLCOygxV5N9D5tYGVidp8X7Hz
+         NytzWXgYBWk5R+bzGU6TbzidEM9d26aM/DFIThNKwo4rhnsTC720eQlmr4lW6sEuvwM+
+         NjqXRgUx1/ylDnP9/uOvIv9ooUm0DdS8XdUxW4lh6Aq99gjA+aC+ldgkCHW8Qcncqs5a
+         9sVYaG5q4dc+F5E1jGTv1xloFztQeX3H/O55uM9TetgieGxlcDE/QK017u3MMbMwZT3k
+         /+yuKIVcA0V0TgF7tY0DpxxJWCvpOkt0q9AYzDraum966W2LxptiB5MtycLtmp09v8ME
+         p6Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TAK0ELSb5Txq6hlGzxUJ6nHkFu1g4zycq1EzpQGbhM4=;
-        b=akAOGLhAfBqZ0RHE99N03dGE1ab3wv7TGGoOZHyKke83sAK3xe+me8H1qfnc+M2hsA
-         DbXgUq9yzWmN8NJuWEgokavkGFvoQ7TFrkUHSXcFSM234y+zach0Se7raTnlVKzTnoBZ
-         vliVt6Jmu6FxvZ10ugQ9E8hbepW6FsYvL5MxMTabA/6aSsxn+VsgQoSIIjwybrI7PLlS
-         f/uutcSew236qpf34sErCTygFe9qw2Vc8T9vr6u3EWx3f/mFMHzDWKcL+ney4MUgeeNk
-         QCYs4VRXVP73PVW3iSCDYY5MXP2ODmAb6mZL0hqDgaGIiohY1Lek/EPu/JgAACWq0Uf0
-         ZKFw==
-X-Gm-Message-State: APjAAAXrtaQX44w6rqLGUF4TT1tDUzBd+hVkXsiGugm6s8n6Op+Jjtg1
-        wVsUkA3VspeVSv/jjG3bJAwCF1ahS0VzQaaUyTFASQ==
-X-Google-Smtp-Source: APXvYqyk7m5EdKuiBS0AO5QBu6Ah2Gie2qHdmwJJXHoDUDdkh8c5PFOLmOA8qr27FCuTD1k9eW+WcoN7UwYZBPgSNSA=
-X-Received: by 2002:a19:ad4c:: with SMTP id s12mr24153597lfd.49.1571189742556;
- Tue, 15 Oct 2019 18:35:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QgAe4xYxB5jPjSQpz9ktlhB3AkGxrIcyycu/dMTn2CM=;
+        b=S8rXEYc2xtAWu1VLVL+CrE8p7uj+cddnjiXgCZWPfbVDY1DrJkYwTXH1Ov6eSb/Kvg
+         7rsrMcMlLlBvI6dqp9tSDasarnzQ+evQuF4NLd0g3y4KeDf2KAPUbcwHNFKpIGNNGKw2
+         69QzFWzZgyVbpW4IAWusGkL5aS4bmrjVpTHkwxXywt0EU5o5gVOQE6Kh0acX5W8FvVIQ
+         CLPxZikmZ5QNEjBcXn4VXOkF1A6wzuRyn4HZe+/bd27UxO/oU7U3U6vyxtJeIfYI0mQY
+         krY13pjCUK8pg7FLLvxJdFLw+F3O9ELjlLobDjDaEe2ma0yRtWkGAGfBawmOjR6IAiPx
+         /eYg==
+X-Gm-Message-State: APjAAAUg+O5jwg7g1fh8cvls6gYxTgI/e5JRBHN7fY5QXWLuwGkVSnvX
+        3unTmyVa/GdLuTZv/Jm47EY=
+X-Google-Smtp-Source: APXvYqyTjS2Pc8tHSHvBN3tq56TXtrY4DCaRC2ZuImG4p78sa3Hp+S8PYXUe1UArY+Hj/vQGV3Wuow==
+X-Received: by 2002:a17:90a:a891:: with SMTP id h17mr1811998pjq.32.1571189776736;
+        Tue, 15 Oct 2019 18:36:16 -0700 (PDT)
+Received: from Gentoo ([103.231.90.170])
+        by smtp.gmail.com with ESMTPSA id 11sm21968981pgd.0.2019.10.15.18.36.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Oct 2019 18:36:16 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 07:06:04 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bfields@fieldses.org
+Subject: Re: [PATCH] :scripts: prune-kernel : prunning kernel generalize way
+Message-ID: <20191016013601.GA13621@Gentoo>
+References: <20191015145548.24165-1-unixbhaskar@gmail.com>
+ <c075bcce-0d6d-abee-7fb5-80821f2ae3a2@infradead.org>
 MIME-Version: 1.0
-References: <20191015142144.23544-1-yuehaibing@huawei.com>
-In-Reply-To: <20191015142144.23544-1-yuehaibing@huawei.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Wed, 16 Oct 2019 09:35:30 +0800
-Message-ID: <CAMz4kuKnu5NqeMjtsm3Cinx=FT8Q0BiCqpFaGWULEVXLj7Kk+A@mail.gmail.com>
-Subject: Re: [PATCH -next] clk: sprd: use devm_platform_ioremap_resource() to
- simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Content-Disposition: inline
+In-Reply-To: <c075bcce-0d6d-abee-7fb5-80821f2ae3a2@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Tue, 15 Oct 2019 at 22:22, YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We already posted a patch to do this, thanks anyway.
-https://lore.kernel.org/patchwork/patch/1136894/
+On 16:03 Tue 15 Oct 2019, Randy Dunlap wrote:
+>Subject: s/prunning/pruning/
+>Subject:  s/:scripts:/scripts:/
+>
+>On 10/15/19 7:55 AM, Bhaskar Chowdhury wrote:
+>> This patch will remove old kernels from system selective way.
+>
+>                                                 in a selective way.
+>
+>>
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  scripts/prune-kernel | 16 ++++++++--------
+>>  1 file changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+>> index 74143f229f84..28fae6c91218 100755
+>> --- a/scripts/prune-kernel
+>> +++ b/scripts/prune-kernel
+>> @@ -33,7 +33,7 @@ printf "\t\n Enlist the installed kernels \n\n\n"
+>>  cd $boot_dir && pwd
+>>
+>>  #Bash experts not recomend to run ls inside script,but you can by runni=
+ng that too
+>> -# ls -1 vmlinuz-*
+>> +# ls -1 vmlinuz-*
+>>
+>>  #This is the recommended way , little complex but that's what people wa=
+nt to see!
+>>
+>> @@ -42,10 +42,10 @@ find $boot_dir -name "vmlinuz-*" -type f -print0 -ex=
+ec ls -1 {} \;
+>>  printf "\n\n\n Well, we need to purge some kernel to gain some space.\n=
+\n\n"
+>>
+>>
+>> -printf "Please give the kernel version to remove: %s"
+>> +printf "Please give the kernel version to remove: %s"
+>>  read kernel_version
+>>
+>> -remove_old_kernel
+>> +remove_old_kernel
+>>
+>>  printf "\n\n Remove associated modules too ... \n\n"
+>>
+>> @@ -54,7 +54,7 @@ cd $modules_dir && pwd
+>>  printf "\n\n\n Enlist the installed modules \n\n\n"
+>>
+>>  #This is (-1) minus one not l(el)
+>> -# ls -1
+>> +# ls -1
+>>
+>>  find $modules_dir -name "$kernel_version-*" -type f -print0 -exec ls -1=
+ {} \;
+>>
+>> @@ -66,14 +66,14 @@ rm -rf $modules_version
+>>  printf "\n\n Done \n\n"
+>>
+>>  printf "\n\n Want to remove another?[Yn] : %s"
+>> -read response
+>> +read response
+>>
+>>
+>>  if [[ $response =3D=3D "Y" ]]; then
+>> - printf "Please give another version to remove : %s"
+>> + printf "Please give another version to remove : %s"
+>>   read kernel_version
+>>
+>> -remove_old_kernel
+>> +remove_old_kernel
+>>
+>>  elif [[ $response =3D=3D "n" ]]; then
+>>
+>> @@ -81,4 +81,4 @@ elif [[ $response =3D=3D "n" ]]; then
+>>
+>>  fi
+>>
+>> -exit 0
+>> +exit 0
+>> --
+>> 2.21.0
+>>
+>
+>Trying to apply this patch with 'patch --verbose' says:
+>
+>checking file scripts/prune-kernel
+>Using Plan A...
+>Hunk #1 FAILED at 33.
+>Hunk #2 FAILED at 42.
+>Hunk #3 FAILED at 54.
+>Hunk #4 FAILED at 66.
+>Hunk #5 FAILED at 81.
+>5 out of 5 hunks FAILED
+>Hmm...  Ignoring the trailing garbage.
+>done
+>
+>
+>Those + and - lines with the same content don't make any sense.
+>
+>And probably Cc: the author of the script:
+>J. Bruce Fields <bfields@fieldses.org>
+>
+>--=20
+>~Randy
 
-> ---
->  drivers/clk/sprd/common.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
-> index 9d56eac..3718696 100644
-> --- a/drivers/clk/sprd/common.c
-> +++ b/drivers/clk/sprd/common.c
-> @@ -42,7 +42,6 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
->         void __iomem *base;
->         struct device_node *node = pdev->dev.of_node;
->         struct regmap *regmap;
-> -       struct resource *res;
->
->         if (of_find_property(node, "sprd,syscon", NULL)) {
->                 regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
-> @@ -51,8 +50,7 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
->                         return PTR_ERR(regmap);
->                 }
->         } else {
-> -               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -               base = devm_ioremap_resource(&pdev->dev, res);
-> +               base = devm_platform_ioremap_resource(pdev, 0);
->                 if (IS_ERR(base))
->                         return PTR_ERR(base);
->
-> --
-> 2.7.4
->
->
+Thank you Randy, silly mistakes creeps in...my bad ...will correct that
+and resend.
+BTW I haven't found Bruce's name anywhere...where did you get it? Or did I
+miss the obvious??
 
+Ran against get_maintainers and it only throw a open list , no other
+names.So kinda, stump by that.=20
 
--- 
-Baolin Wang
-Best Regards
+Time to redo it again...huh
+
+Thanks,
+Bhaskar
+
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2mc/0ACgkQsjqdtxFL
+KRXh7wgAk8luWf86C5OdriZJqIDDBRmCzV8cjpPvV9ddO6LB/t4Am/ceveiKoBdZ
+nfgTUMJTwd+1k2DmovCftBghDSkiKHvhrit2YGaKmhARH8XXkgYn6j6bY+cb5gH7
+6OGkIMmpnHfmXhZnlj6EZFNkgiZdoLl5YOKitNhSIk6WK32mjn71Qw/oDELkiLad
+5Qfbt2EIlbytdX7i9mKpt/ifdzm25fUufyC0dz9//Fy4G83Oiuj3R+IuAQrV0IMz
+6sNiMeKKmHgiadLe7QngSb1G+aYX0Lw4ZR75PZGHaZudfs66d5pLsgEqeKyq8tYp
+i1aei3nl2Xvl5slBbCUEqOwYYe5kTw==
+=mMoA
+-----END PGP SIGNATURE-----
+
+--0F1p//8PRICkK4MW--
