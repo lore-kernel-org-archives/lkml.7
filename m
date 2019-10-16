@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21D6ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B75FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA72207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99677207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264270;
-	bh=fSF9rDv2ZTD2EnBy8DBvgiFivImjgF+owUIyXXBCkMw=;
+	s=default; t=1571264275;
+	bh=l63bBNW4p4Tbl1QgQ/eNqi8H6ikGirXGH3NJnWmRoSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YEPOGBpl/U6alRlhT0GFyyzHPFKVkawhMsOBTgqdJ7HncohIlkChOMTBPglqNGTTp
-	 +9Vju7Dd4LHSzSJTbpLVUM27rrLHElys/iTI72pxrp1MRHRvUwiBFunUtQ5oj3JL1M
-	 rk2FgSw+o/zO9hi4VGWABpkBPxWucNnn0z8h2Qk8=
+	b=FG+8ynxgLDu0dH4lr/0hlXW/79XcjaaffxTmowoTOaHHp7tdTV4s1uy301H0eVGXk
+	 xgn3eeBRDxqlcpyszJGySW+Cp3toIpi6NrhvxesM971vK/bV2mDKNhUFCL11EAp0qF
+	 erDg67BhRYHeFmsP9TMSSARAUkMola939OFhUc7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389170AbfJPWRt (ORCPT
+        id S2389550AbfJPWRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44774 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395050AbfJPVyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:44 -0400
+        id S2395047AbfJPVyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:43 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763ED21A49;
-        Wed, 16 Oct 2019 21:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7EA20872;
+        Wed, 16 Oct 2019 21:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262883;
-        bh=fSF9rDv2ZTD2EnBy8DBvgiFivImjgF+owUIyXXBCkMw=;
+        s=default; t=1571262882;
+        bh=l63bBNW4p4Tbl1QgQ/eNqi8H6ikGirXGH3NJnWmRoSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFr5wOCYPK+IsTr72xW2rdI3qjMlC8utRBSDhRXsFdGg0HFDFJvff1hThvte611uQ
-         6wVCDxbGsrK8yxER+94A7DArfrL5fqA8450niVb9vPUnqnoa3u8jcjExnfrxURGVc8
-         /io9KqvCONsdcl6QR7M6hvtXKUvDMgVjH6/FwvFA=
+        b=snAMcGnNL9c/RWwoJlIF4x8G4p1hZvjd69CWA4CcWBSiH+wpVkfJWsmUM0W4xMmBB
+         CkfXDiTciyjvoNyiCU+sdOfPR37omeGaQ12gp+I2Lbh/qRVEaF9q0am0PJ3akomdOu
+         VUXYmL9SBt75vz2urpDAreCWcoU1HJyyNLPr0zS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 41/92] USB: usb-skeleton: fix NULL-deref on disconnect
-Date:   Wed, 16 Oct 2019 14:50:14 -0700
-Message-Id: <20191016214832.452877889@linuxfoundation.org>
+Subject: [PATCH 4.9 40/92] USB: usb-skeleton: fix runtime PM after driver unbind
+Date:   Wed, 16 Oct 2019 14:50:13 -0700
+Message-Id: <20191016214831.753628078@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,68 +60,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit bed5ef230943863b9abf5eae226a20fad9a8ff71 upstream.
+commit 5c290a5e42c3387e82de86965784d30e6c5270fd upstream.
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag and was setting it to NULL before making sure all
-completion handlers had run. This could lead to NULL-pointer
-dereferences in the dev_err() statements in the completion handlers
-which relies on said pointer.
+Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
+interface PM usage counter") USB drivers must always balance their
+runtime PM gets and puts, including when the driver has already been
+unbound from the interface.
 
-Fix this by using a dedicated disconnected flag.
+Leaving the interface with a positive PM usage counter would prevent a
+later bound driver from suspending the device.
 
-Note that this is also addresses a NULL-pointer dereference at release()
-and a struct usb_interface reference leak introduced by a recent runtime
-PM fix, which depends on and should have been submitted together with
-this patch.
-
-Fixes: 4212cd74ca6f ("USB: usb-skeleton.c: remove err() usage")
-Fixes: 5c290a5e42c3 ("USB: usb-skeleton: fix runtime PM after driver unbind")
+Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009170944.30057-2-johan@kernel.org
+Link: https://lore.kernel.org/r/20191001084908.2003-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usb-skeleton.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/usb/usb-skeleton.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 --- a/drivers/usb/usb-skeleton.c
 +++ b/drivers/usb/usb-skeleton.c
-@@ -63,6 +63,7 @@ struct usb_skel {
- 	spinlock_t		err_lock;		/* lock for errors */
- 	struct kref		kref;
- 	struct mutex		io_mutex;		/* synchronize I/O with disconnect */
-+	unsigned long		disconnected:1;
- 	wait_queue_head_t	bulk_in_wait;		/* to wait for an ongoing read */
- };
- #define to_skel_dev(d) container_of(d, struct usb_skel, kref)
-@@ -239,7 +240,7 @@ static ssize_t skel_read(struct file *fi
- 	if (rv < 0)
- 		return rv;
+@@ -75,6 +75,7 @@ static void skel_delete(struct kref *kre
+ 	struct usb_skel *dev = to_skel_dev(kref);
  
--	if (!dev->interface) {		/* disconnect() was called */
-+	if (dev->disconnected) {		/* disconnect() was called */
- 		rv = -ENODEV;
- 		goto exit;
- 	}
-@@ -420,7 +421,7 @@ static ssize_t skel_write(struct file *f
+ 	usb_free_urb(dev->bulk_in_urb);
++	usb_put_intf(dev->interface);
+ 	usb_put_dev(dev->udev);
+ 	kfree(dev->bulk_in_buffer);
+ 	kfree(dev);
+@@ -126,10 +127,7 @@ static int skel_release(struct inode *in
+ 		return -ENODEV;
  
- 	/* this lock makes sure we don't submit URBs to gone devices */
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* disconnect() was called */
-+	if (dev->disconnected) {		/* disconnect() was called */
- 		mutex_unlock(&dev->io_mutex);
- 		retval = -ENODEV;
- 		goto error;
-@@ -580,7 +581,7 @@ static void skel_disconnect(struct usb_i
+ 	/* allow the device to be autosuspended */
+-	mutex_lock(&dev->io_mutex);
+-	if (dev->interface)
+-		usb_autopm_put_interface(dev->interface);
+-	mutex_unlock(&dev->io_mutex);
++	usb_autopm_put_interface(dev->interface);
  
- 	/* prevent more I/O from starting */
- 	mutex_lock(&dev->io_mutex);
--	dev->interface = NULL;
-+	dev->disconnected = 1;
- 	mutex_unlock(&dev->io_mutex);
+ 	/* decrement the count on our device */
+ 	kref_put(&dev->kref, skel_delete);
+@@ -509,7 +507,7 @@ static int skel_probe(struct usb_interfa
+ 	init_waitqueue_head(&dev->bulk_in_wait);
  
- 	usb_kill_anchored_urbs(&dev->submitted);
+ 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
+-	dev->interface = interface;
++	dev->interface = usb_get_intf(interface);
+ 
+ 	/* set up the endpoint information */
+ 	/* use only the first bulk-in and bulk-out endpoints */
 
 
