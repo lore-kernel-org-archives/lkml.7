@@ -2,114 +2,62 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6568EFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6B5FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4281121D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6amgI+S"
+	by mail.kernel.org (Postfix) with ESMTP id 7B73C20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394279AbfJPSbk (ORCPT
+        id S1732487AbfJPSgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:31:40 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45767 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfJPSbj (ORCPT
+        Wed, 16 Oct 2019 14:36:23 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:40818 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfJPSgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:31:39 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u12so11644188pls.12;
-        Wed, 16 Oct 2019 11:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a/1zy2tkFy+G+r0SQBZgILxnC3tbw9djFpoNmpNTsRg=;
-        b=D6amgI+S7NGX9tACSuAVUt7ZDO/AHMqydlwPUUIOam91QhaGXdYQ/nz0qlS7HWu+ew
-         rmMIyenQpTzNlnyrQ8Hnx/K/aykrbpCoLdzbU2Z3PLdiBPoKonUXqBijLNUCcNTQNp52
-         cUx/IF+oXqQOaPPNuaCgEfiIiF2MUTDa3jzb4vZpbgpXoNyf65r34dmLjISBZelstWSl
-         A9jXk9m2DeRkwOt/w+zH0xuQiYCS2yVJP07bPSv4gHx4+AF+ygNmRYSdXQmeGPCJnAKU
-         BjQYhv1+obty0K3FKlNIfv+QEkb0Q2M2Niz/VQ6S8f12fRflHu4qcZRTrdKeq1vOQzbl
-         gGjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a/1zy2tkFy+G+r0SQBZgILxnC3tbw9djFpoNmpNTsRg=;
-        b=hBi6pDxgQj0uo1N3tSUL3K71rHLfn/eb82+iLNrpKmMoE6jz0I3oOfkYgzPEpQeeHn
-         y7Mt6xCMy5IxmRHiSY2/h8AYYgF7rUbC1oIqw+Iq3s+UeWlYs2PNwJckiAIOxWCRNcd5
-         1oKVQcQi6RyPZ5tAX/A9ajvEiBUmon0UqZvnc5Oe1bCoh0SgTqG/Oj5usgKoLQOySDE8
-         kLN6g0r/UBHlIXDa1og83FX/eyVp0rjHzznOh91C5piVom2oFDHutQlZ6tmmaGHYyAx6
-         2V7fEPNoW7NJmV+jAkr9lCtslkEg2/eAssmlyyB+5X8xT3Af8YNo0moZHW4HZCShKlsL
-         WFsA==
-X-Gm-Message-State: APjAAAVn8pmE6vjyzQKBRbNmxuZeWIZRBX1ANT0hePiuw3cLSrSSVIf6
-        5Ev04BY85WH3b71YgJuVV/I=
-X-Google-Smtp-Source: APXvYqzotBVrKLK7Jaa8T8BE9qJ2kK7Cb6IlZ+dSvzHAMYsoBbC5J9RoHeeVoM4vI+JFWtjVZBlSUw==
-X-Received: by 2002:a17:902:563:: with SMTP id 90mr40957431plf.13.1571250698671;
-        Wed, 16 Oct 2019 11:31:38 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::acd])
-        by smtp.gmail.com with ESMTPSA id x139sm3303436pgx.92.2019.10.16.11.31.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 11:31:37 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 11:31:35 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com
-Subject: Re: [PATCH bpf-next v4 0/3] bpf: switch to new usercopy helpers
-Message-ID: <20191016183133.ylo7k47o5qkygbze@ast-mbp>
-References: <20191016034432.4418-1-christian.brauner@ubuntu.com>
- <20191016111810.1799-1-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016111810.1799-1-christian.brauner@ubuntu.com>
-User-Agent: NeoMutt/20180223
+        Wed, 16 Oct 2019 14:36:23 -0400
+Received: from surfer-172-29-2-69-hotspot.internet-for-guests.com (p578ac27a.dip0.t-ipconnect.de [87.138.194.122])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 68CD6CECDD;
+        Wed, 16 Oct 2019 20:45:19 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: Re: [PATCH] Revert "Bluetooth: hci_ll: set operational frequency
+ earlier"
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191002114626.12407-1-aford173@gmail.com>
+Date:   Wed, 16 Oct 2019 20:36:20 +0200
+Cc:     linux-bluetooth@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, adam.ford@logicpd.com, sre@kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <1550E9D9-43ED-4345-A9AF-6D9F097FC64E@holtmann.org>
+References: <20191002114626.12407-1-aford173@gmail.com>
+To:     Adam Ford <aford173@gmail.com>
+X-Mailer: Apple Mail (2.3594.4.19)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 01:18:07PM +0200, Christian Brauner wrote:
-> Hey everyone,
-> 
-> This is v4. If you still feel that I should leave this code alone then
-> simply ignore it. I won't send another version. Relevant tests pass and
-> I've verified that other failures were already present without this
-> patch series applied.
+Hi Adam,
 
-I'm looking at it the following way:
-- v1 was posted with zero testing. Obviously broken patches.
-- v[23] was claimed to be tested yet there were serious bugs.
-  Means you folks ran only the tests that I pointed out in v1.
-- in v4 patch 3 now has imbalanced copy_to_user. Previously there was:
-  bpf_check_tail_zero+copy_from+copy_to. Now it's copy_struct_from_user+copy_to.
-  It's puzzling to read that code.
-  More so the patch removes actual_size > PAGE_SIZE check.
-  It's a change in behavior that commit log doesn't talk about.
-- so even v4 is not ready to be merged.
-- the copy_struct_from_user api was implemented by the same people who
-  sent buggy patches. When you guys came up with this 'generic' api
-  you didn't consider bpf usage and bpf_check_uarg_tail_zero() is still necessary.
-- few places that were converted to copy_struct_from_user() still have
-  size > PAGE_SIZE. Why wasn't it part of generic?
-  It means that the api likely will be refactored again, but looking at the way
-  the patches were crafted I have no confidence that it will be thoroughly tested.
-- and if I accept this set the future refactoring may break bpf side silently.
-- what check_zeroed_user() is actually doing? imo it's a premature
-  optimization with complex implementation. Most of the time the user space passes
-  the size that is the same as kernel expects or smaller. Rarely user space
-  libs are newer than the kernel. In such case they should probe the kernel
-  once for new features (like libbpf does) and should not be calling kernel api
-  again and again to receive the same E2BIG again and again. So the fancy long read
-  optimization is used once in real life. Yet it's much more complex than
-  simple byte loop we do in bpf_check_uarg_tail_zero.
-- so no, I'm not applying this. Instead I'm taking bets when this shiny new thing
-  will cause issues to other subsystems.
+> As nice as it would be to update firmware faster, that patch broke
+> at least two different boards, an OMAP4+WL1285 based Motorola Droid
+> 4, as reported by Sebasian Reichel and the Logic PD i.MX6Q +
+> WL1837MOD.
+> 
+> This reverts commit a2e02f38eff84f199c8e32359eb213f81f270047.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
 
