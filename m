@@ -2,126 +2,182 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F66BFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0FAFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062062168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0591C2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8ZUM76B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhdBgUIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394178AbfJPQTd (ORCPT
+        id S2405432AbfJPQT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:19:33 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:53800 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404130AbfJPQTc (ORCPT
+        Wed, 16 Oct 2019 12:19:58 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35892 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388413AbfJPQT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:19:32 -0400
-Received: by mail-wm1-f51.google.com with SMTP id i16so3591727wmd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 09:19:31 -0700 (PDT)
+        Wed, 16 Oct 2019 12:19:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so28793556wrd.3;
+        Wed, 16 Oct 2019 09:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ClDQ27rib9gTJsQGXTTJRHusNU/eeaE+CiY63Jy96js=;
-        b=R8ZUM76BwybIlfHTtRwSrwoeTc0Mm9dKOaxg1WK0QsHiLZlUH+m6fN0gP9qidVD9UO
-         rt4KY3Z8S7I4b4fVvyHlt2c3Y5LEhzWqyoSrjgcXq3TPRDi/GDxJWxx8D0qVAksqziO6
-         LAXz+tbSR8VjMmLtGRWn0oL0rz/OXkks//cZD0Kpi9iohJ7ZRw3DkXqeqvMZWRTo1Sp9
-         IPbuJHaekq415jw2F+9KtXMCBZu/GcvpEYnRGPwT2tbab7MTuSBGt4WFKfFXQCvy3RFU
-         K5GcdUL+FW/vh8hltdoCQli7FCk42R7JNG0zQznhzQWbCnSXdgWUKfNakM7kQ0Y/f4JV
-         PDSA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h9IW++BRSCNxbhtWy0+HMRJFW/nVXeIQcj8HcjgdNbY=;
+        b=dhdBgUIWoG0Q6FjxOVwxi5mUVfLXYZdImiZzS4VnexZpFnTvELNjCSoPRub6BjyjPX
+         QL5SGLNmHCdeFbG/uQdNZIuTYM0ccOnlkC58gmmeYy5vrZJj97GW3fq3oMIOEtCOuNkd
+         1BXI99+UIdcWygw6Bptg/7fmuM3bul01qMVVcmzY59Csr0XgprCo6RcvIMRw1jScTlSP
+         3YpvHsFVmiI9COwGRh7r54hv2ocRq+tUY4wbKNbfCq4JsDVehfhfZeDxsGcOKNeo/GBI
+         XS9WbRQTvS2HcLbW7QZW/t/sVibICSFKqIfcK7fFuIRt4y+4REnbiTTTJviWU+B1g6Vh
+         cB/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ClDQ27rib9gTJsQGXTTJRHusNU/eeaE+CiY63Jy96js=;
-        b=km6mmm7krUp+aUTH/RJxOAOFScxATnnAannW9hE1SyctJy/uX37eCOmp+Rc6TLwFHa
-         fhIsEmOIzNR2OqEVcORsQEemwZXmsx1sgaiQIqKDuHa05N4eJQxLzNi/vz5zroofnO2x
-         bj+6rX5/XEdhoLfgZ1mOrsMcS16acYd2ppeka9uRUUbFn/YsVSnGb+IuubVMB3TV77op
-         Nu/4L6QTvltNxWrk5WJjNqx+WOv6S2jzSPn9D+POQCmXqt8Kw2FV1dnJIwx0pq1Ft3Iq
-         tMb8NzqfthmImGzTMwn0bm1nzXzAh5OQaApztaesS1xt1alXHVClTNYXtWNkb63lbZ5V
-         3Xpw==
-X-Gm-Message-State: APjAAAWQ/Cn2+JsISHQm5SgXfwxMIiOiIxBL9MzOAsueH5LWMXBfgrJY
-        oGtNywv9U2ZoSaUmujYNpw0xESncOISyIMJXHClNkA==
-X-Google-Smtp-Source: APXvYqwh8+A8W2StIQF2g+j5jrtEm7yZmJlKM7cnB2ptXcCThx5FPhYGZlDdtFTcJ8UwxXhdehgQHSIszElU/Zr+g78=
-X-Received: by 2002:a7b:c395:: with SMTP id s21mr4085418wmj.102.1571242770235;
- Wed, 16 Oct 2019 09:19:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h9IW++BRSCNxbhtWy0+HMRJFW/nVXeIQcj8HcjgdNbY=;
+        b=oR93YsftRixWSTl97XQM1OSdm5vLCD9q18gDmkwux5FshisneL77ET0mDfkFpWp6Dk
+         LHPVkPRI4ye/tZIZnfR6RU6HTGWdVm032P7/8QGFSeqCGBR74sn5Uh6/M9zaYAJ5ua9e
+         Jp6sWVSrofLzsA1M/xiPWWqzV5IPXKBDST1Nwu3/olqHTWYKexZXkRZtZZQE5qjsQqsA
+         xEPf5VJGVPR4hCyFaJ5bYD+P8A7H1pa1l7ZJU8Yp+9n5S/qOop6rqtgPFXQJJSlazTsx
+         z79dPzUE/0b0WAUiDlGhUoXxVOZtuSUKo7BksY8M30B/jHA3BZMhwEBbIoAdCbBi8pKE
+         +1ww==
+X-Gm-Message-State: APjAAAXZffXYsHZRtdklXRbphVUfrSNXDUjl7s/XhDLCWzOl/nauXWmx
+        xdQIUNDn7zMcc7tJLLQ5eqI=
+X-Google-Smtp-Source: APXvYqyw+hlPiIThyc4HMTeX2noy1aYYoJVRKLh1zberL1OrlN+vywZ7st0nieD+jJH2oLZYGdL1Dg==
+X-Received: by 2002:a5d:43c1:: with SMTP id v1mr3545837wrr.91.1571242794848;
+        Wed, 16 Oct 2019 09:19:54 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id v11sm2941372wml.30.2019.10.16.09.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 09:19:53 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 18:19:52 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 2/2] arm64: tegra: Assume no CLKREQ presence by default
+Message-ID: <20191016161952.GB2526111@ulmo>
+References: <20191005164212.3646-1-vidyas@nvidia.com>
+ <20191005164212.3646-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20191016111541.20208-1-yuehaibing@huawei.com>
-In-Reply-To: <20191016111541.20208-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 16 Oct 2019 12:19:15 -0400
-Message-ID: <CADnq5_MzELoYV2=Fzioy_YqxdyQg+RXQKL4CUwayGP3_RMRg3A@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/display: Make dc_link_detect_helper static
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>, Anthony Koo <Anthony.Koo@amd.com>,
-        Eric Yang <Eric.Yang2@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Chris Park <Chris.Park@amd.com>,
-        Martin Leung <martin.leung@amd.com>, david.galiffi@amd.com,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Content-Disposition: inline
+In-Reply-To: <20191005164212.3646-2-vidyas@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 8:29 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fix sparse warning:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:746:6:
->  warning: symbol 'dc_link_detect_helper' was not declared. Should it be static?
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Applied.  thanks!
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Alex
-
+On Sat, Oct 05, 2019 at 10:12:12PM +0530, Vidya Sagar wrote:
+> Although Tegra194 has support for CLKREQ sideband signal and P2972
+> has routing of the same till the slot, it is the case most of the time
+> that the connected device doesn't have CLKREQ support. Hence, it makes
+> sense to assume that there is no CLKREQ support by default and it can
+> be enabled on need basis when a card with CLKREQ support is connected.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> index fb18681..9350536 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> @@ -743,7 +743,8 @@ static bool wait_for_alt_mode(struct dc_link *link)
->   * This does not create remote sinks but will trigger DM
->   * to start MST detection if a branch is detected.
->   */
-> -bool dc_link_detect_helper(struct dc_link *link, enum dc_detect_reason reason)
-> +static bool dc_link_detect_helper(struct dc_link *link,
-> +                                 enum dc_detect_reason reason)
->  {
->         struct dc_sink_init_data sink_init_data = { 0 };
->         struct display_sink_capability sink_caps = { 0 };
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 6 ------
+>  1 file changed, 6 deletions(-)
+
+Applied to for-5.5/arm64/dt, thanks.
+
+Thierry
+
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/d=
+ts/nvidia/tegra194.dtsi
+> index a312c051448b..11220d97adb8 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -1186,7 +1186,6 @@
+> =20
+>  		nvidia,bpmp =3D <&bpmp 1>;
+> =20
+> -		supports-clkreq;
+>  		nvidia,aspm-cmrt-us =3D <60>;
+>  		nvidia,aspm-pwr-on-t-us =3D <20>;
+>  		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> @@ -1232,7 +1231,6 @@
+> =20
+>  		nvidia,bpmp =3D <&bpmp 2>;
+> =20
+> -		supports-clkreq;
+>  		nvidia,aspm-cmrt-us =3D <60>;
+>  		nvidia,aspm-pwr-on-t-us =3D <20>;
+>  		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> @@ -1278,7 +1276,6 @@
+> =20
+>  		nvidia,bpmp =3D <&bpmp 3>;
+> =20
+> -		supports-clkreq;
+>  		nvidia,aspm-cmrt-us =3D <60>;
+>  		nvidia,aspm-pwr-on-t-us =3D <20>;
+>  		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> @@ -1324,7 +1321,6 @@
+> =20
+>  		nvidia,bpmp =3D <&bpmp 4>;
+> =20
+> -		supports-clkreq;
+>  		nvidia,aspm-cmrt-us =3D <60>;
+>  		nvidia,aspm-pwr-on-t-us =3D <20>;
+>  		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> @@ -1370,7 +1366,6 @@
+> =20
+>  		nvidia,bpmp =3D <&bpmp 0>;
+> =20
+> -		supports-clkreq;
+>  		nvidia,aspm-cmrt-us =3D <60>;
+>  		nvidia,aspm-pwr-on-t-us =3D <20>;
+>  		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> @@ -1420,7 +1415,6 @@
+>  		interrupt-map-mask =3D <0 0 0 0>;
+>  		interrupt-map =3D <0 0 0 0 &gic GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+> =20
+> -		supports-clkreq;
+>  		nvidia,aspm-cmrt-us =3D <60>;
+>  		nvidia,aspm-pwr-on-t-us =3D <20>;
+>  		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> --=20
+> 2.17.1
+>=20
+
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2nQygACgkQ3SOs138+
+s6GU5Q/+LV/SE++KyetHQKYMnNis8n7U2swfFXdv1B7ZJkbmd+LW7O2E1lRq8z+1
+JJ+KsZwWs3tOXEezWuNL0Q8s5x6y+OrdPJ0GComdlBZ5bXOcQTf4+XbE6tYRwsmp
+EV8/uSFQr0AHVCJBffDk+IAbPH0tjCWKo7NQkIXTX6Bf4LR5gfYdTkYuiYGFkmPz
+yissUISHDcM0XGn135Hft6t/fpGiNOGwfBSWr/XsPDsT3WMs7/5UnK0aimMNTQdU
+Uvz0CCC1dJmNudilYczX3fZ1gJ3kDm/o/ioq3/SZER+xgOkEZG58YBTJP+WJln1R
+cKQXbCKCex/AQWq1L9FQAt+Rky1+iyuHE6nGLZO8c3k+dYKIQ7rAe4Vz88VyCu34
+n6VRr/tYNK6p3aSgWIrOYPI6XmQoT7+KzniccBXkUUTEOV+XnPfP65DEbmJ1cCDl
+d/X398HrO9O+YOp1A9v7nLf6ksM/yN/nQd2b7zW/CjrMMzRxtfC+7ThI0syMHCsO
+vHXbgMWi1niBEoVp7Bse6hs2X2VGrbmmdmRD1phA6h+I5uVtW8LL14HuX0WKF5ar
+VWio3vWpdP2Vy8Z44I+wE8y6ILxBVV0a9aW4KVBM4CvAg3ZvFadDSMkP1oHLoIqj
+uSYxjyoKeuUWOpxaTkzEQuE/MB+DTZegGjlj1omMSWw9Y4u9n84=
+=dgRG
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
