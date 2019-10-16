@@ -2,59 +2,67 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59925FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4A2FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39ACD2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BDD2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392780AbfJPLWU (ORCPT
+        id S2392786AbfJPLX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:22:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:37098 "EHLO foss.arm.com"
+        Wed, 16 Oct 2019 07:23:27 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20212 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392658AbfJPLWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:22:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C421728;
-        Wed, 16 Oct 2019 04:22:19 -0700 (PDT)
-Received: from [10.37.9.204] (unknown [10.37.9.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACC403F6C4;
-        Wed, 16 Oct 2019 04:22:14 -0700 (PDT)
-Subject: Re: [PATCHv7 18/33] lib/vdso: Add unlikely() hint into
- vdso_read_begin()
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-References: <20191011012341.846266-1-dima@arista.com>
- <20191011012341.846266-19-dima@arista.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <100f6921-9081-7eb0-7acc-f10cfb647c21@arm.com>
-Date:   Wed, 16 Oct 2019 12:24:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2392658AbfJPLX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:23:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 04:23:26 -0700
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="186119904"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 04:23:23 -0700
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+Date:   Wed, 16 Oct 2019 19:23:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191011012341.846266-19-dima@arista.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,53 +70,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/11/19 2:23 AM, Dmitry Safonov wrote:
-> From: Andrei Vagin <avagin@gmail.com>
+On 10/16/2019 6:16 PM, Paolo Bonzini wrote:
+> On 16/10/19 11:47, Thomas Gleixner wrote:
+>> On Wed, 16 Oct 2019, Paolo Bonzini wrote:
+>>> Just never advertise split-lock
+>>> detection to guests.  If the host has enabled split-lock detection,
+>>> trap #AC and forward it to the host handler---which would disable
+>>> split lock detection globally and reenter the guest.
+>>
+>> Which completely defeats the purpose.
 > 
-> Place the branch with no concurrent write before contended case.
+> Yes it does.  But Sean's proposal, as I understand it, leads to the
+> guest receiving #AC when it wasn't expecting one.  So for an old guest,
+> as soon as the guest kernel happens to do a split lock, it gets an
+> unexpected #AC and crashes and burns.  And then, after much googling and
+> gnashing of teeth, people proceed to disable split lock detection.
 > 
-> Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-> (more clock_gettime() cycles - the better):
->         | before    | after
-> -----------------------------------
->         | 150252214 | 153242367
->         | 150301112 | 153324800
->         | 150392773 | 153125401
->         | 150373957 | 153399355
->         | 150303157 | 153489417
->         | 150365237 | 153494270
-> -----------------------------------
-> avg     | 150331408 | 153345935
-> diff %  | 2	    | 0
-> -----------------------------------
-> stdev % | 0.3	    | 0.1
+> (Old guests are the common case: you're a cloud provider and your
+> customers run old stuff; it's a workstation and you want to play that
+> game that requires an old version of Windows; etc.).
 > 
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
-> Co-developed-by: Dmitry Safonov <dima@arista.com>
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> To save them the googling and gnashing of teeth, I guess we can do a
+> pr_warn_ratelimited on the first split lock encountered by a guest.  (It
+> has to be ratelimited because userspace could create an arbitrary amount
+> of guests to spam the kernel logs).  But the end result is the same,
+> split lock detection is disabled by the user.
+> 
+> The first alternative I thought of was:
+> 
+> - Remove KVM loading of MSR_TEST_CTRL, i.e. KVM *never* writes the CPU's
+>    actual MSR_TEST_CTRL.  KVM still emulates MSR_TEST_CTRL so that the
+>    guest can do WRMSR and handle its own #AC faults, but KVM doesn't
+>    change the value in hardware.
+> 
+> - trap #AC if the guest encounters a split lock while detection is
+>    disabled, and then disable split-lock detection in the host.
+> 
+> But I discarded it because it still doesn't do anything for malicious
+> guests, which can trigger #AC as they prefer.  And it makes things
+> _worse_ for sane guests, because they think split-lock detection is
+> enabled but they become vulnerable as soon as there is only one
+> malicious guest on the same machine.
+> 
+> In all of these cases, the common final result is that split-lock
+> detection is disabled on the host.  So might as well go with the
+> simplest one and not pretend to virtualize something that (without core
+> scheduling) is obviously not virtualizable.
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Right, the nature of core-scope makes MSR_TEST_CTL impossible/hard to 
+virtualize.
 
-> ---
->  include/vdso/helpers.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/vdso/helpers.h b/include/vdso/helpers.h
-> index 01641dbb68ef..9a2af9fca45e 100644
-> --- a/include/vdso/helpers.h
-> +++ b/include/vdso/helpers.h
-> @@ -10,7 +10,7 @@ static __always_inline u32 vdso_read_begin(const struct vdso_data *vd)
->  {
->  	u32 seq;
->  
-> -	while ((seq = READ_ONCE(vd->seq)) & 1)
-> +	while (unlikely((seq = READ_ONCE(vd->seq)) & 1))
->  		cpu_relax();
->  
->  	smp_rmb();
-> 
+- Making old guests survive needs to disable split-lock detection in 
+host(hardware).
+- Defending malicious guests needs to enable split-lock detection in 
+host(hardware).
 
--- 
-Regards,
-Vincenzo
+We cannot achieve them at the same time.
+
+In my opinion, letting kvm disable the split-lock detection in host is 
+not acceptable that it just opens the door for malicious guests to 
+attack. I think we can use Sean's proposal like below.
+
+KVM always traps #AC, and only advertises split-lock detection to guest 
+when the global variable split_lock_detection_enabled in host is true.
+
+- If guest enables #AC (CPL3 alignment check or split-lock detection 
+enabled), injecting #AC back into guest since it's supposed capable of 
+handling it.
+- If guest doesn't enable #AC, KVM reports #AC to userspace (like other 
+unexpected exceptions), and we can print a hint in kernel, or let 
+userspace (e.g., QEMU) tell the user guest is killed because there is a 
+split-lock in guest.
+
+In this way, malicious guests always get killed by userspace and old 
+sane guests cannot survive as well if it causes split-lock. If we do 
+want old sane guests work we have to disable the split-lock detection 
+(through booting parameter or debugfs) in the host just the same as we 
+want to run an old and split-lock generating userspace binary.
+
+But there is an issue that we advertise split-lock detection to guest 
+based on the value of split_lock_detection_enabled to be true in host, 
+which can be turned into false dynamically when split-lock happens in 
+host kernel. This causes guest's capability changes at run time and I 
+don't if there is a better way to inform guest? Maybe we need a pv 
+interface?
+
+> Thanks,
+> 
+> Paolo
+> 
+>> 1) Sane guest
+>>
+>> Guest kernel has #AC handler and you basically prevent it from
+>> detecting malicious user space and killing it. You also prevent #AC
+>> detection in the guest kernel which limits debugability.
+>>
+>> 2) Malicious guest
+>>
+>> Trigger #AC to disable the host detection and then carry out the DoS
+>> attack.
+> 
+> 
