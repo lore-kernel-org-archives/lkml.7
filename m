@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E16FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2E3FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0401821A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD6621928
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ehEm/nIg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mCT66qcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405962AbfJPQAj (ORCPT
+        id S2405973AbfJPQAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:00:39 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55608 "EHLO
+        Wed, 16 Oct 2019 12:00:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55610 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393130AbfJPQAe (ORCPT
+        with ESMTP id S2393136AbfJPQAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 12:00:34 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0UwQ039205;
-        Wed, 16 Oct 2019 11:00:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0VuH039210;
+        Wed, 16 Oct 2019 11:00:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571241630;
-        bh=Z3+DeuUufWSXxrYn+p3pdikwZRDvfcfdNVr2Qn+E6S0=;
+        s=ti-com-17Q1; t=1571241631;
+        bh=J2Vk2Ajsq3pQz40ndtf+q535T0FSNHipw5rnG1vK/ho=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ehEm/nIgts31HX6T4ZaWUs/N+VfYgSq4nBluAxiA7lNELieRyvSwIv2R7gBxW7i2m
-         +PwTHhSDZmqs97fvOIbqiRcYj2IMYXiaSW9k1imGuHj4tLXRK5DsBj8vJ0B1EDZFqB
-         4bwqxW/lQW/a1PKlbOcz06ptKViamp1vmZQrviZE=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GG0Uj8126257
+        b=mCT66qcW52M4j4FAqDhqc132Zj2cmA9m1YpoLY1nRkWidCJaStaZcl0bxZfmmYQ/M
+         ukTuA/sRKbr5ZOXrq0EiSUq90SmOv6LTgNo0YRGDRG0yLQVxrQxyu6HZmaeCPDjyZj
+         xWRWQxI8SJpAlfWPWZPhw6T8LeShDF4Xa8JXRuBU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GG0VAM094835
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 11:00:30 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 16 Oct 2019 11:00:31 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 11:00:23 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 11:00:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 11:00:30 -0500
+ Frontend Transport; Wed, 16 Oct 2019 11:00:24 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0TWS061730;
-        Wed, 16 Oct 2019 11:00:30 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GG0V8Z096990;
+        Wed, 16 Oct 2019 11:00:31 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v13 07/18] dt: bindings: lp55xx: Be consistent in the document with LED acronym
-Date:   Wed, 16 Oct 2019 10:59:43 -0500
-Message-ID: <20191016155954.29044-8-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v13 12/18] leds: lp55xx: Convert LED class registration to devm_*
+Date:   Wed, 16 Oct 2019 10:59:48 -0500
+Message-ID: <20191016155954.29044-13-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191016155954.29044-1-dmurphy@ti.com>
 References: <20191016155954.29044-1-dmurphy@ti.com>
@@ -67,36 +67,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the document to be consistent in case when using "LED".
-This acronym should be capital throughout the document.
+Convert the LED class registration calls to the LED devm_*
+registration calls.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Rob Herring <robh+dt@kernel.org>
 ---
- Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index 1b66a413fb9d..bfe2805c5534 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,4 +1,4 @@
--Binding for TI/National Semiconductor LP55xx Led Drivers
-+Binding for TI/National Semiconductor LP55xx LED Drivers
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 44ced02b49f9..824d1d73dde1 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -181,7 +181,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 		led->cdev.name = name;
+ 	}
  
- Required properties:
- - compatible: one of
-@@ -12,8 +12,8 @@ Required properties:
- - clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
+-	ret = led_classdev_register(dev, &led->cdev);
++	ret = devm_led_classdev_register(dev, &led->cdev);
+ 	if (ret) {
+ 		dev_err(dev, "led register err: %d\n", ret);
+ 		return ret;
+@@ -502,7 +502,7 @@ void lp55xx_unregister_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
  
- Each child has own specific current settings
--- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
--- max-cur: Maximun current at each led channel.
-+- led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
-+- max-cur: Maximun current at each LED channel.
- 
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
+ 	for (i = 0; i < chip->num_leds; i++) {
+ 		each = led + i;
+-		led_classdev_unregister(&each->cdev);
++		devm_led_classdev_unregister(each->cdev.dev, &each->cdev);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(lp55xx_unregister_leds);
 -- 
 2.22.0.214.g8dca754b1e
 
