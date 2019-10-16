@@ -2,103 +2,131 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BADFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0382AFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E9C205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28D6205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLlv0MeD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="o14jG9dc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="o14jG9dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393109AbfJPMeJ (ORCPT
+        id S2393123AbfJPMeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:34:09 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40053 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733070AbfJPMeJ (ORCPT
+        Wed, 16 Oct 2019 08:34:16 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55966 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733070AbfJPMeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:34:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so23833163ljw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:34:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9EysGKwAMgXXygyzOXkQ7pShV2hQHXICJ75+QvsLTBY=;
-        b=HLlv0MeD2E9hs6is28aAs7TiTNwhmn/o8yknVMgs7CtznyDtUhmE4WqzWbmtdEhTEw
-         S82uxowSCTfXLgrrpu3BKca7UbPBMptLGgKeISmGBpqeLrsHALwYdZ/mxwR4Q7m+lNe4
-         fZyaGKze9yPewQcFzr4L4IFT/7E3DOlrlHFFmgYVHUVGiYJKsjaKZJMOCbqmmD+5nf3I
-         Z8OfG77Ns56FlOdXRl4HNITcWI3ZVs2ME5Txl35hnP60CUmmkhXnzV3CwlGCocQBGQ2e
-         hNsL5JYJJQGh10rCL3Rnc4KdZP4PRxUsQz/UDVi/Tjx/UtpAXBugovlc/WceAt14S0r3
-         1v7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9EysGKwAMgXXygyzOXkQ7pShV2hQHXICJ75+QvsLTBY=;
-        b=LnV/SAygrKgRJJnXwH71ksc/e6zTOrr6PBNpqESyIVKT+KwoFnkcM4apPyeqttp0xJ
-         x6nJ8FwcsyLyzuMJcLAZXJYDhGPMsY/hiILTAZWk6gQ59elfwF3WdVTMjUKJHvucWHkR
-         kNVBCVoMRtrIvB7uE0/L47CuSpNzs7VTATwO9SpOvg/0rbtl0ExEHcXMHS7r8RYF6sek
-         +Lf1a9OdLRBqVp8xR7J2d6z4tmuwypBS9ywnjGUyijpGbDxPa3/QylVIPT59xiap9CQl
-         5SVrII/hYcR6p5Fmrrlk8KQJx/vZ5tMvEioXSgC71lG2nqm1aggCHhd8exbEfC4bnx3J
-         Rfmg==
-X-Gm-Message-State: APjAAAXE1LP8HZpGWfGoFsE1sGCuD5bRN447+mnwzlLKTqwRxUCglqGG
-        AFz3usDAMR8WYsxEObOQCco=
-X-Google-Smtp-Source: APXvYqwHt7sCh5g0ZTnwvcbI6A3r0Iyc2Qv0wChRhGIC4CIAL/V7habUytiOLi16NvB9mQL5JEMXcg==
-X-Received: by 2002:a2e:9a4c:: with SMTP id k12mr26347766ljj.213.1571229247533;
-        Wed, 16 Oct 2019 05:34:07 -0700 (PDT)
-Received: from workstation.lan (81-229-85-231-no13.tbcn.telia.com. [81.229.85.231])
-        by smtp.gmail.com with ESMTPSA id 207sm8605119lfn.0.2019.10.16.05.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 05:34:06 -0700 (PDT)
-From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/scdc: Fix typo in bit definition of SCDC_STATUS_FLAGS
-Date:   Wed, 16 Oct 2019 14:33:42 +0200
-Message-Id: <20191016123342.19119-1-patrik.r.jakobsson@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 16 Oct 2019 08:34:16 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 95DF98EE0CC;
+        Wed, 16 Oct 2019 05:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1571229255;
+        bh=DLovgWcYpoVQPuDx5Rz7kbFf0gXtdi0u6vI43N1Bp0g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=o14jG9dc+ikKCo66qGBQlCFm7kBAJKESbhF9cGoKLps4Qdla9QfbpwQZTQdxwy4pr
+         Ie8/keP0YBtAJc2dqVABjG8Bk+7XZ8GO0TIJNzabgoJEmWxtYSrJ6FVvTTQf0x74lS
+         fmlDUGpZZHSpfBzrcxRH1i4cN9PklcmjSLJN2XEM=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MeFCJHFdFf8g; Wed, 16 Oct 2019 05:34:15 -0700 (PDT)
+Received: from [192.168.100.84] (unknown [24.246.103.29])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 61D5F8EE02B;
+        Wed, 16 Oct 2019 05:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1571229255;
+        bh=DLovgWcYpoVQPuDx5Rz7kbFf0gXtdi0u6vI43N1Bp0g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=o14jG9dc+ikKCo66qGBQlCFm7kBAJKESbhF9cGoKLps4Qdla9QfbpwQZTQdxwy4pr
+         Ie8/keP0YBtAJc2dqVABjG8Bk+7XZ8GO0TIJNzabgoJEmWxtYSrJ6FVvTTQf0x74lS
+         fmlDUGpZZHSpfBzrcxRH1i4cN9PklcmjSLJN2XEM=
+Message-ID: <1571229252.3477.7.camel@HansenPartnership.com>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Wed, 16 Oct 2019 08:34:12 -0400
+In-Reply-To: <20191016110031.GE10184@linux.intel.com>
+References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+         <20191004182711.GC6945@linux.intel.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+         <20191007000520.GA17116@linux.intel.com>
+         <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+         <20191008234935.GA13926@linux.intel.com>
+         <20191008235339.GB13926@linux.intel.com>
+         <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+         <20191014190033.GA15552@linux.intel.com>
+         <1571081397.3728.9.camel@HansenPartnership.com>
+         <20191016110031.GE10184@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo where bits got compared (x < y) instead of shifted (x << y).
+On Wed, 2019-10-16 at 14:00 +0300, Jarkko Sakkinen wrote:
+> On Mon, Oct 14, 2019 at 12:29:57PM -0700, James Bottomley wrote:
+> > The job of the in-kernel rng is simply to produce a mixed entropy
+> > pool from which we can draw random numbers.  The idea is that quite
+> > a few attackers have identified the rng as being a weak point in
+> > the security architecture of the kernel, so if we mix entropy from
+> > all the sources we have, you have to compromise most of them to
+> > gain some predictive power over the rng sequence.
+> 
+> The documentation says that krng is suitable for key generation.
+> Should the documentation changed to state that it is unsuitable?
 
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
----
- include/drm/drm_scdc_helper.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+How do you get that from the argument above?  The krng is about the
+best we have in terms of unpredictable key generation, so of course it
+is suitable ... provided you give the entropy enough time to have
+sufficient entropy.  It's also not foolproof ... Bernstein did a
+speculation about how you could compromise all our input sources for
+entropy.  However the more sources we have the more difficult the
+compromise becomes.
 
-diff --git a/include/drm/drm_scdc_helper.h b/include/drm/drm_scdc_helper.h
-index f92eb2094d6b..6a483533aae4 100644
---- a/include/drm/drm_scdc_helper.h
-+++ b/include/drm/drm_scdc_helper.h
-@@ -50,9 +50,9 @@
- #define  SCDC_READ_REQUEST_ENABLE (1 << 0)
- 
- #define SCDC_STATUS_FLAGS_0 0x40
--#define  SCDC_CH2_LOCK (1 < 3)
--#define  SCDC_CH1_LOCK (1 < 2)
--#define  SCDC_CH0_LOCK (1 < 1)
-+#define  SCDC_CH2_LOCK (1 << 3)
-+#define  SCDC_CH1_LOCK (1 << 2)
-+#define  SCDC_CH0_LOCK (1 << 1)
- #define  SCDC_CH_LOCK_MASK (SCDC_CH2_LOCK | SCDC_CH1_LOCK | SCDC_CH0_LOCK)
- #define  SCDC_CLOCK_DETECT (1 << 0)
- 
--- 
-2.23.0
+> > The point is not how certified the TPM RNG is, the point is that
+> > it's a single source and if we rely on it solely for some
+> > applications, like trusted keys, then it gives the attackers a
+> > single known point to go after.  This may be impossible for script
+> > kiddies, but it won't be for nation states ... are you going to
+> > exclusively trust the random number you got from your chinese
+> > certified TPM?
+> 
+> I'd suggest approach where TPM RNG result is xored with krng result.
+
+reversible ciphers are generally frowned upon in random number
+generation, that's why the krng uses chacha20.  In general I think we
+shouldn't try to code our own mixing and instead should get the krng to
+do it for us using whatever the algorithm du jour that the crypto guys
+have blessed is.  That's why I proposed adding the TPM output to the
+krng as entropy input and then taking the output of the krng.
+
+James
+
+> > Remember also that the attack doesn't have to be to the TPM only,
+> > it could be the pathway by which we get the random number, which
+> > involves components outside of the TPM certification.
+> 
+> Yeah, I do get this.
+> 
+> /Jarkko
+> 
 
