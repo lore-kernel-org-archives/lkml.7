@@ -2,240 +2,158 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1622ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36D9C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92657217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A99E20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="et4X9bLB"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="OCnVYcmw";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="e7l8ixo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390833AbfJPEc7 (ORCPT
+        id S2389453AbfJPEgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 00:32:59 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33578 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390659AbfJPEcv (ORCPT
+        Wed, 16 Oct 2019 00:36:52 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:4008 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728189AbfJPEgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 00:32:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9G4SbB7166088;
-        Wed, 16 Oct 2019 04:31:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=SjMY2CWkzmBSyTOuZ/oTakA5fkKjvmKR1RWoCcDCaag=;
- b=et4X9bLB3DJbrRCtsHZ486/SIMF49ywsTUL5A0LPtfZZE+DXevPi4A9/O70dhskgcMXs
- lSEZVJkOALfFIhYIF/cGBgxLSFk1BBquzAow/aIEVOwFl0SfqDLetE2IJl2h4u4Cy/rA
- 4H5/Q8SkSBD/xTftqtkSA+sd8LGgjK15QFvzbUtd0SI9XEN1QCcFbiXnp9obqycmGiRx
- 2o2Xm4HreNHuMBeQc4Eq56yKX0RqdEusRIfU8zzmS+rgndccSwQpOoLvtKUJCMyuNwtU
- 7+cpApatYB0PE6UMDgJcWkLibGNmi1cBhVodJrszHPyIjIgTe7C+E9seGyRQ73B3h/Q9 Fw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vk7frbxgp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 04:31:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9G4Rf2U122538;
-        Wed, 16 Oct 2019 04:31:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2vn719wws6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 04:31:20 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9G4V67u007524;
-        Wed, 16 Oct 2019 04:31:06 GMT
-Received: from neelam.us.oracle.com (/10.152.128.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Oct 2019 21:31:05 -0700
-From:   Alex Kogan <alex.kogan@oracle.com>
-To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        alex.kogan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-Subject: [PATCH v5 0/5] Add NUMA-awareness to qspinlock
-Date:   Wed, 16 Oct 2019 00:28:58 -0400
-Message-Id: <20191016042903.61081-1-alex.kogan@oracle.com>
-X-Mailer: git-send-email 2.19.1
+        Wed, 16 Oct 2019 00:36:51 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9G4X24W011970;
+        Tue, 15 Oct 2019 21:35:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=onIgYJVbVN2LApoxLItSSy4BxIBnppE3SR3R3Ef9Omw=;
+ b=OCnVYcmwKkibAPVWhUNYTrJ5zsOXHeQX1KvKW+NX4jnyVCBPNEwKy/FpMpqVAZmfP8TZ
+ jinEijzATB6gfklzo6z0jRsd3DJjd5RsmIhsSLl50ONE8jI5qTVcfdP5tNg9McZSBBiZ
+ 9kqYD0qW+869gq1HdG+jYFRTRi0nuEJanTnCQVa+UMUoxJ7RDThFR69E0UGTMzbQxD+B
+ 8nTBKXGGFc5aIP2EAH5jb1DWvu2d2KgptB7JM7QA15eo1cwwSbAEaAeaVFILX36nXMzE
+ +/G2ENfd87+1hmjXzRD4kqGC+hufNag5MoXZqggiZYnZu2z25NZ/rDPKrXh2q4hIob4v Dw== 
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2059.outbound.protection.outlook.com [104.47.38.59])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2vkbd26ckq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 21:35:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JwR4tln1EYk42OO5cSQ+6bj4FaXluGZJx4lP72iPz9zGzXkuNOMySrTxn9jQfwWgdlkPyEby0XUSHeDJt4Bo/tC0FCvz1IglFI28rPRGymra2uBS9S4h7NhDKYvvUUjuMeHnhj6PmxG6NqZl4KUzcl36O8OWNz3wDXLEMkR1Yss5902JBJqCLPBiZPsMsVhVuXgDAzPE7eHkQBAKWWwQHamqhtDLDKre3IG41PTZMsC6LrmxcGf7ZWd8imBa0xemPq8in0rqtPp3XDnqke5dcsillr4r44qSoxGa2TjY/pDj0UAUgkAWLG8XYEqGODaSSh9n4jyAXL52fsOvHgOQsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=onIgYJVbVN2LApoxLItSSy4BxIBnppE3SR3R3Ef9Omw=;
+ b=Nh6DwowMNjQJy4kNJDr1eKhCp9dwQMpffeUJOBXeRzanR/VSBvTrBJpuCWyD04YPVK2tSmJvmSE+gcAYJarW///2f5jOJDXysowM/Jq7KqFn3Myj4AlHW7nAgctZqhICvVhEMeqtfKhqgI6jor7IluNuE4tQUdoyHtcV7kMkBhkgO3D+r9VQN5g/kXsdPAp5rReXg1QqzSsxaehYmt89vgQT7EJXte+7X9WfNDICb0wNu/9gOJmd+feXG54EflaoJkdKic6GWmjsAgnmcqfr44GsPi86r3xzhZTVF/+2nlW8kTsrU45SdRsZ/bJevbsmP+YTSqj8rO+p+4ItutMZ5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=onIgYJVbVN2LApoxLItSSy4BxIBnppE3SR3R3Ef9Omw=;
+ b=e7l8ixo/X4RecbxyAZDlvJRIAF+xGcVB6geCAAI/7xuQXUJytAWE1tFNI7pogNR92qNwrtasOKU1kRVVu0OuEZ8uyDxtzBfuKidAi38VG98LIok3yo8TT8owIHursGECHpyCuhrpbkf9Ro5qqekJLXI1GksGuezhPH125LXK4MI=
+Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
+ BYAPR07MB4565.namprd07.prod.outlook.com (52.135.224.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Wed, 16 Oct 2019 04:35:40 +0000
+Received: from BYAPR07MB4709.namprd07.prod.outlook.com
+ ([fe80::8dae:bee9:340a:b770]) by BYAPR07MB4709.namprd07.prod.outlook.com
+ ([fe80::8dae:bee9:340a:b770%6]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
+ 04:35:40 +0000
+From:   Pawel Laszczak <pawell@cadence.com>
+To:     Peter Chen <peter.chen@nxp.com>, Roger Quadros <rogerq@ti.com>
+CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] usb: cdns3: gadget: Fix full-speed mode
+Thread-Topic: [PATCH 2/2] usb: cdns3: gadget: Fix full-speed mode
+Thread-Index: AQHVfQkFJQBIV6DW50mc96mlxAV/BKdQZMgAgAxXN3A=
+Date:   Wed, 16 Oct 2019 04:35:39 +0000
+Message-ID: <BYAPR07MB470974072BDED3F032E35F80DD920@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <20191007121601.25996-1-rogerq@ti.com>
+ <20191007121601.25996-3-rogerq@ti.com> <20191008080711.GH5670@b29397-desktop>
+In-Reply-To: <20191008080711.GH5670@b29397-desktop>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNjYzY2E1NmEtZWZjZS0xMWU5LTg3NGItYTQ0Y2M4YzMwYmQ0XGFtZS10ZXN0XDY2M2NhNTZjLWVmY2UtMTFlOS04NzRiLWE0NGNjOGMzMGJkNGJvZHkudHh0IiBzej0iMTEwMSIgdD0iMTMyMTU2NzQxMzc5MjU4MTcwIiBoPSJjOXd1TS8zMC90THBMcjlZMThyTmVoZjIrYms9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+x-originating-ip: [185.217.253.59]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 42dd3db1-9c7c-43d8-45fc-08d751f24c50
+x-ms-traffictypediagnostic: BYAPR07MB4565:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR07MB4565D62D85661E4B19DF4C5EDD920@BYAPR07MB4565.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0192E812EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(36092001)(189003)(199004)(66476007)(81156014)(476003)(11346002)(99286004)(86362001)(186003)(4744005)(7696005)(3846002)(6116002)(66946007)(66446008)(446003)(64756008)(76176011)(71200400001)(6506007)(71190400001)(66556008)(52536014)(8676002)(8936002)(81166006)(2906002)(4326008)(102836004)(25786009)(486006)(6436002)(7736002)(6246003)(9686003)(305945005)(66066001)(76116006)(229853002)(33656002)(74316002)(478600001)(5660300002)(26005)(316002)(110136005)(54906003)(55016002)(14454004)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB4565;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Cpbo7ISjIruxR8LoEXxTkd3BNKOWg9/bd5jsKdTKrbsnKo52lC1HHRj6a6QdI9+owB7+6ptXCI9yMZybNNP6T02LsYN6cUfQ9IUzxUszj7VqpMocfgJS9QG7pnDqbq3CF6d127a7WosX1j9FjcCk30hU3k7pkvQVvPh0FByBxGBLQaLH7wFu4hCtC0nzP6SBMtrCEMR97BfwRvd+uNJhlhxXEInDm4eWe2t81IaL0l99QhMK8fu34BVOnNVOLcDyBz+92F/Txm+ax5DnJ34OWZ8y/4xGGIPZugPCUQ3Mqc81FiBioN9hlG3EQ2lKKxgDLp58M6gwNV936ALtFGZnoaKoOmLUOayXaUQzfBd8po5dApC5MpGYfeyZhqBKrtYqYHKteZ2Diwk04+KceaQaoNk1FUHFjq/ynixAD1xk4Iw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910160040
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910160040
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42dd3db1-9c7c-43d8-45fc-08d751f24c50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 04:35:39.8490
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UPuB8O1DNNS9FwiHUVey1QQp+RCDKzpmFgaxnfPMDqKaYOEYx+v8IgdmWq4agHxZFLqYFSKdR2a6IrgkykkrnLfNDm4/SVro0BB+4YnSL4Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4565
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-16_01:2019-10-15,2019-10-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
+ adultscore=0 mlxlogscore=909 suspectscore=0 phishscore=0 spamscore=0
+ mlxscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910160041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from v4:
-----------------
+>On 19-10-07 15:16:01, Roger Quadros wrote:
+>> We need to disable USB3 PHY for full-speed mode else
+>> gadget mode is broken.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> ---
+>>  drivers/usb/cdns3/gadget.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+>> index 228cdc4ab886..157536753b8c 100644
+>> --- a/drivers/usb/cdns3/gadget.c
+>> +++ b/drivers/usb/cdns3/gadget.c
+>> @@ -2571,6 +2571,7 @@ static int cdns3_gadget_start(struct cdns3 *cdns)
+>>  	switch (max_speed) {
+>>  	case USB_SPEED_FULL:
+>>  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>>  		break;
+>>  	case USB_SPEED_HIGH:
+>>  		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>
+>Reviewed-by: Peter Chen <peter.chen@nxp.com>
 
-- Switch to a deterministic bound on the number of intra-node handoffs,
-as suggested by Longman.
+Reviewed-by: Pawel Laszczak <pawell@cadence.com>
+>
+>--
+>
+>Thanks,
+>Peter Chen
 
-- Scan the main queue after acquiring the MCS lock and before acquiring 
-the spinlock (pre-scan), as suggested by Longman. If no thread is found 
-in pre-scan, try again after acquiring the spinlock, resuming from the
-same place where pre-scan stopped.
-
-- Convert the secondary queue to a cyclic list such that the tail’s @next
-points to the head of the queue. Store the pointer to the secondary queue
-tail (rather than head) in @locked. This eliminates the need for the @tail
-field in CNA nodes, making space for fields required by the two changes
-above.
-
-- Change arch_mcs_spin_lock_contended() to arch_mcs_spin_lock(), and
-fix misuse of old macro names, as suggested by Hanjun.
-
-
-Summary
--------
-
-Lock throughput can be increased by handing a lock to a waiter on the
-same NUMA node as the lock holder, provided care is taken to avoid
-starvation of waiters on other NUMA nodes. This patch introduces CNA
-(compact NUMA-aware lock) as the slow path for qspinlock. It is
-enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
-
-CNA is a NUMA-aware version of the MCS lock. Spinning threads are
-organized in two queues, a main queue for threads running on the same
-node as the current lock holder, and a secondary queue for threads
-running on other nodes. Threads store the ID of the node on which
-they are running in their queue nodes. After acquiring the MCS lock and
-before acquiring the spinlock, the lock holder scans the main queue
-looking for a thread running on the same node (pre-scan). If found (call
-it thread T), all threads in the main queue between the current lock
-holder and T are moved to the end of the secondary queue.  If such T
-is not found, we make another scan of the main queue after acquiring 
-the spinlock when unlocking the MCS lock (post-scan), starting at the
-node where pre-scan stopped. If both scans fail to find such T, the
-MCS lock is passed to the first thread in the secondary queue. If the
-secondary queue is empty, the MCS lock is passed to the next thread in the
-main queue. To avoid starvation of threads in the secondary queue, those
-threads are moved back to the head of the main queue after a certain
-number of intra-node lock hand-offs.
-
-More details are available at https://arxiv.org/abs/1810.05600.
-
-We have done some performance evaluation with the locktorture module
-as well as with several benchmarks from the will-it-scale repo.
-The following locktorture results are from an Oracle X5-4 server
-(four Intel Xeon E7-8895 v3 @ 2.60GHz sockets with 18 hyperthreaded
-cores each). Each number represents an average (over 25 runs) of the
-total number of ops (x10^7) reported at the end of each run. The 
-standard deviation is also reported in (), and in general is about 3%
-from the average. The 'stock' kernel is v5.4.0-rc1,
-commit d90f2df63c5c, compiled in the default configuration. 
-'patch-CNA' is the modified kernel with NUMA_AWARE_SPINLOCKS set; 
-the speedup is calculated dividing 'patch-CNA' by 'stock'.
-
-#thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
-  1  2.674 (0.118)  2.736 (0.119)  1.023
-  2  2.588 (0.141)  2.603 (0.108)  1.006
-  4  4.230 (0.120)  4.220 (0.127)  0.998
-  8  5.362 (0.181)  6.679 (0.182)  1.246
- 16  6.639 (0.133)  8.050 (0.200)  1.213
- 32  7.359 (0.149)  8.792 (0.168)  1.195
- 36  7.443 (0.142)  8.873 (0.230)  1.192
- 72  6.554 (0.147)  9.317 (0.158)  1.421
-108  6.156 (0.093)  9.404 (0.191)  1.528
-142  5.659 (0.093)  9.361 (0.184)  1.654
-
-The following tables contain throughput results (ops/us) from the same
-setup for will-it-scale/open1_threads: 
-
-#thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
-  1  0.532 (0.002)  0.532 (0.003)  1.000
-  2  0.785 (0.024)  0.779 (0.025)  0.992
-  4  1.426 (0.018)  1.409 (0.021)  0.988
-  8  1.779 (0.101)  1.711 (0.127)  0.962
- 16  1.761 (0.093)  1.671 (0.104)  0.949
- 32  0.935 (0.063)  1.619 (0.093)  1.731
- 36  0.936 (0.082)  1.591 (0.086)  1.699
- 72  0.839 (0.043)  1.667 (0.097)  1.988
-108  0.842 (0.035)  1.701 (0.091)  2.021
-142  0.830 (0.037)  1.714 (0.098)  2.066
-
-and will-it-scale/lock2_threads:
-
-#thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
-  1  1.555 (0.009)  1.577 (0.002)  1.014
-  2  2.644 (0.060)  2.682 (0.062)  1.014
-  4  5.159 (0.205)  5.197 (0.231)  1.007
-  8  4.302 (0.221)  4.279 (0.318)  0.995
- 16  4.259 (0.111)  4.087 (0.163)  0.960
- 32  2.583 (0.112)  4.077 (0.120)  1.578
- 36  2.499 (0.106)  4.076 (0.106)  1.631
- 72  1.979 (0.085)  4.077 (0.123)  2.061
-108  2.096 (0.090)  4.043 (0.130)  1.929
-142  1.913 (0.109)  3.984 (0.108)  2.082
-
-Our evaluation shows that CNA also improves performance of user 
-applications that have hot pthread mutexes. Those mutexes are 
-blocking, and waiting threads park and unpark via the futex 
-mechanism in the kernel. Given that kernel futex chains, which
-are hashed by the mutex address, are each protected by a 
-chain-specific spin lock, the contention on a user-mode mutex 
-translates into contention on a kernel level spinlock. 
-
-Here are the results for the leveldb ‘readrandom’ benchmark:
-
-#thr  	 stock        patch-CNA   speedup (patch-CNA/stock)
-  1  0.532 (0.007)  0.535 (0.015)  1.006
-  2  0.665 (0.030)  0.673 (0.034)  1.011
-  4  0.715 (0.023)  0.716 (0.026)  1.002
-  8  0.686 (0.023)  0.686 (0.024)  1.001
- 16  0.719 (0.030)  0.737 (0.025)  1.025
- 32  0.740 (0.034)  0.959 (0.105)  1.296
- 36  0.730 (0.024)  1.079 (0.112)  1.478
- 72  0.652 (0.018)  1.160 (0.024)  1.778
-108  0.622 (0.016)  1.157 (0.028)  1.860
-142  0.600 (0.015)  1.145 (0.035)  1.908
-
-Additional performance numbers are available in previous revisions
-of the series.
-
-Further comments are welcome and appreciated.
-
-Alex Kogan (5):
-  locking/qspinlock: Rename mcs lock/unlock macros and make them more
-    generic
-  locking/qspinlock: Refactor the qspinlock slow path
-  locking/qspinlock: Introduce CNA into the slow path of qspinlock
-  locking/qspinlock: Introduce starvation avoidance into CNA
-  locking/qspinlock: Introduce the shuffle reduction optimization into
-    CNA
-
- arch/arm/include/asm/mcs_spinlock.h |   6 +-
- arch/x86/Kconfig                    |  19 +++
- arch/x86/include/asm/qspinlock.h    |   4 +
- arch/x86/kernel/alternative.c       |  41 +++++
- include/asm-generic/mcs_spinlock.h  |   4 +-
- kernel/locking/mcs_spinlock.h       |  20 +--
- kernel/locking/qspinlock.c          |  77 ++++++++-
- kernel/locking/qspinlock_cna.h      | 312 ++++++++++++++++++++++++++++++++++++
- kernel/locking/qspinlock_paravirt.h |   2 +-
- 9 files changed, 462 insertions(+), 23 deletions(-)
- create mode 100644 kernel/locking/qspinlock_cna.h
-
--- 
-2.11.0 (Apple Git-81)
-
+Regards,
+Pawell
