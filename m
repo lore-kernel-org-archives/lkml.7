@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258D9ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2DEFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1070207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FFA207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264254;
-	bh=GPJ7645YJnOFEkI99cyW6COELt9QMB3Y1uScwAJPgh4=;
+	s=default; t=1571264261;
+	bh=ETT6k0FHLbyFEEH0jp8KcmUsarCWhizwve0BhgUsxXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O7zKF+K9JhbM8e2/EkBfpvihevVkQnV6kuet3XQ/T7ePlJDGZX9DFY4CsWdRX6SPe
-	 GlM+uYFNxfFFWjbiBoeN5zVyB456cvLfyDmaB+G62D/TaFWJOqe4/Gc6bseyxucg6R
-	 Uh0hzhRdtZ9A9gZYrKC3YGmKi3MFOmUCG0nsgzLs=
+	b=OJZSUIZUwlAIDrpMLlbP33Y5V/6Lxl/ILszaFNRqtdCoH80lGRvqLl4JET2YQ/F6F
+	 9T0A4nnwEqRhL++huK1H+1J459GW02V9m+kdZT+lAs0LoVjZ3Prwdq1shN2Mz2EbQz
+	 cZYoc7kButT+IIFR7TbXvaOvTh/dSMNFRRnDdl5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbfJPWR3 (ORCPT
+        id S2388923AbfJPWRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44928 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390357AbfJPVyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:50 -0400
+        id S1733243AbfJPVyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:45 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97BEE21D7F;
-        Wed, 16 Oct 2019 21:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B5421928;
+        Wed, 16 Oct 2019 21:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262889;
-        bh=GPJ7645YJnOFEkI99cyW6COELt9QMB3Y1uScwAJPgh4=;
+        s=default; t=1571262884;
+        bh=ETT6k0FHLbyFEEH0jp8KcmUsarCWhizwve0BhgUsxXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3RMYVACl3hgyPHk1ahsiyqzKL7VnRFb5rZ7t3mvm1DqEhhU+cWrJXwFMCREkw+aR
-         KoxsbH2EKEE6Nfsw3410ozNGtwJh5+IAOEiAxKJAx4ebvNFUaUBhvMO8n0VfH5CiS7
-         K7In1tBd+k91e5MZhXPFpyaxXoKynZTvtps3oP4A=
+        b=dCc3o/4uUONh0P8AZlKm71DU9zERtRFCQqlTNQvpnGoAMnQ8nGlRYbpnsIR6PC3ch
+         jidnfGa/XMSXyNr57GNjnskbbw3iQym3tdzubBUSx48MvQgZ9v/spPXZMRqpTa4fT/
+         i47/vmXtflbU41S5Nfnq/FXtXio3K+QKPK5uf2qA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.9 46/92] xhci: Increase STS_SAVE timeout in xhci_suspend()
-Date:   Wed, 16 Oct 2019 14:50:19 -0700
-Message-Id: <20191016214834.250667060@linuxfoundation.org>
+Subject: [PATCH 4.9 42/92] xhci: Fix false warning message about wrong bounce buffer write length
+Date:   Wed, 16 Oct 2019 14:50:15 -0700
+Message-Id: <20191016214832.941082581@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,41 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit ac343366846a445bb81f0a0e8f16abb8bd5d5d88 upstream.
+commit c03101ff4f74bb30679c1a03d551ecbef1024bf6 upstream.
 
-After commit f7fac17ca925 ("xhci: Convert xhci_handshake() to use
-readl_poll_timeout_atomic()"), ASMedia xHCI may fail to suspend.
+The check printing out the "WARN Wrong bounce buffer write length:"
+uses incorrect values when comparing bytes written from scatterlist
+to bounce buffer. Actual copied lengths are fine.
 
-Although the algorithms are essentially the same, the old max timeout is
-(usec + usec * time of doing readl()), and the new max timeout is just
-usec, which is much less than the old one.
+The used seg->bounce_len will be set to equal new_buf_len a few lines later
+in the code, but is incorrect when doing the comparison.
 
-Increase the timeout to make ASMedia xHCI able to suspend again.
+The patch which added this false warning was backported to 4.8+ kernels
+so this should be backported as far as well.
 
-BugLink: https://bugs.launchpad.net/bugs/1844021
-Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org> # v4.8+
+Fixes: 597c56e372da ("xhci: update bounce buffer with correct sg num")
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-8-git-send-email-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/1570190373-30684-2-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-ring.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -985,7 +985,7 @@ int xhci_suspend(struct xhci_hcd *xhci,
- 	command |= CMD_CSS;
- 	writel(command, &xhci->op_regs->command);
- 	if (xhci_handshake(&xhci->op_regs->status,
--				STS_SAVE, 0, 10 * 1000)) {
-+				STS_SAVE, 0, 20 * 1000)) {
- 		xhci_warn(xhci, "WARN: xHC save state timeout\n");
- 		spin_unlock_irq(&xhci->lock);
- 		return -ETIMEDOUT;
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -3200,10 +3200,10 @@ static int xhci_align_td(struct xhci_hcd
+ 	if (usb_urb_dir_out(urb)) {
+ 		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
+ 				   seg->bounce_buf, new_buff_len, enqd_len);
+-		if (len != seg->bounce_len)
++		if (len != new_buff_len)
+ 			xhci_warn(xhci,
+ 				"WARN Wrong bounce buffer write length: %zu != %d\n",
+-				len, seg->bounce_len);
++				len, new_buff_len);
+ 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
+ 						 max_pkt, DMA_TO_DEVICE);
+ 	} else {
 
 
