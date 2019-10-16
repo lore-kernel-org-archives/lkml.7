@@ -2,53 +2,53 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CBBFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0AFECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D170121925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA9721925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263112;
-	bh=mtdqMHulVyKXbq3Tr2bNi74wNnHB7ppgGT1q3gSmhwI=;
+	s=default; t=1571263114;
+	bh=nj2s/8Yp2W0RC4AUkCJ9rriUDVt7cGSPze4YEpcsPmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypY+WEs0BwsTZvXSRcfStHxugoFMEuqJ6vdhr6J5eJtAnCgrtz3iLjG7P2yJ5CcTF
-	 0UgTwKWf9LOZYgxmKQgsxMLmeDmqzvRKBAlsN6m27VvVrxsxScrXa1r64x9p9iPJG7
-	 R6CwiLq0mur5BrSBtZQ6CF+xr1juogZXASknXhlE=
+	b=GAv0Ge6DGJQIiJ/o3s9xc/F6V+2BvIzwyuys7y4oFC9MeuUYNYUNV29evP9m5TVAX
+	 4sf1FYj7N4N1wEGTjDtGnSeGg3VZnqq3AYCvTS6ULy4r1mf6l97wtvstx3iYf9KvjM
+	 qcaHpTm+Oa0spC0h39GLjvI/MzrAbGCd9C1j82MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438176AbfJPV6b (ORCPT
+        id S2438187AbfJPV6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50524 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395507AbfJPV5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:40 -0400
+        id S2395516AbfJPV5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:42 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F019F21D7A;
-        Wed, 16 Oct 2019 21:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3EDB218DE;
+        Wed, 16 Oct 2019 21:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263059;
-        bh=mtdqMHulVyKXbq3Tr2bNi74wNnHB7ppgGT1q3gSmhwI=;
+        s=default; t=1571263061;
+        bh=nj2s/8Yp2W0RC4AUkCJ9rriUDVt7cGSPze4YEpcsPmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Paopr+5lklS1JYg/weezT+qORU5YnvW8ffn6OkwF6Ah82j0/zJacFPYhjnM3Tyyvs
-         5R3C6GLpyuQmvTjhnypMVIPg/g7STB4yOfZSjNiJVx5BK0pLcVth4q7jQp17ZbLL6b
-         uszo8DMyYB1Zs+AX4eIVyUCkNc05f60tL1lI1tQw=
+        b=f7BT2QZXMAWePoCZY134Dxcf1mDGUGdKomr9FLgEmvqQ0KB2YE3/8hJU2QBE+7+YM
+         nzHMks23OaicSWGbjy5Orzxc+269xOR+An+VO+2aPQLTc8JF0eFnxk/sd1qz2f3Ahx
+         9mYw9nbAGzpCLMO/utJCZPwx1oSM5fwX8JOR+xq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 61/81] iio: adc: stm32-adc: fix a race when using several adcs with dma and irq
-Date:   Wed, 16 Oct 2019 14:51:12 -0700
-Message-Id: <20191016214843.894642341@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 63/81] btrfs: fix incorrect updating of log root tree
+Date:   Wed, 16 Oct 2019 14:51:14 -0700
+Message-Id: <20191016214844.214258814@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -61,135 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit dcb10920179ab74caf88a6f2afadecfc2743b910 ]
+commit 4203e968947071586a98b5314fd7ffdea3b4f971 upstream.
 
-End of conversion may be handled by using IRQ or DMA. There may be a
-race when two conversions complete at the same time on several ADCs.
-EOC can be read as 'set' for several ADCs, with:
-- an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
-  called in this case.
-- an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
-  request instead. It's then automatically cleared by DMA read. But the
-  handler gets called due to status bit is temporarily set (IRQ triggered
-  by the other ADC).
-So both EOC status bit in CSR and EOCIE control bit must be checked
-before invoking the interrupt handler (e.g. call ISR only for
-IRQ-enabled ADCs).
+We've historically had reports of being unable to mount file systems
+because the tree log root couldn't be read.  Usually this is the "parent
+transid failure", but could be any of the related errors, including
+"fsid mismatch" or "bad tree block", depending on which block got
+allocated.
 
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+The modification of the individual log root items are serialized on the
+per-log root root_mutex.  This means that any modification to the
+per-subvol log root_item is completely protected.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However we update the root item in the log root tree outside of the log
+root tree log_mutex.  We do this in order to allow multiple subvolumes
+to be updated in each log transaction.
+
+This is problematic however because when we are writing the log root
+tree out we update the super block with the _current_ log root node
+information.  Since these two operations happen independently of each
+other, you can end up updating the log root tree in between writing out
+the dirty blocks and setting the super block to point at the current
+root.
+
+This means we'll point at the new root node that hasn't been written
+out, instead of the one we should be pointing at.  Thus whatever garbage
+or old block we end up pointing at complains when we mount the file
+system later and try to replay the log.
+
+Fix this by copying the log's root item into a local root item copy.
+Then once we're safely under the log_root_tree->log_mutex we update the
+root item in the log_root_tree.  This way we do not modify the
+log_root_tree while we're committing it, fixing the problem.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Chris Mason <clm@fb.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/adc/stm32-adc-core.c | 43 +++++++++++++++++++++++++++++---
- drivers/iio/adc/stm32-adc-core.h |  1 +
- 2 files changed, 41 insertions(+), 3 deletions(-)
+ fs/btrfs/tree-log.c |   36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index ce2cc61395d63..38eb966930793 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -27,12 +27,16 @@
-  * @eoc1:	adc1 end of conversion flag in @csr
-  * @eoc2:	adc2 end of conversion flag in @csr
-  * @eoc3:	adc3 end of conversion flag in @csr
-+ * @ier:	interrupt enable register offset for each adc
-+ * @eocie_msk:	end of conversion interrupt enable mask in @ier
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -2860,7 +2860,8 @@ out:
+  * in the tree of log roots
   */
- struct stm32_adc_common_regs {
- 	u32 csr;
- 	u32 eoc1_msk;
- 	u32 eoc2_msk;
- 	u32 eoc3_msk;
-+	u32 ier;
-+	u32 eocie_msk;
- };
- 
- struct stm32_adc_priv;
-@@ -241,6 +245,8 @@ static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
- 	.eoc1_msk = STM32F4_EOC1,
- 	.eoc2_msk = STM32F4_EOC2,
- 	.eoc3_msk = STM32F4_EOC3,
-+	.ier = STM32F4_ADC_CR1,
-+	.eocie_msk = STM32F4_EOCIE,
- };
- 
- /* STM32H7 common registers definitions */
-@@ -248,8 +254,24 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
- 	.csr = STM32H7_ADC_CSR,
- 	.eoc1_msk = STM32H7_EOC_MST,
- 	.eoc2_msk = STM32H7_EOC_SLV,
-+	.ier = STM32H7_ADC_IER,
-+	.eocie_msk = STM32H7_EOCIE,
- };
- 
-+static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
-+	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
-+};
-+
-+static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
-+					  unsigned int adc)
-+{
-+	u32 ier, offset = stm32_adc_offset[adc];
-+
-+	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
-+
-+	return ier & priv->cfg->regs->eocie_msk;
-+}
-+
- /* ADC common interrupt for all instances */
- static void stm32_adc_irq_handler(struct irq_desc *desc)
+ static int update_log_root(struct btrfs_trans_handle *trans,
+-			   struct btrfs_root *log)
++			   struct btrfs_root *log,
++			   struct btrfs_root_item *root_item)
  {
-@@ -260,13 +282,28 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
- 	chained_irq_enter(chip, desc);
- 	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
+ 	struct btrfs_fs_info *fs_info = log->fs_info;
+ 	int ret;
+@@ -2868,10 +2869,10 @@ static int update_log_root(struct btrfs_
+ 	if (log->log_transid == 1) {
+ 		/* insert root item on the first sync */
+ 		ret = btrfs_insert_root(trans, fs_info->log_root_tree,
+-				&log->root_key, &log->root_item);
++				&log->root_key, root_item);
+ 	} else {
+ 		ret = btrfs_update_root(trans, fs_info->log_root_tree,
+-				&log->root_key, &log->root_item);
++				&log->root_key, root_item);
+ 	}
+ 	return ret;
+ }
+@@ -2969,6 +2970,7 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct btrfs_root *log = root->log_root;
+ 	struct btrfs_root *log_root_tree = fs_info->log_root_tree;
++	struct btrfs_root_item new_root_item;
+ 	int log_transid = 0;
+ 	struct btrfs_log_ctx root_log_ctx;
+ 	struct blk_plug plug;
+@@ -3032,18 +3034,26 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 		goto out;
+ 	}
  
--	if (status & priv->cfg->regs->eoc1_msk)
 +	/*
-+	 * End of conversion may be handled by using IRQ or DMA. There may be a
-+	 * race here when two conversions complete at the same time on several
-+	 * ADCs. EOC may be read 'set' for several ADCs, with:
-+	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
-+	 *   is then automatically cleared by DR read in hardware)
-+	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
-+	 *   be called in this case)
-+	 * So both EOC status bit in CSR and EOCIE control bit must be checked
-+	 * before invoking the interrupt handler (e.g. call ISR only for
-+	 * IRQ-enabled ADCs).
++	 * We _must_ update under the root->log_mutex in order to make sure we
++	 * have a consistent view of the log root we are trying to commit at
++	 * this moment.
++	 *
++	 * We _must_ copy this into a local copy, because we are not holding the
++	 * log_root_tree->log_mutex yet.  This is important because when we
++	 * commit the log_root_tree we must have a consistent view of the
++	 * log_root_tree when we update the super block to point at the
++	 * log_root_tree bytenr.  If we update the log_root_tree here we'll race
++	 * with the commit and possibly point at the new block which we may not
++	 * have written out.
 +	 */
-+	if (status & priv->cfg->regs->eoc1_msk &&
-+	    stm32_adc_eoc_enabled(priv, 0))
- 		generic_handle_irq(irq_find_mapping(priv->domain, 0));
+ 	btrfs_set_root_node(&log->root_item, log->node);
++	memcpy(&new_root_item, &log->root_item, sizeof(new_root_item));
  
--	if (status & priv->cfg->regs->eoc2_msk)
-+	if (status & priv->cfg->regs->eoc2_msk &&
-+	    stm32_adc_eoc_enabled(priv, 1))
- 		generic_handle_irq(irq_find_mapping(priv->domain, 1));
+ 	root->log_transid++;
+ 	log->log_transid = root->log_transid;
+ 	root->log_start_pid = 0;
+ 	/*
+-	 * Update or create log root item under the root's log_mutex to prevent
+-	 * races with concurrent log syncs that can lead to failure to update
+-	 * log root item because it was not created yet.
+-	 */
+-	ret = update_log_root(trans, log);
+-	/*
+ 	 * IO has been started, blocks of the log tree have WRITTEN flag set
+ 	 * in their headers. new modifications of the log will be written to
+ 	 * new positions. so it's safe to allow log writers to go in.
+@@ -3063,6 +3073,14 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	mutex_unlock(&log_root_tree->log_mutex);
  
--	if (status & priv->cfg->regs->eoc3_msk)
-+	if (status & priv->cfg->regs->eoc3_msk &&
-+	    stm32_adc_eoc_enabled(priv, 2))
- 		generic_handle_irq(irq_find_mapping(priv->domain, 2));
- 
- 	chained_irq_exit(chip, desc);
-diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
-index 94aa2d2577dc9..2579d514c2a34 100644
---- a/drivers/iio/adc/stm32-adc-core.h
-+++ b/drivers/iio/adc/stm32-adc-core.h
-@@ -25,6 +25,7 @@
-  * --------------------------------------------------------
-  */
- #define STM32_ADC_MAX_ADCS		3
-+#define STM32_ADC_OFFSET		0x100
- #define STM32_ADCX_COMN_OFFSET		0x300
- 
- /* STM32F4 - Registers for each ADC instance */
--- 
-2.20.1
-
+ 	mutex_lock(&log_root_tree->log_mutex);
++
++	/*
++	 * Now we are safe to update the log_root_tree because we're under the
++	 * log_mutex, and we're a current writer so we're holding the commit
++	 * open until we drop the log_mutex.
++	 */
++	ret = update_log_root(trans, log, &new_root_item);
++
+ 	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
+ 		/* atomic_dec_and_test implies a barrier */
+ 		cond_wake_up_nomb(&log_root_tree->log_writer_wait);
 
 
