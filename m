@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3475CFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68722ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C80B21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41ADC21D7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262995;
-	bh=gYkeHv2pVC1gVduuwi6FZhed2yorRXCI+ZgLHcWznLI=;
+	s=default; t=1571262998;
+	bh=J2Sn1aG9tQc5zNbTM4373KlEXNztfHo5wQ38E+AP4+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NQMBcqpxw80q5PsKgDo5Z9keuQEjlJ+UI9FObyxfkdWj5a0gqLRjDAfDQ+e/PHUo
-	 L2wSb+UqqEXNTnVdW03afG7F+OJJBW5r22oxke8np4eTY4TDVRnMPjKjflaK5cyNfC
-	 K/hkZTU/o9EmoHJMDrrh2KrkaLzNMj8nhcFhVueM=
+	b=whnAHEzRCJstNcrIUp6qUO/hZvnAtia1ST3fKIMbPZEFpkDxITr6JKrRXv2PfBQe8
+	 +49/YAEdvRQEcMz52bhki8x76YFioU+WWehFqjeRi9NFzAaa8IUVTBhSktCgL0whc8
+	 wcII/xFKFiZ4BdJKm9SzgopTKsdD/On0EIM1Z+BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391366AbfJPV4d (ORCPT
+        id S2395388AbfJPV4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47822 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406619AbfJPV4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:18 -0400
+        id S2406627AbfJPV4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:20 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0F8421D7C;
-        Wed, 16 Oct 2019 21:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9D820872;
+        Wed, 16 Oct 2019 21:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262978;
-        bh=gYkeHv2pVC1gVduuwi6FZhed2yorRXCI+ZgLHcWznLI=;
+        s=default; t=1571262979;
+        bh=J2Sn1aG9tQc5zNbTM4373KlEXNztfHo5wQ38E+AP4+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r5yjIjnqkR9CBL3HeE8M6ZY5EUgckgqiTN6JUsDQ8/3nIPEV3wDy5tzu5v7j+R85L
-         ezqdNrLA5BfaS2rRcSUtMHYr5YkHOnXPcDlzvr7V+T8CKaTzRpwNJaEUymj9mXh8yY
-         oTeegnhAiTxTSIeQXPI2/TIHAvA8MJ3bqN5fRtfU=
+        b=lL4fL7tNWtc1offacAvhniuKZfFqHTqwnH9XklgC2wPIMc/CxqaNBphOhRUvtzLYc
+         hRsD8/6tzc0kHNBQZQFSb+ZWET0/Cgx6tyxwF0Mc+bQMznwHEiLpDQgghbj0c59Ebq
+         +ehowKj5gTyYTivLmyAFTw14diVuaSm/0F4WnK2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.14 47/65] CIFS: Force revalidate inode when dentry is stale
-Date:   Wed, 16 Oct 2019 14:51:01 -0700
-Message-Id: <20191016214834.707923238@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 49/65] kernel/sysctl.c: do not override max_threads provided by userspace
+Date:   Wed, 16 Oct 2019 14:51:03 -0700
+Message-Id: <20191016214835.534949867@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -59,61 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Michal Hocko <mhocko@suse.com>
 
-commit c82e5ac7fe3570a269c0929bf7899f62048e7dbc upstream.
+commit b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40 upstream.
 
-Currently the client indicates that a dentry is stale when inode
-numbers or type types between a local inode and a remote file
-don't match. If this is the case attributes is not being copied
-from remote to local, so, it is already known that the local copy
-has stale metadata. That's why the inode needs to be marked for
-revalidation in order to tell the VFS to lookup the dentry again
-before openning a file. This prevents unexpected stale errors
-to be returned to the user space when openning a file.
+Partially revert 16db3d3f1170 ("kernel/sysctl.c: threads-max observe
+limits") because the patch is causing a regression to any workload which
+needs to override the auto-tuning of the limit provided by kernel.
 
+set_max_threads is implementing a boot time guesstimate to provide a
+sensible limit of the concurrently running threads so that runaways will
+not deplete all the memory.  This is a good thing in general but there
+are workloads which might need to increase this limit for an application
+to run (reportedly WebSpher MQ is affected) and that is simply not
+possible after the mentioned change.  It is also very dubious to
+override an admin decision by an estimation that doesn't have any direct
+relation to correctness of the kernel operation.
+
+Fix this by dropping set_max_threads from sysctl_max_threads so any
+value is accepted as long as it fits into MAX_THREADS which is important
+to check because allowing more threads could break internal robust futex
+restriction.  While at it, do not use MIN_THREADS as the lower boundary
+because it is also only a heuristic for automatic estimation and admin
+might have a good reason to stop new threads to be created even when
+below this limit.
+
+This became more severe when we switched x86 from 4k to 8k kernel
+stacks.  Starting since 6538b8ea886e ("x86_64: expand kernel stack to
+16K") (3.16) we use THREAD_SIZE_ORDER = 2 and that halved the auto-tuned
+value.
+
+In the particular case
+
+  3.12
+  kernel.threads-max = 515561
+
+  4.4
+  kernel.threads-max = 200000
+
+Neither of the two values is really insane on 32GB machine.
+
+I am not sure we want/need to tune the max_thread value further.  If
+anything the tuning should be removed altogether if proven not useful in
+general.  But we definitely need a way to override this auto-tuning.
+
+Link: http://lkml.kernel.org/r/20190922065801.GB18814@dhcp22.suse.cz
+Fixes: 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/fork.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -410,6 +410,7 @@ int cifs_get_inode_info_unix(struct inod
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*pinode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -417,6 +418,7 @@ int cifs_get_inode_info_unix(struct inod
- 		/* if filetype is different, return error */
- 		if (unlikely(((*pinode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -925,6 +927,7 @@ cifs_get_inode_info(struct inode **inode
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
-@@ -932,6 +935,7 @@ cifs_get_inode_info(struct inode **inode
- 		/* if filetype is different, return error */
- 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2499,7 +2499,7 @@ int sysctl_max_threads(struct ctl_table
+ 	struct ctl_table t;
+ 	int ret;
+ 	int threads = max_threads;
+-	int min = MIN_THREADS;
++	int min = 1;
+ 	int max = MAX_THREADS;
+ 
+ 	t = *table;
+@@ -2511,7 +2511,7 @@ int sysctl_max_threads(struct ctl_table
+ 	if (ret || !write)
+ 		return ret;
+ 
+-	set_max_threads(threads);
++	max_threads = threads;
+ 
+ 	return 0;
+ }
 
 
