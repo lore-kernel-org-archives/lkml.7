@@ -2,115 +2,112 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2293FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15B3FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919A32168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8D62168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:53:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TsPMzUgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389763AbfJPMx2 (ORCPT
+        id S2391519AbfJPMxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:53:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37590 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfJPMx2 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:53:28 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BBE87A3CD82;
-        Wed, 16 Oct 2019 12:53:27 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C975E1001B08;
-        Wed, 16 Oct 2019 12:53:25 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 14:53:25 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 3/5] perf report: Sort by sampled cycles percent per
- block for stdio
-Message-ID: <20191016125325.GA10222@krava>
-References: <20191015053350.13909-1-yao.jin@linux.intel.com>
- <20191015053350.13909-4-yao.jin@linux.intel.com>
- <20191015084102.GA10951@krava>
- <6882f3ae-0f8d-5a01-7fd5-5b9f9c93f9ac@linux.intel.com>
- <20191016101543.GC15580@krava>
- <456b8e97-dc50-449c-9999-0bddef0e9c4c@linux.intel.com>
+        Wed, 16 Oct 2019 08:53:52 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45174 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389781AbfJPMxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:53:51 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c21so35830207qtj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P/sRs2+kPjcvwd2trmOBWPVdM0AxawvVsZ+s8sAO7/4=;
+        b=TsPMzUgWcdtdkasHhYq577HFiCkshIqaxslChEP+do1RFpTIxW2jQRhCLSPwbd5x8i
+         U7niU6BZWK/agFFkyA+6MFgZbwkW60EosnfY+llAQGBocfTcp4KRF8J/zJn8tfy+Xn4R
+         ND/tIJ4q5KZ7QKtwldwq2k59a5s7at2G3Hi8BXC6iZm33w3oVf21uxvJWvsoT6eTs4Vn
+         WDL+yMSxQwFiUsYSJ7A7I+v43eHl0YHYHoIzhjWanzIpiZ7RpplDgnbKGyR9Qf/+l5dt
+         /jBMTe3E/dc+CJIqaHslN4E+fQmzn4yXKprR+7pYhIDJP/ZUFpJZXfCOGoH5zVOCAejO
+         Ui3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P/sRs2+kPjcvwd2trmOBWPVdM0AxawvVsZ+s8sAO7/4=;
+        b=aiSfGt+PF7ApkASlBqEnWisoc+3TNgT/gdh4iaCYThWPCHdIT2/HbXoGBuWe5lKc3G
+         /qdhsc+RWv1VtwaOW9ld6UTI4P+AdM0hD1X+axSMo5uPwBUR3LLJ0cgXgQ5EPnrJhY1k
+         pJoHCNCiaVwaGyOPsNmufYP/2ckpHpFp56jThcqsYiPYVGZ5CESkKiFxoN55ODV9vvtS
+         zuXnFhYD8jTluLYBWq9onc6roWZ6OUVI8zlqbfxu+PMMs7gyYK85nn3kC9hPz+Gq3sbC
+         rUKEFc0mYocP3iYgXVlwLxcLzkdbGjjT+4ixCZCJR5H2uPGHEnE5azmFAxZA74kO4Sth
+         hL+w==
+X-Gm-Message-State: APjAAAUmjywmR54Taj/hrZiE958tzIj9te79rEBEruwFPLYEmkp+PAq5
+        yVQp0ql0e4iWk7Al4D8D77/VnoGiTvJNU5Fs/7wmpg==
+X-Google-Smtp-Source: APXvYqxRmpmcyaCxmLmkEi0JWpxgYlv/RpJs/yNT3A1lP3hXCkiugyGea31zdLuV3cm9n/Bm5GfFph4HfEVVYNrBVag=
+X-Received: by 2002:ac8:3ac6:: with SMTP id x64mr33736244qte.51.1571230430797;
+ Wed, 16 Oct 2019 05:53:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <456b8e97-dc50-449c-9999-0bddef0e9c4c@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 12:53:27 +0000 (UTC)
+References: <20191004012525.26647-1-chris.packham@alliedtelesis.co.nz>
+ <20191004012525.26647-3-chris.packham@alliedtelesis.co.nz>
+ <CACRpkdYWLTjiSQo_VTeReL1CfEO3h_8ONbdCk=PD1x+oc2ggCg@mail.gmail.com> <628c495994a0648d956bc663ea8fdcfa6f439802.camel@alliedtelesis.co.nz>
+In-Reply-To: <628c495994a0648d956bc663ea8fdcfa6f439802.camel@alliedtelesis.co.nz>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Oct 2019 14:53:39 +0200
+Message-ID: <CACRpkdb8o9UU0W1FJ4=KYiV3CUEUkXbR4CFY7XKdJG2O8sSJFA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Add xgs-iproc driver
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Richard Laing <Richard.Laing@alliedtelesis.co.nz>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 06:51:07PM +0800, Jin, Yao wrote:
-> 
-> 
-> On 10/16/2019 6:15 PM, Jiri Olsa wrote:
-> > On Tue, Oct 15, 2019 at 10:53:18PM +0800, Jin, Yao wrote:
-> > 
-> > SNIP
-> > 
-> > > > > +static struct block_header_column{
-> > > > > +	const char *name;
-> > > > > +	int width;
-> > > > > +} block_columns[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
-> > > > > +	[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_COV] = {
-> > > > > +		.name = "Sampled Cycles%",
-> > > > > +		.width = 15,
-> > > > > +	},
-> > > > > +	[PERF_HPP_REPORT__BLOCK_LBR_CYCLES] = {
-> > > > > +		.name = "Sampled Cycles",
-> > > > > +		.width = 14,
-> > > > > +	},
-> > > > > +	[PERF_HPP_REPORT__BLOCK_CYCLES_PCT] = {
-> > > > > +		.name = "Avg Cycles%",
-> > > > > +		.width = 11,
-> > > > > +	},
-> > > > > +	[PERF_HPP_REPORT__BLOCK_AVG_CYCLES] = {
-> > > > > +		.name = "Avg Cycles",
-> > > > > +		.width = 10,
-> > > > > +	},
-> > > > > +	[PERF_HPP_REPORT__BLOCK_RANGE] = {
-> > > > > +		.name = "[Program Block Range]",
-> > > > > +		.width = 70,
-> > > > > +	},
-> > > > > +	[PERF_HPP_REPORT__BLOCK_DSO] = {
-> > > > > +		.name = "Shared Object",
-> > > > > +		.width = 20,
-> > > > > +	}
-> > > > >    };
-> > > > 
-> > > > so we already have support for multiple columns,
-> > > > why don't you add those as 'struct sort_entry' objects?
-> > > > 
-> > > 
-> > > For 'struct sort_entry' objects, do you mean I should reuse the "sort_dso"
-> > > which has been implemented yet in util/sort.c?
-> > > 
-> > > For other columns, it looks we can't reuse the existing sort_entry objects.
-> > 
-> > I did not mean reuse, just add new sort entries
-> > to current sort framework
-> > 
-> 
-> Does it seem like what the c2c does?
+On Mon, Oct 14, 2019 at 12:08 AM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
+Me:
 
-well c2c has its own data output with multiline column titles,
-hence it has its own separate dimension stuff, but your code
-output is within the standard perf report right? single column
-output.. why couldn't you use just sort_entry ?
+> > I think this should be a chained interrupt handler (see below how to
+> > register it).
+> >
+> > See e.g. drivers/gpio/gpio-ftgpio010.c for an example:
+> > change function prototype, no return value, use
+> > chained_irq_enter/exit(irqchip, desc); etc.
+> >
+>
+> I don't think a chained interrupt handler can work. The problem is that
+> the parent irq on the SoC is shared between the gpio and uart0 (why
+> it's this way with two IP blocks in the same SoC I'll never know). When
+> a chained interrupt handler is registered I lose the serial interrupts.
+> Please correct me if there is some way to make the chained handlers
+> deal with sharing interrupts.
 
-jirka
+Aha I see. Look at:
+drivers/gpio/gpio-mt7621.c
+
+And how that driver sets the parent handler to NULL in order
+to still exploit the core helpers.
+
+I will refactor this to some more elegant API at some point when
+I get there, for now follow the example of mt7621.
+
+Yours,
+Linus Walleij
