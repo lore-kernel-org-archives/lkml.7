@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FCDECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A11FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC56D21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D22920872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262887;
-	bh=XcoT/50f9fWF2zLsvDahJadR7e2rbv6TMDZt5+85trw=;
+	s=default; t=1571262890;
+	bh=fruldeb33iN9zTBskPGOhUUlHhwi0U+9Kdn0xTmWzyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jw+kGyFKvs/P5yIUnaVCi/eDHsBE/7nzlL1deFju7Bw4f8v2xmcg4vRKm45FsU1+3
-	 883xg2bHmsZig/vORbcowUrnKIsqxZmP8KTUMRj3yE3gLX3qyEYUsuHQFUJFkRhlcn
-	 HRfENfP6uoOEYu0nFlN2q448ssK/YVT1snzHxLf0=
+	b=rYnLlXI05w+HyCCd8CaygL+Nnee9gPhOkbfNNyfVamRiKoFW2fivB1dMbHbqH4uQh
+	 yl5sAOwe2fFz20Ehna50B80IQH3dRt/6qF7XyfErMIIqkC7O6QgAkD3GW8/37j5+y3
+	 eYcJKw/5MRT/MTYv0gAJrYLdUmw7TVgBfOGgXIsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395066AbfJPVyr (ORCPT
+        id S2395076AbfJPVys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395016AbfJPVyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:33 -0400
+        id S2395025AbfJPVyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:35 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F7320872;
-        Wed, 16 Oct 2019 21:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B3C421A4C;
+        Wed, 16 Oct 2019 21:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262872;
-        bh=XcoT/50f9fWF2zLsvDahJadR7e2rbv6TMDZt5+85trw=;
+        s=default; t=1571262874;
+        bh=fruldeb33iN9zTBskPGOhUUlHhwi0U+9Kdn0xTmWzyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b50RGf7/FBrlupqKn3osH6Qf2bA4pwq+G0s3sDmrHFFqkXXbzU4Q8DjyEmwMFwOIw
-         FF0XzRJU1LwDantR8BucOvvKmLkumUgfuLdiSmCVx2y9CBwfLFsCGBwy/upiIBi1Nf
-         Y6wFb0BeToCbGETv4fiei/4za/NfLaz/v1LpSstc=
+        b=r5hphM52kbgoEOYe0FCm3l4ObRII5BD9Ih+0ZQNuR4hKGzICLiyVMRbQSmshGCjrK
+         yICEqJe0vBUUTH0Wbb8itFPfracbMbkSQG6Tk2q8mle4nB04of2JT9OMBAvB6NzAlr
+         2cdOqcpYNuRMLCVYyJTXrWf+8kZQ3e8dIz4ne0pQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 36/92] panic: ensure preemption is disabled during panic()
-Date:   Wed, 16 Oct 2019 14:50:09 -0700
-Message-Id: <20191016214828.213152289@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Tomoki Sekiyama <tomoki.sekiyama@gmail.com>,
+        syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 38/92] USB: yurex: Dont retry on unexpected errors
+Date:   Wed, 16 Oct 2019 14:50:11 -0700
+Message-Id: <20191016214829.499578660@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -64,82 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
+commit 32a0721c6620b77504916dac0cea8ad497c4878a upstream.
 
-Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
-calling CPU in an infinite loop, but with interrupts and preemption
-enabled.  From this state, userspace can continue to be scheduled,
-despite the system being "dead" as far as the kernel is concerned.
+According to Greg KH, it has been generally agreed that when a USB
+driver encounters an unknown error (or one it can't handle directly),
+it should just give up instead of going into a potentially infinite
+retry loop.
 
-This is easily reproducible on arm64 when booting with "nosmp" on the
-command line; a couple of shell scripts print out a periodic "Ping"
-message whilst another triggers a crash by writing to
-/proc/sysrq-trigger:
+The three codes -EPROTO, -EILSEQ, and -ETIME fall into this category.
+They can be caused by bus errors such as packet loss or corruption,
+attempting to communicate with a disconnected device, or by malicious
+firmware.  Nowadays the extent of packet loss or corruption is
+negligible, so it should be safe for a driver to give up whenever one
+of these errors occurs.
 
-  | sysrq: Trigger a crash
-  | Kernel panic - not syncing: sysrq triggered crash
-  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
-  | Hardware name: linux,dummy-virt (DT)
-  | Call trace:
-  |  dump_backtrace+0x0/0x148
-  |  show_stack+0x14/0x20
-  |  dump_stack+0xa0/0xc4
-  |  panic+0x140/0x32c
-  |  sysrq_handle_reboot+0x0/0x20
-  |  __handle_sysrq+0x124/0x190
-  |  write_sysrq_trigger+0x64/0x88
-  |  proc_reg_write+0x60/0xa8
-  |  __vfs_write+0x18/0x40
-  |  vfs_write+0xa4/0x1b8
-  |  ksys_write+0x64/0xf0
-  |  __arm64_sys_write+0x14/0x20
-  |  el0_svc_common.constprop.0+0xb0/0x168
-  |  el0_svc_handler+0x28/0x78
-  |  el0_svc+0x8/0xc
-  | Kernel Offset: disabled
-  | CPU features: 0x0002,24002004
-  | Memory Limit: none
-  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
-  |  Ping 2!
-  |  Ping 1!
-  |  Ping 1!
-  |  Ping 2!
+Although the yurex driver handles -EILSEQ errors in this way, it
+doesn't do the same for -EPROTO (as discovered by the syzbot fuzzer)
+or other unrecognized errors.  This patch adjusts the driver so that
+it doesn't log an error message for -EPROTO or -ETIME, and it doesn't
+retry after any errors.
 
-The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
-otherwise local interrupts are disabled in 'smp_send_stop()'.
-
-Disable preemption in 'panic()' before re-enabling interrupts.
-
-Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
-Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
-Signed-off-by: Will Deacon <will@kernel.org>
-Reported-by: Xogium <contact@xogium.me>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-and-tested-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Tomoki Sekiyama <tomoki.sekiyama@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1909171245410.1590-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/panic.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/misc/yurex.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -144,6 +144,7 @@ void panic(const char *fmt, ...)
- 	 * after setting panic_cpu) from invoking panic() again.
- 	 */
- 	local_irq_disable();
-+	preempt_disable_notrace();
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -136,6 +136,7 @@ static void yurex_interrupt(struct urb *
+ 	switch (status) {
+ 	case 0: /*success*/
+ 		break;
++	/* The device is terminated or messed up, give up */
+ 	case -EOVERFLOW:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - overflow with length %d, actual length is %d\n",
+@@ -144,12 +145,13 @@ static void yurex_interrupt(struct urb *
+ 	case -ENOENT:
+ 	case -ESHUTDOWN:
+ 	case -EILSEQ:
+-		/* The device is terminated, clean up */
++	case -EPROTO:
++	case -ETIME:
+ 		return;
+ 	default:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - unknown status received: %d\n", __func__, status);
+-		goto exit;
++		return;
+ 	}
  
- 	/*
- 	 * It's possible to come here directly from a panic-assertion and
+ 	/* handle received message */
+@@ -181,7 +183,6 @@ static void yurex_interrupt(struct urb *
+ 		break;
+ 	}
+ 
+-exit:
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
 
 
