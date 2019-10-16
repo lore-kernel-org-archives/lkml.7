@@ -2,112 +2,108 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15B3FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36483FA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8D62168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7BB2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TsPMzUgW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUUc212a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391519AbfJPMxw (ORCPT
+        id S2391538AbfJPMyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:53:52 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45174 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389781AbfJPMxv (ORCPT
+        Wed, 16 Oct 2019 08:54:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44485 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfJPMyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:53:51 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c21so35830207qtj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 05:53:51 -0700 (PDT)
+        Wed, 16 Oct 2019 08:54:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e10so10261090pgd.11;
+        Wed, 16 Oct 2019 05:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P/sRs2+kPjcvwd2trmOBWPVdM0AxawvVsZ+s8sAO7/4=;
-        b=TsPMzUgWcdtdkasHhYq577HFiCkshIqaxslChEP+do1RFpTIxW2jQRhCLSPwbd5x8i
-         U7niU6BZWK/agFFkyA+6MFgZbwkW60EosnfY+llAQGBocfTcp4KRF8J/zJn8tfy+Xn4R
-         ND/tIJ4q5KZ7QKtwldwq2k59a5s7at2G3Hi8BXC6iZm33w3oVf21uxvJWvsoT6eTs4Vn
-         WDL+yMSxQwFiUsYSJ7A7I+v43eHl0YHYHoIzhjWanzIpiZ7RpplDgnbKGyR9Qf/+l5dt
-         /jBMTe3E/dc+CJIqaHslN4E+fQmzn4yXKprR+7pYhIDJP/ZUFpJZXfCOGoH5zVOCAejO
-         Ui3Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8a9HNA2BKGzGwxQrVAzjlpqsmr7lfX1r2QUJLnuq4M8=;
+        b=ZUUc212azMCOIP56SZCnXe9tI35MmHs9g8a+tqb/WMJmGQ1dJKa83hOdA91+Mav88U
+         8MpozPbLu0g3jY80UGoIFAy+AT9ljM5Nyl3fD5UaAtWWNHm0GRvP5QvAFPNfTvM5wOOL
+         /UaUEo07Zx5U3olsTfM38GliySpyAt5iZum+AdKo7EC38tgQBT+NO5UCZXGzsDnytyF2
+         AgRp02Ei2cmQT3AAJlzdvPx6o0EUlorvm2QV1tuYqwzppzuWRAMv6U460znOzKsHn1WH
+         69q25o8g8+sixoJuNZPVeIYyDRLLABE2cdBIxvO7mwLFn/NarAzZl6OUNVAvqiwk69r/
+         yK7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/sRs2+kPjcvwd2trmOBWPVdM0AxawvVsZ+s8sAO7/4=;
-        b=aiSfGt+PF7ApkASlBqEnWisoc+3TNgT/gdh4iaCYThWPCHdIT2/HbXoGBuWe5lKc3G
-         /qdhsc+RWv1VtwaOW9ld6UTI4P+AdM0hD1X+axSMo5uPwBUR3LLJ0cgXgQ5EPnrJhY1k
-         pJoHCNCiaVwaGyOPsNmufYP/2ckpHpFp56jThcqsYiPYVGZ5CESkKiFxoN55ODV9vvtS
-         zuXnFhYD8jTluLYBWq9onc6roWZ6OUVI8zlqbfxu+PMMs7gyYK85nn3kC9hPz+Gq3sbC
-         rUKEFc0mYocP3iYgXVlwLxcLzkdbGjjT+4ixCZCJR5H2uPGHEnE5azmFAxZA74kO4Sth
-         hL+w==
-X-Gm-Message-State: APjAAAUmjywmR54Taj/hrZiE958tzIj9te79rEBEruwFPLYEmkp+PAq5
-        yVQp0ql0e4iWk7Al4D8D77/VnoGiTvJNU5Fs/7wmpg==
-X-Google-Smtp-Source: APXvYqxRmpmcyaCxmLmkEi0JWpxgYlv/RpJs/yNT3A1lP3hXCkiugyGea31zdLuV3cm9n/Bm5GfFph4HfEVVYNrBVag=
-X-Received: by 2002:ac8:3ac6:: with SMTP id x64mr33736244qte.51.1571230430797;
- Wed, 16 Oct 2019 05:53:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8a9HNA2BKGzGwxQrVAzjlpqsmr7lfX1r2QUJLnuq4M8=;
+        b=AZ2KmnnAQ3Eq+wAbI6DxKepcinF67gGfc/W5Jy/YQwGyvg3qU544/7zVxkL6LJejhF
+         Y7hbDBr/P5pg5BJaLZOY6TxcEU46t9e/n1pBKUcPlP2GLth+ZD3SLKr4oitRPFcApV1V
+         7nq0rIb8Y0pVEAEBDERLlPt0hkaKB/uwhJISIvW/TA8cHCa4O6n63OPH/iMbs+WzvfdM
+         cF9BOx1Bs6WWu0Xoy1MBbaedO5hmgC7HOw70WHOeexNb0RmuJkCU130mHDhCikHLT1lj
+         FnAy9mQHuN5QwcRmTujsTzY0TOkC7dz4uXL7XF5IYgtD5kq1f/2dZqURZitUaUyD2Vju
+         o+iQ==
+X-Gm-Message-State: APjAAAXC0F59cDR5w/XmXp29BeFLF40lYB5P6NEMbXSaTot0lXIt3ySb
+        I91/jD8QYtJtxFBS6JGb+VI=
+X-Google-Smtp-Source: APXvYqwkSyOIiNgoq7akH/I2XecLVnJJ7aw3IKPENmDImEh16Pi/oo9zVzBOZnn1TMawcSuoq5EWZQ==
+X-Received: by 2002:aa7:8b4d:: with SMTP id i13mr45697833pfd.226.1571230468438;
+        Wed, 16 Oct 2019 05:54:28 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id r18sm19049233pgm.31.2019.10.16.05.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 05:54:27 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] leds: an30259a: add a check for devm_regmap_init_i2c
+Date:   Wed, 16 Oct 2019 20:54:03 +0800
+Message-Id: <20191016125403.23359-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191004012525.26647-1-chris.packham@alliedtelesis.co.nz>
- <20191004012525.26647-3-chris.packham@alliedtelesis.co.nz>
- <CACRpkdYWLTjiSQo_VTeReL1CfEO3h_8ONbdCk=PD1x+oc2ggCg@mail.gmail.com> <628c495994a0648d956bc663ea8fdcfa6f439802.camel@alliedtelesis.co.nz>
-In-Reply-To: <628c495994a0648d956bc663ea8fdcfa6f439802.camel@alliedtelesis.co.nz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Oct 2019 14:53:39 +0200
-Message-ID: <CACRpkdb8o9UU0W1FJ4=KYiV3CUEUkXbR4CFY7XKdJG2O8sSJFA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: Add xgs-iproc driver
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Richard Laing <Richard.Laing@alliedtelesis.co.nz>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:08 AM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
-Me:
+an30259a_probe misses a check for devm_regmap_init_i2c and may cause
+problems.
+Add a check and print errors like other leds drivers.
 
-> > I think this should be a chained interrupt handler (see below how to
-> > register it).
-> >
-> > See e.g. drivers/gpio/gpio-ftgpio010.c for an example:
-> > change function prototype, no return value, use
-> > chained_irq_enter/exit(irqchip, desc); etc.
-> >
->
-> I don't think a chained interrupt handler can work. The problem is that
-> the parent irq on the SoC is shared between the gpio and uart0 (why
-> it's this way with two IP blocks in the same SoC I'll never know). When
-> a chained interrupt handler is registered I lose the serial interrupts.
-> Please correct me if there is some way to make the chained handlers
-> deal with sharing interrupts.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Use goto exit instead of return to destroy the mutex when failed.
 
-Aha I see. Look at:
-drivers/gpio/gpio-mt7621.c
+ drivers/leds/leds-an30259a.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-And how that driver sets the parent handler to NULL in order
-to still exploit the core helpers.
+diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
+index 250dc9d6f635..82350a28a564 100644
+--- a/drivers/leds/leds-an30259a.c
++++ b/drivers/leds/leds-an30259a.c
+@@ -305,6 +305,13 @@ static int an30259a_probe(struct i2c_client *client)
+ 
+ 	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
+ 
++	if (IS_ERR(chip->regmap)) {
++		err = PTR_ERR(chip->regmap);
++		dev_err(&client->dev, "Failed to allocate register map: %d\n",
++			err);
++		goto exit;
++	}
++
+ 	for (i = 0; i < chip->num_leds; i++) {
+ 		struct led_init_data init_data = {};
+ 
+-- 
+2.20.1
 
-I will refactor this to some more elegant API at some point when
-I get there, for now follow the example of mt7621.
-
-Yours,
-Linus Walleij
