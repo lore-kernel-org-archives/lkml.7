@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933EFECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76C9ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662CE207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB42207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264299;
-	bh=mYrFo0W9gI8djX/nmVkmDQqAzDr5zN+mypISr36JtF0=;
+	s=default; t=1571264304;
+	bh=TJgNxGNNZP0s9+UFBGKZOaBCKZnH8g1GWZxeCl/HqTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KAWoeJEU2ztiQYtncsEaZ/REwNGO4YQwQ0wnd+r2IEg2wezCgeHNBBvA0ogIfTVHj
-	 gsEHXb09tzFGoGSS9ZjWnYxHAm9Jz1Oh9DyIfRjdabeUE6UnDqaxbBhhLo6I0LDEr9
-	 N4usBTmEU1+W5dB17qRNUx+VtbCzfnv2OyVpW6Bw=
+	b=GujVtN0HaR1urDCubpRsbqCVIwgEyfW8IFFEc62QHqndoFqwSlRs/mUjMyr0sniwg
+	 P+EQtjXItIVRxCYqVTDnTlrhwejlLjKYedvas7JcOI74NUZ4/QYmyXViYB/3f6TL7h
+	 qPTypme6vU+l4aqeEEzdcMXFYQSpGepS/DcTv5w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390917AbfJPWSS (ORCPT
+        id S2391043AbfJPWSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44478 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727832AbfJPVya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:30 -0400
+        id S2395004AbfJPVy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:29 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8146E20872;
-        Wed, 16 Oct 2019 21:54:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9BA20872;
+        Wed, 16 Oct 2019 21:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262869;
-        bh=mYrFo0W9gI8djX/nmVkmDQqAzDr5zN+mypISr36JtF0=;
+        s=default; t=1571262868;
+        bh=TJgNxGNNZP0s9+UFBGKZOaBCKZnH8g1GWZxeCl/HqTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JF8MeTixq16GkEXDmmBuAa4bCNaIG9+M9oGChFnK1hpyr1grGN6eE4ysJciyXohfE
-         HOCBlf21E+CXXRmeuMl+r342TLEZJuH6SL4ne6t5sUnimphIcGIv2WEmXaUdhUhXv8
-         I7RxwqZeQzxTnA8UQ1Sf7kkiKfLGEA/Uf+xBGifs=
+        b=K8pODPI8nZ74U1ctVc09nPyrw+invCv729BhAWpJ5pTaf1G6QASrVvpoF+5w2hGDa
+         y2MELqqkdcjLPErTfM4Epvp9pc8FwJdv/4YDPahJsrE8TmyfNszHQCfTZTHoDcLTyS
+         gtDmxmCGB3PS4TQXiHV2EwgG5JyVd/QGSpgxRSMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 08/92] can: mcp251x: mcp251x_hw_reset(): allow more time after a reset
-Date:   Wed, 16 Oct 2019 14:49:41 -0700
-Message-Id: <20191016214805.498638552@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 34/92] nl80211: validate beacon head
+Date:   Wed, 16 Oct 2019 14:50:07 -0700
+Message-Id: <20191016214827.202831898@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -59,57 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit d84ea2123f8d27144e3f4d58cd88c9c6ddc799de upstream.
+commit f88eb7c0d002a67ef31aeb7850b42ff69abc46dc upstream.
 
-Some boards take longer than 5ms to power up after a reset, so allow
-some retries attempts before giving up.
+We currently don't validate the beacon head, i.e. the header,
+fixed part and elements that are to go in front of the TIM
+element. This means that the variable elements there can be
+malformed, e.g. have a length exceeding the buffer size, but
+most downstream code from this assumes that this has already
+been checked.
 
-Fixes: ff06d611a31c ("can: mcp251x: Improve mcp251x_hw_reset()")
-Cc: linux-stable <stable@vger.kernel.org>
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Add the necessary checks to the netlink policy.
+
+Cc: stable@vger.kernel.org
+Fixes: ed1b6cc7f80f ("cfg80211/nl80211: add beacon settings")
+Link: https://lore.kernel.org/r/1569009255-I7ac7fbe9436e9d8733439eab8acbbd35e55c74ef@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/spi/mcp251x.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ net/wireless/nl80211.c |   35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -627,7 +627,7 @@ static int mcp251x_setup(struct net_devi
- static int mcp251x_hw_reset(struct spi_device *spi)
- {
- 	struct mcp251x_priv *priv = spi_get_drvdata(spi);
--	u8 reg;
-+	unsigned long timeout;
- 	int ret;
- 
- 	/* Wait for oscillator startup timer after power up */
-@@ -641,10 +641,19 @@ static int mcp251x_hw_reset(struct spi_d
- 	/* Wait for oscillator startup timer after reset */
- 	mdelay(MCP251X_OST_DELAY_MS);
- 
--	reg = mcp251x_read_reg(spi, CANSTAT);
--	if ((reg & CANCTRL_REQOP_MASK) != CANCTRL_REQOP_CONF)
--		return -ENODEV;
--
-+	/* Wait for reset to finish */
-+	timeout = jiffies + HZ;
-+	while ((mcp251x_read_reg(spi, CANSTAT) & CANCTRL_REQOP_MASK) !=
-+	       CANCTRL_REQOP_CONF) {
-+		usleep_range(MCP251X_OST_DELAY_MS * 1000,
-+			     MCP251X_OST_DELAY_MS * 1000 * 2);
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&spi->dev,
-+				"MCP251x didn't enter in conf mode after reset\n");
-+			return -EBUSY;
-+		}
-+	}
- 	return 0;
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -213,6 +213,36 @@ cfg80211_get_dev_from_info(struct net *n
+ 	return __cfg80211_rdev_from_attrs(netns, info->attrs);
  }
  
++static int validate_beacon_head(const struct nlattr *attr)
++{
++	const u8 *data = nla_data(attr);
++	unsigned int len = nla_len(attr);
++	const struct element *elem;
++	const struct ieee80211_mgmt *mgmt = (void *)data;
++	unsigned int fixedlen = offsetof(struct ieee80211_mgmt,
++					 u.beacon.variable);
++
++	if (len < fixedlen)
++		goto err;
++
++	if (ieee80211_hdrlen(mgmt->frame_control) !=
++	    offsetof(struct ieee80211_mgmt, u.beacon))
++		goto err;
++
++	data += fixedlen;
++	len -= fixedlen;
++
++	for_each_element(elem, data, len) {
++		/* nothing */
++	}
++
++	if (for_each_element_completed(elem, data, len))
++		return 0;
++
++err:
++	return -EINVAL;
++}
++
+ /* policy for the attributes */
+ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
+ 	[NL80211_ATTR_WIPHY] = { .type = NLA_U32 },
+@@ -3680,6 +3710,11 @@ static int nl80211_parse_beacon(struct n
+ 	memset(bcn, 0, sizeof(*bcn));
+ 
+ 	if (attrs[NL80211_ATTR_BEACON_HEAD]) {
++		int ret = validate_beacon_head(attrs[NL80211_ATTR_BEACON_HEAD]);
++
++		if (ret)
++			return ret;
++
+ 		bcn->head = nla_data(attrs[NL80211_ATTR_BEACON_HEAD]);
+ 		bcn->head_len = nla_len(attrs[NL80211_ATTR_BEACON_HEAD]);
+ 		if (!bcn->head_len)
 
 
