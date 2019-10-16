@@ -2,338 +2,237 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA606FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7975FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F24B20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C9UK7bh+"
+	by mail.kernel.org (Postfix) with ESMTP id AA4D120663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393727AbfJPNxK (ORCPT
+        id S2393737AbfJPNzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:53:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36427 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393717AbfJPNxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:53:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 67so20201557oto.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pXaUYTlHBDwej+JruJ2WTRxguQOYJLFuT4MqoWM48a4=;
-        b=C9UK7bh+ztLhwBM8J33XqmOMriejaJ+0xBWQ6kKLjRvTfQIxk5p/YpBZGwm9t49f9O
-         xrSm9+8G6fyjGt+qPRHVWarJDF/9bBUe05isRIgqUFacAMzOUJfCTVcJeiDjWPxOjHTm
-         5sqfr+HZQHAW+K7huLX8uVp+FtOB+3cHS3DYiJegAId2vcxFnEQLLzv5aj1GhYHwEb3k
-         tMqUv0gevFgRy3WOSk9EKLDeg21dXFnWX1U0zIKJlDA9zyPfJzApkRdMeAPAn/ZEXlCp
-         eeaChM88DYDHx1QmnU19AZsQvEFi7LV9EgRPZKoI2iHv/uSey1DQoTW9mA92EzRyf/h1
-         Wk9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pXaUYTlHBDwej+JruJ2WTRxguQOYJLFuT4MqoWM48a4=;
-        b=ZPrIRYyHOY7co9fbzgV6YIC/rkT8MFMx5aX9RfREDjzIZCxif7ZNF76HP2zy0XVzHG
-         b8j+DJNl9maA6W1+kGGocF/rioUd0WT9ZzFHnUB5lYg2kUl7dxMc9EOaxNJffYPIbfOV
-         DfTAWfDQgUbGZIXWAxIH8l8Y9+jFULJWIVu6+4LpwS+Y+DIi5R4lZfZl6w9kk8bhmNYQ
-         EFSnQVgAElKgDIbTP2+JcZXVSa/xru0IrYkm435HBbm16Q0VETGiwTn9W5GyqRRyz5ZO
-         B37P5uDc4nkDzePT2zVLJzxjYEnDpUpi5/g2nxBej8ZokkpAs3q2jZiEvaK3x7YoT98F
-         QBgg==
-X-Gm-Message-State: APjAAAVileQW16wY/7kXNs0CjzSrD5uHIAMxjKl7fuc1U4GkIBvkJXmL
-        VPZKzI25JDax1J8b8f/9iVWMvixco2UEKysCeRxHcA==
-X-Google-Smtp-Source: APXvYqzFavdggnaXP/V8PoDQYCbLiuVoElErTrh7JNRIbFLWthPWSxHzXi/gtBRq+FPGjih37+pfVizePnpq6egTXfY=
-X-Received: by 2002:a9d:724e:: with SMTP id a14mr34578027otk.23.1571233986798;
- Wed, 16 Oct 2019 06:53:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016083959.186860-1-elver@google.com> <20191016083959.186860-2-elver@google.com>
- <CAAeHK+wO226yFsWw97wET_CY3aCiqX30JBYLtBspO5PbSV9FAA@mail.gmail.com>
-In-Reply-To: <CAAeHK+wO226yFsWw97wET_CY3aCiqX30JBYLtBspO5PbSV9FAA@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 16 Oct 2019 15:52:53 +0200
-Message-ID: <CANpmjNOcE=myHAC4xYOdssMUvJP2=1BeXmQ62O_tRQ-5cbiKMA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
+        Wed, 16 Oct 2019 09:55:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37496 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388087AbfJPNzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:55:09 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9256D6908A;
+        Wed, 16 Oct 2019 13:55:07 +0000 (UTC)
+Received: from [10.36.116.19] (ovpn-116-19.ams2.redhat.com [10.36.116.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 69A4C100EBD4;
+        Wed, 16 Oct 2019 13:55:01 +0000 (UTC)
+Subject: Re: [PATCH RFC v3 6/9] mm: Allow to offline PageOffline() pages with
+ a reference count of 0
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Juergen Gross <jgross@suse.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
         Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        dave.hansen@linux.intel.com, David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yu Zhao <yuzhao@google.com>, Minchan Kim <minchan@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+References: <20190919142228.5483-1-david@redhat.com>
+ <20190919142228.5483-7-david@redhat.com>
+ <20191016114321.GX317@dhcp22.suse.cz>
+ <bd38d88d-19a7-275a-386d-f37cb76a3390@redhat.com>
+ <20191016134519.GC317@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <2aef8477-7d12-63a8-e273-9eae8712d5c2@redhat.com>
+Date:   Wed, 16 Oct 2019 15:55:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191016134519.GC317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 16 Oct 2019 13:55:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
-> > new file mode 100644
-> > index 000000000000..5b46cc5593c3
-> > --- /dev/null
-> > +++ b/Documentation/dev-tools/kcsan.rst
-> > @@ -0,0 +1,202 @@
-> > +The Kernel Concurrency Sanitizer (KCSAN)
-> > +========================================
-> > +
-> > +Overview
-> > +--------
-> > +
-> > +*Kernel Concurrency Sanitizer (KCSAN)* is a dynamic data-race detector for
-> > +kernel space. KCSAN is a sampling watchpoint-based data-race detector -- this
-> > +is unlike Kernel Thread Sanitizer (KTSAN), which is a happens-before data-race
-> > +detector. Key priorities in KCSAN's design are lack of false positives,
-> > +scalability, and simplicity. More details can be found in `Implementation
-> > +Details`_.
-> > +
-> > +KCSAN uses compile-time instrumentation to instrument memory accesses. KCSAN is
-> > +supported in both GCC and Clang. With GCC it requires version 7.3.0 or later.
-> > +With Clang it requires version 7.0.0 or later.
-> > +
-> > +Usage
-> > +-----
-> > +
-> > +To enable KCSAN configure kernel with::
-> > +
-> > +    CONFIG_KCSAN = y
-> > +
-> > +KCSAN provides several other configuration options to customize behaviour (see
-> > +their respective help text for more info).
-> > +
-> > +debugfs
-> > +~~~~~~~
-> > +
-> > +* The file ``/sys/kernel/debug/kcsan`` can be read to get stats.
-> > +
-> > +* KCSAN can be turned on or off by writing ``on`` or ``off`` to
-> > +  ``/sys/kernel/debug/kcsan``.
-> > +
-> > +* Writing ``!some_func_name`` to ``/sys/kernel/debug/kcsan`` adds
-> > +  ``some_func_name`` to the report filter list, which (by default) blacklists
-> > +  reporting data-races where either one of the top stackframes are a function
-> > +  in the list.
-> > +
-> > +* Writing either ``blacklist`` or ``whitelist`` to ``/sys/kernel/debug/kcsan``
-> > +  changes the report filtering behaviour. For example, the blacklist feature
-> > +  can be used to silence frequently occurring data-races; the whitelist feature
-> > +  can help with reproduction and testing of fixes.
-> > +
-> > +Error reports
-> > +~~~~~~~~~~~~~
-> > +
-> > +A typical data-race report looks like this::
-> > +
-> > +    ==================================================================
-> > +    BUG: KCSAN: data-race in generic_permission / kernfs_refresh_inode
-> > +
-> > +    write to 0xffff8fee4c40700c of 4 bytes by task 175 on cpu 4:
-> > +     kernfs_refresh_inode+0x70/0x170
-> > +     kernfs_iop_permission+0x4f/0x90
-> > +     inode_permission+0x190/0x200
-> > +     link_path_walk.part.0+0x503/0x8e0
-> > +     path_lookupat.isra.0+0x69/0x4d0
-> > +     filename_lookup+0x136/0x280
-> > +     user_path_at_empty+0x47/0x60
-> > +     vfs_statx+0x9b/0x130
-> > +     __do_sys_newlstat+0x50/0xb0
-> > +     __x64_sys_newlstat+0x37/0x50
-> > +     do_syscall_64+0x85/0x260
-> > +     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > +
-> > +    read to 0xffff8fee4c40700c of 4 bytes by task 166 on cpu 6:
-> > +     generic_permission+0x5b/0x2a0
-> > +     kernfs_iop_permission+0x66/0x90
-> > +     inode_permission+0x190/0x200
-> > +     link_path_walk.part.0+0x503/0x8e0
-> > +     path_lookupat.isra.0+0x69/0x4d0
-> > +     filename_lookup+0x136/0x280
-> > +     user_path_at_empty+0x47/0x60
-> > +     do_faccessat+0x11a/0x390
-> > +     __x64_sys_access+0x3c/0x50
-> > +     do_syscall_64+0x85/0x260
-> > +     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > +
-> > +    Reported by Kernel Concurrency Sanitizer on:
-> > +    CPU: 6 PID: 166 Comm: systemd-journal Not tainted 5.3.0-rc7+ #1
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +The header of the report provides a short summary of the functions involved in
-> > +the race. It is followed by the access types and stack traces of the 2 threads
-> > +involved in the data-race.
-> > +
-> > +The other less common type of data-race report looks like this::
-> > +
-> > +    ==================================================================
-> > +    BUG: KCSAN: racing read in e1000_clean_rx_irq+0x551/0xb10
->
-> Do we want to have a different bug title here? Can we also report this
-> as a data-race to simplify report parsing rules?
+On 16.10.19 15:45, Michal Hocko wrote:
+> On Wed 16-10-19 14:50:30, David Hildenbrand wrote:
+>> On 16.10.19 13:43, Michal Hocko wrote:
+>>> On Thu 19-09-19 16:22:25, David Hildenbrand wrote:
+>>>> virtio-mem wants to allow to offline memory blocks of which some parts
+>>>> were unplugged, especially, to later offline and remove completely
+>>>> unplugged memory blocks. The important part is that PageOffline() has
+>>>> to remain set until the section is offline, so these pages will never
+>>>> get accessed (e.g., when dumping). The pages should not be handed
+>>>> back to the buddy (which would require clearing PageOffline() and
+>>>> result in issues if offlining fails and the pages are suddenly in the
+>>>> buddy).
+>>>>
+>>>> Let's use "PageOffline() + reference count = 0" as a sign to
+>>>> memory offlining code that these pages can simply be skipped when
+>>>> offlining, similar to free or HWPoison pages.
+>>>>
+>>>> Pass flags to test_pages_isolated(), similar as already done for
+>>>> has_unmovable_pages(). Use a new flag to indicate the
+>>>> requirement of memory offlining to skip over these special pages.
+>>>>
+>>>> In has_unmovable_pages(), make sure the pages won't be detected as
+>>>> movable. This is not strictly necessary, however makes e.g.,
+>>>> alloc_contig_range() stop early, trying to isolate such page blocks -
+>>>> compared to failing later when testing if all pages were isolated.
+>>>>
+>>>> Also, make sure that when a reference to a PageOffline() page is
+>>>> dropped, that the page will not be returned to the buddy.
+>>>>
+>>>> memory devices (like virtio-mem) that want to make use of this
+>>>> functionality have to make sure to synchronize against memory offlining,
+>>>> using the memory hotplug notifier.
+>>>>
+>>>> Alternative: Allow to offline with a reference count of 1
+>>>> and use some other sign in the struct page that offlining is permitted.
+>>>
+>>> Few questions. I do not see onlining code to take care of this special
+>>> case. What should happen when offline && online?
+>>
+>> Once offline, the memmap is garbage. When onlining again:
+>>
+>> a) memmap will be re-initialized
+>> b) online_page_callback_t will be called for every page in the section. The
+>> driver can mark them offline again and not give them to the buddy.
+>> c) section will be marked online.
+> 
+> But we can skip those pages when onlining and keep them in the offline
+> state right? We do not poison offlined pages.
 
-Changed to just "data-race in" as well.
+Right now, I do that via the online_page_callback_t call (similar to 
+HyperV), as the memmap is basically garbage and not trustworthy.
 
-> > +
-> > +    race at unknown origin, with read to 0xffff933db8a2ae6c of 1 bytes by interrupt on cpu 0:
-> > +     e1000_clean_rx_irq+0x551/0xb10
-> > +     e1000_clean+0x533/0xda0
-> > +     net_rx_action+0x329/0x900
-> > +     __do_softirq+0xdb/0x2db
-> > +     irq_exit+0x9b/0xa0
-> > +     do_IRQ+0x9c/0xf0
-> > +     ret_from_intr+0x0/0x18
-> > +     default_idle+0x3f/0x220
-> > +     arch_cpu_idle+0x21/0x30
-> > +     do_idle+0x1df/0x230
-> > +     cpu_startup_entry+0x14/0x20
-> > +     rest_init+0xc5/0xcb
-> > +     arch_call_rest_init+0x13/0x2b
-> > +     start_kernel+0x6db/0x700
-> > +
-> > +    Reported by Kernel Concurrency Sanitizer on:
-> > +    CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc7+ #2
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +This report is generated where it was not possible to determine the other
-> > +racing thread, but a race was inferred due to the data-value of the watched
-> > +memory location having changed. These can occur either due to missing
-> > +instrumentation or e.g. DMA accesses.
-> > +
-> > +Data-Races
-> > +----------
-> > +
-> > +Informally, two operations *conflict* if they access the same memory location,
-> > +and at least one of them is a write operation. In an execution, two memory
-> > +operations from different threads form a **data-race** if they *conflict*, at
-> > +least one of them is a *plain access* (non-atomic), and they are *unordered* in
-> > +the "happens-before" order according to the `LKMM
-> > +<../../tools/memory-model/Documentation/explanation.txt>`_.
-> > +
-> > +Relationship with the Linux Kernel Memory Model (LKMM)
-> > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > +
-> > +The LKMM defines the propagation and ordering rules of various memory
-> > +operations, which gives developers the ability to reason about concurrent code.
-> > +Ultimately this allows to determine the possible executions of concurrent code,
-> > +and if that code is free from data-races.
-> > +
-> > +KCSAN is aware of *atomic* accesses (``READ_ONCE``, ``WRITE_ONCE``,
-> > +``atomic_*``, etc.), but is oblivious of any ordering guarantees. In other
-> > +words, KCSAN assumes that as long as a plain access is not observed to race
-> > +with another conflicting access, memory operations are correctly ordered.
-> > +
-> > +This means that KCSAN will not report *potential* data-races due to missing
-> > +memory ordering. If, however, missing memory ordering (that is observable with
-> > +a particular compiler and architecture) leads to an observable data-race (e.g.
-> > +entering a critical section erroneously), KCSAN would report the resulting
-> > +data-race.
-> > +
-> > +Implementation Details
-> > +----------------------
-> > +
-> > +The general approach is inspired by `DataCollider
-> > +<http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf>`_.
-> > +Unlike DataCollider, KCSAN does not use hardware watchpoints, but instead
-> > +relies on compiler instrumentation. Watchpoints are implemented using an
-> > +efficient encoding that stores access type, size, and address in a long; the
-> > +benefits of using "soft watchpoints" are portability and greater flexibility in
-> > +limiting which accesses trigger a watchpoint.
-> > +
-> > +More specifically, KCSAN requires instrumenting plain (unmarked, non-atomic)
-> > +memory operations; for each instrumented plain access:
-> > +
-> > +1. Check if a matching watchpoint exists; if yes, and at least one access is a
-> > +   write, then we encountered a racing access.
-> > +
-> > +2. Periodically, if no matching watchpoint exists, set up a watchpoint and
-> > +   stall some delay.
-> > +
-> > +3. Also check the data value before the delay, and re-check the data value
-> > +   after delay; if the values mismatch, we infer a race of unknown origin.
-> > +
-> > +To detect data-races between plain and atomic memory operations, KCSAN also
-> > +annotates atomic accesses, but only to check if a watchpoint exists
-> > +(``kcsan_check_atomic(..)``); i.e.  KCSAN never sets up a watchpoint on atomic
-> > +accesses.
-> > +
-> > +Key Properties
-> > +~~~~~~~~~~~~~~
-> > +
-> > +1. **Performance Overhead:** KCSAN's runtime is minimal, and does not require
-> > +   locking shared state for each access. This results in significantly better
-> > +   performance in comparison with KTSAN.
-> > +
-> > +2. **Memory Overhead:** No shadow memory is required. The current
-> > +   implementation uses a small array of longs to encode watchpoint information,
-> > +   which is negligible.
-> > +
-> > +3. **Memory Ordering:** KCSAN is *not* aware of the LKMM's ordering rules. This
-> > +   may result in missed data-races (false negatives), compared to a
-> > +   happens-before data-race detector such as KTSAN.
-> > +
-> > +4. **Accuracy:** Imprecise, since it uses a sampling strategy.
-> > +
-> > +5. **Annotation Overheads:** Minimal annotation is required outside the KCSAN
-> > +   runtime. With a happens-before data-race detector, any omission leads to
-> > +   false positives, which is especially important in the context of the kernel
-> > +   which includes numerous custom synchronization mechanisms. With KCSAN, as a
-> > +   result, maintenance overheads are minimal as the kernel evolves.
-> > +
-> > +6. **Detects Racy Writes from Devices:** Due to checking data values upon
-> > +   setting up watchpoints, racy writes from devices can also be detected.
->
-> This part compares KCSAN with KTSAN, do we need it here? I think it
-> might be better to move this to the cover letter as a rationale as to
-> why we went with the watchpoint based approach, instead of the
-> happens-before one.
+> 
+> There is state stored in the struct page. In other words this shouldn't
+> be really different from HWPoison pages. I cannot find the code that is
+> doing that and maybe we don't handle that. But we cannot simply online
+> hwpoisoned page. Offlining the range will not make a broken memory OK
+> all of the sudden. And your usecase sounds similar to me.
 
-Removed mentions of KTSAN where it doesn't add very much.
+Sorry to say, but whenever we online memory the memmap is overwritten, 
+because there is no way you could tell it contains garbage or not. You 
+have to assume it is garbage. (my recent patch even poisons the memmap 
+when offlining, which helped to find a lot of these "garbage memmap" BUGs)
 
-These are properties of the design that, if not summarized here, would
-be lost and we'd have to look at the code. This is also for the
-benefit of developers using KCSAN to detect races, highlighting the
-pros and cons in the inherent design they should be aware of. I prefer
-keeping this information here, as otherwise it will get lost and we
-will have no central place to refer to.
+online_pages()
+	...
+	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL);
+	...
+		memmap_init_zone()
+			-> memmap initialized
 
-> Some performance numbers comparing KCSAN with a non instrumented
-> kernel would be more useful here.
+So yes, offlining memory with HWPoison and re-onlining it effectively 
+drops HWPoison markers. On the next access, you will trigger a new HWPoison.
 
-I've added a sentence with some empirical data.
+> 
+>> The driver that marked these pages to be skipped when offlining is
+>> responsible for registering the online_page_callback_t callback where these
+>> pages will get excluded.
+>>
+>> This is exactly the same as when onling a memory block that is partially
+>> populated (e.g., HpyerV balloon right now).
+>>
+>> So it's effectively "re-initializing the memmap using the driver knowledge"
+>> when onlining.
+> 
+> I am not sure I follow. So you exclude those pages when onlining?
 
-Changes queued for v2.
+Exactly, using the online_page callback. The pages will - again - be 
+marked PG_offline with a refcount of 0. They will not be put to the buddy.
 
-Many thanks,
--- Marco
+> 
+>>> Should we allow to try_remove_memory to succeed with these pages?
+>>
+>> I think we should first properly offline them (mark sections offline and
+>> memory blocks, fixup numbers, shrink zones ...). The we can cleanly remove
+>> the memory. (see [PATCH RFC v3 8/9] mm/memory_hotplug: Introduce
+>> offline_and_remove_memory())
+> 
+> I will have a look, but just to quick question. try_remove_memory would
+> fail if the range is offline (via user interface) but there are still some
+> pages in the driver Offline state?
+
+try_remove_memory() does not check any memmap (because it is garbage), 
+it only makes sure that the memory blocks are properly marked as 
+offline. (IOW, device_offline() was called on the memory block).
+
+> 
+>> Once offline, the memmap is irrelevant and try_remove_memory() can do its
+>> job.
+>>
+>>> Do we really have hook into __put_page? Why do we even care about the
+>>> reference count of those pages? Wouldn't it be just more consistent to
+>>> elevate the reference count (I guess this is what you suggest in the
+>>> last paragraph) and the virtio driver would return that page to the
+>>> buddy by regular put_page. This is also related to the above question
+>>> about the physical memory remove.
+>>
+>> Returning them to the buddy is problematic for various reasons. Let's have a
+>> look at __offline_pages():
+>>
+>> 1) start_isolate_page_range()
+>> -> offline pages with a reference count of one will be detected as unmovable
+>> -> BAD, we abort right away. We could hack around that.
+>>
+>> 2) memory_notify(MEM_GOING_OFFLINE, &arg);
+>> -> Here, we could release all pages to the buddy, clearing PG_offline
+>> -> BAD, PF_offline must not be cleared so dumping tools will not touch
+>>     these pages. I don't see a way to hack around that.
+>>
+>> 3) scan_movable_pages() ...
+>>
+>> 4a) memory_notify(MEM_OFFLINE, &arg);
+>>
+>> Perfect, it worked. Sections are offline.
+>>
+>> 4b) undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
+>>      memory_notify(MEM_CANCEL_OFFLINE, &arg);
+>>
+>> -> Offlining failed for whatever reason.
+>> -> Pages are in the buddy, but we already un-isolated them. BAD.
+>>
+>> By not going via the buddy we avoid these issues and can leave PG_offline
+>> set until the section is fully offline. Something that is very desirable for
+>> virtio-mem (and as far as I can tell also HyperV in the future).
+> 
+> I am not sure I follow. Maybe my original question was confusing. Let me
+> ask again. Why do we need to hook into __put_page?
+
+Just replied again answering this question, before I read this mail :)
+
+Thanks!
+
+-- 
+
+Thanks,
+
+David / dhildenb
