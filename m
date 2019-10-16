@@ -2,85 +2,67 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A02C4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E660ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403F82082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571207284;
-	bh=R3LJ895N9E9pE0cFFt4AtsD2smGUhoFnt5YlJuFUZrU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pokqHH2Ets/oiPo5VlHKtPy8JIJTaQJg/9C70pNspTTgqnZxDi10kpcN2Zwr/WKfJ
-	 pqqEWQh1J1iSBI3BJn8Bl0YIr2neopLQ/qfnpCJD6a2p7dzfmFQ1/P46P/rCQF/JPk
-	 sDwDCwWjoxFZYu5kXEQiOBu6qE7Fs5Gvutgv2KYM=
+	by mail.kernel.org (Postfix) with ESMTP id 0C4592082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 06:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YihJJmR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbfJPG2D (ORCPT
+        id S2388845AbfJPG2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 02:28:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfJPG2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 02:28:02 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3436F2082C;
-        Wed, 16 Oct 2019 06:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571207282;
-        bh=R3LJ895N9E9pE0cFFt4AtsD2smGUhoFnt5YlJuFUZrU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=KLqvnONhSNhIfnY0+xnxfId7f03QWuyYJxNHiIYuqJaJRuQIBKd1l8Alfl3WgLc4B
-         GYx1qbowvDDsLeGAdrikTqHtV7/QqfSYdSxfs9a6zhG193QF1QNsyrMWql1Mtx4Vsu
-         bmF7RqRaxksaDAHyAKPyhhhbpJRgsgvUY7UHXY6c=
-Date:   Wed, 16 Oct 2019 08:27:59 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Zhang Lixu <lixu.zhang@intel.com>
-cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srinivas.pandruvada@linux.intel.com, benjamin.tissoires@redhat.com
-Subject: Re: [PATCH] hid: intel-ish-hid: fix wrong error handling in
- ishtp_cl_alloc_tx_ring()
-In-Reply-To: <20191016001559.27947-1-lixu.zhang@intel.com>
-Message-ID: <nycvar.YFH.7.76.1910160827460.13160@cbobk.fhfr.pm>
-References: <20191016001559.27947-1-lixu.zhang@intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 16 Oct 2019 02:28:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43374 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfJPG2e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 02:28:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ub26c8z5A9JfTFPI6SxDoFbuRhH0FWEJLyq04FuxNLU=; b=YihJJmR+AwWlBY07w47sBvJnO
+        BNctRzzWJJNu7akowzBygWkDFrIRBDcnmryja6kX2DQm1+EsB0U3E1ca5vy7fvzkOqMhPMmu+I2E2
+        /lJFlk64Qjm81ofdI+mrO62q/MTaD4GQHFHXdjruZOhCF/l3ieILlVT8ATvoYdlEVf9OM29XRDwR5
+        vo4aHuZG/+ljQLi7eg2Db1U/Lh+68EeVD3up1lCdmakAgeyLOQcsSK8tfsHAQgneJnA5ceVJEzoYN
+        HmfIUcWHO4E81jBV+mBXwEz37mwx1Hk1MlDWiZxKmzmRbJeNXHN/bAYfwZ3SM/X1MnJ630U/RMLPO
+        tHtTlCblA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKcnP-0001ju-F0; Wed, 16 Oct 2019 06:28:31 +0000
+Date:   Tue, 15 Oct 2019 23:28:31 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: sysfs: remove pci_bridge_groups and pcie_dev_groups
+Message-ID: <20191016062831.GB6537@infradead.org>
+References: <20191015140059.18660-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015140059.18660-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019, Zhang Lixu wrote:
-
-> When allocating tx ring buffers failed, should free tx buffers, not rx buffers.
+On Tue, Oct 15, 2019 at 03:00:59PM +0100, Ben Dooks wrote:
+> The pci_bridge_groups and pcie_dev_groups objects are
+> not exported and not used at-all, so remove them to
+> fix the following warnings from sparse:
 > 
-> Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  drivers/hid/intel-ish-hid/ishtp/client-buffers.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-> index 1b0a0cc605e7..513d7a4a1b8a 100644
-> --- a/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-> +++ b/drivers/hid/intel-ish-hid/ishtp/client-buffers.c
-> @@ -84,7 +84,7 @@ int ishtp_cl_alloc_tx_ring(struct ishtp_cl *cl)
->  	return	0;
->  out:
->  	dev_err(&cl->device->dev, "error in allocating Tx pool\n");
-> -	ishtp_cl_free_rx_ring(cl);
-> +	ishtp_cl_free_tx_ring(cl);
+> drivers/pci/pci-sysfs.c:1546:30: warning: symbol 'pci_bridge_groups' was not declared. Should it be static?
+> drivers/pci/pci-sysfs.c:1555:30: warning: symbol 'pcie_dev_groups' was not declared. Should it be static?
 
-Applied to for-5.4/upstream-fixes, thanks.
-
--- 
-Jiri Kosina
-SUSE Labs
-
+But now pci_bridge_group is unused, and if you remove that the
+attributes, etc..
