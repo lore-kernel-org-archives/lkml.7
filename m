@@ -2,91 +2,64 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BCEC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFA4ECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC5620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28442168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389167AbfJPHcM (ORCPT
+        id S1731497AbfJPHeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:32:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48478 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389039AbfJPHcM (ORCPT
+        Wed, 16 Oct 2019 03:34:08 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:38750 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729662AbfJPHeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:32:12 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iKdmp-0007Pm-FE; Wed, 16 Oct 2019 09:31:59 +0200
-Date:   Wed, 16 Oct 2019 09:31:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-cc:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
-        yangbo.lu@nxp.com, john.stultz@linaro.org,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
-        suzuki.poulose@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com,
-        justin.he@arm.com, nd@arm.com
-Subject: Re: [PATCH v5 4/6] psci: Add hvc call service for ptp_kvm.
-In-Reply-To: <9641fbff-cfcd-4854-e0c9-0b97d44193ee@redhat.com>
-Message-ID: <alpine.DEB.2.21.1910160929500.2518@nanos.tec.linutronix.de>
-References: <20191015104822.13890-1-jianyong.wu@arm.com> <20191015104822.13890-5-jianyong.wu@arm.com> <9641fbff-cfcd-4854-e0c9-0b97d44193ee@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 16 Oct 2019 03:34:08 -0400
+Received: from [167.98.27.226] (helo=[10.35.5.173])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKdot-0006Xm-1h; Wed, 16 Oct 2019 08:34:07 +0100
+Subject: Re: [PATCH] bus: moxtet: declare moxtet_bus_type
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Marek Behun <marek.behun@nic.cz>, linux-kernel@vger.kernel.org
+References: <20191015122535.5439-1-ben.dooks@codethink.co.uk>
+ <20191015163205.GB11160@infradead.org>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <ec914ca4-53c6-ef4d-b0db-82852cdd9bbe@codethink.co.uk>
+Date:   Wed, 16 Oct 2019 08:34:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191015163205.GB11160@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019, Paolo Bonzini wrote:
-> On 15/10/19 12:48, Jianyong Wu wrote:
-> > diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> > index 07e57a49d1e8..3597f1f27b10 100644
-> > --- a/drivers/clocksource/arm_arch_timer.c
-> > +++ b/drivers/clocksource/arm_arch_timer.c
-> > @@ -1634,3 +1634,8 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
-> >  }
-> >  TIMER_ACPI_DECLARE(arch_timer, ACPI_SIG_GTDT, arch_timer_acpi_init);
-> >  #endif
-> > +
-> > +bool is_arm_arch_counter(void *cs)
-> > +{
-> > +	return (struct clocksource *)cs == &clocksource_counter;
-> > +}
+On 15/10/2019 17:32, Christoph Hellwig wrote:
+> On Tue, Oct 15, 2019 at 01:25:35PM +0100, Ben Dooks wrote:
+>> The moxtet_bus_type object is exported from the bus
+>> driver, but not declared. Add a declaration for use
+>> and to silence the following warning:
 > 
-> As Thomas pointed out, any reason to have a void * here?
-> 
-> However, since he didn't like modifying the struct, here is an
-> alternative idea:
-> 
-> 1) add a "struct clocksource*" argument to ktime_get_snapshot
-> 
-> 2) return -ENODEV if the argument is not NULL and is not the current
-> clocksource
-> 
-> 3) move the implementation of the hypercall to
-> drivers/clocksource/arm_arch_timer.c, so that it can call
-> ktime_get_snapshot(&systime_snapshot, &clocksource_counter);
+> The symbol can be marked static instead.
 
-And then you implement a gazillion of those functions for every
-arch/subarch which has a similar requirement. Pointless exercise.
+Then it would have to be un-exported as it's listed as
+EXPORT_SYMBOL_GPL(moxtet_bus_type);
 
-Having the ID is trivial enough and the storage space is not really a
-concern.
 
-Thanks,
 
-	tglx
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
