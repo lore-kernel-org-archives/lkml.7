@@ -2,125 +2,95 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA43ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94FBECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117102168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571265328;
-	bh=71cxs0SO4TFyvUYxs7QZ7B28Lrrx3IgLfsy0m4r/p8U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P03clMdL89Bup5QIDbI/BHA6xkBrhoY19+ijs+BbdZdNUCaMqKPZ2biNZJHCuFitY
-	 vDl6cdWNcNA3E8Rg010V2FhyfZhXBihSBmUlvv+5L2jD78bFEBCpLo4xbVQ+xK0CQJ
-	 JZlnIFVipg/Z9PwflshhRNOJ6uiUTOrbglsfpOVc=
+	by mail.kernel.org (Postfix) with ESMTP id 79F7A2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391798AbfJPWfY (ORCPT
+        id S2388782AbfJPWxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:35:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60262 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfJPWfY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 18:35:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X6Sf04ArD7jN+fMhh6LgGi0CQBGg138wDjt0wx/X6YQ=; b=nPOPzYG2BZgfRlCTsM1Tw9T/f
-        1+5ByqsJqcq2PpoevodlkHfjpX3svIy4yaebHYxPSOm7dB/LKY9dmOGDmAwVjzql0xRcmuzMcqo66
-        eF6rHeN3PyN+rGA6knH5G1AAvWUgHF4JXP/CUugqDvXRDieF0tz73AOB4o2y6dgROksrY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iKrt1-0006P1-O3; Wed, 16 Oct 2019 22:35:19 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C841B274325C; Wed, 16 Oct 2019 23:35:18 +0100 (BST)
-Date:   Wed, 16 Oct 2019 23:35:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Richard Leitner <richard.leitner@skidata.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 5.3 112/112] ASoC: sgtl5000: add ADC mute control
-Message-ID: <20191016223518.GC11473@sirena.co.uk>
-References: <20191016214844.038848564@linuxfoundation.org>
- <20191016214907.599726506@linuxfoundation.org>
- <20191016220044.GB11473@sirena.co.uk>
- <20191016221025.GA990599@kroah.com>
+        Wed, 16 Oct 2019 18:53:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:40499 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726965AbfJPWx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 18:53:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 15:53:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,305,1566889200"; 
+   d="scan'208";a="199097059"
+Received: from xiaoboma-mobl1.ccr.corp.intel.com (HELO wfg-t570.sh.intel.com) ([10.254.214.50])
+  by orsmga003.jf.intel.com with ESMTP; 16 Oct 2019 15:53:27 -0700
+Received: from wfg by wfg-t570.sh.intel.com with local (Exim 4.89)
+        (envelope-from <fengguang.wu@intel.com>)
+        id 1iKsAY-0003HH-1Q; Thu, 17 Oct 2019 06:53:26 +0800
+Date:   Thu, 17 Oct 2019 06:53:26 +0800
+From:   Fengguang Wu <fengguang.wu@intel.com>
+To:     Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Wu Fengguang <fengguang.wu@intel.com>,
+        Liu Jingqi <jingqi.liu@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm: trivial mark_page_accessed() cleanup
+Message-ID: <20191016225326.GB12497@wfg-t540p.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016221025.GA990599@kroah.com>
-X-Cookie: Auction:
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This avoids duplicated PageReferenced() calls.
+No behavior change.
 
---ALfTUftag+2gvp1h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+  mm/swap.c | 14 +++++++++-----
+  1 file changed, 9 insertions(+), 5 deletions(-)
 
-On Wed, Oct 16, 2019 at 03:10:25PM -0700, Greg Kroah-Hartman wrote:
-> On Wed, Oct 16, 2019 at 11:00:44PM +0100, Mark Brown wrote:
-> > On Wed, Oct 16, 2019 at 02:51:44PM -0700, Greg Kroah-Hartman wrote:
-> > > From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+diff --git a/mm/swap.c b/mm/swap.c
+index 38a52b9..c55720c 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -373,9 +373,15 @@ void mark_page_accessed(struct page *page)
+  	page = compound_head(page);
+  	inc_node_page_state(page, NR_ACCESSED);
+  
+-	if (!PageActive(page) && !PageUnevictable(page) &&
+-			PageReferenced(page)) {
+-
++	if (!PageReferenced(page)) {
++		SetPageReferenced(page);
++	} else if (PageUnevictable(page)) {
++		/*
++		 * Unevictable pages are on the "LRU_UNEVICTABLE" list. But,
++		 * this list is never rotated or maintained, so marking an
++		 * evictable page accessed has no effect.
++		 */
++	} else if (!PageActive(page)) {
+  		/*
+  		 * If the page is on the LRU, queue it for activation via
+  		 * activate_page_pvecs. Otherwise, assume the page is on a
+@@ -389,8 +395,6 @@ void mark_page_accessed(struct page *page)
+  		ClearPageReferenced(page);
+  		if (page_is_file_cache(page))
+  			workingset_activation(page);
+-	} else if (!PageReferenced(page)) {
+-		SetPageReferenced(page);
+  	}
+  	if (page_is_idle(page))
+  		clear_page_idle(page);
+-- 
+2.7.4
 
-> > > commit 694b14554d75f2a1ae111202e71860d58b434a21 upstream.
-
-> > > This control mute/unmute the ADC input of SGTL5000
-> > > using its CHIP_ANA_CTRL register.
-
-> > This seems like a new feature and not an obvious candidate for stable?
-
-> there was a long email from Richard that said:
-> 	Upstream commit 631bc8f0134a ("ASoC: sgtl5000: Fix of unmute
-> 	outputs on probe"), which is e9f621efaebd in v5.3 replaced
-> 	snd_soc_component_write with snd_soc_component_update_bits and
-> 	therefore no longer cleared the MUTE_ADC flag. This caused the
-> 	ADC to stay muted and recording doesn't work any longer. This
-> 	patch fixes this problem by adding a Switch control for
-> 	MUTE_ADC.
-
-> That's why I took this.  If this isn't true, I'll be glad to drop this.
-
-That's probably not an appropriate fix for stable - it's going to add a
-new control which users will need to manually set (or hope their
-userspace automatically figures out that it should set for them, more
-advanced userspaces like PulseAudio should) which isn't a drop in fix.=20
-You could either drop the backport that was done for zero cross or take
-a new patch that clears the MUTE_ADC flag (rather than punting to
-userspace to do so), or just be OK with what you've got at the minute
-which might be fine given the lack of user reports.
-
---ALfTUftag+2gvp1h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2nmyUACgkQJNaLcl1U
-h9DWfwf+K0fc88QLIuGcWpAJ3DwOZiSnXrA9pkmrlSQ4aR8OEk+t2JiTrfCySwH8
-F6FczIz+0Zu3FHrozTsnmaB/QTl8PprwARpVQitGnY7h/U4ULv4WRiuMZGA2azXG
-nzcm/7hCpE+WqFCGcwU2crKtn01HZ3xHMaizHW0xJqoQAP8gXeEz/B6+HGercbkX
-v/FzDuyaispEy48+7/ktcWkQOj0xCZl/newEY1Z6B+PvfteUgoKaa440Vo01WzM3
-PBB7x1rz54Z0ws/z+tFJY9RykpE4t16j2hjIMlhKdsZQMA2kJzEjI7dn4shL4uKV
-oPkSvOU4E3YPneqh4cxbBxAcwezFnA==
-=kUz1
------END PGP SIGNATURE-----
-
---ALfTUftag+2gvp1h--
