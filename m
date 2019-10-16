@@ -2,83 +2,150 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D2CC4360C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAB6C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AB2222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C31C20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 08:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391829AbfJPI7k (ORCPT
+        id S2391842AbfJPI7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 04:59:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46424 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388817AbfJPI7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 04:59:39 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0D8C0BE2ADF6A9344CCD;
-        Wed, 16 Oct 2019 16:59:38 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 16:59:30 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <matthias.bgg@gmail.com>,
-        <bhanusreemahesh@gmail.com>, <jbi.octave@gmail.com>,
-        <swboyd@chromium.org>, <yuehaibing@huawi.com>,
-        <sergio.paracuellos@gmail.com>, <puranjay12@gmail.com>,
-        <arma2ff0@gmail.com>, <kimbrownkd@gmail.com>
-CC:     <devel@driverdev.osuosl.org>,
-        <linux-arm-kernel@lists.ifradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: mt7621-dma: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 16 Oct 2019 16:58:33 +0800
-Message-ID: <20191016085833.26376-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 16 Oct 2019 04:59:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:33026 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388817AbfJPI7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 04:59:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940C9142F;
+        Wed, 16 Oct 2019 01:59:50 -0700 (PDT)
+Received: from [10.163.1.216] (unknown [10.163.1.216])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2810F3F6C4;
+        Wed, 16 Oct 2019 01:59:32 -0700 (PDT)
+Subject: Re: [PATCH V6 0/2] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
+ <1571150502.5937.39.camel@lca.pw>
+ <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
+ <1571164920.5937.45.camel@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <fb1fe447-d30a-21ea-1b85-0d46e14f0872@arm.com>
+Date:   Wed, 16 Oct 2019 14:29:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1571164920.5937.45.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/mt7621-dma/mtk-hsdma.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/staging/mt7621-dma/mtk-hsdma.c b/drivers/staging/mt7621-dma/mtk-hsdma.c
-index d964642..4d541c4 100644
---- a/drivers/staging/mt7621-dma/mtk-hsdma.c
-+++ b/drivers/staging/mt7621-dma/mtk-hsdma.c
-@@ -650,7 +650,6 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 	struct mtk_hsdma_chan *chan;
- 	struct mtk_hsdam_engine *hsdma;
- 	struct dma_device *dd;
--	struct resource *res;
- 	int ret;
- 	int irq;
- 	void __iomem *base;
-@@ -667,8 +666,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 	if (!hsdma)
- 		return -EINVAL;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 	hsdma->base = base + HSDMA_BASE_OFFSET;
--- 
-2.7.4
 
 
+On 10/16/2019 12:12 AM, Qian Cai wrote:
+> On Tue, 2019-10-15 at 20:51 +0530, Anshuman Khandual wrote:
+>>
+>> On 10/15/2019 08:11 PM, Qian Cai wrote:
+>>> The x86 will crash with linux-next during boot due to this series (v5) with the
+>>> config below plus CONFIG_DEBUG_VM_PGTABLE=y. I am not sure if v6 would address
+>>> it.
+>>>
+>>> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+>>>
+>>> [   33.862600][    T1] page:ffffea0009000000 is uninitialized and poisoned
+>>> [   33.862608][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff
+>>> ffffff871140][    T1]  ? _raw_spin_unlock_irq+0x27/0x40
+>>> [   33.871140][    T1]  ? rest_init+0x307/0x307
+>>> [   33.871140][    T1]  kernel_init+0x11/0x139
+>>> [   33.871140][    T1]  ? rest_init+0x307/0x307
+>>> [   33.871140][    T1]  ret_from_fork+0x27/0x50
+>>> [   33.871140][    T1] Modules linked in:
+>>> [   33.871140][    T1] ---[ end trace e99d392b0f7befbd ]---
+>>> [   33.871140][    T1] RIP: 0010:alloc_gigantic_page_order+0x3fe/0x490
+>>
+>> Hmm, with defconfig (DEBUG_VM=y and DEBUG_VM_PGTABLE=y) it does not crash but
+>> with the config above, it does. Just wondering if it is possible that these
+>> pages might not been initialized yet because DEFERRED_STRUCT_PAGE_INIT=y ?
+> 
+> Yes, this patch works fine.
+> 
+> diff --git a/init/main.c b/init/main.c
+> index 676d8020dd29..591be8f9e8e0 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1177,7 +1177,6 @@ static noinline void __init kernel_init_freeable(void)
+>         workqueue_init();
+>  
+>         init_mm_internals();
+> -       debug_vm_pgtable();
+>  
+>         do_pre_smp_initcalls();
+>         lockup_detector_init();
+> @@ -1186,6 +1185,8 @@ static noinline void __init kernel_init_freeable(void)
+>         sched_init_smp();
+>  
+>         page_alloc_init_late();
+> +       debug_vm_pgtable();
+> +
+>         /* Initialize page ext after all struct pages are initialized. */
+>         page_ext_init();
+> 
+
+Sure, will keep this in mind if we at all end up with memory allocation approach
+for this test.
+
+>>
+>> [   13.898549][    T1] page:ffffea0005000000 is uninitialized and poisoned
+>> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+>> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+>> [   13.898549][    T1] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+>> [   13.898549][    T1] ------------[ cut here ]------------
+>> [   13.898549][    T1] kernel BUG at ./include/linux/mm.h:1107!
+>> [   13.898549][    T1] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+>> [   13.898549][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-next-20191015+ #
+> 
