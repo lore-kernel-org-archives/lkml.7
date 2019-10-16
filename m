@@ -2,265 +2,210 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197D4ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AF0FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACDD21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFA521848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IIV5RTsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbfJPVsg (ORCPT
+        id S2394762AbfJPVtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:48:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56670 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394662AbfJPVsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:48:36 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9FD167FDF5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 21:48:35 +0000 (UTC)
-Received: by mail-qt1-f198.google.com with SMTP id y10so252406qti.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 14:48:35 -0700 (PDT)
+        Wed, 16 Oct 2019 17:49:16 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42644 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394721AbfJPVtP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:49:15 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so29658716wrw.9
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 14:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+X7Hc9+9kZ9bvpM8j/9p1fpCYhA60kt0JDHGpFj+5jQ=;
+        b=IIV5RTsu/wsF2/pG92OGHkVY+WtcDtHGJENZGEUl4ecpYY/EdHl7ZV24lWSE/7bg75
+         awpDLSfhp6Rt2GPFWVsace2lFiTdjrG2GHSkVpV9dW8glXMi+PdZu5nDwjrQ/zIbXnJm
+         wSkUtLBxErpeuxGX44IIuQ8ak4MmAoTl0ti7JKucEXDimq82FcwVEMj8Lk0uHmQH/ibd
+         hUTmcfVF8yHVJPCREXIxnFlZeXGYa/jHfW+kAicUmMFMgBkhJffjJP80BboGz50yno/h
+         zKMa8UqmfubQMSOq6O1AmBUP1dIxTEt2MgHxNbhMWw8SsUkgLVBXB5NlHHtx1AuQS+30
+         kfnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QborS368Ajr5BbVEVEpxWdvLBweeVUiSSgjGJk+rcJ8=;
-        b=FliMAX0Thto/1Zw73RO36avgfeoU5hb3oKYhqTjmS+OKJoduSkI1dgPVqddjRtnbzQ
-         90kIvbR36572oTPt6eZri0ZgorWYTODXWQKCL7cMbKzoOy7pLWXxSO5uWqdHO89K0iPU
-         Ky2qPxEjQSUcv6m9CiCHqf4OlAxVvFJQ3f0g+JVX+j6uQMZIZMvvgDAXXuaWd4FMg/5m
-         IOvF2W80+1Ml1C9ml8K8552DLaXJ1RFQN9uMB+Cje+eCt5Hq/Xf4PsxqE9uQwAeZXCuL
-         M8uLhzQHYbduG9efOF0CM3Z4rPTvlG8FF/KLymHuQCVbyZqtY7pgfpXmiaLenDbH6Zh4
-         ntCA==
-X-Gm-Message-State: APjAAAX5COpySbBWlnmTQOYNsb/c/kIwYfHH2u71/YLM6a5sdxp5sqIt
-        QRHrXcVva6Rl6owT9zxqqwDg2lk1f2t3PWMVZkDdMZSS+bqFg69vDQr0j8LrnPRawLcOaMsTWXY
-        WjiEHGpjcnGRoXdhXdeeKxgdgNGceo9fVTx1afFKZ
-X-Received: by 2002:a05:620a:718:: with SMTP id 24mr87453qkc.157.1571262514808;
-        Wed, 16 Oct 2019 14:48:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzVAXETPoHb1C+3a9i2Ionj1YmrL2Oz6IWFpXhjfCSWTuUZ1T1NFQTTKzGbexXPoe0TiIBXqpKiqboNgzd7Ymo=
-X-Received: by 2002:a05:620a:718:: with SMTP id 24mr87423qkc.157.1571262514349;
- Wed, 16 Oct 2019 14:48:34 -0700 (PDT)
+        bh=+X7Hc9+9kZ9bvpM8j/9p1fpCYhA60kt0JDHGpFj+5jQ=;
+        b=VwJm6IWUg7g4WQCzmxM5qyeGzLKUsG7Wu0zjtIEld70ZRuqZ0tMeB1Cw9UxQXUAGLJ
+         TTPkQusiqSIn9eCoKgxtiHpnFckVCMgm/6JjtWja4yUib2B3eVUoddoxraJ9gaV6Co65
+         whTOjcV5QxHlx/mTKwCuXdt4D/t7NKo7BmczS5TuI4EyLzcbZ+SWtaCTZMbHIAiYbVPl
+         pPDWKbta5O82FuL7igOap2oo1OrNwy88g/QZSj4YKRSKfycxsQhfR9sH8eymEIRnwvXx
+         G6PLBIa0tP3me+d45XQzf6fZchtJB3odHUhnERuU4Cmggosn37rIqwUtX0H7PRY+n1TE
+         1s3A==
+X-Gm-Message-State: APjAAAX93nKxzbFmaRDoBaGe4ds1TkAqfqNudG29VD5uujPdvQH2NXSM
+        fC2IF4zpbLdZA8b2NqbZcH9Wb/lnc+KTJIJbys+6rA==
+X-Google-Smtp-Source: APXvYqy2ifTj/41CUJKYlnNnPwUNZyeUFAW1IL2uPIvDye8iXvKbGZf1qbfoyxHPUr/zGy6mTaUMmPY3A5iLHFg3OT0=
+X-Received: by 2002:a5d:4302:: with SMTP id h2mr34229wrq.35.1571262550711;
+ Wed, 16 Oct 2019 14:49:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <CACO55ttOJaXKWmKQQbMAQRJHLXF-VtNn58n4BZhFKYmAdfiJjA@mail.gmail.com>
- <20191016213722.GA72810@google.com>
-In-Reply-To: <20191016213722.GA72810@google.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Wed, 16 Oct 2019 23:48:22 +0200
-Message-ID: <CACO55tuXck7vqGVLmMBGFg6A2pr3h8koRuvvWHLNDH8XvBVxew@mail.gmail.com>
-Subject: Re: [PATCH v3] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20191010185631.26541-1-davidgow@google.com> <20191011140727.49160042fafa20d5867f8df7@linux-foundation.org>
+ <CABVgOS=UwWxwD97c6y-XzbLWVhznPjBO3qvQEzX=8jTJ-gBi3A@mail.gmail.com> <20191011145519.7b7a1d16ecdead9bec212c01@linux-foundation.org>
+In-Reply-To: <20191011145519.7b7a1d16ecdead9bec212c01@linux-foundation.org>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 16 Oct 2019 14:48:59 -0700
+Message-ID: <CABVgOS=W4cfFoE=JT4mbk1zkUsreucrw_B81R2jwDCFPocomHQ@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v2] lib/list-test: add a test for the
+ 'list' doubly linked list
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000003a8a3005950e1215"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:37 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc linux-acpi]
->
-> On Wed, Oct 16, 2019 at 09:18:32PM +0200, Karol Herbst wrote:
-> > but setting the PCI_DEV_FLAGS_NO_D3 flag does prevent using the
-> > platform means of putting the device into D3cold, right? That's
-> > actually what should still happen, just the D3hot step should be
-> > skipped.
->
-> If I understand correctly, when we put a device in D3cold on an ACPI
-> system, we do something like this:
->
->   pci_set_power_state(D3cold)
->     if (PCI_DEV_FLAGS_NO_D3)
->       return 0                                   <-- nothing at all if quirked
->     pci_raw_set_power_state
->       pci_write_config_word(PCI_PM_CTRL, D3hot)  <-- set to D3hot
->     __pci_complete_power_transition(D3cold)
->       pci_platform_power_transition(D3cold)
->         platform_pci_set_power_state(D3cold)
->           acpi_pci_set_power_state(D3cold)
->             acpi_device_set_power(ACPI_STATE_D3_COLD)
->               ...
->                 acpi_evaluate_object("_OFF")     <-- set to D3cold
->
-> I did not understand the connection with platform (ACPI) power
-> management from your patch.  It sounds like you want this entire path
-> except that you want to skip the PCI_PM_CTRL write?
->
+--0000000000003a8a3005950e1215
+Content-Type: text/plain; charset="UTF-8"
 
-exactly. I am running with this workaround for a while now and never
-had any fails with it anymore. The GPU gets turned off correctly and I
-see the same power savings, just that the GPU can be powered on again.
+Hi all,
 
-> That seems like something Rafael should weigh in on.  I don't know
-> why we set the device to D3hot with PCI_PM_CTRL before using the ACPI
-> methods, and I don't know what the effect of skipping that is.  It
-> seems a little messy to slice out this tiny piece from the middle, but
-> maybe it makes sense.
+Thanks, Andrew, for the review and for adding this to the -mm tree --
+having some soak time in -next has been helpful and picked up at least
+one bug.
+
+Since KUnit is not yet in Linus' branch, though, it probably makes
+sense to put this test into the linux-kselftest/test branch, so that
+there aren't any chances of the list test getting in without the KUnit
+infrastructure. Ultimately, once KUnit is upstream, this shouldn't be
+an issue, but it is probably easier to consolidate things for now.
+Does that sound sensible?
+
+In any case, I plan to send a v3 patch out shortly which addresses
+some memory allocation warnings (caught by Dan Carpenter, thanks!). I
+could always do that as a separate bugfix patch if people preferred,
+though, but if this switches to the linux-kselftest/test branch, I
+feel we might as well get it right in the original patch.
+
+Cheers,
+-- David
+
+
+
+
+On Fri, Oct 11, 2019 at 2:55 PM Andrew Morton <akpm@linux-foundation.org> wrote:
 >
+> On Fri, 11 Oct 2019 14:37:25 -0700 David Gow <davidgow@google.com> wrote:
+>
+> > On Fri, Oct 11, 2019 at 2:05 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > >
+> > > <looks at kunit>
+> > >
+> > > Given that everything runs at late_initcall time, shouldn't everything
+> > > be __init, __initdata etc so all the code and data doesn't hang around
+> > > for ever?
+> > >
+> >
+> > That's an interesting point. We haven't done this for KUnit tests to
+> > date, and there is certainly a possibility down the line that we may
+> > want to be able to run these tests in other circumstances. (There's
+> > some work being done to allow KUnit and KUnit tests to be built as
+> > modules here: https://lkml.org/lkml/2019/10/8/628 for example.) Maybe
+> > it'd be worth having macros which wrap __init/__initdata etc as a way
+> > of futureproofing tests against such a change?
+> >
+> > Either way, I suspect this is something that should probably be
+> > considered for KUnit as a whole, rather than on a test-by-test basis.
+>
+> Sure, a new set of macros for this makes sense.  Can be retrofitted any
+> time.
+>
+> There might be a way of loading all of list_test.o into a discardable
+> section at link time instead of sprinkling annotation all over the .c
+> code.
 
-afaik when I was talking with others in the past about it, Windows is
-doing that before using ACPI calls, but maybe they have some similar
-workarounds for certain intel bridges as well? I am sure it affects
-more than the one I am blacklisting here, but I rather want to check
-each device before blacklisting all kabylake and sky lake bridges (as
-those are the ones were this issue can be observed).
+--0000000000003a8a3005950e1215
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Sadly we had no luck getting any information about such workaround out
-of Nvidia or Intel.
-
-> > On Wed, Oct 16, 2019 at 9:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Wed, Oct 16, 2019 at 04:44:49PM +0200, Karol Herbst wrote:
-> > > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-> > > > states.
-> > > >
-> > > > v2: convert to pci_dev quirk
-> > > >     put a proper technical explanation of the issue as a in-code comment
-> > > > v3: disable it only for certain combinations of intel and nvidia hardware
-> > > >
-> > > > Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Cc: Lyude Paul <lyude@redhat.com>
-> > > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > > Cc: Mika Westerberg <mika.westerberg@intel.com>
-> > > > Cc: linux-pci@vger.kernel.org
-> > > > Cc: linux-pm@vger.kernel.org
-> > > > Cc: dri-devel@lists.freedesktop.org
-> > > > Cc: nouveau@lists.freedesktop.org
-> > > > ---
-> > > >  drivers/pci/pci.c    | 11 ++++++++++
-> > > >  drivers/pci/quirks.c | 52 ++++++++++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/pci.h  |  1 +
-> > > >  3 files changed, 64 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > index b97d9e10c9cc..8e056eb7e6ff 100644
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -805,6 +805,13 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
-> > > >       return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
-> > > >  }
-> > > >
-> > > > +static inline bool parent_broken_child_pm(struct pci_dev *dev)
-> > > > +{
-> > > > +     if (!dev->bus || !dev->bus->self)
-> > > > +             return false;
-> > > > +     return dev->bus->self->broken_nv_runpm && dev->broken_nv_runpm;
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * pci_raw_set_power_state - Use PCI PM registers to set the power state of
-> > > >   *                        given PCI device
-> > > > @@ -850,6 +857,10 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
-> > > >          || (state == PCI_D2 && !dev->d2_support))
-> > > >               return -EIO;
-> > > >
-> > > > +     /* check if the bus controller causes issues */
-> > > > +     if (state != PCI_D0 && parent_broken_child_pm(dev))
-> > > > +             return 0;
-> > > > +
-> > > >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > >
-> > > >       /*
-> > > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > > index 44c4ae1abd00..c2f20b745dd4 100644
-> > > > --- a/drivers/pci/quirks.c
-> > > > +++ b/drivers/pci/quirks.c
-> > > > @@ -5268,3 +5268,55 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-> > > >  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-> > > >                             PCI_CLASS_DISPLAY_VGA, 8,
-> > > >                             quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> > > > +
-> > > > +/*
-> > > > + * Some Intel PCIe bridges cause devices to disappear from the PCIe bus after
-> > > > + * those were put into D3cold state if they were put into a non D0 PCI PM
-> > > > + * device state before doing so.
-> > > > + *
-> > > > + * This leads to various issue different issues which all manifest differently,
-> > > > + * but have the same root cause:
-> > > > + *  - AIML code execution hits an infinite loop (as the coe waits on device
-> > > > + *    memory to change).
-> > > > + *  - kernel crashes, as all pci reads return -1, which most code isn't able
-> > > > + *    to handle well enough.
-> > > > + *  - sudden shutdowns, as the kernel identified an unrecoverable error after
-> > > > + *    userspace tries to access the GPU.
-> > > > + *
-> > > > + * In all cases dmesg will contain at least one line like this:
-> > > > + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-> > > > + * followed by a lot of nouveau timeouts.
-> > > > + *
-> > > > + * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of the
-> > > > + * PCIe bridge controller in order to power down the GPU.
-> > > > + * Nonetheless, there are other code paths inside the ACPI firmware which use
-> > > > + * other registers, which seem to work fine:
-> > > > + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-> > > > + *  - 0xb0 bit 0x10 (link disable)
-> > > > + * Changing the conditions inside the firmware by poking into the relevant
-> > > > + * addresses does resolve the issue, but it seemed to be ACPI private memory
-> > > > + * and not any device accessible memory at all, so there is no portable way of
-> > > > + * changing the conditions.
-> > > > + *
-> > > > + * The only systems where this behavior can be seen are hybrid graphics laptops
-> > > > + * with a secondary Nvidia Pascal GPU. It cannot be ruled out that this issue
-> > > > + * only occurs in combination with listed Intel PCIe bridge controllers and
-> > > > + * the mentioned GPUs or if it's only a hw bug in the bridge controller.
-> > > > + *
-> > > > + * But because this issue was NOT seen on laptops with an Nvidia Pascal GPU
-> > > > + * and an Intel Coffee Lake SoC, there is a higher chance of there being a bug
-> > > > + * in the bridge controller rather than in the GPU.
-> > > > + *
-> > > > + * This issue was not able to be reproduced on non laptop systems.
-> > > > + */
-> > > > +
-> > > > +static void quirk_broken_nv_runpm(struct pci_dev *dev)
-> > > > +{
-> > > > +     dev->broken_nv_runpm = 1;
-> > >
-> > > Can you use the existing PCI_DEV_FLAGS_NO_D3 flag for this instead of
-> > > adding a new flag?
-> > >
-> > > I would put the parent_broken_child_pm() logic here, if possible,
-> > > e.g., something like:
-> > >
-> > >   struct pci_dev *bridge = pci_upstream_bridge(dev);
-> > >
-> > >   if (bridge &&
-> > >       bridge->vendor == PCI_VENDOR_ID_INTEL && bridge->device == 0x1901)
-> > >         dev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
-> > >
-> > > > +}
-> > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> > > > +                           PCI_BASE_CLASS_DISPLAY, 16,
-> > > > +                           quirk_broken_nv_runpm);
-> > > > +/* kaby lake */
-> > > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1901,
-> > > > +                     quirk_broken_nv_runpm);
-> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > > index ac8a6c4e1792..903a0b3a39ec 100644
-> > > > --- a/include/linux/pci.h
-> > > > +++ b/include/linux/pci.h
-> > > > @@ -416,6 +416,7 @@ struct pci_dev {
-> > > >       unsigned int    __aer_firmware_first_valid:1;
-> > > >       unsigned int    __aer_firmware_first:1;
-> > > >       unsigned int    broken_intx_masking:1;  /* INTx masking can't be used */
-> > > > +     unsigned int    broken_nv_runpm:1;      /* some combinations of intel bridge controller and nvidia GPUs break rtd3 */
-> > > >       unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O windows */
-> > > >       unsigned int    irq_managed:1;
-> > > >       unsigned int    has_secondary_link:1;
-> > > > --
-> > > > 2.21.0
-> > > >
+MIIPCgYJKoZIhvcNAQcCoIIO+zCCDvcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggxtMIIEkjCCA3qgAwIBAgINAewckktV4F6Q7sAtGDANBgkqhkiG9w0BAQsFADBMMSAwHgYDVQQL
+ExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMK
+R2xvYmFsU2lnbjAeFw0xODA2MjAwMDAwMDBaFw0yODA2MjAwMDAwMDBaMEsxCzAJBgNVBAYTAkJF
+MRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSEwHwYDVQQDExhHbG9iYWxTaWduIFNNSU1FIENB
+IDIwMTgwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCUeobu8FdB5oJg6Fz6SFf8YsPI
+dNcq4rBSiSDAwqMNYbeTpRrINMBdWuPqVWaBX7WHYMsKQwCOvAF1b7rkD+ROo+CCTJo76EAY25Pp
+jt7TYP/PxoLesLQ+Ld088+BeyZg9pQaf0VK4tn23fOCWbFWoM8hdnF86Mqn6xB6nLsxJcz4CUGJG
+qAhC3iedFiCfZfsIp2RNyiUhzPAqalkrtD0bZQvCgi5aSNJseNyCysS1yA58OuxEyn2e9itZJE+O
+sUeD8VFgz+nAYI5r/dmFEXu5d9npLvTTrSJjrEmw2/ynKn6r6ONueZnCfo6uLmP1SSglhI/SN7dy
+L1rKUCU7R1MjAgMBAAGjggFyMIIBbjAOBgNVHQ8BAf8EBAMCAYYwJwYDVR0lBCAwHgYIKwYBBQUH
+AwIGCCsGAQUFBwMEBggrBgEFBQcDCTASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBRMtwWJ
+1lPNI0Ci6A94GuRtXEzs0jAfBgNVHSMEGDAWgBSP8Et/qC5FJK5NUPpjmove4t0bvDA+BggrBgEF
+BQcBAQQyMDAwLgYIKwYBBQUHMAGGImh0dHA6Ly9vY3NwMi5nbG9iYWxzaWduLmNvbS9yb290cjMw
+NgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIzLmNybDBn
+BgNVHSAEYDBeMAsGCSsGAQQBoDIBKDAMBgorBgEEAaAyASgKMEEGCSsGAQQBoDIBXzA0MDIGCCsG
+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
+KwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMFEGCCsGAQUF
+BwEBBEUwQzBBBggrBgEFBQcwAoY1aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQv
+Z3NzbWltZWNhMjAxOC5jcnQwHwYDVR0jBBgwFoAUTLcFidZTzSNAougPeBrkbVxM7NIwPwYDVR0f
+BDgwNjA0oDKgMIYuaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9jYS9nc3NtaW1lY2EyMDE4LmNy
+bDANBgkqhkiG9w0BAQsFAAOCAQEAJ/zitSY5ytjRHvjJRs//GXSqWUC9k+0tOBStoNWdT0W+IU1B
+1LFJELO6cCMS7c1z3KsQoLfLNc/eSYUv/jVWQoXht3qEyYjRS0s/yq8fxvm89uCGbGqtPjygIohU
+o4MsxfvqX/0D3LDZjBSQFsM5pzdIj2c+yEsDuTz1ZZONpsYJZ8e+2sd2soqYkQPjgrTw/DC4iLup
+tRDKk7xLOvTS4GEcnNBZx8EPg9sKqyP51KSxSKQRKAH+fuugWhJTI582FJI1zXnFXW7CywdhCCfI
+nCNqI2fk/FFl6FVqgaJKm30Sp4GZUd2VnH0aGYJq3gYFVph+jvojHGcUqOO5ggMjPTGCAmEwggJd
+AgEBMF8wSzELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExITAfBgNVBAMT
+GEdsb2JhbFNpZ24gU01JTUUgQ0EgMjAxOAIQARE2WR1lhjWKYHwTHLtF1jANBglghkgBZQMEAgEF
+AKCB1DAvBgkqhkiG9w0BCQQxIgQg4r8Ard2+L1AsIa986Utq7TyDAveQ8MCG6UsBzr/kWJUwGAYJ
+KoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkxMDE2MjE0OTExWjBpBgkq
+hkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJYIZIAWUDBAECMAoGCCqG
+SIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEB
+AQUABIIBAH6rfUbR3IsK7gb8ynVOPvTJ4OWmRmC83xgKKgfIxwtAx376fjRyH7kkNENBYuVOHOYz
+zRK4L5UVb5MgVcvI9Rw9H6bfgHz1Svm6SYtXQGydqxtBbMAyA0eUBUtPdsAEuPuJ6ZChEHjnVyvu
+AmnCX7CO9t1EniCZx0qKFLUHq9tJenLBgXDlt9ksKlNSF+y2Ozx4UN2Eq6o8/JG0PW2TYFPhInBS
+agrd7kVhYONNogMlwpHnS5WXIXEIem4RTcMgmmSQA7gcynvcbCFhBoj3UZZNpxeGcZNk0EBcpd6V
+5HPTtFMjkcKluvL/vJQg4hRqUaSkNXYxI+H3vH5YgMWtzU8=
+--0000000000003a8a3005950e1215--
