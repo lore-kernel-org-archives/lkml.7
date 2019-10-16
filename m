@@ -2,39 +2,42 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC52ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9960EECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE61120872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C04120872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 07:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbfJPHUG (ORCPT
+        id S1732708AbfJPHUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 03:20:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4164 "EHLO huawei.com"
+        Wed, 16 Oct 2019 03:20:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4167 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726977AbfJPHUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 03:20:05 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 718CEDB1DC527F38EA0F;
-        Wed, 16 Oct 2019 15:20:03 +0800 (CST)
+        id S1726977AbfJPHUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 03:20:09 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8931F137143FFFC49AEA;
+        Wed, 16 Oct 2019 15:20:08 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 16 Oct 2019 15:19:57 +0800
+ 14.3.439.0; Wed, 16 Oct 2019 15:19:58 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 00/12] net: hns3: add some bugfixes and optimizations
-Date:   Wed, 16 Oct 2019 15:16:59 +0800
-Message-ID: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 03/12] net: hns3: fix a use after freed problem in hns3_nic_maybe_stop_tx()
+Date:   Wed, 16 Oct 2019 15:17:02 +0800
+Message-ID: <1571210231-29154-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
+References: <1571210231-29154-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -44,70 +47,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes some bugfixes and code optimizations
-for the HNS3 ethernet controller driver.
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[patch 01/12] removes unused and unnecessary structures.
+Currently, hns3_nic_maybe_stop_tx() use skb_copy() to linearize a
+SKB if the BD num required by the SKB does not meet the hardware
+limitation, and it linearizes the SKB by allocating a new SKB and
+freeing the old SKB, if hns3_nic_maybe_stop_tx() returns -EBUSY,
+the sch_direct_xmit() still hold reference to old SKB and try to
+retransmit the old SKB when dev_hard_start_xmit() return TX_BUSY,
+which may cause use after freed problem.
 
-[patch 02/12] fixes a TX queue not restarted problem.
+This patch fixes it by using __skb_linearize() to linearize the
+SKB in hns3_nic_maybe_stop_tx().
 
-[patch 03/12] fixes a use-after-free issue.
+Fixes: 51e8439f3496 ("net: hns3: add 8 BD limit for tx flow")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-[patch 04/12] fixes a mis-counting IRQ number issue.
-
-[patch 05/12] fixes VF VLAN table entries inconsistent issue.
-
-[patch 06/12] uses a ETH_ALEN u8 array to replace two mac_addr_*
-field in struct hclge_mac_mgr_tbl_entry_cmd.
-
-[patch 07/12] optimizes the barrier used in the IO path.
-
-[patch 08/12] introduces macro ring_to_netdev() to get netdevive
-from struct hns3_enet_ring variable.
-
-[patch 09/12] adds a minor cleanup for hns3_handle_rx_bd().
-
-[patch 10/12] fixes a VF ID issue for setting VF VLAN.
-
-[patch 11/12] removes linear data allocating for fraglist SKB.
-
-[patch 12/12] clears hardware error when resetting.
-
-Guojia Liao (1):
-  net: hns3: optimized MAC address in management table.
-
-Jian Shen (3):
-  net: hns3: fix VF VLAN table entries inconsistent issue
-  net: hns3: fix VF id issue for setting VF VLAN
-  net: hns3: log and clear hardware error after reset complete
-
-Yonglong Liu (1):
-  net: hns3: fix mis-counting IRQ vector numbers issue
-
-Yunsheng Lin (7):
-  net: hns3: remove struct hns3_nic_ring_data in hns3_enet module
-  net: hns3: fix TX queue not restarted problem
-  net: hns3: fix a use after freed problem in hns3_nic_maybe_stop_tx()
-  net: hns3: minor optimization for barrier in IO path
-  net: hns3: introduce ring_to_netdev() in enet module
-  net: hns3: minor cleanup for hns3_handle_rx_bd()
-  net: hns3: do not allocate linear data for fraglist skb
-
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |   1 +
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   2 +
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  24 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 255 +++++++++------------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  20 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  33 ++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |   4 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  49 ++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  |  11 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  32 ++-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   1 +
- 13 files changed, 212 insertions(+), 222 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 2cfdfbb..5a237f94 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1287,33 +1287,26 @@ static bool hns3_skb_need_linearized(struct sk_buff *skb, unsigned int *bd_size,
+ }
+ 
+ static int hns3_nic_maybe_stop_tx(struct net_device *netdev,
+-				  struct sk_buff **out_skb)
++				  struct sk_buff *skb)
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+ 	unsigned int bd_size[HNS3_MAX_TSO_BD_NUM + 1U];
+-	struct sk_buff *skb = *out_skb;
+ 	struct hns3_enet_ring *ring;
+ 	unsigned int bd_num;
+ 
+ 	ring = &priv->ring[skb->queue_mapping];
+ 	bd_num = hns3_tx_bd_num(skb, bd_size);
+ 	if (unlikely(bd_num > HNS3_MAX_NON_TSO_BD_NUM)) {
+-		struct sk_buff *new_skb;
+ 
+ 		if (bd_num <= HNS3_MAX_TSO_BD_NUM && skb_is_gso(skb) &&
+ 		    !hns3_skb_need_linearized(skb, bd_size, bd_num))
+ 			goto out;
+ 
+-		/* manual split the send packet */
+-		new_skb = skb_copy(skb, GFP_ATOMIC);
+-		if (!new_skb)
++		if (__skb_linearize(skb))
+ 			return -ENOMEM;
+-		dev_kfree_skb_any(skb);
+-		*out_skb = new_skb;
+-
+-		bd_num = hns3_tx_bd_count(new_skb->len);
+-		if ((skb_is_gso(new_skb) && bd_num > HNS3_MAX_TSO_BD_NUM) ||
+-		    (!skb_is_gso(new_skb) &&
++		bd_num = hns3_tx_bd_count(skb->len);
++		if ((skb_is_gso(skb) && bd_num > HNS3_MAX_TSO_BD_NUM) ||
++		    (!skb_is_gso(skb) &&
+ 		     bd_num > HNS3_MAX_NON_TSO_BD_NUM))
+ 			return -ENOMEM;
+ 
+@@ -1416,7 +1409,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	/* Prefetch the data used later */
+ 	prefetch(skb->data);
+ 
+-	ret = hns3_nic_maybe_stop_tx(netdev, &skb);
++	ret = hns3_nic_maybe_stop_tx(netdev, skb);
+ 	if (unlikely(ret <= 0)) {
+ 		if (ret == -EBUSY) {
+ 			u64_stats_update_begin(&ring->syncp);
 -- 
 2.7.4
 
