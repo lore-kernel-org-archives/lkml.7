@@ -2,122 +2,99 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72EBFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66B1207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571240232;
-	bh=kewc2DHCxPax0/As8Dys1vVHnw4VcjP7TAGHyJnCm3U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rfAMyCekSvev1K1qs2HUPAIQdpxJ84tlB2mRc8xNX3I7zL6bx2Mi3dsiNvlFR2I/f
-	 fggmRrr9mCln4i37qO0bGCla/RZI1bB11Gcp9MdeuUrTuSh/tYkx2eNSGLCipKCBWV
-	 Fi6VmBAli6cnE6zfYjO77qLCQci/wrlKpJZt5LO8=
+	by mail.kernel.org (Postfix) with ESMTP id 81AED207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405117AbfJPPhL (ORCPT
+        id S2405330AbfJPPhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:37:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbfJPPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:37:11 -0400
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D380320854;
-        Wed, 16 Oct 2019 15:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571240230;
-        bh=kewc2DHCxPax0/As8Dys1vVHnw4VcjP7TAGHyJnCm3U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e/1YPbJN2q6MW1B2PLR7tF/VsizhEwRlx2jWIO+PGFB7nQsA+W3L40aNX+4e4meou
-         wa/+akdLGCSd3lnmxG/a2oDCPp8YqydfEk55ZXTBrL+IvmsriSRm3L+997cCx7LmxW
-         Z2M2v6ABbRZpirXk12MlNjgDzpkMsCRBLE+G0AWI=
-Received: by mail-yb1-f178.google.com with SMTP id z125so7950690ybc.4;
-        Wed, 16 Oct 2019 08:37:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAXDlckBGDKsUMz91BzM7EjuDlnABHKZ2OVLfzoVYopfY1nnBVDV
-        xLnmX7IY+dlY6X6n3Qibly2NDvmfd0nzVoaf6Q==
-X-Google-Smtp-Source: APXvYqyQKovpJMvdc7d8KZIJ6YAr98uicEeI6atpwgB7s7JZpNePYfmdWhWwkMnddX4aoxlCOjiIRZ54XNh3gZE8uQE=
-X-Received: by 2002:a25:7543:: with SMTP id q64mr27841489ybc.414.1571240229011;
- Wed, 16 Oct 2019 08:37:09 -0700 (PDT)
+        Wed, 16 Oct 2019 11:37:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47481 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405140AbfJPPhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:37:20 -0400
+Received: from [213.220.153.21] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iKlMU-00050w-QB; Wed, 16 Oct 2019 15:37:18 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     oleg@redhat.com, linux-kernel@vger.kernel.org
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@kellner.me, cyphar@cyphar.com, elena.reshetova@intel.com,
+        guro@fb.com, jannh@google.com, ldv@altlinux.org,
+        linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
+        shuah@kernel.org, tglx@linutronix.de, viro@zeniv.linux.org.uk,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 5/5] pid: use task_alive() in pidfd_open()
+Date:   Wed, 16 Oct 2019 17:36:06 +0200
+Message-Id: <20191016153606.2326-5-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191016153606.2326-1-christian.brauner@ubuntu.com>
+References: <20191015141332.4055-1-christian.brauner@ubuntu.com>
+ <20191016153606.2326-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20191009175628.20570-1-bparrot@ti.com> <20191009175628.20570-2-bparrot@ti.com>
- <20191015222947.GA13388@bogus> <20191016132239.ufptwl44ktmhvylo@ti.com>
-In-Reply-To: <20191016132239.ufptwl44ktmhvylo@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 16 Oct 2019 10:36:54 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKAGE=CytS89ET+r4+mSGfYPR5FMRUo2_jjVTZgW9o=Nw@mail.gmail.com>
-Message-ID: <CAL_JsqKAGE=CytS89ET+r4+mSGfYPR5FMRUo2_jjVTZgW9o=Nw@mail.gmail.com>
-Subject: Re: [Patch 1/3] dt-bindings: media: ti-vpe: Document VPE driver
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 8:20 AM Benoit Parrot <bparrot@ti.com> wrote:
->
-> Rob Herring <robh@kernel.org> wrote on Tue [2019-Oct-15 17:29:47 -0500]:
-> > On Wed, Oct 09, 2019 at 12:56:26PM -0500, Benoit Parrot wrote:
-> > > Device Tree bindings for the Video Processing Engine (VPE) driver.
-> > >
-> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > > ---
-> > >  .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
-> > >  MAINTAINERS                                   |  1 +
-> > >  2 files changed, 49 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
-> >
-> > Please convert to DT schema format.
->
-> I can do that.
-> Before posting/merging a .yaml, are we supposed to be able to pass these?
-> # make dt_binding_check
-> # make dtbs_check
+Use the new task_alive() helper in pidfd_open(). This simplifies the
+code and avoids taking rcu_read_{lock,unlock}() and leads to overall
+nicer code.
 
-Only dt_binding_check needs to be warning free. It is good to test
-your schema with dtbs_check and make sure any warnings seem valid.
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v1 */
+patch not present
 
-> Because currently with 5.4-rc3 these fails.
+/* v2 */
+patch introduced
+---
+ kernel/pid.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Yeah, still waiting on regulator and media fixes. :( linux-next is fixed.
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 70ad4a9f728c..1f425b6c4c47 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -497,7 +497,7 @@ static int pidfd_create(struct pid *pid)
+  */
+ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ {
+-	int fd, ret;
++	int fd;
+ 	struct pid *p;
+ 
+ 	if (flags)
+@@ -510,13 +510,11 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ 	if (!p)
+ 		return -ESRCH;
+ 
+-	ret = 0;
+-	rcu_read_lock();
+-	if (!pid_task(p, PIDTYPE_TGID))
+-		ret = -EINVAL;
+-	rcu_read_unlock();
++	if (task_alive(p, PIDTYPE_TGID))
++		fd = pidfd_create(p);
++	else
++		fd = -EINVAL;
+ 
+-	fd = ret ?: pidfd_create(p);
+ 	put_pid(p);
+ 	return fd;
+ }
+-- 
+2.23.0
 
-> Is there a way to run these "test command" target a specific .yaml and not
-> the whole set?
-
-Yes, it's documented in writing-schema.rst. Use DT_SCHEMA_FILES  to
-test just your schema file.
-
-[...]
-
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 8598f49fa2c8..63dcda51f8ae 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -16299,6 +16299,7 @@ W:  http://linuxtv.org/
-> > >  Q: http://patchwork.linuxtv.org/project/linux-media/list/
-> > >  S: Maintained
-> > >  F: drivers/media/platform/ti-vpe/
-> > > +F: Documentation/devicetree/bindings/media/ti-vpe.txt
->
-> Now with the dt_schemas, I noticed that the maintainer's name is part of
-> the yaml file. Do we still need to add this to the MAINTAINERS file as
-> well?
-
-Within the schema is really preparation for having schema outside of
-the kernel tree and because lots of bindings don't have a MAINTAINERS
-entry. So yes, you can still have both.
-
-Rob
