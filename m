@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D85FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF87DFA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F53F2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C96B207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264293;
-	bh=kYzjHFeSJmYMO6kYfEMX+vU+jy9Iq1brizrumZUAVe8=;
+	s=default; t=1571264295;
+	bh=f6t4c88a69fuHzhV8io9AVBJIcK7SkSDMOV9GaanKkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0/p+r7jkEVFvs/2kS0ds+Tc7ORzBJiXWcfg8W0ucGhPt0aUAgHA+BtlF7xvBp+YV
-	 ztDOhMDkAIDv8X05qtoYdYJTUYuyYS1tXf+NNNIzczpjnwbbOtOfEKz9DxfVl+qyqm
-	 jM+ykOpDGy65NbONuaFd8Qiob9Yg8XSmPf8TvmvY=
+	b=HoeHRhk4cGXbktZBrT9AxNSuPycA6IbMx+J0cvzrtRdoFR0/6NAa/ylf75VexvcfJ
+	 8L0OKEKWO+Xc16vkd+sdPEt1LpoWFsRb7geMRVcpPG8wiY2286DmAzUifKjcKZBqfu
+	 QVz5r427MgZwyNt8qJ6rj7rxdU8EFBCotQwn0RR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395027AbfJPVyf (ORCPT
+        id S2388273AbfJPVyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388866AbfJPVyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:18 -0400
+        id S2394952AbfJPVyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:15 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B5C21A4C;
-        Wed, 16 Oct 2019 21:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 005EE21925;
+        Wed, 16 Oct 2019 21:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262858;
-        bh=kYzjHFeSJmYMO6kYfEMX+vU+jy9Iq1brizrumZUAVe8=;
+        s=default; t=1571262855;
+        bh=f6t4c88a69fuHzhV8io9AVBJIcK7SkSDMOV9GaanKkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=voKsnQzKq7FrAGwg4J1S3QS2RRSzqJbF6V/pc4uYxL6JCLJ9r9jUFxRbBbCSQeEOz
-         GjQGCsEIxARygVMbcaOKOCmc5FlojKJ6KJ9h7tFF5GAs3mXi4iUAZBNNqEEZObZAL1
-         S589xn1Ah640MvQbnfbva/mY5mYqpsvGCJ5DM5xI=
+        b=F2d5ps6xO5jN95Rr9xsLYnNx7RWcQKJLhxCJFoxms/k3JS08GFVDpeaWLjTGf9m6g
+         PqS5cMOdilzbGfFYn6NtwGWGmXcC0fRSpY/g+dSqm0rorE5eeqOJ23KLK6L+90kdjg
+         DLtkViwZdt0PQ+ZjZNqhe87HGbUNw7L/EE03vyDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KeMeng Shi <shikemeng@huawei.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 24/92] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
-Date:   Wed, 16 Oct 2019 14:49:57 -0700
-Message-Id: <20191016214819.797335164@linuxfoundation.org>
+        stable@vger.kernel.org, Trek <trek00@inbox.ru>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 21/92] drm/amdgpu: Check for valid number of registers to read
+Date:   Wed, 16 Oct 2019 14:49:54 -0700
+Message-Id: <20191016214818.171084892@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -63,83 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KeMeng Shi <shikemeng@huawei.com>
+From: Trek <trek00@inbox.ru>
 
-[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
+[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
 
-An oops can be triggered in the scheduler when running qemu on arm64:
+Do not try to allocate any amount of memory requested by the user.
+Instead limit it to 128 registers. Actually the longest series of
+consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
+mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
 
- Unable to handle kernel paging request at virtual address ffff000008effe40
- Internal error: Oops: 96000007 [#1] SMP
- Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
- lr : move_queued_task.isra.21+0x124/0x298
- ...
- Call trace:
-  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
-  __migrate_task+0xc8/0xe0
-  migration_cpu_stop+0x170/0x180
-  cpu_stopper_thread+0xec/0x178
-  smpboot_thread_fn+0x1ac/0x1e8
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
-
-__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
-migrage the process if process is not currently running on any one of the
-CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
-invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
-CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
-corresponding bit is coincidentally set. As a consequence, kernel will
-access an invalid rq address associate with the invalid CPU in
-migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
-
-The reproduce the crash:
-
-  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-  sched_setaffinity.
-
-  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
-  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
-
-  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
-
-Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
+Signed-off-by: Trek <trek00@inbox.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 63be0bcfa286d..82cec9a666e7b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1162,7 +1162,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_equal(&p->cpus_allowed, new_mask))
- 		goto out;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index 3938fca1ea8e5..24941a7b659f4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -430,6 +430,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
+ 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
+ 			sh_num = 0xffffffff;
  
--	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-+	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-+	if (dest_cpu >= nr_cpu_ids) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1183,7 +1184,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_test_cpu(task_cpu(p), new_mask))
- 		goto out;
- 
--	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
- 	if (task_running(rq, p) || p->state == TASK_WAKING) {
- 		struct migration_arg arg = { p, dest_cpu };
- 		/* Need help from migration thread: drop lock and wait. */
++		if (info->read_mmr_reg.count > 128)
++			return -EINVAL;
++
+ 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
+ 		if (!regs)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
