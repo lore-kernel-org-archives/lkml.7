@@ -2,89 +2,110 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDB8FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10342FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD73218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FD721848
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393820AbfJPPHf (ORCPT
+        id S2393889AbfJPPHi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:07:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50545 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfJPPHb (ORCPT
+        Wed, 16 Oct 2019 11:07:38 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:42214 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393785AbfJPPHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:07:31 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iKktN-0007P5-O1; Wed, 16 Oct 2019 17:07:13 +0200
-Date:   Wed, 16 Oct 2019 17:07:13 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-Subject: Re: [PATCHv7 19/33] lib/vdso: Prepare for time namespace support
-In-Reply-To: <a726e64f-bf73-4eca-6acf-75926898d88a@arm.com>
-Message-ID: <alpine.DEB.2.21.1910161704120.2046@nanos.tec.linutronix.de>
-References: <20191011012341.846266-1-dima@arista.com> <20191011012341.846266-20-dima@arista.com> <a726e64f-bf73-4eca-6acf-75926898d88a@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 16 Oct 2019 11:07:35 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 432AC7CDEC3;
+        Wed, 16 Oct 2019 17:07:29 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 16 Oct
+ 2019 17:07:28 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 16 Oct 2019 17:07:28 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     "krzk@kernel.org" <krzk@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 05/10] ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node with
+ 'stdout-path'
+Thread-Topic: [PATCH 05/10] ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node
+ with 'stdout-path'
+Thread-Index: AQHVhDNtV8lSzlri1kKwAXPnKCvhWg==
+Date:   Wed, 16 Oct 2019 15:07:28 +0000
+Message-ID: <20191016150622.21753-6-frieder.schrempf@kontron.de>
+References: <20191016150622.21753-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20191016150622.21753-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 432AC7CDEC3.A0C86
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019, Vincenzo Frascino wrote:
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-< SNIP >
+The Kontron N6x1x SoMs all use uart4 as a debug serial interface.
+Therefore we set in the 'chosen' node.
 
-> > --- a/lib/vdso/Kconfig
-> > +++ b/lib/vdso/Kconfig
-> > @@ -24,4 +24,10 @@ config GENERIC_COMPAT_VDSO
-> >  	help
-> >  	  This config option enables the compat VDSO layer.
-> >  
-> > +config VDSO_TIMENS
-> 
-> To uniform the naming with the rest of the file and with CONFIG_TIME_NS, can we
-> please change the name of this config option in GENERIC_VDSO_TIME_NS? And then
-> follow the logic explained by Thomas in patch 1 of this series.
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Can you pretty please finally start to trim your replies?
-
-If you didn't read the link I sent you earlier, then here is the relevant
-paragraph:
-
-  It's an annoyance to have to scroll down through several pages of quoted
-  text to find a single line of reply or to figure out that after that
-  reply the rest of the e-mail is just useless ballast.
-
-I know that corporate mail style does not care about that, but I pretty
-much care.
-
-Thanks,
-
-	tglx
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+index ba50c2966998..e8e44fb2afc5 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+@@ -7,6 +7,12 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ 
++/ {
++	chosen {
++		stdout-path = &uart4;
++	};
++};
++
+ &ecspi2 {
+ 	cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+-- 
+2.17.1
