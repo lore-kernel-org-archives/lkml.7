@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3A5FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE25ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A12222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174EB222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263074;
-	bh=yk9sT55xKYSbTU7SwJdDXKQs5jxFZqeLsk4v9Gu/aQY=;
+	s=default; t=1571263084;
+	bh=yfKx3VWq8AufLebFFeZh5Y6tRVVHGP2MGGjwAkjkM2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GR0XSNSB0AVyv+74dtied/VZ8N0Kn9zUUYUv16qzvYVxm7lhXO+o31NVJZKSxuk5V
-	 MX3+tOy0Q9HerDYZcS+CF/4xbKaH4Tyz4MAxvMhPQHPMHxf+qXeb//kJihXqxjJ0Gj
-	 j9WaMdHKXF1IW5cJcNSzblJ+2yfcfbCigHlFLw+M=
+	b=RXmA3xM0DFPurmVTHyrbqPBJjLImt0IBuOOa3sbTGTLUR2UvzEYYiQSVyw7TV5vql
+	 jBXTZoIrPp9HI/Lp1b7qQSw4cv977zJS2cxEb2AkAm3FZwlcpjlJaTfNrLJQsBKdCK
+	 Xa5n915TqhZdXcZe30aMM3abjnnMbolVIbeA3V/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395547AbfJPV5w (ORCPT
+        id S2438111AbfJPV6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:57:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395441AbfJPV5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:57:04 -0400
+        id S2391375AbfJPV5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:57:12 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1705320872;
-        Wed, 16 Oct 2019 21:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF23D21D7A;
+        Wed, 16 Oct 2019 21:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263022;
-        bh=yk9sT55xKYSbTU7SwJdDXKQs5jxFZqeLsk4v9Gu/aQY=;
+        s=default; t=1571263032;
+        bh=yfKx3VWq8AufLebFFeZh5Y6tRVVHGP2MGGjwAkjkM2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzNpN+s/2N9vCJyGKM/9C4zN1CYF7vhdqa54EvXg0Tq6qME2noICXPppKVyczHJn6
-         VuLVi3dxgTosd/qbBU8VB7L9iQNimILt2P3zvL7H6ZoYB7nuyPKomgZugOgVJFGL0o
-         RW4q/30H8RKMC6stnYTGKUjiIOk89hptcZgbTh3I=
+        b=ytVA1r1bacMwwU+9PmYvlYm4T0A6oBnZD7mns43JJPo17X7Ne9pIBy8P7y4u4COck
+         fObTsMnqgxzJ6PnuWjih2lOweAe0vdtfceM7rs66WWfDdi+Y44Tjjo+SpZqRBy8uAe
+         ehd3zJRTeDl7BxjD1TDvGupoFm3oS6c/oJmXK5s8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 23/81] USB: ldusb: fix NULL-derefs on driver unbind
-Date:   Wed, 16 Oct 2019 14:50:34 -0700
-Message-Id: <20191016214826.995001530@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4.19 33/81] usb: renesas_usbhs: gadget: Do not discard queues in usb_ep_set_{halt,wedge}()
+Date:   Wed, 16 Oct 2019 14:50:44 -0700
+Message-Id: <20191016214833.888463334@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
@@ -58,130 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
+commit 1aae1394294cb71c6aa0bc904a94a7f2f1e75936 upstream.
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag, but was setting it to NULL before making sure all
-completion handlers had run. This could lead to a NULL-pointer
-dereference in a number of dev_dbg, dev_warn and dev_err statements in
-the completion handlers which relies on said pointer.
+The commit 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
+had added a usbhsg_pipe_disable() calling into
+__usbhsg_ep_set_halt_wedge() accidentally. But, this driver should
+not call the usbhsg_pipe_disable() because the function discards
+all queues. So, this patch removes it.
 
-Fix this by unconditionally stopping all I/O and preventing
-resubmissions by poisoning the interrupt URBs at disconnect and using a
-dedicated disconnected flag.
-
-This also makes sure that all I/O has completed by the time the
-disconnect callback returns.
-
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
+Fixes: 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
+Cc: <stable@vger.kernel.org> # v3.1+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1569924633-322-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/ldusb.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/usb/renesas_usbhs/mod_gadget.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -153,6 +153,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
- struct ld_usb {
- 	struct mutex		mutex;		/* locks this structure */
- 	struct usb_interface	*intf;		/* save off the usb interface pointer */
-+	unsigned long		disconnected:1;
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -722,8 +722,6 @@ static int __usbhsg_ep_set_halt_wedge(st
+ 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
+ 	unsigned long flags;
  
- 	int			open_count;	/* number of times this port has been opened */
- 
-@@ -192,12 +193,10 @@ static void ld_usb_abort_transfers(struc
- 	/* shutdown transfer */
- 	if (dev->interrupt_in_running) {
- 		dev->interrupt_in_running = 0;
--		if (dev->intf)
--			usb_kill_urb(dev->interrupt_in_urb);
-+		usb_kill_urb(dev->interrupt_in_urb);
- 	}
- 	if (dev->interrupt_out_busy)
--		if (dev->intf)
--			usb_kill_urb(dev->interrupt_out_urb);
-+		usb_kill_urb(dev->interrupt_out_urb);
- }
- 
- /**
-@@ -205,8 +204,6 @@ static void ld_usb_abort_transfers(struc
-  */
- static void ld_usb_delete(struct ld_usb *dev)
- {
--	ld_usb_abort_transfers(dev);
+-	usbhsg_pipe_disable(uep);
 -
- 	/* free data structures */
- 	usb_free_urb(dev->interrupt_in_urb);
- 	usb_free_urb(dev->interrupt_out_urb);
-@@ -263,7 +260,7 @@ static void ld_usb_interrupt_in_callback
+ 	dev_dbg(dev, "set halt %d (pipe %d)\n",
+ 		halt, usbhs_pipe_number(pipe));
  
- resubmit:
- 	/* resubmit if we're still running */
--	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
-+	if (dev->interrupt_in_running && !dev->buffer_overflow) {
- 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
- 		if (retval) {
- 			dev_err(&dev->intf->dev,
-@@ -392,7 +389,7 @@ static int ld_usb_release(struct inode *
- 		retval = -ENODEV;
- 		goto unlock_exit;
- 	}
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		/* the device was unplugged before the file was released */
- 		mutex_unlock(&dev->mutex);
- 		/* unlock here as ld_usb_delete frees dev */
-@@ -423,7 +420,7 @@ static __poll_t ld_usb_poll(struct file
- 
- 	dev = file->private_data;
- 
--	if (!dev->intf)
-+	if (dev->disconnected)
- 		return EPOLLERR | EPOLLHUP;
- 
- 	poll_wait(file, &dev->read_wait, wait);
-@@ -462,7 +459,7 @@ static ssize_t ld_usb_read(struct file *
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -542,7 +539,7 @@ static ssize_t ld_usb_write(struct file
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -764,6 +761,9 @@ static void ld_usb_disconnect(struct usb
- 	/* give back our minor */
- 	usb_deregister_dev(intf, &ld_usb_class);
- 
-+	usb_poison_urb(dev->interrupt_in_urb);
-+	usb_poison_urb(dev->interrupt_out_urb);
-+
- 	mutex_lock(&dev->mutex);
- 
- 	/* if the device is not opened, then we clean up right now */
-@@ -771,7 +771,7 @@ static void ld_usb_disconnect(struct usb
- 		mutex_unlock(&dev->mutex);
- 		ld_usb_delete(dev);
- 	} else {
--		dev->intf = NULL;
-+		dev->disconnected = 1;
- 		/* wake up pollers */
- 		wake_up_interruptible_all(&dev->read_wait);
- 		wake_up_interruptible_all(&dev->write_wait);
 
 
