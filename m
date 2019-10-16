@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9456CFA372D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E26BFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AD721D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1909021D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="fWcMHMde"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NDSNSaUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436940AbfJPUBI (ORCPT
+        id S2437023AbfJPUBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:01:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44490 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436926AbfJPUBF (ORCPT
+        Wed, 16 Oct 2019 16:01:38 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46008 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436931AbfJPUBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:01:05 -0400
-Received: by mail-qt1-f196.google.com with SMTP id u40so37954617qth.11
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:01:04 -0700 (PDT)
+        Wed, 16 Oct 2019 16:01:08 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c21so37943802qtj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 13:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ADaPlgsxUTXDoToK9CJnC6JqPCrliOXSW+GZvxTqrfM=;
-        b=fWcMHMdeRF61RXXgFbsSde0TUuD9iStZlRHqG/LFIDJV9kompUv7iirW+QMwSWacq4
-         glwYmN0mLJqvl56lLSgUR0hi/113Jr7CRUAmkNwj/53dD8wDyz4Ktzv54yJTXzM/IvBb
-         IjObZQ00IZjvNNnyyPoOufxxPcHrZLUqHHp9DP8qFOU3lA7py7Rb86VMbW7fE9d6kzsQ
-         ri5vQnwoNik+8utdxKj8qvVZTOqS+ZAIQ8JCpMewuiQRK/yF4Zo/cOHUZs5jWzuIoX6o
-         zASj7LGsGPsZak57aoUTxJanmeQNkP67QrmcjHHwC8ePUGZmqQk5Ata/sR17HULf7JVc
-         jO4Q==
+        bh=Sp+VstuavASlsN1G0FJ/FWHqH9Fozh8Uv4KMjFw0HxA=;
+        b=NDSNSaUlA4y+6G85DRCykmRw6kEaoLE6jlhErSwZ96+UQ7KdR/bWgVQhBfyv0JKjA7
+         H9GU2Ew1TthzvQmfly4miNmRwvWthsF688SunrQS1ZFWiURD8eW2vguIfwUStbfiU9qo
+         F54lFdMP8zIzLX1y1TQSiBNfpyw/yjrSopnhEOsKDhd7quyUuCv+7gYSXjJ5iTlL4PxV
+         4d9poZehRV7/Iw2BW4yl3DPMXZ+K8wyk4K4pWo8OTNlqOso2cR8MW96tEE7YcNBXLjq7
+         urSQ8NQxcEUiZqJI24vETHgj8MoIdcsVfp5G3QCIJCfh6bGnCY/ndpJ5ICaxF0LE28eH
+         hl/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ADaPlgsxUTXDoToK9CJnC6JqPCrliOXSW+GZvxTqrfM=;
-        b=PNuf9WjoiIijuIgGTr4S0n8Kq+mwuFaPbub7UpxIhaGoxDjZJOfFK4bxQBvwpLpttx
-         ql9Pe1qu9XRLfz6c8rsaEaQif1gJby1UQX0CrywQyvo0UfmlWsFFSdLTQNjustJhL4w1
-         ra3Noyki/yUO3tZO4KX8muE8yxpdjp7tU9oDbs0pLVxzpsdf/H4LgYoY0PNFxA3+4LSz
-         8CQvC/RHf8GkDHpsg2VW2EyBJLPCo9oxRYkeR9TwSUqocKyGH16oi50yG7/GoWixdIqU
-         eAqJCkvbm31G5BzWUYE5gK8dbCf0QrXi8ztbSEjGrX/0DbU8hq5f7ZG1wZmbbkBrj/XI
-         3Sfg==
-X-Gm-Message-State: APjAAAWrU4A6EbsvXD1K9Pl+Hx/TjqjeMK6j7p5n7Md3oji8/iOvzPtK
-        6XgxHXTKcYiTvucgIzwzb2vUHA==
-X-Google-Smtp-Source: APXvYqynGGdSXuDQaPwJSbR7snjT6dI3cQ574+9wJQuf+wqqsCeR4boU0L9zKxkcwuMKg89ls9wgtg==
-X-Received: by 2002:ac8:1413:: with SMTP id k19mr47859620qtj.360.1571256064395;
-        Wed, 16 Oct 2019 13:01:04 -0700 (PDT)
+        bh=Sp+VstuavASlsN1G0FJ/FWHqH9Fozh8Uv4KMjFw0HxA=;
+        b=mkSPBOuFztfxlUdgs8B6FhIC7kT1LF++qMEXMThu+DjlMOo69C2RYBICpR5vbDVwmI
+         3kOzYZszBnyahE6gYfb4ECaJFXqyA4oYhq0t54fW2NYtRAadf6LQZVFulG9Rirx2ewZM
+         5eSztnDXEXzjHRRPfKfy32b0pabDF2glnOIRvLgkmbj1FtjRdPuB7MmbcYSeDIYsrnEb
+         LxwWHq5iIJyeb80N4tKwX0YG3+TPKN++Pr7MRskeBf1Q31TVQkYtjz5bKc/IlzATwbVV
+         +SPIx7tKibrDoujtpNjivr6BA9TlxQt3CM8wF+VpbdxYpxFdzmCz1DsF3v7HIliYtzoq
+         fFng==
+X-Gm-Message-State: APjAAAX2ttd3vr1pmQG1rXEflR5lGLSEAg2VQt3G0VcPX3xekHRbL5ni
+        P3r2xMKi6qMjvyM47EKEVo5tWA==
+X-Google-Smtp-Source: APXvYqw7/01BK2AK82CMWOt5K8aNWTlA5v03uhy/lj7bm5OhDkRgLGoZwMDY3iJtsa+WCiAtCNhtXA==
+X-Received: by 2002:ac8:729a:: with SMTP id v26mr48203902qto.4.1571256067312;
+        Wed, 16 Oct 2019 13:01:07 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.01.02
+        by smtp.gmail.com with ESMTPSA id c204sm13342030qkb.90.2019.10.16.13.01.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 13:01:03 -0700 (PDT)
+        Wed, 16 Oct 2019 13:01:06 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -66,9 +66,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
         tglx@linutronix.de
-Subject: [PATCH v7 17/25] arm64: kexec: cpu_soft_restart change argument types
-Date:   Wed, 16 Oct 2019 16:00:26 -0400
-Message-Id: <20191016200034.1342308-18-pasha.tatashin@soleen.com>
+Subject: [PATCH v7 19/25] arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
+Date:   Wed, 16 Oct 2019 16:00:28 -0400
+Message-Id: <20191016200034.1342308-20-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
 References: <20191016200034.1342308-1-pasha.tatashin@soleen.com>
@@ -79,43 +79,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change argument types from unsigned long to a more descriptive
-phys_addr_t.
+x0 will contain the only argument to arm64_relocate_new_kernel; don't
+use it as a temp. Reassigned registers to free-up x0.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/cpu-reset.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/relocate_kernel.S | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-index ed50e9587ad8..3a54c4d987f3 100644
---- a/arch/arm64/kernel/cpu-reset.h
-+++ b/arch/arm64/kernel/cpu-reset.h
-@@ -10,17 +10,17 @@
+diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+index e9c974ea4717..41f9c95fabe8 100644
+--- a/arch/arm64/kernel/relocate_kernel.S
++++ b/arch/arm64/kernel/relocate_kernel.S
+@@ -32,14 +32,14 @@ ENTRY(arm64_relocate_new_kernel)
+ 	mov	x14, xzr			/* x14 = entry ptr */
+ 	mov	x13, xzr			/* x13 = copy dest */
+ 	/* Clear the sctlr_el2 flags. */
+-	mrs	x0, CurrentEL
+-	cmp	x0, #CurrentEL_EL2
++	mrs	x2, CurrentEL
++	cmp	x2, #CurrentEL_EL2
+ 	b.ne	1f
+-	mrs	x0, sctlr_el2
++	mrs	x2, sctlr_el2
+ 	ldr	x1, =SCTLR_ELx_FLAGS
+-	bic	x0, x0, x1
++	bic	x2, x2, x1
+ 	pre_disable_mmu_workaround
+-	msr	sctlr_el2, x0
++	msr	sctlr_el2, x2
+ 	isb
+ 1:	/* Check if the new image needs relocation. */
+ 	tbnz	x16, IND_DONE_BIT, .Ldone
+@@ -51,17 +51,17 @@ ENTRY(arm64_relocate_new_kernel)
+ 	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
  
- #include <asm/virt.h>
+ 	/* Invalidate dest page to PoC. */
+-	mov     x0, x13
+-	add     x20, x0, #PAGE_SIZE
++	mov     x2, x13
++	add     x20, x2, #PAGE_SIZE
+ 	sub     x1, x15, #1
+-	bic     x0, x0, x1
+-2:	dc      ivac, x0
+-	add     x0, x0, x15
+-	cmp     x0, x20
++	bic     x2, x2, x1
++2:	dc      ivac, x2
++	add     x2, x2, x15
++	cmp     x2, x20
+ 	b.lo    2b
+ 	dsb     sy
  
--void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
--	unsigned long arg0, unsigned long arg1, unsigned long arg2);
-+void __cpu_soft_restart(phys_addr_t el2_switch, phys_addr_t entry,
-+	phys_addr_t arg0, phys_addr_t arg1, phys_addr_t arg2);
- 
--static inline void __noreturn cpu_soft_restart(unsigned long entry,
--					       unsigned long arg0,
--					       unsigned long arg1,
--					       unsigned long arg2)
-+static inline void __noreturn cpu_soft_restart(phys_addr_t entry,
-+					       phys_addr_t arg0,
-+					       phys_addr_t arg1,
-+					       phys_addr_t arg2)
- {
- 	typeof(__cpu_soft_restart) *restart;
- 
--	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
-+	phys_addr_t el2_switch = !is_kernel_in_hyp_mode() &&
- 		is_hyp_mode_available();
- 	restart = (void *)__pa_symbol(__cpu_soft_restart);
- 
+-	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
++	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
+ 	b	.Lnext
+ .Ltest_indirection:
+ 	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
 -- 
 2.23.0
 
