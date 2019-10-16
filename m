@@ -7,55 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC4EFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C5BFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C20218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BA320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262746;
-	bh=zia0u6U50VqyyHFrQCAoWOuBsAuMqjFRq80uvANzgHg=;
+	s=default; t=1571262750;
+	bh=1pWgX6uDTUOH3YJheezI2u1Praf4IWP5+BgBbA3TdN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nm4lJasF0rfitwp2CbHYIMDLhTs9Z6AfSFcOZqCn7mVgZ6kf0bnvnaHgJpbmdI3Ln
-	 4jgEAmUhPrw1H6AYmVqJ1DC3hLTJCgOGAxqJnHlp0BHjVKF7xLXPtJRm7d3cwqT9TW
-	 uuM0JUaftDGV9c9wSq4RvVfZ77wCjjafOBjJMNJY=
+	b=F0txxoDqllr3Vfjw4EUCMjPUEQANFY35a79Qg5WQksuHX9/aqd9OZz+5nS+zxvunk
+	 gSJn6nwNgQlncme8ebc2sXl/cL5DSLEMtK6Ctek9PaCAEFiH3/u7BfVONLCO2v4bIg
+	 VANNOGET7u5vhq86roBEtE0GDp+mTFr5B0kMdUy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394776AbfJPVwY (ORCPT
+        id S2394789AbfJPVw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41000 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394721AbfJPVwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:52:24 -0400
+        id S2394765AbfJPVw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:52:28 -0400
 Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 514AD20872;
-        Wed, 16 Oct 2019 21:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A005F218DE;
+        Wed, 16 Oct 2019 21:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262742;
-        bh=zia0u6U50VqyyHFrQCAoWOuBsAuMqjFRq80uvANzgHg=;
+        s=default; t=1571262747;
+        bh=1pWgX6uDTUOH3YJheezI2u1Praf4IWP5+BgBbA3TdN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DaUMULRyWVTXNrBHsOzETQgl0qnSwiAw0sbsbdmtC+NRYQT0bmZOwvYwds+MbfUSl
-         7tTLkzcctTOIHbG0dh/HCS0iEuQ6PqXZHei3JxF09jFZv9paprlE7FXhoinfu6zwIA
-         vvMIKNd4Je1l2YPqXLgYgSwk04n/C8rzUXfNzMa8=
+        b=lUWgP8ZmeakA17yihpJiWULISmUQC9yjkGCusyWPj3BtKVaIZS/oqQESCYvRk42z9
+         iYKT8yC1M3/YCPaZui5kY5aygy7Z2+JxZeCw2HFdowIWwcx77P7jzR/dlpTctgOmIA
+         g5tgD2dZ37OMJurj0CubIL4ZAZj0gNUvQYGuWz20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.4 01/79] KVM: s390: Test for bad access register and size at the start of S390_MEM_OP
-Date:   Wed, 16 Oct 2019 14:49:36 -0700
-Message-Id: <20191016214730.169837508@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Aring <alex.aring@gmail.com>,
+        syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>
+Subject: [PATCH 4.4 10/79] ieee802154: atusb: fix use-after-free at disconnect
+Date:   Wed, 16 Oct 2019 14:49:45 -0700
+Message-Id: <20191016214738.771838140@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,50 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit a13b03bbb4575b350b46090af4dfd30e735aaed1 upstream.
+commit 7fd25e6fc035f4b04b75bca6d7e8daa069603a76 upstream.
 
-If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-then there is certainly a bug in the calling userspace application.
-We check for wrong access registers, but only if the vCPU was already
-in the access register mode before (i.e. the SIE block has recorded
-it). The check is also buried somewhere deep in the calling chain (in
-the function ar_translation()), so this is somewhat hard to find.
+The disconnect callback was accessing the hardware-descriptor private
+data after having having freed it.
 
-It's better to always report an error to the userspace in case this
-field is set wrong, and it's safer in the KVM code if we block wrong
-values here early instead of relying on a check somewhere deep down
-the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-directly.
-
-We also should check that the "size" is non-zero here (thanks to Janosch
-Frank for the hint!). If we do not check the size, we could call vmalloc()
-with this 0 value, and this will cause a kernel warning.
-
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lkml.kernel.org/r/20190829122517.31042-1-thuth@redhat.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: 7490b008d123 ("ieee802154: add support for atusb transceiver")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Cc: Alexander Aring <alex.aring@gmail.com>
+Reported-by: syzbot+f4509a9138a1472e7e80@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/kvm-s390.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ieee802154/atusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2471,7 +2471,7 @@ static long kvm_s390_guest_mem_op(struct
- 	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
- 				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+--- a/drivers/net/ieee802154/atusb.c
++++ b/drivers/net/ieee802154/atusb.c
+@@ -756,10 +756,11 @@ static void atusb_disconnect(struct usb_
  
--	if (mop->flags & ~supported_flags)
-+	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
- 		return -EINVAL;
+ 	ieee802154_unregister_hw(atusb->hw);
  
- 	if (mop->size > MEM_OP_MAX_SIZE)
++	usb_put_dev(atusb->usb_dev);
++
+ 	ieee802154_free_hw(atusb->hw);
+ 
+ 	usb_set_intfdata(interface, NULL);
+-	usb_put_dev(atusb->usb_dev);
+ 
+ 	pr_debug("atusb_disconnect done\n");
+ }
 
 
