@@ -2,117 +2,148 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A37AECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97691ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18B02168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCF32168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264282;
-	bh=U4kDOlX8lQYv+4nKBktAaaJMCGAvRP2iVRiV78ERC3g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ejw6xHFi7HC9eacMqjO2Qnuyjk3kuenyc9dbks4Y6XhwWBXj14+L06XpOmvNbMcMl
-	 XTwbu9ECrr10QlXS3ptLIwh3qA0FzYe/mTgHNyLmccbtths60hR2PdccaNF5VppfaT
-	 3b5GLjwcKAB/VKbRx94srrA9cZ/LGBcCKyBX1/lE=
+	s=default; t=1571264284;
+	bh=rfASr3IKubPje+T8VgFF+tS3jyFedjIoi1VksgpQP8w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mYlI1PkHanYeO+eIaJ+IENy2+MzTO4qgSeWdcfluRQ+a8jh2583ea4dk2e8ExadlA
+	 ahiHLgM+qaia2pH8Iw0E6F3hqzzOuoww3n/qi2BW+hLARMTHKwJuW2OQUTp0tTOa3C
+	 RT+pTazrEYiRi9NjDXbWrkYOt5qyaSmrOaaEMov0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390297AbfJPWSB (ORCPT
+        id S2390047AbfJPWSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389879AbfJPWR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 18:17:59 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S2437713AbfJPVyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:38 -0400
+Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B452D207FF;
-        Wed, 16 Oct 2019 22:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 282E421A4C;
+        Wed, 16 Oct 2019 21:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571264279;
-        bh=U4kDOlX8lQYv+4nKBktAaaJMCGAvRP2iVRiV78ERC3g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Mo9aP8Y34RQ4T1WhJP7WEvCs5I0D3LjQ5OK80fEVa99L3+Gn45VjBU4b6/VH4rdDR
-         ze6Xukj2ztHIIQo1N+vOeOiWM3w9QKDM7Xjd/MuDi5Xo7OnUiEcNQHp63T3NHM7Yof
-         aqc1H3F9fROmIsEQ8ldNSeAj9xC5j8N8VaDy4XDg=
-Date:   Wed, 16 Oct 2019 17:17:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [V2] PCI: sysfs: remove pci_bridge_groups and
- pcie_dev_groups
-Message-ID: <20191016221757.GA90897@google.com>
+        s=default; t=1571262876;
+        bh=rfASr3IKubPje+T8VgFF+tS3jyFedjIoi1VksgpQP8w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=otcNFN26lcutWUbKy49Hfk2XodixNz3pKXwFU1Mf4usNPr0q9dBN6IrkzfwbfuAqH
+         mvT115tMwkBRIbE2tySGX5xtVK9ErN89u4rbdehX3Z0fn2VaqCoEP43X6jhL3EH4P+
+         R1Plq6zp4CP64/DrF+iSz4qhz0YuRifoWUwi07Ho=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 39/92] USB: yurex: fix NULL-derefs on disconnect
+Date:   Wed, 16 Oct 2019 14:50:12 -0700
+Message-Id: <20191016214829.782371694@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
+References: <20191016214759.600329427@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016080324.12864-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 09:03:24AM +0100, Ben Dooks (Codethink) wrote:
-> From: Ben Dooks <ben.dooks@codethink.co.uk>
-> 
-> The pci_bridge_groups and pcie_dev_groups objects are
-> not exported and not used at-all, so remove them to
-> fix the following warnings from sparse:
-> 
-> drivers/pci/pci-sysfs.c:1546:30: warning: symbol 'pci_bridge_groups' was not declared. Should it be static?
-> drivers/pci/pci-sysfs.c:1555:30: warning: symbol 'pcie_dev_groups' was not declared. Should it be static?
-> 
-> Also remove the unused pci_bridge_group and pcie_dev_group
-> as they are not used any more.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+From: Johan Hovold <johan@kernel.org>
 
-Applied to pci/misc for v5.5, thanks a lot, Ben!
+commit aafb00a977cf7d81821f7c9d12e04c558c22dc3c upstream.
 
-> ---
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> fixup - more unused pci bits
-> ---
->  drivers/pci/pci-sysfs.c | 18 ------------------
->  1 file changed, 18 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 793412954529..eaffb477c5bf 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1539,24 +1539,6 @@ const struct attribute_group *pci_dev_groups[] = {
->  	NULL,
->  };
->  
-> -static const struct attribute_group pci_bridge_group = {
-> -	.attrs = pci_bridge_attrs,
-> -};
-> -
-> -const struct attribute_group *pci_bridge_groups[] = {
-> -	&pci_bridge_group,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group pcie_dev_group = {
-> -	.attrs = pcie_dev_attrs,
-> -};
-> -
-> -const struct attribute_group *pcie_dev_groups[] = {
-> -	&pcie_dev_group,
-> -	NULL,
-> -};
-> -
->  static const struct attribute_group pci_dev_hp_attr_group = {
->  	.attrs = pci_dev_hp_attrs,
->  	.is_visible = pci_dev_hp_attrs_are_visible,
-> -- 
-> 2.23.0
-> 
+The driver was using its struct usb_interface pointer as an inverted
+disconnected flag, but was setting it to NULL without making sure all
+code paths that used it were done with it.
+
+Before commit ef61eb43ada6 ("USB: yurex: Fix protection fault after
+device removal") this included the interrupt-in completion handler, but
+there are further accesses in dev_err and dev_dbg statements in
+yurex_write() and the driver-data destructor (sic!).
+
+Fix this by unconditionally stopping also the control URB at disconnect
+and by using a dedicated disconnected flag.
+
+Note that we need to take a reference to the struct usb_interface to
+avoid a use-after-free in the destructor whenever the device was
+disconnected while the character device was still open.
+
+Fixes: aadd6472d904 ("USB: yurex.c: remove dbg() usage")
+Fixes: 45714104b9e8 ("USB: yurex.c: remove err() usage")
+Cc: stable <stable@vger.kernel.org>     # 3.5: ef61eb43ada6
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009153848.8664-6-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/misc/yurex.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -64,6 +64,7 @@ struct usb_yurex {
+ 
+ 	struct kref		kref;
+ 	struct mutex		io_mutex;
++	unsigned long		disconnected:1;
+ 	struct fasync_struct	*async_queue;
+ 	wait_queue_head_t	waitq;
+ 
+@@ -111,6 +112,7 @@ static void yurex_delete(struct kref *kr
+ 				dev->int_buffer, dev->urb->transfer_dma);
+ 		usb_free_urb(dev->urb);
+ 	}
++	usb_put_intf(dev->interface);
+ 	usb_put_dev(dev->udev);
+ 	kfree(dev);
+ }
+@@ -209,7 +211,7 @@ static int yurex_probe(struct usb_interf
+ 	init_waitqueue_head(&dev->waitq);
+ 
+ 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
+-	dev->interface = interface;
++	dev->interface = usb_get_intf(interface);
+ 
+ 	/* set up the endpoint information */
+ 	iface_desc = interface->cur_altsetting;
+@@ -326,8 +328,9 @@ static void yurex_disconnect(struct usb_
+ 
+ 	/* prevent more I/O from starting */
+ 	usb_poison_urb(dev->urb);
++	usb_poison_urb(dev->cntl_urb);
+ 	mutex_lock(&dev->io_mutex);
+-	dev->interface = NULL;
++	dev->disconnected = 1;
+ 	mutex_unlock(&dev->io_mutex);
+ 
+ 	/* wakeup waiters */
+@@ -415,7 +418,7 @@ static ssize_t yurex_read(struct file *f
+ 	dev = file->private_data;
+ 
+ 	mutex_lock(&dev->io_mutex);
+-	if (!dev->interface) {		/* already disconnected */
++	if (dev->disconnected) {		/* already disconnected */
+ 		mutex_unlock(&dev->io_mutex);
+ 		return -ENODEV;
+ 	}
+@@ -450,7 +453,7 @@ static ssize_t yurex_write(struct file *
+ 		goto error;
+ 
+ 	mutex_lock(&dev->io_mutex);
+-	if (!dev->interface) {		/* already disconnected */
++	if (dev->disconnected) {		/* already disconnected */
+ 		mutex_unlock(&dev->io_mutex);
+ 		retval = -ENODEV;
+ 		goto error;
+
+
