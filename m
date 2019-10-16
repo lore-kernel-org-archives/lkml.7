@@ -2,113 +2,301 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB63FFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ECCFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB2C207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877032053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 23:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGkoD3I3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GA4zg9r+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405311AbfJPW7H (ORCPT
+        id S2405377AbfJPXBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:59:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46692 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726965AbfJPW7G (ORCPT
+        Wed, 16 Oct 2019 19:01:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33467 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391935AbfJPXBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 18:59:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571266745;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NyiMlWJkqAf8MO4pTs8/WbLKzyR9A5LqxtBH32MGUbQ=;
-        b=EGkoD3I3DTgw/WShNfXNPwkX7Qycm7b3GbyA3bMJpVzq+dBSFEeqTh8sA5ynB7Nx8Q/9D2
-        OXPhAilrWUFEUAoABf1A6kiP75moOmsy1hsdJHLdK7AK1QQx42KFKnu3pivBk/Qxnx8iT9
-        sx9zE30082C6lTw7GK++iKtpabEpaTY=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-VmxnFOSWN7q3WB6g9jRpIQ-1; Wed, 16 Oct 2019 18:59:03 -0400
-Received: by mail-io1-f70.google.com with SMTP id g15so479496ioc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 15:59:03 -0700 (PDT)
+        Wed, 16 Oct 2019 19:01:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so341583pfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 16:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I9WFsrimijjIQTTTvra2DRi53E6Nf4wu24Q/ZNw7Ij4=;
+        b=GA4zg9r+Cze4L83PgF54iQR1EoR0TvqpiljILydNHik/A9gDCrBlrbIwnXifE0ZvdU
+         n5b1V5dRJRWR6k3MYabH6tFFosuk16xAjG8EFLxusOikLtrktJni40LSnvkr2upVRhzE
+         lgBceHPvww0z5Nhdg637voAiMDIxJsHK+saTAKPpIK15ZhrBmDA42AjTw3b2FcTOTvZh
+         kFaEq2dHrTAw/KOOWSlngsj9NC7F4Ss+2QUfOqKdCorUJ+mil7FQX8WNhrC0pvbcIjuS
+         dsKR5n/L7/4ftxh/BUQ5EaqXAX9vgIuhl+GXD4pY4sFJCPcR7E484kBl/as2/ETsyWOI
+         KRMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=izr2IsFI8KdP3bcHd0eKxqMK3CSawZuxmuGffwvF3wM=;
-        b=NB5GyzB0ankfvvCy3ujxVXHYkzdunyaIptwOhjN9tyl+j32beccyXMOhp4S2NA+gjh
-         X6lh7JpAu11uC6ZR0DfxrJi75iGQCA+NcpDKzq3odhaSXCZVAM+ERkGoq82w7v/W6fQD
-         ozJYbw4i65q0XuU66Aj3YqssE9xp6jG7LBtcHXfY+Rle9IknqUxKyQlwOqL8CYd4K7j6
-         dmVuOxouik1DZkd7audo/2EbXYpr0gL5aPDQ1EBJp0luzN7YEp1hgcfJhv9/qtLDDlVy
-         S1d+5b+Uund3b2R0ndAmzxSu1J4pN2UQHj2kFQGSurmSkotDN7r/f/+/FSNsfTFkF/am
-         sI5Q==
-X-Gm-Message-State: APjAAAWZY1ARTizq7Z1uKlXDCzKWFH4ox6IM4JkCLC/PTISg1GWxXu7+
-        LUln+qarp6HGFIQDS8ehqv4OrCPvSgZi7Kvr2jJiEVSwIfbdWX7Ve+7S1st0pomPiWsdr83dGnV
-        JLOwWxGCdXlAekjjMzICgkcDF
-X-Received: by 2002:a02:7124:: with SMTP id n36mr450931jac.90.1571266743021;
-        Wed, 16 Oct 2019 15:59:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyXgcSDWOvFVRU4qEgI4WtmHcPsJHr4aMIDVzx1G2HnyuwCQ56ZEGP2XRwkkjSFyOMu6fRo6A==
-X-Received: by 2002:a02:7124:: with SMTP id n36mr450914jac.90.1571266742774;
-        Wed, 16 Oct 2019 15:59:02 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id t8sm101183ild.7.2019.10.16.15.59.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I9WFsrimijjIQTTTvra2DRi53E6Nf4wu24Q/ZNw7Ij4=;
+        b=VGyJLKnDcDtuRIQno0DoB0/qTzE1uo4YhXW5HPrR8CTCELHLS8AoQGXEQJZHJjOR4w
+         mLXdOPsEJGgeHjHJPAbvHWf6p2N9fvAxjHglAo8oWKX+IpJCwzsekDao+YSsYUpQla5Z
+         OQnhgXD4iAe9HXp6rLJH7cwS/+l1eVZ8jMB4zqyLFtnids0lsBV4/sOYXMCBtvJ4zoFR
+         /ZTI8I4UG8CGkLqrtWf/0+5f+vVDs+nWLms+f0wW9R5TK8xu/lRTgOBRmzBy6+Sqm3n0
+         8ZPHbVa2L2cpXQKVNM0KvM7J2GMJtv8+OpKohgLS7Ve++yDDyuMyQ3fg4XwvYaBZJkyK
+         Av0Q==
+X-Gm-Message-State: APjAAAUIpyrSCr+3z6oN6ExumMpSgCctOa4292uGjyJKkk5lJxcIU4Hc
+        BWLQNA4XTVmz/2gWRHg2Poew9Q==
+X-Google-Smtp-Source: APXvYqxy7dlCISkd8kX9c+KN64/gjeSFBDq0yKJ98CSKO5cWiWTZtyhVjbFpKdLFfIh2N39OMz5wZQ==
+X-Received: by 2002:a17:90a:3706:: with SMTP id u6mr443281pjb.107.1571266882056;
+        Wed, 16 Oct 2019 16:01:22 -0700 (PDT)
+Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
+        by smtp.gmail.com with ESMTPSA id 69sm97530pgh.47.2019.10.16.16.01.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2019 15:59:01 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 15:58:59 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Qian Cai <cai@lca.pw>, jroedel@suse.de, don.brace@microsemi.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        jejb@linux.ibm.com, esc.storagedev@microsemi.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH -next] iommu/amd: fix a warning in increase_address_space
-Message-ID: <20191016225859.j3jq6pt73mn56chn@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Qian Cai <cai@lca.pw>, jroedel@suse.de,
-        don.brace@microsemi.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, jejb@linux.ibm.com,
-        esc.storagedev@microsemi.com, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <1571254542-13998-1-git-send-email-cai@lca.pw>
- <20191016220415.cbam7qk3pxjmw4gi@cantor>
+        Wed, 16 Oct 2019 16:01:21 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 16:01:16 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        changbin.du@intel.com, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Subject: Re: [PATCH v2 linux-kselftest-test 1/3] kunit: allow kunit tests to
+ be loaded as a module
+Message-ID: <20191016230116.GA82401@google.com>
+References: <1570546546-549-1-git-send-email-alan.maguire@oracle.com>
+ <1570546546-549-2-git-send-email-alan.maguire@oracle.com>
+ <20191008213535.GB186342@google.com>
+ <alpine.LRH.2.20.1910091726010.2517@dhcp-10-175-191-127.vpn.oracle.com>
+ <CAFd5g46_6McK06XSrX=EZ9AaYYitQzd2CTvPMX+rPymisDq5uQ@mail.gmail.com>
+ <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016220415.cbam7qk3pxjmw4gi@cantor>
-User-Agent: NeoMutt/20180716
-X-MC-Unique: VmxnFOSWN7q3WB6g9jRpIQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.20.1910111105350.21459@dhcp-10-175-191-48.vpn.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed Oct 16 19, Jerry Snitselaar wrote:
->On Wed Oct 16 19, Qian Cai wrote:
->>
->>BTW, Joerg, this line from the commit "iommu/amd: Remove domain->updated"=
- looks
->>suspicious. Not sure what the purpose of it.
->>
->>*updated =3D increase_address_space(domain, gfp) || *updated;
->>
->
->Looking at it again I think that isn't an issue really, it would just
->not lose updated being set in a previous loop iteration, but now
->I'm wondering about the loop itself. In the cases where it would return
->false, how does the evaluation of the condition for the while loop
->change?
->
+On Fri, Oct 11, 2019 at 11:25:33AM +0100, Alan Maguire wrote:
+> On Fri, 11 Oct 2019, Brendan Higgins wrote:
+> 
+> > Sorry for the delayed reply. I will be on vacation until Wednesday,
+> > October 16th.
+> > 
+> > On Wed, Oct 9, 2019 at 9:36 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > >
+> > > On Tue, 8 Oct 2019, Brendan Higgins wrote:
+> > >
+> > > > On Tue, Oct 08, 2019 at 03:55:44PM +0100, Alan Maguire wrote:
+> > [...]
+> > > > > diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+> > > > > index e6d17aa..e4f3a97 100644
+> > > > > --- a/lib/kunit/string-stream.c
+> > > > > +++ b/lib/kunit/string-stream.c
+> > > > > @@ -100,6 +100,7 @@ int string_stream_vadd(struct string_stream *stream,
+> > > > >
+> > > > >     return 0;
+> > > > >  }
+> > > > > +EXPORT_SYMBOL_GPL(string_stream_vadd);
+> > > >
+> > > > Is this actually needed by anything other than lib/kunit/test.c right
+> > > > now? Maybe we should move the include file into the kunit/ directory to
+> > > > hide these so no one else can use them.
+> > > >
+> > >
+> > > I tried this, and it's the right answer I think but it exposes
+> > > a problem with symbol visibility when kunit is compiled as a module.
+> > > More on this below...
+> > >
+> > > > >  int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+> > > > >  {
+> > > > > @@ -112,6 +113,7 @@ int string_stream_add(struct string_stream *stream, const char *fmt, ...)
+> > > > >
+> > > > >     return result;
+> > > > >  }
+> > > > > +EXPORT_SYMBOL_GPL(string_stream_add);
+> > > > [...]
+> > > > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > > > > index c83c0fa..e7896f1 100644
+> > > > > --- a/lib/kunit/test.c
+> > > > > +++ b/lib/kunit/test.c
+> > > > [...]
+> > > > > @@ -50,6 +51,7 @@ static unsigned long kunit_test_timeout(void)
+> > > > >      * For more background on this topic, see:
+> > > > >      * https://mike-bland.com/2011/11/01/small-medium-large.html
+> > > > >      */
+> > > > > +#ifndef MODULE
+> > > >
+> > > > Why is this block of code "ifndef MODULE"?
+> > > >
+> > >
+> > > Symbol visibility is the problem again; sysctl_hung_task_timeout_secs
+> > > isn't exported so when kunit is a module it can't find the symbol.
+> > >
+> > > I think I saw Kees mentioned something about symbol lookup too; in KTF
+> > > Knut solved this by defining ktf_find_symbol(). I'd suggest we may need a
+> > > kunit_find_symbol() with a function signature
 
-I guess the mode level 6 check is really for other potential callers
-increase_address_space, none exist at the moment, and the condition
-of the while loop in alloc_pte should fail if the mode level is 6.
+Based on what you said below, I think the kunit_find_symbol() may have
+value for writing tests; however, I do not think it is the right way to
+handle resources needed by test.c. I think exporting the symbols in this
+case is the lesser of the two evils.
 
+I am still suprised that you need to export a symbol that is getting
+compiled into and is only used by the kunit module. In fact, I think I
+found an example in the kernel where someone else managed this. Checkout
+stp_policy_node_priv(). Looks like the symbol is used here[1] and is
+defined here[2]. You can see here[3] and here[4] that the files end up
+in the same module. Do you mind taking a look why it works for stm, but
+not here?
+
+> > I thought we were just talking about exposing symbols for linking
+> > outside of a compilation unit (static vs. not static); nevertheless, I
+> > think you are right that it is relevant here. Kees, thoughts?
+> > 
+> > > void *kunit_find_symbol(const char *modname, const char *symbol_name);
+> > >
+> > > ...which does a [module_]kallsyms_lookup_sym().
+> > >
+> > > If the above makes sense I can look at adding it as a patch (and adding
+> > > a test of it of course!). What do you think?
+> > 
+> > So that won't work if you are trying to link against a symbol not in a
+> > module, right? Also, it won't work against a static symbol, right?
+> > 
+> 
+> Nope, works in both cases with the proviso that we need to use an
+
+Nifty! That sounds great!
+
+> alternative name for symbols when compiling built-in.  For example
+
+Can you elaborate on "need[ing] to use an alternative name"?
+
+> in the case of the string-stream tests, we'd use a test init callback
+> to initialize used symbols:
+> 
+> static int string_stream_test_init(struct kunit *test)
+> {
+>         _alloc_string_stream = kunit_find_symbol("alloc_string_stream");
+>         _string_stream_add = kunit_find_symbol("string_stream_add");
+>         _string_stream_get_string = kunit_find_symbol("string_stream_get_string");
+>         _string_stream_is_empty = kunit_find_symbol("string_stream_is_empty");
+>         if (IS_ERR(_alloc_string_stream) ||
+>             IS_ERR(_string_stream_add) ||
+>             IS_ERR(_string_stream_get_string) ||
+>             IS_ERR(_string_stream_is_empty))
+>                 return EINVAL;
+>         return 0;
+> } 
+> 
+> I've tested this when string-stream-test is compiled built-in and as a 
+> module.  We can of course create a wrapper macro to handle these 
+> assignments.
+
+I've got mixed feelings on this. On one hand, that has the potential to
+solve a lot of problems with visibility and modules in a way that
+doesn't immediately cause code under test to change in undesirable ways.
+On the other hand, I feel that this has the potential to be really prone
+to breakage. It would be much nicer if the compiler could tell you that
+your symbol changed rather than having to wait until you run the test.
+Just having the test tell you that a symbol doesn't exist anymore would
+be mildly annoying, but having the signature of the symbol change could
+get downright frustrating using this method.
+
+> To illustrate further here's the test cases I'd propose adding to 
+> test-test.c with the changes. 
+> 
+> In the first case we're grabbing the "modules" variable from the kernel,
+> and in the second we're grabbing a static symbol from the test-test.ko
+> module (when it is compiled as a module):
+> 
+> /*
+>  * Find non-exported kernel symbol; we use the modules list as a safe
+>  * choice that should always be present.
+>  */
+> static void kunit_find_symbol_kernel(struct kunit *test)
+> {
+>         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, kunit_find_symbol("modules"));
+> }
+> 
+> #ifdef MODULE
+> /*
+>  * If we are compiled as a module, use this module for lookup.
+>  */
+> static void kunit_find_symbol_module(struct kunit *test)
+> {
+>         KUNIT_ASSERT_NOT_ERR_OR_NULL(test,
+>                                      kunit_find_symbol("kunit_find_symbol_kernel"));
+> }
+> #endif
+> 
+>  
+> > Even so, I think it is pretty wonky to expect users to either a)
+> > export any symbol name to be tested,
+> 
+> Absolutely not, I'd never advocate that.  Nothing should need to change in 
+
+Cool. Looks like we are on the same page then :-)
+
+> the component under test simply to facilitate testing, especially if 
+> there's a way the test framework can work around it.
+
+I would say it depends. I think it is fine to ask people to write code
+in such a manner that makes it more testable. From my experience, this
+generally leads to better quality code.
+
+Nevertheless, I agree from the perspective that suddenly having to
+export symbol names for no good reason is not something we should make
+users do.
+
+> > or b) have to access them via
+> > kunit_find_symbol.  I think it is fine to have some tests that cannot
+> > be compiled as modules, if there is no other user friendly way to make
+> > this work in those cases.
+> 
+> That's fine, and I agree in some cases it's unworkable, but there are 
+> going to be a lot of tristate componenets we'd like to test, and 
+> restricting testing of those by requiring CONFIG_FOO=y seems like a 
+> limitation too.  In practice I've found symbol lookup isn't needed 
+> extensively for test development.  For cases where the weight of symbol 
+> lookup is too heavy the tests can simply stay built-in - the non-exported 
+> nature of the symbols is probably suggesting something about the nature of 
+> the interface that makes that a more natural choice anyway.  However for 
+> other cases I think there's value to having something like this feature.
+
+I think that makes sense.
+
+So, I don't think the symbol lookup is needed for this patchset. I think
+all the symbols that you use should *probably* be exported at worse
+since they are used by the core kunit library stuff.
+
+Nevertheless, I have a test coming down the pipeline for which this
+could be a potential solution. I will CC you on the test when I send it.
+
+> Of course there may be better ways to realize the functionality than what 
+> I'm proposing.
+
+Cheers!
+
+[1] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/core.c#L322
+[2] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/policy.c#L40
+[3] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/Makefile#L4
+[4] https://elixir.bootlin.com/linux/v5.3.6/source/drivers/hwtracing/stm/Kconfig#L3
