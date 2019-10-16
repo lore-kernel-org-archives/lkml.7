@@ -2,95 +2,89 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC6CFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42F3FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED240205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7969020854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfJPLp0 (ORCPT
+        id S1732319AbfJPLqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:45:26 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:49635 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731586AbfJPLp0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:45:26 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iKhjx-00062v-JZ; Wed, 16 Oct 2019 12:45:17 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iKhjw-000281-Ug; Wed, 16 Oct 2019 12:45:16 +0100
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: inside-secure - fix unexported warnings
-Date:   Wed, 16 Oct 2019 12:45:12 +0100
-Message-Id: <20191016114512.8138-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 16 Oct 2019 07:46:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:37602 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727187AbfJPLqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:46:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B591B28;
+        Wed, 16 Oct 2019 04:46:14 -0700 (PDT)
+Received: from [10.1.31.184] (e121487-lin.cambridge.arm.com [10.1.31.184])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E0043F6C4;
+        Wed, 16 Oct 2019 04:46:12 -0700 (PDT)
+Subject: Re: [PATCH] arm64: defconfig: add JFFS FS support in defconfig
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>
+Cc:     Tan Ley Foon <ley.foon.tan@intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ong Hean Loong <hean.loong.ong@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Olof Johansson <olof@lixom.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <1571218528-12126-1-git-send-email-joyce.ooi@intel.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <8869edbc-e7b4-dfb3-1567-740132820133@arm.com>
+Date:   Wed, 16 Oct 2019 12:46:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571218528-12126-1-git-send-email-joyce.ooi@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The safexcel_pci_remove, pcireg_rc and ofreg_rc are
-not exported or declared externally so make them static.
+On 10/16/19 10:35 AM, Ooi, Joyce wrote:
+> This patch adds JFFS2 FS support and remove QSPI Sector 4K size force in
+> the default defconfig
+> 
+> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+> ---
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index c9adae4..6080c6e 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -860,3 +860,5 @@ CONFIG_DEBUG_KERNEL=y
+>  # CONFIG_DEBUG_PREEMPT is not set
+>  # CONFIG_FTRACE is not set
+>  CONFIG_MEMTEST=y
+> +CONFIG_JFFS2_FS=y
+> +CONFIG_MTD_SPI_NOR_USE_4K_SECTORS=n
+                                   ^^^^
+This is incorrect syntax for disabling config option. Correct one is
 
-This avoids the following sparse warnings:
+# CONFIG_MTD_SPI_NOR_USE_4K_SECTORS is not set
 
-drivers/crypto/inside-secure/safexcel.c:1760:6: warning: symbol 'safexcel_pci_remove' was not declared. Should it be static?
-drivers/crypto/inside-secure/safexcel.c:1794:5: warning: symbol 'pcireg_rc' was not declared. Should it be static?
-drivers/crypto/inside-secure/safexcel.c:1797:5: warning: symbol 'ofreg_rc' was not declared. Should it be static?
+However, it looks to me you want to remove it from defconfig rather than
+force it to be unset.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/crypto/inside-secure/safexcel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-index 4ab1bde8dd9b..223d1bfdc7e6 100644
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -1757,7 +1757,7 @@ static int safexcel_pci_probe(struct pci_dev *pdev,
- 	return rc;
- }
- 
--void safexcel_pci_remove(struct pci_dev *pdev)
-+static void safexcel_pci_remove(struct pci_dev *pdev)
- {
- 	struct safexcel_crypto_priv *priv = pci_get_drvdata(pdev);
- 	int i;
-@@ -1791,10 +1791,10 @@ static struct pci_driver safexcel_pci_driver = {
- 
- /* Unfortunately, we have to resort to global variables here */
- #if IS_ENABLED(CONFIG_PCI)
--int pcireg_rc = -EINVAL; /* Default safe value */
-+static int pcireg_rc = -EINVAL; /* Default safe value */
- #endif
- #if IS_ENABLED(CONFIG_OF)
--int ofreg_rc = -EINVAL; /* Default safe value */
-+static int ofreg_rc = -EINVAL; /* Default safe value */
- #endif
- 
- static int __init safexcel_init(void)
--- 
-2.23.0
-
+Cheers
+Vladimir
