@@ -2,53 +2,57 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0768FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD55FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6B2207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9AA207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264425;
-	bh=Cf5c/80aJdyXt3Zpm5BFNdbfwCnNyBhS/mtUmHs+fWs=;
+	s=default; t=1571264429;
+	bh=GQe8EeLqG6PpoebDlvdKElf1ra2zPi7pDl6tBmXa50E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/0vyvMroT7BUv90OY1U2w4xukoLGFleC0GzvMb7DD4yj/l8KAJrFS5hLlT+fk2S2
-	 SjIv8r47GYRl5hObCDNBF9+2fYdcp+88V4Qxmg+evJxL0GFUGzK0oykeALfyk1rF6W
-	 HpMZpKP42rFF6q7FU4qtokBSy83FPRY4s7abhIb4=
+	b=AQE8yKdi+mofZaPrICfbUrVvxj/rf54qenLzUdZFu7rxoGl4TMWkuh3QV0wVSBW7x
+	 kmV6k5PFNtvwMxQAXXogarOL+VKyPKfsOhw+l715+jWSrVdl5ceJc7YmQ6N1A7G+EC
+	 BLrWaW1OKUz/bOpvKkkO4Pmry3AuP/xvfR/FljZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404726AbfJPWUY (ORCPT
+        id S2394901AbfJPVxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:20:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389339AbfJPVxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 17:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437575AbfJPVxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:53:44 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95626218DE;
-        Wed, 16 Oct 2019 21:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCDDA20872;
+        Wed, 16 Oct 2019 21:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262828;
-        bh=Cf5c/80aJdyXt3Zpm5BFNdbfwCnNyBhS/mtUmHs+fWs=;
+        s=default; t=1571262824;
+        bh=GQe8EeLqG6PpoebDlvdKElf1ra2zPi7pDl6tBmXa50E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMF6WKhml88Xe6tmTnNT7rPJyffrHorrGibJSYhjKty/NTzNpwDvosQBdH/nuzAqB
-         JGcyn7BYFPo3eVzdwZvVsUmJl+3DL24ksLu79QYVwy2iHZ2y9Ek/L0gmHLbZ7KZrlB
-         4Qxt377p/frJQ9AI1HgGGG424J08vFXR6/d2qeiY=
+        b=lAl4zB3iX7g08QTsvGt+6/Cx0gb5qmqHgzufW8tSM7PwpUHIfzkz4dV49WHnz54x1
+         5taDWxW/MuJqNi/E0jQo553QfmkklANerCgFQ6JTk5zsWIvnqlL0hvMaKMo2tQsQiy
+         tj1oxgGYrrZR77UEIVvKsjqtrhk38OjBVXelVUEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 71/79] arm64: capabilities: Handle sign of the feature bit
-Date:   Wed, 16 Oct 2019 14:50:46 -0700
-Message-Id: <20191016214829.359534414@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.4 67/79] perf llvm: Dont access out-of-scope array
+Date:   Wed, 16 Oct 2019 14:50:42 -0700
+Message-Id: <20191016214826.803890383@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214729.758892904@linuxfoundation.org>
 References: <20191016214729.758892904@linuxfoundation.org>
@@ -61,128 +65,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Ian Rogers <irogers@google.com>
 
-commit ff96f7bc7bf6393eef8ff2bde1279715ce13343a usptream
+commit 7d4c85b7035eb2f9ab217ce649dcd1bfaf0cacd3 upstream.
 
-Use the appropriate accessor for the feature bit by keeping
-track of the sign of the feature.
+The 'test_dir' variable is assigned to the 'release' array which is
+out-of-scope 3 lines later.
 
-This is a pre-requisite for the commit 28c5dcb22f90 upstream,
-which fixes the arm64_ftr_value() for signed feature fields.
+Extend the scope of the 'release' array so that an out-of-scope array
+isn't accessed.
 
-Cc: stable@vger.kernel.org # v4.4
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Bug detected by clang's address sanitizer.
+
+Fixes: 07bc5c699a3d ("perf tools: Make fetch_kernel_version() publicly available")
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lore.kernel.org/lkml/20190926220018.25402-1-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/include/asm/cpufeature.h |  7 +++---
- arch/arm64/kernel/cpufeature.c      | 33 +++++++++++++++++------------
- 2 files changed, 23 insertions(+), 17 deletions(-)
+ tools/perf/util/llvm-utils.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index 0a66f8241f185..690961a749da1 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -88,9 +88,10 @@ struct arm64_cpu_capabilities {
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -214,14 +214,14 @@ static int detect_kbuild_dir(char **kbui
+ 	const char *prefix_dir = "";
+ 	const char *suffix_dir = "";
  
- 		struct {	/* Feature register checking */
- 			u32 sys_reg;
--			int field_pos;
--			int min_field_value;
--			int hwcap_type;
-+			u8 field_pos;
-+			u8 min_field_value;
-+			u8 hwcap_type;
-+			bool sign;
- 			unsigned long hwcap;
- 		};
- 	};
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 062484d344509..3949991e544bf 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -636,6 +636,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_useable_gicv3_cpuif,
- 		.sys_reg = SYS_ID_AA64PFR0_EL1,
- 		.field_pos = ID_AA64PFR0_GIC_SHIFT,
-+		.sign = FTR_UNSIGNED,
- 		.min_field_value = 1,
- 	},
- #ifdef CONFIG_ARM64_PAN
-@@ -645,6 +646,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_cpuid_feature,
- 		.sys_reg = SYS_ID_AA64MMFR1_EL1,
- 		.field_pos = ID_AA64MMFR1_PAN_SHIFT,
-+		.sign = FTR_UNSIGNED,
- 		.min_field_value = 1,
- 		.enable = cpu_enable_pan,
- 	},
-@@ -656,6 +658,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_cpuid_feature,
- 		.sys_reg = SYS_ID_AA64ISAR0_EL1,
- 		.field_pos = ID_AA64ISAR0_ATOMICS_SHIFT,
-+		.sign = FTR_UNSIGNED,
- 		.min_field_value = 2,
- 	},
- #endif /* CONFIG_AS_LSE && CONFIG_ARM64_LSE_ATOMICS */
-@@ -665,37 +668,39 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_cpuid_feature,
- 		.sys_reg = SYS_ID_AA64PFR0_EL1,
- 		.field_pos = ID_AA64PFR0_EL0_SHIFT,
-+		.sign = FTR_UNSIGNED,
- 		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
- 	},
- 	{},
- };
++	/* _UTSNAME_LENGTH is 65 */
++	char release[128];
++
+ 	char *autoconf_path;
  
--#define HWCAP_CAP(reg, field, min_value, type, cap)		\
-+#define HWCAP_CAP(reg, field, s, min_value, type, cap)	\
- 	{							\
- 		.desc = #cap,					\
- 		.matches = has_cpuid_feature,			\
- 		.sys_reg = reg,					\
- 		.field_pos = field,				\
-+		.sign = s,					\
- 		.min_field_value = min_value,			\
- 		.hwcap_type = type,				\
- 		.hwcap = cap,					\
- 	}
+ 	int err;
  
- static const struct arm64_cpu_capabilities arm64_hwcaps[] = {
--	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, 2, CAP_HWCAP, HWCAP_PMULL),
--	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, 1, CAP_HWCAP, HWCAP_AES),
--	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA1_SHIFT, 1, CAP_HWCAP, HWCAP_SHA1),
--	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA2_SHIFT, 1, CAP_HWCAP, HWCAP_SHA2),
--	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_CRC32_SHIFT, 1, CAP_HWCAP, HWCAP_CRC32),
--	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_ATOMICS_SHIFT, 2, CAP_HWCAP, HWCAP_ATOMICS),
--	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, 0, CAP_HWCAP, HWCAP_FP),
--	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, 0, CAP_HWCAP, HWCAP_ASIMD),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, HWCAP_PMULL),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_AES_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_AES),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SHA1),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SHA2_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SHA2),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_CRC32_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_CRC32),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_ATOMICS_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, HWCAP_ATOMICS),
-+	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_FP),
-+	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_ASIMD),
- #ifdef CONFIG_COMPAT
--	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
--	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
--	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
--	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA2_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA2),
--	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_CRC32_SHIFT, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_CRC32),
-+	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 2, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_PMULL),
-+	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_AES_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_AES),
-+	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA1_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA1),
-+	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_SHA2_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_SHA2),
-+	HWCAP_CAP(SYS_ID_ISAR5_EL1, ID_ISAR5_CRC32_SHIFT, FTR_UNSIGNED, 1, CAP_COMPAT_HWCAP2, COMPAT_HWCAP2_CRC32),
- #endif
- 	{},
- };
--- 
-2.20.1
-
+ 	if (!test_dir) {
+-		/* _UTSNAME_LENGTH is 65 */
+-		char release[128];
+-
+ 		err = fetch_kernel_version(NULL, release,
+ 					   sizeof(release));
+ 		if (err)
 
 
