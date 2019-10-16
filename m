@@ -2,121 +2,153 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62909FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BFFFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBED20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bJIkwwcH"
+	by mail.kernel.org (Postfix) with ESMTP id E58DD20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571224116;
+	bh=9h5rk5wG9u0PrxLqHEh7Pu8GaErpedAh6B+yh8QNHEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UPcrW4eEeRnJicRhfmmKYYDnaf3fqZEDLyovE9J3pghQRLYgvgGSYhQfH4vB4mRNC
+	 2FTbh3J6jV4vZ6gh0dNVXzXaHVeTwfE7lHmpTzS2BF7CuJcuF67MEuGgo/NVE3I+Wm
+	 dp+IA6w8yL+kx0iiw0Uwt6G3IWFmUWDS/RJI6jlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404850AbfJPLHr (ORCPT
+        id S2392610AbfJPLIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:07:47 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40710 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfJPLHr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:07:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GB47jo131252;
-        Wed, 16 Oct 2019 11:07:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=aWHhLYwSawiorx+Po3WUPkLbtnXvsVxnqtcmobZcGC8=;
- b=bJIkwwcHuHE3suC8BGZ3JOjcpOQL6l0zoXgHJGQZbQquOA5MAxRBEVpxXLMxIR5gl2wf
- BzuMl819pP84XBq4+YgEhOzRBp3RuxrT0vB7xBVd39/SlTOvR5Ely4dTNHU2SPxx6DyM
- bYpN/2EN/rogOnwUJwyiaiDrhLAGUFk2qb5ZVzbk4IUaQQCT3v5cQ+epN8llR1D3hqan
- 9ylP+3KNLSiA/jAqV8TifV1xu9BIi9ZeB2MVwURUk0eVLpBVly5+zmT570h20J6NI8og
- 360AuzuR4T7YcZEE0536ojYSWbstq6Tu3kAAq0ooOv0k3UP2iALuOZRBKnt5VpAYiYYP uQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2vk68up352-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 11:07:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9GB2a8w136503;
-        Wed, 16 Oct 2019 11:07:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2vnxv9dsxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 11:07:03 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9GB6nED022214;
-        Wed, 16 Oct 2019 11:06:55 GMT
-Received: from tomti.i.net-space.pl (/10.175.219.98)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Oct 2019 11:06:48 +0000
-Date:   Wed, 16 Oct 2019 13:06:42 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        hpa@zytor.com, jgross@suse.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
-Subject: Re: [PATCH v3 0/3] x86/boot: Introduce the kernel_info et consortes
-Message-ID: <20191016110642.5q3bm73vi6o6gn5r@tomti.i.net-space.pl>
-References: <20191009105358.32256-1-daniel.kiper@oracle.com>
+        Wed, 16 Oct 2019 07:08:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46882 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728406AbfJPLIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:08:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 096DDB1FF;
+        Wed, 16 Oct 2019 11:08:32 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 13:08:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: Make alloc_gigantic_page() available for
+ general use
+Message-ID: <20191016110831.GV317@dhcp22.suse.cz>
+References: <1571211293-29974-1-git-send-email-anshuman.khandual@arm.com>
+ <c7ac9f99-a34f-c553-b216-b847d093cae9@redhat.com>
+ <20191016085123.GO317@dhcp22.suse.cz>
+ <679b5c66-8f1b-ec4d-64dd-13fbc440917d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191009105358.32256-1-daniel.kiper@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=727
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910160100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=812 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910160100
+In-Reply-To: <679b5c66-8f1b-ec4d-64dd-13fbc440917d@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 12:53:55PM +0200, Daniel Kiper wrote:
-> Hi,
->
-> Due to very limited space in the setup_header this patch series introduces new
-> kernel_info struct which will be used to convey information from the kernel to
-> the bootloader. This way the boot protocol can be extended regardless of the
-> setup_header limitations. Additionally, the patch series introduces some
-> convenience features like the setup_indirect struct and the
-> kernel_info.setup_type_max field.
->
-> Daniel
->
->  Documentation/x86/boot.rst             | 168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  arch/x86/boot/Makefile                 |   2 +-
->  arch/x86/boot/compressed/Makefile      |   4 +-
->  arch/x86/boot/compressed/kaslr.c       |  12 ++++++
->  arch/x86/boot/compressed/kernel_info.S |  22 +++++++++++
->  arch/x86/boot/header.S                 |   3 +-
->  arch/x86/boot/tools/build.c            |   5 +++
->  arch/x86/include/uapi/asm/bootparam.h  |  16 +++++++-
->  arch/x86/kernel/e820.c                 |  11 ++++++
->  arch/x86/kernel/kdebugfs.c             |  20 ++++++++--
->  arch/x86/kernel/ksysfs.c               |  30 ++++++++++----
->  arch/x86/kernel/setup.c                |   4 ++
->  arch/x86/mm/ioremap.c                  |  11 ++++++
->  13 files changed, 292 insertions(+), 16 deletions(-)
->
-> Daniel Kiper (3):
->       x86/boot: Introduce the kernel_info
->       x86/boot: Introduce the kernel_info.setup_type_max
->       x86/boot: Introduce the setup_indirect
+On Wed 16-10-19 10:56:16, David Hildenbrand wrote:
+> On 16.10.19 10:51, Michal Hocko wrote:
+> > On Wed 16-10-19 10:08:21, David Hildenbrand wrote:
+> > > On 16.10.19 09:34, Anshuman Khandual wrote:
+> > [...]
+> > > > +static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
+> > > > +				   unsigned long nr_pages)
+> > > > +{
+> > > > +	unsigned long i, end_pfn = start_pfn + nr_pages;
+> > > > +	struct page *page;
+> > > > +
+> > > > +	for (i = start_pfn; i < end_pfn; i++) {
+> > > > +		page = pfn_to_online_page(i);
+> > > > +		if (!page)
+> > > > +			return false;
+> > > > +
+> > > > +		if (page_zone(page) != z)
+> > > > +			return false;
+> > > > +
+> > > > +		if (PageReserved(page))
+> > > > +			return false;
+> > > > +
+> > > > +		if (page_count(page) > 0)
+> > > > +			return false;
+> > > > +
+> > > > +		if (PageHuge(page))
+> > > > +			return false;
+> > > > +	}
+> > > 
+> > > We might still try to allocate a lot of ranges that contain unmovable data
+> > > (we could avoid isolating a lot of page blocks in the first place). I'd love
+> > > to see something like pfn_range_movable() (similar, but different to
+> > > is_mem_section_removable(), which uses has_unmovable_pages()).
+> > 
+> > Just to make sure I understand. Do you want has_unmovable_pages to be
+> > called inside pfn_range_valid_contig?
+> 
+> I think this requires more thought, as has_unmovable_pages() works on
+> pageblocks only AFAIK. If you try to allocate < MAX_ORDER - 1, you could get
+> a lot of false positives.
+> 
+> E.g., if a free "MAX_ORDER - 1" page spans two pageblocks and you only test
+> the second pageblock, you might detect "unmovable" if not taking proper care
+> of the "bigger" free page. (alloc_contig_range() properly works around that
+> issue)
 
-hpa, ping?
+OK, I see your point. You are right that false positives are possible. I
+would deal with those in a separate patch though.
 
-Daniel
+> > [...]
+> > > > +struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
+> > > > +				int nid, nodemask_t *nodemask)
+> > > > +{
+> > > > +	unsigned long ret, pfn, flags;
+> > > > +	struct zonelist *zonelist;
+> > > > +	struct zone *zone;
+> > > > +	struct zoneref *z;
+> > > > +
+> > > > +	zonelist = node_zonelist(nid, gfp_mask);
+> > > > +	for_each_zone_zonelist_nodemask(zone, z, zonelist,
+> > > > +					gfp_zone(gfp_mask), nodemask) {
+> > > 
+> > > One important part is to never use the MOVABLE zone here (otherwise
+> > > unmovable data would end up on the movable zone). But I guess the caller is
+> > > responsible for that (not pass GFP_MOVABLE) like gigantic pages do.
+> > 
+> > Well, if the caller uses GFP_MOVABLE then the movability should be
+> > implemented in some form. If that is not the case then it is a bug on
+> > the caller behalf.
+> > 
+> > > > +		spin_lock_irqsave(&zone->lock, flags);
+> > > > +
+> > > > +		pfn = ALIGN(zone->zone_start_pfn, nr_pages);
+> > > 
+> > > This alignment does not make too much sense when allowing passing in !power
+> > > of two orders. Maybe the caller should specify the requested alignment
+> > > instead? Or should we enforce this to be aligned to make our life easier for
+> > > now?
+> > 
+> > Are there any usecases that would require than the page alignment?
+> 
+> Gigantic pages have to be aligned AFAIK.
+
+Aligned to what? I do not see any guarantee like that in the existing
+code.
+
+-- 
+Michal Hocko
+SUSE Labs
