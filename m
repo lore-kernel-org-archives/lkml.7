@@ -2,88 +2,63 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF2FFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2027BFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5462082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0521B2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 17:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393547AbfJPRny convert rfc822-to-8bit (ORCPT
+        id S2394099AbfJPRoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 13:43:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49672 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390723AbfJPRnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:43:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 687E2B5FD;
-        Wed, 16 Oct 2019 17:23:22 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 19:23:21 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v10 4/6] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-Id: <20191016192321.c1ef8ea7c2533d6c8e1b98a2@suse.de>
-In-Reply-To: <20191015122349.612a230b@cakuba.netronome.com>
-References: <20191015120953.2597-1-tbogendoerfer@suse.de>
-        <20191015120953.2597-5-tbogendoerfer@suse.de>
-        <20191015122349.612a230b@cakuba.netronome.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Wed, 16 Oct 2019 13:44:13 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52198 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389705AbfJPRoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:44:13 -0400
+Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5853A142387B6;
+        Wed, 16 Oct 2019 10:44:12 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 13:44:11 -0400 (EDT)
+Message-Id: <20191016.134411.315258296003464370.davem@davemloft.net>
+To:     ben.dooks@codethink.co.uk
+Cc:     daniel@iogearbox.net, linux-kernel@lists.codethink.co.uk,
+        ast@kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: bpf: add static in net/core/filter.c
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <e3e81678-6c58-191b-3514-629f5f94def2@codethink.co.uk>
+References: <e947b15d-1d70-39d9-3b28-0367a3f0f4c0@codethink.co.uk>
+        <20191016131020.GE21367@pc-63.home>
+        <e3e81678-6c58-191b-3514-629f5f94def2@codethink.co.uk>
+X-Mailer: Mew version 6.8 on Emacs 26.2
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 16 Oct 2019 10:44:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 12:23:49 -0700
-Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Date: Wed, 16 Oct 2019 14:11:52 +0100
 
-> On Tue, 15 Oct 2019 14:09:49 +0200, Thomas Bogendoerfer wrote:
-> > SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
-> > It also supports connecting a SuperIO chip for serial and parallel
-> > interfaces. IOC3 is used inside various SGI systemboards and add-on
-> > cards with different equipped external interfaces.
-> > 
-> > Support for ethernet and serial interfaces were implemented inside
-> > the network driver. This patchset moves out the not network related
-> > parts to a new MFD driver, which takes care of card detection,
-> > setup of platform devices and interrupt distribution for the subdevices.
-> > 
-> > Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> Hmm, your config it does, I get /none/ of these warnings.
 > 
-> Looks good, I think.
+> I guess a lot of this is being built whether or not is then used.
 
-thank you. 
+When you are making changes like this, unless you have done a full grep
+over the tree and are %100 sure it is unrefrenced you should do at
+a minimum an allmodconfig build.
 
-Now how do I get an Acked-by for the network part to merge it via
-the MIPS tree ?
-
-Thomas.
-
--- 
-SUSE Software Solutions Germany GmbH
-HRB 36809 (AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+Otherwise by definition you are not testing the build of this change.
