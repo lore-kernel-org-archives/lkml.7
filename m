@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF98ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B212BFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF772168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEEB207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264109;
-	bh=crHSjvYMY9d/dYMyzSZHnf5e6SCkxwWPOlxaPZTBiYQ=;
+	s=default; t=1571264118;
+	bh=R7muj0ZQtz28cz8Rdo20VjZVXN0cWVxoYOowSW3clsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQKb+k2iB+ZES21e7c03Ci1E3rjMnvCbn5uIIRLrbneIDeZNjpp2Yrk+omEt9L83B
-	 30GBGBAsaDhspTWLDP83jqRdqnCzkLzS/tNqWqp6oHz5pIOKAuzDGtEKhRlkFuR8GI
-	 TbY82Umbrc7rpOT1w2iTaUS9RlErYNjGTwII4jvk=
+	b=KSpo14/TcbmmlbVkA1Yh2gxFgbtIB8jBZs7M098nMl1gBKJFQyukfPB/T7x7KJgfY
+	 PyrNbZ4TqfnNz+AXd3+4MlAuUQhkGpFL1hSWPc8tJfnjyxfSTsVGpxR5Jyfuac0XlZ
+	 mihy00ytqe3oZ0kj1Fg2z7X5cIcZUktYsVUC91Ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407430AbfJPWPI (ORCPT
+        id S2439356AbfJPWPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46232 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:15:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395237AbfJPVza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:30 -0400
+        id S2395220AbfJPVz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:28 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC569218DE;
-        Wed, 16 Oct 2019 21:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3674720872;
+        Wed, 16 Oct 2019 21:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262930;
-        bh=crHSjvYMY9d/dYMyzSZHnf5e6SCkxwWPOlxaPZTBiYQ=;
+        s=default; t=1571262928;
+        bh=R7muj0ZQtz28cz8Rdo20VjZVXN0cWVxoYOowSW3clsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dKjAGF5ZqDo/B4hWjIkT5tABv1sKNzvzmKhHqxRI6lWra1L3n27MgjQ2mvm0WnbW8
-         QyrEgVru9eBJ+TjjpSFz3FPW4HM2OHiqdugCBmEi/VHAF3MyxicIhHyJKG042uK7Mx
-         9E/mrTaCkSGRuVMlhT+t3a/IrxBrhFzSdi7piC3g=
+        b=qoAHQRIKBAorgKbjy/GiIXiFR6JpQeBI3RgzCHSa5bcLJJDX1A6krKiCVTMCO/8sE
+         dWYLA4scygYS3GFi0M6TX3D1tPhqdzl2Fd32T9+iONdA0TL+35kD6EjapnyWq0tAET
+         PyKvrB4gfHSeasV1uy5mhhL7/3GF8U1txOQKk/zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 54/92] USB: usblp: fix runtime PM after driver unbind
-Date:   Wed, 16 Oct 2019 14:50:27 -0700
-Message-Id: <20191016214838.063905932@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.9 88/92] tracing/hwlat: Report total time spent in all NMIs during the sample
+Date:   Wed, 16 Oct 2019 14:51:01 -0700
+Message-Id: <20191016214848.472113499@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -58,45 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 
-commit 9a31535859bfd8d1c3ed391f5e9247cd87bb7909 upstream.
+commit 98dc19c11470ee6048aba723d77079ad2cda8a52 upstream.
 
-Since commit c2b71462d294 ("USB: core: Fix bug caused by duplicate
-interface PM usage counter") USB drivers must always balance their
-runtime PM gets and puts, including when the driver has already been
-unbound from the interface.
+nmi_total_ts is supposed to record the total time spent in *all* NMIs
+that occur on the given CPU during the (active portion of the)
+sampling window. However, the code seems to be overwriting this
+variable for each NMI, thereby only recording the time spent in the
+most recent NMI. Fix it by accumulating the duration instead.
 
-Leaving the interface with a positive PM usage counter would prevent a
-later bound driver from suspending the device.
+Link: http://lkml.kernel.org/r/157073343544.17189.13911783866738671133.stgit@srivatsa-ubuntu
 
-Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage counter")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191001084908.2003-3-johan@kernel.org
+Fixes: 7b2c86250122 ("tracing: Add NMI tracing in hwlat detector")
+Cc: stable@vger.kernel.org
+Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/usblp.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/trace/trace_hwlat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -474,10 +474,12 @@ static int usblp_release(struct inode *i
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -151,7 +151,7 @@ void trace_hwlat_callback(bool enter)
+ 		if (enter)
+ 			nmi_ts_start = time_get();
+ 		else
+-			nmi_total_ts = time_get() - nmi_ts_start;
++			nmi_total_ts += time_get() - nmi_ts_start;
+ 	}
  
- 	mutex_lock(&usblp_mutex);
- 	usblp->used = 0;
--	if (usblp->present) {
-+	if (usblp->present)
- 		usblp_unlink_urbs(usblp);
--		usb_autopm_put_interface(usblp->intf);
--	} else		/* finish cleanup from disconnect */
-+
-+	usb_autopm_put_interface(usblp->intf);
-+
-+	if (!usblp->present)		/* finish cleanup from disconnect */
- 		usblp_cleanup(usblp);
- 	mutex_unlock(&usblp_mutex);
- 	return 0;
+ 	if (enter)
 
 
