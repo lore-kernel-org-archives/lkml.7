@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6544DECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25458ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BBD21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5AC21A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263152;
-	bh=axZIwNdfKdDdPLE4tMS6r7yKnYi7SwZ0HbtEFjMZyz4=;
+	s=default; t=1571263155;
+	bh=jlGR3XPRL+NAmC7s4hIpPBFodatK9NRysbSifcG7A+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iVOdxOnD2TWdLDvDdCC3jUZcgeWzutvve0ST6C/GgGGaiIkxbdAOKaMmkD5XvImKZ
-	 ID8AM79HPDDytqjDGGHBDMKhndgi9NzAe8ggYO1v2lLEPvZ9lLxsuD7gJemTbHuu8i
-	 SPPPikDxUcmeSAHYBHTI5C1oecv3Yyp/wUtbG/UE=
+	b=bj9QLpHH9o993B8uxKq4jegv3SfTuzsglXZGab5RSofSrrblW1phAqUZFLamiyoAy
+	 9k7aY6AyrcpTdMUarAwkfOpXW0v6+k2p+sO7J7PTkjQyXJkK+ris4/UjaHDSb79itn
+	 NsC8OUNsa5M1bqVQdzvLowMrRbuM5FmCPLlewEHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438421AbfJPV7L (ORCPT
+        id S2438434AbfJPV7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51740 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:59:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406710AbfJPV6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:17 -0400
+        id S2438134AbfJPV6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:58:20 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D11821928;
-        Wed, 16 Oct 2019 21:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA90A21A49;
+        Wed, 16 Oct 2019 21:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263097;
-        bh=axZIwNdfKdDdPLE4tMS6r7yKnYi7SwZ0HbtEFjMZyz4=;
+        s=default; t=1571263100;
+        bh=jlGR3XPRL+NAmC7s4hIpPBFodatK9NRysbSifcG7A+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0WKuhvYFOkOZC+fO/7YtO3mhhm7MRcKMIOXeHHzAfY7A0+70ZQQi1skFWpU2+JOr
-         SEMWJYVARGWT+I86OTjg8jt/6IOUZQWxwF9FmknKjDNwDZ7+1stHySjaQ5CttYfqwj
-         2galNK/9OP7rNbAQmhKM45g/PcilMI9Jbxawco4Y=
+        b=emHK+C+YqfFohFc8xA1/2Pqg3w/FZFFkdfuyWUXOT45zva7jFJVZnZv5Vvbij0JFz
+         mF+c/68/bpOhahR4eBu0dn0cKN2YW25wmW6YfLlsSognLWn4Ua4KqkBGm0h9YhuVy4
+         2yGUkRVnD6th7RCILkCTgJHn0eY5MqxkNMu1kvGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 019/112] USB: iowarrior: fix use-after-free on release
-Date:   Wed, 16 Oct 2019 14:50:11 -0700
-Message-Id: <20191016214849.418931324@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Tomoki Sekiyama <tomoki.sekiyama@gmail.com>,
+        syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 003/112] USB: yurex: Dont retry on unexpected errors
+Date:   Wed, 16 Oct 2019 14:49:55 -0700
+Message-Id: <20191016214844.568394952@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -58,43 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 80cd5479b525093a56ef768553045741af61b250 upstream.
+commit 32a0721c6620b77504916dac0cea8ad497c4878a upstream.
 
-The driver was accessing its struct usb_interface from its release()
-callback without holding a reference. This would lead to a
-use-after-free whenever debugging was enabled and the device was
-disconnected while its character device was open.
+According to Greg KH, it has been generally agreed that when a USB
+driver encounters an unknown error (or one it can't handle directly),
+it should just give up instead of going into a potentially infinite
+retry loop.
 
-Fixes: 549e83500b80 ("USB: iowarrior: Convert local dbg macro to dev_dbg")
-Cc: stable <stable@vger.kernel.org>     # 3.16
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009104846.5925-3-johan@kernel.org
+The three codes -EPROTO, -EILSEQ, and -ETIME fall into this category.
+They can be caused by bus errors such as packet loss or corruption,
+attempting to communicate with a disconnected device, or by malicious
+firmware.  Nowadays the extent of packet loss or corruption is
+negligible, so it should be safe for a driver to give up whenever one
+of these errors occurs.
+
+Although the yurex driver handles -EILSEQ errors in this way, it
+doesn't do the same for -EPROTO (as discovered by the syzbot fuzzer)
+or other unrecognized errors.  This patch adjusts the driver so that
+it doesn't log an error message for -EPROTO or -ETIME, and it doesn't
+retry after any errors.
+
+Reported-and-tested-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Tomoki Sekiyama <tomoki.sekiyama@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1909171245410.1590-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/misc/yurex.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -243,6 +243,7 @@ static inline void iowarrior_delete(stru
- 	kfree(dev->int_in_buffer);
- 	usb_free_urb(dev->int_in_urb);
- 	kfree(dev->read_queue);
-+	usb_put_intf(dev->interface);
- 	kfree(dev);
- }
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -132,6 +132,7 @@ static void yurex_interrupt(struct urb *
+ 	switch (status) {
+ 	case 0: /*success*/
+ 		break;
++	/* The device is terminated or messed up, give up */
+ 	case -EOVERFLOW:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - overflow with length %d, actual length is %d\n",
+@@ -140,12 +141,13 @@ static void yurex_interrupt(struct urb *
+ 	case -ENOENT:
+ 	case -ESHUTDOWN:
+ 	case -EILSEQ:
+-		/* The device is terminated, clean up */
++	case -EPROTO:
++	case -ETIME:
+ 		return;
+ 	default:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - unknown status received: %d\n", __func__, status);
+-		goto exit;
++		return;
+ 	}
  
-@@ -764,7 +765,7 @@ static int iowarrior_probe(struct usb_in
- 	init_waitqueue_head(&dev->write_wait);
+ 	/* handle received message */
+@@ -177,7 +179,6 @@ static void yurex_interrupt(struct urb *
+ 		break;
+ 	}
  
- 	dev->udev = udev;
--	dev->interface = interface;
-+	dev->interface = usb_get_intf(interface);
- 
- 	iface_desc = interface->cur_altsetting;
- 	dev->product_id = le16_to_cpu(udev->descriptor.idProduct);
+-exit:
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
 
 
