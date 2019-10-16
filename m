@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596D9FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E9AECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBF520659
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CDE20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 20:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437104AbfJPUQj (ORCPT
+        id S2437115AbfJPUQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 16:16:39 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:36909 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437071AbfJPUQi (ORCPT
+        Wed, 16 Oct 2019 16:16:42 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48071 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437070AbfJPUQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 16:16:38 -0400
+        Wed, 16 Oct 2019 16:16:35 -0400
 X-Originating-IP: 86.202.229.42
 Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 9BC1140002;
-        Wed, 16 Oct 2019 20:16:34 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 8D67C1C0004;
+        Wed, 16 Oct 2019 20:16:33 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Tony Prisk <linux@prisktech.co.nz>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5/5] rtc: vt8500: let the core handle rtc range
-Date:   Wed, 16 Oct 2019 22:16:26 +0200
-Message-Id: <20191016201626.31309-5-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/5] rtc: vt8500: remove superfluous error message
+Date:   Wed, 16 Oct 2019 22:16:24 +0200
+Message-Id: <20191016201626.31309-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191016201626.31309-1-alexandre.belloni@bootlin.com>
 References: <20191016201626.31309-1-alexandre.belloni@bootlin.com>
@@ -43,36 +44,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the rtc core check the date/time against the RTC range.
+The RTC core now has error messages in case of registration failure, there
+is no need to have other messages in the drivers.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-vt8500.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-vt8500.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-vt8500.c b/drivers/rtc/rtc-vt8500.c
-index 0761478861f8..e2588625025f 100644
+index f84e534a8793..c2ab394912bb 100644
 --- a/drivers/rtc/rtc-vt8500.c
 +++ b/drivers/rtc/rtc-vt8500.c
-@@ -122,12 +122,6 @@ static int vt8500_rtc_set_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct vt8500_rtc *vt8500_rtc = dev_get_drvdata(dev);
+@@ -224,11 +224,8 @@ static int vt8500_rtc_probe(struct platform_device *pdev)
  
--	if (tm->tm_year < 100) {
--		dev_warn(dev, "Only years 2000-2199 are supported by the "
--			      "hardware!\n");
--		return -EINVAL;
--	}
--
- 	writel((bin2bcd(tm->tm_year % 100) << DATE_YEAR_S)
- 		| (bin2bcd(tm->tm_mon + 1) << DATE_MONTH_S)
- 		| (bin2bcd(tm->tm_mday))
-@@ -227,6 +221,8 @@ static int vt8500_rtc_probe(struct platform_device *pdev)
+ 	vt8500_rtc->rtc = devm_rtc_device_register(&pdev->dev, "vt8500-rtc",
+ 					      &vt8500_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(vt8500_rtc->rtc)) {
+-		dev_err(&pdev->dev,
+-			"Failed to register RTC device -> %d\n", ret);
++	if (IS_ERR(vt8500_rtc->rtc))
  		return PTR_ERR(vt8500_rtc->rtc);
- 
- 	vt8500_rtc->rtc->ops = &vt8500_rtc_ops;
-+	vt8500_rtc->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
-+	vt8500_rtc->rtc->range_max = RTC_TIMESTAMP_END_2199;
+-	}
  
  	ret = devm_request_irq(&pdev->dev, vt8500_rtc->irq_alarm,
  				vt8500_rtc_irq, 0, "rtc alarm", vt8500_rtc);
