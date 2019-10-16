@@ -2,86 +2,77 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB88AECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92312ECE59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F6E2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6078D2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390412AbfJPBAd (ORCPT
+        id S2390421AbfJPBDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:00:33 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:30014 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726315AbfJPBAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:00:33 -0400
-X-IronPort-AV: E=Sophos;i="5.67,301,1566835200"; 
-   d="scan'208";a="77023489"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 16 Oct 2019 09:00:31 +0800
-Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
-        by cn.fujitsu.com (Postfix) with ESMTP id 14C874CE14F4;
-        Wed, 16 Oct 2019 09:00:10 +0800 (CST)
-Received: from G08CNEXMBPEKD03.g08.fujitsu.local ([10.167.33.86]) by
- G08CNEXCHPEKD03.g08.fujitsu.local ([10.167.33.85]) with mapi id
- 14.03.0439.000; Wed, 16 Oct 2019 09:00:26 +0800
-From:   "Su, Yanjun" <suyj.fnst@cn.fujitsu.com>
-To:     "trondmy@gmail.com" <trondmy@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: About patch NFS: Fix O_DIRECT accounting of number of bytes
- read/written
-Thread-Topic: About patch NFS: Fix O_DIRECT accounting of number of bytes
- read/written
-Thread-Index: AdWDupUDFq5cvVv1QGGoMCLng+/bzA==
-Date:   Wed, 16 Oct 2019 01:00:30 +0000
-Message-ID: <9608C5E5429A7846A89FDA46D5296B97334E3824@G08CNEXMBPEKD03.g08.fujitsu.local>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.167.226.33]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-yoursite-MailScanner-ID: 14C874CE14F4.AEBB8
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
+        Tue, 15 Oct 2019 21:03:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48293 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfJPBDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 21:03:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Oct 2019 18:03:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,301,1566889200"; 
+   d="scan'208";a="347268928"
+Received: from lingshan-mobl5.ccr.corp.intel.com (HELO localhost.localdomain) ([10.249.68.79])
+  by orsmga004.jf.intel.com with ESMTP; 15 Oct 2019 18:03:29 -0700
+From:   Zhu Lingshan <lingshan.zhu@intel.com>
+To:     mst@redhat.com, jasowang@redhat.com, alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com, tiwei.bie@intel.com,
+        jason.zeng@intel.com, zhiyuan.lv@intel.com,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: [RFC 0/2] Intel IFC VF driver for vdpa
+Date:   Wed, 16 Oct 2019 09:03:16 +0800
+Message-Id: <20191016010318.3199-1-lingshan.zhu@intel.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgdHJvbmQsDQpCZWNhdXNlIE15IG1haWwgc3lzdGVtIGNhbnQgcmVjZWl2
-ZSBuZnMgbWFpbCBsaXN0oa9zIG1haWxzLCBJIHJlcGx5IHlvdXIgcGF0Y2gg
-aGVyZS4NCkkgaGF2ZSBzb21lIHF1ZXN0aW9uIGZvciB0aGUgcGF0Y2guDQoN
-Cj5Oby4gQmFzaWMgT19ESVJFQ1QgZG9lcyBub3QgZ3VhcmFudGVlIGF0b21p
-Y2l0eSBvZiByZXF1ZXN0cywgd2hpY2ggaXMNCj53aHkgd2UgZG8gbm90IGhh
-dmUgZ2VuZXJpYyBsb2NraW5nIGF0IHRoZSBWRlMgbGV2ZWwgd2hlbiByZWFk
-aW5nIGFuZA0KPndyaXRpbmcuIFRoZSBvbmx5IGd1YXJhbnRlZSBiZWluZyBv
-ZmZlcmVkIGlzIHRoYXQgT19ESVJFQ1QgYW5kIGJ1ZmZlcmVkDQo+d3JpdGVz
-IGRvIG5vdCBjb2xsaWRlLg0KRG8geW91IG1lYW4gb3RoZXIgZnMgYWxzbyBj
-YW50IGd1YXJhbnRlZSBhdG9taWNpdHkgb2YgT19ESVJFQ1QgcmVxdWVzdCBv
-ciBqdXN0IG5mcz8NCg0KPklPVzogSSB0aGluayB0aGUgYmFzaWMgcHJlbWlz
-ZSBmb3IgdGhpcyB0ZXN0IGlzIGp1c3QgYnJva2VuIChhcyBJDQo+Y29tbWVu
-dGVkIGluIHRoZSBwYXRjaCBzZXJpZXMgSSBzZW50KSBiZWNhdXNlIGl0IGlz
-IGFzc3VtaW5nIGENCj5iZWhhdmlvdXIgdGhhdCBpcyBzaW1wbHkgbm90IGd1
-YXJhbnRlZWQuDQpTbyB0aGUgZ2VuZXJpYy80NjUgb2YgeGZzdGVzdHMgY2Fu
-oa90IGFwcGx5IHRvIG5mcyBmb3Igbm93LCBhbSBJIHJpZ2h0Pw0KDQo+QlRX
-OiBub3RlIHRoYXQgYnVmZmVyZWQgd3JpdGVzIGhhdmUgdGhlIHNhbWUgcHJv
-cGVydHkuIFRoZXkgYXJlIG9yZGVyZWQNCj53aGVuIGJlaW5nIHdyaXR0ZW4g
-aW50byB0aGUgcGFnZSBjYWNoZSwgbWVhbmluZyB0aGF0IHJlYWRzIG9uIHRo
-ZSBzYW1lDQo+Y2xpZW50IHdpbGwgc2VlIG5vIGhvbGVzLCBob3dldmVyIGlm
-IHlvdSB0cnkgdG8gcmVhZCBmcm9tIGFub3RoZXINCj5jbGllbnQsIHRoZW4g
-eW91IHdpbGwgc2VlIHRoZSBzYW1lIGJlaGF2aW91ciwgd2l0aCB0ZW1wb3Jh
-cnkgaG9sZXMNCj5tYWdpY2FsbHkgYXBwZWFyaW5nIGluIHRoZSBmaWxlLg0K
-QXMgeW91IHNheSwgbmZzIGJ1ZmZlcmVkIHdyaXRlIGFsc28gaGFzIHRoZSBo
-b2xlIHByb2JsZW0gd2l0aCBtdWx0aXBsZSByL3cgb24gZGlmZmVyZW50IGNs
-aWVudHMuDQpJIHdhbnQgdG8ga25vdyBpZiB0aGUgcHJvYmxlbSBleGlzdHMg
-aW4gb3RoZXIgbG9jYWwgZnMgc3VjaCBhcyB4ZnMsZXh0ND8NCg0KVGhhbmtz
-IGluIGFkdmFuY2UuDQoKCg==
+Hi all:
+ 
+This series intends to introduce Intel IFC VF NIC driver for Vhost
+Data Plane Acceleration.
+ 
+Here comes two main parts, one is ifcvf_base layer, which handles
+hardware operations. The other is ifcvf_main layer handles VF
+initialization, configuration and removal, which depends on
+and complys to vhost_mdev https://lkml.org/lkml/2019/9/26/15 
+ 
+This is a first RFC try, please help review.
+ 
+Thanks!
+BR
+Zhu Lingshan
+
+
+Zhu Lingshan (2):
+  vhost: IFC VF hardware operation layer
+  vhost: IFC VF vdpa layer
+
+ drivers/vhost/ifcvf/ifcvf_base.c | 390 ++++++++++++++++++++++++++++
+ drivers/vhost/ifcvf/ifcvf_base.h | 137 ++++++++++
+ drivers/vhost/ifcvf/ifcvf_main.c | 541 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1068 insertions(+)
+ create mode 100644 drivers/vhost/ifcvf/ifcvf_base.c
+ create mode 100644 drivers/vhost/ifcvf/ifcvf_base.h
+ create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
+
+-- 
+2.16.4
+
