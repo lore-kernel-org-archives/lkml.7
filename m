@@ -6,78 +6,72 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124D7ECE588
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5BCECE588
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC3221835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D80620650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404167AbfJPJYs (ORCPT
+        id S2391961AbfJPJYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:24:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47562 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391925AbfJPJYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 16 Oct 2019 05:24:47 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9493277D8DAEA9F0BA43;
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47512 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726480AbfJPJYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:24:47 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 58B5D5162D73CB561496;
         Wed, 16 Oct 2019 17:24:45 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 17:24:34 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>,
-        <mingfangsen@huawei.com>
-Subject: [PATCH] KVM: SVM: Fix potential wrong physical id in avic_handle_ldr_update
-Date:   Wed, 16 Oct 2019 17:25:08 +0800
-Message-ID: <1571217908-7693-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
+ 17:24:36 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <minyard@acm.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC:     <openipmi-developer@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ipmi: bt-bmc: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 16 Oct 2019 17:21:31 +0800
+Message-ID: <20191016092131.23096-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guest physical APIC ID may not equal to vcpu->vcpu_id in some case.
-We may set the wrong physical id in avic_handle_ldr_update as we
-always use vcpu->vcpu_id.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/x86/kvm/svm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/char/ipmi/bt-bmc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index f8ecb6d..67cb5ba 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -4591,6 +4591,8 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
- 	int ret = 0;
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	u32 ldr = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LDR);
-+	u32 apic_id_reg = kvm_lapic_get_reg(vcpu->arch.apic, APIC_ID);
-+	u32 id = (apic_id_reg >> 24) & 0xff;
+diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+index 40b9927..d36aeac 100644
+--- a/drivers/char/ipmi/bt-bmc.c
++++ b/drivers/char/ipmi/bt-bmc.c
+@@ -444,15 +444,13 @@ static int bt_bmc_probe(struct platform_device *pdev)
  
- 	if (ldr == svm->ldr_reg)
- 		return 0;
-@@ -4598,7 +4600,7 @@ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
- 	avic_invalidate_logical_id_entry(vcpu);
+ 	bt_bmc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+ 	if (IS_ERR(bt_bmc->map)) {
+-		struct resource *res;
+ 		void __iomem *base;
  
- 	if (ldr)
--		ret = avic_ldr_write(vcpu, vcpu->vcpu_id, ldr);
-+		ret = avic_ldr_write(vcpu, id, ldr);
+ 		/*
+ 		 * Assume it's not the MFD-based devicetree description, in
+ 		 * which case generate a regmap ourselves
+ 		 */
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-		base = devm_ioremap_resource(&pdev->dev, res);
++		base = devm_platform_ioremap_resource(pdev, 0);
+ 		if (IS_ERR(base))
+ 			return PTR_ERR(base);
  
- 	if (!ret)
- 		svm->ldr_reg = ldr;
 -- 
-1.8.3.1
+2.7.4
+
 
