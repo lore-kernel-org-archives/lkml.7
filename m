@@ -2,173 +2,91 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D0CFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F338FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4D72082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571223573;
-	bh=MH1lAOLAmOqimzjmC01RwPih+47UvtVHbjzbGIk6qjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FWyZUtq8nra+rOzN5pgnqTvdpJQJM6WRBh3gTSqhL58AFbviI24AR01N1myHN/3JS
-	 FW9ZEqM0qa76uy8xvLjbfsEhvioWQWNKghB/8P7gqttTQwXv9uiX67R6rzbSzzEkgW
-	 KfWv72Mk5OPCbbRzxYNqIbXVKOakQeGZL+WSJG+g=
+	by mail.kernel.org (Postfix) with ESMTP id E43722082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404756AbfJPK7c (ORCPT
+        id S2392537AbfJPLAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:59:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42988 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726083AbfJPK7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:59:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C182DAE4B;
-        Wed, 16 Oct 2019 10:59:29 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 12:59:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 1/3] mm/vmalloc: remove preempt_disable/enable when do
- preloading
-Message-ID: <20191016105928.GS317@dhcp22.suse.cz>
-References: <20191016095438.12391-1-urezki@gmail.com>
+        Wed, 16 Oct 2019 07:00:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3400 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbfJPLAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:00:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 04:00:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="225749572"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.130])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Oct 2019 04:00:32 -0700
+Date:   Wed, 16 Oct 2019 14:00:31 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191016110031.GE10184@linux.intel.com>
+References: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A22E@ALPMBAPA12.e2k.ad.ge.com>
+ <20191004182711.GC6945@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2A38B@ALPMBAPA12.e2k.ad.ge.com>
+ <20191007000520.GA17116@linux.intel.com>
+ <59b88042-9c56-c891-f75e-7c0719eb5ff9@linux.ibm.com>
+ <20191008234935.GA13926@linux.intel.com>
+ <20191008235339.GB13926@linux.intel.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F2B995@ALPMBAPA12.e2k.ad.ge.com>
+ <20191014190033.GA15552@linux.intel.com>
+ <1571081397.3728.9.camel@HansenPartnership.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191016095438.12391-1-urezki@gmail.com>
+In-Reply-To: <1571081397.3728.9.camel@HansenPartnership.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 16-10-19 11:54:36, Uladzislau Rezki (Sony) wrote:
-> Some background. The preemption was disabled before to guarantee
-> that a preloaded object is available for a CPU, it was stored for.
+On Mon, Oct 14, 2019 at 12:29:57PM -0700, James Bottomley wrote:
+> The job of the in-kernel rng is simply to produce a mixed entropy pool
+> from which we can draw random numbers.  The idea is that quite a few
+> attackers have identified the rng as being a weak point in the security
+> architecture of the kernel, so if we mix entropy from all the sources
+> we have, you have to compromise most of them to gain some predictive
+> power over the rng sequence.
 
-Probably good to be explicit that this has been achieved by combining
-the disabling the preemption and taking the spin lock while the
-ne_fit_preload_node is checked resp. repopulated, right?
+The documentation says that krng is suitable for key generation.
+Should the documentation changed to state that it is unsuitable?
 
-> The aim was to not allocate in atomic context when spinlock
-> is taken later, for regular vmap allocations. But that approach
-> conflicts with CONFIG_PREEMPT_RT philosophy. It means that
-> calling spin_lock() with disabled preemption is forbidden
-> in the CONFIG_PREEMPT_RT kernel.
-> 
-> Therefore, get rid of preempt_disable() and preempt_enable() when
-> the preload is done for splitting purpose. As a result we do not
-> guarantee now that a CPU is preloaded, instead we minimize the
-> case when it is not, with this change.
+> The point is not how certified the TPM RNG is, the point is that it's a
+> single source and if we rely on it solely for some applications, like
+> trusted keys, then it gives the attackers a single known point to go
+> after.  This may be impossible for script kiddies, but it won't be for
+> nation states ... are you going to exclusively trust the random number
+> you got from your chinese certified TPM?
 
-by populating the per cpu preload pointer under the vmap_area_lock.
-This implies that at least each caller which has done the preallocation
-will not fallback to an atomic allocation later. It is possible that the
-preallocation would be pointless or that no preallocation is done
-because of the race but your data shows that this is really rare.
+I'd suggest approach where TPM RNG result is xored with krng result.
 
-> For example i run the special test case that follows the preload
-> pattern and path. 20 "unbind" threads run it and each does
-> 1000000 allocations. Only 3.5 times among 1000000 a CPU was
-> not preloaded. So it can happen but the number is negligible.
-> 
-> V2 - > V3:
->     - update the commit message
-> 
-> V1 -> V2:
->   - move __this_cpu_cmpxchg check when spin_lock is taken,
->     as proposed by Andrew Morton
->   - add more explanation in regard of preloading
->   - adjust and move some comments
-> 
-> Fixes: 82dd23e84be3 ("mm/vmalloc.c: preload a CPU with one object for split purpose")
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Acked-by: Daniel Wagner <dwagner@suse.de>
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> Remember also that the attack doesn't have to be to the TPM only, it
+> could be the pathway by which we get the random number, which involves
+> components outside of the TPM certification.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Yeah, I do get this.
 
-> ---
->  mm/vmalloc.c | 37 ++++++++++++++++++++-----------------
->  1 file changed, 20 insertions(+), 17 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index e92ff5f7dd8b..b7b443bfdd92 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -1078,31 +1078,34 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
->  
->  retry:
->  	/*
-> -	 * Preload this CPU with one extra vmap_area object to ensure
-> -	 * that we have it available when fit type of free area is
-> -	 * NE_FIT_TYPE.
-> +	 * Preload this CPU with one extra vmap_area object. It is used
-> +	 * when fit type of free area is NE_FIT_TYPE. Please note, it
-> +	 * does not guarantee that an allocation occurs on a CPU that
-> +	 * is preloaded, instead we minimize the case when it is not.
-> +	 * It can happen because of cpu migration, because there is a
-> +	 * race until the below spinlock is taken.
->  	 *
->  	 * The preload is done in non-atomic context, thus it allows us
->  	 * to use more permissive allocation masks to be more stable under
-> -	 * low memory condition and high memory pressure.
-> +	 * low memory condition and high memory pressure. In rare case,
-> +	 * if not preloaded, GFP_NOWAIT is used.
->  	 *
-> -	 * Even if it fails we do not really care about that. Just proceed
-> -	 * as it is. "overflow" path will refill the cache we allocate from.
-> +	 * Set "pva" to NULL here, because of "retry" path.
->  	 */
-> -	preempt_disable();
-> -	if (!__this_cpu_read(ne_fit_preload_node)) {
-> -		preempt_enable();
-> -		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
-> -		preempt_disable();
-> +	pva = NULL;
->  
-> -		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva)) {
-> -			if (pva)
-> -				kmem_cache_free(vmap_area_cachep, pva);
-> -		}
-> -	}
-> +	if (!this_cpu_read(ne_fit_preload_node))
-> +		/*
-> +		 * Even if it fails we do not really care about that.
-> +		 * Just proceed as it is. If needed "overflow" path
-> +		 * will refill the cache we allocate from.
-> +		 */
-> +		pva = kmem_cache_alloc_node(vmap_area_cachep, GFP_KERNEL, node);
->  
->  	spin_lock(&vmap_area_lock);
-> -	preempt_enable();
-> +
-> +	if (pva && __this_cpu_cmpxchg(ne_fit_preload_node, NULL, pva))
-> +		kmem_cache_free(vmap_area_cachep, pva);
->  
->  	/*
->  	 * If an allocation fails, the "vend" address is
-> -- 
-> 2.20.1
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+/Jarkko
