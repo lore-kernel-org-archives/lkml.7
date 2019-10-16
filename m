@@ -2,52 +2,53 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D466ECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE917ECE599
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6E721D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DC0218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263005;
-	bh=56kjPX0eX66U31d8LMlDx4804SYS0FnyBIXSPh8M7ec=;
+	s=default; t=1571263018;
+	bh=qFP1NjO6W8Srt9bBH9rasyAL70V1cecuNsWg7IKsMEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nwlxzvdsxHu6D8JadsxkdjdlBhm4szo0+FlmhRhQLXnQnhjC/tbzh1BF9txhDKH9N
-	 Fp6qaUn2lw5McxnjPMlPLBggfdwRwz4s4FskSVt5bBYzQUnFGIPuCWNBAEwKIBdm2l
-	 ULllF0DNzrr6MU1vK3wed1fYMG+5PQWh1ZjuynpQ=
+	b=iGOevNQizw/0pus/njEpthNPBlAT2rG1wYgS0qfLnISBI8Nc3bRaLHyyZhLkFBXgm
+	 n2SuRsqYGemBbmTkwzljhL1O0HidI8AetSqImpYBHQJEMy+pq3lGUDAtCul+tEWf0K
+	 ROpMnjgmj0HZShgjPUv/7HsLBPBegyD7OFTBxD6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395423AbfJPV4o (ORCPT
+        id S2437942AbfJPV44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47994 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387438AbfJPV4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:24 -0400
+        id S2406644AbfJPV41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:27 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E753E21D7A;
-        Wed, 16 Oct 2019 21:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A0FB21D7E;
+        Wed, 16 Oct 2019 21:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262984;
-        bh=56kjPX0eX66U31d8LMlDx4804SYS0FnyBIXSPh8M7ec=;
+        s=default; t=1571262986;
+        bh=qFP1NjO6W8Srt9bBH9rasyAL70V1cecuNsWg7IKsMEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aa6tpYAUm6lCI/d2Dbdk0UtP2HeGy0V873CID6khdhLjjBzAG17S0lSgcm5aRQUSN
-         aDQdRW/Hjc44IDwgnky4/Dj/oxiSFP5nkC8tKnMM1ov43X8eKto/RZ44inzPW86FU5
-         T2Apce6uN35nJ0JMcYT/PvG3ZSZGGV8+5Fsff4cI=
+        b=S75StnAgxkuU2RBkJ+9IBDM9SUEvP9m/2NnojWmv6M1rSJeddZFhac3odUsC3PvEG
+         FLIxlG+tyxtNXedtFHdVXARkay6tdPqGMlI0rPo5TOX/TQlS394ozvS1OENQzez8Mr
+         XFRVOZoJd5p5pvyj8GedfLdLLicUkdlHGqnfBj2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 53/65] iio: hx711: add delay until DOUT is ready
-Date:   Wed, 16 Oct 2019 14:51:07 -0700
-Message-Id: <20191016214837.120994171@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 55/65] btrfs: fix incorrect updating of log root tree
+Date:   Wed, 16 Oct 2019 14:51:09 -0700
+Message-Id: <20191016214837.671712650@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -60,106 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Klinger <ak@it-klinger.de>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 461631face58054c72b1f1453f2d66d71b1974e7 ]
+commit 4203e968947071586a98b5314fd7ffdea3b4f971 upstream.
 
-On a system with parasitic capacitance it turned out that DOUT is not ready
-after 100 ns after PD_SCK has raised. A measurement showed almost 1000 ns
-until DOUT has reached its correct value.
+We've historically had reports of being unable to mount file systems
+because the tree log root couldn't be read.  Usually this is the "parent
+transid failure", but could be any of the related errors, including
+"fsid mismatch" or "bad tree block", depending on which block got
+allocated.
 
-With this patch its now possible to wait until data is ready.
+The modification of the individual log root items are serialized on the
+per-log root root_mutex.  This means that any modification to the
+per-subvol log root_item is completely protected.
 
-The wait time should not be higher than the maximum PD_SCK high time which
-is corresponding to the datasheet 50000 ns.
+However we update the root item in the log root tree outside of the log
+root tree log_mutex.  We do this in order to allow multiple subvolumes
+to be updated in each log transaction.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is problematic however because when we are writing the log root
+tree out we update the super block with the _current_ log root node
+information.  Since these two operations happen independently of each
+other, you can end up updating the log root tree in between writing out
+the dirty blocks and setting the super block to point at the current
+root.
+
+This means we'll point at the new root node that hasn't been written
+out, instead of the one we should be pointing at.  Thus whatever garbage
+or old block we end up pointing at complains when we mount the file
+system later and try to replay the log.
+
+Fix this by copying the log's root item into a local root item copy.
+Then once we're safely under the log_root_tree->log_mutex we update the
+root item in the log_root_tree.  This way we do not modify the
+log_root_tree while we're committing it, fixing the problem.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Chris Mason <clm@fb.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/adc/hx711.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ fs/btrfs/tree-log.c |   36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-index 27005d84ed73d..8eb3f1bbe332b 100644
---- a/drivers/iio/adc/hx711.c
-+++ b/drivers/iio/adc/hx711.c
-@@ -89,6 +89,14 @@ struct hx711_data {
- 	int			gain_set;	/* gain set on device */
- 	int			gain_chan_a;	/* gain for channel A */
- 	struct mutex		lock;
-+	/*
-+	 * delay after a rising edge on SCK until the data is ready DOUT
-+	 * this is dependent on the hx711 where the datasheet tells a
-+	 * maximum value of 100 ns
-+	 * but also on potential parasitic capacities on the wiring
-+	 */
-+	u32			data_ready_delay_ns;
-+	u32			clock_frequency;
- };
- 
- static int hx711_cycle(struct hx711_data *hx711_data)
-@@ -102,6 +110,14 @@ static int hx711_cycle(struct hx711_data *hx711_data)
- 	 */
- 	preempt_disable();
- 	gpiod_set_value(hx711_data->gpiod_pd_sck, 1);
-+
-+	/*
-+	 * wait until DOUT is ready
-+	 * it turned out that parasitic capacities are extending the time
-+	 * until DOUT has reached it's value
-+	 */
-+	ndelay(hx711_data->data_ready_delay_ns);
-+
- 	val = gpiod_get_value(hx711_data->gpiod_dout);
- 	/*
- 	 * here we are not waiting for 0.2 us as suggested by the datasheet,
-@@ -112,6 +128,12 @@ static int hx711_cycle(struct hx711_data *hx711_data)
- 	gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
- 	preempt_enable();
- 
-+	/*
-+	 * make it a square wave for addressing cases with capacitance on
-+	 * PC_SCK
-+	 */
-+	ndelay(hx711_data->data_ready_delay_ns);
-+
- 	return val;
- }
- 
-@@ -401,6 +423,7 @@ static const struct iio_chan_spec hx711_chan_spec[] = {
- static int hx711_probe(struct platform_device *pdev)
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -2729,7 +2729,8 @@ out:
+  * in the tree of log roots
+  */
+ static int update_log_root(struct btrfs_trans_handle *trans,
+-			   struct btrfs_root *log)
++			   struct btrfs_root *log,
++			   struct btrfs_root_item *root_item)
  {
- 	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct hx711_data *hx711_data;
- 	struct iio_dev *indio_dev;
+ 	struct btrfs_fs_info *fs_info = log->fs_info;
  	int ret;
-@@ -474,6 +497,22 @@ static int hx711_probe(struct platform_device *pdev)
- 	hx711_data->gain_set = 128;
- 	hx711_data->gain_chan_a = 128;
+@@ -2737,10 +2738,10 @@ static int update_log_root(struct btrfs_
+ 	if (log->log_transid == 1) {
+ 		/* insert root item on the first sync */
+ 		ret = btrfs_insert_root(trans, fs_info->log_root_tree,
+-				&log->root_key, &log->root_item);
++				&log->root_key, root_item);
+ 	} else {
+ 		ret = btrfs_update_root(trans, fs_info->log_root_tree,
+-				&log->root_key, &log->root_item);
++				&log->root_key, root_item);
+ 	}
+ 	return ret;
+ }
+@@ -2836,6 +2837,7 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct btrfs_root *log = root->log_root;
+ 	struct btrfs_root *log_root_tree = fs_info->log_root_tree;
++	struct btrfs_root_item new_root_item;
+ 	int log_transid = 0;
+ 	struct btrfs_log_ctx root_log_ctx;
+ 	struct blk_plug plug;
+@@ -2901,18 +2903,26 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 		goto out;
+ 	}
  
-+	hx711_data->clock_frequency = 400000;
-+	ret = of_property_read_u32(np, "clock-frequency",
-+					&hx711_data->clock_frequency);
++	/*
++	 * We _must_ update under the root->log_mutex in order to make sure we
++	 * have a consistent view of the log root we are trying to commit at
++	 * this moment.
++	 *
++	 * We _must_ copy this into a local copy, because we are not holding the
++	 * log_root_tree->log_mutex yet.  This is important because when we
++	 * commit the log_root_tree we must have a consistent view of the
++	 * log_root_tree when we update the super block to point at the
++	 * log_root_tree bytenr.  If we update the log_root_tree here we'll race
++	 * with the commit and possibly point at the new block which we may not
++	 * have written out.
++	 */
+ 	btrfs_set_root_node(&log->root_item, log->node);
++	memcpy(&new_root_item, &log->root_item, sizeof(new_root_item));
+ 
+ 	root->log_transid++;
+ 	log->log_transid = root->log_transid;
+ 	root->log_start_pid = 0;
+ 	/*
+-	 * Update or create log root item under the root's log_mutex to prevent
+-	 * races with concurrent log syncs that can lead to failure to update
+-	 * log root item because it was not created yet.
+-	 */
+-	ret = update_log_root(trans, log);
+-	/*
+ 	 * IO has been started, blocks of the log tree have WRITTEN flag set
+ 	 * in their headers. new modifications of the log will be written to
+ 	 * new positions. so it's safe to allow log writers to go in.
+@@ -2932,6 +2942,14 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	mutex_unlock(&log_root_tree->log_mutex);
+ 
+ 	mutex_lock(&log_root_tree->log_mutex);
 +
 +	/*
-+	 * datasheet says the high level of PD_SCK has a maximum duration
-+	 * of 50 microseconds
++	 * Now we are safe to update the log_root_tree because we're under the
++	 * log_mutex, and we're a current writer so we're holding the commit
++	 * open until we drop the log_mutex.
 +	 */
-+	if (hx711_data->clock_frequency < 20000) {
-+		dev_warn(dev, "clock-frequency too low - assuming 400 kHz\n");
-+		hx711_data->clock_frequency = 400000;
-+	}
++	ret = update_log_root(trans, log, &new_root_item);
 +
-+	hx711_data->data_ready_delay_ns =
-+				1000000000 / hx711_data->clock_frequency;
-+
- 	platform_set_drvdata(pdev, indio_dev);
- 
- 	indio_dev->name = "hx711";
--- 
-2.20.1
-
+ 	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
+ 		/*
+ 		 * Implicit memory barrier after atomic_dec_and_test
 
 
