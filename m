@@ -2,160 +2,188 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F903FA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBC1FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5885B205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fosF19Oy"
+	by mail.kernel.org (Postfix) with ESMTP id 50A92218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 12:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571228635;
+	bh=tpyw6dnWtRktL2mWFhpiJUG5Thn3Q7Jh+AkFL2KBI+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yj00YYV78O9LlqZNR/X54sgQR9lC7wKRZU20lIWqHjZNmGlx+PCYrBwYkLS8oCV3A
+	 2Dy+kenpktAertnKJ2TciTH5cGqm/XEs4KHSEBKq9t0PQUTj+R1bM7Q2tyT9GykgT4
+	 KVa7uh25Wq8U8XhynVcpHC/vhg9pAGdyS6u8uAcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392958AbfJPMWE (ORCPT
+        id S2389783AbfJPMXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 08:22:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48228 "EHLO vps0.lunn.ch"
+        Wed, 16 Oct 2019 08:23:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbfJPMWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:22:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Dxyt+ZOiCiHKtL/UeQs81zIxekX5q0wpGSVddf2x5d8=; b=fosF19Oy801w1a4Ztm9zgHINtT
-        S281NvrHjvUVd/K6p+PV/3v12HcPstTEIZDXwqBifAivm5nvtVd34RAQeNPGfDPUlvANwSetLsOEW
-        DCo8UpWRW94TXRzURLaTvXuvxuBH1nv/B95XpGYsRVucfGHIaZXx7DWtGKqV9+cO3JOY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iKiJM-0007Hy-Ba; Wed, 16 Oct 2019 14:21:52 +0200
-Date:   Wed, 16 Oct 2019 14:21:52 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] dt-bindings: net: dsa: qca,ar9331 switch
- documentation
-Message-ID: <20191016122152.GE4780@lunn.ch>
-References: <20191014061549.3669-1-o.rempel@pengutronix.de>
- <20191014061549.3669-3-o.rempel@pengutronix.de>
+        id S2387581AbfJPMXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 08:23:54 -0400
+Received: from localhost (unknown [171.76.123.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34B6218DE;
+        Wed, 16 Oct 2019 12:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571228632;
+        bh=tpyw6dnWtRktL2mWFhpiJUG5Thn3Q7Jh+AkFL2KBI+Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qa/l60b2JJTcUZ278R7jNoVGx28q8QiwPDjwOtI1jkSn/4IzfMZFipQJWoSj3cHm9
+         324dSyDpVJWSuUWz58xXxLajnhCAGqgQS0rpyf2eNJ27gsgFeuLPyeymiCitTgXFGD
+         O51IqEr0niNCj4CXPP4J2l59dA6ubVPC7XIUA5Vg=
+Date:   Wed, 16 Oct 2019 17:53:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: gcc: Add missing clocks in SM8150
+Message-ID: <20191016122343.GM2654@vkoul-mobl>
+References: <20190917091623.3453-1-vkoul@kernel.org>
+ <20190917161000.DAFF3206C2@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191014061549.3669-3-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190917161000.DAFF3206C2@mail.kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 08:15:47AM +0200, Oleksij Rempel wrote:
-> Atheros AR9331 has built-in 5 port switch. The switch can be configured
-> to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
-> ethernet controller or to be used directly by the switch over second ethernet
-> controller.
+Hi Steve,
+
+Looks like I missed replying to this one, apologies!
+
+On 17-09-19, 09:09, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-09-17 02:16:23)
+> > The initial upstreaming of SM8150 GCC driver missed few clock so add
+> > them up now.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../devicetree/bindings/net/dsa/ar9331.txt    | 155 ++++++++++++++++++
->  1 file changed, 155 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
+> Should have some sort of fixes tag?
+
+Not really, the drivers to use these clks are not upstream so we dont
+miss it yet
+
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/ar9331.txt b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
-> new file mode 100644
-> index 000000000000..b0f95fd19584
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
-> @@ -0,0 +1,155 @@
-> +Atheros AR9331 built-in switch
-> +=============================
-> +
-> +It is a switch built-in to Atheros AR9331 WiSoC and addressable over internal
-> +MDIO bus. All PHYs are build-in as well. 
-> +
-> +Required properties:
-> +
-> + - compatible: should be: "qca,ar9331-switch" 
-> + - reg: Address on the MII bus for the switch.
-> + - resets : Must contain an entry for each entry in reset-names.
-> + - reset-names : Must include the following entries: "switch"
-> + - interrupt-parent: Phandle to the parent interrupt controller
-> + - interrupts: IRQ line for the switch
-> + - interrupt-controller: Indicates the switch is itself an interrupt
-> +   controller. This is used for the PHY interrupts.
-> + - #interrupt-cells: must be 1
-> + - mdio: Container of PHY and devices on the switches MDIO bus.
-> +
-> +See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
-> +required and optional properties.
-> +Examples:
-> +
-> +eth0: ethernet@19000000 {
-> +	compatible = "qca,ar9330-eth";
-> +	reg = <0x19000000 0x200>;
-> +	interrupts = <4>;
-> +
-> +	resets = <&rst 9>, <&rst 22>;
-> +	reset-names = "mac", "mdio";
-> +	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
-> +	clock-names = "eth", "mdio";
-> +
-> +	phy-mode = "mii";
-> +	phy-handle = <&phy_port4>;
+> >  drivers/clk/qcom/gcc-sm8150.c | 172 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 172 insertions(+)
+> > 
+> > diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+> > index 12ca2d14797f..13d4d14a5744 100644
+> > --- a/drivers/clk/qcom/gcc-sm8150.c
+> > +++ b/drivers/clk/qcom/gcc-sm8150.c
+> > @@ -1616,6 +1616,38 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
+> >         },
+> >  };
+> >  
+> > +static struct clk_branch gcc_gpu_gpll0_clk_src = {
+> > +       .halt_check = BRANCH_HALT_SKIP,
+> 
+> Why skip?
 
-This does not seem like a valid example. If phy_port4 is listed here,
-i would expect switch_port 5 to be totally missing?
+I will explore and add comments for that
 
-> +};
-> +
-> +eth1: ethernet@1a000000 {
-> +	compatible = "qca,ar9330-eth";
-> +	reg = <0x1a000000 0x200>;
-> +	interrupts = <5>;
-> +	resets = <&rst 13>, <&rst 23>;
-> +	reset-names = "mac", "mdio";
-> +	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
-> +	clock-names = "eth", "mdio";
-> +
-> +	phy-mode = "gmii";
-> +	phy-handle = <&switch_port0>;
-> +
-> +	fixed-link {
-> +		speed = <1000>;
-> +		full-duplex;
-> +	};
+> > +       .clkr = {
+> > +               .enable_reg = 0x52004,
+> > +               .enable_mask = BIT(15),
+> > +               .hw.init = &(struct clk_init_data){
+> > +                       .name = "gcc_gpu_gpll0_clk_src",
+> > +                       .parent_hws = (const struct clk_hw *[]){
+> > +                               &gpll0.clkr.hw },
+> > +                       .num_parents = 1,
+> > +                       .flags = CLK_SET_RATE_PARENT,
+> > +                       .ops = &clk_branch2_ops,
+> > +               },
+> > +       },
+> > +};
+> > +
+> > +static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
+> > +       .halt_check = BRANCH_HALT_SKIP,
+> 
+> Why skip?
+> 
+> > +       .clkr = {
+> > +               .enable_reg = 0x52004,
+> > +               .enable_mask = BIT(16),
+> > +               .hw.init = &(struct clk_init_data){
+> > +                       .name = "gcc_gpu_gpll0_div_clk_src",
+> > +                       .parent_hws = (const struct clk_hw *[]){
+> > +                               &gcc_gpu_gpll0_clk_src.clkr.hw },
+> > +                       .num_parents = 1,
+> > +                       .flags = CLK_SET_RATE_PARENT,
+> > +                       .ops = &clk_branch2_ops,
+> > +               },
+> > +       },
+> > +};
+> > +
+> >  static struct clk_branch gcc_gpu_iref_clk = {
+> >         .halt_reg = 0x8c010,
+> >         .halt_check = BRANCH_HALT,
+> > @@ -1698,6 +1730,38 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
+> >         },
+> >  };
+> >  
+> > +static struct clk_branch gcc_npu_gpll0_clk_src = {
+> > +       .halt_check = BRANCH_HALT_SKIP,
+> > +       .clkr = {
+> > +               .enable_reg = 0x52004,
+> > +               .enable_mask = BIT(18),
+> > +               .hw.init = &(struct clk_init_data){
+> > +                       .name = "gcc_npu_gpll0_clk_src",
+> > +                       .parent_hws = (const struct clk_hw *[]){
+> > +                               &gpll0.clkr.hw },
+> > +                       .num_parents = 1,
+> > +                       .flags = CLK_SET_RATE_PARENT,
+> > +                       .ops = &clk_branch2_ops,
+> > +               },
+> > +       },
+> > +};
+> > +
+> > +static struct clk_branch gcc_npu_gpll0_div_clk_src = {
+> > +       .halt_check = BRANCH_HALT_SKIP,
+> > +       .clkr = {
+> > +               .enable_reg = 0x52004,
+> > +               .enable_mask = BIT(19),
+> > +               .hw.init = &(struct clk_init_data){
+> > +                       .name = "gcc_npu_gpll0_div_clk_src",
+> > +                       .parent_hws = (const struct clk_hw *[]){
+> > +                               &gcc_npu_gpll0_clk_src.clkr.hw },
+> > +                       .num_parents = 1,
+> > +                       .flags = CLK_SET_RATE_PARENT,
+> > +                       .ops = &clk_branch2_ops,
+> > +               },
+> > +       },
+> > +};
+> > +
+> >  static struct clk_branch gcc_npu_trig_clk = {
+> >         .halt_reg = 0x4d00c,
+> >         .halt_check = BRANCH_VOTED,
+> > @@ -2812,6 +2876,42 @@ static struct clk_branch gcc_ufs_card_phy_aux_hw_ctl_clk = {
+> >         },
+> >  };
+> >  
+> > +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
+> > +       .halt_check = BRANCH_HALT_SKIP,
+> 
+> Can't we fix the UFS driver to not require this anymore? This is the
+> fourth or fifth time I've asked for this.
 
-You also cannot have both a fixed-link and a phy-handle.
+yeah Bjorn did tell me that and I think there was some other thread on
+similar lines. So is this fine by you.
 
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		switch10: switch@10 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			compatible = "qca,ar9331-switch";
-> +			reg = <16>;
-
-Maybe don't mix up hex and decimal? switch16: switch@16.
-
-      Andrew
+-- 
+~Vinod
