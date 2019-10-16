@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30856FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7573AFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7FA20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446A720872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263458;
-	bh=hBzaPLWMlU+AIxsjy3lQg77sD59CSAafwrLjn5pho+8=;
+	s=default; t=1571263460;
+	bh=Yzw/3d2j0WY5wr/qB3QLvmZXyYZmfj5Lu6FIZXpaxn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XnnzOQUTeVAHZBpAsDqeNVwADO2g3ZtGepf2JFBFJWXEWjBKXuJX2CEZzMfl4p4i
-	 xRUqEyti2W/phkAgvhnR8894vsic/mbu1M3h+m0KOaGLXI6xF7Oj9dPKT6+mY99eLV
-	 n6v9Ro086djGOVcjdDRHxqXfVEM5BsKBcmfA0qG4=
+	b=G3xCx+JCnA7YJQwM8+zaZqcl//iN9cVObbxlmosAjfFKJ0mYX+xXVw2eYTmRtBRDC
+	 lkWM0ULG5a+cnedVsdv1uUAtg8mDBXd7k6KUlIk1zoiy96koO4dLaBqoeIM4FhmnCO
+	 5RlMpOge27rh7CT9UYLWWJSZ+vM6Z2pfFBJQS6uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438392AbfJPV7G (ORCPT
+        id S2406842AbfJPWES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51576 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404125AbfJPV6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:58:12 -0400
+        id S2438386AbfJPV7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:59:05 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1FC121D80;
-        Wed, 16 Oct 2019 21:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C3FA222C2;
+        Wed, 16 Oct 2019 21:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263092;
-        bh=hBzaPLWMlU+AIxsjy3lQg77sD59CSAafwrLjn5pho+8=;
+        s=default; t=1571263145;
+        bh=Yzw/3d2j0WY5wr/qB3QLvmZXyYZmfj5Lu6FIZXpaxn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5+1Q8dwKaCa4A7ywp3JmmTIc43VMf68Ao78rfKnt6WvpOF3USmaXWxJVBASauLOo
-         vli0nFn9NB7vzRcd4hiQYLvYeFUcdPfn1oSn+BXOZ57Ms1sywlK16griuwXdIXjyOY
-         3xkBl5wo495FmP31AHyLEqPKCqc+zlA00SFgC2Ms=
+        b=ucsyybagAhDbL4f3M04j3E5ABDv4FPJbJwaUfv5aEndzXepq1K+sqLwmdSVCaW5kJ
+         puMeIvjkKoBmdlg9k6l3Uia33ujBvnxNGBs7X7R73NdGcvJQYfqkewkMbacBJdr5NU
+         9dyJtOzFj+NOqHLweYfJOrXTtTD0k5gtsS6Yc9YU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.3 013/112] xhci: Increase STS_SAVE timeout in xhci_suspend()
-Date:   Wed, 16 Oct 2019 14:50:05 -0700
-Message-Id: <20191016214847.438460379@linuxfoundation.org>
+        stable@vger.kernel.org, Beni Mahler <beni.mahler@gmx.net>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 027/112] USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
+Date:   Wed, 16 Oct 2019 14:50:19 -0700
+Message-Id: <20191016214852.704485914@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214844.038848564@linuxfoundation.org>
 References: <20191016214844.038848564@linuxfoundation.org>
@@ -60,41 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Beni Mahler <beni.mahler@gmx.net>
 
-commit ac343366846a445bb81f0a0e8f16abb8bd5d5d88 upstream.
+commit 357f16d9e0194cdbc36531ff88b453481560b76a upstream.
 
-After commit f7fac17ca925 ("xhci: Convert xhci_handshake() to use
-readl_poll_timeout_atomic()"), ASMedia xHCI may fail to suspend.
+Both devices added here have a FTDI chip inside. The device from Echelon
+is called 'Network Interface' it is actually a LON network gateway.
 
-Although the algorithms are essentially the same, the old max timeout is
-(usec + usec * time of doing readl()), and the new max timeout is just
-usec, which is much less than the old one.
+ ID 0403:8348 Future Technology Devices International, Ltd
+ https://www.eltako.com/fileadmin/downloads/de/datenblatt/Datenblatt_PL-SW-PROF.pdf
 
-Increase the timeout to make ASMedia xHCI able to suspend again.
+ ID 0920:7500 Network Interface
+ https://www.echelon.com/products/u20-usb-network-interface
 
-BugLink: https://bugs.launchpad.net/bugs/1844021
-Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-8-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Beni Mahler <beni.mahler@gmx.net>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ftdi_sio.c     |    3 +++
+ drivers/usb/serial/ftdi_sio_ids.h |    9 +++++++++
+ 2 files changed, 12 insertions(+)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1032,7 +1032,7 @@ int xhci_suspend(struct xhci_hcd *xhci,
- 	writel(command, &xhci->op_regs->command);
- 	xhci->broken_suspend = 0;
- 	if (xhci_handshake(&xhci->op_regs->status,
--				STS_SAVE, 0, 10 * 1000)) {
-+				STS_SAVE, 0, 20 * 1000)) {
- 	/*
- 	 * AMD SNPS xHC 3.0 occasionally does not clear the
- 	 * SSS bit of USBSTS and when driver tries to poll
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1030,6 +1030,9 @@ static const struct usb_device_id id_tab
+ 	/* EZPrototypes devices */
+ 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
+ 	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
++	/* Sienna devices */
++	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
++	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
+ 	{ }					/* Terminating entry */
+ };
+ 
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -39,6 +39,9 @@
+ 
+ #define FTDI_LUMEL_PD12_PID	0x6002
+ 
++/* Sienna Serial Interface by Secyourit GmbH */
++#define FTDI_SIENNA_PID		0x8348
++
+ /* Cyber Cortex AV by Fabulous Silicon (http://fabuloussilicon.com) */
+ #define CYBER_CORTEX_AV_PID	0x8698
+ 
+@@ -689,6 +692,12 @@
+ #define BANDB_ZZ_PROG1_USB_PID	0xBA02
+ 
+ /*
++ * Echelon USB Serial Interface
++ */
++#define ECHELON_VID		0x0920
++#define ECHELON_U20_PID		0x7500
++
++/*
+  * Intrepid Control Systems (http://www.intrepidcs.com/) ValueCAN and NeoVI
+  */
+ #define INTREPID_VID		0x093C
 
 
