@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D014DECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1A7FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47F8207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4911E207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571264043;
-	bh=M6SR5GjYxGUI+9nzIIp3JhPfCJi1hqJh+mra8AS75kU=;
+	s=default; t=1571264046;
+	bh=azaKT2C62TPRSsYE+ckZPK4Di2dsoBRGaz19NRo69Rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ib7nagaXkI2xJWeYZOnnapGL+xg/u+ueRnRf7Tjvf+hLzCYSm7CZ9YEtIPVlINaO7
-	 6QyZGcxA3nl22JbXGHmLWcyAdZ1U+E86yHbGRGJOIANiABhfMc3SgbxkPT1zeaH6nO
-	 JVXaE6lrHPz7IRz2ueS9rw/6tCYeGw0VgV1RgZjg=
+	b=kELj4mGd83ouGeP6nTdLA8RMKxRQIoStlf7BCNvrVzEFwQ7dyARJkSOVc0i2gMFP4
+	 OC/ui/Euzi6MXghS8PPRTI0i2TvCp5BBeNpuTRRpxaOmSyqz44txX0BCCUJ3FvNTAq
+	 5hV9Lj5NJsg2T2q6NtdV6BudOgYzvx/orPObr8O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390020AbfJPVzm (ORCPT
+        id S2395339AbfJPWOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:14:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390372AbfJPVzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:35 -0400
+        id S2395309AbfJPVzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:42 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9516C21D80;
-        Wed, 16 Oct 2019 21:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC8521D7E;
+        Wed, 16 Oct 2019 21:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262934;
-        bh=M6SR5GjYxGUI+9nzIIp3JhPfCJi1hqJh+mra8AS75kU=;
+        s=default; t=1571262941;
+        bh=azaKT2C62TPRSsYE+ckZPK4Di2dsoBRGaz19NRo69Rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tii2GyRwd3z2uLltI0hB8YYCxt/l+xMGPwHxNcajQngEVScQZT6a45rg6f+28ni4y
-         JGS8w6E7BCrc7AuVM8R+1cAzJesN02zYIw6bZho1OTyVh0qfQfYVnX+ckXtEXfrkfS
-         IIfuGeoHVq2pIZLsc51sEA92Gny9NMDLSXcKaWmI=
+        b=jnPZqFTObqfxpV+6zexcsLo6YB/HliQT7bWLIvc2fCznlqFVD3IM6pLVFajKmhH4k
+         9U5rncGb8WDlG7ozOcv95FgEuyuXbQBA/V2W6iEdN/RfSLxrY593K8fFUcQknopWSP
+         I6Czx5ced87S2xdsTbNgR6vZ+xnzp7X/7SxuSys8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 56/92] USB: ldusb: fix NULL-derefs on driver unbind
-Date:   Wed, 16 Oct 2019 14:50:29 -0700
-Message-Id: <20191016214838.885312409@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 12/65] xhci: Increase STS_SAVE timeout in xhci_suspend()
+Date:   Wed, 16 Oct 2019 14:50:26 -0700
+Message-Id: <20191016214805.437728649@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
-References: <20191016214759.600329427@linuxfoundation.org>
+In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
+References: <20191016214756.457746573@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,130 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
+commit ac343366846a445bb81f0a0e8f16abb8bd5d5d88 upstream.
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag, but was setting it to NULL before making sure all
-completion handlers had run. This could lead to a NULL-pointer
-dereference in a number of dev_dbg, dev_warn and dev_err statements in
-the completion handlers which relies on said pointer.
+After commit f7fac17ca925 ("xhci: Convert xhci_handshake() to use
+readl_poll_timeout_atomic()"), ASMedia xHCI may fail to suspend.
 
-Fix this by unconditionally stopping all I/O and preventing
-resubmissions by poisoning the interrupt URBs at disconnect and using a
-dedicated disconnected flag.
+Although the algorithms are essentially the same, the old max timeout is
+(usec + usec * time of doing readl()), and the new max timeout is just
+usec, which is much less than the old one.
 
-This also makes sure that all I/O has completed by the time the
-disconnect callback returns.
+Increase the timeout to make ASMedia xHCI able to suspend again.
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
+BugLink: https://bugs.launchpad.net/bugs/1844021
+Fixes: f7fac17ca925 ("xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()")
+Cc: <stable@vger.kernel.org> # v5.2+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-8-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/ldusb.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/usb/host/xhci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -158,6 +158,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
- struct ld_usb {
- 	struct mutex		mutex;		/* locks this structure */
- 	struct usb_interface*	intf;		/* save off the usb interface pointer */
-+	unsigned long		disconnected:1;
- 
- 	int			open_count;	/* number of times this port has been opened */
- 
-@@ -197,12 +198,10 @@ static void ld_usb_abort_transfers(struc
- 	/* shutdown transfer */
- 	if (dev->interrupt_in_running) {
- 		dev->interrupt_in_running = 0;
--		if (dev->intf)
--			usb_kill_urb(dev->interrupt_in_urb);
-+		usb_kill_urb(dev->interrupt_in_urb);
- 	}
- 	if (dev->interrupt_out_busy)
--		if (dev->intf)
--			usb_kill_urb(dev->interrupt_out_urb);
-+		usb_kill_urb(dev->interrupt_out_urb);
- }
- 
- /**
-@@ -210,8 +209,6 @@ static void ld_usb_abort_transfers(struc
-  */
- static void ld_usb_delete(struct ld_usb *dev)
- {
--	ld_usb_abort_transfers(dev);
--
- 	/* free data structures */
- 	usb_free_urb(dev->interrupt_in_urb);
- 	usb_free_urb(dev->interrupt_out_urb);
-@@ -267,7 +264,7 @@ static void ld_usb_interrupt_in_callback
- 
- resubmit:
- 	/* resubmit if we're still running */
--	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
-+	if (dev->interrupt_in_running && !dev->buffer_overflow) {
- 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
- 		if (retval) {
- 			dev_err(&dev->intf->dev,
-@@ -396,7 +393,7 @@ static int ld_usb_release(struct inode *
- 		retval = -ENODEV;
- 		goto unlock_exit;
- 	}
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		/* the device was unplugged before the file was released */
- 		mutex_unlock(&dev->mutex);
- 		/* unlock here as ld_usb_delete frees dev */
-@@ -427,7 +424,7 @@ static unsigned int ld_usb_poll(struct f
- 
- 	dev = file->private_data;
- 
--	if (!dev->intf)
-+	if (dev->disconnected)
- 		return POLLERR | POLLHUP;
- 
- 	poll_wait(file, &dev->read_wait, wait);
-@@ -466,7 +463,7 @@ static ssize_t ld_usb_read(struct file *
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -546,7 +543,7 @@ static ssize_t ld_usb_write(struct file
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -768,6 +765,9 @@ static void ld_usb_disconnect(struct usb
- 	/* give back our minor */
- 	usb_deregister_dev(intf, &ld_usb_class);
- 
-+	usb_poison_urb(dev->interrupt_in_urb);
-+	usb_poison_urb(dev->interrupt_out_urb);
-+
- 	mutex_lock(&dev->mutex);
- 
- 	/* if the device is not opened, then we clean up right now */
-@@ -775,7 +775,7 @@ static void ld_usb_disconnect(struct usb
- 		mutex_unlock(&dev->mutex);
- 		ld_usb_delete(dev);
- 	} else {
--		dev->intf = NULL;
-+		dev->disconnected = 1;
- 		/* wake up pollers */
- 		wake_up_interruptible_all(&dev->read_wait);
- 		wake_up_interruptible_all(&dev->write_wait);
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -968,7 +968,7 @@ int xhci_suspend(struct xhci_hcd *xhci,
+ 	writel(command, &xhci->op_regs->command);
+ 	xhci->broken_suspend = 0;
+ 	if (xhci_handshake(&xhci->op_regs->status,
+-				STS_SAVE, 0, 10 * 1000)) {
++				STS_SAVE, 0, 20 * 1000)) {
+ 	/*
+ 	 * AMD SNPS xHC 3.0 occasionally does not clear the
+ 	 * SSS bit of USBSTS and when driver tries to poll
 
 
