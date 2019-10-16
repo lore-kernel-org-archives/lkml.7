@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7CFECE599
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4354FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6752A21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2C621A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262867;
-	bh=2i8+d2TT3yX8/1+HhuIWKqY7fbcAmg4UD+/uh4pIKuY=;
+	s=default; t=1571262870;
+	bh=DdXffDv43Dzcs2A5WSrvHVsPPlFVTzzPNg20It8U2EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+Tmh8x9iboR8QsN7Qx4MurYVloSdew2IadY6Tr34ISKtycWMMlks7091q6Z5ItRk
-	 4469I1KmkYRS2iMLP4NHtgPanD8L+fUUkyYhgQXqboHh7kfv0eRs1+lQmRlNayjxJP
-	 6YztxH2Fz7Q4+VkYGXj/ZpbJsfdJnknXum2z+wSU=
+	b=HRlRrk9XGg5No9RcOWn98e2Gymt/gXxzR1O24GM+FXPQya+7o4/29AhW/URo6qGpa
+	 zqX3WgMkP0GW6i1zsbDOAamrqsL8xypRCIVqvvNaldnI4M5gP1tFVdpRKdx0ytKgqK
+	 YP/wmad/zcwFR/rVyxXjiroqUJQzjcPgJUqbmXi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394997AbfJPVy0 (ORCPT
+        id S2395009AbfJPVy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437700AbfJPVyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:54:11 -0400
+        id S1727832AbfJPVyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:54:14 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C54D2218DE;
-        Wed, 16 Oct 2019 21:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A861521A49;
+        Wed, 16 Oct 2019 21:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262851;
-        bh=2i8+d2TT3yX8/1+HhuIWKqY7fbcAmg4UD+/uh4pIKuY=;
+        s=default; t=1571262853;
+        bh=DdXffDv43Dzcs2A5WSrvHVsPPlFVTzzPNg20It8U2EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWtfigqn0yS+IwShFbbfKTy4NDeKwmAKt2pGrS0aEIFdl5y29oSDFSkkfogaJchg9
-         cXENLzmnM781neTXsGwpkDPDTByJUeWvICf9pjs+DSiLME1QJYvHbyqCFXiqEKuBSu
-         512uy/VqCQJnboss8ml0MPICTsTJs7OXUSmnPylI=
+        b=tJjScAh3+Ua6ukoztvDUX2UuYcjp2wNjrPRdds4h0e+YhHUuvu0XcJH/GpSHREY7k
+         fsICQOANlFciaNSXLNkpiLoW54/LLep2sizgosONW5Nc+ZSkhNCoLFSFWvWqIMREZF
+         GbHQqJdphNlMwJTqUJcig6VKGT1RT9mNgyM1up1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/92] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
-Date:   Wed, 16 Oct 2019 14:49:50 -0700
-Message-Id: <20191016214815.045948092@linuxfoundation.org>
+Subject: [PATCH 4.9 20/92] ceph: reconnect connection if session hang in opening state
+Date:   Wed, 16 Oct 2019 14:49:53 -0700
+Message-Id: <20191016214816.727736806@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214759.600329427@linuxfoundation.org>
 References: <20191016214759.600329427@linuxfoundation.org>
@@ -60,45 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@zoho.com.cn>
+From: Erqi Chen <chenerqi@gmail.com>
 
-[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
+[ Upstream commit 71a228bc8d65900179e37ac309e678f8c523f133 ]
 
-Currently on mmap cache policy, we always attach writeback_fid
-whether mmap type is SHARED or PRIVATE. However, in the use case
-of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
-this behavior will trigger overlayfs' copy-up when excute command
-inside container.
+If client mds session is evicted in CEPH_MDS_SESSION_OPENING state,
+mds won't send session msg to client, and delayed_work skip
+CEPH_MDS_SESSION_OPENING state session, the session hang forever.
 
-Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
-Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Allow ceph_con_keepalive to reconnect a session in OPENING to avoid
+session hang. Also, ensure that we skip sessions in RESTARTING and
+REJECTED states since those states can't be resurrected by issuing
+a keepalive.
+
+Link: https://tracker.ceph.com/issues/41551
+Signed-off-by: Erqi Chen chenerqi@gmail.com
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ceph/mds_client.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 79ff727254bb6..e963b83afc717 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -528,6 +528,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
- 	v9inode = V9FS_I(inode);
- 	mutex_lock(&v9inode->v_mutex);
- 	if (!v9inode->writeback_fid &&
-+	    (vma->vm_flags & VM_SHARED) &&
- 	    (vma->vm_flags & VM_WRITE)) {
- 		/*
- 		 * clone a fid and add it to writeback_fid
-@@ -629,6 +630,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 			(vma->vm_end - vma->vm_start - 1),
- 	};
- 
-+	if (!(vma->vm_flags & VM_SHARED))
-+		return;
- 
- 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
- 
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 67cb9d078bfa7..3139fbd4c34e3 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3410,7 +3410,9 @@ static void delayed_work(struct work_struct *work)
+ 				pr_info("mds%d hung\n", s->s_mds);
+ 			}
+ 		}
+-		if (s->s_state < CEPH_MDS_SESSION_OPEN) {
++		if (s->s_state == CEPH_MDS_SESSION_NEW ||
++		    s->s_state == CEPH_MDS_SESSION_RESTARTING ||
++		    s->s_state == CEPH_MDS_SESSION_REJECTED) {
+ 			/* this mds is failed or recovering, just wait */
+ 			ceph_put_mds_session(s);
+ 			continue;
 -- 
 2.20.1
 
