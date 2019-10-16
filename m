@@ -2,130 +2,126 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F3FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B71AFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341D0218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248252067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOvEAIgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404778AbfJPOnr (ORCPT
+        id S2405745AbfJPOoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:43:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50458 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbfJPOnq (ORCPT
+        Wed, 16 Oct 2019 10:44:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33727 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731768AbfJPOoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:43:46 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iKkWM-0006wq-TK; Wed, 16 Oct 2019 16:43:26 +0200
-Date:   Wed, 16 Oct 2019 16:43:26 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-In-Reply-To: <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
-Message-ID: <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de> <20190925180931.GG31852@linux.intel.com> <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com> <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de> <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
- <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com> <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com> <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 16 Oct 2019 10:44:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so14888513pfl.0;
+        Wed, 16 Oct 2019 07:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=0wM1+4IO1bY5BTi6K7Yji/0+jGvbIiPygIqwyuwJlfU=;
+        b=tOvEAIgqFTKi5LFuzuzGZixhErKJm3yjDG6HKm30AMcV2JhEnsOdP9rJ1oVbKSrb7l
+         mOGXYib8/sgyEXtNKdVfvxD0jC8gybPrFM38DsfdkMoGKA3MbcCyM9xZZcgdhrukzLv6
+         4gMKstUxUeIuxYbj1WrTF+SaC6Hs6IffTeq7gHHC2jvyvh7Qkpi3Bgq/6aw8LzSBxSSg
+         tlTT8fwT/bHTMnZ0hzeQAInq3oz7xhxv11AhhGUry5y7awa0eV0bDUUmb0ceyvhoiNLR
+         PaGD7BtgtqH6nb/DylBbtJLjDHEPev/wI2Oh6X98Mi9GN/7aCCxXgGUhLLJ56nDXXtQO
+         T/2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=0wM1+4IO1bY5BTi6K7Yji/0+jGvbIiPygIqwyuwJlfU=;
+        b=WJwu7YiLhA9EMHMaHr58wZpZ5zEO9VPZCEt1U8hT55BbHs6EqxZoFr6DCgomAbBx4U
+         jG7NeF2cibpXONd7NWxo1wd73yF0MMZoujDRGf2peEXAzfKSiAq7NPEw+P+ydPIWPFgF
+         VdDPJ89w7gTtdgL2j+4aoD41mXWSGz+yaQ2tZdGkTIsXXWlgb2/0Q4iPvXtXu+KoH5Af
+         gXhxcQUs7sdkCbR6I5VFnrMqeIeHCKZ40xsKQ+cwkC5gJ6x42x3eJkl/UInw8ZVKH27F
+         MRaZ++w5gaPKADTtU/FTwfRAEaAf1I2GWDtBtv2NDCOppg2WadNW+vPVksDPMsaF48V5
+         1FaA==
+X-Gm-Message-State: APjAAAW3nvFnY7yOmL+II8nzIYSjQQUqa8AWBVbJxq73fup47eu3coZR
+        IGTDvTQTZHhIQYgcaEhRpnc=
+X-Google-Smtp-Source: APXvYqy3lpffubpVvlmyh30qUtp1f0ncXogj09ETjm55Zk00R4WxRN8QY95MvMfdqWaKHhLIbWziSg==
+X-Received: by 2002:a63:d0a:: with SMTP id c10mr44006817pgl.203.1571237059486;
+        Wed, 16 Oct 2019 07:44:19 -0700 (PDT)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id v9sm23693755pfe.1.2019.10.16.07.44.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 07:44:18 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     'Christoph Hellwig' <hch@infradead.org>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "vidyas@nvidia.com" <vidyas@nvidia.com>,
+        'Anvesh Salveru' <anvesh.s@samsung.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH v3] PCI: dwc: Add support to add GEN3 related equalization
+ quirks
+Thread-Topic: [PATCH v3] PCI: dwc: Add support to add GEN3 related
+ equalization quirks
+Thread-Index: ATFlMXAyX9siOHFasDKw4/raoiQM8nluLS0yNDIwODAkNDkkZDlBNDAxJDkxJGQ1QTMwMb0Ze/7q
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Wed, 16 Oct 2019 14:44:12 +0000
+Message-ID: <SL2P216MB010526CC784E2F4364B4197DAA920@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <CGME20191015025933epcas5p1f0891dacc13648559ed8e037e49ee5b1@epcas5p1.samsung.com>
+ <1571108362-25962-1-git-send-email-pankaj.dubey@samsung.com>
+ <20191015081620.GA28204@infradead.org>
+ <068001d58336$a76ed970$f64c8c50$@samsung.com>
+ <20191015090547.GA7199@infradead.org>
+ <000e01d5836b$ac871190$059534b0$@samsung.com>
+ <20191016065234.GA6825@infradead.org>
+In-Reply-To: <20191016065234.GA6825@infradead.org>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019, Xiaoyao Li wrote:
-> On 10/16/2019 7:26 PM, Paolo Bonzini wrote:
-> > Old guests are prevalent enough that enabling split-lock detection by
-> > default would be a big usability issue.  And even ignoring that, you
-> > would get the issue you describe below:
-> 
-> Right, whether enabling split-lock detection is made by the administrator. The
-> administrator is supposed to know the consequence of enabling it. Enabling it
-> means don't want any split-lock happens in userspace, of course VMM softwares
-> are under control.
+On 10/16/19, 2:52 AM, 'Christoph Hellwig' wrote:
+>
+> On Tue, Oct 15, 2019 at 08:47:32PM +0530, Pankaj Dubey wrote:
+> > OK, but do we think the current driver has only code which is being use=
+d by
+> > some user?
+>
+> That is at least the intent of how we do kernel development.=20
 
-I have no idea what you are talking about, but the whole thing is trivial
-enough to describe in a decision matrix:
+Agreed!
 
-N | #AC       | #AC enabled | SMT | Ctrl    | Guest | Action
-R | available | on host     |     | exposed | #AC   |
---|-----------|-------------|-----|---------|-------|---------------------
-  |           |             |     |         |       |
-0 | N         |     x       |  x  |   N     |   x   | None
-  |           |             |     |         |       |
-1 | Y         |     N       |  x  |   N     |   x   | None
-  |           |             |     |         |       |
-2 | Y         |     Y       |  x  |   Y     |   Y   | Forward to guest
-  |           |             |     |         |       |
-3 | Y         |     Y       |  N  |   Y     |   N   | A) Store in vCPU and
-  |           |             |     |         |       |    toggle on VMENTER/EXIT
-  |           |             |     |         |       |
-  |           |             |     |         |       | B) SIGBUS or KVM exit code
-  |           |             |     |         |       |
-4 | Y         |     Y       |  Y  |   Y     |   N   | A) Disable globally on
-  |           |             |     |         |       |    host. Store in vCPU/guest
-  |           |             |     |         |       |    state and evtl. reenable
-  |           |             |     |         |       |    when guest goes away.
-  |           |             |     |         |       | 
-  |           |             |     |         |       | B) SIGBUS or KVM exit code
+>
+> > At least I can see current driver has some features which is not being =
+used
+> > by any current driver. =20
+>
+> Please send patches to remove them.
 
-  [234] need proper accounting and tracepoints in KVM
+Agreed!
 
-  [34]  need a policy decision in KVM
+Mainline kernel should not include features that have not been used.
+Thank you.
 
-Now there are a two possible state transitions:
-
- #AC enabled on host during runtime
-
-   Existing guests are not notified. Nothing changes.
-
-
- #AC disabled on host during runtime
-
-   That only affects state #2 from the above table and there are two
-   possible solutions:
-
-     1) Do nothing.
-
-     2) Issue a notification to the guest. This would be doable at least
-     	for Linux guests because any guest kernel which handles #AC is
-	at least the same generation as the host which added #AC.
-
-   	Whether it's worth it, I don't know, but it makes sense at least
-	for consistency reasons.
-
-     For a first step I'd go for 'Do nothing'
-
-SMT state transitions could be handled in a similar way, but I don't think
-it's worth the trouble. The above should cover everything at least on a
-best effort basis.
-
-Thanks,
-
-	tglx
+Best regards,
+Jingoo Han
