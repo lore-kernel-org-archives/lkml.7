@@ -4,53 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8632CFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794CCFA372B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4F821925
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D66121925
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263879;
-	bh=BakXtVNyWxfe6/6cNUyEpr7kiZiRERaM4EkEd9adm7w=;
+	s=default; t=1571263884;
+	bh=Y8vjRB1HKyf86CsVZF6f3sro0+PODNZ0qgmKF8X/scU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tO1RBlwsBrsUEBp+OCmT/yn1vYNRXdjRxt8MAeVjcmlk8r4QxYjvTxx+asIuuWbIQ
-	 BAwmZFsI3KBuct4E/7jakD/OPBSiaKfwtjf1m9oZCmzt8qyQj1011dyrY3d79UaAiC
-	 CIghtmMaK5Gqow8nev2F8yCz62doJH7U+JTXdzSk=
+	b=ph+DnzsMFpbGOUthjKtaw97f/XLGQdYTr65/6OK36RANrpXPd+z5rAo5YDDLQLEL7
+	 /LTDznghkY1XXk8We9myRZesJcZHqUYKdlxJs8yoQMw4ZuPIzr3nhui8avxmKzJxpZ
+	 IusP0s5NDT+QrqIR93WHZ4QjAt7VvKSjHefhCd6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407273AbfJPWLS (ORCPT
+        id S2407284AbfJPWLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48956 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 18:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437924AbfJPV4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:50 -0400
+        id S2391393AbfJPV4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:56:48 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8562F21925;
-        Wed, 16 Oct 2019 21:56:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE92121D7A;
+        Wed, 16 Oct 2019 21:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571263009;
-        bh=BakXtVNyWxfe6/6cNUyEpr7kiZiRERaM4EkEd9adm7w=;
+        s=default; t=1571263007;
+        bh=Y8vjRB1HKyf86CsVZF6f3sro0+PODNZ0qgmKF8X/scU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MrjHYQ31+PRoLRWDOnF6Q+H4bNorriRjz7/fC5CRprVOVFSgtq67WsMjY2QHF3jvw
-         UqOeO5Vh6OLROtNs9zpzbJI3PZTPRFAharsv/oRiSVIHLwJJqqr5LzmxG+Jys6ft0r
-         PMGtq3l0gteBLNXLOdvMbMtKeXMONOcsTfEwtUSY=
+        b=uir8u3BjWw/QNbs5H2joU1FUxAZ5+iX0QzU56e59X3MrXBDEXFklY2mbCuUUqGw0m
+         RTgRuiiSFWfUicc20mRmwL7h/AcqckmsFWgKabTF7pP0Zm94yxGaeASpvPJXxSarlQ
+         8jyrZjaCsV0nuqNMNwamaYVJQoAaYUtTuxBk5wqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rick Tseng <rtseng@nvidia.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 12/81] usb: xhci: wait for CNR controller not ready bit in xhci resume
-Date:   Wed, 16 Oct 2019 14:50:23 -0700
-Message-Id: <20191016214817.920493885@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Xogium <contact@xogium.me>, Kees Cook <keescook@chromium.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 01/81] panic: ensure preemption is disabled during panic()
+Date:   Wed, 16 Oct 2019 14:50:12 -0700
+Message-Id: <20191016214806.623585425@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214805.727399379@linuxfoundation.org>
 References: <20191016214805.727399379@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,45 +66,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Tseng <rtseng@nvidia.com>
+From: Will Deacon <will@kernel.org>
 
-commit a70bcbc322837eda1ab5994d12db941dc9733a7d upstream.
+commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
 
-NVIDIA 3.1 xHCI card would lose power when moving power state into D3Cold.
-Thus we need to wait for CNR bit to clear in xhci resume, just as in
-xhci init.
+Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
+calling CPU in an infinite loop, but with interrupts and preemption
+enabled.  From this state, userspace can continue to be scheduled,
+despite the system being "dead" as far as the kernel is concerned.
 
-[Minor changes to comment and commit message -Mathias]
+This is easily reproducible on arm64 when booting with "nosmp" on the
+command line; a couple of shell scripts print out a periodic "Ping"
+message whilst another triggers a crash by writing to
+/proc/sysrq-trigger:
+
+  | sysrq: Trigger a crash
+  | Kernel panic - not syncing: sysrq triggered crash
+  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
+  | Hardware name: linux,dummy-virt (DT)
+  | Call trace:
+  |  dump_backtrace+0x0/0x148
+  |  show_stack+0x14/0x20
+  |  dump_stack+0xa0/0xc4
+  |  panic+0x140/0x32c
+  |  sysrq_handle_reboot+0x0/0x20
+  |  __handle_sysrq+0x124/0x190
+  |  write_sysrq_trigger+0x64/0x88
+  |  proc_reg_write+0x60/0xa8
+  |  __vfs_write+0x18/0x40
+  |  vfs_write+0xa4/0x1b8
+  |  ksys_write+0x64/0xf0
+  |  __arm64_sys_write+0x14/0x20
+  |  el0_svc_common.constprop.0+0xb0/0x168
+  |  el0_svc_handler+0x28/0x78
+  |  el0_svc+0x8/0xc
+  | Kernel Offset: disabled
+  | CPU features: 0x0002,24002004
+  | Memory Limit: none
+  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
+  |  Ping 2!
+  |  Ping 1!
+  |  Ping 1!
+  |  Ping 2!
+
+The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
+otherwise local interrupts are disabled in 'smp_send_stop()'.
+
+Disable preemption in 'panic()' before re-enabling interrupts.
+
+Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
+Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
+Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Xogium <contact@xogium.me>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Feng Tang <feng.tang@intel.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Rick Tseng <rtseng@nvidia.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-6-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/panic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1098,6 +1098,18 @@ int xhci_resume(struct xhci_hcd *xhci, b
- 		hibernated = true;
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -149,6 +149,7 @@ void panic(const char *fmt, ...)
+ 	 * after setting panic_cpu) from invoking panic() again.
+ 	 */
+ 	local_irq_disable();
++	preempt_disable_notrace();
  
- 	if (!hibernated) {
-+		/*
-+		 * Some controllers might lose power during suspend, so wait
-+		 * for controller not ready bit to clear, just as in xHC init.
-+		 */
-+		retval = xhci_handshake(&xhci->op_regs->status,
-+					STS_CNR, 0, 10 * 1000 * 1000);
-+		if (retval) {
-+			xhci_warn(xhci, "Controller not ready at resume %d\n",
-+				  retval);
-+			spin_unlock_irq(&xhci->lock);
-+			return retval;
-+		}
- 		/* step 1: restore register */
- 		xhci_restore_registers(xhci);
- 		/* step 2: initialize command ring buffer */
+ 	/*
+ 	 * It's possible to come here directly from a panic-assertion and
 
 
