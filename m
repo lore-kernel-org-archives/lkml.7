@@ -2,138 +2,120 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98664FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFA2FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A7D21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="baeRmgMA"
+	by mail.kernel.org (Postfix) with ESMTP id 8C8C62168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406268AbfJPQYd (ORCPT
+        id S2406275AbfJPQZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:24:33 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:58596 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406180AbfJPQYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:24:07 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F047AC2FFE;
-        Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1571243046; bh=Gl7iBE75XELfcNREiXW7mW3FbQ2SBGxgIlhfE4i/THg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=baeRmgMAmW6WkrxQQwh5Dss5cDho+NCZTIh3/kYQRbrxlbQYYnCUUV80yWxL8H0/J
-         d8S/+J4HEECuH3MYrxLV3pLeXtFD2JAUzjKXRvkqpR/X4ELMr8iZQybIMuZJbfISoU
-         iYwc+C4D5EK2JAJCd6KzB8JDePUK8wMRzY9R8XETXrHXN5yWuv/NrWfQWSpI07SIb8
-         FFsQbN91Ji3gM6rKELHHpn8xKwzA75fK4dHpzqsBL+63tL9Vib6YfAy73KDK37y6I6
-         GdvkF1GFwFMjJDNf9UwRYVDgSpTAfZKa3g1yzHgAoE/wea/kEl/gYA1Yws5pa3mMwL
-         LRMDu/phyxaNg==
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.61])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 6A909A007A;
-        Wed, 16 Oct 2019 16:24:04 +0000 (UTC)
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     linux-mm@kvack.org
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
+        Wed, 16 Oct 2019 12:25:34 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53038 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392349AbfJPQZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 12:25:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 09:25:33 -0700
+X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
+   d="scan'208";a="189729232"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.58]) ([10.255.31.58])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Oct 2019 09:25:29 -0700
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH v3 2/5] asm-generic/tlb: stub out pud_free_tlb() if nopud ...
-Date:   Wed, 16 Oct 2019 09:23:57 -0700
-Message-Id: <20191016162400.14796-3-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191016162400.14796-1-vgupta@synopsys.com>
-References: <20191016162400.14796-1-vgupta@synopsys.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+ <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+ <20190925180931.GG31852@linux.intel.com>
+ <3ec328dc-2763-9da5-28d6-e28970262c58@redhat.com>
+ <alpine.DEB.2.21.1910161142560.2046@nanos.tec.linutronix.de>
+ <57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com>
+ <c3ff2fb3-4380-fb07-1fa3-15896a09e748@intel.com>
+ <d30652bb-89fa-671a-5691-e2c76af231d0@redhat.com>
+ <8808c9ac-0906-5eec-a31f-27cbec778f9c@intel.com>
+ <alpine.DEB.2.21.1910161519260.2046@nanos.tec.linutronix.de>
+ <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <bea889c5-1599-1eb8-ff3a-3bde1e58afa3@intel.com>
+Date:   Thu, 17 Oct 2019 00:25:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba2c0aab-1d7c-5cfd-0054-ac2c266c1df3@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... independent of __ARCH_HAS_4LEVEL_HACK
+On 10/16/2019 11:37 PM, Paolo Bonzini wrote:
+> On 16/10/19 16:43, Thomas Gleixner wrote:
+>>
+>> N | #AC       | #AC enabled | SMT | Ctrl    | Guest | Action
+>> R | available | on host     |     | exposed | #AC   |
+>> --|-----------|-------------|-----|---------|-------|---------------------
+>>    |           |             |     |         |       |
+>> 0 | N         |     x       |  x  |   N     |   x   | None
+>>    |           |             |     |         |       |
+>> 1 | Y         |     N       |  x  |   N     |   x   | None
+> 
+> So far so good.
+> 
+>> 2 | Y         |     Y       |  x  |   Y     |   Y   | Forward to guest
+>>
+>> 3 | Y         |     Y       |  N  |   Y     |   N   | A) Store in vCPU and
+>>    |           |             |     |         |       |    toggle on VMENTER/EXIT
+>>    |           |             |     |         |       |
+>>    |           |             |     |         |       | B) SIGBUS or KVM exit code
+> 
+> (2) is problematic for the SMT=y case, because of what happens when #AC
+> is disabled on the host---safe guests can start to be susceptible to
+> DoS.
+> 
+> For (3), which is the SMT=n case,, the behavior is the same independent of
+> guest #AC.
+> 
+> So I would change these two lines to:
+> 
+>    2 | Y         |     Y       |  Y  |   N     |   x   | On first guest #AC,
+>      |           |             |     |         |       | disable globally on host.
+>      |           |             |     |         |       |
+>    3 | Y         |     Y       |  N  |   Y     |   x   | Switch MSR_TEST_CTRL on
+>      |           |             |     |         |       | enter/exit, plus:
+>      |           |             |     |         |       | A) #AC forwarded to guest.
+>      |           |             |     |         |       | B) SIGBUS or KVM exit code
+>
 
-This came up when removing __ARCH_HAS_5LEVEL_HACK for ARC as code bloat.
-With this patch we see the following code reduction
+I just want to get confirmed that in (3), we should split into 2 case:
 
-| bloat-o-meter2 vmlinux-B-elide-ARCH_USE_5LEVEL_HACK vmlinux-C-elide-pud_free_tlb
-| add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-104 (-104)
-| function                                     old     new   delta
-| free_pgd_range                               656     552    -104
-| Total: Before=4137276, After=4137172, chg -1.000000%
+a) if host has it enabled, still apply the constraint that guest is 
+forcibly enabled? so we don't switch MSR_TEST_CTL.
 
-Note: The primary change is alternate defintion for pud_free_tlb() but
-while there also removed empty stubs for __pud_free_tlb, which is anyhow
-called only from pud_free_tlb()
-
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- include/asm-generic/4level-fixup.h  | 1 -
- include/asm-generic/pgtable-nopud.h | 2 +-
- include/asm-generic/tlb.h           | 2 --
- 3 files changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/include/asm-generic/4level-fixup.h b/include/asm-generic/4level-fixup.h
-index e3667c9a33a5..c86cf7cb4bba 100644
---- a/include/asm-generic/4level-fixup.h
-+++ b/include/asm-generic/4level-fixup.h
-@@ -30,7 +30,6 @@
- #undef pud_free_tlb
- #define pud_free_tlb(tlb, x, addr)	do { } while (0)
- #define pud_free(mm, x)			do { } while (0)
--#define __pud_free_tlb(tlb, x, addr)	do { } while (0)
- 
- #undef  pud_addr_end
- #define pud_addr_end(addr, end)		(end)
-diff --git a/include/asm-generic/pgtable-nopud.h b/include/asm-generic/pgtable-nopud.h
-index c77a1d301155..d3776cb494c0 100644
---- a/include/asm-generic/pgtable-nopud.h
-+++ b/include/asm-generic/pgtable-nopud.h
-@@ -59,7 +59,7 @@ static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
-  */
- #define pud_alloc_one(mm, address)		NULL
- #define pud_free(mm, x)				do { } while (0)
--#define __pud_free_tlb(tlb, x, a)		do { } while (0)
-+#define pud_free_tlb(tlb, x, a)		        do { } while (0)
- 
- #undef  pud_addr_end
- #define pud_addr_end(addr, end)			(end)
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index 04c0644006fd..5e0c2d01e656 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -584,7 +584,6 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 	} while (0)
- #endif
- 
--#ifndef __ARCH_HAS_4LEVEL_HACK
- #ifndef pud_free_tlb
- #define pud_free_tlb(tlb, pudp, address)			\
- 	do {							\
-@@ -594,7 +593,6 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
- 		__pud_free_tlb(tlb, pudp, address);		\
- 	} while (0)
- #endif
--#endif
- 
- #ifndef __ARCH_HAS_5LEVEL_HACK
- #ifndef p4d_free_tlb
--- 
-2.20.1
-
+b) if host has it disabled, we can switch MSR_TEST_CTL on enter/exit.
