@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97F1FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678C8FA372C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E4E21928
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3553320872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 21:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571262956;
-	bh=B0dcqoSbicMHkVqB5HcqhintxRZrIi1P7Pzde2xZLLc=;
+	s=default; t=1571262962;
+	bh=D7p1egD3uCx9qb4alD0rkTnmhpO0xomFFmgHLmj87RY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RMOFgEmCpetzIxyYURal8VnoK4jQOoLnor2dhj9bIXuWXBoRX8JCYH1r2aFc4j1pG
-	 WzbR9WIjq1Reex+Jp+RRETvFcZUPBCSJnilN4cYY3KPSHNDkN+3F3onQDbNgHRU6Pd
-	 B9Xn0xVIrirbLbWJSqIzdX//cHmu4Dux5x7Ew29I=
+	b=2caEpblZ/8Xhb2i6lxMGINaUaAz7ESJ8eMw3Oozc8sYCAr5b209/Q5tB8reTD5FVq
+	 Hk/UL5L2mpGlY7lKj+DfIbnrXSMhAwyeUVmmCaeS8vCLGp/dw1oduB5BcgiTE3XzjA
+	 iyosOMCgXFuVx+CwcW/KBHfFpURA6uqdD79ToSrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437849AbfJPVzz (ORCPT
+        id S2390199AbfJPV4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 17:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46976 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:56:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437838AbfJPVzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:55:53 -0400
+        id S2437858AbfJPVz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:56 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C1621925;
-        Wed, 16 Oct 2019 21:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F12F20872;
+        Wed, 16 Oct 2019 21:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262952;
-        bh=B0dcqoSbicMHkVqB5HcqhintxRZrIi1P7Pzde2xZLLc=;
+        s=default; t=1571262956;
+        bh=D7p1egD3uCx9qb4alD0rkTnmhpO0xomFFmgHLmj87RY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxAmalAQLSuQaQcShACg807qlXlHt6dRG8fj9Z+ssqd0WkhPWfyI15fpLpJhgcgN7
-         lL5rLj9cHL1kPs/E7fx5LYIaW+ngYaif8gOK8HByBD3zcv+5Tx2REmF3MYwyB/2+4T
-         /Vq1LWFLEmBdCjeTNMjUMni9MHlX/+YmNUMSM2aA=
+        b=BE7z7YK5XfzZqLDShyoFmkwpLdaq7NE/4AU2HR+wFqeqJXzzbS7SHJIvuwArZ7jaF
+         /JSFo5hhVVSCDAkGslikTRWdbzfmiDnFoKQuYuEunm/lh9evsZs3Hy5Xr+Y1+9z2EO
+         jXlwuyiViUIfNNQxb4FiH5ERzA56553HaPQHwKzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 22/65] USB: ldusb: fix NULL-derefs on driver unbind
-Date:   Wed, 16 Oct 2019 14:50:36 -0700
-Message-Id: <20191016214818.168238921@linuxfoundation.org>
+        stable@vger.kernel.org, Beni Mahler <beni.mahler@gmx.net>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 25/65] USB: serial: ftdi_sio: add device IDs for Sienna and Echelon PL-20
+Date:   Wed, 16 Oct 2019 14:50:39 -0700
+Message-Id: <20191016214821.983489547@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -58,130 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Beni Mahler <beni.mahler@gmx.net>
 
-commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
+commit 357f16d9e0194cdbc36531ff88b453481560b76a upstream.
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag, but was setting it to NULL before making sure all
-completion handlers had run. This could lead to a NULL-pointer
-dereference in a number of dev_dbg, dev_warn and dev_err statements in
-the completion handlers which relies on said pointer.
+Both devices added here have a FTDI chip inside. The device from Echelon
+is called 'Network Interface' it is actually a LON network gateway.
 
-Fix this by unconditionally stopping all I/O and preventing
-resubmissions by poisoning the interrupt URBs at disconnect and using a
-dedicated disconnected flag.
+ ID 0403:8348 Future Technology Devices International, Ltd
+ https://www.eltako.com/fileadmin/downloads/de/datenblatt/Datenblatt_PL-SW-PROF.pdf
 
-This also makes sure that all I/O has completed by the time the
-disconnect callback returns.
+ ID 0920:7500 Network Interface
+ https://www.echelon.com/products/u20-usb-network-interface
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Signed-off-by: Beni Mahler <beni.mahler@gmx.net>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/ldusb.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/usb/serial/ftdi_sio.c     |    3 +++
+ drivers/usb/serial/ftdi_sio_ids.h |    9 +++++++++
+ 2 files changed, 12 insertions(+)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -157,6 +157,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
- struct ld_usb {
- 	struct mutex		mutex;		/* locks this structure */
- 	struct usb_interface	*intf;		/* save off the usb interface pointer */
-+	unsigned long		disconnected:1;
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1025,6 +1025,9 @@ static const struct usb_device_id id_tab
+ 	/* EZPrototypes devices */
+ 	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
+ 	{ USB_DEVICE_INTERFACE_NUMBER(UNJO_VID, UNJO_ISODEBUG_V1_PID, 1) },
++	/* Sienna devices */
++	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
++	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
+ 	{ }					/* Terminating entry */
+ };
  
- 	int			open_count;	/* number of times this port has been opened */
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -39,6 +39,9 @@
  
-@@ -196,12 +197,10 @@ static void ld_usb_abort_transfers(struc
- 	/* shutdown transfer */
- 	if (dev->interrupt_in_running) {
- 		dev->interrupt_in_running = 0;
--		if (dev->intf)
--			usb_kill_urb(dev->interrupt_in_urb);
-+		usb_kill_urb(dev->interrupt_in_urb);
- 	}
- 	if (dev->interrupt_out_busy)
--		if (dev->intf)
--			usb_kill_urb(dev->interrupt_out_urb);
-+		usb_kill_urb(dev->interrupt_out_urb);
- }
+ #define FTDI_LUMEL_PD12_PID	0x6002
  
- /**
-@@ -209,8 +208,6 @@ static void ld_usb_abort_transfers(struc
-  */
- static void ld_usb_delete(struct ld_usb *dev)
- {
--	ld_usb_abort_transfers(dev);
--
- 	/* free data structures */
- 	usb_free_urb(dev->interrupt_in_urb);
- 	usb_free_urb(dev->interrupt_out_urb);
-@@ -266,7 +263,7 @@ static void ld_usb_interrupt_in_callback
- 
- resubmit:
- 	/* resubmit if we're still running */
--	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
-+	if (dev->interrupt_in_running && !dev->buffer_overflow) {
- 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
- 		if (retval) {
- 			dev_err(&dev->intf->dev,
-@@ -395,7 +392,7 @@ static int ld_usb_release(struct inode *
- 		retval = -ENODEV;
- 		goto unlock_exit;
- 	}
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		/* the device was unplugged before the file was released */
- 		mutex_unlock(&dev->mutex);
- 		/* unlock here as ld_usb_delete frees dev */
-@@ -426,7 +423,7 @@ static unsigned int ld_usb_poll(struct f
- 
- 	dev = file->private_data;
- 
--	if (!dev->intf)
-+	if (dev->disconnected)
- 		return POLLERR | POLLHUP;
- 
- 	poll_wait(file, &dev->read_wait, wait);
-@@ -465,7 +462,7 @@ static ssize_t ld_usb_read(struct file *
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -545,7 +542,7 @@ static ssize_t ld_usb_write(struct file
- 	}
- 
- 	/* verify that the device wasn't unplugged */
--	if (dev->intf == NULL) {
-+	if (dev->disconnected) {
- 		retval = -ENODEV;
- 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
- 		goto unlock_exit;
-@@ -762,6 +759,9 @@ static void ld_usb_disconnect(struct usb
- 	/* give back our minor */
- 	usb_deregister_dev(intf, &ld_usb_class);
- 
-+	usb_poison_urb(dev->interrupt_in_urb);
-+	usb_poison_urb(dev->interrupt_out_urb);
++/* Sienna Serial Interface by Secyourit GmbH */
++#define FTDI_SIENNA_PID		0x8348
 +
- 	mutex_lock(&dev->mutex);
+ /* Cyber Cortex AV by Fabulous Silicon (http://fabuloussilicon.com) */
+ #define CYBER_CORTEX_AV_PID	0x8698
  
- 	/* if the device is not opened, then we clean up right now */
-@@ -769,7 +769,7 @@ static void ld_usb_disconnect(struct usb
- 		mutex_unlock(&dev->mutex);
- 		ld_usb_delete(dev);
- 	} else {
--		dev->intf = NULL;
-+		dev->disconnected = 1;
- 		/* wake up pollers */
- 		wake_up_interruptible_all(&dev->read_wait);
- 		wake_up_interruptible_all(&dev->write_wait);
+@@ -689,6 +692,12 @@
+ #define BANDB_ZZ_PROG1_USB_PID	0xBA02
+ 
+ /*
++ * Echelon USB Serial Interface
++ */
++#define ECHELON_VID		0x0920
++#define ECHELON_U20_PID		0x7500
++
++/*
+  * Intrepid Control Systems (http://www.intrepidcs.com/) ValueCAN and NeoVI
+  */
+ #define INTREPID_VID		0x093C
 
 
