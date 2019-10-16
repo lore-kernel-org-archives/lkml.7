@@ -2,324 +2,107 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E73DFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F2AFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447CF218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oO69GKlE"
+	by mail.kernel.org (Postfix) with ESMTP id 6A84720650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 15:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571241253;
+	bh=VanuJ71RvvI5sjdozyr9x7rrGpfPj3c8ybI0pGjZh9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bn2EbKqXH7JlEqPnprY/8hET/Rbpeg+o3zDs8y/EIQSw6ReFtLKxaMcL1cWbCyuix
+	 +g7zG43x3OI0sY0RVAEHE5fBIkzvJxNXnnzgR8sV4hX7HOLHT5NDCFmW89EfzeIhcO
+	 RjjhFhot8uKR9DYstyYPh1FIxTfLltoS5UdzmodI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405902AbfJPPx7 (ORCPT
+        id S2405916AbfJPPyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 11:53:59 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41224 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405891AbfJPPx7 (ORCPT
+        Wed, 16 Oct 2019 11:54:12 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43565 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405903AbfJPPyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:53:59 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g13so20573230otp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 08:53:58 -0700 (PDT)
+        Wed, 16 Oct 2019 11:54:11 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h126so23207747qke.10;
+        Wed, 16 Oct 2019 08:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ES8PPxqISv6le2aU+Na1jJhECeSWLsXBsBUpCljFmNc=;
-        b=oO69GKlEUEmZWfog28/tduGmrNxTECrWedf44ep3BiJWADibe3BtF/qSPOt+lHQnrd
-         HMZ/O6vy/oZ1Mn29CFgrBvva1cxYf0fsP2Iv2I85mFP+PSSHxMWS5bWwvJtAkW4KeQ4X
-         zHsZ4zn4Ud3sy3FtVlyWWHfups+bSfs5dcKPEQoYxyP86YUHE43Ssz5B42ovDjgprbuJ
-         QoImASQ3r2C39DI1HTT9w7MtYoLRwjzHESnKd/q21EZ4qeAz9arZ/6uRGqW264QE2D9u
-         M4kZpDAKBF3fk3pugbmFA+dNIL07VCSKkOnXhdXNc50ltBiqs8ufauu0rzHnctKYwyTf
-         J+zg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0WPO79DQDmX9K5UUvDG9NIvgYir9s6WI5TJKIJkxgcM=;
+        b=KCKGbCnnZALErjaIOXUYlE+dIZkF5JwVP/bpZ27+TuqqGH9oF0ds351xGOTB7cX87c
+         c4943D0f6UUJc5cY4nDXJIhYnPI8ba57pzg6LD+UtawPccJUsKjuyd0K8Y6vM2/hJm5I
+         RflHR2EyV1blt1g8DVrTRsNn+6EwcKLXhSqsK6OznGPFaYfeKCajl+kZriwEBFPPtDIC
+         LGwjAz89030aFNhbBaWQtFZnJTGGXoLm4aPpNSC1rj5FOBJXVMSkAZGyhvXwt8cU8Ppo
+         1pTL4woX4HN5aiZXh64itUXu4jap71Aba4sJGmNQlXnuRmfaDnNtUd8f4WP9tHxpEf67
+         KKXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ES8PPxqISv6le2aU+Na1jJhECeSWLsXBsBUpCljFmNc=;
-        b=HGTHarZCc3qkbz3EKhKknxYmFzAWfRjO8SumFDByHSc4yGH9ylG7iEcFj15EUp7qxm
-         ep6xjGJqhh1EKPyI6PxkU0hg75ANa6DOt6E4NrIOUdnlFibHIS0U26YGpykezc+PqXBi
-         7xtSJDkZWXp9kGQXNI5oqmApD2gBaZG3g4MGtCt21NS3eRuSqOaO57w8RXaU4GY1xxFF
-         rXprQEklKdoYPR4C2Lfz29zp7Y7Exn3aSuJALO6So9BWMnpW404huSN9/NVqkF+NjZug
-         2hgqq/qpRA2uoS37Y+Ll+CPuieWfXKTR8+10BTr3TO5W/UYGo4sXB8tjJn+KVybQM/jK
-         8Ydg==
-X-Gm-Message-State: APjAAAXGthNsttoXgEA8e7u+SeS9DYOKwd9DjgNiKYLuJvD1Me1dmQi/
-        /zGtgyLqK1GBTz+umhtUs3lh5wj271rHeYXclKEEwQ==
-X-Google-Smtp-Source: APXvYqy/bEpTtLLHRnuZTAKQyMKjVxdlLHEt24tIzExwmKRAvwqnmZoQehyCbZB5w1Ds0iSmKpp3CZhKegjg3ge7PUQ=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr8514934otk.2.1571241237486;
- Wed, 16 Oct 2019 08:53:57 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0WPO79DQDmX9K5UUvDG9NIvgYir9s6WI5TJKIJkxgcM=;
+        b=cNAR3KtXW+5S96RcMbualKEeWbYNHyBu2nz7xJkLbxfGHCpHjYHnIfEZ0PVIjnLg60
+         /4OKmYU1mirnTYYwEKeuykLjM/Uu9n+S7MRadHAtJz17YQCDw8+l2XBvSwj4u7Zxi3d5
+         t1P9bu4OWFWaMKQB2ua00X65xN1pl7cpS0a43xxtNBfaxhIKUUGyFNCsJ+Vs/yZWdm2A
+         HdURnkMokfyVwkkFQLskztrY0KKNOO21C7ZwpN3Ew9+brbcfBgrcgTyOwIGwyIc/L4mo
+         vbLg5/hnWo1QWhu2kopSAu1FzKJIqEbeYCOLnhWx1cbXXIsM/TN6Gp5zPyMLY54LctJR
+         eTig==
+X-Gm-Message-State: APjAAAXlS4AuDcpmmM6CzWWcBtoKrYvU/nGS7/paNQkj26aNM9V2aXpO
+        jXvgCxs0lOWVfZFwnoNP284=
+X-Google-Smtp-Source: APXvYqwBOCFb3TTsHBTEWw1SzJD1ztkfhHtDDk3aI2+Pj7u5QuOWjlAz0L3mRgFVS7r/KKRiaPiqBw==
+X-Received: by 2002:a37:db0a:: with SMTP id e10mr4290823qki.3.1571241250379;
+        Wed, 16 Oct 2019 08:54:10 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:2d57])
+        by smtp.gmail.com with ESMTPSA id b4sm11832566qkd.121.2019.10.16.08.54.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Oct 2019 08:54:09 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 08:54:07 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cgroup: pids: use {READ,WRITE}_ONCE for pids->limit
+ operations
+Message-ID: <20191016155407.GP18794@devbig004.ftw2.facebook.com>
+References: <20191012010539.6131-1-cyphar@cyphar.com>
+ <20191014154136.GF18794@devbig004.ftw2.facebook.com>
+ <20191014155931.jl7idjebhqxb3ck3@yavin.dot.cyphar.com>
+ <20191014163307.GG18794@devbig004.ftw2.facebook.com>
+ <20191016083218.ttsaqnxpjh5i5bgv@yavin.dot.cyphar.com>
+ <20191016142756.GN18794@devbig004.ftw2.facebook.com>
+ <20191016152946.34j5x45ko5auhv3g@yavin.dot.cyphar.com>
+ <20191016153520.zet5mn5xsygig4xc@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-References: <20191016083959.186860-1-elver@google.com> <20191016083959.186860-2-elver@google.com>
- <20191016151643.GC46264@lakrids.cambridge.arm.com>
-In-Reply-To: <20191016151643.GC46264@lakrids.cambridge.arm.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 16 Oct 2019 17:53:45 +0200
-Message-ID: <CANpmjNNctoVsUc+VbJ_RAMgLxcbvjq55gK1NdE0G0muMdv1+Ng@mail.gmail.com>
-Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>, ard.biesheuvel@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016153520.zet5mn5xsygig4xc@yavin.dot.cyphar.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 at 17:16, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, Oct 16, 2019 at 10:39:52AM +0200, Marco Elver wrote:
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index 2c2e56bd8913..34a1d9310304 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -1171,6 +1171,13 @@ struct task_struct {
-> >  #ifdef CONFIG_KASAN
-> >       unsigned int                    kasan_depth;
-> >  #endif
-> > +#ifdef CONFIG_KCSAN
-> > +     /* See comments at kernel/kcsan/core.c: struct cpu_state. */
-> > +     int                             kcsan_disable;
-> > +     int                             kcsan_atomic_next;
-> > +     int                             kcsan_atomic_region;
-> > +     bool                            kcsan_atomic_region_flat;
-> > +#endif
->
-> Should these be unsigned?
+On Thu, Oct 17, 2019 at 02:35:20AM +1100, Aleksa Sarai wrote:
+> > Sure, I will switch it to use atomic64_read() and atomic64_set() instead
+> > if that's what you'd prefer. Though I will mention that on quite a few
+> > architectures atomic64_read() is defined as:
+> > 
+> >   #define atomic64_read(v)        READ_ONCE((v)->counter)
+> 
+> Though I guess that's because on those architectures it turns out that
+> READ_ONCE is properly atomic?
 
-I prefer to keep them int, as they can become negative (rather than
-underflow with unsigned), if we e.g. have unbalanced
-kcsan_enable_current etc. Since we do not need the full unsigned range
-(these values should stay relatively small), int is more than enough.
+Oh yeah, on archs where 64bit accesses are atomic, READ_ONCE() /
+WRITE_ONCE() would work here.  If the limit variable were ulong
+instead of an explicit 64bit variable, RW ONCE would work too as ulong
+accesses are atomic on all archs IIRC.
 
-> > +/*
-> > + * Per-CPU state that should be used instead of 'current' if we are not in a
-> > + * task.
-> > + */
-> > +struct cpu_state {
-> > +     int disable; /* disable counter */
-> > +     int atomic_next; /* number of following atomic ops */
-> > +
-> > +     /*
-> > +      * We use separate variables to store if we are in a nestable or flat
-> > +      * atomic region. This helps make sure that an atomic region with
-> > +      * nesting support is not suddenly aborted when a flat region is
-> > +      * contained within. Effectively this allows supporting nesting flat
-> > +      * atomic regions within an outer nestable atomic region. Support for
-> > +      * this is required as there are cases where a seqlock reader critical
-> > +      * section (flat atomic region) is contained within a seqlock writer
-> > +      * critical section (nestable atomic region), and the "mismatching
-> > +      * kcsan_end_atomic()" warning would trigger otherwise.
-> > +      */
-> > +     int atomic_region;
-> > +     bool atomic_region_flat;
-> > +};
-> > +static DEFINE_PER_CPU(struct cpu_state, this_state) = {
-> > +     .disable = 0,
-> > +     .atomic_next = 0,
-> > +     .atomic_region = 0,
-> > +     .atomic_region_flat = 0,
-> > +};
->
-> These are the same as in task_struct, so I think it probably makes sense
-> to have a common structure for these, e.g.
->
-> | struct kcsan_ctx {
-> |       int     disable;
-> |       int     atomic_next;
-> |       int     atomic_region;
-> |       bool    atomic_region_flat;
-> | };
->
-> ... which you then place within task_struct, e.g.
->
-> | #ifdef CONFIG_KCSAN
-> |       struct kcsan_ctx        kcsan_ctx;
-> | #endif
->
-> ... and here, e.g.
->
-> | static DEFINE_PER_CPU(struct kcsan_ctx, kcsan_cpu_ctx);
->
-> That would simplify a number of cases below where you have to choose one
-> or the other, as you can choose the pointer, then handle the rest in a
-> common way.
->
-> e.g. for:
->
-> > +static inline bool is_atomic(const volatile void *ptr)
-> > +{
-> > +     if (in_task()) {
-> > +             if (unlikely(current->kcsan_atomic_next > 0)) {
-> > +                     --current->kcsan_atomic_next;
-> > +                     return true;
-> > +             }
-> > +             if (unlikely(current->kcsan_atomic_region > 0 ||
-> > +                          current->kcsan_atomic_region_flat))
-> > +                     return true;
-> > +     } else { /* interrupt */
-> > +             if (unlikely(this_cpu_read(this_state.atomic_next) > 0)) {
-> > +                     this_cpu_dec(this_state.atomic_next);
-> > +                     return true;
-> > +             }
-> > +             if (unlikely(this_cpu_read(this_state.atomic_region) > 0 ||
-> > +                          this_cpu_read(this_state.atomic_region_flat)))
-> > +                     return true;
-> > +     }
-> > +
-> > +     return kcsan_is_atomic(ptr);
-> > +}
->
-> ... you could have something like:
->
-> | struct kcsan_ctx *kcsan_get_ctx(void)
-> | {
-> |       return in_task() ? &current->kcsan_ctx : this_cpu_ptr(kcsan_cpu_ctx);
-> | }
-> |
-> | static inline bool is_atomic(const volatile void *ptr)
-> | {
-> |       struct kcsan_ctx *ctx = kcsan_get_ctx();
-> |       if (unlikely(ctx->atomic_next > 0) {
-> |               --ctx->atomic_next;
-> |               return true;
-> |       }
-> |       if (unlikely(ctx->atomic_region > 0 || ctx->atomic_region_flat))
-> |               return true;
-> |
-> |       return kcsan_is_atomic(ptr);
-> | }
->
-> ... avoiding duplicating the checks for task/irq contexts.
->
-> It's not clear to me how either that or the original code works if a
-> softirq is interrupted by a hardirq. IIUC most of the fields should
-> remain stable over that window, since the hardirq should balance most
-> changes it makes before returning, but I don't think that's true for
-> atomic_next. Can't that be corrupted from the PoV of the softirq
-> handler?
+Thanks.
 
-As you say, these fields should balance. So far I have not observed
-any issues. For atomic_next I'm not concerned as it is an
-approximation either way (see seqlock patch), and it's fine if there
-is a small error.
-
-> [...]
->
-> > +void kcsan_begin_atomic(bool nest)
-> > +{
-> > +     if (nest) {
-> > +             if (in_task())
-> > +                     ++current->kcsan_atomic_region;
-> > +             else
-> > +                     this_cpu_inc(this_state.atomic_region);
-> > +     } else {
-> > +             if (in_task())
-> > +                     current->kcsan_atomic_region_flat = true;
-> > +             else
-> > +                     this_cpu_write(this_state.atomic_region_flat, true);
-> > +     }
-> > +}
->
-> Assuming my suggestion above wasn't bogus, this can be:
->
-> | void kcsan_begin_atomic(boot nest)
-> | {
-> |       struct kcsan_ctx *ctx = kcsan_get_ctx();
-> |       if (nest)
-> |               ctx->atomic_region++;
-> |       else
-> |               ctx->atomic_region_flat = true;
-> | }
->
-> > +void kcsan_end_atomic(bool nest)
-> > +{
-> > +     if (nest) {
-> > +             int prev =
-> > +                     in_task() ?
-> > +                             current->kcsan_atomic_region-- :
-> > +                             (this_cpu_dec_return(this_state.atomic_region) +
-> > +                              1);
-> > +             if (prev == 0) {
-> > +                     kcsan_begin_atomic(true); /* restore to 0 */
-> > +                     kcsan_disable_current();
-> > +                     WARN(1, "mismatching %s", __func__);
-> > +                     kcsan_enable_current();
-> > +             }
-> > +     } else {
-> > +             if (in_task())
-> > +                     current->kcsan_atomic_region_flat = false;
-> > +             else
-> > +                     this_cpu_write(this_state.atomic_region_flat, false);
-> > +     }
-> > +}
->
-> ... similarly:
->
-> | void kcsan_end_atomic(bool nest)
-> | {
-> |       struct kcsan_ctx *ctx = kcsan_get_ctx();
-> |
-> |       if (nest)
-> |               if (ctx->kcsan_atomic_region--) {
-> |                       kcsan_begin_atomic(true); /* restore to 0 */
-> |                       kcsan_disable_current();
-> |                       WARN(1, "mismatching %s"\ __func__);
-> |                       kcsan_enable_current();
-> |               }
-> |       } else {
-> |               ctx->atomic_region_flat = true;
-> |       }
-> | }
->
-> > +void kcsan_atomic_next(int n)
-> > +{
-> > +     if (in_task())
-> > +             current->kcsan_atomic_next = n;
-> > +     else
-> > +             this_cpu_write(this_state.atomic_next, n);
-> > +}
->
-> ... and:
->
-> | void kcsan_atomic_nextint n)
-> | {
-> |       kcsan_get_ctx()->atomic_next = n;
-> | }
-
-Otherwise, yes, this makes much more sense and I will just introduce
-the struct and integrate the above suggestions for v2.
-
-Many thanks,
--- Marco
+-- 
+tejun
