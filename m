@@ -2,77 +2,59 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94673ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA3CECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751372084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBB82084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 01:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfJPBRo (ORCPT
+        id S1731784AbfJPBTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 21:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfJPBRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:17:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515792084B;
-        Wed, 16 Oct 2019 01:17:43 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 21:17:41 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Viktor Rosendahl (BMW)" <viktor.rosendahl@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/4] ftrace: Implement fs notification for
- tracing_max_latency
-Message-ID: <20191015211741.3ff2f3a1@gandalf.local.home>
-In-Reply-To: <20191016004120.GD89937@google.com>
-References: <20191015111910.4496-1-viktor.rosendahl@gmail.com>
-        <20191015111910.4496-2-viktor.rosendahl@gmail.com>
-        <20191016004120.GD89937@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 15 Oct 2019 21:19:38 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42900 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfJPBTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 21:19:37 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1873511F5F798;
+        Tue, 15 Oct 2019 18:19:37 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 18:19:36 -0700 (PDT)
+Message-Id: <20191015.181936.1206475589133546355.davem@davemloft.net>
+To:     jgross@suse.com
+Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.liu@kernel.org, paul@xen.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 0/2] xen/netback: bug fix and cleanup
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191014090910.9701-1-jgross@suse.com>
+References: <20191014090910.9701-1-jgross@suse.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 15 Oct 2019 18:19:37 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 15 Oct 2019 20:41:20 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
+From: Juergen Gross <jgross@suse.com>
+Date: Mon, 14 Oct 2019 11:09:08 +0200
 
-> > +static const struct file_operations tracing_max_lat_fops;
-> > +
-> > +#if (defined(CONFIG_TRACER_MAX_TRACE) || defined(CONFIG_HWLAT_TRACER)) && \
-> > +	defined(CONFIG_FSNOTIFY)  
-> 
-> Something bothers me. If you dropped support for HWLAT_TRACER as you
-> mentioned in the cover letter, then why does this #if look for the CONFIG
-> option?
-> 
-> (and similar comment on the rest of the patch..)
+> One bugfix (patch 1) I stumbled over while doing a cleanup (patch 2)
+> of the xen-netback init/deinit code.
 
-Also, if you have a complex if statement like this, it is better to
-create a new define to set it in a header file:
+Please do not mix cleanups and genuine bug fixes.
 
-#if (defined(CONFIG_TRACER_MAX_TRACE) || defined(CONFIG_HWLAT_TRACER)) && \
-	defined(CONFIG_FSNOTIFY)
-# define HAVE_TRACER_FSNOTIFY
-#endif
+Submit the bug fix targetting the 'net' GIT tree, and once that eventually
+gets merged into 'net-next' you can submit the cleanup against that.
 
-And then just use that:
-
-#ifdef HAVE_TRACER_FSNOTIFY
-...
-#endif
-
-It keeps things a bit more manageable.
-
--- Steve
+Thanks.
