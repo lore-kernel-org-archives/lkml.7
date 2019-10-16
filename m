@@ -2,292 +2,152 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9467FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800D3FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B71C2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571233882;
-	bh=HCdRDuHYzMBbEO0nrbpBojXNDkZQrE3bThDnWnyflKg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dlbU9zbR1sc5i55xQeaMqMIsYE7hQpQUKX6p0fnhAONehN1oZbC9aC3KwOT8vPsVd
-	 sNl8LXm24ORJD3h5cD/+J1e3RlUCfcuF0ZxZ/rixvzk43nRq6dtw7VdQyNVFWxq9Vu
-	 g+5mhSNZBOfbae2lKIw1vQl5Q6JrptwtIfeZSvWw=
+	by mail.kernel.org (Postfix) with ESMTP id 547A220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:52:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTm6zlZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405582AbfJPNvV (ORCPT
+        id S2405589AbfJPNwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405567AbfJPNvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:51:21 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5235A21848;
-        Wed, 16 Oct 2019 13:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571233879;
-        bh=HCdRDuHYzMBbEO0nrbpBojXNDkZQrE3bThDnWnyflKg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hOWQm9ByS5ZORydHhQKZjVIUuZvxknqO/TwgDkO2NBEqM65WZlnKiWY8VjhFhVIs8
-         mL6HWiIAubrubhLSrrA6za5k4qFm4R6RNxX5NzVe38k3lJ32ceoQru8mgMNem/gfAr
-         pipS/Lzlmn0CI0rsl9rQs87gPXuAMAwgHmYZqUIo=
-Received: by mail-qk1-f173.google.com with SMTP id u184so22808767qkd.4;
-        Wed, 16 Oct 2019 06:51:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAVgJJL3X9w7PqNEJGGjjiHpsDcOt9sMj7s5Ao5T/UwvffGYiByb
-        htH2C8SQut4eIMwXv5EUhW6YaDzAOeB/uOhH3w==
-X-Google-Smtp-Source: APXvYqx7BlcygeKrIYBNjMW/BUKQN2ZxX5edXsFDWH7JF43qkfOVAIHn+CnzgtR4eQlWfHy/eyt61P4z/30Axgg7KSo=
-X-Received: by 2002:a37:2f81:: with SMTP id v123mr41956355qkh.254.1571233878318;
- Wed, 16 Oct 2019 06:51:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191015162300.22024-1-brgl@bgdev.pl> <20191015162300.22024-2-brgl@bgdev.pl>
- <CAL_JsqKhGr6QDWZFR6cq6MH-0vghb9oSgkCCdi7bhiKmvrkY_w@mail.gmail.com> <CAMRc=Mdb7T6p7xXWJBS2UXq0E-FD4WRtaP7H-AvRH0s6-MyJ8A@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdb7T6p7xXWJBS2UXq0E-FD4WRtaP7H-AvRH0s6-MyJ8A@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 16 Oct 2019 08:51:06 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJZ9myO3Uwb6j_R3W8EpVtOaCZV6_tDfNAXwoaUZO+kNQ@mail.gmail.com>
-Message-ID: <CAL_JsqJZ9myO3Uwb6j_R3W8EpVtOaCZV6_tDfNAXwoaUZO+kNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: max77650: convert the binding
- document to yaml
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 16 Oct 2019 09:52:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41104 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391962AbfJPNwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:52:14 -0400
+Received: by mail-io1-f66.google.com with SMTP id n26so53809895ioj.8;
+        Wed, 16 Oct 2019 06:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=utCDVgVbZ5WjSdZrf9lDYLAzWEhwnZ24Zw+SLge2X/Q=;
+        b=NTm6zlZ32eSZNxQ5TRo6LYWQC7jJJNF3MjYWWedy26p/7IPFYjdWNNasmcSOJho1Na
+         YKmafUu8hzR21aTYGewjdH9rMvGXw5r0JNn5IjYFdDAnbJTjtnd9dIcF1Mde0aaFI69h
+         g9CppfLaqK77qmlX7dQCL6yLpwD/ALftKjB8Y/r+qW9yt9rAiwDtWNPEiQPuPIUsUe+J
+         uwE3NMuUIWY6Th0Qjwz21Ox6PIBy77jxAYJzwtRMGFI/vB+gOFeFnxrSk/cz4kjrjZ7P
+         y8UWu+9w90IRhrPyTplF+jZQxB6c4pWNHyxu+vGMvcpUsFVlZVMop3/UPkphYRI49TOu
+         Rltg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=utCDVgVbZ5WjSdZrf9lDYLAzWEhwnZ24Zw+SLge2X/Q=;
+        b=oV6qWoFNsLy41Y2EfgL3fQHTqDe2xpLgrK0LFUXrOpfg3Ed2nvMEARRaea7DQwf73n
+         8vqWVZps7dqkNLK0bW/cVbFaAFjV53j/B9umzhVVuiCquSvGFz95seUB0aEc6BCB7wBg
+         eGMZXmCASRL43J+GvUSaneyEA5U1OTZx4fowQIRg/lRMp8FyUY8WzkRgjvSoBGDxLgaX
+         8GQFzqOjXX/gEpiiWSFtMTGifrCgfcLxvaoC/9hutFM3mVk6OpcErThmNCAE+pw7ojY7
+         uDERdmCtGqqv7DEzd0j3JyteXH4Xf/Nm4IeLcD97VIGGjHVXxc/u3369hwNxRMV/oY2Q
+         qUuQ==
+X-Gm-Message-State: APjAAAW4wfIA0GGPL72zghAWNhCpJoy8OADn68KrzaU1Si4E07Ul0eJz
+        ke/Uw99mS+pvbd16CyIecU4=
+X-Google-Smtp-Source: APXvYqxKHHiKucNI0gkNKLs3b54iLE/Y1m78a8dY5DI5Q5i+Vkenqm2lDHbWmnE7zIvO4FHH3PtqIQ==
+X-Received: by 2002:a5d:9c4b:: with SMTP id 11mr7571501iof.240.1571233933273;
+        Wed, 16 Oct 2019 06:52:13 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id e139sm17227545iof.60.2019.10.16.06.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 06:52:12 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-omap@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+Date:   Wed, 16 Oct 2019 08:51:45 -0500
+Message-Id: <20191016135147.7743-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 7:55 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> wt., 15 pa=C5=BA 2019 o 23:17 Rob Herring <robh+dt@kernel.org> napisa=C5=
-=82(a):
-> >
-> > On Tue, Oct 15, 2019 at 11:23 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> > >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Convert the binding document for MAX77650 core MFD module to YAML.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > ---
-> > >  .../devicetree/bindings/mfd/max77650.txt      | 47 +----------
-> > >  .../devicetree/bindings/mfd/max77650.yaml     | 83 +++++++++++++++++=
-++
-> > >  2 files changed, 84 insertions(+), 46 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.ya=
-ml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77650.txt
-> > > index b529d8d19335..080871686b3b 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/max77650.txt
-> > > +++ b/Documentation/devicetree/bindings/mfd/max77650.txt
-> > > @@ -1,46 +1 @@
-> > > -MAX77650 ultra low-power PMIC from Maxim Integrated.
-> > > -
-> > > -Required properties:
-> > > --------------------
-> > > -- compatible:          Must be "maxim,max77650"
-> > > -- reg:                 I2C device address.
-> > > -- interrupts:          The interrupt on the parent the controller is
-> > > -                       connected to.
-> > > -- interrupt-controller: Marks the device node as an interrupt contro=
-ller.
-> > > -- #interrupt-cells:    Must be <2>.
-> > > -
-> > > -- gpio-controller:     Marks the device node as a gpio controller.
-> > > -- #gpio-cells:         Must be <2>. The first cell is the pin number=
- and
-> > > -                       the second cell is used to specify the gpio a=
-ctive
-> > > -                       state.
-> > > -
-> > > -Optional properties:
-> > > ---------------------
-> > > -gpio-line-names:       Single string containing the name of the GPIO=
- line.
-> > > -
-> > > -The GPIO-controller module is represented as part of the top-level P=
-MIC
-> > > -node. The device exposes a single GPIO line.
-> > > -
-> > > -For device-tree bindings of other sub-modules (regulator, power supp=
-ly,
-> > > -LEDs and onkey) refer to the binding documents under the respective
-> > > -sub-system directories.
-> > > -
-> > > -For more details on GPIO bindings, please refer to the generic GPIO =
-DT
-> > > -binding document <devicetree/bindings/gpio/gpio.txt>.
-> > > -
-> > > -Example:
-> > > ---------
-> > > -
-> > > -       pmic@48 {
-> > > -               compatible =3D "maxim,max77650";
-> > > -               reg =3D <0x48>;
-> > > -
-> > > -               interrupt-controller;
-> > > -               interrupt-parent =3D <&gpio2>;
-> > > -               #interrupt-cells =3D <2>;
-> > > -               interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
-> > > -
-> > > -               gpio-controller;
-> > > -               #gpio-cells =3D <2>;
-> > > -               gpio-line-names =3D "max77650-charger";
-> > > -       };
-> > > +This file has been moved to max77650.yaml.
-> > > diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Do=
-cumentation/devicetree/bindings/mfd/max77650.yaml
-> > > new file mode 100644
-> > > index 000000000000..5186ad287ec7
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
-> > > @@ -0,0 +1,83 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/max77650.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: MAX77650 ultra low-power PMIC from Maxim Integrated.
-> > > +
-> > > +maintainers:
-> > > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > +
-> > > +description: |
-> > > +  This document describes the DT properties of the core MFD controll=
-er.
-> > > +
-> > > +  The GPIO-controller module is represented as part of the top-level=
- PMIC
-> > > +  node. The device exposes a single GPIO line.
-> > > +
-> > > +  For device-tree bindings of other sub-modules (regulator, power su=
-pply,
-> > > +  LEDs and onkey) refer to the binding documents under the respectiv=
-e
-> > > +  sub-system directories.
-> > > +
-> > > +  For more details on GPIO bindings, please refer to the generic GPI=
-O DT
-> > > +  binding document <devicetree/bindings/gpio/gpio.txt>.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: maxim,max77650
-> > > +
-> > > +  reg:
-> > > +    description:
-> > > +      I2C device address.
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    description:
-> > > +      The interrupt on the parent the controller is connected to.
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupt-controller: true
-> > > +
-> > > +  "#interrupt-cells":
-> > > +    const: 2
-> > > +    description:
-> > > +      The first cell is the IRQ number, the second cell is the trigg=
-er type.
-> > > +
-> > > +  gpio-controller: true
-> > > +
-> > > +  "#gpio-cells":
-> > > +    const: 2
-> > > +    description:
-> > > +      The first cell is the pin number and the second cell is used t=
-o specify
-> > > +      the gpio active state.
-> > > +
-> > > +  gpio-line-names:
-> > > +    $ref: '/schemas/types.yaml#/definitions/string-array'
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      Single string containing the name of the GPIO line.
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - interrupt-controller
-> > > +  - "#interrupt-cells"
-> > > +  - gpio-controller
-> > > +  - "#gpio-cells"
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    pmic@48 {
-> > > +        compatible =3D "maxim,max77650";
-> > > +        reg =3D <0x48>;
-> > > +
-> > > +        interrupt-controller;
-> > > +        interrupt-parent =3D <&gpio2>;
-> > > +        #interrupt-cells =3D <2>;
-> > > +        interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
-> >
-> > Examples are built now. Run 'make dt_binding_check' on bindings before
-> > sending them:
-> >
-> > Error: Documentation/devicetree/bindings/mfd/max77650.example.dts:24.29=
--30
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:321: recipe for target
-> > 'Documentation/devicetree/bindings/mfd/max77650.example.dt.yaml'
-> > failed
-> > make[1]: *** [Documentation/devicetree/bindings/mfd/max77650.example.dt=
-.yaml]
-> > Error 1
-> >
-> > You need to include any includes that you use.
-> >
-> > Rob
->
-> Hi Rob,
->
-> thanks for the review.
->
-> I'm on v5.4-rc3 and when running dt_binding_check, the error I'm
-> getting is this:
->
-> # make dt_binding_check
-> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/mfd/max77650.yaml
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
->   CHKDT   Documentation/devicetree/bindings/mfd/max77650.yaml
-> make[1]: *** No rule to make target
-> 'Documentation/devicetree/bindings/mfd/max77650.example.dt.yaml',
-> needed by '__build'.  Stop.
-> make: *** [Makefile:1263: dt_binding_check] Error 2
->
-> Is this caused by the same issue or am I missing something?
+Previously, there was an omap panel-dpi driver that would
+read generic timings from the device tree and set the display
+timing accordingly.  This driver was removed so the screen
+no longer functions.  This patch modifies the panel-simple
+file to setup the timings to the same values previously used.
 
-I believe that's because dtc needs to be built with libyaml support.
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
-Rob
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+---
+V5:  No Change
+V4:  No Change
+V3:  No Change
+V2:  No Change
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5d487686d25c..72f69709f349 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
+ 
++static const struct drm_display_mode logicpd_type_28_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 3,
++	.hsync_end = 480 + 3 + 42,
++	.htotal = 480 + 3 + 42 + 2,
++
++	.vdisplay = 272,
++	.vsync_start = 272 + 2,
++	.vsync_end = 272 + 2 + 11,
++	.vtotal = 272 + 2 + 11 + 3,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc logicpd_type_28 = {
++	.modes = &logicpd_type_28_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 105,
++		.height = 67,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
++};
++
+ static const struct panel_desc mitsubishi_aa070mc01 = {
+ 	.modes = &mitsubishi_aa070mc01_mode,
+ 	.num_modes = 1,
+@@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logicpd,type28",
++		.data = &logicpd_type_28,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
+-- 
+2.17.1
+
