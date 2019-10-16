@@ -2,121 +2,157 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514F7FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8C1FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EADA2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAC72168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LuQBx/8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbfJPNgf (ORCPT
+        id S2391928AbfJPNhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:36:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38124 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727619AbfJPNge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:36:34 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6DF9E476CBDCC42BCA3A;
-        Wed, 16 Oct 2019 21:36:33 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 16 Oct 2019
- 21:36:24 +0800
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mingo@redhat.com>,
-        <peterz@infradead.org>, <alex.williamson@redhat.com>
-CC:     Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>
-Subject: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com>
-Date:   Wed, 16 Oct 2019 21:36:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 16 Oct 2019 09:37:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34075 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733031AbfJPNhO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:37:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j11so28126611wrp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 06:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=CMdNj2+acb0B7tDCqXrl91GW8f8XDBPBKRIxHWWs42c=;
+        b=LuQBx/8tJ64k2Fp4YEOOrFwjVU627ODDbybjUhS2ifRD0J9i+tD7rY7Win7VAqzbsg
+         saC06fZc5v0/q2MizPah9BJ5KOM2ncpNw3gtWNTuqIcAa3KMlPmywDBx0jKw9SztWdBx
+         kxKctzZdDalr7X9Kl9XtTTYu6RniliFk4YJcZlygcylMg+WNakhRSQsj38nUyGvYIggr
+         3rDCPZh2JAsyF2G7ufRa5ZlG7k46Td/fUWRp46ey9aoiNv+UT3gxK1Rj77PvFvPMEajn
+         wvAMjUW6D0mvWBCcCCkkMLD5UJbi5l7rIEa63QizI0X6jmgyxlDEUHNgVu6E38YBBHVD
+         x+OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=CMdNj2+acb0B7tDCqXrl91GW8f8XDBPBKRIxHWWs42c=;
+        b=f53XQUEUzZOVam5n7POgD2+AwLL2KedpnML4E3Spws3BI/ad4MsWWVAeugqNkn9ub+
+         HV7Mgw0mStbvP3uB8lBufkChnroCnB8dwhneV6sOvcNBKg8BRidsdrhXjF1kDBLjgFFX
+         Kt/VCLXFD0vuaLcvdYy3FAWVvuHx+jGRR4tChpgXfvBu95EdP5xjedGyhyUI4kt/S1rI
+         nsB9eq6uaCKhE/M3VV2jvbxPsVsCNtd4Cu0Bf+IinTxVX4fFDTrUO7Bv3v96dDivuScu
+         dNPpmfzBAPgiqrbB6tJIYN85lkXYeSb6i1Y4dW9Y0MDJOmRgahsQpvcGUKlgMkBdSRfG
+         UbxA==
+X-Gm-Message-State: APjAAAVw9Dj6lK6bSTRnjAkq/fvTBq+S5PlNJqLvjrswbqt7qdeNNG+8
+        Z2R8kf53u30hgPXkFODK6XyJxA==
+X-Google-Smtp-Source: APXvYqyRAfZ2navxpVMc69fM9dW1dVKGTOneB+CBuphbL/MPphkzJlEhwqcSStzQWgG7AJ9AyOFleg==
+X-Received: by 2002:a5d:49c9:: with SMTP id t9mr1670541wrs.146.1571233031987;
+        Wed, 16 Oct 2019 06:37:11 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id 207sm3212108wme.17.2019.10.16.06.37.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 06:37:11 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 14:37:10 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Module loading problem since 5.3
+Message-ID: <20191016133710.GB35139@google.com>
+References: <20191014085235.GW16384@42.do-not-panic.com>
+ <20191014144440.GG35313@google.com>
+ <20191016125030.GH16384@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016125030.GH16384@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, Oct 16, 2019 at 12:50:30PM +0000, Luis Chamberlain wrote:
+>On Mon, Oct 14, 2019 at 03:44:40PM +0100, Matthias Maennich wrote:
+>> Hi Luis!
+>>
+>> On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
+>> > On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
+>> > > On 10.10.2019 19:15, Luis Chamberlain wrote:
+>> > > >
+>> > > >
+>> > > > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
+>> > > >
+>> > > >        MODULE_SOFTDEP("pre: realtek")
+>> > > >
+>> > > >     Are you aware of any current issues with module loading
+>> > > >     that could cause this problem?
+>> > > >
+>> > > >
+>> > > > Nope. But then again I was not aware of MODULE_SOFTDEP(). I'd encourage an extension to lib/kmod.c or something similar which stress tests this. One way that comes to mind to test this is to allow a new tests case which loads two drives which co depend on each other using this macro. That'll surely blow things up fast. That is, the current kmod tests uses request_module() or get_fs_type(), you'd want a new test case with this added using then two new dummy test drivers with the macro dependency.
+>> > > >
+>> > > > If you want to resolve this using a more tested path, you could have request_module() be used as that is currently tested. Perhaps a test patch for that can rule out if it's the macro magic which is the issue.
+>> > > >
+>> > > >   Luis
+>> > >
+>> > > Maybe issue is related to a bug in introduction of symbol namespaces, see here:
+>> > > https://lkml.org/lkml/2019/10/11/659
+>> >
+>> > Can you have your user with issues either revert 8651ec01daed or apply the fixes
+>> > mentioned by Matthias to see if that was the issue?
+>> >
+>> > Matthias what module did you run into which let you run into the issue
+>> > with depmod? I ask as I think it would be wise for us to add a test case
+>> > using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
+>> > regression you detected.
+>>
+>> The depmod warning can be reproduced when using a symbol that is built
+>> into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
+>> CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
+>> namespace USB_STORAGE and depmod stumbles upon this emitting the
+>> following warning (e.g. during make modules_install).
+>>
+>>  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
+>>
+>> As there is another (less intrusive) way of implementing the namespace
+>> feature, I posted a patch series [1] on last Thursday that should
+>> mitigate the issue as the ksymtab entries depmod eventually relies on
+>> are no longer carrying the namespace in their names.
+>>
+>> Cheers,
+>> Matthias
+>>
+>> [1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
+>
+>Yes but kmalloc() is built-in, and used by *all* drivers compiled as
+>modules, so why was that an issue?
 
-Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
-See the call stack below:
+I believe you meant, "why was that *not* an issue?".
+In ksymtab, namespaced symbols had the format
 
-[66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
-[66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
-[66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
-[66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
-[66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
-[66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
-[66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-[66630.246266] Mem abort info:
-[66630.249047]   ESR = 0x8600000d
-[66630.252088]   Exception class = IABT (current EL), IL = 32 bits
-[66630.257981]   SET = 0, FnV = 0
-[66630.261022]   EA = 0, S1PTW = 0
-[66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
-[66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
-[66630.277751] Internal error: Oops: 8600000d [#1] SMP
-[66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
-[66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
-[66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
-[66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
-[66630.314042] pc : 0xffff802dac469000
-[66630.317519] lr : __wake_up_common+0x90/0x1a8
-[66630.321768] sp : ffff00027746bb00
-[66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
-[66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
-[66630.335643] x25: 0000000000000000 x24: 0000000000000000
-[66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
-[66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
-[66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
-[66630.356793] x17: 0000000000000000 x16: 0000000000000000
-[66630.362081] x15: 0000000000000000 x14: 0000000000000000
-[66630.367368] x13: 0000000000000000 x12: 0000000000000000
-[66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
-[66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
-[66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
-[66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
-[66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
-[66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
-[66630.404381] Call trace:
-[66630.406818]  0xffff802dac469000
-[66630.409945]  __wake_up_common_lock+0xa8/0x1a0
-[66630.414283]  __wake_up+0x40/0x50
-[66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
-[66630.421752]  pci_try_reset_function+0x58/0x78
-[66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
-[66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
-[66630.436158]  do_vfs_ioctl+0xc4/0x8c0
-[66630.439718]  ksys_ioctl+0x8c/0xa0
-[66630.443018]  __arm64_sys_ioctl+0x28/0x38
-[66630.446925]  el0_svc_common+0x78/0x130
-[66630.450657]  el0_svc_handler+0x38/0x78
-[66630.454389]  el0_svc+0x8/0xc
-[66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
-[66630.463325] kernel fault(0x1) notification starting on CPU 41
-[66630.469044] kernel fault(0x1) notification finished on CPU 41
+  __ksymtab_<NAMESPACE>.<symbol>
 
-The chance to reproduce this problem is very small. We had an initial analysis of this problem,
-and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
+while symbols without namespace would still use the old format
 
-I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
-concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+  __ksymtab_<symbol>
 
+These are also the names that are extracted into System.map (using
+scripts/mksysmap). Depmod is reading the System.map and for symbols used
+by modules that are in a namespace, it would not find a match as it does
+not understand the namespace notation. Depmod would still not emit a
+warning for symbols without namespace as their format did not change.
 
--- 
+Cheers,
+Matthias
 
-Thanks,
-Xiang
-
+>
+>  Luis
