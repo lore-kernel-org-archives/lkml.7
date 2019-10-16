@@ -2,113 +2,123 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6447FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF791FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4B92067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FF32067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cY9dsuzo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfFKuR5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405725AbfJPOD6 (ORCPT
+        id S2393748AbfJPOG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:03:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44044 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405714AbfJPOD6 (ORCPT
+        Wed, 16 Oct 2019 10:06:56 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39043 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfJPOGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:03:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z9so28211732wrl.11;
-        Wed, 16 Oct 2019 07:03:56 -0700 (PDT)
+        Wed, 16 Oct 2019 10:06:55 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 4so22837144qki.6
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:06:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UkCPOkyDARfo8k/pBvvcA0h9m0lAAi+VfYgojWm4kgk=;
-        b=cY9dsuzoAPwxU/XF5YOyYMjat23Qun9g3x6ILdtSx/ggQRqIePmLDkjzG2p5jnu/K2
-         8E1+2ITKF3H/fb7zzkOun+aQOQ0hhp94nirrHcqfEuc/HjDynTAHWZpgePCE2K1OZMfs
-         pjfc9gfZIvlmAKztRuOpcLCtda7izI0fM9fWl2oJlxCnKhV+kSNYJlU3gVDyh65z781h
-         1Cg5vWoK9PxSRedm1NUZ9it8nmzgzziT3YRqK7fp6bM6hn3bnxpeQA5hgmmxmb7u4te/
-         60PH4xXqvpKLPy3o8g7wNFCMhWNDKXG3yVULIqqwRVOr4ZMY8gmr/nhu6mrWaVoM2Y8M
-         4YyA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OV8M1D/TxXy4oGUbP8BzEAmD46S3DBGLQJESy6/GXeU=;
+        b=UfFKuR5LAMCyoEYi+f9+s+Mh5PZY6ghn7wl89N+4RRU60bGweIE0fFGJUrJDbDInX7
+         RLki6pINLythhgJ7RrL9msTqr57E0K1LJatgrpJnNyctINvqYro+Ifo8KNgyH1RxP55o
+         GdxTAQaif4QPMo88jswMry5AnC+bLur1ZhTriS2y+EVjvF64CsU/PH9kU3g/C3bb8JQZ
+         WmJ45bVIwc6pfZB31LLYWaGyzrUhJToG6+mHYyHgUv9c24jHabd2TPv96KDS9XDIDCgK
+         hnHpogDGRBq/6wRPNWbsv1LwNd+XeH3Y7qzakjy/b36eLMnImHnKaCg14LfPZY85bofw
+         yKgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UkCPOkyDARfo8k/pBvvcA0h9m0lAAi+VfYgojWm4kgk=;
-        b=FBmeS18BY5Kgq6DgS6lVC+OP8oj9Hs1pwIB6IZCPXfr425bmnHlJY2ZePTW9yR5/Ef
-         w/PIv9dPD1s+UcyO4uBWgGUvmOS8bMNCke3LObZ66RvKnUiRYvSV1ZWqJlhxfXf1KdP0
-         yyUmdi6WwIjTURTUQdm+ipONsFn9eeSBAgZgoa4Iv/X8WUHdfQlqASMq9BUilHnaVk5k
-         +r9+b2bis5LypPMU0AlFaUfgPcTpalBK/EcOO7zF6GAUKzYN8oCJUg36bRd66Gz1lu2k
-         ENFsQ6ivfONQLF7tXczTr1aBD+c9nnLvhtpsOjF7ea8Tn6v+GkHtT+r4FKE9TivKLe+r
-         Wg4g==
-X-Gm-Message-State: APjAAAW1Yni++Wh1uUmYqL0kO7j9gC4WHQ0vJobGzi0yXrJmIs0FIi5X
-        K5yksUM+oEHTQ3HSDk248LM=
-X-Google-Smtp-Source: APXvYqwVB1pZhXJU7zyV30yowyh/v7HB68SaAJm2+nDZiRFa1Y5kqu3QvOa4SMlU88KEt9f6U3tzHw==
-X-Received: by 2002:adf:ecd0:: with SMTP id s16mr2842961wro.65.1571234635696;
-        Wed, 16 Oct 2019 07:03:55 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id r27sm67512626wrc.55.2019.10.16.07.03.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 16 Oct 2019 07:03:54 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 16:03:53 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
-Message-ID: <20191016140353.4hrncxa5wkx47oau@pali>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190829205631.uhz6jdboneej3j3c@pali>
- <184209.1567120696@turing-police>
- <20190829233506.GT5281@sasha-vm>
- <20190830075647.wvhrx4asnkrfkkwk@pali>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OV8M1D/TxXy4oGUbP8BzEAmD46S3DBGLQJESy6/GXeU=;
+        b=tFuCpd1LenKTx79s/C7ZrYBZzOYV+2Thyyf1i4zrkKucs1jIO1ODgUUo2NoDdfHdvU
+         Numzatf7MIGvIIj2f4c0UjnBIh7TlXZ4XVV+Lbeex+QZmPWOGSBrTXwvgv2VX9O81TrW
+         M2jgiulxKAk2hyxhr76YnAzpOOxa4cch7w3MQzwInNb+WqSXMQ3rEaq6x/QVd3nma2k2
+         /4jfM8F8ufW8JPIr/WfX2IkpXGBISv9h2N0HNF1ySfT3hO6Tcx3r3W2AO6z9WC3oFoZB
+         dAqqwH9LQYGCbXfNcigILf12ytmaTw/8+QMRzqwAh7n7gOIiYLDliBV8RVIviOaLUV9m
+         BD8A==
+X-Gm-Message-State: APjAAAVXSebqerKsw7dwAN27LYMofbXYEHDk99kijaRp9hxbval+yMwd
+        Q5kO4GGz2HS4YRfEmdbY1lM=
+X-Google-Smtp-Source: APXvYqypuwINeVW9ebGUzWJbX1NGuwaXHGsmPX40GxEza2MOqKgWyyluL6SGBIToXT/VzxBdeUjUZA==
+X-Received: by 2002:a37:f90e:: with SMTP id l14mr40331357qkj.68.1571234814792;
+        Wed, 16 Oct 2019 07:06:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id p22sm11418505qkk.92.2019.10.16.07.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 07:06:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D4EAD4DD66; Wed, 16 Oct 2019 11:06:51 -0300 (-03)
+Date:   Wed, 16 Oct 2019 11:06:51 -0300
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        hushiyuan@huawei.com, linfeilong@huawei.com
+Subject: Re: [PATCH v2] perf kmem: Fix memory leak in compact_gfp_flags()
+Message-ID: <20191016140651.GF22835@kernel.org>
+References: <7fd48f77-fbc4-b99f-60c1-ccc7d8d287e9@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190830075647.wvhrx4asnkrfkkwk@pali>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <7fd48f77-fbc4-b99f-60c1-ccc7d8d287e9@huawei.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 30 August 2019 09:56:47 Pali Rohár wrote:
-> On Thursday 29 August 2019 19:35:06 Sasha Levin wrote:
-> > With regards to missing specs/docs/whatever - our main concern with this
-> > release was that we want full interoperability, which is why the spec
-> > was made public as-is without modifications from what was used
-> > internally. There's no "secret sauce" that Microsoft is hiding here.
+Em Wed, Oct 16, 2019 at 09:26:50PM +0800, Yunfeng Ye escreveu:
+> The memory @orig_flags is allocated by strdup(), it is freed on the
+> normal path, but leak to free on the error path.
 > 
-> Ok, if it was just drop of "current version" of documentation then it
-> makes sense.
+> Fix this by adding free(orig_flags) on the error path.
 > 
-> > How about we give this spec/code time to get soaked and reviewed for a
-> > bit, and if folks still feel (in a month or so?) that there are missing
-> > bits of information related to exfat, I'll be happy to go back and try
-> > to get them out as well.
+> Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+> v1 -> v2:
+>  - add "Fixes:" message
 
-Hello Sasha!
+No need for that, I did it already, just next time look for when the
+problem you fixed was introduced, that way the various bots out there
+can pick this up for backports, i.e. your fix has a higher chance of
+being beneficial to more systems.
 
-Now one month passed, so do you have some information when missing parts
-of documentation like TexFAT would be released to public?
-
-> Basically external references in that released exFAT specification are
-> unknown / not released yet. Like TexFAT. So if you have an input in MS
-> could you forward request about these missing bits?
+- Arnaldo
+ 
+>  tools/perf/builtin-kmem.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 1e61e353f579..9661671cc26e 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
+>  			new = realloc(new_flags, len + strlen(cpt) + 2);
+>  			if (new == NULL) {
+>  				free(new_flags);
+> +				free(orig_flags);
+>  				return NULL;
+>  			}
+> 
+> -- 
+> 2.7.4.3
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+
+- Arnaldo
