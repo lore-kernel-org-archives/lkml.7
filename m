@@ -2,412 +2,124 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD78FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F546FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBD121848
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E0C218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 14:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmVGKFBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393912AbfJPOSJ convert rfc822-to-8bit (ORCPT
+        id S2393920AbfJPOTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 10:18:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44751 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393902AbfJPOSI (ORCPT
+        Wed, 16 Oct 2019 10:19:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39791 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730937AbfJPOTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 10:18:08 -0400
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iKk7m-00083W-Po
-        for linux-kernel@vger.kernel.org; Wed, 16 Oct 2019 14:18:03 +0000
-Received: by mail-pl1-f197.google.com with SMTP id g7so14276595plo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:18:02 -0700 (PDT)
+        Wed, 16 Oct 2019 10:19:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s22so20278666otr.6
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Oct 2019 07:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oRCJA7Fo6qKgPkycGt7GDX3KsXKekLnt+bCZAb1lUvQ=;
+        b=kmVGKFBVSltBLVc5IdxfR70Sn9KD+16oQYLZrmvIB3fFsxTG878Z9MXJHt/QkP+cBq
+         u4NmLTBDMgJi0dqbv0HCu6F0VDZnayXCP9Y2lXENq0zImZQQXGsFTky4BIO359avKJGm
+         /tIVJbLgv4fJW7jBAxYakqwUHVE3nDQCN7P2HLBxNXasgP/+fhHV9DE3oID4FyzKbiis
+         rce8MS/NxTZsem3AdWsoHE7i5g3SiucIaMahTWiQhnNgeXs/rp613JzaoYgzdp0QPB2r
+         SlVY6MohzNoTmohNZf8e/S/4DRLNHdEcj3h6dvlFQX2+8XO1LYDBSefU9NB5DzwoPXIL
+         fD9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TuTC8ijcgLc67jQ2AXPUc8dg003S1A5ZUCuiMtqNO18=;
-        b=SxOHig/omgfxARZ8sxW10Rp3YJzYXEj8p1usHJTMUkbvG1uXpk7RdctKtUyEErSnBO
-         1Quq9XVWyHIDdPoYYMXu+XSzjEll7vZeXy6UxmaFVxNN345SX3PGTFKSsE5Il6JF3WfQ
-         LqjbjJcsTznFMkSKltuCu4bE5CBsAG2zNlCiUSAtGfsMdqqkch0QFYPMHhMebJ30nu9l
-         LyHVg8hh70Pa3iaOi2OCA27bDvTO+rPRT62v0MPN2ZREXhcxxtM+CD5uV6xY9mzA8gpW
-         AntuZ0AZRJFw1Jn6i/qaqRb+/Lf2VQtGzDzy1Veb72oCbbKkKIS7y2aTZc9wZALWaVcn
-         sSZQ==
-X-Gm-Message-State: APjAAAV/fSovTGDqsI5M4iLsEoLaepHAn2oN7UuQC1FXnsrUHVLzqU+y
-        hynqAl3M04QjS6o/TOI0XljhdGLoG54C8/F5y3GhUYM4O21rt4QDzMnkICcMb47TCOsr4Cf+Mrf
-        meGTIb1nDFEXDTfz6sLilwC+zMGbrVZp3A8B9uqIvWQ==
-X-Received: by 2002:a62:6247:: with SMTP id w68mr46242526pfb.11.1571235481398;
-        Wed, 16 Oct 2019 07:18:01 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwCnmIENYA5oC5ae7xAxN2QmZlfpeuhboiP84i3lN3Z/ILvjnrHd+GupMMATDSC2oExGulqOA==
-X-Received: by 2002:a62:6247:: with SMTP id w68mr46242463pfb.11.1571235480832;
-        Wed, 16 Oct 2019 07:18:00 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-c02c-3cd8-f108-bd7e.dynamic-ip6.hinet.net (2001-b011-380f-3c42-c02c-3cd8-f108-bd7e.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:c02c:3cd8:f108:bd7e])
-        by smtp.gmail.com with ESMTPSA id d69sm28715879pfd.175.2019.10.16.07.17.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 07:18:00 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601\))
-Subject: Re: [PATCH] HID: i2c-hid: Remove runtime power management
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAO-hwJJoy3=a_m9V6ZseisGgWp=jJpYr3ub85SaLiQFiioZ7ew@mail.gmail.com>
-Date:   Wed, 16 Oct 2019 22:17:56 +0800
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        You-Sheng Yang <vicamo.yang@canonical.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <42A39804-8A92-4282-B4AC-BCF5BFC9F0DB@canonical.com>
-References: <20191008153829.24766-1-kai.heng.feng@canonical.com>
- <d096582b-c96b-69a2-bcc5-cba2984705e7@redhat.com>
- <CAO-hwJJoy3=a_m9V6ZseisGgWp=jJpYr3ub85SaLiQFiioZ7ew@mail.gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-X-Mailer: Apple Mail (2.3601)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=oRCJA7Fo6qKgPkycGt7GDX3KsXKekLnt+bCZAb1lUvQ=;
+        b=srZ+HAElgyEIGtaY0a54Yu/EnsPae+QKtSnxBjhkpwK0ttic06esiCkn8HL4n7kP2I
+         7MhzyUTTMJst/PDELUDY+heA2XjUOi7k+mrp2F+V8XI4VXdHt3spesnZ4lDtWa0Ac7p2
+         bNtn8mHPq4CZ++9imUu6MzyEoaUqnGrLiqZ4JvbkbX8cN7EEtqVSo8fmPaxXPNYKQ7VD
+         f4A21M74e08xPItXtLY++85j3Wg7G0OPWazC9QLDwIt+lQbivgzm6S0omOh+TokHELAO
+         /pH8XbaUKcs8Y92t4A5BKfS4TWrCt4TBzvtoaQ4iymNq6MKvdAxLsN+md2cEZO44jaaD
+         Q7iw==
+X-Gm-Message-State: APjAAAWWOWbibcmMgJ/x9tZlRjR59WLdiwiPRdLGeWG0LAFlEHH7G6Z7
+        WJ+myEuPapMwqJCxjL3jlQ==
+X-Google-Smtp-Source: APXvYqzsMQ8sg5gTyK6Tys4TFflwQcD2kmByJ78d7v7u2pMPuFKF96PL0pWTxDbBatC8ov4NW2yxPw==
+X-Received: by 2002:a9d:30c1:: with SMTP id r1mr1816638otg.91.1571235578921;
+        Wed, 16 Oct 2019 07:19:38 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.136.59])
+        by smtp.gmail.com with ESMTPSA id 91sm7752566otn.36.2019.10.16.07.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 07:19:38 -0700 (PDT)
+Received: from t560 (unknown [192.168.27.180])
+        by serve.minyard.net (Postfix) with ESMTPSA id 6C59D180056;
+        Wed, 16 Oct 2019 14:19:37 +0000 (UTC)
+Date:   Wed, 16 Oct 2019 09:19:36 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        Alistair Popple <alistair@popple.id.au>,
+        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>
+Subject: Re: [PATCH -next] ipmi: bt-bmc: use devm_platform_ioremap_resource()
+ to simplify code
+Message-ID: <20191016141936.GN14232@t560>
+Reply-To: minyard@acm.org
+References: <20191016092131.23096-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016092131.23096-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+On Wed, Oct 16, 2019 at 05:21:31PM +0800, YueHaibing wrote:
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
 
-> On Oct 11, 2019, at 17:27, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> 
-> Hi,
-> 
-> [Adding Mika, who introduced runpm in i2c-hid]
-> 
-> few questions, remarks:
-> 
-> On Tue, Oct 8, 2019 at 10:26 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> 
->> Hi,
->> 
->> On 08-10-2019 17:38, Kai-Heng Feng wrote:
->>> Runtime power management in i2c-hid brings lots of issues, such as:
->>> - When transitioning from display manager to desktop session, i2c-hid
->>> was closed and opened, so the device was set to SLEEP and ON in a short
->>> period. Vendors confirmed that their devices can't handle fast ON/SLEEP
->>> command because Windows doesn't have this behavior.
->>> 
->>> - When rebooting, i2c-hid was closed, and the driver core put the device
->>> back to full power before shutdown. This behavior also triggers a quick
->>> SLEEP and ON commands that some devices can't handle, renders an
->>> unusable touchpad after reboot.
->>> 
->>> - Runtime power management is only useful when i2c-hid isn't opened,
->>> i.e. a laptop without desktop session, which isn't that common.
-> 
-> There is also one GPM-like driver that uses libinput (can't remember
-> from the top of my head), but you can have the i2c-hid device opened
-> on a vt too (with 2 finger gestures for scrolling and what not) :)
+Adding the module author and others. I can't see a reason to not do
+this.
 
-Ok, I'll remove it as it's actually a valid use case.
+-corey
 
 > 
-> And there is also the use case of a 2-in-1 when the laptop is in
-> tablet mode. In some cases, the compositor will close the inputs to
-> ignore the touchpad events.
-
-Is it controlled by software? I thought the 2-in-1s handle this by firmware.
-
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/char/ipmi/bt-bmc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Anyway, Mika, is there any drawbacks of not having runpm on i2c-hid
-> devices? Maybe at the IRQ level?
+> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+> index 40b9927..d36aeac 100644
+> --- a/drivers/char/ipmi/bt-bmc.c
+> +++ b/drivers/char/ipmi/bt-bmc.c
+> @@ -444,15 +444,13 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>  
+>  	bt_bmc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+>  	if (IS_ERR(bt_bmc->map)) {
+> -		struct resource *res;
+>  		void __iomem *base;
+>  
+>  		/*
+>  		 * Assume it's not the MFD-based devicetree description, in
+>  		 * which case generate a regmap ourselves
+>  		 */
+> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -		base = devm_ioremap_resource(&pdev->dev, res);
+> +		base = devm_platform_ioremap_resource(pdev, 0);
+>  		if (IS_ERR(base))
+>  			return PTR_ERR(base);
+>  
+> -- 
+> 2.7.4
 > 
->>> 
->>> - Most importantly, my power meter reports little to none energy saving
->>> when i2c-hid is runtime suspended.
 > 
-> Heh, that was the whole point of HID over I2C: the bus doesn't drain
-> power when not in used, so we can have always on devices with little
-> to no consumption of energy.
-> 
-> Do you have any numbers, or is it in the noise range?
-
-I think it's even below the noise range.
-
-> 
->>> 
->>> So let's remove runtime power management since there is no actual
->>> benefit.
->>> 
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> 
-> Thanks for the patch (one nitpick down below though).
-> 
->> 
->> Given all the problems we've been seeing related to runtime pm I agree
->> that this is probably the best approach:
->> 
->> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Thanks Hans.
-> 
-> You-Sheng, does this solve your issue with your touchpad? Do I have
-> your acked-by or tested-by?
-
-This is just a notify to let You-Sheng know that I removed lots of quirk entries. I believe it's a different issue.
-
-> 
-> Cheers,
-> Benjamin
-> 
->> 
->> Regards,
->> 
->> Hans
->> 
->> 
->> 
->>> ---
->>>  drivers/hid/i2c-hid/i2c-hid-core.c | 111 ++---------------------------
->>>  1 file changed, 4 insertions(+), 107 deletions(-)
->>> 
->>> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
->>> index 2a7c6e33bb1c..5ab4982b3a7b 100644
->>> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
->>> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
->>> @@ -26,7 +26,6 @@
->>>  #include <linux/delay.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/pm.h>
->>> -#include <linux/pm_runtime.h>
->>>  #include <linux/device.h>
->>>  #include <linux/wait.h>
->>>  #include <linux/err.h>
->>> @@ -48,8 +47,6 @@
->>>  /* quirks to control the device */
->>>  #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV    BIT(0)
->>>  #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET    BIT(1)
->>> -#define I2C_HID_QUIRK_NO_RUNTIME_PM          BIT(2)
->>> -#define I2C_HID_QUIRK_DELAY_AFTER_SLEEP              BIT(3)
->>>  #define I2C_HID_QUIRK_BOGUS_IRQ                     BIT(4)
->>> 
->>>  /* flags */
->>> @@ -172,14 +169,7 @@ static const struct i2c_hid_quirks {
->>>      { USB_VENDOR_ID_WEIDA, HID_ANY_ID,
->>>              I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
->>>      { I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
->>> -             I2C_HID_QUIRK_NO_IRQ_AFTER_RESET |
->>> -             I2C_HID_QUIRK_NO_RUNTIME_PM },
->>> -     { I2C_VENDOR_ID_RAYDIUM, I2C_PRODUCT_ID_RAYDIUM_4B33,
->>> -             I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
->>> -     { USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
->>> -             I2C_HID_QUIRK_NO_RUNTIME_PM },
->>> -     { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
->>> -             I2C_HID_QUIRK_NO_RUNTIME_PM },
->>> +             I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
->>>      { USB_VENDOR_ID_ELAN, HID_ANY_ID,
->>>               I2C_HID_QUIRK_BOGUS_IRQ },
->>>      { 0, 0 }
->>> @@ -397,7 +387,6 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
->>>  {
->>>      struct i2c_hid *ihid = i2c_get_clientdata(client);
->>>      int ret;
->>> -     unsigned long now, delay;
->>> 
->>>      i2c_hid_dbg(ihid, "%s\n", __func__);
->>> 
->>> @@ -415,22 +404,9 @@ static int i2c_hid_set_power(struct i2c_client *client, int power_state)
->>>                      goto set_pwr_exit;
->>>      }
->>> 
->>> -     if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
->>> -         power_state == I2C_HID_PWR_ON) {
->>> -             now = jiffies;
->>> -             if (time_after(ihid->sleep_delay, now)) {
->>> -                     delay = jiffies_to_usecs(ihid->sleep_delay - now);
->>> -                     usleep_range(delay, delay + 1);
->>> -             }
->>> -     }
->>> -
->>>      ret = __i2c_hid_command(client, &hid_set_power_cmd, power_state,
->>>              0, NULL, 0, NULL, 0);
->>> 
->>> -     if (ihid->quirks & I2C_HID_QUIRK_DELAY_AFTER_SLEEP &&
->>> -         power_state == I2C_HID_PWR_SLEEP)
->>> -             ihid->sleep_delay = jiffies + msecs_to_jiffies(20);
->>> -
->>>      if (ret)
->>>              dev_err(&client->dev, "failed to change power setting.\n");
->>> 
->>> @@ -791,11 +767,6 @@ static int i2c_hid_open(struct hid_device *hid)
->>>  {
->>>      struct i2c_client *client = hid->driver_data;
->>>      struct i2c_hid *ihid = i2c_get_clientdata(client);
->>> -     int ret = 0;
->>> -
->>> -     ret = pm_runtime_get_sync(&client->dev);
->>> -     if (ret < 0)
->>> -             return ret;
->>> 
->>>      set_bit(I2C_HID_STARTED, &ihid->flags);
->>>      return 0;
->>> @@ -807,27 +778,6 @@ static void i2c_hid_close(struct hid_device *hid)
->>>      struct i2c_hid *ihid = i2c_get_clientdata(client);
->>> 
->>>      clear_bit(I2C_HID_STARTED, &ihid->flags);
->>> -
->>> -     /* Save some power */
->>> -     pm_runtime_put(&client->dev);
->>> -}
->>> -
->>> -static int i2c_hid_power(struct hid_device *hid, int lvl)
->>> -{
->>> -     struct i2c_client *client = hid->driver_data;
->>> -     struct i2c_hid *ihid = i2c_get_clientdata(client);
->>> -
->>> -     i2c_hid_dbg(ihid, "%s lvl:%d\n", __func__, lvl);
->>> -
->>> -     switch (lvl) {
->>> -     case PM_HINT_FULLON:
->>> -             pm_runtime_get_sync(&client->dev);
->>> -             break;
->>> -     case PM_HINT_NORMAL:
->>> -             pm_runtime_put(&client->dev);
->>> -             break;
->>> -     }
->>> -     return 0;
->>>  }
->>> 
->>>  struct hid_ll_driver i2c_hid_ll_driver = {
->>> @@ -836,7 +786,6 @@ struct hid_ll_driver i2c_hid_ll_driver = {
->>>      .stop = i2c_hid_stop,
->>>      .open = i2c_hid_open,
->>>      .close = i2c_hid_close,
->>> -     .power = i2c_hid_power,
->>>      .output_report = i2c_hid_output_report,
->>>      .raw_request = i2c_hid_raw_request,
->>>  };
->>> @@ -1104,9 +1053,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->>> 
->>>      i2c_hid_acpi_fix_up_power(&client->dev);
->>> 
->>> -     pm_runtime_get_noresume(&client->dev);
->>> -     pm_runtime_set_active(&client->dev);
->>> -     pm_runtime_enable(&client->dev);
->>>      device_enable_async_suspend(&client->dev);
->>> 
->>>      /* Make sure there is something at this address */
->>> @@ -1154,9 +1100,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->>>              goto err_mem_free;
->>>      }
->>> 
->>> -     if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
->>> -             pm_runtime_put(&client->dev);
->>> -
->>>      return 0;
->>> 
->>>  err_mem_free:
->>> @@ -1166,9 +1109,6 @@ static int i2c_hid_probe(struct i2c_client *client,
->>>      free_irq(client->irq, ihid);
->>> 
->>>  err_pm:
-> 
-> shouldn't this label go away?
-
-You are right, I'll send a v2 to address that.
-
-Kai-Heng
-
-> 
->>> -     pm_runtime_put_noidle(&client->dev);
->>> -     pm_runtime_disable(&client->dev);
->>> -
->>>  err_regulator:
->>>      regulator_bulk_disable(ARRAY_SIZE(ihid->pdata.supplies),
->>>                             ihid->pdata.supplies);
->>> @@ -1181,12 +1121,6 @@ static int i2c_hid_remove(struct i2c_client *client)
->>>      struct i2c_hid *ihid = i2c_get_clientdata(client);
->>>      struct hid_device *hid;
->>> 
->>> -     if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
->>> -             pm_runtime_get_sync(&client->dev);
->>> -     pm_runtime_disable(&client->dev);
->>> -     pm_runtime_set_suspended(&client->dev);
->>> -     pm_runtime_put_noidle(&client->dev);
->>> -
->>>      hid = ihid->hid;
->>>      hid_destroy_device(hid);
->>> 
->>> @@ -1219,25 +1153,15 @@ static int i2c_hid_suspend(struct device *dev)
->>>      int wake_status;
->>> 
->>>      if (hid->driver && hid->driver->suspend) {
->>> -             /*
->>> -              * Wake up the device so that IO issues in
->>> -              * HID driver's suspend code can succeed.
->>> -              */
->>> -             ret = pm_runtime_resume(dev);
->>> -             if (ret < 0)
->>> -                     return ret;
->>> -
->>>              ret = hid->driver->suspend(hid, PMSG_SUSPEND);
->>>              if (ret < 0)
->>>                      return ret;
->>>      }
->>> 
->>> -     if (!pm_runtime_suspended(dev)) {
->>> -             /* Save some power */
->>> -             i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
->>> +     /* Save some power */
->>> +     i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
->>> 
->>> -             disable_irq(client->irq);
->>> -     }
->>> +     disable_irq(client->irq);
->>> 
->>>      if (device_may_wakeup(&client->dev)) {
->>>              wake_status = enable_irq_wake(client->irq);
->>> @@ -1279,11 +1203,6 @@ static int i2c_hid_resume(struct device *dev)
->>>                              wake_status);
->>>      }
->>> 
->>> -     /* We'll resume to full power */
->>> -     pm_runtime_disable(dev);
->>> -     pm_runtime_set_active(dev);
->>> -     pm_runtime_enable(dev);
->>> -
->>>      enable_irq(client->irq);
->>> 
->>>      /* Instead of resetting device, simply powers the device on. This
->>> @@ -1304,30 +1223,8 @@ static int i2c_hid_resume(struct device *dev)
->>>  }
->>>  #endif
->>> 
->>> -#ifdef CONFIG_PM
->>> -static int i2c_hid_runtime_suspend(struct device *dev)
->>> -{
->>> -     struct i2c_client *client = to_i2c_client(dev);
->>> -
->>> -     i2c_hid_set_power(client, I2C_HID_PWR_SLEEP);
->>> -     disable_irq(client->irq);
->>> -     return 0;
->>> -}
->>> -
->>> -static int i2c_hid_runtime_resume(struct device *dev)
->>> -{
->>> -     struct i2c_client *client = to_i2c_client(dev);
->>> -
->>> -     enable_irq(client->irq);
->>> -     i2c_hid_set_power(client, I2C_HID_PWR_ON);
->>> -     return 0;
->>> -}
->>> -#endif
->>> -
->>>  static const struct dev_pm_ops i2c_hid_pm = {
->>>      SET_SYSTEM_SLEEP_PM_OPS(i2c_hid_suspend, i2c_hid_resume)
->>> -     SET_RUNTIME_PM_OPS(i2c_hid_runtime_suspend, i2c_hid_runtime_resume,
->>> -                        NULL)
->>>  };
->>> 
->>>  static const struct i2c_device_id i2c_hid_id_table[] = {
-
