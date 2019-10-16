@@ -4,87 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB69BFA372B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AFEC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF6D20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FDD20650
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 10:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404489AbfJPKDR (ORCPT
+        id S2390211AbfJPKEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 06:03:17 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48799 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404289AbfJPKDR (ORCPT
+        Wed, 16 Oct 2019 06:04:22 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:45155 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbfJPKEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:03:17 -0400
-Received: from linux.loongson.cn (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPDxb2Ld6qZdxwQSAA--.75S2;
-        Wed, 16 Oct 2019 18:03:09 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org,
-        chenhc@lemote.com
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] MIPS: Loongson: Make default kernel log buffer size as 128KB for Loongson3
-Date:   Wed, 16 Oct 2019 18:03:00 +0800
-Message-Id: <1571220180-5478-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: QMiowPDxb2Ld6qZdxwQSAA--.75S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZr1rXF45Ar4rtr1kXw4fKrg_yoWkAFX_Jr
-        ZIkr1Uuw45JrW7uw4Iva1rur42ya4xA3WFyr47JrZrA3yakr15Jws0qr4UGwn8Zayqyr4f
-        Z3ykJF92kFn2qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbxxYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG0xvY0x0EwIxGrVCF
-        72vEw4AK0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWU
-        JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUI3
-        C7UUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 16 Oct 2019 06:04:22 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iKgA8-0002jl-As; Wed, 16 Oct 2019 11:04:12 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iKgA7-0004VB-RR; Wed, 16 Oct 2019 11:04:11 +0100
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ubifs: force prandom result to __le32
+Date:   Wed, 16 Oct 2019 11:04:09 +0100
+Message-Id: <20191016100409.17262-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I update kernel with loongson3_defconfig based on the Loongson 3A3000
-platform, then using dmesg command to show kernel ring buffer, the initial
-kernel messages have disappeared due to the log buffer is too small, it is
-better to change the kernel log buffer size from 16KB to 128KB which is
-enough to save the boot messages.
+In set_dent_cookie() the result of prandom_u32() is
+assinged to an __le32 type. Make this a forced conversion
+to remove the following sparse warning:
 
-Since the default LOG_BUF_SHIFT value is 17, the default kernel log buffer
-size is 128KB, just delete the CONFIG_LOG_BUF_SHIFT line.
+fs/ubifs/journal.c:506:30: warning: incorrect type in assignment (different base types)
+fs/ubifs/journal.c:506:30:    expected restricted __le32 [usertype] cookie
+fs/ubifs/journal.c:506:30:    got unsigned int
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Artem Bityutskiy <dedekind1@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/ubifs/journal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v3: use the default LOG_BUF_SHIFT value 17 and update the commit message
-
- arch/mips/configs/loongson3_defconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 90ee008..25e1179 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -12,7 +12,6 @@ CONFIG_TASKSTATS=y
- CONFIG_TASK_DELAY_ACCT=y
- CONFIG_TASK_XACCT=y
- CONFIG_TASK_IO_ACCOUNTING=y
--CONFIG_LOG_BUF_SHIFT=14
- CONFIG_MEMCG=y
- CONFIG_MEMCG_SWAP=y
- CONFIG_BLK_CGROUP=y
+diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
+index 4fd9683b8245..d6136f7c1cfc 100644
+--- a/fs/ubifs/journal.c
++++ b/fs/ubifs/journal.c
+@@ -503,7 +503,7 @@ static void mark_inode_clean(struct ubifs_info *c, struct ubifs_inode *ui)
+ static void set_dent_cookie(struct ubifs_info *c, struct ubifs_dent_node *dent)
+ {
+ 	if (c->double_hash)
+-		dent->cookie = prandom_u32();
++		dent->cookie = (__force __le32) prandom_u32();
+ 	else
+ 		dent->cookie = 0;
+ }
 -- 
-2.1.0
-
+2.23.0
 
