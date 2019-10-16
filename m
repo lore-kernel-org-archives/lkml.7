@@ -2,167 +2,115 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0179ECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFAAECE59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F9E20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9129521835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 04:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SfJcnijl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NoX42E5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391178AbfJPEqM (ORCPT
+        id S2390842AbfJPE5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 00:46:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50834 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391117AbfJPEqM (ORCPT
+        Wed, 16 Oct 2019 00:57:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39309 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389406AbfJPE5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 00:46:12 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9G4k1Q9130349;
-        Tue, 15 Oct 2019 23:46:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571201161;
-        bh=2e1ep+jz9ThULjwuPHURE/WBfxKsgQ0iJmPcL/PVeZo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SfJcnijlf1XwiD6nqRxlO3e9zzuqWTguFxaNWOVio66d/ssT0/dJd4IzEZMiEqzea
-         KRFef42cOE1obpQC6z4BX4mf0X6fh08o33i9nOX+whSfsc1OK5JIeVQqRZuvJSc7ph
-         cP+UWXKr3skoqMbAefp3lWgOo0a1IVNdamID15UA=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9G4k1NQ001573
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Oct 2019 23:46:01 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
- Oct 2019 23:45:54 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 15 Oct 2019 23:46:00 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9G4jqTh107770;
-        Tue, 15 Oct 2019 23:45:54 -0500
-Subject: Re: [RFC PATCH 02/21] dt-bindings: PCI: Endpoint: Add DT bindings for
- PCI EPF Device
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>
-References: <20190926112933.8922-1-kishon@ti.com>
- <20190926112933.8922-3-kishon@ti.com> <20191015184243.GA10228@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <af3483e0-0533-4b13-64d1-b2cd6fedf514@ti.com>
-Date:   Wed, 16 Oct 2019 10:15:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191015184243.GA10228@bogus>
+        Wed, 16 Oct 2019 00:57:33 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p12so4183553pgn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Oct 2019 21:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=FkcYsvQW9DCuO8FIIta+BX8R8j3WmMX3n+DnEou1u9g=;
+        b=NoX42E5tQHVBX2OTb84UT4yoQagDGL6lXFej+SixelM0Ct41ZVJI1RMIC/j+1lUZNa
+         lnxJvH2oF61wdUQigS9UL5pQrhOOINYGTmxZzVz9TYtn4wiFPvzBmWfkitgiOMtFwrd7
+         z5NVofZHgl4NFe3uoZOyIcfHbz8IO2dAjIT6E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=FkcYsvQW9DCuO8FIIta+BX8R8j3WmMX3n+DnEou1u9g=;
+        b=rFNQzpisvywbPa4j6qjSiVYFSqb3+HJxlBH7FSRRfB/d7czeaPedPCXpUtoFij1G+V
+         BhSeLA4Qnj/JXkf8RHVe88Q7BGuasJ3b6pG2iZb8hwCZmp8686R5+coqeDJyzGBA8zpM
+         qYB5TBvdV1bInCzu9xaBhlkP/z5tYRrhTalshSKB1XnE+0h26z40Ahi69Du5lAnGBgvq
+         V4BBWvDH4uikAGO6CEBDe8O9ow03o2mKcgJj65PgAe6JjAzozkyobKiu8NDqvolF09Fx
+         vFUGBH06/9/cAzJHBJ1bFcC57tX6wpSeIy0ryEdLmATp6vv6shZipKNfniZcrc9kYo5E
+         K81g==
+X-Gm-Message-State: APjAAAWOGJceT5ffwvwuQTxvT+jqnTzSgq/FyYK6JiTydD+Zk/kP3YUi
+        UIgc9AxyiCwcjufVDeHIvlcagw==
+X-Google-Smtp-Source: APXvYqxpDxQimqJ2TytuIDDL1ryHC0bnU/A4itgozpPrv7HJksahoeyOtkc6JvrgH5YBZC/kupezMA==
+X-Received: by 2002:a63:6a03:: with SMTP id f3mr1856640pgc.167.1571201852446;
+        Tue, 15 Oct 2019 21:57:32 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k23sm25002741pgi.49.2019.10.15.21.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 21:57:31 -0700 (PDT)
+Message-ID: <5da6a33b.1c69fb81.64cc.6834@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
+References: <cover.1571181041.git.amit.kucheria@linaro.org> <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-pm@vger.kernel.org
+Subject: Re: [PATCH] of-thermal: Disable polling when interrupt property is found in DT
+User-Agent: alot/0.8.1
+Date:   Tue, 15 Oct 2019 21:57:30 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Amit Kucheria (2019-10-15 16:13:16)
+> Currently, in order to enable interrupt-only mode, one must set
+> polling-delay-passive and polling-delay properties in the DT to 0,
+> otherwise the thermal framework will continue to setup a periodic timers
+> to monitor the thermal zones.
+>=20
+> Change the behaviour, so that on DT-based systems, we no longer have to
+> set the properties to zero if we find an 'interrupt' property in the
+> sensor.
+>=20
+> Following data shows the number of times
+> thermal_zone_device_set_polling() is invoked with and without this
+> patch. So the patch achieves the same behaviour as setting the delay
+> properties to 0.
+>=20
+> Current behaviour (without setting delay properties to 0):
+>   FUNC                              COUNT
+>   thermal_zone_device_update          302
+>   thermal_zone_device_set_pollin     7911
 
+thermal_zone_device_set_polling?
 
-On 16/10/19 12:12 AM, Rob Herring wrote:
-> On Thu, Sep 26, 2019 at 04:59:14PM +0530, Kishon Vijay Abraham I wrote:
->> Add device tree bindings for PCI endpoint function device. The
->> nodes for PCI endpoint function device should be attached to
->> PCI endpoint function bus.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/endpoint/pci-epf.txt         | 28 +++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
-> 
-> This and the previous patch for the bus should be combined and please 
-> convert to a schema.
+>=20
+> Current behaviour (with delay properties set to 0):
+>   FUNC                              COUNT
+>   thermal_zone_device_update            3
+>   thermal_zone_device_set_pollin        6
+>=20
+> With this patch (without setting delay properties to 0):
+>   FUNC                              COUNT
+>   thermal_zone_device_update            3
+>   thermal_zone_device_set_pollin        6
+>=20
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
 
-Sure Rob. Thanks for the review.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
--Kishon
-> 
->>
->> diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
->> new file mode 100644
->> index 000000000000..f006395fd526
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
->> @@ -0,0 +1,28 @@
->> +PCI Endpoint Function Device
->> +
->> +This describes the generic bindings to be used when a device has to be
->> +exposed to the remote host over PCIe. The device could be an actual
->> +peripheral in the platform or a virtual device created by the software.
->> +
->> +epcs : phandle to the endpoint controller device
->> +epc-names : the names of the endpoint controller device corresponding
->> +	    to the EPCs present in the *epcs* phandle
-> 
-> Other than the NTB case, I'd expect the parent device to be the 
-> controller. Let's make NTB the exception...
-> 
-> 
->> +vendor-id: used to identify device manufacturer
->> +device-id: used to identify a particular device
->> +baseclass-code: used to classify the type of function the device performs
->> +subclass-code: used to identify more specifically the function of the device
-> 
-> Are these codes standard?
-> 
-> Powerpc has "class-code" already...
-> 
->> +subsys-vendor-id: used to identify vendor of the add-in card or subsystem
-> 
-> Powerpc has "subsystem-vendor-id" already...
-> 
->> +subsys-id: used to specify an id that is specific to a vendor
->> +
->> +Example:
->> +Following is an example of NTB device exposed to the remote host.
->> +
->> +ntb {
-> 
-> This is going to need some sort of addressing (which implies 'reg')? If 
-> not, I don't understand why you have 2 levels.
-> 
->> +	compatible = "pci-epf-ntb";
->> +	epcs = <&pcie0_ep>, <&pcie1_ep>;
->> +	epc-names = "primary", "secondary";
->> +	vendor-id = /bits/ 16 <0x104c>;
->> +	device-id = /bits/ 16 <0xb00d>;
-> 
-> These have a long history in OF and should be 32-bits (yes, we've let 
-> some cases of 16-bit creep in).
-> 
->> +	num-mws = <4>;
-> 
-> Doesn't this apply to more than NTB?
-> 
-> Can't you just get the length of 'mws-size'?
-> 
->> +	mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
-> 
-> Need to support 64-bit sizes?
-> 
->> +};
->> -- 
->> 2.17.1
->>
