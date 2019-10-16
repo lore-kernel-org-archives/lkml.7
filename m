@@ -2,69 +2,361 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B808EFA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67951FA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9900A218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB58218DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:28:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NA21KMli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390930AbfJPSYB (ORCPT
+        id S2394184AbfJPS2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:24:01 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52604 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389512AbfJPSYB (ORCPT
+        Wed, 16 Oct 2019 14:28:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51024 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390895AbfJPS2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:24:01 -0400
-Received: from localhost (unknown [IPv6:2603:3023:50c:85e1:5314:1b70:2a53:887e])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 12B9C142612A7;
-        Wed, 16 Oct 2019 11:24:00 -0700 (PDT)
-Date:   Wed, 16 Oct 2019 14:23:59 -0400 (EDT)
-Message-Id: <20191016.142359.416946718751400991.davem@davemloft.net>
-To:     alexandre.belloni@bootlin.com
-Cc:     vz@mleia.com, slemieux.tyco@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] net: lpc_eth: parse phy nodes from device tree
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191010204530.15150-2-alexandre.belloni@bootlin.com>
-References: <20191010204530.15150-1-alexandre.belloni@bootlin.com>
-        <20191010204530.15150-2-alexandre.belloni@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 16 Oct 2019 11:24:00 -0700 (PDT)
+        Wed, 16 Oct 2019 14:28:33 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 5so4005528wmg.0;
+        Wed, 16 Oct 2019 11:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rWuJPd9boTIX1O7shUbeHC/cca4oDppQItIevlnS2VU=;
+        b=NA21KMliRd0OnaeaAByVQc4l8szMHMhcT9d5n2C96Lbz+AqcbLj6wJnaS+M37P/Q1K
+         NVuYKZjb4zpJaQTdP1VE9XVZZuDBsdvlv1DpPbq+cNy1SARx2BZrlN+hYU9cRjWa0uwZ
+         HH0RSzLIjrmDVlDRcsKsHN0/BUDW6yo2j452En41WjvWDKPEqsR9fWTazAHqaHIqoD3x
+         5c/r3qLWGjDV+ABGXhGjf0f6WQfx/ZKPfVYuwx7k4W2F/Bz7QWwcwTLKeOIqn+/GnNZX
+         ebKaCQ+nBsxx2+v4qD7nVo1JEmaNhDhVQN7xOQoCpyxeUPFE2ryz8atgXG8dBOtpPF+L
+         RfTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rWuJPd9boTIX1O7shUbeHC/cca4oDppQItIevlnS2VU=;
+        b=i4T7zg2s8qqcu+5snmZ1qaEP6Xnrkw9jtRzDHD9Icp2KQp8rjfl6c1bkhCvfySf8rB
+         /3nLvPlt7tot4jztDWOwGO5WN3e0aIK/HMctZlTXGTK31nhP27sRAvWc9vb18Bi2Yd4h
+         t2gc3WGucMZ4NV69Nrs201pDF6caEVZO/sJSj9QnemOouu3XmXzM0pThYfX2o/MCxbMA
+         +cyE+J156F4r2xjzuDnEZQAOgqLKZrvsZ9BttOjHN+XIqpr2cyGkMzLF+w8KkeFAbzgf
+         Ss1PCtd+zbXkrWbVasHfBrUuWHZtQ4/6td80swZ3T2d25NAyxIUMdyvQFoZUCHi8/iyW
+         c7nA==
+X-Gm-Message-State: APjAAAXZexVC0tRj0PiYMFpOptkGhfmcwKXS5IfmIeE2P64QmMdIx/XE
+        5NHqmStidbSLZLmVOMTL9lc=
+X-Google-Smtp-Source: APXvYqxzoCQtrw5rgFxGuvNQGyITDYKN6vU8Dyyn+vuo2WFj0F74eMjithWDoBl5TItEYQR7jF+ibg==
+X-Received: by 2002:a7b:c44f:: with SMTP id l15mr4630678wmi.121.1571250508334;
+        Wed, 16 Oct 2019 11:28:28 -0700 (PDT)
+Received: from hv-1.home ([188.187.106.129])
+        by smtp.gmail.com with ESMTPSA id u10sm2800755wmm.0.2019.10.16.11.28.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 11:28:27 -0700 (PDT)
+From:   ivan.lazeev@gmail.com
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Lazeev <ivan.lazeev@gmail.com>
+Subject: [PATCH v8] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Date:   Wed, 16 Oct 2019 21:28:14 +0300
+Message-Id: <20191016182814.18350-1-ivan.lazeev@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Date: Thu, 10 Oct 2019 22:45:30 +0200
+From: Ivan Lazeev <ivan.lazeev@gmail.com>
 
-> When connected to a micrel phy, phy_find_first doesn't work properly
-> because the first phy found is on address 0, the broadcast address but, the
-> first thing the phy driver is doing is disabling this broadcast address.
-> The phy is then available only on address 1 but the mdio driver doesn't
-> know about it.
-> 
-> Instead, register the mdio bus using of_mdiobus_register and try to find
-> the phy description in device tree before falling back to phy_find_first.
-> 
-> This ultimately also allows to describe the interrupt the phy is connected
-> to.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
 
-I asked you to address Andrew's feedback.
+cmd/rsp buffers are expected to be in the same ACPI region.
+For Zen+ CPUs BIOS's might report two different regions, some of
+them also report region sizes inconsistent with values from TPM
+registers.
 
-You can't let this sit for days like that.
+Memory configuration on ASRock x470 ITX:
 
-Therefore, I'm dropping your patches.
+db0a0000-dc59efff : Reserved
+        dc57e000-dc57efff : MSFT0101:00
+        dc582000-dc582fff : MSFT0101:00
+
+Work around the issue by storing ACPI regions declared for the
+device in a fixed array and adding an array for pointers to
+corresponding possibly allocated resources in crb_map_io function.
+This data was previously held for a single resource
+in struct crb_priv (iobase field) and local variable io_res in
+crb_map_io function. ACPI resources array is used to find index of
+corresponding region for each buffer and make the buffer size
+consistent with region's length. Array of pointers to allocated
+resources is used to map the region at most once.
+
+Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
+---
+Changelog:
+v8:
+	- fix sparse warning
+
+v7:
+	- use terminator entry in iores_array
+
+v6:
+	- get rid of new structures
+	- open code helper functions
+	- remove incorrect FW_BUG
+
+v5:
+	- prefix new symbols with tpm_crb_
+	- get rid of dynamic allocation in ACPI walker
+
+v4:
+	- rename struct crb_resource fields (style change)
+	- improve commit message
+
+v3:
+	- make crb_containing_resource search for address only,
+	  because buffer sizes aren't trusted anyway
+	- improve commit message
+
+v2:
+	- use list_for_each_safe
+
+ drivers/char/tpm/tpm_crb.c | 123 +++++++++++++++++++++++++++----------
+ 1 file changed, 90 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index e59f1f91d7f3..a9dcf31eadd2 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -22,6 +22,7 @@
+ #include "tpm.h"
+ 
+ #define ACPI_SIG_TPM2 "TPM2"
++#define TPM_CRB_MAX_RESOURCES 3
+ 
+ static const guid_t crb_acpi_start_guid =
+ 	GUID_INIT(0x6BBF6CAB, 0x5463, 0x4714,
+@@ -91,7 +92,6 @@ enum crb_status {
+ struct crb_priv {
+ 	u32 sm;
+ 	const char *hid;
+-	void __iomem *iobase;
+ 	struct crb_regs_head __iomem *regs_h;
+ 	struct crb_regs_tail __iomem *regs_t;
+ 	u8 __iomem *cmd;
+@@ -434,21 +434,27 @@ static const struct tpm_class_ops tpm_crb = {
+ 
+ static int crb_check_resource(struct acpi_resource *ares, void *data)
+ {
+-	struct resource *io_res = data;
++	struct resource *iores_array = data;
+ 	struct resource_win win;
+ 	struct resource *res = &(win.res);
++	int i;
+ 
+ 	if (acpi_dev_resource_memory(ares, res) ||
+ 	    acpi_dev_resource_address_space(ares, &win)) {
+-		*io_res = *res;
+-		io_res->name = NULL;
++		for (i = 0; i < TPM_CRB_MAX_RESOURCES + 1; ++i) {
++			if (resource_type(iores_array + i) != IORESOURCE_MEM) {
++				iores_array[i] = *res;
++				iores_array[i].name = NULL;
++				break;
++			}
++		}
+ 	}
+ 
+ 	return 1;
+ }
+ 
+-static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+-				 struct resource *io_res, u64 start, u32 size)
++static void __iomem *crb_map_res(struct device *dev, struct resource *iores,
++				 void __iomem **iobase_ptr, u64 start, u32 size)
+ {
+ 	struct resource new_res = {
+ 		.start	= start,
+@@ -460,10 +466,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+ 	if (start != new_res.start)
+ 		return (void __iomem *) ERR_PTR(-EINVAL);
+ 
+-	if (!resource_contains(io_res, &new_res))
++	if (!iores)
+ 		return devm_ioremap_resource(dev, &new_res);
+ 
+-	return priv->iobase + (new_res.start - io_res->start);
++	if (!*iobase_ptr) {
++		*iobase_ptr = devm_ioremap_resource(dev, iores);
++		if (IS_ERR(*iobase_ptr))
++			return *iobase_ptr;
++	}
++
++	return *iobase_ptr + (new_res.start - iores->start);
+ }
+ 
+ /*
+@@ -490,9 +502,13 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 		      struct acpi_table_tpm2 *buf)
+ {
+-	struct list_head resources;
+-	struct resource io_res;
++	struct list_head acpi_resource_list;
++	struct resource iores_array[TPM_CRB_MAX_RESOURCES + 1] = { {0} };
++	void __iomem *iobase_array[TPM_CRB_MAX_RESOURCES] = {NULL};
+ 	struct device *dev = &device->dev;
++	struct resource *iores;
++	void __iomem **iobase_ptr;
++	int i;
+ 	u32 pa_high, pa_low;
+ 	u64 cmd_pa;
+ 	u32 cmd_size;
+@@ -501,21 +517,41 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	u32 rsp_size;
+ 	int ret;
+ 
+-	INIT_LIST_HEAD(&resources);
+-	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
+-				     &io_res);
++	INIT_LIST_HEAD(&acpi_resource_list);
++	ret = acpi_dev_get_resources(device, &acpi_resource_list,
++				     crb_check_resource, iores_array);
+ 	if (ret < 0)
+ 		return ret;
+-	acpi_dev_free_resource_list(&resources);
++	acpi_dev_free_resource_list(&acpi_resource_list);
+ 
+-	if (resource_type(&io_res) != IORESOURCE_MEM) {
++	if (resource_type(iores_array) != IORESOURCE_MEM) {
+ 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+ 		return -EINVAL;
++	} else if (resource_type(iores_array + TPM_CRB_MAX_RESOURCES) ==
++		IORESOURCE_MEM) {
++		dev_warn(dev, "TPM2 ACPI table defines too many memory resources\n");
++		memset(iores_array + TPM_CRB_MAX_RESOURCES,
++		       0, sizeof(*iores_array));
++		iores_array[TPM_CRB_MAX_RESOURCES].flags = 0;
+ 	}
+ 
+-	priv->iobase = devm_ioremap_resource(dev, &io_res);
+-	if (IS_ERR(priv->iobase))
+-		return PTR_ERR(priv->iobase);
++	iores = NULL;
++	iobase_ptr = NULL;
++	for (i = 0; resource_type(iores_array + i) == IORESOURCE_MEM; ++i) {
++		if (buf->control_address >= iores_array[i].start &&
++		    buf->control_address + sizeof(struct crb_regs_tail) - 1 <=
++		    iores_array[i].end) {
++			iores = iores_array + i;
++			iobase_ptr = iobase_array + i;
++			break;
++		}
++	}
++
++	priv->regs_t = crb_map_res(dev, iores, iobase_ptr, buf->control_address,
++				   sizeof(struct crb_regs_tail));
++
++	if (IS_ERR(priv->regs_t))
++		return PTR_ERR(priv->regs_t);
+ 
+ 	/* The ACPI IO region starts at the head area and continues to include
+ 	 * the control area, as one nice sane region except for some older
+@@ -523,9 +559,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	 */
+ 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
+ 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
+-		if (buf->control_address == io_res.start +
++		if (iores &&
++		    buf->control_address == iores->start +
+ 		    sizeof(*priv->regs_h))
+-			priv->regs_h = priv->iobase;
++			priv->regs_h = *iobase_ptr;
+ 		else
+ 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
+ 	}
+@@ -534,13 +571,6 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
+-				   sizeof(struct crb_regs_tail));
+-	if (IS_ERR(priv->regs_t)) {
+-		ret = PTR_ERR(priv->regs_t);
+-		goto out_relinquish_locality;
+-	}
+-
+ 	/*
+ 	 * PTT HW bug w/a: wake up the device to access
+ 	 * possibly not retained registers.
+@@ -552,13 +582,26 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+ 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+ 	cmd_pa = ((u64)pa_high << 32) | pa_low;
+-	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
+-				      ioread32(&priv->regs_t->ctrl_cmd_size));
++	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
++
++	iores = NULL;
++	iobase_ptr = NULL;
++	for (i = 0; iores_array[i].end; ++i) {
++		if (cmd_pa >= iores_array[i].start &&
++		    cmd_pa <= iores_array[i].end) {
++			iores = iores_array + i;
++			iobase_ptr = iobase_array + i;
++			break;
++		}
++	}
++
++	if (iores)
++		cmd_size = crb_fixup_cmd_size(dev, iores, cmd_pa, cmd_size);
+ 
+ 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+ 		pa_high, pa_low, cmd_size);
+ 
+-	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
++	priv->cmd = crb_map_res(dev, iores, iobase_ptr,	cmd_pa, cmd_size);
+ 	if (IS_ERR(priv->cmd)) {
+ 		ret = PTR_ERR(priv->cmd);
+ 		goto out;
+@@ -566,11 +609,25 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+ 	rsp_pa = le64_to_cpu(__rsp_pa);
+-	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
+-				      ioread32(&priv->regs_t->ctrl_rsp_size));
++	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
++
++	iores = NULL;
++	iobase_ptr = NULL;
++	for (i = 0; resource_type(iores_array + i) == IORESOURCE_MEM; ++i) {
++		if (rsp_pa >= iores_array[i].start &&
++		    rsp_pa <= iores_array[i].end) {
++			iores = iores_array + i;
++			iobase_ptr = iobase_array + i;
++			break;
++		}
++	}
++
++	if (iores)
++		rsp_size = crb_fixup_cmd_size(dev, iores, rsp_pa, rsp_size);
+ 
+ 	if (cmd_pa != rsp_pa) {
+-		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
++		priv->rsp = crb_map_res(dev, iores, iobase_ptr,
++					rsp_pa, rsp_size);
+ 		ret = PTR_ERR_OR_ZERO(priv->rsp);
+ 		goto out;
+ 	}
+-- 
+2.20.1
+
