@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1F3FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD2EFA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DFD207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825392168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 22:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571263990;
-	bh=iBmMNpsMkaLFYz2F1wd4Cfv0fExA4wWb3h61kywWhC0=;
+	s=default; t=1571263993;
+	bh=eqaNvDbEgR9LqdmdTpj7aNxT56/z4+pKMu2ClJFzbhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTl5P6YEnTfbmpTxjN9Y8+T4/L7gzJm9hjPgGtnUeB8aNUCiUFnE8UgwrPCupsOtJ
-	 rziaXAEzVusFOlH2nfd6gDuKtiSqrdHLbNXGP6boVdvwkCytaQZJ5Y3Da/Y2BlMB+N
-	 A9R16c5luRt41ORx+rlvSYVYbMkZx9qvgnVpH+RE=
+	b=ayTKX2//NLqUNdz8hlM9Aq7AYvLF6lknlwykejdkGdA/YI6Ri+Z4G7MvcZEyxjcea
+	 7H3YpFN9kfHp5wx8G5nYMQSYvTdQiGM/X5ZkkBLsECPG8TyBPT5nVyY4j4tdp61//9
+	 k+QOzTGbV8M1pEvhACP0tGuyl/9hptb18DJddGBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439297AbfJPWNJ (ORCPT
+        id S2437883AbfJPV4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 18:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47336 "EHLO mail.kernel.org"
+        Wed, 16 Oct 2019 17:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfJPV4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 17:56:04 -0400
+        id S2437870AbfJPVz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 17:55:59 -0400
 Received: from localhost (unknown [192.55.54.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A575E20872;
-        Wed, 16 Oct 2019 21:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEDD218DE;
+        Wed, 16 Oct 2019 21:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571262963;
-        bh=iBmMNpsMkaLFYz2F1wd4Cfv0fExA4wWb3h61kywWhC0=;
+        s=default; t=1571262958;
+        bh=eqaNvDbEgR9LqdmdTpj7aNxT56/z4+pKMu2ClJFzbhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C9UnCAg1B9pgmhNDf9vFxjsK1ntYpCGSKxMM1jROO5C9OoqL4x4wymRCYZuPnB+AV
-         j5YfRz7zGRzdyImT2+IZl3Pggx8/Q1tw7qSMSvOsbXzdP4emHXcsLGzJwXd8hfnuNW
-         2XKLG90ErGjDpZUKvt7hAQLpcy5Z3lme5XnLqvNs=
+        b=UVbnZHxXWfI4NzjwkwTZwKnw2F1krXY30nxlmIHXOgFped1JVVC3CQF19510z0CcJ
+         vde88ivxGvgJAP5D+EWLaF+NoESk8Pjv6sQFBRl6b+7fGolhogvzDAL6Pp430WjF0t
+         PXfVx9sAI+p0YJjA7Egc0sqKuPFgIL0ms5O6xkhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacky Cao <Jacky.Cao@sony.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.14 31/65] USB: dummy-hcd: fix power budget for SuperSpeed mode
-Date:   Wed, 16 Oct 2019 14:50:45 -0700
-Message-Id: <20191016214825.944488701@linuxfoundation.org>
+        stable@vger.kernel.org, Reinhard Speyerer <rspmn@arcor.de>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 27/65] USB: serial: option: add support for Cinterion CLS8 devices
+Date:   Wed, 16 Oct 2019 14:50:41 -0700
+Message-Id: <20191016214822.766140932@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191016214756.457746573@linuxfoundation.org>
 References: <20191016214756.457746573@linuxfoundation.org>
@@ -59,48 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky.Cao@sony.com <Jacky.Cao@sony.com>
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-commit 2636d49b64671d3d90ecc4daf971b58df3956519 upstream.
+commit dfbac2f4da6a0c4a8f6b4d715a4077a7b8df53ad upstream.
 
-The power budget for SuperSpeed mode should be 900 mA
-according to USB specification, so set the power budget
-to 900mA for dummy_start_ss which is only used for
-SuperSpeed mode.
+Add support for the serial ports of Cinterion CLS8 devices.
 
-If the max power consumption of SuperSpeed device is
-larger than 500 mA, insufficient available bus power
-error happens in usb_choose_configuration function
-when the device connects to dummy hcd.
+T:  Bus=01 Lev=03 Prnt=05 Port=01 Cnt=02 Dev#= 25 Spd=480  MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1e2d ProdID=00b0 Rev= 3.18
+S:  Manufacturer=GEMALTO
+S:  Product=USB Modem
+C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 
-Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/16EA1F625E922C43B00B9D82250220500871CDE5@APYOKXMS108.ap.sony.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/dummy_hcd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/serial/option.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -50,6 +50,7 @@
- #define DRIVER_VERSION	"02 May 2005"
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -422,6 +422,7 @@ static void option_instat_callback(struc
+ #define CINTERION_PRODUCT_PH8_AUDIO		0x0083
+ #define CINTERION_PRODUCT_AHXX_2RMNET		0x0084
+ #define CINTERION_PRODUCT_AHXX_AUDIO		0x0085
++#define CINTERION_PRODUCT_CLS8			0x00b0
  
- #define POWER_BUDGET	500	/* in mA; use 8 for low-power port testing */
-+#define POWER_BUDGET_3	900	/* in mA */
- 
- static const char	driver_name[] = "dummy_hcd";
- static const char	driver_desc[] = "USB Host+Gadget Emulator";
-@@ -2439,7 +2440,7 @@ static int dummy_start_ss(struct dummy_h
- 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
- 	dum_hcd->stream_en_ep = 0;
- 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
--	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET;
-+	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET_3;
- 	dummy_hcd_to_hcd(dum_hcd)->state = HC_STATE_RUNNING;
- 	dummy_hcd_to_hcd(dum_hcd)->uses_new_polling = 1;
- #ifdef CONFIG_USB_OTG
+ /* Olivetti products */
+ #define OLIVETTI_VENDOR_ID			0x0b3c
+@@ -1858,6 +1859,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_AHXX_2RMNET, 0xff) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_AHXX_AUDIO, 0xff) },
++	{ USB_DEVICE_INTERFACE_CLASS(CINTERION_VENDOR_ID, CINTERION_PRODUCT_CLS8, 0xff),
++	  .driver_info = RSVD(0) | RSVD(4) },
+ 	{ USB_DEVICE(CINTERION_VENDOR_ID, CINTERION_PRODUCT_HC28_MDM) },
+ 	{ USB_DEVICE(CINTERION_VENDOR_ID, CINTERION_PRODUCT_HC28_MDMNET) },
+ 	{ USB_DEVICE(SIEMENS_VENDOR_ID, CINTERION_PRODUCT_HC25_MDM) },
 
 
