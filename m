@@ -2,308 +2,84 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E2FA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1B8FA372D
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326BE2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD07321A49
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 11:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405138AbfJPLco (ORCPT
+        id S2391096AbfJPLdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 07:32:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35322 "EHLO mx1.suse.de"
+        Wed, 16 Oct 2019 07:33:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35590 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405015AbfJPLco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 07:32:44 -0400
+        id S1727597AbfJPLdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:33:20 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E4670AD12;
-        Wed, 16 Oct 2019 11:32:41 +0000 (UTC)
-Subject: Re: [PATCH] drivers: mcb: use symbol namespaces
-To:     Johannes Thumshirn <jthumshirn@suse.de>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>
-References: <20191016100158.1400-1-jthumshirn@suse.de>
-From:   Michael Moese <mmoese@suse.de>
-Autocrypt: addr=mmoese@suse.de; keydata=
- mQENBFpMxXQBCAC7Z72NqEDJW9vUrNbkIaAxobHAoZBtLK1RsorBlqYgqsUilu5ACfDazfox
- u7uw07rkSIFdBZU2ghPwdWr8j0LM/5DEpf6+jY+PU6AUiKzji4UHbJVLViHVsV7q8UsDTmIf
- XTkZVVVFGCBerfHpWKRJfkreL5g2TA6tDFkBE+eeJEgWmubMP/XYEmtSStSzXBmCiA1QZ08k
- 66ETcgEFok6iB5EJb1eYmkVZO5kUeCvl0EHkeBpybSuaEd+/Ux3OAfhh0nyYZwDNXJMNR8Uu
- CrQtJPKdR1LXial5ycKbtoe7mN9cxLAbHZWLLna9VaRA/C7iIfhEqO70IAgY4vcnXFgvABEB
- AAG0Hk1pY2hhZWwgTW9lc2UgPG1tb2VzZUBzdXNlLmRlPokBPwQTAQIAKQUCWkzHqwIbAwUJ
- B4TOAAcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEGAhN1yGNX50quMIALiRNQ2Jt0Fz
- pr/K1s0IS3VglbWbDIDVlauZixQ02+IU+cywcc9Bm7A9KnXT8MjN6+dNlBuBsK7KXmqrnwn0
- gMVb+KTXKVVZR0k3lvWrlH+zQ3FPY/xTSuZyPAYcuZVAUly7VLyN8UDGuAeJF7WrqfO4I/jF
- 7s9DffubVA5Umyl0yhQxHcTjEozCfmUBukEVCTZ2zIsKqBMp7eUPMWRDe+QauId+BSRC9gMF
- KeEOVHi/VVi+Vr3A0U4zFxXjAcrbQZhjNS1GJ6jOPjy+MX3edY9WlkYQtx/tu2xZMhePw1I1
- 4W4sTLCqAvHN59KZiACRGsd0/20pZN+T3rIIQOfTnM+5AQ0EWkzFdAEIALh+XBKEnfViYecZ
- B1suj0OBg9nnBk6j1FpQCx09ACooTiVmBQFqfMrvm1JiizombQ80kBRyiwcZ1BDmzjWLoeYB
- VovPZh4Mx+YPLSt1L7WmflGC7oWoAL3HtDKe7HCRUR17czTQXuDmeKuAggO8PV/FexHD70N/
- 6EeKRPh9Dtzlo5hbC6/sqp8RmVf0E71LLBpxej1GHn8FvH2N0CA/RI/mvtuo311NudEUiR5e
- FML1oeW63Iknr0jTLutSOhZEKjeaRwFZOCt0X8ECiyuXYZU970GHhqUfVtnM8/q5qU2l18Rp
- /stWAmVyDQ7TGjECc6AvV9VSnaq6aDxgHOJi5EUAEQEAAYkBJQQYAQIADwUCWkzFdAIbDAUJ
- B4TOAAAKCRBgITdchjV+dAHWB/9VrimlVzbdURLP0ZSttHtO8WdxPiYdmvl8G08a6yy59nc7
- 5qnkc7EKQ9XMisejZqsbSXbWxmgpA65rBtXrFomi0qoaDHzUlKVGlEU9YkkJo+/PEsgvxnWF
- J4vR0aLRYNOO9PvWRhJ6aHkWlCz2i9n6xsVA6PILYBiSQW22rvpH6AHu7WH7k3ddHmh4hmfw
- yxpDl1qL127wmZGUMLArb+mIEbG+Ftre84TwpvHLq9J1+xwo7/A+dEDfWwzDb3GjeL+TNar9
- ZpY8cPYiHNDqnPUoNhHdhSJuvoIuNBhUU3RalPbNRYkuitKUWfJYMvIypGO4+YBj61TIvOaY
- nDZS/ArT
-Message-ID: <3a7a65f6-e1e8-7ab5-f407-d979da6f60dd@suse.de>
-Date:   Wed, 16 Oct 2019 13:32:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        by mx1.suse.de (Postfix) with ESMTP id 5662BB188;
+        Wed, 16 Oct 2019 11:33:18 +0000 (UTC)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     rostedt@goodmis.org, mingo@redhat.com, jpoimboe@redhat.com,
+        jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        shuah@kernel.org, kamalesh@linux.vnet.ibm.com,
+        linux-kselftest@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH v3 0/3] ftrace: Introduce PERMANENT ftrace_ops flag
+Date:   Wed, 16 Oct 2019 13:33:12 +0200
+Message-Id: <20191016113316.13415-1-mbenes@suse.cz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191016100158.1400-1-jthumshirn@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Livepatch uses ftrace for redirection to new patched functions. It means
+that if ftrace is disabled, all live patched functions are disabled as
+well. Toggling global 'ftrace_enabled' sysctl thus affect it directly.
+It is not a problem per se, because only administrator can set sysctl
+values, but it still may be surprising.
 
+Introduce PERMANENT ftrace_ops flag to amend this. If the
+FTRACE_OPS_FL_PERMANENT is set on any ftrace ops, the tracing cannot be
+disabled by disabling ftrace_enabled. Equally, a callback with the flag
+set cannot be registered if ftrace_enabled is disabled.
 
-On 16.10.19 12:01, Johannes Thumshirn wrote:
-> Now that we have symbol namespaces, use them in MCB to not pollute the
-> default namespace with MCB internals.
-> 
-> Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+v2->v3:
+- ftrace_enabled explicitly set to true
+- selftest from Joe Lawrence (I just split it to two patches)
+- typo fix
 
-Reviewed-by: Michael Moese <mmoese@suse.de>
+v1->v2:
+- different logic, proposed by Joe Lawrence
 
-> ---
->  drivers/gpio/gpio-menz127.c            |  1 +
->  drivers/iio/adc/men_z188_adc.c         |  1 +
->  drivers/mcb/mcb-core.c                 | 28 ++++++++++++++--------------
->  drivers/mcb/mcb-lpc.c                  |  1 +
->  drivers/mcb/mcb-parse.c                |  2 +-
->  drivers/mcb/mcb-pci.c                  |  1 +
->  drivers/tty/serial/8250/8250_men_mcb.c |  1 +
->  drivers/tty/serial/men_z135_uart.c     |  1 +
->  drivers/watchdog/menz69_wdt.c          |  1 +
->  9 files changed, 22 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-menz127.c b/drivers/gpio/gpio-menz127.c
-> index 70fdb42a8e88..1e21c661d79d 100644
-> --- a/drivers/gpio/gpio-menz127.c
-> +++ b/drivers/gpio/gpio-menz127.c
-> @@ -211,3 +211,4 @@ MODULE_AUTHOR("Andreas Werner <andreas.werner@men.de>");
->  MODULE_DESCRIPTION("MEN 16z127 GPIO Controller");
->  MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS("mcb:16z127");
-> +MODULE_IMPORT_NS(MCB);
-> diff --git a/drivers/iio/adc/men_z188_adc.c b/drivers/iio/adc/men_z188_adc.c
-> index 3b2fbb7ce431..196c8226381e 100644
-> --- a/drivers/iio/adc/men_z188_adc.c
-> +++ b/drivers/iio/adc/men_z188_adc.c
-> @@ -167,3 +167,4 @@ MODULE_AUTHOR("Johannes Thumshirn <johannes.thumshirn@men.de>");
->  MODULE_LICENSE("GPL");
->  MODULE_DESCRIPTION("IIO ADC driver for MEN 16z188 ADC Core");
->  MODULE_ALIAS("mcb:16z188");
-> +MODULE_IMPORT_NS(MCB);
-> diff --git a/drivers/mcb/mcb-core.c b/drivers/mcb/mcb-core.c
-> index b72e82efaee5..38fbb3b59873 100644
-> --- a/drivers/mcb/mcb-core.c
-> +++ b/drivers/mcb/mcb-core.c
-> @@ -191,7 +191,7 @@ int __mcb_register_driver(struct mcb_driver *drv, struct module *owner,
->  
->  	return driver_register(&drv->driver);
->  }
-> -EXPORT_SYMBOL_GPL(__mcb_register_driver);
-> +EXPORT_SYMBOL_NS_GPL(__mcb_register_driver, MCB);
->  
->  /**
->   * mcb_unregister_driver() - Unregister a @mcb_driver from the system
-> @@ -203,7 +203,7 @@ void mcb_unregister_driver(struct mcb_driver *drv)
->  {
->  	driver_unregister(&drv->driver);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_unregister_driver);
-> +EXPORT_SYMBOL_NS_GPL(mcb_unregister_driver, MCB);
->  
->  static void mcb_release_dev(struct device *dev)
->  {
-> @@ -249,7 +249,7 @@ int mcb_device_register(struct mcb_bus *bus, struct mcb_device *dev)
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(mcb_device_register);
-> +EXPORT_SYMBOL_NS_GPL(mcb_device_register, MCB);
->  
->  static void mcb_free_bus(struct device *dev)
->  {
-> @@ -301,7 +301,7 @@ struct mcb_bus *mcb_alloc_bus(struct device *carrier)
->  	kfree(bus);
->  	return ERR_PTR(rc);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_alloc_bus);
-> +EXPORT_SYMBOL_NS_GPL(mcb_alloc_bus, MCB);
->  
->  static int __mcb_devices_unregister(struct device *dev, void *data)
->  {
-> @@ -323,7 +323,7 @@ void mcb_release_bus(struct mcb_bus *bus)
->  {
->  	mcb_devices_unregister(bus);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_release_bus);
-> +EXPORT_SYMBOL_NS_GPL(mcb_release_bus, MCB);
->  
->  /**
->   * mcb_bus_put() - Increment refcnt
-> @@ -338,7 +338,7 @@ struct mcb_bus *mcb_bus_get(struct mcb_bus *bus)
->  
->  	return bus;
->  }
-> -EXPORT_SYMBOL_GPL(mcb_bus_get);
-> +EXPORT_SYMBOL_NS_GPL(mcb_bus_get, MCB);
->  
->  /**
->   * mcb_bus_put() - Decrement refcnt
-> @@ -351,7 +351,7 @@ void mcb_bus_put(struct mcb_bus *bus)
->  	if (bus)
->  		put_device(&bus->dev);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_bus_put);
-> +EXPORT_SYMBOL_NS_GPL(mcb_bus_put, MCB);
->  
->  /**
->   * mcb_alloc_dev() - Allocate a device
-> @@ -371,7 +371,7 @@ struct mcb_device *mcb_alloc_dev(struct mcb_bus *bus)
->  
->  	return dev;
->  }
-> -EXPORT_SYMBOL_GPL(mcb_alloc_dev);
-> +EXPORT_SYMBOL_NS_GPL(mcb_alloc_dev, MCB);
->  
->  /**
->   * mcb_free_dev() - Free @mcb_device
-> @@ -383,7 +383,7 @@ void mcb_free_dev(struct mcb_device *dev)
->  {
->  	kfree(dev);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_free_dev);
-> +EXPORT_SYMBOL_NS_GPL(mcb_free_dev, MCB);
->  
->  static int __mcb_bus_add_devices(struct device *dev, void *data)
->  {
-> @@ -412,7 +412,7 @@ void mcb_bus_add_devices(const struct mcb_bus *bus)
->  {
->  	bus_for_each_dev(&mcb_bus_type, NULL, NULL, __mcb_bus_add_devices);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_bus_add_devices);
-> +EXPORT_SYMBOL_NS_GPL(mcb_bus_add_devices, MCB);
->  
->  /**
->   * mcb_get_resource() - get a resource for a mcb device
-> @@ -428,7 +428,7 @@ struct resource *mcb_get_resource(struct mcb_device *dev, unsigned int type)
->  	else
->  		return NULL;
->  }
-> -EXPORT_SYMBOL_GPL(mcb_get_resource);
-> +EXPORT_SYMBOL_NS_GPL(mcb_get_resource, MCB);
->  
->  /**
->   * mcb_request_mem() - Request memory
-> @@ -454,7 +454,7 @@ struct resource *mcb_request_mem(struct mcb_device *dev, const char *name)
->  
->  	return mem;
->  }
-> -EXPORT_SYMBOL_GPL(mcb_request_mem);
-> +EXPORT_SYMBOL_NS_GPL(mcb_request_mem, MCB);
->  
->  /**
->   * mcb_release_mem() - Release memory requested by device
-> @@ -469,7 +469,7 @@ void mcb_release_mem(struct resource *mem)
->  	size = resource_size(mem);
->  	release_mem_region(mem->start, size);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_release_mem);
-> +EXPORT_SYMBOL_NS_GPL(mcb_release_mem, MCB);
->  
->  static int __mcb_get_irq(struct mcb_device *dev)
->  {
-> @@ -495,7 +495,7 @@ int mcb_get_irq(struct mcb_device *dev)
->  
->  	return __mcb_get_irq(dev);
->  }
-> -EXPORT_SYMBOL_GPL(mcb_get_irq);
-> +EXPORT_SYMBOL_NS_GPL(mcb_get_irq, MCB);
->  
->  static int mcb_init(void)
->  {
-> diff --git a/drivers/mcb/mcb-lpc.c b/drivers/mcb/mcb-lpc.c
-> index 8f1bde437a7e..506676754538 100644
-> --- a/drivers/mcb/mcb-lpc.c
-> +++ b/drivers/mcb/mcb-lpc.c
-> @@ -168,3 +168,4 @@ module_exit(mcb_lpc_exit);
->  MODULE_AUTHOR("Andreas Werner <andreas.werner@men.de>");
->  MODULE_LICENSE("GPL");
->  MODULE_DESCRIPTION("MCB over LPC support");
-> +MODULE_IMPORT_NS(MCB);
-> diff --git a/drivers/mcb/mcb-parse.c b/drivers/mcb/mcb-parse.c
-> index 3b69e6aa3d88..0266bfddfbe2 100644
-> --- a/drivers/mcb/mcb-parse.c
-> +++ b/drivers/mcb/mcb-parse.c
-> @@ -253,4 +253,4 @@ int chameleon_parse_cells(struct mcb_bus *bus, phys_addr_t mapbase,
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(chameleon_parse_cells);
-> +EXPORT_SYMBOL_NS_GPL(chameleon_parse_cells, MCB);
-> diff --git a/drivers/mcb/mcb-pci.c b/drivers/mcb/mcb-pci.c
-> index 14866aa22f75..dc88232d9af8 100644
-> --- a/drivers/mcb/mcb-pci.c
-> +++ b/drivers/mcb/mcb-pci.c
-> @@ -131,3 +131,4 @@ module_pci_driver(mcb_pci_driver);
->  MODULE_AUTHOR("Johannes Thumshirn <johannes.thumshirn@men.de>");
->  MODULE_LICENSE("GPL");
->  MODULE_DESCRIPTION("MCB over PCI support");
-> +MODULE_IMPORT_NS(MCB);
-> diff --git a/drivers/tty/serial/8250/8250_men_mcb.c b/drivers/tty/serial/8250/8250_men_mcb.c
-> index 02c5aff58a74..80a5c063ed70 100644
-> --- a/drivers/tty/serial/8250/8250_men_mcb.c
-> +++ b/drivers/tty/serial/8250/8250_men_mcb.c
-> @@ -174,3 +174,4 @@ MODULE_AUTHOR("Michael Moese <michael.moese@men.de");
->  MODULE_ALIAS("mcb:16z125");
->  MODULE_ALIAS("mcb:16z025");
->  MODULE_ALIAS("mcb:16z057");
-> +MODULE_IMPORT_NS(MCB);
-> diff --git a/drivers/tty/serial/men_z135_uart.c b/drivers/tty/serial/men_z135_uart.c
-> index e5d3ebab6dae..4f53a4caabf6 100644
-> --- a/drivers/tty/serial/men_z135_uart.c
-> +++ b/drivers/tty/serial/men_z135_uart.c
-> @@ -930,3 +930,4 @@ MODULE_AUTHOR("Johannes Thumshirn <johannes.thumshirn@men.de>");
->  MODULE_LICENSE("GPL v2");
->  MODULE_DESCRIPTION("MEN 16z135 High Speed UART");
->  MODULE_ALIAS("mcb:16z135");
-> +MODULE_IMPORT_NS(MCB);
-> diff --git a/drivers/watchdog/menz69_wdt.c b/drivers/watchdog/menz69_wdt.c
-> index ed18238c5407..8973f98bc6a5 100644
-> --- a/drivers/watchdog/menz69_wdt.c
-> +++ b/drivers/watchdog/menz69_wdt.c
-> @@ -168,3 +168,4 @@ module_mcb_driver(men_z069_driver);
->  MODULE_AUTHOR("Johannes Thumshirn <jth@kernel.org>");
->  MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS("mcb:16z069");
-> +MODULE_IMPORT_NS(MCB);
-> 
+Joe Lawrence (2):
+  selftests/livepatch: Make dynamic debug setup and restore generic
+  selftests/livepatch: Test interaction with ftrace_enabled
+
+Miroslav Benes (1):
+  ftrace: Introduce PERMANENT ftrace_ops flag
+
+ Documentation/trace/ftrace-uses.rst           |  8 +++
+ Documentation/trace/ftrace.rst                |  4 +-
+ include/linux/ftrace.h                        |  3 +
+ kernel/livepatch/patch.c                      |  3 +-
+ kernel/trace/ftrace.c                         | 23 ++++++-
+ tools/testing/selftests/livepatch/Makefile    |  3 +-
+ .../testing/selftests/livepatch/functions.sh  | 34 +++++++---
+ .../selftests/livepatch/test-callbacks.sh     |  2 +-
+ .../selftests/livepatch/test-ftrace.sh        | 65 +++++++++++++++++++
+ .../selftests/livepatch/test-livepatch.sh     |  2 +-
+ .../selftests/livepatch/test-shadow-vars.sh   |  2 +-
+ 11 files changed, 132 insertions(+), 17 deletions(-)
+ create mode 100755 tools/testing/selftests/livepatch/test-ftrace.sh
 
 -- 
-Michael Moese <mmoese@suse.de>
-QA Engineer
-PGP Fingerprint: 4CCE 3896 F873 2CA5 2382  3C6F 6021 375C 8635 7E74
+2.23.0
 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5
-90409 Nürnberg
-Germany
-
-(HRB 36809, AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
