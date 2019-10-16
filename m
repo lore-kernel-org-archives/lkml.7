@@ -2,129 +2,199 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51684FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C753BFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC7B2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5202067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 13:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QN8Dk+0W"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KxCHByEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393565AbfJPNTM (ORCPT
+        id S2393582AbfJPNUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 09:19:12 -0400
-Received: from mail-eopbgr140085.outbound.protection.outlook.com ([40.107.14.85]:48806
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726530AbfJPNTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:19:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WS427jOMIuJlf3c0kwoIprmaO1N4RHLZVGIUqNB/SKjrsg1lbt4g+zi802dR2RF1KDp7THSY1C6C6hjq9PA6UDl6ft3gHv40JTmaxpzZYGS3Igp4cLqx1Ts7glcbjuufkyR+FwNDDepIq/kN6JNNN1DYOqA7FOM8jIgxR7a9J9jnUfgzqRUM7vQmrPVDEeMgyNFYxXNhSj4g8ddugdZUX3pIElcipwHkw+rBCdoGzV/iHiOeOxEUQ61bd3ehGN0b/Gp1oK6tYU0K2X52ocRsZ47Re6irJ4LXylu3Nr5ayn2+dpogiLnHhqD6b0DHxFJNtRfuynNd8y26wWAATec2Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1SgbFS5o+KJNhP05rWP8/UKyxwp1NZwQ6X6OlBKyCLE=;
- b=lD5LB6cVQZKh/1iIcMi8J0DWwdxY8eudKwHddUjtTsbK+djfrUYAlO+lhbzykkANYk9nx7oaRzn07iE3DBSUQuXdMLkCwVrPV1fhFM0vkVOgpgRSYvvXR3EOo6zlS7tqodtQ7e0JbFMIptrKHhcBz3b04z5w8Q2i8T8gElvmQmk4N2KsbsVNoBQVY4gVzYsCaYIr19K+tWhPHlPpBAnWgacZzxCitLBYl82683/8WNYtnrPXQ7lSc7gUbOcz6RfzeO6ZcwTakxMbYR5aUNFBZKzdf4gGUzMmeUGb0JGso0CbXsCyFhlp7r8xbbOjigEAYSYVL1h8CDEkGJKQxR1PAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1SgbFS5o+KJNhP05rWP8/UKyxwp1NZwQ6X6OlBKyCLE=;
- b=QN8Dk+0Wf8jMFwqbRIu5BLZ/98kIgU4NkSjuWK8rMZrSmNrhIv5x+Yzys95AIkrXtPuPu0ZLFiZkv65TjsflHPW1BmGUjl7vOOFP/0twiTrjl3z6w/X28KU68y2vqMH42tj9oYyvIRq1PV4IL6WyRXyxVKw/y9eiEjLBoOu24B4=
-Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com (52.133.29.29) by
- AM6PR0402MB3431.eurprd04.prod.outlook.com (52.133.23.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Wed, 16 Oct 2019 13:19:07 +0000
-Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com
- ([fe80::41c6:84dd:815a:7fed]) by AM6PR0402MB3798.eurprd04.prod.outlook.com
- ([fe80::41c6:84dd:815a:7fed%2]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 13:19:07 +0000
-From:   Christian Herber <christian.herber@nxp.com>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-Thread-Topic: Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-Thread-Index: AdWEJEhq7WLWRdOeSmCgG9/MWDe38A==
-Date:   Wed, 16 Oct 2019 13:19:06 +0000
-Message-ID: <AM6PR0402MB379820688ED6E8D3FA60D45C86920@AM6PR0402MB3798.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=christian.herber@nxp.com; 
-x-originating-ip: [95.112.80.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 951f0523-f754-4c8e-a752-08d7523b6c62
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM6PR0402MB3431:
-x-microsoft-antispam-prvs: <AM6PR0402MB3431597DF373B22E973C524786920@AM6PR0402MB3431.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(189003)(199004)(74316002)(66066001)(6246003)(7736002)(66946007)(53546011)(102836004)(26005)(9686003)(6506007)(186003)(2501003)(7696005)(486006)(476003)(44832011)(86362001)(76116006)(305945005)(66476007)(66446008)(64756008)(66556008)(229853002)(14454004)(52536014)(316002)(33656002)(81156014)(54906003)(81166006)(478600001)(8936002)(25786009)(6436002)(5660300002)(2906002)(3846002)(6116002)(4326008)(55016002)(99286004)(8676002)(71200400001)(71190400001)(256004)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3431;H:AM6PR0402MB3798.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ktXDsWUpoP/ZvE1wEDpuCkXR/Ujw6Ctc61zqodZ1NgZ/UQZkw3RXz2QRC8JmtRrtL9JiK+HJOnfALGWlb9XxPBtJDXU6Epb0n1XkHr7WrjDKEqNl1HDjCHqQWeX+wysu5sSiCPJoySeKp9FNmWo5zFQrE9byUjIxVIJRqi53+3wBfGQfUh9zaZ/+JaLXWFOXvhWMhJa2d6wkMH5WIAU+kkQZ/T50o+LRb5jqsvR6GD5jW2FaHXy1Yc86YLG86YWqj7RXa7qXOHnlPdKlp8m+2qjiCHv9NL+WqQNbZpM+5hnQAZpCuIidydDsMxRk83C7yfL1DLzfUJgo2ZD8S/Xefilvq4+gNaPw4l0bqOq5tA+tI1WCWddM/OsAi7t6cyk4WTRA3s1KqHzpdgc8+5ONEhY0C67nZTRVdOwEkEYdqkE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 16 Oct 2019 09:20:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48022 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388141AbfJPNUI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:20:08 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GDK2GC110727;
+        Wed, 16 Oct 2019 08:20:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571232002;
+        bh=pn1VJ6hcp1F1tZLG4xpI8lS3IUjFzRCxzxKnmp0Jaq0=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=KxCHByEfMBLsRmBAXWWcNQCupC/BZCNyKovmhaDakle728gy820EYYpkqCx+5Gxz+
+         J6ADvghlRoDdaFgX1JeCBynrO9CXqIUI354FGvtcr/PNJYwGAzY8Jkb5P6vfvtSitX
+         6K/r3+FOBiSWAevhohiFBj5UMuPEShDYjikPgM/k=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GDK2Jl111013
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Oct 2019 08:20:02 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
+ Oct 2019 08:20:01 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 16 Oct 2019 08:20:01 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x9GDK1N8027346;
+        Wed, 16 Oct 2019 08:20:01 -0500
+Date:   Wed, 16 Oct 2019 08:22:39 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 1/3] dt-bindings: media: ti-vpe: Document VPE driver
+Message-ID: <20191016132239.ufptwl44ktmhvylo@ti.com>
+References: <20191009175628.20570-1-bparrot@ti.com>
+ <20191009175628.20570-2-bparrot@ti.com>
+ <20191015222947.GA13388@bogus>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 951f0523-f754-4c8e-a752-08d7523b6c62
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 13:19:06.7889
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7YnXhC+gTVdea++jBdUrYszks+uHKKIF2vz0iEZmfZNrFwIL46/bCizLlX3vw1z7nPc6JaiGLeIXtIzQLuDqHSGbsi+q6cKkBD6lOzKBRFA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3431
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191015222947.GA13388@bogus>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gT2N0b2JlciAxNiwgMjAxOSAxMDozNzozMCBBTSBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5n
-dXRyb25peC5kZT4gd3JvdGU6DQoNCj4gT24gRnIsIDIwMTktMDgtMTYgYXQgMjI6NTkgKzAyMDAs
-IEhlaW5lciBLYWxsd2VpdCB3cm90ZToNCj4+IE9uIDE1LjA4LjIwMTkgMTc6MzIsIENocmlzdGlh
-biBIZXJiZXIgd3JvdGU6DQo+PiA+IFRoaXMgcGF0Y2ggYWRkcyBiYXNpYyBzdXBwb3J0IGZvciBC
-QVNFLVQxIFBIWXMgaW4gdGhlIGZyYW1ld29yay4NCj4+ID4gQkFTRS1UMSBQSFlzIG1haW4gYXJl
-YSBvZiBhcHBsaWNhdGlvbiBhcmUgYXV0b21vdGl2ZSBhbmQgaW5kdXN0cmlhbC4NCj4+ID4gQkFT
-RS1UMSBpcyBzdGFuZGFyZGl6ZWQgaW4gSUVFRSA4MDIuMywgbmFtZWx5DQo+PiA+IC0gSUVFRSA4
-MDIuM2J3OiAxMDBCQVNFLVQxDQo+PiA+IC0gSUVFRSA4MDIuM2JwIDEwMDBCQVNFLVQxDQo+PiA+
-IC0gSUVFRSA4MDIuM2NnOiAxMEJBU0UtVDFMIGFuZCAxMEJBU0UtVDFTDQo+PiA+DQo+PiA+IFRo
-ZXJlIGFyZSBubyBwcm9kdWN0cyB3aGljaCBjb250YWluIEJBU0UtVDEgYW5kIGNvbnN1bWVyIHR5
-cGUgUEhZcyBsaWtlDQo+PiA+IDEwMDBCQVNFLVQuIEhvd2V2ZXIsIGRldmljZXMgZXhpc3Qgd2hp
-Y2ggY29tYmluZSAxMDBCQVNFLVQxIGFuZCAxMDAwQkFTRS1UMQ0KPj4gPiBQSFlzIHdpdGggYXV0
-by1uZWdvdGlhdGlvbi4NCj4+DQo+PiBJcyB0aGlzIG1lYW50IGluIGEgd2F5IHRoYXQgKmN1cnJl
-bnRseSogdGhlcmUgYXJlIG5vIFBIWSdzIGNvbWJpbmluZyBCYXNlLVQxDQo+PiB3aXRoIG5vcm1h
-bCBCYXNlLVQgbW9kZXM/IE9yIGFyZSB0aGVyZSByZWFzb25zIHdoeSB0aGlzIGlzbid0IHBvc3Np
-YmxlIGluDQo+PiBnZW5lcmFsPyBJJ20gYXNraW5nIGJlY2F1c2Ugd2UgaGF2ZSBQSFkncyBjb21i
-aW5pbmcgY29wcGVyIGFuZCBmaWJlciwgYW5kIGUuZy4NCj4+IHRoZSBtZW50aW9uZWQgQXF1YW50
-aWEgUEhZIHRoYXQgY29tYmluZXMgTkJhc2UtVCB3aXRoIDEwMDBCYXNlLVQyLg0KPg0KPiBUaGVy
-ZSBhcmUgUEhZcyBjb21iaW5pbmcgYm90aCBCYXNlLVQxIGFuZCBvdGhlciBCYXNlLVQgY2FwYWJp
-bGl0aWVzLg0KPiBFLmcuIHRoZSBCcm9hZGNvbSBCQ001NDgxMSBzdXBwb3J0IGJvdGggQmFzZS1U
-MSwgYXMgd2VsbCBhcyAxMDAwQkFTRS1UDQo+IGFuZCAxMDBCQVNFLVRYLg0KPg0KPiBSZWdhcmRz
-LA0KPiBMdWNhcw0KDQpJbnRlcmVzdGluZy4gVG8gYmUgcHJlY2lzZSwgdGhlIGRldmljZSBzdXBw
-b3J0cyBCcm9hZFItUmVhY2ggYW5kIG5vdCAxMDBCQVNFLVQxIGFjY29yZGluZyB0byB0aGVpciBw
-cm9kdWN0IGJyaWVmLiBUaGVyZWZvcmUgSSB3b3VsZCBhc3N1bWUgdGhhdCB0aGUgcmVnaXN0ZXJz
-IGFsc28gZG8gbm90IGZvbGxvdyB0aGUgSUVFRSBkZWZpbmVkIENsYXVzZSA0NSBsYXlvdXQuIFdo
-aWxlIHdlIGNhbm5vdCBsZWFybiBtdWNoIHRoZW4gaG93IHRvIGhhbmRsZSBzdWNoIGRldmljZXMg
-aW4gYSBnZW5lcmljIGNsYXVzZSA0NSBkcml2ZXIsIHRoaXMgc3VnZ2VzdHMgdGhhdCBzdWNoIGRl
-dmljZXMgY2FuIGFwcGVhci4NCg0KU3RpbGwsIElFRUUgODAyLjMgZG9lcyBub3QgcmVhbGx5IGRl
-ZmluZSBhIHdheSB0aGF0IHRoZXNlIGRldmljZXMgd291bGQgY29leGlzdCwgc28gSSB3b3VsZCBh
-c3N1bWUgaXQgaXMgcHJldHR5IG11Y2ggdHdvIFBIWXMgaW4gb25lIElDIGFuZCB5b3UgY2FuIGNo
-b3NlIHdoaWNoIGZsYXZvciB5b3Ugd2FudC4gSXMgbXkgYXNzdW1wdGlvbiBvbiB0aGF0IGNvcnJl
-Y3Q/DQoNCkluIHRoYXQgY2FzZSwgeW91IHdvdWxkIGhhdmUgdG8gc3RydWN0dXJlIHRoZSBkcml2
-ZXJzIGluIGEgd2F5IHRoZSB5b3UgaGF2ZSBzZXBhcmF0ZSBmdW5jdGlvbnMgZm9yIHRoZSBzdGFu
-ZGFsb25lIGZsYXZvcnMgb2YgQ2xhdXNlIDQ1IG1hbmFnZWQgUEhZcywgd2hpbGUgbWFraW5nIGFz
-IG11Y2ggcmV1c2UgYXMgcG9zc2libGUgYmV0d2VlbiB0aGVtLg0K
+Rob Herring <robh@kernel.org> wrote on Tue [2019-Oct-15 17:29:47 -0500]:
+> On Wed, Oct 09, 2019 at 12:56:26PM -0500, Benoit Parrot wrote:
+> > Device Tree bindings for the Video Processing Engine (VPE) driver.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  .../devicetree/bindings/media/ti-vpe.txt      | 48 +++++++++++++++++++
+> >  MAINTAINERS                                   |  1 +
+> >  2 files changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
+> 
+> Please convert to DT schema format.
+
+I can do that.
+Before posting/merging a .yaml, are we supposed to be able to pass these?
+# make dt_binding_check
+# make dtbs_check
+
+Because currently with 5.4-rc3 these fails.
+
+Is there a way to run these "test command" target a specific .yaml and not
+the whole set?
+
+> 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/ti-vpe.txt b/Documentation/devicetree/bindings/media/ti-vpe.txt
+> > new file mode 100644
+> > index 000000000000..b2942fa8c3ea
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/ti-vpe.txt
+> > @@ -0,0 +1,48 @@
+> > +Texas Instruments DRA7x VIDEO PROCESSING ENGINE (VPE)
+> > +------------------------------------------------------
+> > +
+> > +The Video Processing Engine (VPE) is a key component for image post
+> > +processing applications. VPE consist of a single memory to memory
+> > +path which can perform chroma up/down sampling, deinterlacing,
+> > +scaling and color space conversion.
+> > +
+> > +Required properties:
+> > +- compatible: must be "ti,vpe"
+> 
+> Needs to have SoC specific compatibles.
+
+Yes, I'll fix that.
+
+> 
+> > +- reg:	physical base address and length of the registers set for the 4
+> > +	memory regions required;
+> > +- reg-names: name associated with the memory regions described is <reg>;
+> 
+> The names need to be documented.
+
+Ok.
+
+> 
+> > +- interrupts: should contain IRQ line for VPE;
+> > +
+> > +Example:
+> > +
+> > +	target-module@1d0010 {                  /* 0x489d0000, ap 27 30.0 */
+> > +		compatible = "ti,sysc-omap4", "ti,sysc";
+> > +		reg = <0x1d0010 0x4>;
+> > +		reg-names = "sysc";
+> > +		ti,sysc-midle = <SYSC_IDLE_FORCE>,
+> > +				<SYSC_IDLE_NO>,
+> > +				<SYSC_IDLE_SMART>;
+> > +		ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> > +				<SYSC_IDLE_NO>,
+> > +				<SYSC_IDLE_SMART>;
+> > +		clocks = <&vpe_clkctrl DRA7_VPE_VPE_CLKCTRL 0>;
+> > +		clock-names = "fck";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges = <0x0 0x1d0000 0x10000>;
+> 
+> All this is outside the scope of this binding.
+
+OK I was not sure if the whole interconnect thing was needed in the example
+or not.
+
+> 
+> > +
+> > +		vpe: vpe@0 {
+> > +			compatible = "ti,vpe";
+> > +			reg = <0x0000 0x120>,
+> > +			      <0x0700 0x80>,
+> > +			      <0x5700 0x18>,
+> > +			      <0xd000 0x400>;
+> > +			reg-names = "vpe_top",
+> > +				    "sc",
+> > +				    "csc",
+> > +				    "vpdma";
+> > +			interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+> 
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> 
+> Not documented, nor needed as there are no child nodes.
+
+Yeah, I'll remove that.
+
+> 
+> > +		};
+> > +	};
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 8598f49fa2c8..63dcda51f8ae 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -16299,6 +16299,7 @@ W:	http://linuxtv.org/
+> >  Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+> >  S:	Maintained
+> >  F:	drivers/media/platform/ti-vpe/
+> > +F:	Documentation/devicetree/bindings/media/ti-vpe.txt
+
+Now with the dt_schemas, I noticed that the maintainer's name is part of
+the yaml file. Do we still need to add this to the MAINTAINERS file as
+well?
+
+Benoit
+
+
+> >  
+> >  TI WILINK WIRELESS DRIVERS
+> >  L:	linux-wireless@vger.kernel.org
+> > -- 
+> > 2.17.1
+> > 
