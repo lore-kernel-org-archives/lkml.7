@@ -2,232 +2,80 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C614FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E32FC4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B94F20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsAp2aMF"
+	by mail.kernel.org (Postfix) with ESMTP id 3886020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 09:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392044AbfJPJmr (ORCPT
+        id S2392050AbfJPJoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 05:42:47 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42024 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfJPJmr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 05:42:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w14so35102214qto.9;
-        Wed, 16 Oct 2019 02:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tc+bjrFvCm99dkdh8oHRuyC3BtBT5HBjTdr0g9Rtqkg=;
-        b=PsAp2aMFrpQeUVfKKIw12to7ciwCj3LHoHmyOPdzFWsswiJ6kXsv1mb0q77oUZ9qPz
-         XYR4aS+6mT+8SNy7FCY6OdbupRF8wfSSaVCbkWxwjWhhlcZaNVqvGdsFylj7YJCw2dY3
-         ymIFlzkAstc6TGOb5oMPfuAvPNv5aC1kpoODjB98NfomTm0NunbjQ2mn637lIiUuFV87
-         0YVQwMmXz1vdwww4bv6fxNRXlCjQeYmGfKTL0Wc3Wl1L5Rxb3o5co9y8fUtDdTFvjdNB
-         2lvS7WBkm+s09jacoMVDx0W4liDwPgyf33qVFu7t5K9Ujvzmn8WquTVidiB2gtWe2qwc
-         W7Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tc+bjrFvCm99dkdh8oHRuyC3BtBT5HBjTdr0g9Rtqkg=;
-        b=j4HfzMUrM39YWhCUlfJHrpPsvFuKi93S0jSmQEBkYnIoegFdLj3rAuDElwcwMxGB/v
-         ulg3pRfbD6prICC5UP5weFKq6GwYrRb6e94BBHrbL6kjhh3LnHnz0LFHkT7PIwvdEDwS
-         apNfUWsTvdBsEOHcGQ0B+2VPYl8EiEVTxZoPZDb9jCHw3I4LEWsarZaJSKQZql4lR9D9
-         LsKONEFFr8tVTrpKHpeK1+6lPc9zAoel1HkEopRjhJsvlLjpHnI7b7tmjgd3hTPl1KcZ
-         RVTMYvmPtZZ+oVi8LhukbOAJflAbD9Vpjw0q2GVbSTQJ6OdcIfz0ZcAclPGo4wbzXb2O
-         qZng==
-X-Gm-Message-State: APjAAAUEMB8yyWkTXaI4tzhZYGO+ihmRuwNhFuxkphoryadxgyZ3hQ8C
-        aO+VyizMNCgiYNu0lzHLjgU=
-X-Google-Smtp-Source: APXvYqwv4OPCbvJ/75Lox4Ir6P4EncPUZZJZylf1we/5Vtb4xrvd19GTx1XCLu0AyB4tvOx1k1Pa+g==
-X-Received: by 2002:ac8:7084:: with SMTP id y4mr44279072qto.146.1571218965731;
-        Wed, 16 Oct 2019 02:42:45 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id p53sm12956733qtk.23.2019.10.16.02.42.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Oct 2019 02:42:44 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 5433120931;
-        Wed, 16 Oct 2019 05:42:43 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 16 Oct 2019 05:42:43 -0400
-X-ME-Sender: <xms:EOamXau1beLCvey8giMNfWrS5u-M98SOlPG_UcrFJ_Y4lqdSeQSxrg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrjeehgddulecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehgtderredtredvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppedutd
-    durdekiedrgedurddvuddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
-    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
-    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
-    vgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:EOamXXISM7AZAGOysAqNwFrwskFK4GyvXEMAUK76sMQhyalLITrueQ>
-    <xmx:EOamXX9WFyjbGgP8fN1v2SsFAsuaS2nvq57_d3YoSZKkDj0uzpSfrQ>
-    <xmx:EOamXT5zY7H9WLM1B_lOpw2bBnMmL1VKQXk25rKbr0sGwMbHc8WAiw>
-    <xmx:E-amXT59VT5qlyQTUsleQCVd7IBHXi8qe1VOu-Vf8i4ehTQfx0geLQQ1pB0>
-Received: from localhost (unknown [101.86.41.212])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 78764D60062;
-        Wed, 16 Oct 2019 05:42:38 -0400 (EDT)
-Date:   Wed, 16 Oct 2019 17:42:34 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, bp@alien8.de,
-        dja@axtens.net, dlustig@nvidia.com, dave.hansen@linux.intel.com,
-        dhowells@redhat.com, dvyukov@google.com, hpa@zytor.com,
-        mingo@redhat.com, j.alglave@ucl.ac.uk, joel@joelfernandes.org,
-        corbet@lwn.net, jpoimboe@redhat.com, luc.maranget@inria.fr,
-        mark.rutland@arm.com, npiggin@gmail.com, paulmck@linux.ibm.com,
-        peterz@infradead.org, tglx@linutronix.de, will@kernel.org,
-        kasan-dev@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 1/8] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20191016094234.GB2701514@tardis>
-References: <20191016083959.186860-1-elver@google.com>
- <20191016083959.186860-2-elver@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
-In-Reply-To: <20191016083959.186860-2-elver@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 16 Oct 2019 05:44:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61115 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbfJPJoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 05:44:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 02:44:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,303,1566889200"; 
+   d="scan'208";a="186100964"
+Received: from unknown (HELO ubuntu.localdomain) ([10.226.249.160])
+  by orsmga007.jf.intel.com with ESMTP; 16 Oct 2019 02:44:11 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Ong Hean Loong <hean.loong.ong@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>
+Subject: [PATCHv2] arm64: dts: altera: update QSPI reg addresses for Stratix10
+Date:   Wed, 16 Oct 2019 02:44:07 -0700
+Message-Id: <1571219047-12437-1-git-send-email-joyce.ooi@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch updates the reg addresses for QSPI boot and QSPI rootfs in
+the device tree for Stratix10
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
+---
+v2: update the qspi_rootfs partition size
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Hi Marco,
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 66e4ffb..3704a17 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -178,12 +178,12 @@
+ 
+ 			qspi_boot: partition@0 {
+ 				label = "Boot and fpga data";
+-				reg = <0x0 0x4000000>;
++				reg = <0x0 0x034B0000>;
+ 			};
+ 
+-			qspi_rootfs: partition@4000000 {
++			qspi_rootfs: partition@34B0000 {
+ 				label = "Root Filesystem - JFFS2";
+-				reg = <0x4000000 0x4000000>;
++				reg = <0x034B0000 0x0CB50000>;
+ 			};
+ 		};
+ 	};
+-- 
+1.9.1
 
-On Wed, Oct 16, 2019 at 10:39:52AM +0200, Marco Elver wrote:
-[...]
-> --- /dev/null
-> +++ b/kernel/kcsan/kcsan.c
-> @@ -0,0 +1,81 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * The Kernel Concurrency Sanitizer (KCSAN) infrastructure. For more info please
-> + * see Documentation/dev-tools/kcsan.rst.
-> + */
-> +
-> +#include <linux/export.h>
-> +
-> +#include "kcsan.h"
-> +
-> +/*
-> + * Concurrency Sanitizer uses the same instrumentation as Thread Sanitizer.
-
-Is there any documentation on the instrumentation? Like a complete list
-for all instrumentation functions plus a description of where the
-compiler will use those functions. Yes, the names of the below functions
-are straightforward, but an accurate doc on the instrumentation will
-cerntainly help people review KCSAN.
-
-Regards,
-Boqun
-
-> + */
-> +
-> +#define DEFINE_TSAN_READ_WRITE(size)                                           \
-> +	void __tsan_read##size(void *ptr)                                      \
-> +	{                                                                      \
-> +		__kcsan_check_access(ptr, size, false);                        \
-> +	}                                                                      \
-> +	EXPORT_SYMBOL(__tsan_read##size);                                      \
-> +	void __tsan_write##size(void *ptr)                                     \
-> +	{                                                                      \
-> +		__kcsan_check_access(ptr, size, true);                         \
-> +	}                                                                      \
-> +	EXPORT_SYMBOL(__tsan_write##size)
-> +
-> +DEFINE_TSAN_READ_WRITE(1);
-> +DEFINE_TSAN_READ_WRITE(2);
-> +DEFINE_TSAN_READ_WRITE(4);
-> +DEFINE_TSAN_READ_WRITE(8);
-> +DEFINE_TSAN_READ_WRITE(16);
-> +
-> +/*
-> + * Not all supported compiler versions distinguish aligned/unaligned accesses,
-> + * but e.g. recent versions of Clang do.
-> + */
-> +#define DEFINE_TSAN_UNALIGNED_READ_WRITE(size)                                 \
-> +	void __tsan_unaligned_read##size(void *ptr)                            \
-> +	{                                                                      \
-> +		__kcsan_check_access(ptr, size, false);                        \
-> +	}                                                                      \
-> +	EXPORT_SYMBOL(__tsan_unaligned_read##size);                            \
-> +	void __tsan_unaligned_write##size(void *ptr)                           \
-> +	{                                                                      \
-> +		__kcsan_check_access(ptr, size, true);                         \
-> +	}                                                                      \
-> +	EXPORT_SYMBOL(__tsan_unaligned_write##size)
-> +
-> +DEFINE_TSAN_UNALIGNED_READ_WRITE(2);
-> +DEFINE_TSAN_UNALIGNED_READ_WRITE(4);
-> +DEFINE_TSAN_UNALIGNED_READ_WRITE(8);
-> +DEFINE_TSAN_UNALIGNED_READ_WRITE(16);
-> +
-> +void __tsan_read_range(void *ptr, size_t size)
-> +{
-> +	__kcsan_check_access(ptr, size, false);
-> +}
-> +EXPORT_SYMBOL(__tsan_read_range);
-> +
-> +void __tsan_write_range(void *ptr, size_t size)
-> +{
-> +	__kcsan_check_access(ptr, size, true);
-> +}
-> +EXPORT_SYMBOL(__tsan_write_range);
-> +
-> +/*
-> + * The below are not required KCSAN, but can still be emitted by the compiler.
-> + */
-> +void __tsan_func_entry(void *call_pc)
-> +{
-> +}
-> +EXPORT_SYMBOL(__tsan_func_entry);
-> +void __tsan_func_exit(void)
-> +{
-> +}
-> +EXPORT_SYMBOL(__tsan_func_exit);
-> +void __tsan_init(void)
-> +{
-> +}
-> +EXPORT_SYMBOL(__tsan_init);
-[...]
-
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAl2m5gMACgkQSXnow7UH
-+rjJegf/Rrq3dKwfP4Vyd25nX8MIlEeiMrDXyxhCS2tQFw7EfcgilRD8INFnob38
-H/FZ9xR3ndkcpXmoq64gGCN+dEULY78jI7Zg1fpnvUcoVI+q7Hc43PWERvU3otLo
-c65FZXO36WKdEg0PJ//SWfSgwQBDfUdjmJ+17YBUd/78SleSsDk9PQNm+A6yb+u5
-5jsmrV1uo7vDA+B7/n8Pn06Zu8Uwi0qZn9aWQzoGwmAFrwaF7KRbvWX86p2SMr6k
-Tqi7Rpp0uoJDTBFyZg3Dmnizqh81BsHEEQtI3Yjh6bKUpGdre0tyMNUVRYHpQaYX
-oVHK6bV3bKlerxpvUT/SE2yOUOBGtw==
-=zQTb
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
