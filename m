@@ -2,326 +2,183 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DE7FA372A
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86461FA3728
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF7F2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5892621835
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 16:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pV8AJmxd";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="FjpPncGw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3y/nq3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390289AbfJPQII (ORCPT
+        id S2391659AbfJPQIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 12:08:08 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:14144 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbfJPQIH (ORCPT
+        Wed, 16 Oct 2019 12:08:22 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48576 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732188AbfJPQIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 12:08:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1571242086; x=1602778086;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=dfLLuN+la3iKy6ZX8Z5xrKNppveTKZfMpAZXhDH99yg=;
-  b=pV8AJmxdtMjDlDgqcv+rDixEpXjJu3XsECCsPzVVLSmZ/cS0LFVkTXUM
-   vgor1CCEcXMJkU18I1pTK2v2/2H38DzJohOv4rrCfNymeo/nyCWQvWQOC
-   7H7FPKZKEPrwDSnclHmRx5lBlswZve+4MknzxmXY7WPbc4cIeXRIiGp/8
-   YuEbkGtndMvTMXVGgIsU0lEIsZT5b0EJNyzlpc4/IxqeeWEyR2pTGxlOu
-   QHM/7MGCEBbRcjzqo9jlE4p2jhqgG2NfddpJ/c0r35VOVSnQvHy0WDEaG
-   KmYtw3cOzq/zMs/WwIOU4iaSUHoZg4MivJ09MaJeQxEeiQ9LsYnQtzCz3
-   Q==;
-IronPort-SDR: PyR8FXrA+Oo/TUxPkU/9BwGytWTeQhrkCIDMl1ai5zGXxvzBI6qQ42ZYyUBayq7SGwx79WMQ6u
- zkLb2T+Jhl9+CmykdoVBe8BWu+eW2whTKnNL2N1Lxv1nLWOI16OFxw+5/6/c5yKLRVPkkMt58k
- D49V6fi4BmzvTxYwVKcdafMDfB5IQCRvcduv7U403+M9nh5tJezd9DZMoM643GkyLtrjrXm2AH
- tZWMq2j72so9e08LuZxWs4CVBE+HjYWcOvIuSBfmGg4JKYmY0rwq8sZWP0S8U2EtpZxBq8b2N7
- biM=
-X-IronPort-AV: E=Sophos;i="5.67,304,1566835200"; 
-   d="scan'208";a="121448168"
-Received: from mail-dm3nam03lp2052.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.52])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Oct 2019 00:08:04 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f9YB1nY9fFoo/i2Ev2Ti0T1YDvbnTFY3AntianmfnjVAdBQZ15FE/MEBIudsrIFpBym9JlhJox1ngA9Dra7DYAbeIoQPpVvUjQu2wok4WwdwwKpb4SWQ48DGV32O6YGcuzv/3eixJ4ZvSnB1mGE9ypF5kwM2VkDNObA/T6sp9ViTOQlCnUjOK8TtBu6YUMYBxReWo4cuj85PvHFiaml/YosyekoO2umw+7yQreesCEjdGazp/hAQLVGUBzwA8nK2R0fzTm921FUMQjPxRt5Ux0/QnKoz/ByQtmDb+iXWjFIsoVWmyH4+DBrSVDF/W/QPL0iDpoyr/eoIATyH+AyikA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J91KfnOUqoFoWj199Ik90adrRRo0HPquPXLjl2e7yRY=;
- b=BuqFPWADAVIS223UIFGRNAJjZ75FuQ15wyao9EU7rbKBtDBS3Pa1lYxcqmBa7I4gG64ssLRq8OR2WBUr9NO6TkGkZk0yBQLRtcpS1T5pI7p6v6AHJqqrs8GmLqFztZqlmN8LiZ21QtNEVwGDkowZCLL9SAf+Yc+KGlq78k5EAUNGKJLe9XbEX58fV7uqqiV5g66leUM9BdcoCZ/IAiM+zAVwrBw6eXUNCxkxN/lUaKA1P2wRUVR5+Ktdbek1Cr8/6/KlA79iwgfXnAJAiVOymb7L3YnYsqiVM36Ft711wGqKh1cZzm2alN3W8vSnC6fUqQiqQpOS/STRAMKVrigRDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J91KfnOUqoFoWj199Ik90adrRRo0HPquPXLjl2e7yRY=;
- b=FjpPncGwPMwNJG/1G4DOprGiW/Iinf+b9F4Kv+iyMf1nfp+MMn3X9qgAZdq4eq2CR97drqRWcd7jlmD0QNYiKMmLtvDmY5/NBOrbrY3gNCayNFk3UEU3MH/9Oxipshj2GDdSpVQmjofK9cp6WWfxlScSRpj0IdSljTjWHn25RdM=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6397.namprd04.prod.outlook.com (52.132.170.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.17; Wed, 16 Oct 2019 16:08:02 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::1454:87a:13b0:d3a]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::1454:87a:13b0:d3a%7]) with mapi id 15.20.2347.023; Wed, 16 Oct 2019
- 16:08:02 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v9 00/22] KVM RISC-V Support
-Thread-Topic: [PATCH v9 00/22] KVM RISC-V Support
-Thread-Index: AQHVhDvjgWUSb1QOnEOpmdfhfnPxUQ==
-Date:   Wed, 16 Oct 2019 16:08:02 +0000
-Message-ID: <20191016160649.24622-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::16) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.27.162]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 261cb235-cf59-4666-6d9f-08d75253057c
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: MN2PR04MB6397:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB639769652E62FDC250C1244F8D920@MN2PR04MB6397.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:277;
-x-forefront-prvs: 0192E812EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(199004)(189003)(71190400001)(71200400001)(66556008)(66476007)(66446008)(64756008)(66946007)(6116002)(3846002)(14444005)(66066001)(52116002)(256004)(99286004)(25786009)(7416002)(14454004)(4326008)(478600001)(966005)(7736002)(8676002)(305945005)(110136005)(476003)(54906003)(86362001)(2616005)(316002)(102836004)(81166006)(486006)(55236004)(44832011)(6306002)(5660300002)(50226002)(26005)(9456002)(186003)(8936002)(36756003)(1076003)(6436002)(6512007)(2906002)(6486002)(386003)(81156014)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6397;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hpblZSej8o99pKKGUio2DnS/CuEHzt/vAZgGcbH7s/aFraIjTeeWKuU0RolJAeI1IGG47ZF7rSmTivIAc44cnCC7NJLJ6sdxi4cSSRpR9I3xGjLmSkr/fS4HelYJhU7NevcgjxwCGNCUM3e4rS/cW10/zYnXgKJs9kufHD65hGS1eA5RJbNUk8qvMH7Up9048Y+PLkJ0Ah8GAq7Hd5QAQfLnpmrG9Pb6x8Ut86TTAOF6TJEvDwz5rzzatw4/i5xaH4ogm1lkMg1rLYKbzFjHwtMu4eouw7vXzqA9uCI5r3UdELD8KZTSsiPYdugZi38eNwl9kAapqpjyuUyAbzA95AB7FuGwF7l+O5Q/cVlV8a/tYwk41fn4EUfTxSH8DNe9qLjaIWfqGojtQR7d9WLKdxff0C/CPo0qQW/4vvL0Ne+vxEC3HLw2Dhpm1ShR2UlMos/atmw/GQO4dy6XourizQ==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 16 Oct 2019 12:08:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oiKEHdS8biAfxu8EaK2ZrXR0yySguU1MKB+SrQtNg8A=; b=e3y/nq3VKcddu+6AV5ybwVV3I
+        lragupywXtbHyMts2l0QMhpi8FqPSmrFfE6dK3Zgq2jO3tCFU796uwAcHY7f/L2pM9ZuzzUvg/KIL
+        JN51XQyLYslah0jjKCYR7hWJe4ahpbE6gId8x8CzlNzGLGMjoH0LkHqObxJy5U3cELoWfCaDBD7XJ
+        soRoPyDSVpKSdJlCbBkyWfRzdITVJsj+7xusl3901N/lX82DO2IakkCEnaHnbBFUt7kt8ulRmerGx
+        Qn605uMRNsH9eczyJGKcidjxSionSm+5JfqSzG5fd/+TuHt5P4y9wjKSSQSEe5PEYGjmbJhdeo3Pz
+        DdA55wI4w==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iKlqW-0007Gf-9c; Wed, 16 Oct 2019 16:08:20 +0000
+Subject: Re: [PATCH] scripts : prune-kernel : prune kernels generalized way
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        yamada.masahiro@socionext.com, michal.lkml@markovi.net
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bfields@fieldses.org
+References: <20191016061312.10626-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <307349e6-69b0-b894-a2b9-edfd5b0fe4c7@infradead.org>
+Date:   Wed, 16 Oct 2019 09:08:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 261cb235-cf59-4666-6d9f-08d75253057c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2019 16:08:02.6107
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WHOI3wvyQYz8gSHma6FaSJdWpE8MtiZartrjwyX3rRIAVlLcAn67exp/k2SX4DbOt1R+h76So10b/Iu7DB88nw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6397
+In-Reply-To: <20191016061312.10626-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds initial KVM RISC-V support. Currently, we are able to boot
-RISC-V 64bit Linux Guests with multiple VCPUs.
+On 10/15/19 11:13 PM, Bhaskar Chowdhury wrote:
+> This patch will remove old kernel from the system in a selective way.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+> Thanks, a bunch to Randy for the hand holding . :)
 
-Few key aspects of KVM RISC-V added by this series are:
-1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
-2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
-3. KVM ONE_REG interface for VCPU register access from user-space.
-4. PLIC emulation is done in user-space.
-5. Timer and IPI emuation is done in-kernel.
-6. MMU notifiers supported.
-7. FP lazy save/restore supported.
-8. SBI v0.1 emulation for KVM Guest available.
-9. Forward unhandled SBI calls to KVM userspace.
-10. Hugepage support for Guest/VM
+Hi Bhaskar,
 
-Here's a brief TODO list which we will work upon after this series:
-1. SBI v0.2 emulation in-kernel
-2. SBI v0.2 hart hotplug emulation in-kernel
-3. In-kernel PLIC emulation
-4. ..... and more .....
+First problem is that patch complains:
 
-This series can be found in riscv_kvm_v9 branch at:
-https//github.com/avpatel/linux.git
+checking file scripts/prune-kernel
+Using Plan A...
+patch: **** malformed patch at line 87: 2.21.0
 
-Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at=
-:
-https//github.com/avpatel/kvmtool.git
+IOW, this patch does not apply cleanly.
 
-The QEMU RISC-V hypervisor emulation is done by Alistair and is available
-in mainline/alistair/riscv-hyp-ext-v0.4.1 branch at:
-https://github.com/kvm-riscv/qemu.git
+More comments below.
 
-To play around with KVM RISC-V, refer KVM RISC-V wiki at:
-https://github.com/kvm-riscv/howto/wiki
-https://github.com/kvm-riscv/howto/wiki/KVM-RISCV64-on-QEMU
 
-Changes since v8:
- - Rebased series on Linux-5.4-rc3 and Atish's SBI v0.2 patches
- - Use HRTIMER_MODE_REL instead of HRTIMER_MODE_ABS in timer emulation
- - Fixed kvm_riscv_stage2_map() to handle hugepages
- - Added patch to forward unhandled SBI calls to user-space
- - Added patch for iterative/recursive stage2 page table programming
- - Added patch to remove per-CPU vsip_shadow variable
- - Added patch to fix race-condition in kvm_riscv_vcpu_sync_interrupts()
+>  scripts/prune-kernel | 71 ++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 59 insertions(+), 12 deletions(-)
+> 
+> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+> index e8aa940bc0a9..78dd4c854b2b 100755
+> --- a/scripts/prune-kernel
+> +++ b/scripts/prune-kernel
+> @@ -5,17 +5,64 @@
+>  # again, /boot and /lib/modules/ eventually fill up.
+>  # Dumb script to purge that stuff:
+> 
+> +#for f in "$@"
+> +#do
+> +#        if rpm -qf "/lib/modules/$f" >/dev/null; then
+> +#                echo "keeping $f (installed from rpm)"
+> +#        elif [ $(uname -r) = "$f" ]; then
+> +#                echo "keeping $f (running kernel) "
+> +#        else
+> +#                echo "removing $f"
+> +#                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+> +#                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+> +#                rm -rf "/lib/modules/$f"
+> +#                new-kernel-pkg --remove $f
+> +#        fi
+> +#done
+> +boot_dir=/boot
+> +modules_dir=/lib/modules
+> +
+> +function remove_old_kernel(){
+> +	cd $boot_dir
+> +	rm -If vmlinuz-$kenrel_version System.map-$kernel_version config-$kernel_verison
 
-Changes since v7:
-- Rebased series on Linux-5.4-rc1 and Atish's SBI v0.2 patches
-- Removed PATCH1, PATCH3, and PATCH20 because these already merged
-- Use kernel doc style comments for ISA bitmap functions
-- Don't parse X, Y, and Z extension in riscv_fill_hwcap() because it will
-  be added in-future
-- Mark KVM RISC-V kconfig option as EXPERIMENTAL
-- Typo fix in commit description of PATCH6 of v7 series
-- Use separate structs for CORE and CSR registers of ONE_REG interface
-- Explicitly include asm/sbi.h in kvm/vcpu_sbi.c
-- Removed implicit switch-case fall-through in kvm_riscv_vcpu_exit()
-- No need to set VSSTATUS.MXR bit in kvm_riscv_vcpu_unpriv_read()
-- Removed register for instruction length in kvm_riscv_vcpu_unpriv_read()
-- Added defines for checking/decoding instruction length
-- Added separate patch to forward unhandled SBI calls to userspace tool
+Typos:
+	               $kernel_version                                   $kernel_version
 
-Changes since v6:
-- Rebased patches on Linux-5.3-rc7
-- Added "return_handled" in struct kvm_mmio_decode to ensure that
-  kvm_riscv_vcpu_mmio_return() updates SEPC only once
-- Removed trap_stval parameter from kvm_riscv_vcpu_unpriv_read()
-- Updated git repo URL in MAINTAINERS entry
+I.e., you can't have tested this.
 
-Changes since v5:
-- Renamed KVM_REG_RISCV_CONFIG_TIMEBASE register to
-  KVM_REG_RISCV_CONFIG_TBFREQ register in ONE_REG interface
-- Update SPEC in kvm_riscv_vcpu_mmio_return() for MMIO exits
-- Use switch case instead of illegal instruction opcode table for simplicit=
-y
-- Improve comments in stage2_remote_tlb_flush() for a potential remote TLB
-  flush optimization
-- Handle all unsupported SBI calls in default case of
-  kvm_riscv_vcpu_sbi_ecall() function
-- Fixed kvm_riscv_vcpu_sync_interrupts() for software interrupts
-- Improved unprivilege reads to handle traps due to Guest stage1 page table
-- Added separate patch to document RISC-V specific things in
-  Documentation/virt/kvm/api.txt
+> +}
+> +function remove_old_kernel_modules_dir(){
+> +	cd $modules_dir
+> +	rm -rf $modules_version
+> +}
+> +printf "\n\n Enlist the installed kernels \n\n"
+> +
+> +find $boot_dir -name "vmlinuz-*" -type f  -exec ls -1 {} \;
+> +
+> +printf "\n\n\n Please give the kernel version to remove: %s"
+> +read kernel_version
+> +
 
-Changes since v4:
-- Rebased patches on Linux-5.3-rc5
-- Added Paolo's Acked-by and Reviewed-by
-- Updated mailing list in MAINTAINERS entry
+If I enter nothing here, no need to call remove_old_kernel.
 
-Changes since v3:
-- Moved patch for ISA bitmap from KVM prep series to this series
-- Make vsip_shadow as run-time percpu variable instead of compile-time
-- Flush Guest TLBs on all Host CPUs whenever we run-out of VMIDs
+> +remove_old_kernel
+> +
+> +printf "\n\n Enlist the installed modules directory \n\n"
+> +
+> +find $modules_dir  -maxdepth 0 -type d -exec ls -1 {} \;
+> +
+> +printf "\n\n Please give the full modules directory name to remove: %s"
+> +read modules_version
 
-Changes since v2:
-- Removed references of KVM_REQ_IRQ_PENDING from all patches
-- Use kvm->srcu within in-kernel KVM run loop
-- Added percpu vsip_shadow to track last value programmed in VSIP CSR
-- Added comments about irqs_pending and irqs_pending_mask
-- Used kvm_arch_vcpu_runnable() in-place-of kvm_riscv_vcpu_has_interrupt()
-  in system_opcode_insn()
-- Removed unwanted smp_wmb() in kvm_riscv_stage2_vmid_update()
-- Use kvm_flush_remote_tlbs() in kvm_riscv_stage2_vmid_update()
-- Use READ_ONCE() in kvm_riscv_stage2_update_hgatp() for vmid
+If I enter nothing here, don't call remove_old_kernel_modules_dir.
 
-Changes since v1:
-- Fixed compile errors in building KVM RISC-V as module
-- Removed unused kvm_riscv_halt_guest() and kvm_riscv_resume_guest()
-- Set KVM_CAP_SYNC_MMU capability only after MMU notifiers are implemented
-- Made vmid_version as unsigned long instead of atomic
-- Renamed KVM_REQ_UPDATE_PGTBL to KVM_REQ_UPDATE_HGATP
-- Renamed kvm_riscv_stage2_update_pgtbl() to kvm_riscv_stage2_update_hgatp(=
-)
-- Configure HIDELEG and HEDELEG in kvm_arch_hardware_enable()
-- Updated ONE_REG interface for CSR access to user-space
-- Removed irqs_pending_lock and use atomic bitops instead
-- Added separate patch for FP ONE_REG interface
-- Added separate patch for updating MAINTAINERS file
+> +
+> +remove_old_kernel_modules_dir
+> +
+> +printf "\n\n Removed kernel version: $kernel_version and associcated modules: $modules_version ...Done \n"
 
-Anup Patel (18):
-  RISC-V: Add bitmap reprensenting ISA features common across CPUs
-  RISC-V: Add hypervisor extension related CSR defines
-  RISC-V: Add initial skeletal KVM support
-  RISC-V: KVM: Implement VCPU create, init and destroy functions
-  RISC-V: KVM: Implement VCPU interrupts and requests handling
-  RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
-  RISC-V: KVM: Implement VCPU world-switch
-  RISC-V: KVM: Handle MMIO exits for VCPU
-  RISC-V: KVM: Handle WFI exits for VCPU
-  RISC-V: KVM: Implement VMID allocator
-  RISC-V: KVM: Implement stage2 page table programming
-  RISC-V: KVM: Implement MMU notifiers
-  RISC-V: KVM: Forward unhandled SBI calls to userspace
-  RISC-V: KVM: Simplify stage2 page table programming
-  RISC-V: KVM: Remove per-CPU vsip_shadow variable
-  RISC-V: KVM: Fix race-condition in kvm_riscv_vcpu_sync_interrupts()
-  RISC-V: KVM: Document RISC-V specific parts of KVM API.
-  RISC-V: KVM: Add MAINTAINERS entry
+       typo:                                                associated
 
-Atish Patra (4):
-  RISC-V: KVM: Add timer functionality
-  RISC-V: KVM: FP lazy save/restore
-  RISC-V: KVM: Implement ONE REG interface for FP registers
-  RISC-V: KVM: Add SBI v0.1 support
+> +while :
+>  do
 
- Documentation/virt/kvm/api.txt          | 158 +++-
- MAINTAINERS                             |  10 +
- arch/riscv/Kconfig                      |   2 +
- arch/riscv/Makefile                     |   2 +
- arch/riscv/include/asm/csr.h            |  58 ++
- arch/riscv/include/asm/hwcap.h          |  22 +
- arch/riscv/include/asm/kvm_host.h       | 260 +++++++
- arch/riscv/include/asm/kvm_vcpu_timer.h |  30 +
- arch/riscv/include/asm/pgtable-bits.h   |   1 +
- arch/riscv/include/uapi/asm/kvm.h       | 111 +++
- arch/riscv/kernel/asm-offsets.c         | 148 ++++
- arch/riscv/kernel/cpufeature.c          |  83 +-
- arch/riscv/kvm/Kconfig                  |  34 +
- arch/riscv/kvm/Makefile                 |  14 +
- arch/riscv/kvm/main.c                   |  86 ++
- arch/riscv/kvm/mmu.c                    | 773 ++++++++++++++++++
- arch/riscv/kvm/tlb.S                    |  43 +
- arch/riscv/kvm/vcpu.c                   | 995 ++++++++++++++++++++++++
- arch/riscv/kvm/vcpu_exit.c              | 610 +++++++++++++++
- arch/riscv/kvm/vcpu_sbi.c               | 151 ++++
- arch/riscv/kvm/vcpu_switch.S            | 382 +++++++++
- arch/riscv/kvm/vcpu_timer.c             | 110 +++
- arch/riscv/kvm/vm.c                     |  86 ++
- arch/riscv/kvm/vmid.c                   | 123 +++
- drivers/clocksource/timer-riscv.c       |   8 +
- include/clocksource/timer-riscv.h       |  16 +
- include/uapi/linux/kvm.h                |   8 +
- 27 files changed, 4314 insertions(+), 10 deletions(-)
- create mode 100644 arch/riscv/include/asm/kvm_host.h
- create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
- create mode 100644 arch/riscv/include/uapi/asm/kvm.h
- create mode 100644 arch/riscv/kvm/Kconfig
- create mode 100644 arch/riscv/kvm/Makefile
- create mode 100644 arch/riscv/kvm/main.c
- create mode 100644 arch/riscv/kvm/mmu.c
- create mode 100644 arch/riscv/kvm/tlb.S
- create mode 100644 arch/riscv/kvm/vcpu.c
- create mode 100644 arch/riscv/kvm/vcpu_exit.c
- create mode 100644 arch/riscv/kvm/vcpu_sbi.c
- create mode 100644 arch/riscv/kvm/vcpu_switch.S
- create mode 100644 arch/riscv/kvm/vcpu_timer.c
- create mode 100644 arch/riscv/kvm/vm.c
- create mode 100644 arch/riscv/kvm/vmid.c
- create mode 100644 include/clocksource/timer-riscv.h
+Why is the "do" line missing a '+'?  The only do/done in the current script
+are already listed above as being commented out.
 
---
-2.17.1
+> +printf "\n\n Do you want to remove another?[YN] : %s"
+> +read response
+> +
+> +if [[ $response == "Y" ]];then
+> +	printf "Please give another version to remove : %s"
+> +	read kernel_version
+> +	remove_old_kernel
+> +	printf "\n\n Please give the full modules directory name to remove: %s"
+> +	read modules_version
+> +	remove_old_kernel_modules_dir
+> +elif [[ $response == "N" ]];then
+> +	printf "\n\n Alright,no more. \n\n"
+
+Just exit, no printf needed.
+
+> +	exit 1
+> +fi
+>  done
+
+Same comment for "done" as for "do" above.
+
+> --
+> 2.21.0
+
+
+-- 
+~Randy
