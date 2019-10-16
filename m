@@ -2,126 +2,98 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C0AECE59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590C6C4360C
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9BD20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bvUvLkCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 31380217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 03:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571197636;
+	bh=1/BRSuGd20H8z4UWP9evd28hs3MmIqOFX4BuM/kPxEM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=aLR63j7f/g01yR4LHaquF6IjCikntZxrahwM5SitxYmN+od+SENfKVgeabFi1DcBj
+	 hshlmBDbvFo5gsxD9k9b2W1Kk6KpmKeoZQEKLfWSlp8s3xFgnx0ViBst5pKpwAzGyI
+	 KCDb4VUgv/XEHWQOcuFtHc7odoe0piZMQSmbMBV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389707AbfJPDrF (ORCPT
+        id S2403870AbfJPDrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 23:47:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33190 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfJPDrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 23:47:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lEWx+UcLpjc4KWKcEW1+PWSmi50tgZmjOZfoB8gc4Z0=; b=bvUvLkCZ/lM3nfg8dRn4Rby90
-        6tm5t6HgvANdT8lfI4/c1AUt0cV9N9yzP+bTBJcDpfIA0f5eD8ikUUFb2L3ZujeofE9rFB+DcTrQ3
-        vfqXZPUGrMiebMroUw17r/Fcri6IrpiQr0SoD6YyGJ4Cs+GP8oC1AiJd6wrnJgOnvQcm63kRo76TR
-        AWR9Mrvib9X42zArYzWXiq9V8cm7BuqIynEuufKHGk1v2rmRF+D8xJDY7nSP9YNGaW1GCVIbZL/cF
-        W8zE3XxzNdTak5wGCc6vy8PablKcKpdWahoWyxuF/pdYNw42bju7QTEXf4cLjBNR7UHVkyAgnHaD2
-        wtWal3F6Q==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iKaHA-0004MI-Al; Wed, 16 Oct 2019 03:47:04 +0000
-Subject: Re: [PATCH] usb: typec: Add sysfs node to show cc orientation
-To:     pumahsu <pumahsu@google.com>, heikki.krogerus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     badhri@google.com, kyletso@google.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191016034314.231363-1-pumahsu@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <577ac2f6-f073-1bd0-0adb-33fa8243773c@infradead.org>
-Date:   Tue, 15 Oct 2019 20:47:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 15 Oct 2019 23:47:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfJPDrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 15 Oct 2019 23:47:14 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [76.14.14.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CF6E20854;
+        Wed, 16 Oct 2019 03:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571197633;
+        bh=1/BRSuGd20H8z4UWP9evd28hs3MmIqOFX4BuM/kPxEM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AEoe7zhHviWvmPVe5ELG/IJg2edZuV7JWXS6Npd9mX8C2tRse3PusAVc69CXFyymC
+         +TYfLmgeP85oMqkqe2y+3TvWncZV74o5dHr3eKSDqyqS7D8c6nAO+iuK9fhzhjTACJ
+         e9+34Q5dmByvE06EMBEc6Go138p80lWKhSbkyYIs=
+Date:   Tue, 15 Oct 2019 20:47:11 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     20191015102402.1978-1-laijs@linux.alibaba.com
+Cc:     linux-kernel@vger.kernel.org,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 4/7] rcu: remove the declaration of call_rcu() in tree.h
+Message-ID: <20191016034711.GZ2689@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191015102850.2079-1-laijs@linux.alibaba.com>
+ <20191015102850.2079-2-laijs@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20191016034314.231363-1-pumahsu@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015102850.2079-2-laijs@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/15/19 8:43 PM, pumahsu wrote:
-> Export the Type-C cc orientation so that user space can
-> get this information.
+On Tue, Oct 15, 2019 at 10:28:46AM +0000, Lai Jiangshan wrote:
+> call_rcu() is external RCU API declared in include/linux/,
+> and doesn't need to be (re-)declared in internal files again.
 > 
-> Signed-off-by: pumahsu <pumahsu@google.com>
+> Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
+> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 
-Hi,
-what the * is cc orientation?
+Good catch!
+
+Queued for testing and review, thank you!
+
+							Thanx, Paul
 
 > ---
->  Documentation/ABI/testing/sysfs-class-typec |  7 +++++++
->  drivers/usb/typec/class.c                   | 11 +++++++++++
->  2 files changed, 18 insertions(+)
+>  kernel/rcu/tree.h | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
-> index d7647b258c3c..419f952c991d 100644
-> --- a/Documentation/ABI/testing/sysfs-class-typec
-> +++ b/Documentation/ABI/testing/sysfs-class-typec
-> @@ -108,6 +108,13 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
->  Description:
->  		Revision number of the supported USB Type-C specification.
->  
-> +What:		/sys/class/typec/<port>/cc_orientation
-> +Date:		September 2019
-> +Contact:	Puma Hsu <pumahsu@google.com>
-> +Description:
-> +		Indicates which cc orientation is active now, or 0 when
-> +		nothing is connected.
-> +
->  
->  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
->  
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 7d8805d9bf37..00edae63da8e 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1238,6 +1238,16 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(usb_power_delivery_revision);
->  
-> +static ssize_t cc_orientation_show(struct device *dev,
-> +						struct device_attribute *attr,
-> +						char *buf)
-> +{
-> +	struct typec_port *p = to_typec_port(dev);
-> +
-> +	return sprintf(buf, "%d\n", typec_get_orientation(p));
-> +}
-> +static DEVICE_ATTR_RO(cc_orientation);
-> +
->  static struct attribute *typec_attrs[] = {
->  	&dev_attr_data_role.attr,
->  	&dev_attr_power_operation_mode.attr,
-> @@ -1248,6 +1258,7 @@ static struct attribute *typec_attrs[] = {
->  	&dev_attr_usb_typec_revision.attr,
->  	&dev_attr_vconn_source.attr,
->  	&dev_attr_port_type.attr,
-> +	&dev_attr_cc_orientation.attr,
->  	NULL,
->  };
->  ATTRIBUTE_GROUPS(typec);
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index f8e6c70cceef..823f475c5e35 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -412,7 +412,6 @@ static bool rcu_preempt_has_tasks(struct rcu_node *rnp);
+>  static int rcu_print_task_exp_stall(struct rcu_node *rnp);
+>  static void rcu_preempt_check_blocked_tasks(struct rcu_node *rnp);
+>  static void rcu_flavor_sched_clock_irq(int user);
+> -void call_rcu(struct rcu_head *head, rcu_callback_t func);
+>  static void dump_blkd_tasks(struct rcu_node *rnp, int ncheck);
+>  static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags);
+>  static void rcu_preempt_boost_start_gp(struct rcu_node *rnp);
+> -- 
+> 2.20.1
 > 
-
-
--- 
-~Randy
