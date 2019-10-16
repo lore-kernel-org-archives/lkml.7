@@ -2,103 +2,178 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F909ECE58F
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B2ECE58F
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601B02084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4BC2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 00:43:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gkk5uU1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390369AbfJPAmD (ORCPT
+        id S2388572AbfJPAnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 15 Oct 2019 20:42:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53360 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390304AbfJPAlu (ORCPT
+        Tue, 15 Oct 2019 20:43:04 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45358 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728557AbfJPAnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 15 Oct 2019 20:41:50 -0400
-Received: from [213.220.153.21] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iKXNr-00065g-Qz; Wed, 16 Oct 2019 00:41:47 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     christian.brauner@ubuntu.com
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, yhs@fb.com, Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH v2 3/3] bpf: use copy_struct_from_user() in bpf() syscall
-Date:   Wed, 16 Oct 2019 02:41:38 +0200
-Message-Id: <20191016004138.24845-4-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191016004138.24845-1-christian.brauner@ubuntu.com>
-References: <20191009160907.10981-1-christian.brauner@ubuntu.com>
- <20191016004138.24845-1-christian.brauner@ubuntu.com>
+        Tue, 15 Oct 2019 20:43:04 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9G0dqH2003599;
+        Wed, 16 Oct 2019 00:42:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=RO+XrYrDaeBDBxb1QAxo3QY1K6pbqEr9rfJZhor0FR0=;
+ b=gkk5uU1QPz3pbW3mvR/PL+XZDaVfWIA3KgJD1tICgkTq04qP2LRQ4b9QQTxGdfae+vbD
+ MWqnAiZ1yKyo09CvbtkuXG5osuKUNnzs0mr9+qLxSM55L7THOJW+XGdDmIfCOoYKrn6Q
+ uBNh2sj6j9clhaoSjcDM3PmbUJqdr4BM70dnGctX09WWasq9eTEBiT1bOwP4Sosbi3lz
+ WU3ndcM4/66BpxDL9LLiaYQJFh879sJ3LTlrXWyJtzB4VSh7YYDcfYcDI3a++8tbhoWC
+ bYDy4CEiqjMBLaRonpcjNxWYqAdjnwb17XxqauDmvnQzoHXlAhofSFJ8FnT+/z9MXk2l +g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vk6sqkfmv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 00:42:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9G0dKZL099099;
+        Wed, 16 Oct 2019 00:40:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2vnf7s7m4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 00:40:35 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9G0eZvr007898;
+        Wed, 16 Oct 2019 00:40:35 GMT
+Received: from dhcp-10-132-91-76.usdhcp.oraclecorp.com (/10.132.91.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Oct 2019 00:40:35 +0000
+Subject: Re: [PATCH 2/4] KVM: VMX: Setup MSR bitmap only when has msr_bitmap
+ capability
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191015164033.87276-1-xiaoyao.li@intel.com>
+ <20191015164033.87276-3-xiaoyao.li@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <05ff009e-5f60-54ff-a371-111763a1cb7f@oracle.com>
+Date:   Tue, 15 Oct 2019 17:40:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
+In-Reply-To: <20191015164033.87276-3-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=11 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910160002
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9411 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=11 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910160002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In v5.4-rc2 we added a new helper (cf. [1]) copy_struct_from_user().
-This helper is intended for all codepaths that copy structs from
-userspace that are versioned by size. The bpf() syscall does exactly
-what copy_struct_from_user() is doing.
-Note that copy_struct_from_user() is calling min() already. So
-technically, the min_t() call could go. But the size is used further
-below so leave it.
 
-[1]: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: bpf@vger.kernel.org
-Acked-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v1 */
-Link: https://lore.kernel.org/r/20191009160907.10981-4-christian.brauner@ubuntu.com
 
-/* v2 */
-- Alexei Starovoitov <ast@kernel.org>:
-  - remove unneeded initialization
----
- kernel/bpf/syscall.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+On 10/15/2019 09:40 AM, Xiaoyao Li wrote:
+> Move the MSR bitmap setup codes to vmx_vmcs_setup() and only setup them
+> when hardware has msr_bitmap capability.
+>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>   arch/x86/kvm/vmx/vmx.c | 39 ++++++++++++++++++++-------------------
+>   1 file changed, 20 insertions(+), 19 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 58b77a882426..7051511c27c2 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4164,12 +4164,30 @@ static void ept_set_mmio_spte_mask(void)
+>   static void vmx_vmcs_setup(struct vcpu_vmx *vmx)
+>   {
+>   	int i;
+> +	unsigned long *msr_bitmap;
+>   
+>   	if (nested)
+>   		nested_vmx_vmcs_setup();
+>   
+> -	if (cpu_has_vmx_msr_bitmap())
+> -		vmcs_write64(MSR_BITMAP, __pa(vmx->vmcs01.msr_bitmap));
+> +	if (cpu_has_vmx_msr_bitmap()) {
+> +		msr_bitmap = vmx->vmcs01.msr_bitmap;
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 45524089e15d..5db9887a8f4c 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2817,20 +2817,17 @@ static int bpf_task_fd_query(const union bpf_attr *attr,
- 
- SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
- {
--	union bpf_attr attr = {};
-+	union bpf_attr attr;
- 	int err;
- 
- 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	err = bpf_check_uarg_tail_zero(uattr, sizeof(attr), size);
--	if (err)
--		return err;
- 	size = min_t(u32, size, sizeof(attr));
--
- 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
--	if (copy_from_user(&attr, uattr, size) != 0)
--		return -EFAULT;
-+	err = copy_struct_from_user(&attr, sizeof(attr), uattr, size);
-+	if (err)
-+		return err;
- 
- 	err = security_bpf(cmd, &attr, size);
- 	if (err < 0)
--- 
-2.23.0
+vmx_disable_intercept_for_msr() also calls cpu_has_vmx_msr_bitmap(), 
+which means we are repeating the check. A cleaner approach is to remove 
+the call to cpu_has_vmx_msr_bitmap()  from 
+vmx_disable_intercept_for_msr()  and let its callers do the check just 
+like you are doing here.
+
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+> +		if (kvm_cstate_in_guest(vmx->vcpu.kvm)) {
+> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
+> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+> +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+> +		}
+> +
+> +		vmcs_write64(MSR_BITMAP, __pa(msr_bitmap));
+> +	}
+> +	vmx->msr_bitmap_mode = 0;
+>   
+>   	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
+>   
+> @@ -6697,7 +6715,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>   {
+>   	int err;
+>   	struct vcpu_vmx *vmx;
+> -	unsigned long *msr_bitmap;
+>   	int cpu;
+>   
+>   	BUILD_BUG_ON_MSG(offsetof(struct vcpu_vmx, vcpu) != 0,
+> @@ -6754,22 +6771,6 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>   	if (err < 0)
+>   		goto free_msrs;
+>   
+> -	msr_bitmap = vmx->vmcs01.msr_bitmap;
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_TSC, MSR_TYPE_R);
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_FS_BASE, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_GS_BASE, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
+> -	vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
+> -	if (kvm_cstate_in_guest(kvm)) {
+> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C1_RES, MSR_TYPE_R);
+> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
+> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+> -		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+> -	}
+> -	vmx->msr_bitmap_mode = 0;
+> -
+>   	vmx->loaded_vmcs = &vmx->vmcs01;
+>   	cpu = get_cpu();
+>   	vmx_vcpu_load(&vmx->vcpu, cpu);
 
