@@ -2,135 +2,82 @@ Return-Path: <SRS0=S2At=YJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B94AFA3728
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A435CFA372A
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D1721A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:47:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aw34iHks"
+	by mail.kernel.org (Postfix) with ESMTP id 872FA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 16 Oct 2019 18:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394391AbfJPSrv (ORCPT
+        id S2394401AbfJPSsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 16 Oct 2019 14:47:51 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46158 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394367AbfJPSrv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 16 Oct 2019 14:47:51 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9GIlLBr082291;
-        Wed, 16 Oct 2019 13:47:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571251641;
-        bh=X9B0cbHSFBh6z+++yuvEhMSytocbxnyPPOMKchxLqbc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=aw34iHksGamBkIr0fZBcxlu+VFyJGOGtSg2GUjlp3d0qvYviv+tCd5UnLOFdKh4gt
-         4HCB/rwHUCtuxk/CUMVgwQTElt5Bvl6g0ODcTFdqIK2+5ECG1YwRRPleVIWbkWZ+La
-         3zngMZpBKdEHgbzvovCiWdOh4Oz1dmY7073F08qA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9GIlLR7035298
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Oct 2019 13:47:21 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 16
- Oct 2019 13:47:20 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 16 Oct 2019 13:47:13 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9GIlIhA094854;
-        Wed, 16 Oct 2019 13:47:20 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 2/3] ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
-Date:   Wed, 16 Oct 2019 13:49:53 -0500
-Message-ID: <20191016184954.14048-3-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191016184954.14048-1-bparrot@ti.com>
-References: <20191016184954.14048-1-bparrot@ti.com>
+        Wed, 16 Oct 2019 14:48:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:21962 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391023AbfJPSsA (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 16 Oct 2019 14:48:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Oct 2019 11:47:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,304,1566889200"; 
+   d="scan'208";a="225889320"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Oct 2019 11:47:59 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 4D5163001C0; Wed, 16 Oct 2019 11:47:59 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 11:47:59 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, acme@kernel.org,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf list: Hide deprecated events by default
+Message-ID: <20191016184759.GU9933@tassilo.jf.intel.com>
+References: <20191015025357.8708-1-yao.jin@linux.intel.com>
+ <20191015091401.GE10951@krava>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015091401.GE10951@krava>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add VPFE device nodes entries.
-Add OmniVision OV2659 sensor device nodes and linkage.
+On Tue, Oct 15, 2019 at 11:14:01AM +0200, Jiri Olsa wrote:
+> On Tue, Oct 15, 2019 at 10:53:57AM +0800, Jin Yao wrote:
+> > There are some deprecated events listed by perf list. But we can't remove
+> > them from perf list with ease because some old scripts may use them.
+> > 
+> > Deprecated events are old names of renamed events.  When an event gets
+> > renamed the old name is kept around for some time and marked with
+> > Deprecated. The newer Intel event lists in the tree already have these
+> > headers.
+> > 
+> > So we need to keep them in the event list, but provide a new option to
+> > show them. The new option is "--deprecated".
+> > 
+> > With this patch, the deprecated events are hidden by default but they can
+> > be displayed when option "--deprecated" is enabled.
+> 
+> not sure it's wise to hide them, because people will not read man page
+> to find --deprecated option, they will rather complain right away ;-)
 
-The sensor clock (xvclk) is sourced from clkout1.
-Add clock entries to properly select clkout1 and set its parent
-clock to sys_clkin_ck.
+perf list will have the same event with a different name.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- arch/arm/boot/dts/am437x-sk-evm.dts | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+If someone is using perf list presumably they don't know the event name,
+and look at the description, and the description is still there,
+just with a new name.
 
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 74eaa6a3b258..25222497f828 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -272,6 +272,12 @@
- 		>;
- 	};
- 
-+	clkout1_pin: pinmux_clkout1_pin {
-+		pinctrl-single,pins = <
-+			0x270 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* XDMA_EVENT_INTR0/CLKOUT1 */
-+		>;
-+	};
-+
- 	cpsw_default: cpsw_default {
- 		pinctrl-single,pins = <
- 			/* Slave 1 */
-@@ -593,6 +599,25 @@
- 	pinctrl-0 = <&i2c1_pins>;
- 	clock-frequency = <400000>;
- 
-+	ov2659@30 {
-+		compatible = "ovti,ov2659";
-+		reg = <0x30>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&clkout1_pin>;
-+
-+		clocks = <&clkout1_mux_ck>;
-+		clock-names = "xvclk";
-+		assigned-clocks = <&clkout1_mux_ck>;
-+		assigned-clock-parents = <&clkout1_osc_div_ck>;
-+
-+		port {
-+			ov2659_1: endpoint {
-+				remote-endpoint = <&vpfe0_ep>;
-+				link-frequencies = /bits/ 64 <70000000>;
-+			};
-+		};
-+	};
-+
- 	edt-ft5306@38 {
- 		status = "okay";
- 		compatible = "edt,edt-ft5306", "edt,edt-ft5x06";
-@@ -877,7 +902,7 @@
- 	/* Camera port */
- 	port {
- 		vpfe0_ep: endpoint {
--			/* remote-endpoint = <&sensor>; add once we have it */
-+			remote-endpoint = <&ov2659_1>;
- 			ti,am437x-vpfe-interface = <0>;
- 			bus-width = <8>;
- 			hsync-active = <0>;
--- 
-2.17.1
+Old scripts of course still work because -e looks up deprecated
+events too.
 
+-Andi
